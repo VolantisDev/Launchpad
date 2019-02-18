@@ -21,6 +21,7 @@ if (!FileExist(ahk2Exe)) {
 FileRemoveDir, %buildDir%, 1
 FileCreateDir, %buildDir%
 RunWait, %ahk2Exe% /in "%ahkScript%" /out "%exeFile%" /icon "%iconFile%"
+FileCopy, %A_ScriptDir%\Launchers.json.sample, %buildDir%\Launchers.json.sample
 FileCopy, %A_ScriptDir%\LICENSE.txt, %buildDir%\LICENSE.txt
 FileCopy, %A_ScriptDir%\README.md, %buildDir%\README.md
 FileCopyDir, %A_ScriptDir%\LauncherLib, %buildDir%\LauncherLib
