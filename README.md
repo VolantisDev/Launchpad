@@ -1,10 +1,10 @@
 # LauncherGen
 
-Create beautifully-simple Steam-compatible .exe files for almost any game.
+Create beautifully-simple .exe launchers files for almost any game that make it compatible with Steam.
 
 ## Introduction
 
-Non-Steam games have some issues:
+Non-Steam games have some issues on Steam:
 - The Steam overlay doesn't work consistently with all games.
 - Steam often says you're playing a game for a second and then stops, even though you're still playing.
 - Because of the previous issue, Steam doesn't track play time for many Non-Steam games properly.
@@ -49,6 +49,13 @@ Each time you run the application, you're given the option to update all of your
 Once you have built your launcher, simply add the newly-generated "[Game Name].exe" file to Steam as a Non-Steam 
 game. If set up properly, you should find Steam properly tracks your gameplay, and you should be able to use the
 Steam overlay within your games.
+
+You can also add these .exe files to any other game platform or launcher you wish, as there is nothing
+Steam-specific about them.
+
+Some of the generated .exe files may depend on vendor files within the main LauncherGen directory), but you can
+copy the .exe file anywhere on your system that you would like without having to copy any other dependencies 
+around.
 
 ## Credits
 
