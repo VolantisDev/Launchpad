@@ -5,6 +5,7 @@ Create beautifully-simple .exe launchers files for almost any game that make it 
 ## Introduction
 
 Non-Steam games have some issues on Steam:
+- Some types of games that open via URL or the Windows Store can't be added to Steam at all.
 - The Steam overlay doesn't work consistently with all games.
 - Steam often says you're playing a game for a second and then stops, even though you're still playing.
 - Because of the previous issue, Steam doesn't track play time for many Non-Steam games properly.
