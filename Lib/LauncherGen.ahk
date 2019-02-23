@@ -17,7 +17,7 @@
 
     __New(appName, appDir, askUpdateExisting := true) {
         this.appConfigValue := new AppConfig(appName, appDir)
-        this.config := new LauncherConfig(this.appConfigValue.LauncherFile)
+        this.config := new LauncherConfig(this.appConfigValue.LauncherFile, this.appConfigValue.DefaultsFile)
 
         if (askUpdateExisting) {
             this.AskUpdateExisting()

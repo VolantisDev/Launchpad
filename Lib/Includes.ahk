@@ -7,9 +7,6 @@
 #Include Lib\GameShortcut.ahk
 #Include Lib\LauncherConfig.ahk
 #Include Lib\LauncherGen.ahk
-#Include Lib\ConfigEditor\ConfigEditor.ahk
-#Include Lib\ConfigEditor\LaunchersConfigEditor.ahk
-#Include Lib\ConfigEditor\ListViewConfigEditor.ahk
 #Include Lib\Dependencies\AutoHotKey.ahk
 #Include Lib\Dependencies\Bnetlauncher.ahk
 #Include Lib\Dependencies\Dependency.ahk

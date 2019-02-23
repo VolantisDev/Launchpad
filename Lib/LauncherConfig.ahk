@@ -1,6 +1,8 @@
 ﻿class LauncherConfig {
     filePath := ""
+    defaultsFilePath := ""
     config := {}
+    defaults := {}
 
     Games[] {
         get {
@@ -15,8 +17,9 @@
         }
     }
 
-    __New(filePath, autoLoad := true) {
+    __New(filePath, defaultsFilePath := "", autoLoad := true) {
         this.filePath := filePath
+        this.defaultsFilePath := defaultsFilePath
 
         if (autoLoad and this.filePath) {
             this.LoadConfig()
@@ -33,11 +36,42 @@
 
         if (jsonString) {
             this.config := JSON.Load(jsonString)
+            this.PopulateFromDefaults()
         } else {
             this.config := {}
         }
 
         return this
+    }
+
+    LoadDefaults() {
+        if (this.defaultsFilePath) {
+            FileRead, jsonString, % this.defaultsFilePath
+
+            if (jsonString) {
+                this.defaults := JSON.Load(jsonString)
+            } else {
+                this.defaults := {}
+            }
+        }
+    }
+
+    PopulateFromDefaults() {
+        if (!this.defaults._NewEnum()[k, v]) {
+            this.LoadDefaults()
+        }
+
+        for key, config in this.config.Games
+        {
+            if (this.defaults.Games.hasKey(key)) {
+                newConfig := this.defaults.Games[key]
+                for gameKey, gameValue in config
+                {
+                    newConfig[gameKey] := gameValue
+                }
+                this.config.Games[key] := newConfig
+            }
+        }
     }
 
     SaveConfig() {

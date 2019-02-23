@@ -62,6 +62,12 @@
         }
     }
 
+    DefaultsFile[] {
+        get {
+            return this.appDirValue . "\Data\GamesDB.json"
+        }
+    }
+
     __New(appName, appDir, configPath := "") {
         this.appDirValue := appDir
         this.appNameValue := appName

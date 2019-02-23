@@ -1,107 +1,39 @@
 {
     "Games": {
-        "Anthem": {
-            "launcherType": "OriginLauncher",
-            "gameId": "Anthem.exe"
-        },
-        "Battlefield 1": {
-            "launcherType": "OriginLauncher",
-            "gameId": "bf1.exe"
-        },
-        "Battlefield V": {
-            "launcherType": "OriginLauncher",
-            "gameId": "bfv.exe"
-        },
+        "A Way Out": {},
+        "Anthem": {},
+        "Apex Legends": {},
+        "Battlefield 1": {},
+        "Battlefield V": {},
         "Call of Duty - Black Ops 4": {
-            "launcherType": "BlizzardLauncher",
-            "gameType": "BnetlauncherGame",
-            "gameId": "codbo4",
             "workingDir": "G:\\Blizzard Games\\Call of Duty Black Ops 4"
         },
         "Destiny 2": {
-            "LauncherType": "BlizzardLauncher",
-            "gameType": "BnetlauncherGame",
-            "gameId": "dst2",
             "workingDir": "G:\\Blizzard Games\\Destiny 2"
         },
         "Diablo III": {
-            "LauncherType": "BlizzardLauncher",
-            "gameType": "BnetlauncherGame",
-            "gameId": "d3",
             "workingDir": "D:\\Blizzard Games\\Diablo III"
         },
-        "Dragon Age Inquisition": {
-            "launcherType": "OriginLauncher",
-            "gameId": "Dragon Age: Inquisition",
-            "useClass": true
-        },
-        "Fallout 76": {
-            "launcherType": "BethesdaLauncher",
-            "gameId": "Fallout76",
-            "useClass": true
-        },
-        "Fortnite": {
-            "launcherType": "EpicLauncher",
-            "gameId": "FortniteClient-Win64-Shipping.exe"
-        },
-        "Gears of War 4": {
-            "launcherType": "MicrosoftStoreLauncher",
-            "gameType": "MicrosoftStoreGame",
-            "gameId": "GearGame.exe",
-            "gameShortcut": "shell:appsFolder\\Microsoft.SpartaUWP_8wekyb3d8bbwe!GearGameShippingPublic"
-        },
+        "Dragon Age Inquisition": {},
+        "Fallout 76": {},
+        "Fortnite": {},
+        "Gears of War 4": {},
         "Heroes of the Storm": {
-            "LauncherType": "BlizzardLauncher",
-            "gameType": "BnetlauncherGame",
-            "gameId": "hots",
             "workingDir": "D:\\Blizzard Games\\Heroes of the Storm"
         },
-        "Mass Effect Andromeda": {
-            "launcherType": "OriginLauncher",
-            "gameId": "MassEffectAndromeda.exe"
-        },
-        "Metro Exodus": {
-            "launcherType": "EpicLauncher",
-            "gameId": "4A Engine",
-            "useClass": true
-        },
-        "Mirror's Edge Catalyst": {
-            "launcherType": "OriginLauncher",
-            "gameId": "MirrorsEdgeCatalyst.exe"
-        },
+        "Mass Effect Andromeda": {},
+        "Metro Exodus": {},
+        "Mirror's Edge Catalyst": {},
         "Overwatch": {
-            "launcherType": "BlizzardLauncher",
-            "gameType": "BnetlauncherGame",
-            "gameId": "ow",
             "workingDir": "G:\\Blizzard Games\\Overwatch"
         },
-        "Sea of Thieves": {
-            "launcherType": "MicrosoftStoreLauncher",
-            "gameType": "MicrosoftStoreGame",
-            "gameId": "SoTGame.exe",
-            "gameShortcut": "shell:appsFolder\\Microsoft.SeaofThieves_8wekyb3d8bbwe!AthenaClientShipping"
-        },
-        "SimCity": {
-            "launcherType": "OriginLauncher",
-            "gameId": "SimCity.exe"
-        },
-        "Star Wars Battlefront": {
-            "launcherType": "OriginLauncher",
-            "gameId": "starwarsbattlefront.exe"
-        },
-        "Star Wars Battlefront II": {
-            "launcherType": "OriginLauncher",
-            "gameId": "starwarsbattlefrontii.exe"
-        },
+        "Sea of Thieves": {},
+        "SimCity": {},
+        "Star Wars Battlefront": {},
+        "Star Wars Battlefront II": {},
         "StarCraft II": {
-            "launcherType": "BlizzardLauncher",
-            "gameType": "BnetlauncherGame",
-            "gameId": "sc2",
             "workingDir": "D:\\Blizzard Games\\StarCraft II"
         },
-        "Titanfall 2": {
-            "launcherType": "OriginLauncher",
-            "gameId": "Titanfall2.exe"
-        }
+        "Titanfall 2": {}
     }
 }

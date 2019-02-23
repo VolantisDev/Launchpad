@@ -9,6 +9,7 @@
     gameIconValue := ""
     workingDirValue := ""
     useClassValue := ""
+    requiresWorkingDirValue := ""
 
     LauncherType[] {
         get {
@@ -73,6 +74,15 @@
         }
     }
 
+    RequiresWorkingDir[] {
+        get {
+            return this.requiresWorkingDirValue
+        }
+        set {
+            return this.requiresWorkingDirValue := value
+        }
+    }
+
     __New(app, key, config) {
         this.app := app
         this.key := key
@@ -81,7 +91,13 @@
         this.launcherTypeValue := config.hasKey("launcherType") ? config.launcherType : "GameLauncher"
         this.gameTypeValue := config.hasKey("gameType") ? config.gameType : "Game"
         this.gameIdValue := config.hasKey("gameId") ? config.gameId : key
-        this.workingDirValue := config.hasKey("workingDir") ? config.workingDir : this.launcherDir
+
+        this.requiresWorkingDirValue := config.hasKey("requiresWorkingDir") ? config.useClass : false
+        if (!config.hasKey("requiresWorkingDir") and this.launcherTypeValue == "BlizzardLauncher") {
+            this.requiresWorkingDirValue := true
+        }
+
+        this.workingDirValue := config.hasKey("workingDir") ? config.workingDir : this.GetWorkingDir()
         this.useClassValue := config.hasKey("useClass") ? config.useClass : false
         this.gameShortcutValue := config.hasKey("gameShortcut") ? config.gameShortcut : ""
         this.gameIconValue := config.hasKey("gameIcon") ? config.gameIcon : ""
@@ -117,5 +133,14 @@
 
         shortcutObj := new GameShortcut(this.launcherDir, this.key, this.gameShortcutValue)
         return shortcutObj.ShortcutPath
+    }
+
+    PrepareWorkingDir() {
+        if (!this.workingDirValue and this.requiresWorkingDirValue) {
+            FileSelectFolder, folder,,, % this.key . ": Select the game's working directory"
+            this.workingDirValue := folder
+        }
+
+        return this.workingDirValue
     }
 }

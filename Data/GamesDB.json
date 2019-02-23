@@ -1,0 +1,109 @@
+{
+    "Games": {
+        "A Way Out": {
+            "launcherType": "OriginLauncher",
+            "gameId": "AWayOut.exe"
+        },
+        "Anthem": {
+            "launcherType": "OriginLauncher",
+            "gameId": "Anthem.exe"
+        },
+        "Apex Legends": {
+            "launcherType": "OriginLauncher",
+            "gameId": "r5apex.exe"
+        },
+        "Battlefield 1": {
+            "launcherType": "OriginLauncher",
+            "gameId": "bf1.exe"
+        },
+        "Battlefield V": {
+            "launcherType": "OriginLauncher",
+            "gameId": "bfv.exe"
+        },
+        "Call of Duty - Black Ops 4": {
+            "launcherType": "BlizzardLauncher",
+            "gameType": "BnetlauncherGame",
+            "gameId": "codbo4"
+        },
+        "Destiny 2": {
+            "LauncherType": "BlizzardLauncher",
+            "gameType": "BnetlauncherGame",
+            "gameId": "dst2"
+        },
+        "Diablo III": {
+            "LauncherType": "BlizzardLauncher",
+            "gameType": "BnetlauncherGame",
+            "gameId": "d3"
+        },
+        "Dragon Age Inquisition": {
+            "launcherType": "OriginLauncher",
+            "gameId": "Dragon Age: Inquisition",
+            "useClass": true
+        },
+        "Fallout 76": {
+            "launcherType": "BethesdaLauncher",
+            "gameId": "Fallout76",
+            "useClass": true
+        },
+        "Fortnite": {
+            "launcherType": "EpicLauncher",
+            "gameId": "FortniteClient-Win64-Shipping.exe"
+        },
+        "Gears of War 4": {
+            "launcherType": "MicrosoftStoreLauncher",
+            "gameType": "MicrosoftStoreGame",
+            "gameId": "GearGame.exe",
+            "gameShortcut": "shell:appsFolder\\Microsoft.SpartaUWP_8wekyb3d8bbwe!GearGameShippingPublic"
+        },
+        "Heroes of the Storm": {
+            "LauncherType": "BlizzardLauncher",
+            "gameType": "BnetlauncherGame",
+            "gameId": "hots"
+        },
+        "Mass Effect Andromeda": {
+            "launcherType": "OriginLauncher",
+            "gameId": "MassEffectAndromeda.exe"
+        },
+        "Metro Exodus": {
+            "launcherType": "EpicLauncher",
+            "gameId": "4A Engine",
+            "useClass": true
+        },
+        "Mirror's Edge Catalyst": {
+            "launcherType": "OriginLauncher",
+            "gameId": "MirrorsEdgeCatalyst.exe"
+        },
+        "Overwatch": {
+            "launcherType": "BlizzardLauncher",
+            "gameType": "BnetlauncherGame",
+            "gameId": "ow"
+        },
+        "Sea of Thieves": {
+            "launcherType": "MicrosoftStoreLauncher",
+            "gameType": "MicrosoftStoreGame",
+            "gameId": "SoTGame.exe",
+            "gameShortcut": "shell:appsFolder\\Microsoft.SeaofThieves_8wekyb3d8bbwe!AthenaClientShipping"
+        },
+        "SimCity": {
+            "launcherType": "OriginLauncher",
+            "gameId": "SimCity.exe"
+        },
+        "Star Wars Battlefront": {
+            "launcherType": "OriginLauncher",
+            "gameId": "starwarsbattlefront.exe"
+        },
+        "Star Wars Battlefront II": {
+            "launcherType": "OriginLauncher",
+            "gameId": "starwarsbattlefrontii.exe"
+        },
+        "StarCraft II": {
+            "launcherType": "BlizzardLauncher",
+            "gameType": "BnetlauncherGame",
+            "gameId": "sc2"
+        },
+        "Titanfall 2": {
+            "launcherType": "OriginLauncher",
+            "gameId": "Titanfall2.exe"
+        }
+    }
+}

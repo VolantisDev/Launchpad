@@ -1,13 +1,13 @@
 ﻿#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 ; #Warn  ; Enable warnings to assist with detecting common errors.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+SetWorkingDir RegExReplace(A_ScriptDir,"[^\\]+\\?$")  ; Ensures a consistent starting directory.
 
-buildDir := A_ScriptDir . "\Build"
-ahkScript := A_ScriptDir . "\LauncherGen.ahk"
+buildDir := A_WorkingDir . "\Build"
+ahkScript := A_WorkingDir . "\LauncherGen.ahk"
 exeFile := buildDir . "\LauncherGen.exe"
-iconFile := A_ScriptDir . "\LauncherGen.ico"
-zipPath := A_ScriptDir . "\LauncherGen.zip"
+iconFile := A_WorkingDir . "\LauncherGen.ico"
+zipPath := A_WorkingDir . "\LauncherGen.zip"
 ahk2Exe := "C:\Program Files\AutoHotKey\Compiler\Ahk2Exe.exe"
 
 if (!FileExist(ahk2Exe)) {
@@ -21,10 +21,10 @@ if (!FileExist(ahk2Exe)) {
 FileRemoveDir, %buildDir%, 1
 FileCreateDir, %buildDir%
 RunWait, %ahk2Exe% /in "%ahkScript%" /out "%exeFile%" /icon "%iconFile%"
-FileCopy, %A_ScriptDir%\Launchers.json.sample, %buildDir%\Launchers.json.sample
-FileCopy, %A_ScriptDir%\LICENSE.txt, %buildDir%\LICENSE.txt
-FileCopy, %A_ScriptDir%\README.md, %buildDir%\README.md
-FileCopyDir, %A_ScriptDir%\LauncherLib, %buildDir%\LauncherLib
+FileCopy, %A_WorkingDir%\Launchers.json.sample, %buildDir%\Launchers.json.sample
+FileCopy, %A_WorkingDir%\LICENSE.txt, %buildDir%\LICENSE.txt
+FileCopy, %A_WorkingDir%\README.md, %buildDir%\README.md
+FileCopyDir, %A_WorkingDir%\LauncherLib, %buildDir%\LauncherLib
 MsgBox, Click OK to create zip archive (modify anything in the Build dir you would like first)
 Zip(buildDir, zipPath)
 FileRemoveDir, %buildDir%, true
