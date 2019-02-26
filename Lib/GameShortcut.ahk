@@ -23,8 +23,21 @@
     }
 
     AskGameShortcut() {
-        FileSelectFile, shortcut, 1,, % this.key . ": Select the game shortcut", Shortcuts (*.lnk; *.url)
+        FileSelectFile, shortcut, 1,, % this.key . ": Select the game shortcut", Shortcuts (*.lnk; *.url; *.exe)
+        SplitPath, shortcut,,,ext
+
+        if (ext == "exe") {
+            shortcut := this.CreateGameShortcut(shortcut)
+        }
+
         return shortcut
+    }
+
+    CreateGameShortcut(exePath) {
+        SplitPath, exePath,,workingDir
+        dest := this.launcherDir . "\" . this.key . ".lnk"
+        FileCreateShortcut, %exePath%, %dest%, %workingDir%
+        return dest
     }
 
     CopyGameShortcut(shortcut) {
