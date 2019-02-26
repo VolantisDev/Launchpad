@@ -104,6 +104,10 @@
         "Titanfall 2": {
             "launcherType": "OriginLauncher",
             "gameId": "Titanfall2.exe"
+        },
+        "Unreal Tournament": {
+            "launcherType": "EpicLauncher",
+            "gameId": "UE4-Win64-Shipping.exe"
         }
     }
 }
