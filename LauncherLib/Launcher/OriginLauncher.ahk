@@ -5,4 +5,5 @@
     closeLauncherBefore := true
     closeLauncherAfter := true
     runThenWait := true
+    killLauncher := true
 }

@@ -1,5 +1,7 @@
 class GameLauncher {
     game := {}
+    killLauncher := false
+    launcherCloseWait := 1000
     launcherExe := ""
     launcherShortcut := ""
     launcherName := "Launcher"
@@ -19,11 +21,16 @@ class GameLauncher {
         Loop {
             Process, Exist, % this.LauncherExe
             If (!ErrorLevel= 0) {
-                MsgBox, 5, % this.launcherName . " Running", % this.launcherName . " is currently running. Please shut it down to continue.", 5
-                IfMsgBox Cancel
-                    Exit
+                if (this.killLauncher) {
+                    Process, Close, % this.launcherExe
+                    Sleep, % this.launcherCloseWait
+                } else {
+                    MsgBox, 5, % this.launcherName . " Running", % this.launcherName . " is currently running. Please shut it down to continue.", 5
+                    IfMsgBox Cancel
+                        Exit
+                }
             } Else {
-                Sleep, 1000
+                Sleep, % this.launcherCloseWait
                 Break
             }
         }
