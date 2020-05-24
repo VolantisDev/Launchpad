@@ -1,6 +1,6 @@
 # LauncherGen
 
-Create beautifully-simple .exe launchers files for almost any game that make it compatible with Steam.
+Create beautifully-simple .exe launchers for almost any game to make it work well with Steam.
 
 ## Introduction
 
