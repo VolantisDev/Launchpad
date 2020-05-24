@@ -188,7 +188,7 @@
             "gameType": "BnetlauncherGame",
             "gameId": "wow" 
         },
-        "World of Warcraft: Classic": {
+        "World of Warcraft Classic": {
             "launcherType": "BlizzardLauncher",
             "gameType": "BnetlauncherGame",
             "gameId": "wowclassic"
