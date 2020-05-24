@@ -20,15 +20,33 @@
             "launcherType": "OriginLauncher",
             "gameId": "bfv.exe"
         },
+        "Borderlands 3": {
+            "launcherType": "EpicLauncher",
+            "gameId": "Borderlands3.exe"
+        },
         "Call of Duty - Black Ops 4": {
             "launcherType": "BlizzardLauncher",
             "gameType": "BnetlauncherGame",
             "gameId": "codbo4"
         },
-        "Destiny 2": {
-            "LauncherType": "BlizzardLauncher",
+        "Call of Duty - Modern Warfare": {
+            "launcherType": "BlizzardLauncher",
             "gameType": "BnetlauncherGame",
-            "gameId": "dst2"
+            "gameId": "codmw2019"
+        },
+        "Call of Duty - Modern Warfare 2 CR": {
+            "launcherType": "BlizzardLauncher",
+            "gameType": "BnetlauncherGame",
+            "gameId": "codmw2cr"
+        },
+        "Close to the Sun": {
+            "launcherType": "EpicLauncher",
+            "gameId": "ctts-Win64-Shipping.exe"
+        },
+        "Dauntless": {
+            "launcherType": "EpicLauncher",
+            "gameId": "Dauntless-Win64-Shipping.exe",
+            "gameShortcut": "com.epicgames.launcher://apps/Jackal?action=launch&silent=true"
         },
         "Diablo III": {
             "LauncherType": "BlizzardLauncher",
@@ -55,6 +73,10 @@
             "gameId": "GearGame.exe",
             "gameShortcut": "shell:appsFolder\\Microsoft.SpartaUWP_8wekyb3d8bbwe!GearGameShippingPublic"
         },
+        "GNOG": {
+            "launcherType": "EpicLauncher",
+            "gameId": "GNOG.exe"
+        },
         "Heroes of the Storm": {
             "LauncherType": "BlizzardLauncher",
             "gameType": "BnetlauncherGame",
@@ -73,10 +95,42 @@
             "launcherType": "OriginLauncher",
             "gameId": "MirrorsEdgeCatalyst.exe"
         },
+        "Observation": {
+            "launcherType": "EpicLauncher",
+            "gameId": "Observation.exe"
+        },
+        "Outer Wilds": {
+            "launcherType": "EpicLauncher",
+            "gameId": "OuterWilds.exe"
+        },
+        "Operencia - The Stolen Sun": {
+            "launcherType": "EpicLauncher",
+            "gameId": "Operencia-Win64-Shipping.exe"
+        },
         "Overwatch": {
             "launcherType": "BlizzardLauncher",
             "gameType": "BnetlauncherGame",
             "gameId": "ow"
+        },
+        "Phoenix Point": {
+            "launcherType": "EpicLauncher",
+            "gameId": "PhoenixPointWin64.exe"
+        },
+        "Rebel Galaxy Outlaw": {
+            "launcherType": "EpicLauncher",
+            "gameId": "RebelGalaxyEGS.exe"
+        },
+        "RollerCoaster Tycoon Adventures": {
+            "launcherType": "EpicLauncher",
+            "gameId": "rcta.exe"
+        },
+        "Satisfactory": {
+            "launcherType": "EpicLauncher",
+            "gameId": "FactoryGame-Win64-Shipping.exe"
+        },
+        "Sea of Solitude": {
+            "launcherType": "OriginLauncher",
+            "gameId": "SeaOfSolitude.exe"
         },
         "Sea of Thieves": {
             "launcherType": "MicrosoftStoreLauncher",
@@ -87,6 +141,10 @@
         "SimCity": {
             "launcherType": "OriginLauncher",
             "gameId": "SimCity.exe"
+        },
+        "Superliminal": {
+            "launcherType": "EpicLauncher",
+            "gameId": "Superliminal.exe"
         },
         "Star Wars Battlefront": {
             "launcherType": "OriginLauncher",
@@ -101,13 +159,39 @@
             "gameType": "BnetlauncherGame",
             "gameId": "sc2"
         },
+        "The Cycle": {
+            "launcherType": "EpicLauncher",
+            "gameId": "The Cycle.exe"
+        },
+        "The Outer Worlds": {
+            "launcherType": "EpicLauncher",
+            "gameId": "IndianaEpicGameStore-Win64-Shipping.exe"
+        },
+        "The Sinking City": {
+            "launcherType": "EpicLauncher",
+            "gameId": "TSCGame-Win64-Shipping.exe"
+        },
         "Titanfall 2": {
             "launcherType": "OriginLauncher",
             "gameId": "Titanfall2.exe"
         },
+        "Tropico 6": {
+            "launcherType": "OriginLauncher",
+            "gameId": "Tropico6-Win64-Shipping.exe"
+        },
         "Unreal Tournament": {
             "launcherType": "EpicLauncher",
             "gameId": "UE4-Win64-Shipping.exe"
+        },
+        "World of Warcraft": {
+            "launcherType": "BlizzardLauncher",
+            "gameType": "BnetlauncherGame",
+            "gameId": "wow" 
+        },
+        "World of Warcraft: Classic": {
+            "launcherType": "BlizzardLauncher",
+            "gameType": "BnetlauncherGame",
+            "gameId": "wowclassic"
         }
     }
 }
