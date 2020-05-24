@@ -1,15 +1,14 @@
 ﻿class Bnetlauncher extends Dependency {
     name := "Bnetlauncher"
     mainFile := "bnetlauncher.exe"
-    url := "https://github.com/dafzor/bnetlauncher/releases/download/v2.02/bnetlauncher_v202.zip"
+    url := "https://github.com/dafzor/bnetlauncher/releases/download/v2.09/bnetlauncher_v209.zip"
     downloadFile := "bnetlauncher.zip"
 
     Download() {
         base.Download()
 
-        gamesDb := this.path . "\gamesdb.ini"
-        if (!FileExist(gamesDb)) {
-            FileCopy, %gamesDb%.example, %gamesDb%, 1
-        }
+        gameDbSource := this.appDir . "\Data\gamedb.ini"
+        gameDb := this.path . "\gamedb.ini"
+        FileCopy, %gameDbSource%, %gameDb%, 1
     }
 }
