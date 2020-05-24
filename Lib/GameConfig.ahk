@@ -93,11 +93,11 @@
         this.gameIdValue := config.hasKey("gameId") ? config.gameId : key
 
         this.requiresWorkingDirValue := config.hasKey("requiresWorkingDir") ? config.useClass : false
-        if (!config.hasKey("requiresWorkingDir") and this.launcherTypeValue == "BlizzardLauncher") {
-            this.requiresWorkingDirValue := true
-        }
+        ; if (!config.hasKey("requiresWorkingDir") and this.launcherTypeValue == "BlizzardLauncher") {
+        ;     this.requiresWorkingDirValue := true
+        ; }
 
-        this.workingDirValue := config.hasKey("workingDir") ? config.workingDir : this.GetWorkingDir()
+        this.workingDirValue := config.hasKey("workingDir") ? config.workingDir : this.PrepareWorkingDir()
         this.useClassValue := config.hasKey("useClass") ? config.useClass : false
         this.gameShortcutValue := config.hasKey("gameShortcut") ? config.gameShortcut : ""
         this.gameIconValue := config.hasKey("gameIcon") ? config.gameIcon : ""

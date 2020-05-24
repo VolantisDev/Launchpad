@@ -5,35 +5,22 @@
         "Apex Legends": {},
         "Battlefield 1": {},
         "Battlefield V": {},
-        "Call of Duty - Black Ops 4": {
-            "workingDir": "G:\\Blizzard Games\\Call of Duty Black Ops 4"
-        },
-        "Destiny 2": {
-            "workingDir": "G:\\Blizzard Games\\Destiny 2"
-        },
-        "Diablo III": {
-            "workingDir": "D:\\Blizzard Games\\Diablo III"
-        },
+        "Call of Duty - Black Ops 4": {},
+        "Diablo III": {},
         "Dragon Age Inquisition": {},
         "Fallout 76": {},
         "Fortnite": {},
         "Gears of War 4": {},
-        "Heroes of the Storm": {
-            "workingDir": "D:\\Blizzard Games\\Heroes of the Storm"
-        },
+        "Heroes of the Storm": {},
         "Mass Effect Andromeda": {},
         "Metro Exodus": {},
         "Mirror's Edge Catalyst": {},
-        "Overwatch": {
-            "workingDir": "G:\\Blizzard Games\\Overwatch"
-        },
+        "Overwatch": {},
         "Sea of Thieves": {},
         "SimCity": {},
         "Star Wars Battlefront": {},
         "Star Wars Battlefront II": {},
-        "StarCraft II": {
-            "workingDir": "D:\\Blizzard Games\\StarCraft II"
-        },
+        "StarCraft II": {},
         "Titanfall 2": {}
     }
 }
