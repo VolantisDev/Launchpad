@@ -43,6 +43,10 @@
             "launcherType": "EpicLauncher",
             "gameId": "ctts-Win64-Shipping.exe"
         },
+        "Control": {
+            "launcherType": "EpicLauncher",
+            "gameId": "Control_DX12.exe"
+        },
         "Dauntless": {
             "launcherType": "EpicLauncher",
             "gameId": "Dauntless-Win64-Shipping.exe",
@@ -76,6 +80,13 @@
         "GNOG": {
             "launcherType": "EpicLauncher",
             "gameId": "GNOG.exe"
+        },
+        "Halo - The Master Chief Collection": {
+            "launcherType": "MicrosoftStoreLauncher",
+            "gameType": "MicrosoftStoreGame",
+            "gameId": "UnrealWindow",
+            "useClass": true,
+            "gameShortcut": "shell:appsFolder\\Microsoft.Chelan_8wekyb3d8bbwe!HaloMCCShipping"
         },
         "Heroes of the Storm": {
             "LauncherType": "BlizzardLauncher",
