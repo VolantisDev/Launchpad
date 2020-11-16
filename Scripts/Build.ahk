@@ -9,7 +9,7 @@ ahkScript := appDir . "\LauncherGen.ahk"
 exeFile := buildDir . "\LauncherGen.exe"
 iconFile := appDir . "\LauncherGen.ico"
 zipPath := appDir . "\LauncherGen.zip"
-ahk2Exe := "C:\Program Files\AutoHotKey\Compiler\Ahk2Exe.exe"
+ahk2Exe := appDir . "\Vendor\AutoHotKey\Compiler\Ahk2Exe.exe"
 
 if (!FileExist(ahk2Exe)) {
     FileSelectFile, ahk2Exe, 3,,Please select your Ahk2Exe.exe file, EXE Files (*.exe)
@@ -26,12 +26,12 @@ FileCopy, %appDir%\Launchers.json.sample, %buildDir%\Launchers.json.sample
 FileCopy, %appDir%\LICENSE.txt, %buildDir%\LICENSE.txt
 FileCopy, %appDir%\README.md, %buildDir%\README.md
 FileCopyDir, %appDir%\LauncherLib, %buildDir%\LauncherLib
-FileCopyDir, %appDir%\Data, %buildDir%\Data
 
-MsgBox, Click OK to create zip archive (modify anything in the Build dir you would like first)
+MsgBox, You may now modify the Build directory if you would like before creating the zip file. When finished, click OK to create zip archive.
 
 Zip(buildDir, zipPath)
 FileRemoveDir, %buildDir%, true
+
 MsgBox, Finished creating %zipPath%
 
 Zip(zipDir, zipFile) {

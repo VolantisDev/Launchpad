@@ -3,18 +3,23 @@
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 ; #Warn  ; Enable warnings to assist with detecting common errors.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-SetWorkingDir RegExReplace(A_ScriptDir,"[^\\]+\\?$")  ; Ensures a consistent starting directory.
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
-file := "Lib\Includes.ahk"
+appDir := RegExReplace(A_ScriptDir, "\\[^\\]+$")
 
-FileDelete, %file%
-FileAppend, % "; Automatically-generated file, do not edit manually.`n", %file%
+GenerateIncludeFile(file, glob) {
+    FileDelete, %file%
+    FileAppend, % "; Automatically-generated file, do not edit manually.`n", %file%
 
-Loop, Files, %A_WorkingDir%\Lib\*.ahk, R
-{
-    if (A_LoopFileFullPath != file) {
-        FileAppend, % "#Include " . A_LoopFileFullPath . "`n", %file%
+    Loop, Files, %glob%, R
+    {
+        if (A_LoopFileFullPath != file) {
+            FileAppend, % "#Include " . A_LoopFileFullPath . "`n", %file%
+        }
     }
+
+    FileAppend, % "; End of auto-generated includes.`n", %file%
 }
 
-FileAppend, % "; End of auto-generated includes.`n", %file%
+GenerateIncludeFile(appDir . "\Lib\Includes.ahk", appDir . "\Lib\*.ahk")
+GenerateIncludeFile(appDir . "\LauncherLib\Includes.ahk", appDir . "\LauncherLib\*.ahk")

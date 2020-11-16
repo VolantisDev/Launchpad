@@ -1,16 +1,37 @@
 ; Automatically-generated file, do not edit manually.
-#Include Lib\AppConfig.ahk
-#Include Lib\ExeBuilder.ahk
-#Include Lib\GameAhkFIle.ahk
-#Include Lib\GameConfig.ahk
-#Include Lib\GameIcon.ahk
-#Include Lib\GameShortcut.ahk
-#Include Lib\LauncherConfig.ahk
-#Include Lib\LauncherGen.ahk
-#Include Lib\Dependencies\AutoHotKey.ahk
-#Include Lib\Dependencies\Bnetlauncher.ahk
-#Include Lib\Dependencies\Dependency.ahk
-#Include Lib\Dependencies\IconsExt.ahk
-#Include Lib\Vendor\JSON.ahk
-#Include Lib\Vendor\Jxon.ahk
+#Include D:\Game Tools\LauncherGen\Lib\LauncherGame.ahk
+#Include D:\Game Tools\LauncherGen\Lib\LauncherGen.ahk
+#Include D:\Game Tools\LauncherGen\Lib\ApiCache\ApiCache.ahk
+#Include D:\Game Tools\LauncherGen\Lib\ApiEndpoint\ApiEndpoint.ahk
+#Include D:\Game Tools\LauncherGen\Lib\ApiItem\ApiAsset.ahk
+#Include D:\Game Tools\LauncherGen\Lib\ApiItem\ApiDependency.ahk
+#Include D:\Game Tools\LauncherGen\Lib\ApiItem\ApiGame.ahk
+#Include D:\Game Tools\LauncherGen\Lib\ApiItem\ApiGameType.ahk
+#Include D:\Game Tools\LauncherGen\Lib\ApiItem\ApiItem.ahk
+#Include D:\Game Tools\LauncherGen\Lib\ApiItem\ApiLauncherType.ahk
+#Include D:\Game Tools\LauncherGen\Lib\ApiItem\ApiListing.ahk
+#Include D:\Game Tools\LauncherGen\Lib\ApiItem\ApiTypeItem.ahk
+#Include D:\Game Tools\LauncherGen\Lib\ApiItem\JsonItem.ahk
+#Include D:\Game Tools\LauncherGen\Lib\Builder\Builder.ahk
+#Include D:\Game Tools\LauncherGen\Lib\BuildFile\BuildFile.ahk
+#Include D:\Game Tools\LauncherGen\Lib\BuildFile\ComposableBuildFile.ahk
+#Include D:\Game Tools\LauncherGen\Lib\BuildFile\CopyableBuildFile.ahk
+#Include D:\Game Tools\LauncherGen\Lib\BuildFile\GameAhkFile.ahk
+#Include D:\Game Tools\LauncherGen\Lib\BuildFile\GameExeFile.ahk
+#Include D:\Game Tools\LauncherGen\Lib\BuildFile\IconFile.ahk
+#Include D:\Game Tools\LauncherGen\Lib\BuildFile\ShortcutFile.ahk
+#Include D:\Game Tools\LauncherGen\Lib\Config\AppConfig.ahk
+#Include D:\Game Tools\LauncherGen\Lib\Config\Config.ahk
+#Include D:\Game Tools\LauncherGen\Lib\Config\FileConfig.ahk
+#Include D:\Game Tools\LauncherGen\Lib\Config\GameConfig.ahk
+#Include D:\Game Tools\LauncherGen\Lib\Config\IniConfig.ahk
+#Include D:\Game Tools\LauncherGen\Lib\Config\JsonConfig.ahk
+#Include D:\Game Tools\LauncherGen\Lib\Config\JsonWithDefaultsConfig.ahk
+#Include D:\Game Tools\LauncherGen\Lib\Config\LauncherConfig.ahk
+#Include D:\Game Tools\LauncherGen\Lib\Dependency\Dependency.ahk
+#Include D:\Game Tools\LauncherGen\Lib\Gui\MainWindow.ahk
+#Include D:\Game Tools\LauncherGen\Lib\Vendor\Class_Toolbar.ahk
+#Include D:\Game Tools\LauncherGen\Lib\Vendor\HTTPRequest.ahk
+#Include D:\Game Tools\LauncherGen\Lib\Vendor\JSON.ahk
+#Include D:\Game Tools\LauncherGen\Lib\Vendor\Jxon.ahk
 ; End of auto-generated includes.

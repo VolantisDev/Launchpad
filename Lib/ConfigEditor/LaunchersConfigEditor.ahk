@@ -1,3 +1,0 @@
-class LaunchersConfigEditor extends ConfigEditor {
-
-}

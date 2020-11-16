@@ -1,2 +1,0 @@
-﻿class MicrosoftStoreGame extends Game {
-}

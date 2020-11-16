@@ -1,69 +1,111 @@
 ﻿class LauncherGen {
-    appConfigValue := {}
     appName := ""
     appDir := ""
-    launcherDir := ""
-    config := {}
-    updateExisting := false
-
+    tempDir := A_Temp . "\LauncherGen"
+    appConfigObj := {}
+    apiEndpointObj := {}
+    launchersObj := {}
+    
     AppConfig[] {
         get {
-            return this.appConfigValue
+            return this.appConfigObj
         }
         set {
-            return this.appConfigValue := value
+            return this.appConfigObj := value
         }
     }
 
-    __New(appName, appDir, askUpdateExisting := true) {
-        this.appConfigValue := new AppConfig(appName, appDir)
-        this.config := new LauncherConfig(this.appConfigValue.LauncherFile, this.appConfigValue.DefaultsFile)
-
-        if (askUpdateExisting) {
-            this.AskUpdateExisting()
+    ApiEndpoint[] {
+        get {
+            return this.apiEndpointObj
+        }
+        set {
+            return this.apiEndpointObj := value
         }
     }
 
-    AskUpdateExisting() {
-        MsgBox, 4,, Would you also like to update existing launchers? (choosing No will only create new launchers)
-        IfMsgBox Yes
-            this.updateExisting := true
-        else
-            this.updateExisting := false
-    }
-
-    UpdateVendorFiles() {
-        autohotkey := new AutoHotKey(this.AppConfig.AppDir)
-        if (autohotkey.NeedsUpdate()) {
-            autohotkey.Download()
+    Launchers[] {
+        get {
+            return this.launchersObj
         }
-
-        bnetlauncher := new Bnetlauncher(this.AppConfig.AppDir)
-        if (bnetlauncher.NeedsUpdate()) {
-            bnetlauncher.Download()
-        }
-
-        iconsext := new IconsExt(this.AppConfig.AppDir)
-        if (iconsext.NeedsUpdate()) {
-            iconsext.Download()
+        set {
+            return this.launchersObj := value
         }
     }
 
-    GenerateLaunchers() {
-        generated := 0
-        built := 0
+    __New(appName, appDir, cachePath := "") {
+        this.appName := appName
+        this.appDir := appDir
 
-        For key, config in this.config.Games {
-            success := false
-            if (this.updateExisting or !this.LauncherExists(key, config)) {
-                success := this.GenerateLauncherFiles(key, config)
+        if (cachePath == "") {
+            cachePath := this.tempDir . "\API"
+        }
+        
+        this.apiEndpointObj := new ApiEndpoint(this, new ApiCache(this, cachePath))
+        this.appConfigObj := new AppConfig(this)
+        this.launchersObj := new LauncherConfig(this, this.appConfigObj.LauncherFile, true)
+    }
 
-                if (success) {
-                    generated++
+    UpdateDependencies(forceUpdate := false) {
+        Progress, Off
+        Progress, M, Initializing..., Please wait while dependencies are updated., Updating Dependencies
+
+        listingInstance := new ApiListing(this, "dependencies")
+
+        if (listingInstance.Exists()) {
+            listing := listingInstance.Read()
+
+            count := 0
+            for index, key in listing.items
+                count++
+            Progress, R0-%count% M, Initializing..., Please wait while dependencies are updated., Updating Dependencies
+
+            count := 0
+            for index, key in listing.items {
+                count++
+                Progress, %count%,% "Discovering " . key . "...", Please wait while dependencies are updated., Updating Dependencies
+
+                item := new ApiDependency(this, key)
+
+                if (item.Exists()) {
+                    dependencyConfig := item.Read()
+                    dependencyClass := dependencyConfig.class
+                    dependencyInstance := new %dependencyClass%(this, key, dependencyConfig)
+
+                    if (dependencyInstance.NeedsUpdate(forceUpdate)) {
+                        if (dependencyInstance.IsInstalled()) {
+                            Progress,,% "Updating " . dependencyConfig.name . "...", Please wait while dependencies are updated., Updating Dependencies
+                            dependencyInstance.Update(forceUpdate)
+                        } else {
+                            Progress,,% "Installing " . dependencyConfig.name . "...", Please wait while dependencies are updated., Updating Dependencies
+                            dependencyInstance.Install()
+                        }
+                    }
                 }
             }
+        }
 
-            if (this.updateExisting or success) {
+        Progress, Off
+    }
+
+    BuildLaunchers(updateExisting := false) {
+        Progress, Off
+        Progress, M, Initializing..., Please wait while your launchers are built., Building Launchers
+
+        count := 0
+        for key, value in this.Launchers.Games
+            count++
+        Progress, R0-%count% M, Initializing..., Please wait while your launchers are built., Building Launchers
+
+        built := 0
+        count := 0
+        For key, config in this.Launchers.Games {
+            count++
+            Progress, %count%,% "Discovering " . key . "...", Please wait while your launchers are built., Building Launchers
+            success := false
+
+            if (updateExisting or !this.LauncherExists(key, config)) {
+                Progress,,% "Building launcher: " . key . "...", Please wait while your launchers are built., Building Launchers
                 success := this.BuildLauncher(key, config)
 
                 if (success) {
@@ -72,22 +114,27 @@
             }
         }
 
-        MsgBox, Generated launcher files for %generated% games and built %built% launchers.
+        MsgBox, Built %built% launchers.
+        Progress, Off
+        ExitApp, 0
+    }
+
+    GetLauncherFile(key, ext := ".exe") {
+        gameDir := this.AppConfig.LauncherDir
+
+        if (this.AppConfig.IndividualDirs) {
+            gameDir .= "\" . key
+        }
+
+        return := gameDir . "\" . key . ext
     }
 
     LauncherExists(key, config) {
-        if (!FileExist(this.appConfigValue.LauncherDir)) {
+        if (!FileExist(this.AppConfig.LauncherDir)) {
             return false
         }
 
-        gameDir := this.appConfigValue.LauncherDir . "\" . key
-
-        if (!FileExist(gameDir)) {
-            return false
-        }
-
-        launcherFile := gameDir . "\" . key . ".ahk"
-        return FileExist(launcherFile)
+        return FileExist(this.GetLauncherFile(key, ".ahk"))
     }
 
     LauncherIsBuilt(key, config) {
@@ -95,17 +142,60 @@
             return false
         }
 
-        launcherExe := this.appConfigValue.LauncherDir . "\" . key . "\" . key . ".exe"
-        return FileExist(launcherExe)
-    }
-
-    GenerateLauncherFiles(key, config) {
-        gameConfigObj := new GameConfig(this, key, config)
-        return gameConfigObj.PrepareGameFiles()
+        return FileExist(this.GetLauncherFile(key))
     }
 
     BuildLauncher(key, config) {
-        exeBuilderObj := new ExeBuilder(this)
-        return exeBuilderObj.BuildExe(key)
+        generatorInstance := new Builder(this, key, config)
+        return generatorInstance.Build()
+    }
+
+    LaunchMainWindow() {
+        window := new MainWindow(this)
+        window.Show()
+    }
+
+    LaunchManageWindow() {
+        MsgBox, A launcher managment GUI is coming soon.
+        ; @todo Show Launcher Manager window.
+    }
+
+    RemoveBuiltLaunchers() {
+        MsgBox, Launcher cleanup functionality is coming soon.
+        ; @todo Confirm deletion of generated launchers and then delete them.
+    }
+
+    ReloadLauncherFile() {
+        this.Launchers.LoadConfig()
+    }
+
+    OpenLauncherFile() {
+        Run, % this.AppConfig.LauncherFile
+    }
+
+    ChangeLauncherFile() {
+        FileSelectFile, launcherFile, 1,, Select the Launchers file to use, JSON Documents (*.json)
+        this.AppConfig.LauncherFile := launcherFile
+        return launcherFile
+    }
+
+    OpenLauncherDir() {
+        Run, % this.AppConfig.LauncherDir
+    }
+
+    ChangeLauncherDir() {
+        FileSelectFolder, launcherDir,, 3, Create or select the folder to create game launchers within
+        this.AppConfig.LauncherDir := launcherDir
+        return launcherDir
+    }
+
+    OpenAssetsDir() {
+        Run, % this.AppConfig.AssetsDir
+    }
+
+    ChangeAssetsDir() {
+        FileSelectFolder, assetsDir,, 3, Create or select the folder to create game launcher assets within
+        this.AppConfig.AssetsDir := assetsDir
+        return assetsDir
     }
 }

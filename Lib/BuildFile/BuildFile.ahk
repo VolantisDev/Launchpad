@@ -1,0 +1,50 @@
+class BuildFile {
+    app := {}
+    appDir := ""
+    tempDir := ""
+    filePathValue := ""
+    key := ""
+    extension := ""
+    launcherDir := ""
+    config := {}
+
+    FilePath[] {
+        get {
+            return this.filePathValue
+        }
+        set {
+            this.filePathValue := value
+        }
+    }
+
+    __New(app, config, launcherDir, key, extension, filePath := "", autoBuild := true) {
+        this.app := app
+        this.appDir := app.appDir
+        this.tempDir := app.tempDir . "\BuildFiles\" . key
+        this.config := config
+        this.launcherDir := launcherDir
+        this.key := key
+        this.extension := extension
+        this.filePathValue := filePath
+
+        if (this.FilePath == "") {
+            this.FilePath := this.launcherDir . "\" . this.key . this.extension
+        }
+
+        if (autoBuild) {
+            this.Build()
+        }
+    }
+
+    Build() {
+    }
+
+    Cleanup() {
+    }
+
+    Delete() {
+        if (this.FilePath != "") {
+            FileDelete, % this.FilePath
+        }
+    }
+}
