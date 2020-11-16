@@ -1,6 +1,30 @@
 # LauncherGen
 
-Create beautifully-simple .exe launchers for almost any game to make it work well with Steam.
+Create beautifully-simple .exe files to launch any game seamlessly though Steam and other platforms.
+
+## Latest News
+
+I have completely rewritten LauncherGen in the current codebase. This version is highly experimental and likely will not work for you yet.
+
+Once fully released, the new version contains many enhancements, such as:
+
+- A LauncherGen GUI. You can now configure LauncherGen and access all of its functionality from a single window.
+- An online API for getting the latest game and launcher data, as well as build dependencies (https://benmcclure.com/game-launcher-db/). You may contribute your own data to the API now: https://github.com/bmcclure/game-launcher-db
+- Open your Launchers.json file in your associated .json editor with a single click, and reload its contents without having to quit LauncherGen.
+- Open your launchers folder or your game assets folder easily from within the app
+- Separate the game assets dir (icons, shortcut files, etc) from the launcher files if desired (or continue mixing the assets in)
+- Optionally copy the game assets into the launcher directory if you've chosen to store them separately
+- Keep all launcher .exes in a single directory if desired (or continue using one directory per game)
+- Update LauncherGen's dependency files anytime via a click of a button
+
+
+Things that won't yet be in this release, but I am working on for a future release:
+- A Launcher Manager GUI which allows you to visually build your Launchers.json file.
+- A button to automatically remove all generated files when you want to start from scratch.
+
+## Contribute to the Game Launcher DB!
+- Public API endpoint: https://benmcclure.com/game-launcher-db/
+- GitHub page: https://github.com/bmcclure/game-launcher-db
 
 ## Introduction
 
