@@ -19,7 +19,7 @@ class BuildFile {
 
     __New(app, config, launcherDir, key, extension, filePath := "", autoBuild := true) {
         this.app := app
-        this.appDir := app.appDir
+        this.appDir := app.AppConfig.AppDir
         this.tempDir := app.tempDir . "\BuildFiles\" . key
         this.config := config
         this.launcherDir := launcherDir

@@ -1,7 +1,7 @@
 ﻿class MainWindow {
     Show() {
-        global app
-        static ChkIndividualDirs, ChkCopyAssets, TxtLauncherFile, TxtLauncherDir, ChkCreateIndividualDirs, TxtAssetsDir, ChkCopyToLauncher
+        ;global app
+        global app, ChkIndividualDirs, ChkCopyAssets, TxtLauncherFile, TxtLauncherDir, ChkCreateIndividualDirs, TxtAssetsDir, ChkCopyToLauncher
 
         individualDirsChecked := app.AppConfig.IndividualDirs
         copyAssetsChecked := app.AppConfig.CopyAssets
@@ -27,7 +27,7 @@
         Gui Add, GroupBox, x10 y195 w330 h70, Launcher Dir
         Gui Add, Text, x20 y210 w25 h20 +0x200, Path:
         Gui Add, Text, vTxtLauncherDir x50 y210 w280 h20 +0x200, % app.AppConfig.LauncherDir
-        Gui Add, CheckBox, gIndividualDirs vChkIndividualDirs checked%individualDirsChecked% x20 y235 w120 h20, Create individual dirs
+        Gui Add, CheckBox, gIndividualDirs vChkIndividualDirs checked%individualDirsChecked% x20 y235 w120 h20, Individual dirs
         Gui Add, Button, gOpenLauncherDir x165 y235 w80 h20, Open
         Gui Add, Button, gChangeLauncherDir x250 y235 w80 h20, Change
 
@@ -88,7 +88,7 @@
         ChangeLauncherFile:
         {
             app.ChangeLauncherFile()
-            GuiControl, Text, TxtLauncherFile, % app.AppConfig.LauncherFile
+            GuiControl, LauncherGen:Text, TxtLauncherFile, % app.AppConfig.LauncherFile
             Return
         }
 
@@ -108,7 +108,7 @@
         ChangeLauncherDir:
         {
             app.ChangeLauncherDir()
-            GuiControl, Text, TxtLauncherDir, % app.AppConfig.LauncherDir
+            GuiControl, LauncherGen:Text, TxtLauncherDir, % app.AppConfig.LauncherDir
             Return
         }
 
@@ -128,7 +128,7 @@
         ChangeAssetsDir:
         {
             app.ChangeAssetsDir()
-            GuiControl, Text, TxtAssetsDir, % app.AppConfig.AssetsDir
+            GuiControl, LauncherGen:Text, TxtAssetsDir, % app.AppConfig.AssetsDir
             Return
         }
 

@@ -1,4 +1,5 @@
-﻿class LauncherGame {
+﻿; @todo Decide if I still need this
+class LauncherGame {
     app := {}
     config := {}
     launcherDir := ""

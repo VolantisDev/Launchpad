@@ -2,6 +2,8 @@
     primaryConfigKey := "Games"
     defaultReferenceKey := "launcherType"
 
+    gameDefaults := {}
+
     Games[] {
         get {
             if (this.config.Games) {
@@ -15,8 +17,16 @@
         }
     }
 
+    __New(app, configPath := "", autoLoad := true) {
+        this.gameDefaults.requiresShortcutFile := false
+        base.__New(app, configPath,  autoLoad)
+    }
+
     LoadDefaultItemFromSource(key, configItem) {
-        defaults := {}
+        defaults := this.gameDefaults
+
+        ; Set some initial defaults
+        defaults["assetsDir"] := this.app.AppConfig.AssetsDir . "\" . key
         
         apiGameInstance := new ApiGame(this.app, key)
 
@@ -25,7 +35,7 @@
             
             ; Merge defaults from API game data
             if (apiGameData.HasKey("defaults")) {
-                defaults := this.MergeData(apiGameData.defaults, defaults)
+                defaults := this.MergeData(defaults, apiGameData.defaults)
             }
 
             launcherType := configItem.HasKey("launcherType") ? configItem.launcherType : "default"
@@ -45,13 +55,15 @@
             if (apilauncherTypeInstance.Exists()) {
                 apiLauncherTypeData := apiLauncherTypeInstance.Read()
 
+                defaults["launcherClass"] := apiLauncherTypeData.class
+
                 if (apiLauncherTypeData.HasKey("defaults")) {
                     defaults := this.MergeData(apiLauncherTypeData.defaults, defaults)
                 }
             }
             
             ; Determine game type
-            gameType := ""
+            gameType := "default"
             if (configItem.hasKey("gameType")) {
                 gameType := configItem.gameType
             } else if (defaults.HasKey("gameType")) {
@@ -64,6 +76,8 @@
                 
                 if (apiGameTypeInstance.Exists()) {
                     apiGameTypeData := apiGameTypeInstance.Read()
+
+                    defaults["gameClass"] := apiGameTypeData.class
                     
                     if (apiGameTypeData.HasKey("defaults")) {
                         defaults := this.MergeData(apiGameTypeData.defaults, defaults)

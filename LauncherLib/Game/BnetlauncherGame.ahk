@@ -1,5 +1,5 @@
 ﻿class BnetlauncherGame extends Game {
     RunGame() {
-        RunWait, % this.launcherGenDir . "\Vendor\Bnetlauncher\bnetlauncher.exe " . this.gameId
+        RunWait, % this.appDir . "\Vendor\bnetlauncher\bnetlauncher.exe " . this.gameId
     }
 }

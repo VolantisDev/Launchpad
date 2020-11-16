@@ -10,18 +10,26 @@ class Builder {
     }
 
     Build() {
-        gameConfigObj := new this.config.launcherClass (this.app, this.key, this.config)
-        launcherDir := gameConfig.launcherDir
+        launcherDir := this.app.AppConfig.LauncherDir
 
-        FileCreateDir, %launcherDir%
-
-        new IconFile(this.app, gameConfigObj, launcherDir, this.key, "", true, gameConfigObj.GameIcon)
-        
-        if (gameConfigObj.RequiresShortcutFile) {
-            new ShortcutFile(this.app, gameConfigObj, launcherDir, this.key, "", true, gameConfigObj.Shortcut)
+        if (this.app.AppConfig.IndividualDirs) {
+            launcherDir .= "\" . this.key
         }
 
-        new GameAhkFile(this.app, gameConfigObj, launcherDir, this.key)
-        new GameExeFile(this.app, gameConfigObj, launcherDir, this.key)
+        assetsDir := this.app.AppConfig.AssetsDir . "\" . this.key
+
+        FileCreateDir, %launcherDir%
+        FileCreateDir, %assetsDir%
+
+        new IconFile(this.app, this.config, assetsDir, this.key)
+        
+        if (this.config.requiresShortcutFile) {
+            new ShortcutFile(this.app, this.config, assetsDir, this.key)
+        }
+
+        new GameAhkFile(this.app, this.config, launcherDir, this.key)
+        new GameExeFile(this.app, this.config, launcherDir, this.key)
+
+        return true
     }
 }

@@ -4,29 +4,11 @@ class GameExeFile extends ComposableBuildFile {
     }
 
     ComposeFile() {
-        SplitPath, % this.FilePath,,dir,,nameNoExt
+        assetsDir := this.app.AppConfig.AssetsDir . "\" . this.key
 
-        exeBase := dir
-
-        if (this.app.AppConfig.IndividualDirs) {
-            exeBase := exeBase . "\" . nameNoExt
-        }
-
-        assetsDir := this.app.AppConfig.AssetsDir
-
-        if (assetsDir != "") {
-            base := assetsDir  . "\" . nameNoExt
-        } else {
-            base := dir
-
-            if (this.app.AppConfig.IndividualDirs) {
-                base := base . "\" . nameNoExt
-            }
-        }
-
-        exePath := exeBase . ".exe"
-        iconPath := base . ".ico"
-        ahkPath := base . ".ahk"
+        exePath := this.FilePath
+        iconPath := assetsDir . "\" . this.key . ".ico"
+        ahkPath := this.launcherDir . "\" . this.key . ".ahk"
         
         ahk2ExePath := this.app.AppConfig.AppDir . "\Vendor\AutoHotKey\Compiler\Ahk2Exe.exe"
         

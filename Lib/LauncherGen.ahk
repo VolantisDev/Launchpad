@@ -114,9 +114,8 @@
             }
         }
 
-        MsgBox, Built %built% launchers.
         Progress, Off
-        ExitApp, 0
+        MsgBox, Built %built% launchers.
     }
 
     GetLauncherFile(key, ext := ".exe") {
@@ -126,7 +125,7 @@
             gameDir .= "\" . key
         }
 
-        return := gameDir . "\" . key . ext
+        return gameDir . "\" . key . ext
     }
 
     LauncherExists(key, config) {
@@ -134,15 +133,7 @@
             return false
         }
 
-        return FileExist(this.GetLauncherFile(key, ".ahk"))
-    }
-
-    LauncherIsBuilt(key, config) {
-        if (!this.LauncherExists(key, config)) {
-            return false
-        }
-
-        return FileExist(this.GetLauncherFile(key))
+        return FileExist(this.GetLauncherFile(key)) != ""
     }
 
     BuildLauncher(key, config) {

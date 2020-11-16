@@ -7,7 +7,11 @@ class Launcher {
     options := {}
     launcherExe := ""
     
-    __New(appDir, key, launcherType, game, options := {}) {
+    __New(appDir, key, launcherType, game, options := "") {
+        if (options == "") {
+            options := {}
+        }
+        
         this.appDir := appDir
         this.key := key
         this.name := launcherType.hasKey("name") ? launcherType.name : "Game Launcher"

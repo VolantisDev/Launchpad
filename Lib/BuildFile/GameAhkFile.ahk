@@ -9,13 +9,9 @@ class GameAhkFile extends ComposableBuildFile {
         FileAppend, % "SendMode Input`n", % this.FilePath
         FileAppend, % "SetWorkingDir %A_ScriptDir%`n`n", % this.FilePath
         FileAppend, % "#Include " . this.appDir . "\LauncherLib\Includes.ahk`n", % this.FilePath
-        FileAppend, % "gameType := " . this.ConvertObjectToCode(this.config.gameTypeConfig) . "`n", % this.FilePath
-        FileAppend, % "gameObj := new " . this.config.gameClass . "(gameType, """ . this.appDir . """, """ . this.config.GameId . """)`n", % this.FilePath
-        FileAppend, % "gameObj.shortcut := """ . this.config.Shortcut . """`n", % this.FilePath
-        FileAppend, % "gameObj.workingDir := """ . this.config.WorkingDir . """`n", % this.FilePath
-        FileAppend, % "gameObj.useClass := " . (this.config.UseClass ? "true" : "false") . "`n`n", % this.FilePath
-        FileAppend, % "launcherType := " . this.ConvertObjectToCode(this.config.launcherConfig) . "`n", % this.FilePath
-        FileAppend, % "launcherObj := new " . this.config.launcherClass . "(launcherType, gameObj)`n", % this.FilePath
+        FileAppend, % "config := " . this.ConvertObjectToCode(this.config) . "`n", % this.FilePath
+        FileAppend, % "gameObj := new " . this.config.gameClass . "(""" . this.appDir . """, """ . this.key . """, """ . this.config.gameType . """, config)`n", % this.FilePath
+        FileAppend, % "launcherObj := new " . this.config.launcherClass . "(""" . this.appDir . """, """ . this.key . """, """ . this.config.launcherType . """, gameObj, config)`n", % this.FilePath
         FileAppend, % "launcherObj.LaunchGame()`n", % this.FilePath
     }
 

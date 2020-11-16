@@ -1,4 +1,5 @@
-﻿class GameConfig extends ConfigBase {
+﻿; @todo Decide if I still need this
+class GameConfig extends ConfigBase {
     keyValue := ""
     nameValue := ""
     gameClassValue := ""

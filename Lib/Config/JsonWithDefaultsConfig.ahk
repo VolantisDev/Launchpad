@@ -24,7 +24,7 @@ class JsonWithDefaultsConfig extends JsonConfig {
             Progress, %count%,% "Loading data for " . key . "...", Please wait while launcher data is loaded from configured sources., Loading Config
 
             configItem := this.Dereference(key, configItem)
-            this.config[key] := this.MergeDefaults(key, configItem)
+            this.config[this.primaryConfigKey][key] := this.MergeDefaults(key, configItem)
         }
 
         Progress, Off

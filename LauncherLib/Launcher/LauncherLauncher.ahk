@@ -1,7 +1,11 @@
 class LauncherLauncher extends Launcher {
     launcherExe := ""
 
-    __New(appDir, key, launcherType, game, options := {}) {
+    __New(appDir, key, launcherType, game, options := "") {
+        if (options == "") {
+            options := {}
+        }
+        
         this.launcherExe := launcherType.hasKey("exe") ? launcherType.exe : ""
 
         if (!options.hasKey("waitAfterClose")) {
