@@ -17,7 +17,7 @@ class BuildFile {
         }
     }
 
-    __New(app, config, launcherDir, key, extension, filePath := "", autoBuild := true) {
+    __New(app, config, launcherDir, key, extension, filePath := "") {
         this.app := app
         this.appDir := app.AppConfig.AppDir
         this.tempDir := app.tempDir . "\BuildFiles\" . key
@@ -30,16 +30,14 @@ class BuildFile {
         if (this.FilePath == "") {
             this.FilePath := this.launcherDir . "\" . this.key . this.extension
         }
-
-        if (autoBuild) {
-            this.Build()
-        }
     }
 
     Build() {
+        return this.FilePath
     }
 
     Cleanup() {
+        return true
     }
 
     Delete() {

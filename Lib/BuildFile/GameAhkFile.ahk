@@ -1,6 +1,6 @@
 class GameAhkFile extends ComposableBuildFile {
-    __New(app, config, launcherDir, key, filePath := "", autoBuild := true) {
-        base.__New(app, config, launcherDir, key, ".ahk", filePath, autoBuild)
+    __New(app, config, launcherDir, key, filePath := "") {
+        base.__New(app, config, launcherDir, key, ".ahk", filePath)
     }
 
     ComposeFile() {
@@ -13,6 +13,8 @@ class GameAhkFile extends ComposableBuildFile {
         FileAppend, % "gameObj := new " . this.config.gameClass . "(""" . this.appDir . """, """ . this.key . """, """ . this.config.gameType . """, config)`n", % this.FilePath
         FileAppend, % "launcherObj := new " . this.config.launcherClass . "(""" . this.appDir . """, """ . this.key . """, """ . this.config.launcherType . """, gameObj, config)`n", % this.FilePath
         FileAppend, % "launcherObj.LaunchGame()`n", % this.FilePath
+
+        return this.FilePath
     }
 
     ConvertObjectToCode(typeConfig) {

@@ -11,25 +11,44 @@ class Builder {
 
     Build() {
         launcherDir := this.app.AppConfig.LauncherDir
+        assetsDir := this.app.AppConfig.AssetsDir
+
+        if (launcherDir == "" or assetsDir == "") {
+            MsgBox, Required directories not set in configuration. Skipping.
+            return false
+        }
 
         if (this.app.AppConfig.IndividualDirs) {
             launcherDir .= "\" . this.key
         }
-
-        assetsDir := this.app.AppConfig.AssetsDir . "\" . this.key
+        assetsDir .= "\" . this.key
 
         FileCreateDir, %launcherDir%
         FileCreateDir, %assetsDir%
 
-        new IconFile(this.app, this.config, assetsDir, this.key)
+        iconObj := new IconFile(this.app, this.config, assetsDir, this.key)
+        iconResult := iconObj.Build()
         
+        shortcutResult := !this.config.requiresShortcutFile ; Default to true if shortcut isn't required
         if (this.config.requiresShortcutFile) {
-            new ShortcutFile(this.app, this.config, assetsDir, this.key)
+            shortcutObj := new ShortcutFile(this.app, this.config, assetsDir, this.key)
+            shortcutResult := shortcutObj.Build()
         }
 
-        new GameAhkFile(this.app, this.config, launcherDir, this.key)
-        new GameExeFile(this.app, this.config, launcherDir, this.key)
+        ahkResult := false
+        exeResult := false
 
-        return true
+        if (iconResult and shortcutResult) {
+            gameAhkObj := new GameAhkFile(this.app, this.config, assetsDir, this.key)
+            gameAhkResult := gameAhkObj.Build()
+
+            if (gameAhkResult) {
+                gameExeObj := new GameExeFile(this.app, this.config, launcherDir, this.key)
+                gameExeResult := gameExeObj.Build()
+            }
+            
+        }
+        
+        return exeResult
     }
 }

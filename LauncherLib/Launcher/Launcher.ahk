@@ -19,7 +19,7 @@ class Launcher {
         this.game := game
 
         if (!options.hasKey("runThenWait")) {
-            options.runThenWait := true
+            options.runThenWait := false
         }
 
         this.options := options

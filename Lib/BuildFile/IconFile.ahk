@@ -2,9 +2,9 @@ class IconFile extends CopyableBuildFile {
     requestMessage := "Select an icon file or an exe to extract the icon from"
     selectFilter := "Icons (*.ico; *.exe; *.ocx; *.dll; *.cpl)"
 
-    __New(app, config, launcherDir, key, filePath := "", autoBuild := true) {
+    __New(app, config, launcherDir, key, filePath := "") {
         sourcePath := config.HasKey("iconSrc") ? config.iconSrc : ""
-        base.__New(app, config, launcherDir, key, ".ico", filePath, autoBuild, sourcePath)
+        base.__New(app, config, launcherDir, key, ".ico", filePath, sourcePath)
     }
 
     Cleanup() {
@@ -12,6 +12,8 @@ class IconFile extends CopyableBuildFile {
 
         iconsDir := this.tempDir . "\icons"
         FileRemoveDir, %iconsDir%, true
+
+        return true
     }
 
     Locate() {
@@ -21,7 +23,11 @@ class IconFile extends CopyableBuildFile {
             SplitPath, path,,, fileExt
 
             if (fileExt != "ico") {
-                path := this.ExtractGameIcon(path)
+                path := this.ExtractIcon(path)
+
+                if (path == "") {
+                    this.Locate()
+                }
             }
         }
 
@@ -30,12 +36,14 @@ class IconFile extends CopyableBuildFile {
 
     ExtractIcon(path) {
         iconsDir := this.tempDir . "\icons"
-        iconsCount := 0
+        
         iconFilePath := ""
+        iconsExtPath := this.appDir . "\Vendor\IconsExt\iconsext.exe"
         
         FileCreateDir, %iconsDir%
-        RunWait, %appDir%\Vendor\IconsExt\iconsext.exe /save "%path%" "%iconsDir%" -icons,, Hide
+        RunWait, %iconsExtPath% /save "%path%" "%iconsDir%" -icons,, Hide
 
+        iconsCount := 0
         glob := iconsDir . "\*.ico"
         Loop, %glob% {
             iconsCount := A_Index
@@ -43,23 +51,25 @@ class IconFile extends CopyableBuildFile {
         }
 
         if (iconsCount == 0) {
-            MsgBox, No icons count be extracted from %exeFile%.
-            this.Cleanup()
-            ExitApp, -1
-        }
-
-        if (iconsCount > 1) {
+            MsgBox, No icons could be extracted from %exeFile%. Please try another file.
             iconFilePath := ""
-            FileSelectFile, iconFilePath,, %iconsDir%, Select the correct icon from the extracted files, Icons (*.ico)
+            this.Cleanup()
+        } else {
+            if (iconsCount > 1) {
+                iconFilePath := ""
+                FileSelectFile, iconFilePath,, %iconsDir%, Select the correct icon from the extracted files, Icons (*.ico)
 
-            if (iconFilePath == "") {
-                MsgBox, "Canceled icon selection."
-                this.Cleanup()
-                ExitApp, -1
+                if (iconFilePath == "") {
+                    MsgBox, "Canceled icon selection. Please try again."
+                    this.Cleanup()
+                }
             }
         }
 
-        this.sourcePath := iconFilePath
-        return this.sourcePath
+        if (iconFilePath != "") {
+            this.sourcePath := iconFilePath
+        }
+
+        return iconFilePath
     }
 }

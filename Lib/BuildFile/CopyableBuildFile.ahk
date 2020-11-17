@@ -30,22 +30,24 @@ class CopyableBuildFile extends BuildFile {
         }
     }
 
-    __New(app, config, launcherDir, key, extension, filePath := "", autoBuild := true, sourcePath := "") {
+    __New(app, config, launcherDir, key, extension, filePath := "", sourcePath := "") {
         this.sourcePathValue := sourcePath
-        base.__New(app, config, launcherDir, key, extension, filePath, autoBuild)
+        base.__New(app, config, launcherDir, key, extension, filePath)
     }
 
     Build() {
         base.Build()
-
         path := this.Locate()
+        result := path
 
         if (path != "" && path != this.FilePath) {
             this.SourcePath := path
-            this.Copy()
+            result := this.Copy()
         }
 
         this.Cleanup()
+
+        return result
     }
 
     Locate() {
@@ -66,16 +68,21 @@ class CopyableBuildFile extends BuildFile {
         FileSelectFile, file, 1,, % this.key . ": " . this.RequestMessage, % this.SelectFilter
         
         if (file == "") {
-            MsgBox, "No file selected."
-            ExitApp, -1
+            MsgBox, "No file selected. Skipping build file. This might cause the entire launcher to be skipped."
         }
 
         return file
     }
 
     Copy() {
-        if (this.FilePath != "" and this.SourcePath != "" and this.SourcePath != this.FilePath) {
+        if (this.FilePath == "" || this.SourcePath == "") {
+            return false
+        }
+
+        if (this.SourcePath != this.FilePath) {
             FileCopy, % this.SourcePath, % this.FilePath, true
         }
+
+        return this.FilePath
     }
 }
