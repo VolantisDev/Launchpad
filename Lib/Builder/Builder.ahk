@@ -14,7 +14,7 @@ class Builder {
         assetsDir := this.app.AppConfig.AssetsDir
 
         if (launcherDir == "" or assetsDir == "") {
-            MsgBox, Required directories not set in configuration. Skipping.
+            this.app.Toast(this.key . ": Required directories not set. Skipping build.", "LauncherGen", 10, 2)
             return false
         }
 
@@ -40,11 +40,11 @@ class Builder {
 
         if (iconResult and shortcutResult) {
             gameAhkObj := new GameAhkFile(this.app, this.config, assetsDir, this.key)
-            gameAhkResult := gameAhkObj.Build()
+            ahkResult := gameAhkObj.Build()
 
-            if (gameAhkResult) {
+            if (ahkResult) {
                 gameExeObj := new GameExeFile(this.app, this.config, launcherDir, this.key)
-                gameExeResult := gameExeObj.Build()
+                exeResult := gameExeObj.Build()
             }
             
         }

@@ -12,15 +12,15 @@
 
         Gui Add, GroupBox, x10 y10 w330 h105, Launchers
 
-        Gui Add, Button, gBuildAll x20 y30 w150 h40, Build All
-        Gui Add, Button, gBuildMissing x180 y30 w150 h40, Build Missing
+        Gui Add, Button, gBuildAll x20 y30 w150 h40, Build &All
+        Gui Add, Button, gBuildMissing x180 y30 w150 h40, Build &Missing
         Gui Add, Button, gManageLaunchers x20 y80 w150 h25 +Disabled, Manage Launchers
         Gui Add, Button, gRemoveBuilt x180 y80 w150 h25 +Disabled, Remove Built
 
         Gui Add, GroupBox, x10 y120 w330 h70, Launcher File
         Gui Add, Text, x20 y135 w25 h20 +0x200, Path:
         Gui Add, Text, vTxtLauncherFile x50 y135 w280 h20 +0x200, % app.AppConfig.LauncherFile
-        Gui Add, Button, gReloadLauncherFile x20 y160 w80 h20, Reload
+        Gui Add, Button, gReloadLauncherFile x20 y160 w80 h20, &Reload
         Gui Add, Button, gOpenLauncherFile x165 y160 w80 h20, Open
         Gui Add, Button, gChangeLauncherFile x250 y160 w80 h20, Change
 
@@ -38,10 +38,14 @@
         Gui Add, Button, gOpenAssetsDir x165 y310 w80 h20, Open
         Gui Add, Button, gChangeAssetsDir x250 y310 w80 h20, Change
 
-        Gui Add, Button, gUpdateDependencies x10 y345 w160 h30, &Update Dependencies
-        Gui Add, Button, gGuiClose x180 y345 w160 h30, &Exit
+        Gui Add, GroupBox, x10 y345 w330 h55, Tools
+        Gui Add, Button, gUpdateDependencies x20 y360 w150 h30, &Update Dependencies
+        Gui Add, Button, gFlushCache x180 y360 w150 h30, &Flush Cache
 
-        Gui Show, w350 h385
+        Gui Add, Button, gGuiClose x10 y405 w160 h30, &Exit
+        Gui Add, Button, gCleanAndExit x180 y405 w160 h30, &Cleanup && Exit
+
+        Gui Show, w350 h445
         Return
 
         GuiEscape:
@@ -69,7 +73,7 @@
 
         RemoveBuilt:
         {
-            app.RemoveBuiltLaunchers()
+            app.Cleanup()
             Return
         }
 
@@ -136,6 +140,19 @@
         {
             app.UpdateDependencies(true)
             Return
+        }
+
+        FlushCache:
+        {
+            app.FlushCache()
+            Return
+        }
+
+        CleanAndExit:
+        {
+            app.FlushCache()
+            app.Cleanup()
+            ExitApp
         }
     }
 }

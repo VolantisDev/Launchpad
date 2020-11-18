@@ -8,7 +8,7 @@ class JsonConfig extends FileConfig {
 
     LoadConfig() {
         if (this.ConfigPath == "") {
-            MsgBox, Config file path not provided.
+            this.app.Toast("Config file path not provided.", "LauncherGen", 10, 3)
             return this
         }
 
@@ -29,7 +29,7 @@ class JsonConfig extends FileConfig {
         }
 
         if (this.ConfigPath == "") {
-            MsgBox, Config file path not provided.
+            this.app.Toast("Config file path not provided.", "LauncherGen", 10, 3)
             return this
         }
 

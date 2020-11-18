@@ -80,4 +80,10 @@ class ApiCache {
 
         return destination
     }
+
+    FlushCache() {
+        FileRemoveDir,% this.cachePath, true
+        FileCreateDir, % this.cachePath
+        this.app.Toast("Cleared API cache.")
+    }
 }

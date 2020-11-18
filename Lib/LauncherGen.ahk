@@ -61,6 +61,7 @@
             Progress, R0-%count% M, Initializing..., Please wait while dependencies are updated., Updating Dependencies
 
             count := 0
+            updated := 0
             for index, key in listing.items {
                 count++
                 Progress, %count%,% "Discovering " . key . "...", Please wait while dependencies are updated., Updating Dependencies
@@ -73,6 +74,7 @@
                     dependencyInstance := new %dependencyClass%(this, key, dependencyConfig)
 
                     if (dependencyInstance.NeedsUpdate(forceUpdate)) {
+                        updated++
                         if (dependencyInstance.IsInstalled()) {
                             Progress,,% "Updating " . dependencyConfig.name . "...", Please wait while dependencies are updated., Updating Dependencies
                             dependencyInstance.Update(forceUpdate)
@@ -86,6 +88,10 @@
         }
 
         Progress, Off
+
+        if (updated > 0 or forceUpdate) {
+            this.Toast("Updated " . updated . " dependencies.")
+        }
     }
 
     BuildLaunchers(updateExisting := false) {
@@ -115,7 +121,7 @@
         }
 
         Progress, Off
-        MsgBox, Built %built% launchers.
+        this.Toast("Built " . built . " launchers.")
     }
 
     GetLauncherFile(key, ext := ".exe") {
@@ -147,13 +153,8 @@
     }
 
     LaunchManageWindow() {
-        MsgBox, A launcher managment GUI is coming soon.
+        this.Toast("A launcher management GUI is coming soon.")
         ; @todo Show Launcher Manager window.
-    }
-
-    RemoveBuiltLaunchers() {
-        MsgBox, Launcher cleanup functionality is coming soon.
-        ; @todo Confirm deletion of generated launchers and then delete them.
     }
 
     ReloadLauncherFile() {
@@ -188,5 +189,18 @@
         FileSelectFolder, assetsDir,, 3, Create or select the folder to create game launcher assets within
         this.AppConfig.AssetsDir := assetsDir
         return assetsDir
+    }
+
+    Cleanup() {
+        this.Toast("Launcher cleanup functionality is coming soon.")
+        ; @todo Confirm deletion of generated launchers and then delete them.
+    }
+
+    FlushCache() {
+        return this.apiEndpoint.cache.FlushCache()
+    }
+
+    Toast(message, title := "LauncherGen", seconds := 10, options := 17) {
+        TrayTip, %title%, %message%, %seconds%, %options%
     }
 }
