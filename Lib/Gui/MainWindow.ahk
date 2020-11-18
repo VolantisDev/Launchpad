@@ -14,8 +14,8 @@
 
         Gui Add, Button, gBuildAll x20 y30 w150 h40, Build &All
         Gui Add, Button, gBuildMissing x180 y30 w150 h40, Build &Missing
-        Gui Add, Button, gManageLaunchers x20 y80 w150 h25 +Disabled, Manage Launchers
-        Gui Add, Button, gRemoveBuilt x180 y80 w150 h25 +Disabled, Remove Built
+        Gui Add, Button, gManageLaunchers x20 y80 w150 h25, Manage &Launchers
+        Gui Add, Button, gRemoveBuilt x180 y80 w150 h25, &Clean Launchers
 
         Gui Add, GroupBox, x10 y120 w330 h70, Launcher File
         Gui Add, Text, x20 y135 w25 h20 +0x200, Path:
@@ -42,8 +42,8 @@
         Gui Add, Button, gUpdateDependencies x20 y360 w150 h30, &Update Dependencies
         Gui Add, Button, gFlushCache x180 y360 w150 h30, &Flush Cache
 
-        Gui Add, Button, gGuiClose x10 y405 w160 h30, &Exit
-        Gui Add, Button, gCleanAndExit x180 y405 w160 h30, &Cleanup && Exit
+        Gui Add, Button, gCleanAndExit x10 y405 w160 h30, Cleanup && E&xit
+        Gui Add, Button, gGuiClose x180 y405 w160 h30, &Exit
 
         Gui Show, w350 h445
         Return

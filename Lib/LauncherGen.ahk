@@ -192,8 +192,32 @@
     }
 
     Cleanup() {
-        this.Toast("Launcher cleanup functionality is coming soon.")
-        ; @todo Confirm deletion of generated launchers and then delete them.
+        Progress, Off
+        Progress, M, Initializing..., Please wait while your launchers are cleaned., Cleaning Launchers
+
+        count := 0
+        for key, value in this.Launchers.Games
+            count++
+        Progress, R0-%count% M, Initializing..., Please wait while your launchers are cleaned., Cleaning Launchers
+
+        cleaned := 0
+        count := 0
+        For key, config in this.Launchers.Games {
+            count++
+            Progress, %count%,% "Cleaning " . key . "...", Please wait while your launchers are cleaned., Cleaning Launchers
+            
+            success := false
+
+            filePath := this.AppConfig.AssetsDir . "\" . key . "\" . key . ".ahk"
+
+            if (FileExist(filePath)) {
+                FileDelete, %filePath%
+                cleaned++
+            }
+        }
+
+        Progress, Off
+        this.Toast("Cleaned " . cleaned . " launchers.")
     }
 
     FlushCache() {
