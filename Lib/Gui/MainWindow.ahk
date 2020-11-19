@@ -26,7 +26,7 @@
         buttonWidth := this.ButtonWidth(2, areaW)
         buttonHeight := 80
         posX := areaX
-        Gui Add, Button, gMainWindowManageLaunchers x%posX% y%posY% w%buttonWidth% h%buttonHeight%, &Manage Launchers
+        Gui Add, Button, gMainWindowManageLaunchers x%posX% y%posY% w%buttonWidth% h%buttonHeight% Disabled, &Manage Launchers
         posX += buttonWidth + margin
         Gui Add, Button, gMainWindowBuild x%posX% y%posY% w%buttonWidth% h%buttonHeight%, &Build Launchers
         posY += buttonHeight + margin
