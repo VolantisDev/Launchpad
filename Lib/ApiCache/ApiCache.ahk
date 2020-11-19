@@ -1,6 +1,6 @@
 class ApiCache {
     app := {}
-    cachePath := A_Temp . "\LauncherGen\API"
+    cachePath := A_Temp . "\Launchpad\API"
 
     __New(app, cachePath := "") {
         this.app := app

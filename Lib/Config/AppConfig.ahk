@@ -12,13 +12,13 @@
 
     LauncherDir[] {
         get {
-            launcherDirValue := this.GetIniValue("LauncherDir")
+            returnVal := this.GetIniValue("LauncherDir")
 
-            if (launcherDirValue == "") {
-                launcherDirValue := this.app.ChangeLauncherDir()
+            if (returnVal == "") {
+                returnVal := this.app.ChangeLauncherDir()
             }
 
-            return launcherDirValue
+            return returnVal
         }
         set {
             return this.SetIniValue("LauncherDir", value)
@@ -27,13 +27,13 @@
 
     LauncherFile[] {
         get {
-            launcherFileValue := this.GetIniValue("LauncherFile")
+            returnVal := this.GetIniValue("LauncherFile")
 
-            if (launcherFileValue == "") {
-                launcherFileValue := this.app.ChangeLauncherFile()
+            if (returnVal == "") {
+                returnVal := this.app.ChangeLauncherFile()
             }
             
-            return launcherFileValue
+            return returnVal
         }
         set {
             return this.SetIniValue("LauncherFile", value)
@@ -42,28 +42,58 @@
 
     AssetsDir[] {
         get {
-            assetsDirValue := this.GetIniValue("AssetsDir")
+            returnVal := this.GetIniValue("AssetsDir")
 
-            if (assetsDirValue == "") {
-                assetsDirValue := this.LauncherDir
+            if (returnVal == "") {
+                returnVal := this.LauncherDir
             }
             
-            return assetsDirValue
+            return returnVal
         }
         set {
             return this.SetIniValue("AssetsDir", value)
         }
     }
 
-    IndividualDirs[] {
+    CacheDir[] {
         get {
-            individualDirsValue := this.GetIniValue("IndividualDirs")
+            returnVal := this.GetIniValue("CacheDir")
 
-            if (individualDirsValue == "") {
-                individualDirsValue := false
+            if (returnVal == "") {
+                returnVal := A_Temp . "\Launchpad"
+            }
+            
+            return returnVal
+        }
+        set {
+            return this.SetIniValue("CacheDir", value)
+        }
+    }
+
+    UpdateExistingLaunchers[] {
+        get {
+            returnVal := this.GetIniValue("UpdateExistingLaunchers")
+
+            if (returnVal == "") {
+                returnVal := true
             }
 
-            return individualDirsValue
+            return returnVal
+        }
+        set {
+            return this.SetIniValue("UpdateExistingLaunchers", value)
+        }
+    }
+
+    IndividualDirs[] {
+        get {
+            returnVal := this.GetIniValue("IndividualDirs")
+
+            if (returnVal == "") {
+                returnVal := false
+            }
+
+            return returnVal
         }
         set {
             return this.SetIniValue("IndividualDirs", value)
@@ -72,16 +102,76 @@
 
     CopyAssets[] {
         get {
-            copyAssetsValue := this.GetIniValue("CopyAssets")
+            returnVal := this.GetIniValue("CopyAssets")
 
-            if (copyAssetsValue == "") {
-                copyAssetsValue := false
+            if (returnVal == "") {
+                returnVal := false
             }
 
-            return copyAssetsValue
+            return returnVal
         }
         set {
             return this.SetIniValue("CopyAssets", value)
+        }
+    }
+
+    CleanLaunchersOnBuild[] {
+        get {
+            returnVal := this.GetIniValue("CleanLaunchersOnBuild")
+
+            if (returnVal == "") {
+                returnVal := true
+            }
+
+            return returnVal
+        }
+        set {
+            return this.SetIniValue("CleanLaunchersOnBuild", value)
+        }
+    }
+
+    CleanLaunchersOnExit[] {
+        get {
+            returnVal := this.GetIniValue("CleanLaunchersOnExit")
+
+            if (returnVal == "") {
+                returnVal := false
+            }
+
+            return returnVal
+        }
+        set {
+            return this.SetIniValue("CleanLaunchersOnExit", value)
+        }
+    }
+
+    FlushCacheOnExit[] {
+        get {
+            returnVal := this.GetIniValue("FlushCacheOnExit")
+
+            if (returnVal == "") {
+                returnVal := false
+            }
+
+            return returnVal
+        }
+        set {
+            return this.SetIniValue("FlushCacheOnExit", value)
+        }
+    }
+
+    ApiEndpoint[] {
+        get {
+            returnVal := this.GetIniValue("ApiEndpoint")
+
+            if (returnVal == "") {
+                returnVal := "https://benmcclure.com/launcher-db"
+            }
+
+            return returnVal
+        }
+        set {
+            return this.SetIniValue("ApiEndpoint", value)
         }
     }
 }

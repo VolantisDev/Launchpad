@@ -1,21 +1,21 @@
-# LauncherGen
+# Launchpad
 
 Create beautifully-simple .exe files to launch any game seamlessly though Steam and other platforms.
 
 ## Latest News
 
-I have completely rewritten LauncherGen in the current codebase. This version is highly experimental and likely will not work for you yet.
+I have completely rewritten Launchpad in the current codebase. This version is highly experimental and likely will not work for you yet.
 
 Once fully released, the new version contains many enhancements, such as:
 
-- A LauncherGen GUI. You can now configure LauncherGen and access all of its functionality from a single window.
+- A Launchpad GUI. You can now configure Launchpad and access all of its functionality from a single window.
 - An online API for getting the latest game and launcher data, as well as build dependencies (https://benmcclure.com/game-launcher-db/). You may contribute your own data to the API now: https://github.com/bmcclure/game-launcher-db
-- Open your Launchers.json file in your associated .json editor with a single click, and reload its contents without having to quit LauncherGen.
+- Open your Launchers.json file in your associated .json editor with a single click, and reload its contents without having to quit Launchpad.
 - Open your launchers folder or your game assets folder easily from within the app
 - Separate the game assets dir (icons, shortcut files, etc) from the launcher files if desired (or continue mixing the assets in)
 - Optionally copy the game assets into the launcher directory if you've chosen to store them separately
 - Keep all launcher .exes in a single directory if desired (or continue using one directory per game)
-- Update LauncherGen's dependency files anytime via a click of a button
+- Update Launchpad's dependency files anytime via a click of a button
 
 
 Things that won't yet be in this release, but I am working on for a future release:
@@ -36,7 +36,7 @@ Non-Steam games have some issues on Steam:
 - Changing a game's icon in Steam adds an ugly shortcut arrow to the game.
 - It's hard to remember when to close or open external launchers to make them compatible with Steam.
 
-LauncherGen was created to solve all of these issues, and give you a simple way to create a lightweight .exe 
+Launchpad was created to solve all of these issues, and give you a simple way to create a lightweight .exe 
 file for any game that makes it compatible with Steam.
 
 Out of the box, it has support for the following:
@@ -59,7 +59,7 @@ I've included my own Launchers.json file in the application as Launchers.json.sa
 template and copying any entries you want directly into your own file. You can see how easy it is to add your 
 own entries to the file, as well.
 
-Once Launchers.json is in place, you're ready to roll. Just run LauncherGen.exe and answer some basic questions,
+Once Launchers.json is in place, you're ready to roll. Just run Launchpad.exe and answer some basic questions,
 such as:
 - The location of your Launchers.json file
 - The location of the folder you wish to create your new game launchers within
@@ -78,20 +78,20 @@ Steam overlay within your games.
 You can also add these .exe files to any other game platform or launcher you wish, as there is nothing
 Steam-specific about them.
 
-Some of the generated .exe files may depend on vendor files within the main LauncherGen directory), but you can
+Some of the generated .exe files may depend on vendor files within the main Launchpad directory), but you can
 copy the .exe file anywhere on your system that you would like without having to copy any other dependencies 
 around.
 
 ## Credits
 
-LauncherGen was conceived and developed by Ben McClure <ben.mcclure@gmail.com> using AutoHotKey.
+Launchpad was conceived and developed by Ben McClure <ben.mcclure@gmail.com> using AutoHotKey.
 
-LauncherGen automatically downloads the following dependencies:
+Launchpad automatically downloads the following dependencies:
 - [AutoHotKey](https://www.autohotkey.com/)
 - [Bnetlauncher](https://github.com/dafzor/bnetlauncher)
 - [IconsExt](https://www.nirsoft.net/utils/iconsext.html)
 
-These dependencies each use different licensing from LauncherGen, and so LauncherGen doesn't include them in your initial download. They are added later, and you are free to put your own versions of the dependencies there as well.
+These dependencies each use different licensing from Launchpad, and so Launchpad doesn't include them in your initial download. They are added later, and you are free to put your own versions of the dependencies there as well.
 
 ## Contributing
 
@@ -100,3 +100,7 @@ You can build your own GameLauncher and Game derivative classes and place them w
 If you wish to go further, you can download the source code and directly modify or extend the other .ahk files that make up the application.
 
 I would greatly appreciate if you would submit a Pull Request to contribute back any useful additions you make.
+
+## Attribution
+
+Icons made by <a href="https://www.flaticon.com/free-icon/rec_1783406" title="iconixar">iconixar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>

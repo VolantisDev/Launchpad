@@ -2,10 +2,19 @@
 class JsonWithDefaultsConfig extends JsonConfig {
     defaults := {}
     defaultReferenceKey := "defaults"
+    autoMerge := true
+
+    __New(app, configPath := "", autoLoad := true, autoMerge := true) {
+        this.autoMerge := autoMerge
+        base.__New(app, configPath, autoLoad)
+    }
 
     LoadConfig() {
         base.LoadConfig()
-        this.MergeConfig()
+
+        if (this.autoMerge) {
+            this.MergeConfig()
+        }
     }
 
     MergeConfig() {

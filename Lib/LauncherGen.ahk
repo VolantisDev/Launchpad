@@ -1,7 +1,7 @@
-﻿class LauncherGen {
+﻿class Launchpad {
     appName := ""
     appDir := ""
-    tempDir := A_Temp . "\LauncherGen"
+    tempDir := A_Temp . "\Launchpad"
     appConfigObj := {}
     apiEndpointObj := {}
     launchersObj := {}
@@ -36,13 +36,16 @@
     __New(appName, appDir, cachePath := "") {
         this.appName := appName
         this.appDir := appDir
+        
+        this.appConfigObj := new AppConfig(this)
+
+        this.tempDir := this.appConfigObj.CacheDir
 
         if (cachePath == "") {
             cachePath := this.tempDir . "\API"
         }
-        
-        this.apiEndpointObj := new ApiEndpoint(this, new ApiCache(this, cachePath))
-        this.appConfigObj := new AppConfig(this)
+
+        this.apiEndpointObj := new ApiEndpoint(this, this.appConfigObj.ApiEndpoint, new ApiCache(this, cachePath))
         this.launchersObj := new LauncherConfig(this, this.appConfigObj.LauncherFile, true)
     }
 
@@ -51,6 +54,7 @@
         Progress, M, Initializing..., Please wait while dependencies are updated., Updating Dependencies
 
         listingInstance := new ApiListing(this, "dependencies")
+        updated := 0
 
         if (listingInstance.Exists()) {
             listing := listingInstance.Read()
@@ -61,7 +65,6 @@
             Progress, R0-%count% M, Initializing..., Please wait while dependencies are updated., Updating Dependencies
 
             count := 0
-            updated := 0
             for index, key in listing.items {
                 count++
                 Progress, %count%,% "Discovering " . key . "...", Please wait while dependencies are updated., Updating Dependencies
@@ -148,13 +151,23 @@
     }
 
     LaunchMainWindow() {
-        window := new MainWindow(this)
+        window := new MainWindow(this, "Launchpad")
         window.Show()
     }
 
     LaunchManageWindow() {
-        this.Toast("A launcher management GUI is coming soon.")
-        ; @todo Show Launcher Manager window.
+        window := new LauncherManager(this)
+        window.Show()
+    }
+
+    LaunchToolsWindow() {
+        window := new ToolsWindow(this)
+        window.Show()
+    }
+
+    LaunchSettingsWindow() {
+        window := new SettingsWindow(this)
+        window.Show()
     }
 
     ReloadLauncherFile() {
@@ -166,8 +179,13 @@
     }
 
     ChangeLauncherFile() {
-        FileSelectFile, launcherFile, 1,, Select the Launchers file to use, JSON Documents (*.json)
-        this.AppConfig.LauncherFile := launcherFile
+        existingFile := this.AppConfig.GetIniValue("LauncherFile")
+        FileSelectFile, launcherFile, 3, %existingFile%, Select the Launchers file to use, JSON Documents (*.json)
+
+        if (launcherFile != "") {
+            this.AppConfig.LauncherFile := launcherFile
+        }
+        
         return launcherFile
     }
 
@@ -176,8 +194,13 @@
     }
 
     ChangeLauncherDir() {
-        FileSelectFolder, launcherDir,, 3, Create or select the folder to create game launchers within
-        this.AppConfig.LauncherDir := launcherDir
+        existingDir := this.AppConfig.GetIniValue("LauncherDir")
+        FileSelectFolder, launcherDir, *%existingDir%, 3, Create or select the folder to create game launchers within
+
+        if (launcherDir != "") {
+            this.AppConfig.LauncherDir := launcherDir
+        }
+        
         return launcherDir
     }
 
@@ -186,9 +209,46 @@
     }
 
     ChangeAssetsDir() {
-        FileSelectFolder, assetsDir,, 3, Create or select the folder to create game launcher assets within
-        this.AppConfig.AssetsDir := assetsDir
+        existingDir := this.AppConfig.AssetsDir
+        FileSelectFolder, assetsDir, *%existingDir%, 3, Create or select the folder to create game launcher assets within
+        
+        if (assetsDir != "") {
+            this.AppConfig.AssetsDir := assetsDir
+        }
+
         return assetsDir
+    }
+
+    ChangeCacheDir() {
+        existingDir := this.AppConfig.CacheDir
+        FileSelectFolder, cacheDir, *%existingDir%, 3, Create or select the folder to save Launchpad's cache files to
+        
+        if (cacheDir != "") {
+            this.AppConfig.CacheDir := cacheDir
+        }
+
+        return cacheDir
+    }
+
+    ChangeApiEndpoint() {
+        text := "Enter the base URL of the API endpoint you would like Launchpad to connect to.`n`nLeave blank to revert to the default."
+
+        existingEndpoint := this.AppConfig.ApiEndpoint
+
+        dialog := new SingleInputBox(this, "API Endpoint URL", text, existingEndpoint, "MainWindow")
+        apiEndpointUrl := dialog.Show()
+
+        if (apiEndpointUrl != existingEndpoint) {
+            this.AppConfig.ApiEndpoint := apiEndpointUrl
+            apiEndpointUrl := this.AppConfig.ApiEndpoint
+
+            if (apiEndpointUrl != existingEndpoint) {
+                this.ApiEndpoint.endpointUrl := this.AppConfig.ApiEndpoint
+                this.FlushCache()
+            }
+        }
+        
+        return apiEndpointUrl
     }
 
     Cleanup() {
@@ -224,7 +284,16 @@
         return this.apiEndpoint.cache.FlushCache()
     }
 
-    Toast(message, title := "LauncherGen", seconds := 10, options := 17) {
+    Toast(message, title := "Launchpad", seconds := 10, options := 17) {
         TrayTip, %title%, %message%, %seconds%, %options%
+    }
+
+    ExitApp() {
+        if (this.AppConfig.CleanOnExit) {
+            this.FlushCache()
+            this.Cleanup()
+        }
+
+        ExitApp
     }
 }

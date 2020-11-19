@@ -11,12 +11,22 @@ httpQueryReferer := ""
 httpQueryAcceptType := ""
 httpQueryDwFlags := ""
 
-Menu, Tray, Icon, LauncherGen.ico
+Menu, Tray, Icon, Graphics\Launchpad.ico
 
 SplitPath, A_ScriptName,,,, appName
 
-app := new LauncherGen(appName, A_ScriptDir)
+app := new Launchpad(appName, A_ScriptDir)
 app.UpdateDependencies()
 app.LaunchMainWindow()
+
+~LButton::
+{
+    MouseGetPos,,,mouseWindow
+    WinGet, windowId, Id, Tools - Launchpad
+    
+    if (windowId != mouseWindow) {
+        Gui, ToolsWindow:Cancel
+    }
+}
 
 #Include Lib\Includes.ahk

@@ -1,15 +1,16 @@
 class ApiEndpoint {
     app := {}
     cache := {}
-    apiUrl := "https://benmcclure.com/game-launcher-db"
+    endpointUrl := ""
 
-    __New(app, cache) {
+    __New(app, endpointUrl, cache) {
         this.app := app
+        this.endpointUrl := endpointUrl
         this.cache := cache
     }
 
     GetApiUrl(path) {
-        return this.apiUrl . "/" . path
+        return this.endpointUrl . "/" . path
     }
 
     ItemExistsInApi(path) {

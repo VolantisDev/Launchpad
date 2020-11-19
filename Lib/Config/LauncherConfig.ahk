@@ -17,9 +17,9 @@
         }
     }
 
-    __New(app, configPath := "", autoLoad := true) {
+    __New(app, configPath := "", autoLoad := true, autoMerge := true) {
         this.gameDefaults.requiresShortcutFile := false
-        base.__New(app, configPath,  autoLoad)
+        base.__New(app, configPath, autoLoad, autoMerge)
     }
 
     LoadDefaultItemFromSource(key, configItem) {

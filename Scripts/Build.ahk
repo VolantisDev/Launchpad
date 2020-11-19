@@ -5,10 +5,10 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 appDir := RegExReplace(A_ScriptDir, "\\[^\\]+$")
 
 buildDir := appDir . "\Build"
-ahkScript := appDir . "\LauncherGen.ahk"
-exeFile := buildDir . "\LauncherGen.exe"
-iconFile := appDir . "\LauncherGen.ico"
-zipPath := appDir . "\LauncherGen.zip"
+ahkScript := appDir . "\Launchpad.ahk"
+exeFile := buildDir . "\Launchpad.exe"
+iconFile := appDir . "\Launchpad.ico"
+zipPath := appDir . "\Launchpad.zip"
 ahk2Exe := appDir . "\Vendor\AutoHotKey\Compiler\Ahk2Exe.exe"
 
 if (!FileExist(ahk2Exe)) {

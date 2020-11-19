@@ -14,7 +14,7 @@ class Builder {
         assetsDir := this.app.AppConfig.AssetsDir
 
         if (launcherDir == "" or assetsDir == "") {
-            this.app.Toast(this.key . ": Required directories not set. Skipping build.", "LauncherGen", 10, 2)
+            this.app.Toast(this.key . ": Required directories not set. Skipping build.", "Launchpad", 10, 2)
             return false
         }
 

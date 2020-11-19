@@ -51,7 +51,7 @@ class IconFile extends CopyableBuildFile {
         }
 
         if (iconsCount == 0) {
-            this.app.Toast("No icons could be extracted from %exeFile%. Please try another file.", "LauncherGen", 10, 2)
+            this.app.Toast("No icons could be extracted from %exeFile%. Please try another file.", "Launchpad", 10, 2)
             iconFilePath := ""
             this.Cleanup()
         } else {
@@ -60,7 +60,7 @@ class IconFile extends CopyableBuildFile {
                 FileSelectFile, iconFilePath,, %iconsDir%, Select the correct icon from the extracted files, Icons (*.ico)
 
                 if (iconFilePath == "") {
-                    this.app.Toast("Canceled icon selection. Please try again.", "LauncherGen", 10, 2)
+                    this.app.Toast("Canceled icon selection. Please try again.", "Launchpad", 10, 2)
                     this.Cleanup()
                 }
             }
