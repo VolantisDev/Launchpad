@@ -7,7 +7,7 @@ appDir := RegExReplace(A_ScriptDir, "\\[^\\]+$")
 buildDir := appDir . "\Build"
 ahkScript := appDir . "\Launchpad.ahk"
 exeFile := buildDir . "\Launchpad.exe"
-iconFile := appDir . "\Launchpad.ico"
+iconFile := appDir . "\Graphics\Launchpad.ico"
 zipPath := appDir . "\Launchpad.zip"
 ahk2Exe := appDir . "\Vendor\AutoHotKey\Compiler\Ahk2Exe.exe"
 
