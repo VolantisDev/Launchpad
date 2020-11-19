@@ -1,7 +1,6 @@
 ; Automatically-generated file, do not edit manually.
 #Include E:\Tools\Launchpad\Lib\LauncherGame.ahk
 #Include E:\Tools\Launchpad\Lib\LauncherGen.ahk
-#Include E:\Tools\Launchpad\Lib\ApiCache\ApiCache.ahk
 #Include E:\Tools\Launchpad\Lib\ApiEndpoint\ApiEndpoint.ahk
 #Include E:\Tools\Launchpad\Lib\ApiItem\ApiAsset.ahk
 #Include E:\Tools\Launchpad\Lib\ApiItem\ApiDependency.ahk
@@ -20,6 +19,9 @@
 #Include E:\Tools\Launchpad\Lib\BuildFile\GameExeFile.ahk
 #Include E:\Tools\Launchpad\Lib\BuildFile\IconFile.ahk
 #Include E:\Tools\Launchpad\Lib\BuildFile\ShortcutFile.ahk
+#Include E:\Tools\Launchpad\Lib\Cache\Cache.ahk
+#Include E:\Tools\Launchpad\Lib\Cache\FileCache.ahk
+#Include E:\Tools\Launchpad\Lib\Cache\ObjectCache.ahk
 #Include E:\Tools\Launchpad\Lib\Config\AppConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Config\Config.ahk
 #Include E:\Tools\Launchpad\Lib\Config\FileConfig.ahk

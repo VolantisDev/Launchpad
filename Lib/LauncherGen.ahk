@@ -1,10 +1,12 @@
 ﻿class Launchpad {
     appName := ""
     appDir := ""
-    tempDir := A_Temp . "\Launchpad"
+    tempDir := ""
+    cacheDir := ""
     appConfigObj := {}
     apiEndpointObj := {}
     launchersObj := {}
+    caches := {}
     
     AppConfig[] {
         get {
@@ -33,20 +35,33 @@
         }
     }
 
-    __New(appName, appDir, cachePath := "") {
+    __New(appName, appDir) {
         this.appName := appName
         this.appDir := appDir
         
         this.appConfigObj := new AppConfig(this)
 
-        this.tempDir := this.appConfigObj.CacheDir
+        this.tempDir := this.appConfigObj.TempDir
+        this.cacheDir := this.appConfigObj.CacheDir
 
-        if (cachePath == "") {
-            cachePath := this.tempDir . "\API"
-        }
+        this.SetupCaches()
 
-        this.apiEndpointObj := new ApiEndpoint(this, this.appConfigObj.ApiEndpoint, new ApiCache(this, cachePath))
+        this.apiEndpointObj := new ApiEndpoint(this, this.appConfigObj.ApiEndpoint, this.caches.api)
         this.launchersObj := new LauncherConfig(this, this.appConfigObj.LauncherFile, true)
+    }
+
+    SetupCaches() {
+        this.caches.app := new ObjectCache(this)
+        this.caches.file := new FileCache(this, this.cacheDir)
+        this.caches.api := new FileCache(this, this.cacheDir . "\API")
+    }
+
+    GetCache(key) {
+        return (this.caches.HasKey(key)) ? this.caches[key] : {}
+    }
+
+    SetCache(key, cacheObj) {
+        this.caches[key] := cacheObj
     }
 
     UpdateDependencies(forceUpdate := false) {
@@ -225,6 +240,8 @@
         
         if (cacheDir != "") {
             this.AppConfig.CacheDir := cacheDir
+            this.cacheDir := cacheDir
+            this.SetupCaches()
         }
 
         return cacheDir
@@ -281,7 +298,12 @@
     }
 
     FlushCache() {
-        return this.apiEndpoint.cache.FlushCache()
+        for key, cacheObj in this.caches
+        {
+            cacheObj.FlushCache()
+        }
+
+        this.Toast("Flushed all caches.")
     }
 
     Toast(message, title := "Launchpad", seconds := 10, options := 17) {

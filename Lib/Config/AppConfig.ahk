@@ -55,12 +55,27 @@
         }
     }
 
+    TempDir[] {
+        get {
+            returnVal := this.GetIniValue("TempDir")
+
+            if (returnVal == "") {
+                returnVal := A_Temp . "\Launchpad"
+            }
+            
+            return returnVal
+        }
+        set {
+            return this.SetIniValue("TempDir", value)
+        }
+    }
+
     CacheDir[] {
         get {
             returnVal := this.GetIniValue("CacheDir")
 
             if (returnVal == "") {
-                returnVal := A_Temp . "\Launchpad"
+                returnVal := this.TempDir . "\Cache"
             }
             
             return returnVal

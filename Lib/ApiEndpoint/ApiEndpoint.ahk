@@ -35,7 +35,7 @@ class ApiEndpoint {
         filePath := ""
 
         if (this.ItemExistsInApi(path)) {
-            filePath := this.cache.ImportFromUrl(this.getApiUrl(path), path)
+            filePath := this.cache.ImportItemFromUrl(path, this.getApiUrl(path))
         }
 
         return filePath
