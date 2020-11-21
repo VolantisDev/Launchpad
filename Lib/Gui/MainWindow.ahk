@@ -48,7 +48,7 @@ class MainWindow extends GuiBase {
         return posY
     }
 
-    OnClose(guiObj) {
+    OnClose(guiObj, info := "") {
         super.OnClose(guiObj)
         this.app.ExitApp()
     }
@@ -58,23 +58,23 @@ class MainWindow extends GuiBase {
         this.app.ExitApp()
     }
 
-    OnLogo(img) {
+    OnLogo(img, info) {
         this.app.OpenHomepage()
     }
 
-    OnBuildLaunchers(btn) {
+    OnBuildLaunchers(btn, info) {
         this.app.BuildLaunchers(this.app.AppConfig.UpdateExistingLaunchers)
     }
 
-    OnManageLaunchers(btn) {
-        this.app.Guis.OpenLauncherManager()
+    OnManageLaunchers(btn, info) {
+        this.app.GuiManager.OpenLauncherManager()
     }
 
-    OnTools(btn) {
-        this.app.Guis.OpenToolsWindow()
+    OnTools(btn, info) {
+        this.app.GuiManager.OpenToolsWindow()
     }
 
-    OnSettings(btn) {
-        this.app.Guis.OpenSettingsWindow()
+    OnSettings(btn, info) {
+        this.app.GuiManager.OpenSettingsWindow()
     }
 }

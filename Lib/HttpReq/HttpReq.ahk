@@ -49,7 +49,7 @@ class HttpReq {
 
         oHTTP.Option[6] := this.autoRedirect
 
-        oHTTP.Send(In_POST__Out_Data)
+        oHTTP.Send(data)
 	    returnCode := oHTTP.WaitForResponse(this.timeout ? this.timeout : -1)
 
         this.responseBody := oHTTP.ResponseBody

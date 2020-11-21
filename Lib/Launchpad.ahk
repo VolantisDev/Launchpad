@@ -36,7 +36,7 @@
         }
     }
 
-    Guis[] {
+    GuiManager[] {
         get {
             return this.guiServiceObj
         }
@@ -57,7 +57,7 @@
 
         this.SetupCaches()
 
-        this.apiEndpointObj := ApiEndpoint.new(this, this.appConfigObj.ApiEndpoint, this.caches.api)
+        this.apiEndpointObj := ApiEndpoint.new(this, this.appConfigObj.ApiEndpoint, this.caches["api"])
         this.launchersObj := LauncherConfig.new(this, this.appConfigObj.LauncherFile, true)
     }
 
@@ -85,7 +85,7 @@
         if (listingInstance.Exists()) {
             listing := listingInstance.Read()
 
-            for index, key in listing.items {
+            for index, key in listing["items"] {
                 count++
             } 
         }
@@ -94,7 +94,7 @@
     }
 
     UpdateDependencies(forceUpdate := false, owner := "MainWindow") {
-        progress := this.Guis.ProgressIndicator("Updating Dependencies", "Please wait while dependencies are updated.", owner, false, "0-100", 0, "Initializing...")
+        progress := this.GuiManager.ProgressIndicator("Updating Dependencies", "Please wait while dependencies are updated.", owner, "0-100", 0, "Initializing...")
 
         listingInstance := ApiListing.new(this, "dependencies")
         updated := 0
@@ -105,20 +105,20 @@
             listing := listingInstance.Read()
 
             currentItem := 1
-            for index, key in listing.items {
+            for index, key in listing["items"] {
                 progress.SetValue(currentItem, key . ": Discovering...")
 
                 item := ApiDependency.new(this, key)
 
                 if (item.Exists()) {
                     dependencyConfig := item.Read()
-                    dependencyClass := dependencyConfig.class
+                    dependencyClass := dependencyConfig["class"]
                     dependencyInstance := %dependencyClass%.new(this, key, dependencyConfig)
 
                     if (dependencyInstance.NeedsUpdate(forceUpdate)) {
                         installed := dependencyInstance.IsInstalled()
                         statusText := installed ? "Updating" : "Installing"
-                        progress.SetDetailText(dependencyConfig.name . ": " . statusText . "...")
+                        progress.SetDetailText(dependencyConfig["name"] . ": " . statusText . "...")
                         result := installed ? dependencyInstance.Update(forceUpdate) : dependencyInstance.Install()
                         updated++
                     }
@@ -147,7 +147,7 @@
 
     BuildLaunchers(updateExisting := false, owner := "MainWindow") {
         count := this.CountLaunchers()
-        progress := this.Guis.ProgressIndicator("Building Launchers", "Please wait while your launchers are built.", owner, false, "0-" . count, 0, "Initializing...")
+        progress := this.GuiManager.ProgressIndicator("Building Launchers", "Please wait while your launchers are built.", owner, "0-" . count, 0, "Initializing...")
 
         built := 0
         currentItem := 1
@@ -260,7 +260,7 @@
         text := "Enter the base URL of the API endpoint you would like Launchpad to connect to.`n`nLeave blank to revert to the default."
 
         existingEndpoint := this.AppConfig.ApiEndpoint
-        apiEndpointUrl := this.Guis.SingleInputBox("API Endpoint URL", text, existingEndpoint, owner)
+        apiEndpointUrl := this.GuiManager.SingleInputBox("API Endpoint URL", text, existingEndpoint, owner)
 
         if (apiEndpointUrl != existingEndpoint) {
             this.AppConfig.ApiEndpoint := apiEndpointUrl
@@ -275,9 +275,9 @@
         return apiEndpointUrl
     }
 
-    Cleanup() {
+    Cleanup(owner := "MainWindow") {
         count := this.CountLaunchers()
-        progress := this.Guis.ProgressIndicator("Cleaning Launchers", "Please wait while your launchers are cleaned up.", owner, false, "0-" . count, 0, "Initializing...")
+        progress := this.GuiManager.ProgressIndicator("Cleaning Launchers", "Please wait while your launchers are cleaned up.", owner, "0-" . count, 0, "Initializing...")
 
         cleaned := 0
         currentItem := 1

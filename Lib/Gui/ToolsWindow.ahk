@@ -6,7 +6,7 @@ class ToolsWindow extends GuiBase {
     contentWidth := 200
     positionAtMouseCursor := true
 
-    __New(app, owner := 0) {
+    __New(app, owner := "") {
         super.__New(app, "Tools", owner)
     }
 
@@ -33,33 +33,33 @@ class ToolsWindow extends GuiBase {
         return posY
     }
 
-    OnReloadLauncherFile(btn) {
-        this.guiObj.Cancel()
+    OnReloadLauncherFile(btn, info) {
+        this.Close()
         this.app.ReloadLauncherFile()
     }
 
-    OnCleanLaunchers(btn) {
-        this.guiObj.Cancel()
+    OnCleanLaunchers(btn, info) {
+        this.Close()
         this.app.Cleanup()
     }
 
-    OnFlushCache(btn) {
-        this.guiObj.Cancel()
+    OnFlushCache(btn, info) {
+        this.Close()
         this.app.FlushCache()
     }
 
-    OnUpdateDependencies(btn) {
-        this.guiObj.Cancel()
+    OnUpdateDependencies(btn, info) {
+        this.Close()
         this.app.UpdateDependencies(true)
     }
 
     OnClose(guiObj) {
-        this.guiObj.Cancel()
+        this.Close()
         super.OnClose(guiObj)
     }
 
     OnEscape(guiObj) {
-        this.guiObj.Cancel()
+        this.Close()
         super.OnEscape(guiObj)
     }
 }

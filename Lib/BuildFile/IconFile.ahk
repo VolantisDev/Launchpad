@@ -5,7 +5,7 @@ class IconFile extends CopyableBuildFile {
     selectFilter := "Icons (*.ico; *.exe; *.ocx; *.dll; *.cpl)"
 
     __New(app, config, launcherDir, key, filePath := "") {
-        sourcePath := config.Has("iconSrc") ? config.iconSrc : ""
+        sourcePath := config.Has("iconSrc") ? config["iconSrc"] : ""
         super.__New(app, config, launcherDir, key, ".ico", filePath, sourcePath)
     }
 

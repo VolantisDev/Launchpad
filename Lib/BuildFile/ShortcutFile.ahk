@@ -5,7 +5,7 @@ class ShortcutFile extends CopyableBuildFile {
     selectFilter := "Shortcuts (*.lnk; *.url; *.exe)"
     
     __New(app, config, launcherDir, key, filePath := "") {
-        sourcePath := config.Has("shortcutSrc") ? config.shortcutSrc : ""
+        sourcePath := config.Has("shortcutSrc") ? config["shortcutSrc"] : ""
         super.__New(app, config, launcherDir, key, ".lnk", filePath, sourcePath)
     }
 

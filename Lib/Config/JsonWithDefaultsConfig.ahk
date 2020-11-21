@@ -29,7 +29,7 @@ class JsonWithDefaultsConfig extends JsonConfig {
 
     MergeConfig() {
         progressText := "Please wait while your configuration is processed."
-        progress := this.app.Guis.ProgressIndicator("Loading Config", progressText, this.app.Guis.GetGuiObj("MainWindow"), false, "0-" . this.CountItems(), 0, "Initializing...")
+        progress := this.app.GuiManager.ProgressIndicator("Loading Config", progressText, this.app.GuiManager.GetGuiObj("MainWindow"), "0-" . this.CountItems(), 0, "Initializing...")
 
         count := 1
         for key, configItem in this.config[this.primaryConfigKey]

@@ -8,7 +8,7 @@ class LauncherConfig extends JsonWithDefaultsConfig {
 
     Games[] {
         get {
-            if (this.config.Games) {
+            if (this.config["Games"]) {
                 return this.config["Games"]
             } else {
                 return Map()
@@ -46,7 +46,7 @@ class LauncherConfig extends JsonWithDefaultsConfig {
             if (apiGameData.Has("launchers")) {
                 launcherType := this.DereferenceLauncherType(launcherType, apiGameData["launchers"])
 
-                if (apiGameData.launchers.Has(launcherType) and IsObject(apiGameData["launchers"][launcherType])) {
+                if (apiGameData["launchers"].Has(launcherType) and IsObject(apiGameData["launchers"][launcherType])) {
                     defaults := this.MergeData(apiGameData["launchers"][launcherType], defaults)
                 }
             }

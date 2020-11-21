@@ -6,15 +6,15 @@ class GuiService {
         this.app := app
     }
 
-    DialogBox(title, text, owner := 0, buttons := "*&Yes|&No") {
+    DialogBox(title, text, owner := "", buttons := "*&Yes|&No") {
         return this.ShowDialog(DialogBox.new(this.app, title, text, owner, buttons))
     }
 
-    SingleInputBox(title, text, defaultValue := "", owner := 0, isPassword := false) {
+    SingleInputBox(title, text, defaultValue := "", owner := "", isPassword := false) {
         return this.ShowDialog(SingleInputBox.new(this.app, title, text, defaultValue, owner, isPassword))
     }
 
-    ProgressIndicator(title, text, owner := 0, progressRange := "0-100", initialPosition := 0, detailText := true) {
+    ProgressIndicator(title, text, owner := "", progressRange := "0-100", initialPosition := 0, detailText := true) {
         return this.ShowDialog(ProgressIndicator.new(this.app, title, text, owner, progressRange, initialPosition, detailText))
     }
 
@@ -44,7 +44,7 @@ class GuiService {
 
     OpenToolsWindow() {
         if (!this.WindowExists("ToolsWindow")) {
-            this.AddWindow("ToolsWindow", ToolsWindow.new(this, "MainWindow"))
+            this.AddWindow("ToolsWindow", ToolsWindow.new(this.app, "MainWindow"))
         }
 
         return this.ShowWindow("ToolsWindow")

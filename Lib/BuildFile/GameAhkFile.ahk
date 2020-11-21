@@ -9,8 +9,8 @@ class GameAhkFile extends ComposableBuildFile {
         FileAppend("#Warn`n", this.FilePath)
         FileAppend("#Include " . this.appDir . "\LauncherLib\Includes.ahk`n", this.FilePath)
         FileAppend("config := " . this.ConvertObjectToCode(this.config) . "`n", this.FilePath)
-        FileAppend("gameObj := " . this.config.gameClass . ".new(`"" . this.appDir . "`", `"" . this.key . "`", `"" . this.config.gameType . "`", config)`n", this.FilePath)
-        FileAppend("launcherObj := " . this.config.launcherClass . ".new(`"" . this.appDir . "`", `"" . this.key . "`", `"" . this.config.launcherType . "`", gameObj, config)`n", this.FilePath)
+        FileAppend("gameObj := " . this.config["gameClass"] . ".new(`"" . this.appDir . "`", `"" . this.key . "`", `"" . this.config["gameType"] . "`", config)`n", this.FilePath)
+        FileAppend("launcherObj := " . this.config["launcherClass"] . ".new(`"" . this.appDir . "`", `"" . this.key . "`", `"" . this.config["launcherType"] . "`", gameObj, config)`n", this.FilePath)
         FileAppend("launcherObj.LaunchGame()`n", this.FilePath)
 
         return this.FilePath

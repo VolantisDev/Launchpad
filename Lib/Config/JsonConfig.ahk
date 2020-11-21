@@ -17,7 +17,7 @@ class JsonConfig extends FileConfig {
         jsonString := FileRead(this.ConfigPath)
 
         if (jsonString != "") {
-            this.config := JSON.Load(jsonString)
+            this.config := Jxon_Load(jsonString)
         } else {
             this.config := Map()
         }
@@ -39,7 +39,7 @@ class JsonConfig extends FileConfig {
             FileDelete(this.ConfigPath)
         }
         
-        jsonString := JSON.Dump(this.config, "", 4)
+        jsonString := Jxon_Dump(this.config, "", 4)
         FileAppend(jsonString, this.ConfigPath)
 
         return this

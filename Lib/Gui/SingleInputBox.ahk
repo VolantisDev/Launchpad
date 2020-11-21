@@ -4,7 +4,7 @@ class SingleInputBox extends DialogBox {
     defaultValue := ""
     isPassword := false
 
-    __New(app, title, text, defaultValue := "", owner := 0, isPassword := false) {
+    __New(app, title, text, defaultValue := "", owner := "", isPassword := false) {
         this.defaultValue := defaultValue
         this.isPassword := isPassword
         super.__New(app, title, text, owner, "*&OK|&Cancel")

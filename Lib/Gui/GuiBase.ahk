@@ -2,7 +2,7 @@ class GuiBase {
     app := ""
     guiObj := ""
     title := ""
-    owner := 0
+    owner := ""
     windowOptions := ""
     windowSize := ""
     margin := 10
@@ -11,19 +11,14 @@ class GuiBase {
     hToolbar := ""
     positionAtMouseCursor := false
 
-    __New(app, title, owner := 0) {
+    __New(app, title, owner := "") {
         this.app := app
         this.title := title
 
-        if (owner != 0) {
-            if (IsObject(owner)) {
-                this.owner := owner
-            } else {
-                this.owner := this.app.Guis.GetGuiObj("MainWindow")
-            }
+        if (owner != "") {
+            this.owner := (Type(owner) == "String") ? this.app.GuiManager.GetGuiObj(owner) : owner
         }
 
-        this.SetGlobals()
         this.Create()
     }
 
@@ -37,6 +32,7 @@ class GuiBase {
 
     Show() {
         global hToolbar
+        posY := this.margin
 
         if (this.hasToolbar) {
             this.hToolbar := this.AddToolbar()
@@ -88,9 +84,9 @@ class GuiBase {
     }
 
     Start(posY) {
-        if (this.owner != 0 ) {
+        if (this.owner != "") {
             this.owner.Opt("Disabled")
-            this.guiObj.Opt("+Owner" . this.owner)
+            this.guiObj.Opt("+Owner" . this.owner.Hwnd)
 	    }
 
         return posY
@@ -121,7 +117,7 @@ class GuiBase {
     }
 
     Close(submit := false) {
-        if (this.owner != 0) {
+        if (this.owner != "") {
             this.owner.Opt("-Disabled")
         }
 

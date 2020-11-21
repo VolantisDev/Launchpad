@@ -8,7 +8,7 @@ class DialogBox extends GuiBase {
     result := ""
     waitForResult := true
 
-    __New(app, title, text, owner := 0, buttons := "*&Yes|&No") {
+    __New(app, title, text, owner := "", buttons := "*&Yes|&No") {
         this.text := text
         this.buttons := buttons
         super.__New(app, title, owner)
@@ -48,7 +48,7 @@ class DialogBox extends GuiBase {
         super.AddButtons(posY)
         buttons := StrSplit(this.buttons, "|")
 
-        loop buttons.MaxIndex() {
+        loop buttons.Length {
             position := (A_Index == 1) ? "x" . this.margin . " y" . posY . " ": "x+" . this.margin . " y" . posY . " "
             defaultOption := InStr(buttons[A_Index], "*") ? "Default " : " "
             btn := this.guiObj.AddButton(position . defaultOption . "w100", RegExReplace(buttons[A_Index], "\*"))
@@ -56,7 +56,7 @@ class DialogBox extends GuiBase {
         }
     }
 
-    OnDialogBoxButton(btn) {
+    OnDialogBoxButton(btn, info) {
         this.result := StrReplace(btn.Text, "&")
     }
 

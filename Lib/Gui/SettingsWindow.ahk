@@ -5,7 +5,7 @@ class SettingsWindow extends GuiBase {
     windowSize := "w370"
     contentWidth := 350
 
-    __New(app, owner := 0) {
+    __New(app, owner := "") {
         super.__New(app, "Settings", owner)
     }
 
@@ -129,11 +129,11 @@ class SettingsWindow extends GuiBase {
         super.OnEscape(guiObj)
     }
 
-    OnReloadLauncherFile(btn) {
+    OnReloadLauncherFile(btn, info) {
         this.app.ReloadLauncherFile()
     }
 
-    OnOpenLauncherFile(btn) {
+    OnOpenLauncherFile(btn, info) {
         this.app.OpenLauncherFile()
     }
 
@@ -143,77 +143,77 @@ class SettingsWindow extends GuiBase {
         this.guiObj.SetFont()
     }
 
-    OnChangeLauncherFile(btn) {
+    OnChangeLauncherFile(btn, info) {
         this.app.ChangeLauncherFile()
         this.SetText("TxtLauncherFile", this.app.AppConfig.LauncherFile, "Bold")
     }
 
-    OnOpenLauncherDir(btn) {
+    OnOpenLauncherDir(btn, info) {
         this.app.OpenLauncherDir()
     }
 
-    OnChangeLauncherDir(btn) {
+    OnChangeLauncherDir(btn, info) {
         this.app.ChangeLauncherDir()
         this.SetText("TxtLauncherDir", this.app.AppConfig.LauncherDir, "Bold")
     }
 
-    OnIndividualDirs(chk) {
+    OnIndividualDirs(chk, info) {
         this.guiObj.Submit(false)
         this.app.AppConfig.IndividualDirs := chk.Value
     }
 
-    OnUpdateExistingLaunchers(chk) {
+    OnUpdateExistingLaunchers(chk, info) {
         this.guiObj.Submit(false)
         this.app.AppConfig.UpdateExistingLaunchers := chk.Value
     }
 
-    OnCleanLaunchersOnBuild(chk) {
+    OnCleanLaunchersOnBuild(chk, info) {
         this.guiObj.Submit(false)
         this.app.AppConfig.CleanLaunchersOnBuild := chk.Value
     }
 
-    OnCleanLaunchersOnExit(chk) {
+    OnCleanLaunchersOnExit(chk, info) {
         this.guiObj.Submit(false)
         this.app.AppConfig.CleanLaunchersOnExit := chk.Value
     }
 
-    OnOpenAssetsDir(btn) {
+    OnOpenAssetsDir(btn, info) {
         this.app.OpenAssetsDir()
     }
 
-    OnChangeAssetsDir(btn) {
+    OnChangeAssetsDir(btn, info) {
         this.app.ChangeAssetsDir()
         this.SetText("TxtAssetsDir", this.app.AppConfig.AssetsDir, "Bold")
     }
 
-    OnCopyAssets(chk) {
+    OnCopyAssets(chk, info) {
         this.guiObj.Submit(false)
         this.app.AppConfig.CopyAssets := chk.Value
     }
 
-    OnOpenApiEndpoint(btn) {
+    OnOpenApiEndpoint(btn, info) {
         this.app.OpenApiEndpoint()
     }
 
-    OnChangeApiEndpoint(btn) {
+    OnChangeApiEndpoint(btn, info) {
         this.app.ChangeApiEndpoint("SettingsWindow")
         this.SetText("TxtApiEndpoint", this.app.AppConfig.ApiEndpoint, "Bold")
     }
 
-    OnFlushCache(btn) {
+    OnFlushCache(btn, info) {
         this.app.FlushCache()
     }
 
-    OnOpenCacheDir(btn) {
+    OnOpenCacheDir(btn, info) {
         this.app.OpenCacheDir()
     }
 
-    OnChangeCacheDir(btn) {
+    OnChangeCacheDir(btn, info) {
         this.app.ChangeCacheDir()
         this.SetText("TxtCacheDir", this.app.AppConfig.CacheDir, "Bold")
     }
 
-    OnFlushCacheOnExit(chk) {
+    OnFlushCacheOnExit(chk, info) {
         this.guiObj.Submit(false)
         this.app.AppConfig.FlushCacheOnExit := chk.Value
     }

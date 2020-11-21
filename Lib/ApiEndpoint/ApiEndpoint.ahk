@@ -16,7 +16,8 @@ class ApiEndpoint {
     ItemExistsInApi(path) {
         request := HttpReq.new(this.GetApiUrl(path))
         result := request.Send("HEAD")
-        return (result == -1 && request.GetStatusCode() == 200)
+        response := (result == -1 && request.GetStatusCode() == 200)
+        return response
     }
 
     ItemExists(path) {

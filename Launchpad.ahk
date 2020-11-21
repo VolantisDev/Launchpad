@@ -8,15 +8,19 @@ SplitPath(A_ScriptName,,,, appName)
 
 app := Launchpad.new(appName, A_ScriptDir)
 app.UpdateDependencies()
-app.Guis.OpenMainWindow()
+app.GuiManager.OpenMainWindow()
 
 ~LButton::
 {
     global app
-    MouseGetPos(,,mouseWindow)
-    windowId := WinGetID("Tools - Launchpad")
-    
-    if (windowId != mouseWindow) {
-        app.Guis.CloseToolsWindow()
+
+    if (IsSet(app)) {
+        MouseGetPos(,,mouseWindow)
+        toolsObj := app.GuiManager.GetGuiObj("ToolsWindow")
+
+        if (toolsObj != "" and toolsObj.Hwnd != mouseWindow) {
+            app.GuiManager.CloseToolsWindow()
+        }
     }
+    
 }

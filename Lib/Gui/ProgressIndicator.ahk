@@ -8,7 +8,7 @@ class ProgressIndicator extends DialogBox {
     enableDetailText := true
     cancelCallback := ""
 
-    __New(app, title, text, owner := 0, allowCancel := false, progressRange := "0-100", initialPosition := 0, detailText := true) {
+    __New(app, title, text, owner := "", allowCancel := false, progressRange := "0-100", initialPosition := 0, detailText := true) {
         this.progressRange := progressRange
         this.initialPosition := initialPosition
         this.enableDetailText := (detailText != false)
@@ -44,7 +44,7 @@ class ProgressIndicator extends DialogBox {
     }
     
     Finish() {
-        result := this.ProcessResult()
+        result := this.ProcessResult("OK")
         this.Close()
         this.Destroy()
         return result
@@ -72,7 +72,7 @@ class ProgressIndicator extends DialogBox {
         return super.ProcessResult(result)
     }
 
-    OnDialogBoxButton(btn) {
+    OnDialogBoxButton(btn, info) {
         btn := super.OnDialogBoxButton(btn)
         this.result := StrReplace(btn.Text, "&")
 
