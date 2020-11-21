@@ -6,12 +6,29 @@ class GameAhkFile extends ComposableBuildFile {
     ComposeFile() {
         FileAppend("#Warn`n", this.FilePath)
         FileAppend("#Include " . this.appDir . "\LauncherLib\Includes.ahk`n", this.FilePath)
-        FileAppend("config := " . this.ConvertObjectToCode(this.config) . "`n", this.FilePath)
-        FileAppend("gameObj := " . this.config["gameClass"] . ".new(`"" . this.appDir . "`", `"" . this.key . "`", `"" . this.config["gameType"] . "`", config)`n", this.FilePath)
-        FileAppend("launcherObj := " . this.config["launcherClass"] . ".new(`"" . this.appDir . "`", `"" . this.key . "`", `"" . this.config["launcherType"] . "`", gameObj, config)`n", this.FilePath)
+        FileAppend("config := " . this.ConvertMapToCode(this.config) . "`n", this.FilePath)
+        FileAppend("gameObj := " . this.config["gameClass"] . ".new(`"" . this.appDir . "`", `"" . this.key . "`", " . this.config["gameType"] . ", config)`n", this.FilePath)
+        FileAppend("launcherObj := " . this.config["launcherClass"] . ".new(`"" . this.appDir . "`", `"" . this.key . "`", " . this.config["launcherType"] . ", gameObj, config)`n", this.FilePath)
         FileAppend("launcherObj.LaunchGame()`n", this.FilePath)
 
         return this.FilePath
+    }
+
+    ConvertMapToCode(typeConfig) {
+        code := "Map("
+        empty := true
+
+        for key, value in typeConfig {
+            if (!empty) {
+                code .= ", "
+            }
+
+            code .= this.ConvertValueToCode(key) . ", " . this.ConvertValueToCode(value)
+            empty := false
+        }
+
+        code .= ")"
+        return code
     }
 
     ConvertObjectToCode(typeConfig) {
@@ -34,7 +51,7 @@ class GameAhkFile extends ComposableBuildFile {
     ConvertValueToCode(value) {
         if (IsObject(value)) {
             value := this.ConvertObjectToCode(value)
-        } else if (!IsNumber(value)) {
+        } else if (Type(value) == "String" && value != "true" && value != "false") {
             value := "`"" . value . "`""
         }
         
