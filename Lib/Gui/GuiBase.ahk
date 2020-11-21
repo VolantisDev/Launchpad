@@ -67,13 +67,11 @@ class GuiBase {
     }
 
     OnClose(guiObj) {
-        this.Close()
         this.Destroy()
     }
 
     OnEscape(guiObj) {
-        this.Close()
-        this.Destroy()
+        this.WinClose()
     }
 
     OnSize(guiObj, minMax, width, height) {
@@ -123,18 +121,24 @@ class GuiBase {
     }
 
     Close(submit := false) {
-        if (this.owner != "") {
-            this.owner.Opt("-Disabled")
-        }
-
         if (submit) {
             this.guiObj.Submit(true)
         } else {
             this.guiObj.Hide()
         }
+
+        if (WinExist("ahk_id " . this.guiObj.Hwnd)) {
+            WinClose("ahk_id " . this.guiObj.Hwnd)
+        } else {
+            this.Destroy()
+        }
     }
 
     Destroy() {
+        if (this.owner != "") {
+            this.owner.Opt("-Disabled")
+        }
+
         this.Cleanup()
         this.guiObj.Destroy()
 

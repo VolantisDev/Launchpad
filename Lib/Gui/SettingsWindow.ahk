@@ -1,7 +1,6 @@
 ﻿class SettingsWindow extends GuiBase {
     windowOptions := "-MaximizeBox -SysMenu"
-    windowSize := "w370"
-    contentWidth := 350
+    contentWidth := 500
 
     __New(app, owner := "", windowKey := "") {
         super.__New(app, "Settings", owner, windowKey)
@@ -55,7 +54,7 @@
         posY := this.AddCheckBox("Flush cache on exit", "ChkFlushCacheOnExit", "OnFlushCacheOnExit", this.app.AppConfig.FlushCacheOnExit, posY)
         posY += this.margin
 
-        posY := this.AddButton("&Save && Close", "OnClose", this.margin, posY, true, this.contentWidth, 30)
+        posY := this.AddButton("&Save && Close", "OnCloseButton", this.margin, posY, true, this.contentWidth, 30)
 
         return posY
     }
@@ -69,7 +68,7 @@
         btn := this.guiObj.AddButton("x" . posX . " y" . posY . " w" . width . " h" . height, buttonText)
 
         if (callback) {
-            btn.OnEvent("Click", "OnReloadLauncherFile")
+            btn.OnEvent("Click", callback)
         }
 
         if (advanceY) {
@@ -117,9 +116,8 @@
         return posY + height + this.margin
     }
 
-    OnClose(guiObj) {
-        this.guiObj.Submit()
-        super.OnClose(guiObj)
+    OnCloseButton(guiObj, info) {
+        this.Close()
     }
 
     OnEscape(guiObj) {

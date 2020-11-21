@@ -32,14 +32,18 @@ class DialogBox extends GuiBase {
                 }
             }
 
-            this.Close(true)
+            this.Submit()
             result := this.ProcessResult(this.result)
-            this.Destroy()
+            this.Close()
         } else {
             result := this
         }
 
         return result
+    }
+
+    Submit(hide := true) {
+        this.guiObj.Submit(hide)
     }
 
     AddButtons(posY) {

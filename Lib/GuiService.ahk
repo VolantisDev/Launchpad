@@ -51,9 +51,7 @@ class GuiService {
     }
 
     CloseToolsWindow() {
-        if (this.WindowExists("ToolsWindow")) {
-            this.guis["ToolsWindow"].Close()
-        }
+        this.CloseWindow("ToolsWindow")
     }
 
     ShowDialog(instance) {
@@ -80,13 +78,12 @@ class GuiService {
     CloseWindow(key) {
         if (this.WindowExists(key)) {
             this.guis[key].Close()
-            this.guis[key].Destroy()
         }
     }
 
     RemoveWindow(key) {
         if (this.WindowExists(key)) {
-            this.guis.Remove(key)
+            this.guis.Delete(key)
         }
     }
 

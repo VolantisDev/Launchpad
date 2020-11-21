@@ -44,7 +44,6 @@ class ProgressIndicator extends DialogBox {
     Finish() {
         result := this.ProcessResult("OK")
         this.Close()
-        this.Destroy()
         return result
     }
 
