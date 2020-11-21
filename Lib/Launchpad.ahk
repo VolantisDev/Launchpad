@@ -85,16 +85,14 @@
         if (listingInstance.Exists()) {
             listing := listingInstance.Read()
 
-            for index, key in listing["items"] {
-                count++
-            } 
+            count := listing["items"].Length
         }
 
         return count
     }
 
     UpdateDependencies(forceUpdate := false, owner := "MainWindow") {
-        progress := this.GuiManager.ProgressIndicator("Updating Dependencies", "Please wait while dependencies are updated.", owner, "0-100", 0, "Initializing...")
+        progress := this.GuiManager.ProgressIndicator("Updating Dependencies", "Please wait while dependencies are updated.", owner, true, "0-100", 0, "Initializing...")
 
         listingInstance := ApiListing.new(this, "dependencies")
         updated := 0
@@ -135,19 +133,9 @@
         }
     }
 
-    CountLaunchers() {
-        count := 0
-
-        for key, value in this.Launchers.Games {
-            count++
-        } 
-
-        return count
-    }
-
     BuildLaunchers(updateExisting := false, owner := "MainWindow") {
-        count := this.CountLaunchers()
-        progress := this.GuiManager.ProgressIndicator("Building Launchers", "Please wait while your launchers are built.", owner, "0-" . count, 0, "Initializing...")
+        itemCount := this.Launchers.Games.Count
+        progress := this.GuiManager.ProgressIndicator("Building Launchers", "Please wait while your launchers are built.", owner, true, "0-" . itemCount, 0, "Initializing...")
 
         built := 0
         currentItem := 1
@@ -277,7 +265,7 @@
 
     Cleanup(owner := "MainWindow") {
         count := this.CountLaunchers()
-        progress := this.GuiManager.ProgressIndicator("Cleaning Launchers", "Please wait while your launchers are cleaned up.", owner, "0-" . count, 0, "Initializing...")
+        progress := this.GuiManager.ProgressIndicator("Cleaning Launchers", "Please wait while your launchers are cleaned up.", owner, true, "0-" . count, 0, "Initializing...")
 
         cleaned := 0
         currentItem := 1

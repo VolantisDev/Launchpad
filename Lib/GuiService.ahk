@@ -14,8 +14,8 @@ class GuiService {
         return this.ShowDialog(SingleInputBox.new(this.app, title, text, defaultValue, owner, isPassword))
     }
 
-    ProgressIndicator(title, text, owner := "", progressRange := "0-100", initialPosition := 0, detailText := true) {
-        return this.ShowDialog(ProgressIndicator.new(this.app, title, text, owner, progressRange, initialPosition, detailText))
+    ProgressIndicator(title, text, owner := "", allowCancel := false, progressRange := "0-100", initialPosition := 0, detailText := true) {
+        return this.ShowDialog(ProgressIndicator.new(this.app, title, text, owner, allowCancel, progressRange, initialPosition, detailText))
     }
 
     OpenMainWindow() {

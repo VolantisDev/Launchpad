@@ -19,17 +19,10 @@ class JsonWithDefaultsConfig extends JsonConfig {
         }
     }
 
-    CountItems() {
-        count := 0
-        for (key, value in this.config[this.primaryConfigKey]) {
-            count++
-        }
-        return count
-    }
-
     MergeConfig() {
         progressText := "Please wait while your configuration is processed."
-        progress := this.app.GuiManager.ProgressIndicator("Loading Config", progressText, this.app.GuiManager.GetGuiObj("MainWindow"), "0-" . this.CountItems(), 0, "Initializing...")
+        itemCount := this.config[this.primaryConfigKey].Count
+        progress := this.app.GuiManager.ProgressIndicator("Loading Config", progressText, this.app.GuiManager.GetGuiObj("MainWindow"), false, "0-" . itemCount, 0, "Initializing...")
 
         count := 1
         for key, configItem in this.config[this.primaryConfigKey]
