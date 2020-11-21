@@ -24,7 +24,7 @@ class ProgressIndicator extends DialogBox {
 
     SetDetailText(detailText) {
         this.detailText := detailText
-        ; @todo set on gui element
+        this.guiObj["DialogDetailText"].Text := detailText
     }
 
     SetCancelCallback(callback) {
