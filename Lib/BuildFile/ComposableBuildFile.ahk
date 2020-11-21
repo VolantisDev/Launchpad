@@ -1,5 +1,3 @@
-#Include BuildFile.ahk
-
 class ComposableBuildFile extends BuildFile {
     Build() {
         super.Build()

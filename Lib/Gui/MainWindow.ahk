@@ -1,6 +1,4 @@
-﻿#Include GuiBase.ahk
-
-class MainWindow extends GuiBase {
+﻿class MainWindow extends GuiBase {
     windowSize := "w535"
     contentWidth := 515
 

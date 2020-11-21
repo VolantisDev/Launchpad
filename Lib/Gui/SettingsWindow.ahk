@@ -1,12 +1,10 @@
-﻿#Include GuiBase.ahk
-
-class SettingsWindow extends GuiBase {
+﻿class SettingsWindow extends GuiBase {
     windowOptions := "-MaximizeBox -SysMenu"
     windowSize := "w370"
     contentWidth := 350
 
-    __New(app, owner := "") {
-        super.__New(app, "Settings", owner)
+    __New(app, owner := "", windowKey := "") {
+        super.__New(app, "Settings", owner, windowKey)
     }
 
     Controls(posY) {
@@ -121,7 +119,7 @@ class SettingsWindow extends GuiBase {
 
     OnClose(guiObj) {
         this.guiObj.Submit()
-        super.OnEscape(guiObj)
+        super.OnClose(guiObj)
     }
 
     OnEscape(guiObj) {

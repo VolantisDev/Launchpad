@@ -1,5 +1,3 @@
-#Include FileConfig.ahk
-
 class IniConfig extends FileConfig {
     __New(app, configPath := "") {
         super.__New(app, configPath, ".ini", false)

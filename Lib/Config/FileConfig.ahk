@@ -1,5 +1,3 @@
-#Include ConfigBase.ahk
-
 class FileConfig extends ConfigBase {
     configPathValue := ""
 

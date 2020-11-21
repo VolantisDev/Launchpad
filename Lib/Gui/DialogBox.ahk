@@ -1,5 +1,3 @@
-#Include GuiBase.ahk
-
 class DialogBox extends GuiBase {
     text := ""
     buttons := ""

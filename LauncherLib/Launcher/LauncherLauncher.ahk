@@ -1,5 +1,3 @@
-#Include Launcher.ahk
-
 class LauncherLauncher extends Launcher {
     launcherExe := ""
 

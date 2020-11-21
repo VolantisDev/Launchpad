@@ -10,16 +10,22 @@ class GuiBase {
     hasToolbar := false
     hToolbar := ""
     positionAtMouseCursor := false
+    windowKey := ""
 
-    __New(app, title, owner := "") {
+    __New(app, title, owner := "", windowKey := "") {
         this.app := app
         this.title := title
+        this.windowKey := windowKey
 
         if (owner != "") {
             this.owner := (Type(owner) == "String") ? this.app.GuiManager.GetGuiObj(owner) : owner
         }
 
         this.Create()
+    }
+
+    SetWindowKey(windowKey) {
+        this.windowKey := windowKey
     }
 
     GetHwnd() {
@@ -131,6 +137,10 @@ class GuiBase {
     Destroy() {
         this.Cleanup()
         this.guiObj.Destroy()
+
+        if (this.windowKey != "") {
+            this.app.GuiManager.RemoveWindow(this.windowKey)
+        }
     }
 
     Cleanup() {

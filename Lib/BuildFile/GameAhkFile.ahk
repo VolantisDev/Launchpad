@@ -1,5 +1,3 @@
-#Include ComposableBuildFile.ahk
-
 class GameAhkFile extends ComposableBuildFile {
     __New(app, config, launcherDir, key, filePath := "") {
         super.__New(app, config, launcherDir, key, ".ahk", filePath)

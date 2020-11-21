@@ -1,5 +1,3 @@
-#Include DialogBox.ahk
-
 class SingleInputBox extends DialogBox {
     defaultValue := ""
     isPassword := false

@@ -1,5 +1,3 @@
-#Include CopyableBuildFile.ahk
-
 class ShortcutFile extends CopyableBuildFile {
     requestMessage := "Select the game shortcut"
     selectFilter := "Shortcuts (*.lnk; *.url; *.exe)"

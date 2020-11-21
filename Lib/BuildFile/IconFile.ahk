@@ -1,5 +1,3 @@
-#Include CopyableBuildFile.ahk
-
 class IconFile extends CopyableBuildFile {
     requestMessage := "Select an icon file or an exe to extract the icon from"
     selectFilter := "Icons (*.ico; *.exe; *.ocx; *.dll; *.cpl)"

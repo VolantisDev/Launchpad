@@ -1,13 +1,11 @@
-﻿#Include GuiBase.ahk
-
-class ToolsWindow extends GuiBase {
+﻿class ToolsWindow extends GuiBase {
     windowOptions := "+AlwaysOnTop -Caption Border"
     windowSize := "w220"
     contentWidth := 200
     positionAtMouseCursor := true
 
-    __New(app, owner := "") {
-        super.__New(app, "Tools", owner)
+    __New(app, owner := "", windowKey := "") {
+        super.__New(app, "Tools", owner, windowKey)
     }
 
     Controls(posY) {

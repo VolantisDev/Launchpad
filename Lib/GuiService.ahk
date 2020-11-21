@@ -20,7 +20,7 @@ class GuiService {
 
     OpenMainWindow() {
         if (!this.WindowExists("MainWindow")) {
-            this.AddWindow("MainWindow", MainWindow.new(this.app, "Launchpad"))
+            this.AddWindow("MainWindow", MainWindow.new(this.app, "Launchpad", "", "MainWindow"))
         }
 
         return this.ShowWindow("MainWindow")
@@ -28,7 +28,7 @@ class GuiService {
 
     OpenLauncherManager() {
         if (!this.WindowExists("LauncherManager")) {
-            this.AddWindow("LauncherManager", LauncherManager.new(this.app, "MainWindow"))
+            this.AddWindow("LauncherManager", LauncherManager.new(this.app, "MainWindow", "LauncherManager"))
         }
 
         return this.ShowWindow("LauncherManager")
@@ -36,7 +36,7 @@ class GuiService {
 
     OpenSettingsWindow() {
         if (!this.WindowExists("SettingsWindow")) {
-            this.AddWindow("SettingsWindow", SettingsWindow.new(this.app, "MainWindow"))
+            this.AddWindow("SettingsWindow", SettingsWindow.new(this.app, "MainWindow", "SettingsWindow"))
         }
 
         return this.ShowWindow("SettingsWindow")
@@ -44,7 +44,7 @@ class GuiService {
 
     OpenToolsWindow() {
         if (!this.WindowExists("ToolsWindow")) {
-            this.AddWindow("ToolsWindow", ToolsWindow.new(this.app, "MainWindow"))
+            this.AddWindow("ToolsWindow", ToolsWindow.new(this.app, "MainWindow", "ToolsWindow"))
         }
 
         return this.ShowWindow("ToolsWindow")
@@ -70,6 +70,24 @@ class GuiService {
 
     ShowWindow(key) {
         return (this.guis.Has(key)) ? this.guis[key].Show() : false
+    }
+
+    WindowIsOpen(key) {
+        return this.WindowExists(key)
+        ; @todo Make this more accurate?
+    }
+
+    CloseWindow(key) {
+        if (this.WindowExists(key)) {
+            this.guis[key].Close()
+            this.guis[key].Destroy()
+        }
+    }
+
+    RemoveWindow(key) {
+        if (this.WindowExists(key)) {
+            this.guis.Remove(key)
+        }
     }
 
     GetGuiObj(key) {

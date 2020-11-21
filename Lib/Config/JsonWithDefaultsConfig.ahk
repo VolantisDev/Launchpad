@@ -1,5 +1,3 @@
-#Include JsonConfig.ahk
-
 ; JSON configuration objects that can reference a default set of values which will be optionally merged in when reading the configuration
 class JsonWithDefaultsConfig extends JsonConfig {
     defaults := Map()

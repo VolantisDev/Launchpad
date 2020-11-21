@@ -1,5 +1,3 @@
-#Include ApiItem.ahk
-
 class ApiAsset extends ApiItem {
     basePath := "assets"
 

@@ -14,11 +14,11 @@ app.GuiManager.OpenMainWindow()
 {
     global app
 
-    if (IsSet(app)) {
+    if (IsSet(app) and app.GuiManager.WindowIsOpen("ToolsWindow")) {
         MouseGetPos(,,mouseWindow)
         toolsObj := app.GuiManager.GetGuiObj("ToolsWindow")
 
-        if (toolsObj != "" and toolsObj.Hwnd != mouseWindow) {
+        if (toolsObj.Hwnd != mouseWindow) {
             app.GuiManager.CloseToolsWindow()
         }
     }

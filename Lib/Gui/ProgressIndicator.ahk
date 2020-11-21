@@ -1,5 +1,3 @@
-#Include DialogBox.ahk
-
 class ProgressIndicator extends DialogBox {
     progressRange := "0-100"
     initialPosition := 0

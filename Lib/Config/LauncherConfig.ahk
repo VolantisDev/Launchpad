@@ -1,6 +1,4 @@
-﻿#Include JsonWithDefaultsConfig.ahk
-
-class LauncherConfig extends JsonWithDefaultsConfig {
+﻿class LauncherConfig extends JsonWithDefaultsConfig {
     primaryConfigKey := "Games"
     defaultReferenceKey := "launcherType"
 

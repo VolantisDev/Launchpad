@@ -1,5 +1,3 @@
-#Include Cache.ahk
-
 class ObjectCache extends Cache {
     cacheObj := Map()
 

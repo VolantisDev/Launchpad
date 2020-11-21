@@ -1,6 +1,4 @@
-﻿#Include Game.ahk
-
-class ShortcutGame extends Game {
+﻿class ShortcutGame extends Game {
     shortcut := ""
     launcherType := "Shortcut"
 

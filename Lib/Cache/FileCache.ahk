@@ -1,5 +1,3 @@
-#Include Cache.ahk
-
 class FileCache extends Cache {
     cachePath := ""
 

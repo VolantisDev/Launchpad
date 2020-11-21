@@ -1,6 +1,4 @@
-﻿#Include Game.ahk
-
-class UriGame extends Game {
+﻿class UriGame extends Game {
     uri := ""
     launcherType := "Shortcut"
 

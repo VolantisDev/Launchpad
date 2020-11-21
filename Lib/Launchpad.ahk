@@ -264,7 +264,7 @@
     }
 
     Cleanup(owner := "MainWindow") {
-        count := this.CountLaunchers()
+        count := this.Launchers.Games.Count
         progress := this.GuiManager.ProgressIndicator("Cleaning Launchers", "Please wait while your launchers are cleaned up.", owner, true, "0-" . count, 0, "Initializing...")
 
         cleaned := 0
@@ -301,7 +301,7 @@
     }
 
     ExitApp() {
-        if (this.AppConfig.CleanOnExit) {
+        if (this.AppConfig.CleanLaunchersOnExit) {
             this.FlushCache()
             this.Cleanup()
         }

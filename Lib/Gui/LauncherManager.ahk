@@ -1,11 +1,9 @@
-﻿#Include GuiBase.ahk
-
-class LauncherManager extends GuiBase {
+﻿class LauncherManager extends GuiBase {
     windowOptions := "+Resize MinSize380x380"
     contentWidth := 510
 
-    __New(app, owner := "") {
-        super.__New(app, app.AppConfig.LauncherFile, owner)
+    __New(app, owner := "", windowKey := "") {
+        super.__New(app, app.AppConfig.LauncherFile, owner, windowKey)
     }
 
     Controls(posY) {

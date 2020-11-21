@@ -1,5 +1,3 @@
-#Include FileConfig.ahk
-
 class JsonConfig extends FileConfig {
     config := Map()
     primaryConfigKey := "Config"

@@ -1,5 +1,3 @@
-#Include BuildFile.ahk
-
 class CopyableBuildFile extends BuildFile {
     sourcePathValue := ""
     requestMessageValue := "Select the file"
