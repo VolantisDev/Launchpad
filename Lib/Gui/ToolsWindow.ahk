@@ -1,64 +1,65 @@
-﻿class ToolsWindow extends Gui {
+﻿#Include GuiBase.ahk
+
+class ToolsWindow extends GuiBase {
     windowOptions := "+AlwaysOnTop -Caption Border"
     windowSize := "w220"
-    label := "ToolsWindow"
     contentWidth := 200
     positionAtMouseCursor := true
 
     __New(app, owner := 0) {
-        base.__New(app, "Tools", owner)
+        super.__New(app, "Tools", owner)
     }
 
     Controls(posY) {
-        posY := base.Controls(posY)
-
-        margin := this.margin
+        posY := super.Controls(posY)
         controlWidth := this.contentWidth
 
-        Gui Add, Button, gToolsWindowReloadLauncherFile x%margin% y%posY% w%controlWidth% h40, &Reload Launcher File
-        posY += 40 + margin
-        Gui Add, Button, gToolsWindowCleanLaunchers x%margin% y%posY% w%controlWidth% h40, &Clean Launchers
-        posY += 40 + margin
-        Gui Add, Button, gToolsWindowUpdateDependencies x%margin% y%posY% w%controlWidth% h40, &Update Dependencies
-        posY += 40 + margin
-        Gui Add, Button, gToolsWindowFlushCache x%margin% y%posY% w%controlWidth% h40, &Flush Cache
-        posY += 40 + margin
+        btn := this.guiObj.AddButton("x" . this.margin . " y" . posY . " w" . controlWidth . " h40", "&Reload Launcher File")
+        btn.OnEvent("Click", "OnReloadLauncherFile")
+        posY += 40 + this.margin
+
+        btn := this.guiObj.AddButton("x" . this.margin . " y" . posY . " w" . controlWidth . " h40", "&Clean Launchers")
+        btn.OnEvent("Click", "OnCleanLaunchers")
+        posY += 40 + this.margin
+
+        btn := this.guiObj.AddButton("x" . this.margin . " y" . posY . " w" . controlWidth . " h40", "&Update Dependencies")
+        btn.OnEvent("Click", "OnUpdateDependencies")
+        posY += 40 + this.margin
+
+        btn := this.guiObj.AddButton("x" . this.margin . " y" . posY . " w" . controlWidth . " h40", "&Flush Cache")
+        btn.OnEvent("Click", "OnFlushCache")
+        posY += 40 + this.margin
 
         return posY
     }
-}
 
-ToolsWindowEscape:
-ToolsWindowClose:
-{
-    Gui, ToolsWindow:Cancel
-    Return
-}
+    OnReloadLauncherFile(btn) {
+        this.guiObj.Cancel()
+        this.app.ReloadLauncherFile()
+    }
 
- ToolsWindowReloadLauncherFile:
-{
-    Gui, ToolsWindow:Cancel
-    app.ReloadLauncherFile()
-    Return
-}
-        
-ToolsWindowCleanLaunchers:
-{
-    Gui, ToolsWindow:Cancel
-    app.Cleanup()
-    Return
-}
+    OnCleanLaunchers(btn) {
+        this.guiObj.Cancel()
+        this.app.Cleanup()
+    }
 
-ToolsWindowFlushCache:
-{
-    Gui, ToolsWindow:Cancel
-    app.FlushCache()
-    Return
-}
+    OnFlushCache(btn) {
+        this.guiObj.Cancel()
+        this.app.FlushCache()
+    }
 
-ToolsWindowUpdateDependencies:
-{
-    Gui, ToolsWindow:Cancel
-    app.UpdateDependencies(true)
-    Return
+    OnUpdateDependencies(btn) {
+        this.guiObj.Cancel()
+        this.app.UpdateDependencies(true)
+    }
+
+    OnClose(guiObj) {
+        this.guiObj.Cancel()
+        super.OnClose(guiObj)
+    }
+
+    OnEscape(guiObj) {
+        this.guiObj.Cancel()
+        super.OnEscape(guiObj)
+    }
 }

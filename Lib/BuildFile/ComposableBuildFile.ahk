@@ -1,6 +1,8 @@
+#Include BuildFile.ahk
+
 class ComposableBuildFile extends BuildFile {
     Build() {
-        base.Build()
+        super.Build()
         this.Delete()
         result := this.ComposeFile()
         this.Cleanup()

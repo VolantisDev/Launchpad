@@ -1,5 +1,7 @@
+#Include Cache.ahk
+
 class FileCache extends Cache {
-    cachePath := 
+    cachePath := ""
 
     __New(app, cachePath := "") {
         if (cachePath == "") {
@@ -7,9 +9,9 @@ class FileCache extends Cache {
         }
 
         this.cachePath := cachePath
-        FileCreateDir, % this.cachePath
+        DirCreate(this.cachePath)
 
-        base.__New(app)
+        super.__New(app)
     }
 
     ItemExists(path) {
@@ -17,49 +19,44 @@ class FileCache extends Cache {
     }
 
     ReadItem(path) {
-        item := ""
-
-        if (this.ItemExists(path)) {
-            FileRead, item, % this.GetCachePath(path)
-        }
-
-        return item
+        return (this.ItemExists(path)) ? FileRead(this.GetCachePath(path)) : ""
     }
 
     WriteItem(path, content) {
         this.CreateCacheDir(path)
         path := this.GetCachePath(path)
-        FileDelete,%path%
-        FileAppend, %content%, %path%
+
+        if (FileExist(path)) {
+            FileDelete(path)
+        }
+        
+        FileAppend(content, path)
     }
 
     RemoveItem(path) {
         path := this.GetCachePath(path)
 
-        if (path != "") {
-            FileDelete, %path%
+        if (path != "" and FileExist(path)) {
+            FileDelete(path)
         }
     }
 
     GetItemTimestamp(path) {
-        timestamp := ""
-
-        if (this.ItemExists(path)) {
-            FileGetTime, timestamp, % this.GetCachePath(path), M
-        }
-
-        return timestamp
+        return (this.ItemExists(path)) ? FileGetTime(this.GetCachePath(path), "M") : ""
     }
 
     FlushCache() {
-        FileRemoveDir,% this.cachePath, true
-        FileCreateDir, % this.cachePath
+        if (DirExist(this.cachePath)) {
+            DirDelete(this.cachePath, true)
+        }
+        
+        DirCreate(this.cachePath)
     }
 
     CreateCacheDir(path) {
         path := this.GetCachePath(path)
-        SplitPath, path,,cacheDir
-        FileCreateDir, %cacheDir%
+        SplitPath(path,,cacheDir)
+        DirCreate(cacheDir)
     }
 
     GetCachePath(path) {
@@ -67,14 +64,14 @@ class FileCache extends Cache {
     }
 
     ConvertPathToDestinationFormat(path) {
-        StringReplace, path, path,% "/",% "\", All
-        return path
+        return StrReplace(path, "/", "\")
     }
 
     ImportItemFromUrl(path, url) {
         this.CreateCacheDir(path)
         filePath := this.GetCachePath(path)
-        UrlDownloadToFile, %url%, %filePath%
+
+        Download(url, filePath)
         return filePath
     }
 
@@ -82,7 +79,7 @@ class FileCache extends Cache {
         sourcePath := this.GetCachePath(path)
         
         if (path != "" and sourcePath != "" and destination != "" and sourcePath != destination) {
-            FileCopy, %sourcePath%, %destination%, true
+            FileCopy(sourcePath, destination, true)
         }
 
         return destination

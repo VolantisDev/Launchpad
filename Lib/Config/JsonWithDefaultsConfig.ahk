@@ -1,47 +1,51 @@
+#Include JsonConfig.ahk
+
 ; JSON configuration objects that can reference a default set of values which will be optionally merged in when reading the configuration
 class JsonWithDefaultsConfig extends JsonConfig {
-    defaults := {}
+    defaults := Map()
     defaultReferenceKey := "defaults"
     autoMerge := true
 
     __New(app, configPath := "", autoLoad := true, autoMerge := true) {
         this.autoMerge := autoMerge
-        base.__New(app, configPath, autoLoad)
+        super.__New(app, configPath, autoLoad)
     }
 
     LoadConfig() {
-        base.LoadConfig()
+        super.LoadConfig()
 
         if (this.autoMerge) {
             this.MergeConfig()
         }
     }
 
-    MergeConfig() {
-        Progress, Off
-        Progress, M, Initializing..., Please wait while launcher data is loaded from configured sources., Loading Config
-
+    CountItems() {
         count := 0
-        for key, value in this.config[this.primaryConfigKey]
+        for (key, value in this.config[this.primaryConfigKey]) {
             count++
-        Progress, R0-%count% M, Initializing..., Please wait while launcher data is loaded from configured sources., Loading Config
+        }
+        return count
+    }
 
-        count := 0
+    MergeConfig() {
+        progressText := "Please wait while your configuration is processed."
+        progress := this.app.Guis.ProgressIndicator("Loading Config", progressText, this.app.Guis.GetGuiObj("MainWindow"), false, "0-" . this.CountItems(), 0, "Initializing...")
+
+        count := 1
         for key, configItem in this.config[this.primaryConfigKey]
         {
-            count++
-            Progress, %count%,% "Loading data for " . key . "...", Please wait while launcher data is loaded from configured sources., Loading Config
-
+            progress.SetValue(count, key . ": Loading config...")
             configItem := this.Dereference(key, configItem)
             this.config[this.primaryConfigKey][key] := this.MergeDefaults(key, configItem)
+            count++
         }
 
-        Progress, Off
+        progress.Finish()
     }
 
     Dereference(key, configItem) {
         if (!IsObject(configItem)) {
-            newConfigItem := {}
+            newConfigItem := Map()
             newConfigItem[this.defaultReferenceKey] := configItem
             configItem := newConfigItem
         }
@@ -65,19 +69,11 @@ class JsonWithDefaultsConfig extends JsonConfig {
     }
 
     GetDefaultItem(key, configItem) {
-        defaults := {}
-
-        if (this.defaults.HasKey(key)) {
-            defaults := this.defaults[key]
-        } else {
-            defaults := this.LoadDefaultItemFromSource(key, configItem)
-        }
-
-        return defaults
+        return (this.defaults.Has(key)) ? this.defaults[key] : this.LoadDefaultItemFromSource(key, configItem)
     }
 
     LoadDefaultItemFromSource(key, configItem) {
         ; Load and optionally save the result to this.defaults to avoid loading it again if there are multiple instances.
-        return {} 
+        return Map()
     }
 }

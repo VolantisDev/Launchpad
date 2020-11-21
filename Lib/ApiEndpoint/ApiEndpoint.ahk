@@ -1,6 +1,6 @@
 class ApiEndpoint {
-    app := {}
-    cache := {}
+    app := ""
+    cache := ""
     endpointUrl := ""
 
     __New(app, endpointUrl, cache) {
@@ -14,11 +14,9 @@ class ApiEndpoint {
     }
 
     ItemExistsInApi(path) {
-        url := this.GetApiUrl(path)
-        data := ""
-        headers := ""
-        res := HTTPRequest(url, data, headers, "method=head")
-        return (ErrorLevel == 200)
+        request := HttpReq.new(this.GetApiUrl(path))
+        result := request.Send("HEAD")
+        return (result == -1 && request.GetStatusCode() == 200)
     }
 
     ItemExists(path) {

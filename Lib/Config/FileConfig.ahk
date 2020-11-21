@@ -1,3 +1,5 @@
+#Include ConfigBase.ahk
+
 class FileConfig extends ConfigBase {
     configPathValue := ""
 
@@ -11,7 +13,7 @@ class FileConfig extends ConfigBase {
     }
 
     __New(app, configPath := "", extension := ".conf", autoLoad := true) {
-        base.__New(app)
+        super.__New(app)
 
         if (configPath == "") {
             configPath := app.appDir . "\" . app.appName . extension

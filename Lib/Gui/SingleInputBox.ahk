@@ -1,3 +1,5 @@
+#Include DialogBox.ahk
+
 class SingleInputBox extends DialogBox {
     defaultValue := ""
     isPassword := false
@@ -5,25 +7,19 @@ class SingleInputBox extends DialogBox {
     __New(app, title, text, defaultValue := "", owner := 0, isPassword := false) {
         this.defaultValue := defaultValue
         this.isPassword := isPassword
-        
-        base.__New(app, title, text, owner, "*&OK|&Cancel")
+        super.__New(app, title, text, owner, "*&OK|&Cancel")
     }
 
     Controls(posY) {
-        global DialogBox_Value
-
-        posY := base.Controls(posY)
-        Gui, DialogBox:Add, Edit, % "x" . this.margin . " y" . posY . " w" . this.contentWidth . " h20 -VScroll vDialogBox_Value" . (this.isPassword ? " Password" : ""), % this.defaultValue
+        posY := super.Controls(posY)
+        this.guiObj.AddEdit("x" . this.margin . " y" . posY . " w" . this.contentWidth . " h20 -VScroll vDialogEdit" . (this.isPassword ? " Password" : ""), this.defaultValue)
         posY += 20 + this.margin
-
         return posY
     }
 
     ProcessResult(result) {
-        global DialogBox_Value
-
-        result := (result == "OK") ? DialogBox_Value : ""
-
-        return base.ProcessResult(result)
+        value := this.guiObj["DialogEdit"].Value
+        result := (result == "OK") ? value : ""
+        return super.ProcessResult(result)
     }
 }

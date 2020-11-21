@@ -1,3 +1,5 @@
+#Include BuildFile.ahk
+
 class CopyableBuildFile extends BuildFile {
     sourcePathValue := ""
     requestMessageValue := "Select the file"
@@ -32,11 +34,11 @@ class CopyableBuildFile extends BuildFile {
 
     __New(app, config, launcherDir, key, extension, filePath := "", sourcePath := "") {
         this.sourcePathValue := sourcePath
-        base.__New(app, config, launcherDir, key, extension, filePath)
+        super.__New(app, config, launcherDir, key, extension, filePath)
     }
 
     Build() {
-        base.Build()
+        super.Build()
         path := this.Locate()
         result := path
 
@@ -65,7 +67,7 @@ class CopyableBuildFile extends BuildFile {
     }
 
     AskForPath() {
-        FileSelectFile, file, 1,, % this.key . ": " . this.RequestMessage, % this.SelectFilter
+        file := FileSelect(1,, this.key . ": " . this.RequestMessage, this.SelectFilter)
         
         if (file == "") {
             this.app.Toast("No file selected. Skipping build file.", "Launchpad", 10, 3)
@@ -80,7 +82,7 @@ class CopyableBuildFile extends BuildFile {
         }
 
         if (this.SourcePath != this.FilePath) {
-            FileCopy, % this.SourcePath, % this.FilePath, true
+            FileCopy(this.SourcePath, this.FilePath, true)
         }
 
         return this.FilePath

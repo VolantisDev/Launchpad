@@ -1,5 +1,7 @@
-﻿class BnetlauncherGame extends Game {
+﻿#Include Game.ahk
+
+class BnetlauncherGame extends Game {
     RunGame() {
-        RunWait, % this.appDir . "\Vendor\bnetlauncher\bnetlauncher.exe " . this.options.gameId
+        return RunWait(this.appDir . "\Vendor\bnetlauncher\bnetlauncher.exe " . this.options.gameId)
     }
 }

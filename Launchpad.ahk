@@ -1,32 +1,22 @@
-﻿#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
-#Warn  ; Enable warnings to assist with detecting common errors.
-SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+﻿#Warn
+#Include LauncherLib\Includes.ahk
+#Include Lib\Includes.ahk
 
-httpAgent := "AutoHotkeyScript"
-httpProxy := 0
-httpOption := ""
-httpProxyByPass := 0
-httpQueryReferer := ""
-httpQueryAcceptType := ""
-httpQueryDwFlags := ""
+TraySetIcon("Graphics\Launchpad.ico")
 
-Menu, Tray, Icon, Graphics\Launchpad.ico
+SplitPath(A_ScriptName,,,, appName)
 
-SplitPath, A_ScriptName,,,, appName
-
-app := new Launchpad(appName, A_ScriptDir)
+app := Launchpad.new(appName, A_ScriptDir)
 app.UpdateDependencies()
-app.LaunchMainWindow()
+app.Guis.OpenMainWindow()
 
 ~LButton::
 {
-    MouseGetPos,,,mouseWindow
-    WinGet, windowId, Id, Tools - Launchpad
+    global app
+    MouseGetPos(,,mouseWindow)
+    windowId := WinGetID("Tools - Launchpad")
     
     if (windowId != mouseWindow) {
-        Gui, ToolsWindow:Cancel
+        app.Guis.CloseToolsWindow()
     }
 }
-
-#Include Lib\Includes.ahk

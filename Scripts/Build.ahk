@@ -1,59 +1,73 @@
-﻿#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
-; #Warn  ; Enable warnings to assist with detecting common errors.
-SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+﻿#Warn
+
 appDir := RegExReplace(A_ScriptDir, "\\[^\\]+$")
+
+SplitPath(A_AhkPath,,ahkDir)
+
+if (ahkDir == "") {
+    ahkDir := appDir . "\Vendor\AutoHotKey"
+}
 
 buildDir := appDir . "\Build"
 ahkScript := appDir . "\Launchpad.ahk"
 exeFile := buildDir . "\Launchpad.exe"
 iconFile := appDir . "\Graphics\Launchpad.ico"
 zipPath := appDir . "\Launchpad.zip"
-ahk2Exe := appDir . "\Vendor\AutoHotKey\Compiler\Ahk2Exe.exe"
+ahk2Exe := ahkDir . "\Compiler\Ahk2Exe.exe"
 
 if (!FileExist(ahk2Exe)) {
-    FileSelectFile, ahk2Exe, 3,,Please select your Ahk2Exe.exe file, EXE Files (*.exe)
+    ahk2Exe := FileSelect(3,, "Please select your Ahk2Exe.exe file", "EXE Files (*.exe)")
+
     if (ahk2Exe == "") {
         MsgBox, Could not find Ahk2Exe.exe
-        ExitApp, -1
+        ExitApp -1
     }
 }
 
-FileRemoveDir, %buildDir%, 1
-FileCreateDir, %buildDir%
-RunWait, %ahk2Exe% /in "%ahkScript%" /out "%exeFile%" /icon "%iconFile%"
-FileCopy, %appDir%\Launchers.json.sample, %buildDir%\Launchers.json.sample
-FileCopy, %appDir%\LICENSE.txt, %buildDir%\LICENSE.txt
-FileCopy, %appDir%\README.md, %buildDir%\README.md
-FileCopyDir, %appDir%\LauncherLib, %buildDir%\LauncherLib
+DirDelete(buildDir, true)
+DirCreate(buildDir)
 
-MsgBox, You may now modify the Build directory if you would like before creating the zip file. When finished, click OK to create zip archive.
+pid := RunWait(ahk2Exe . " /in " . ahkScript . " /out " . exeFile . " /icon " . iconFile)
+
+FileCopy(appDir . "\Launchers.json.sample", buildDir . "\Launchers.json.sample")
+FileCopy(appDir . "\LICENSE.txt", buildDir . "\LICENSE.txt")
+FileCopy(appDir . "\README.md", buildDir . "\README.md")
+DirCopy(appDir . "\LauncherLib", buildDir . "\LauncherLib")
+
+result := MsgBox("You may now modify the Build directory if needed. Click OK to build zip archive or Cancel to stop here.", "Post-Build Modification", "OC")
+if (result == "Cancel") {
+    ExitApp
+}
 
 Zip(buildDir, zipPath)
-FileRemoveDir, %buildDir%, true
+DirDelete(buildDir, true)
 
-MsgBox, Finished creating %zipPath%
+MsgBox("Finished building Launchpad! The archive is available at " . zipPath, "Launchpad Build Finished")
+ExitApp
 
 Zip(zipDir, zipFile) {
-    FileDelete, %zipFile%
+    if (FileExist(zipFile)) {
+        FileDelete(zipFile)
+    }
+    
     CreateZipFile(zipFile)
 
     psh := ComObjCreate("Shell.Application")
     pshZip := psh.Namespace(zipFile)
 
-    Loop, Files, %zipDir%\*, DF
+    Loop Files zipDir . "\*", "DF"
     {
-        Sleep, 1000
+        Sleep(1000)
         pshZip.CopyHere(A_LoopFileFullPath, 4|16)
     }
 
-    Sleep, 2000
+    Sleep(2000)
 }
 
 CreateZipFile(zipFile)
 {
 	Header1 := "PK" . Chr(5) . Chr(6)
-	VarSetCapacity(Header2, 18, 0)
+	VarSetStrCapacity(Header2, 18)
 	file := FileOpen(zipFile,"w")
 	file.Write(Header1)
 	file.RawWrite(Header2,18)

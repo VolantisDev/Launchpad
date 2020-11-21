@@ -2,24 +2,24 @@ class Launcher {
     appDir := ""
     key := ""
     name := ""
-    launcherType := {}
-    game := {}
-    options := {}
+    launcherType := Map()
+    game := ""
+    options := Map()
     launcherExe := ""
     
     __New(appDir, key, launcherType, game, options := "") {
         if (options == "") {
-            options := {}
+            options := Map()
         }
         
         this.appDir := appDir
         this.key := key
-        this.name := launcherType.hasKey("name") ? launcherType.name : "Game Launcher"
+        this.name := launcherType.Has("name") ? launcherType["name"] : "Game Launcher"
         this.launcherType := launcherType
         this.game := game
 
-        if (!options.hasKey("runThenWait")) {
-            options.runThenWait := false
+        if (!options.Has("runThenWait")) {
+            options["runThenWait"] := false
         }
 
         this.options := options
@@ -31,13 +31,13 @@ class Launcher {
     }
 
     ExitLauncher() {
-        Exit
+        ExitApp
     }
 
     LaunchGame() {
         this.game.RunGame()
 
-        if (this.options.runThenWait) {
+        if (this.options["runThenWait"]) {
             this.game.WaitForClose()
         }
     }

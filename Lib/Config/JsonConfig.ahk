@@ -1,9 +1,11 @@
+#Include FileConfig.ahk
+
 class JsonConfig extends FileConfig {
-    config := {}
+    config := Map()
     primaryConfigKey := "Config"
 
     __New(app, configPath := "", autoLoad := true) {
-        base.__New(app, configPath, ".json", autoLoad)
+        super.__New(app, configPath, ".json", autoLoad)
     }
 
     LoadConfig() {
@@ -12,12 +14,12 @@ class JsonConfig extends FileConfig {
             return this
         }
 
-        FileRead, jsonString, % this.ConfigPath
+        jsonString := FileRead(this.ConfigPath)
 
         if (jsonString != "") {
             this.config := JSON.Load(jsonString)
         } else {
-            this.config := {}
+            this.config := Map()
         }
 
         return this
@@ -33,10 +35,21 @@ class JsonConfig extends FileConfig {
             return this
         }
 
-        FileDelete, % this.ConfigPath
+        if (FileExist(this.ConfigPath)) {
+            FileDelete(this.ConfigPath)
+        }
+        
         jsonString := JSON.Dump(this.config, "", 4)
-        FileAppend, %jsonString%, % this.ConfigPath
+        FileAppend(jsonString, this.ConfigPath)
 
         return this
+    }
+
+    CountItems() {
+        count := 0
+        for (key, value in this.config[this.primaryConfigKey]) {
+            count++
+        }
+        return count
     }
 }

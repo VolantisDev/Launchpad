@@ -1,12 +1,12 @@
 class BuildFile {
-    app := {}
+    app := ""
     appDir := ""
     tempDir := ""
     filePathValue := ""
     key := ""
     extension := ""
     launcherDir := ""
-    config := {}
+    config := Map()
 
     FilePath[] {
         get {
@@ -41,8 +41,8 @@ class BuildFile {
     }
 
     Delete() {
-        if (this.FilePath != "") {
-            FileDelete, % this.FilePath
+        if (this.FilePath != "" && FileExist(this.FilePath)) {
+            FileDelete(this.FilePath)
         }
     }
 }

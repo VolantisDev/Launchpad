@@ -1,62 +1,63 @@
+#Include Launcher.ahk
+
 class LauncherLauncher extends Launcher {
     launcherExe := ""
 
     __New(appDir, key, launcherType, game, options := "") {
         if (options == "") {
-            options := {}
+            options := Map()
         }
         
-        this.launcherExe := launcherType.hasKey("exe") ? launcherType.exe : ""
+        this.launcherExe := launcherType.Has("exe") ? launcherType["exe"] : ""
 
-        if (!options.hasKey("waitAfterClose")) {
-            options.waitAfterClose := 5000
+        if (!options.Has("waitAfterClose")) {
+            options["waitAfterClose"] := 5000
         }
 
-        if (!options.hasKey("waitBehavior")) {
-            options.waitBehavior := "sleep"
+        if (!options.Has("waitBehavior")) {
+            options["waitBehavior"] := "sleep"
         }
 
-        if (!options.hasKey("waitSleep")) {
-            options.waitSleep := 5000
+        if (!options.Has("waitSleep")) {
+            options["waitSleep"] := 5000
         }
 
-        if (!options.hasKey("autoKillLauncher")) {
-            options.autoKillLauncher := false
+        if (!options.Has("autoKillLauncher")) {
+            options["autoKillLauncher"] := false
         }
 
-        if (!options.hasKey("autoKillLauncherDelay")) {
-            options.autoKillLauncherDelay := 1000
+        if (!options.Has("autoKillLauncherDelay")) {
+            options["autoKillLauncherDelay"] := 1000
         }
 
-        if (!options.hasKey("closeLauncherBefore")) {
-            options.closeLauncherBefore := false
+        if (!options.Has("closeLauncherBefore")) {
+            options["closeLauncherBefore"] := false
         }
 
-        if (!options.hasKey("closeLauncherAfter")) {
-            options.closeLauncherAfter := false
+        if (!options.Has("closeLauncherAfter")) {
+            options["closeLauncherAfter"] := false
         }
 
-        if (!options.hasKey("closeLauncherDelay")) {
-            options.closeLauncherDelay := 10000 ; Override to leave time for cloud sync
+        if (!options.Has("closeLauncherDelay")) {
+            options["closeLauncherDelay"] := 10000 ; Override to leave time for cloud sync
         }
 
-        base.__New(appDir, key, launcherType, game, options)
+        super.__New(appDir, key, launcherType, game, options)
     }
 
     WaitLoopHandler() {
-        if (this.options.autoKillLauncher) {
-            Process, Close, % this.launcherExe
-            Sleep, % this.options.autoKillLauncherDelay
+        if (this.options["autoKillLauncher"]) {
+            ProcessClose(this.launcherExe)
+            Sleep(this.options["autoKillLauncherDelay"])
         } else {
-            if (this.options.waitBehavior == "prompt") {
-                MsgBox, 5, % this.name . " Running", % this.name . " is currently running. Please shut it down to continue.", 5
+            if (this.options["waitBehavior"] == "prompt") {
+                result := MsgBox(this.name . " is currently running. Please shut it down to continue.", this.name . " Running", 5)
 
-                IfMsgBox Cancel
-                {
+                if (result == "Cancel") {
                     return true
                 }
             } else {
-                Sleep, % this.options.waitSleep
+                Sleep(this.options["waitSleep"])
             }
         }
 
@@ -65,15 +66,16 @@ class LauncherLauncher extends Launcher {
 
     WaitForClose() {
         Loop {
-            Process, Exist, % this.launcherExe
+            pid := ProcessExist(this.launcherExe)
 
-            if (ErrorLevel != 0) {
+            if (pid != 0) {
                 done := this.WaitLoopHandler()
+
                 if (done) {
                     Break
                 }
             } else {
-                Sleep,% this.options.waitAfterClose
+                Sleep(this.options["waitAfterClose"])
                 Break
             }
         }
@@ -82,14 +84,14 @@ class LauncherLauncher extends Launcher {
     }
 
     LaunchGame() {
-        if (this.options.closeLauncherBefore) {
+        if (this.options["closeLauncherBefore"]) {
             this.WaitForClose()
         }
 
-        base.LaunchGame()
+        super.LaunchGame()
         
-        if (this.options.closeLauncherAfter) {
-            Sleep,% this.options.closeLauncherDelay
+        if (this.options["closeLauncherAfter"]) {
+            Sleep(this.options["closeLauncherDelay"])
             this.WaitForClose()
         }
     }

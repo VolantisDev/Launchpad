@@ -1,5 +1,5 @@
 class Cache {
-    app := {}
+    app := ""
 
     __New(app) {
         this.app := app
@@ -31,21 +31,23 @@ class Cache {
 
     ImportItemFromUrl(reference, url) {
         tempDir := this.app.tempDir
-        FileCreateDir, %tempDir%
         tempFile := tempDir . "\cacheDownload"
 
+        DirCreate(tempDir)
         tempFile := this.DownloadItem(tempFile, url)
-
-        FileRead, content, %tempFile%
-        FileDelete,%tempFile%
-
+        content := FileRead(tempFile)
+        
+        if (FileExist(tempFile)) {
+            FileDelete(tempFile)
+        }
+        
         this.WriteItem(reference, content)
 
         return content
     }
 
     DownloadItem(path, url) {
-        UrlDownloadToFile, %url%, %path%
+        Download(url, path)
         return path
     }
 
@@ -54,9 +56,8 @@ class Cache {
         cacheAge := 999999999 ; Random really high number
 
         if (timestamp != "") {
-            FormatTime, now,,yyyyMMddHHmmss
-            cacheAge := now
-            cacheAge -= timestamp, Seconds
+            now := FormatTime(,"yyyyMMddHHmmss")
+            cacheAge := DateDiff(now, timestamp, "Seconds")
         }
 
         return cacheAge        

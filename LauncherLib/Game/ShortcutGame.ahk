@@ -1,30 +1,33 @@
-﻿class ShortcutGame extends Game {
+﻿#Include Game.ahk
+
+class ShortcutGame extends Game {
     shortcut := ""
     launcherType := "Shortcut"
 
     __New(appDir, key, gameType, options := "") {
         if (options == "") {
-            options := {}
+            options := Map()
         }
 
-        if (options.HasKey("shortcut")) {
-            this.shortcut := options.shortcut
+        if (options.Has("shortcut")) {
+            this.shortcut := options["shortcut"]
         } else {
-            shortcutBase := options.assetsDir . "\" . key
+            shortcutBase := options["assetsDir"] . "\" . key
 
+            ; @todo Support other shortcut extensions?
             if (FileExist(shortcutBase . ".lnk")) {
                 this.shortcut := shortcutBase . ".lnk"
             }
-
-            ; @todo Support other shortcut extensions?
         }
 
-        base.__New(appDir, gameType, gameId)
+        super.__New(appDir, key, gameType, options)
     }
 
     RunGame() {
         if (this.shortcut != "") {
-            Run,% this.shortcut,, Hide
+            Run(this.shortcut,, "Hide")
         }
+
+        return 0
     }
 }

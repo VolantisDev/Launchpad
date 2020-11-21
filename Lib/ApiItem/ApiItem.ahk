@@ -1,6 +1,6 @@
 class ApiItem {
-    app := {}
-    endpoint := {}
+    app := ""
+    endpoint := ""
     basePath := ""
     itemSuffix := ""
     path := ""

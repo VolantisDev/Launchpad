@@ -3,10 +3,11 @@
     appDir := ""
     tempDir := ""
     cacheDir := ""
-    appConfigObj := {}
-    apiEndpointObj := {}
-    launchersObj := {}
-    caches := {}
+    appConfigObj := ""
+    apiEndpointObj := ""
+    launchersObj := ""
+    caches := Map()
+    guiServiceObj := ""
     
     AppConfig[] {
         get {
@@ -35,110 +36,138 @@
         }
     }
 
+    Guis[] {
+        get {
+            return this.guiServiceObj
+        }
+        set {
+            return this.guiServiceObj := value
+        }
+    }
+
     __New(appName, appDir) {
         this.appName := appName
         this.appDir := appDir
         
-        this.appConfigObj := new AppConfig(this)
+        this.appConfigObj := AppConfig.new(this)
 
         this.tempDir := this.appConfigObj.TempDir
         this.cacheDir := this.appConfigObj.CacheDir
+        this.guiServiceObj := GuiService.new(this)
 
         this.SetupCaches()
 
-        this.apiEndpointObj := new ApiEndpoint(this, this.appConfigObj.ApiEndpoint, this.caches.api)
-        this.launchersObj := new LauncherConfig(this, this.appConfigObj.LauncherFile, true)
+        this.apiEndpointObj := ApiEndpoint.new(this, this.appConfigObj.ApiEndpoint, this.caches.api)
+        this.launchersObj := LauncherConfig.new(this, this.appConfigObj.LauncherFile, true)
     }
 
     SetupCaches() {
-        this.caches.app := new ObjectCache(this)
-        this.caches.file := new FileCache(this, this.cacheDir)
-        this.caches.api := new FileCache(this, this.cacheDir . "\API")
+        this.caches["app"] := ObjectCache.new(this)
+        this.caches["file"] := FileCache.new(this, this.cacheDir)
+        this.caches["api"] := FileCache.new(this, this.cacheDir . "\API")
     }
 
     GetCache(key) {
-        return (this.caches.HasKey(key)) ? this.caches[key] : {}
+        return (this.caches.Has(key)) ? this.caches[key] : ""
     }
 
     SetCache(key, cacheObj) {
         this.caches[key] := cacheObj
     }
 
-    UpdateDependencies(forceUpdate := false) {
-        Progress, Off
-        Progress, M, Initializing..., Please wait while dependencies are updated., Updating Dependencies
+    CountDependencies(listingInstance := "") {
+        if (listingInstance == "") {
+            listingInstance := ApiListing.new(this, "dependencies")
+        }
 
-        listingInstance := new ApiListing(this, "dependencies")
-        updated := 0
+        count := 0
 
         if (listingInstance.Exists()) {
             listing := listingInstance.Read()
 
-            count := 0
-            for index, key in listing.items
-                count++
-            Progress, R0-%count% M, Initializing..., Please wait while dependencies are updated., Updating Dependencies
-
-            count := 0
             for index, key in listing.items {
                 count++
-                Progress, %count%,% "Discovering " . key . "...", Please wait while dependencies are updated., Updating Dependencies
+            } 
+        }
 
-                item := new ApiDependency(this, key)
+        return count
+    }
+
+    UpdateDependencies(forceUpdate := false, owner := "MainWindow") {
+        progress := this.Guis.ProgressIndicator("Updating Dependencies", "Please wait while dependencies are updated.", owner, false, "0-100", 0, "Initializing...")
+
+        listingInstance := ApiListing.new(this, "dependencies")
+        updated := 0
+        count := this.CountDependencies(listingInstance)
+
+        if (count > 0) {
+            progress.SetRange("0-" . count)
+            listing := listingInstance.Read()
+
+            currentItem := 1
+            for index, key in listing.items {
+                progress.SetValue(currentItem, key . ": Discovering...")
+
+                item := ApiDependency.new(this, key)
 
                 if (item.Exists()) {
                     dependencyConfig := item.Read()
                     dependencyClass := dependencyConfig.class
-                    dependencyInstance := new %dependencyClass%(this, key, dependencyConfig)
+                    dependencyInstance := %dependencyClass%.new(this, key, dependencyConfig)
 
                     if (dependencyInstance.NeedsUpdate(forceUpdate)) {
+                        installed := dependencyInstance.IsInstalled()
+                        statusText := installed ? "Updating" : "Installing"
+                        progress.SetDetailText(dependencyConfig.name . ": " . statusText . "...")
+                        result := installed ? dependencyInstance.Update(forceUpdate) : dependencyInstance.Install()
                         updated++
-                        if (dependencyInstance.IsInstalled()) {
-                            Progress,,% "Updating " . dependencyConfig.name . "...", Please wait while dependencies are updated., Updating Dependencies
-                            dependencyInstance.Update(forceUpdate)
-                        } else {
-                            Progress,,% "Installing " . dependencyConfig.name . "...", Please wait while dependencies are updated., Updating Dependencies
-                            dependencyInstance.Install()
-                        }
                     }
                 }
+
+                currentItem++
             }
         }
 
-        Progress, Off
+        progress.Finish()
 
         if (updated > 0 or forceUpdate) {
             this.Toast("Updated " . updated . " dependencies.")
         }
     }
 
-    BuildLaunchers(updateExisting := false) {
-        Progress, Off
-        Progress, M, Initializing..., Please wait while your launchers are built., Building Launchers
-
+    CountLaunchers() {
         count := 0
-        for key, value in this.Launchers.Games
+
+        for key, value in this.Launchers.Games {
             count++
-        Progress, R0-%count% M, Initializing..., Please wait while your launchers are built., Building Launchers
+        } 
+
+        return count
+    }
+
+    BuildLaunchers(updateExisting := false, owner := "MainWindow") {
+        count := this.CountLaunchers()
+        progress := this.Guis.ProgressIndicator("Building Launchers", "Please wait while your launchers are built.", owner, false, "0-" . count, 0, "Initializing...")
 
         built := 0
-        count := 0
+        currentItem := 1
         For key, config in this.Launchers.Games {
-            count++
-            Progress, %count%,% "Discovering " . key . "...", Please wait while your launchers are built., Building Launchers
+            progress.SetValue(currentItem, key . ": Discovering...")
             success := false
 
             if (updateExisting or !this.LauncherExists(key, config)) {
-                Progress,,% "Building launcher: " . key . "...", Please wait while your launchers are built., Building Launchers
+                progress.SetDetailText(key . ": Building launcher...")
                 success := this.BuildLauncher(key, config)
 
                 if (success) {
                     built++
                 }
             }
+
+            currentItem++
         }
 
-        Progress, Off
+        progress.Finish()
         this.Toast("Built " . built . " launchers.")
     }
 
@@ -161,28 +190,8 @@
     }
 
     BuildLauncher(key, config) {
-        generatorInstance := new Builder(this, key, config)
+        generatorInstance := Builder.new(this, key, config)
         return generatorInstance.Build()
-    }
-
-    LaunchMainWindow() {
-        window := new MainWindow(this, "Launchpad")
-        window.Show()
-    }
-
-    LaunchManageWindow() {
-        window := new LauncherManager(this)
-        window.Show()
-    }
-
-    LaunchToolsWindow() {
-        window := new ToolsWindow(this)
-        window.Show()
-    }
-
-    LaunchSettingsWindow() {
-        window := new SettingsWindow(this)
-        window.Show()
     }
 
     ReloadLauncherFile() {
@@ -190,12 +199,12 @@
     }
 
     OpenLauncherFile() {
-        Run, % this.AppConfig.LauncherFile
+        Run(this.AppConfig.LauncherFile)
     }
 
     ChangeLauncherFile() {
         existingFile := this.AppConfig.GetIniValue("LauncherFile")
-        FileSelectFile, launcherFile, 3, %existingFile%, Select the Launchers file to use, JSON Documents (*.json)
+        launcherFile := FileSelect(3, existingFile, "Select the Launchers file to use", "JSON Documents (*.json)")
 
         if (launcherFile != "") {
             this.AppConfig.LauncherFile := launcherFile
@@ -205,12 +214,12 @@
     }
 
     OpenLauncherDir() {
-        Run, % this.AppConfig.LauncherDir
+        Run(this.AppConfig.LauncherDir)
     }
 
     ChangeLauncherDir() {
         existingDir := this.AppConfig.GetIniValue("LauncherDir")
-        FileSelectFolder, launcherDir, *%existingDir%, 3, Create or select the folder to create game launchers within
+        launcherDir := DirSelect("*" . existingDir, 3, "Create or select the folder to create game launchers within")
 
         if (launcherDir != "") {
             this.AppConfig.LauncherDir := launcherDir
@@ -220,12 +229,12 @@
     }
 
     OpenAssetsDir() {
-        Run, % this.AppConfig.AssetsDir
+        Run(this.AppConfig.AssetsDir)
     }
 
     ChangeAssetsDir() {
         existingDir := this.AppConfig.AssetsDir
-        FileSelectFolder, assetsDir, *%existingDir%, 3, Create or select the folder to create game launcher assets within
+        assetsDir := DirSelect("*" . existingDir, 3, "Create or select the folder to create launcher assets within")
         
         if (assetsDir != "") {
             this.AppConfig.AssetsDir := assetsDir
@@ -236,7 +245,7 @@
 
     ChangeCacheDir() {
         existingDir := this.AppConfig.CacheDir
-        FileSelectFolder, cacheDir, *%existingDir%, 3, Create or select the folder to save Launchpad's cache files to
+        cacheDir := DirSelect("*" . existingDir, 3, "Create or select the folder to save Launchpad's cache files to")
         
         if (cacheDir != "") {
             this.AppConfig.CacheDir := cacheDir
@@ -247,13 +256,11 @@
         return cacheDir
     }
 
-    ChangeApiEndpoint() {
+    ChangeApiEndpoint(owner := "MainWindow") {
         text := "Enter the base URL of the API endpoint you would like Launchpad to connect to.`n`nLeave blank to revert to the default."
 
         existingEndpoint := this.AppConfig.ApiEndpoint
-
-        dialog := new SingleInputBox(this, "API Endpoint URL", text, existingEndpoint, "MainWindow")
-        apiEndpointUrl := dialog.Show()
+        apiEndpointUrl := this.Guis.SingleInputBox("API Endpoint URL", text, existingEndpoint, owner)
 
         if (apiEndpointUrl != existingEndpoint) {
             this.AppConfig.ApiEndpoint := apiEndpointUrl
@@ -269,31 +276,26 @@
     }
 
     Cleanup() {
-        Progress, Off
-        Progress, M, Initializing..., Please wait while your launchers are cleaned., Cleaning Launchers
-
-        count := 0
-        for key, value in this.Launchers.Games
-            count++
-        Progress, R0-%count% M, Initializing..., Please wait while your launchers are cleaned., Cleaning Launchers
+        count := this.CountLaunchers()
+        progress := this.Guis.ProgressIndicator("Cleaning Launchers", "Please wait while your launchers are cleaned up.", owner, false, "0-" . count, 0, "Initializing...")
 
         cleaned := 0
-        count := 0
+        currentItem := 1
         For key, config in this.Launchers.Games {
-            count++
-            Progress, %count%,% "Cleaning " . key . "...", Please wait while your launchers are cleaned., Cleaning Launchers
-            
+            progress.SetValue(currentItem, key . ": Cleaning launcher...")
             success := false
 
             filePath := this.AppConfig.AssetsDir . "\" . key . "\" . key . ".ahk"
 
             if (FileExist(filePath)) {
-                FileDelete, %filePath%
+                FileDelete(filePath)
                 cleaned++
             }
+
+            currentItem++
         }
 
-        Progress, Off
+        progress.Finish()
         this.Toast("Cleaned " . cleaned . " launchers.")
     }
 
@@ -306,8 +308,8 @@
         this.Toast("Flushed all caches.")
     }
 
-    Toast(message, title := "Launchpad", seconds := 10, options := 17) {
-        TrayTip, %title%, %message%, %seconds%, %options%
+    Toast(message, title := "Launchpad", options := 17) {
+        TrayTip(message, title, options)
     }
 
     ExitApp() {
@@ -317,5 +319,17 @@
         }
 
         ExitApp
+    }
+
+    OpenApiEndpoint() {
+        Run(this.AppConfig.ApiEndpoint)
+    }
+
+    OpenCacheDir() {
+        Run(this.AppConfig.CacheDir)
+    }
+
+    OpenHomepage() {
+        Run("https://github.com/bmcclure/Launchpad")
     }
 }

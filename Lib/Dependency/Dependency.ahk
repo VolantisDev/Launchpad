@@ -1,7 +1,7 @@
 ﻿class Dependency {
-    app := {}
+    app := ""
     key := ""
-    config := {}
+    config := Map()
     path := ""
     downloadPath := ""
     zipped := true
@@ -11,7 +11,7 @@
         this.key := key
         this.config := config
         this.path := app.appDir . "\Vendor\" . key
-        this.downloadPath := this.path . "\" . config.downloadFile
+        this.downloadPath := this.path . "\" . config["downloadFile"]
     }
 
     NeedsUpdate(force := false) {
@@ -24,31 +24,31 @@
     }
 
     Download() {
-        FileCreateDir, % this.path
-        UrlDownloadToFile, % this.config.url, % this.downloadPath
+        DirCreate(this.path)
+        Download(this.config["url"], this.downloadPath)
         return this.downloadPath
     }
 
     Extract() {
-        if (this.zipped) {
+        if (this.zipped and FileExist(this.downloadPath)) {
             this.Unzip(this.downloadPath)
-            FileDelete, % this.downloadPath
+            FileDelete(this.downloadPath)
         }
     }
 
     DownloadAssets() {
-        for apiPath, localPath in this.config.assets {
-            asset := new ApiAsset(this.app, apiPath, "dependencies/" . this.key)
+        for apiPath, localPath in this.config["assets"] {
+            asset := ApiAsset.new(this.app, apiPath, "dependencies/" . this.key)
             asset.Copy(this.path . "\" . localPath)
         }
     }
 
     IsInstalled() {
-        return FileExist(this.path . "\" . this.config.mainFile)
+        return FileExist(this.path . "\" . this.config["mainFile"])
     }
 
     Install() {
-        FileCreateDir, % this.path
+        DirCreate(this.path)
         this.Download()
         this.Extract()
         this.DownloadAssets()

@@ -1,25 +1,27 @@
-﻿class LauncherConfig extends JsonWithDefaultsConfig {
+﻿#Include JsonWithDefaultsConfig.ahk
+
+class LauncherConfig extends JsonWithDefaultsConfig {
     primaryConfigKey := "Games"
     defaultReferenceKey := "launcherType"
 
-    gameDefaults := {}
+    gameDefaults := Map()
 
     Games[] {
         get {
             if (this.config.Games) {
-                return this.config.Games
+                return this.config["Games"]
             } else {
-                return {}
+                return Map()
             }
         }
         set {
-            return this.config.Games := value
+            return this.config["Games"] := value
         }
     }
 
     __New(app, configPath := "", autoLoad := true, autoMerge := true) {
         this.gameDefaults.requiresShortcutFile := false
-        base.__New(app, configPath, autoLoad, autoMerge)
+        super.__New(app, configPath, autoLoad, autoMerge)
     }
 
     LoadDefaultItemFromSource(key, configItem) {
@@ -28,59 +30,59 @@
         ; Set some initial defaults
         defaults["assetsDir"] := this.app.AppConfig.AssetsDir . "\" . key
         
-        apiGameInstance := new ApiGame(this.app, key)
+        apiGameInstance := ApiGame.new(this.app, key)
 
         if (apiGameInstance.Exists()) {
             apiGameData := apiGameInstance.Read()
             
             ; Merge defaults from API game data
-            if (apiGameData.HasKey("defaults")) {
-                defaults := this.MergeData(defaults, apiGameData.defaults)
+            if (apiGameData.Has("defaults")) {
+                defaults := this.MergeData(defaults, apiGameData["defaults"])
             }
 
-            launcherType := configItem.HasKey("launcherType") ? configItem.launcherType : "default"
+            launcherType := configItem.Has("launcherType") ? configItem["launcherType"] : "default"
 
             ; Dereference launcher type and merge defaults from game launcher data
-            if (apiGameData.HasKey("launchers")) {
-                launcherType := this.DereferenceLauncherType(launcherType, apiGameData.launchers)
+            if (apiGameData.Has("launchers")) {
+                launcherType := this.DereferenceLauncherType(launcherType, apiGameData["launchers"])
 
-                if (apiGameData.launchers.HasKey(launcherType) and IsObject(apiGameData.launchers[launcherType])) {
-                    defaults := this.MergeData(apiGameData.launchers[launcherType], defaults)
+                if (apiGameData.launchers.Has(launcherType) and IsObject(apiGameData["launchers"][launcherType])) {
+                    defaults := this.MergeData(apiGameData["launchers"][launcherType], defaults)
                 }
             }
 
             ; Merge defaults from launcher type
-            apiLauncherTypeInstance := new ApiLauncherType(this.app, launcherType)
+            apiLauncherTypeInstance := ApiLauncherType.new(this.app, launcherType)
 
             if (apilauncherTypeInstance.Exists()) {
                 apiLauncherTypeData := apiLauncherTypeInstance.Read()
 
-                defaults["launcherClass"] := apiLauncherTypeData.class
+                defaults["launcherClass"] := apiLauncherTypeData["class"]
 
-                if (apiLauncherTypeData.HasKey("defaults")) {
-                    defaults := this.MergeData(apiLauncherTypeData.defaults, defaults)
+                if (apiLauncherTypeData.Has("defaults")) {
+                    defaults := this.MergeData(apiLauncherTypeData["defaults"], defaults)
                 }
             }
             
             ; Determine game type
             gameType := "default"
-            if (configItem.hasKey("gameType")) {
-                gameType := configItem.gameType
-            } else if (defaults.HasKey("gameType")) {
-                gameType := defaults.gameType
+            if (configItem.Has("gameType")) {
+                gameType := configItem["gameType"]
+            } else if (defaults.Has("gameType")) {
+                gameType := defaults["gameType"]
             }
 
             ; Merge defaults from game type
             if (gameType != "") {
-                apiGameTypeInstance := new ApiGameType(this.app, gameType)
+                apiGameTypeInstance := ApiGameType.new(this.app, gameType)
                 
                 if (apiGameTypeInstance.Exists()) {
                     apiGameTypeData := apiGameTypeInstance.Read()
 
-                    defaults["gameClass"] := apiGameTypeData.class
+                    defaults["gameClass"] := apiGameTypeData["class"]
                     
-                    if (apiGameTypeData.HasKey("defaults")) {
-                        defaults := this.MergeData(apiGameTypeData.defaults, defaults)
+                    if (apiGameTypeData.Has("defaults")) {
+                        defaults := this.MergeData(apiGameTypeData["defaults"], defaults)
                     }
                 }
             }
@@ -90,7 +92,7 @@
     }
 
     DereferenceLauncherType(launcherType, launchersConfig) {
-        if (launchersConfig.HasKey(launcherType) && !IsObject(launchersConfig[launcherType])) {
+        if (launchersConfig.Has(launcherType) && !IsObject(launchersConfig[launcherType])) {
             launcherType := this.DereferenceLauncherType(launchersConfig[launcherType], launchersConfig)
         }
 

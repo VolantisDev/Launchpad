@@ -1,7 +1,7 @@
 class Builder {
-    app := {}
-    key := {}
-    config := {}
+    app := ""
+    key := ""
+    config := Map()
 
     __New(app, key, config) {
         this.app := app
@@ -23,15 +23,15 @@ class Builder {
         }
         assetsDir .= "\" . this.key
 
-        FileCreateDir, %launcherDir%
-        FileCreateDir, %assetsDir%
+        DirCreate(launcherDir)
+        DirCreate(assetsDir)
 
-        iconObj := new IconFile(this.app, this.config, assetsDir, this.key)
+        iconObj := IconFile.new(this.app, this.config, assetsDir, this.key)
         iconResult := iconObj.Build()
         
-        shortcutResult := !this.config.requiresShortcutFile ; Default to true if shortcut isn't required
-        if (this.config.requiresShortcutFile) {
-            shortcutObj := new ShortcutFile(this.app, this.config, assetsDir, this.key)
+        shortcutResult := !this.config["requiresShortcutFile"] ; Default to true if shortcut isn't required
+        if (this.config["requiresShortcutFile"]) {
+            shortcutObj := ShortcutFile.new(this.app, this.config, assetsDir, this.key)
             shortcutResult := shortcutObj.Build()
         }
 
@@ -39,11 +39,11 @@ class Builder {
         exeResult := false
 
         if (iconResult and shortcutResult) {
-            gameAhkObj := new GameAhkFile(this.app, this.config, assetsDir, this.key)
+            gameAhkObj := GameAhkFile.new(this.app, this.config, assetsDir, this.key)
             ahkResult := gameAhkObj.Build()
 
             if (ahkResult) {
-                gameExeObj := new GameExeFile(this.app, this.config, launcherDir, this.key)
+                gameExeObj := GameExeFile.new(this.app, this.config, launcherDir, this.key)
                 exeResult := gameExeObj.Build()
             }
             

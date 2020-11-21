@@ -1,6 +1,7 @@
-﻿class MainWindow extends Gui {
+﻿#Include GuiBase.ahk
+
+class MainWindow extends GuiBase {
     windowSize := "w535"
-    label := "MainWindow"
     contentWidth := 515
 
     GetTitle() {
@@ -8,79 +9,72 @@
     }
 
     Controls(posY) {
-        guiLabel := this.label
-        width := this.contentWidth
-        margin := this.margin
+        this.guiObj.marginX := this.margin
+        this.guiObj.marginY := this.margin * 3
 
-        posY := base.Controls(posY)
+        posY := super.Controls(posY)
 
         logo := this.app.AppConfig.AppDir . "\Graphics\Logo.png"
-
-        Gui %guiLabel%:Add, Picture, gMainWindowLogo x%margin% y%posY% w%width% h-1 +BackgroundTrans, %logo%
-        
-        posY += 205 + margin
+        img := this.guiObj.AddPicture("x" . this.margin . " y" . posY . " w" . this.contentWidth . " h-1 +BackgroundTrans", logo)
+        img.OnEvent("Click", "OnLogo")
+        posY += 205 + this.margin
 
         areaW := 430
-        areaX := margin + ((width - areaW) / 2)
+        areaX := this.margin + ((this.contentWidth - areaW) / 2)
 
         buttonWidth := this.ButtonWidth(2, areaW)
         buttonHeight := 80
         posX := areaX
-        Gui Add, Button, gMainWindowManageLaunchers x%posX% y%posY% w%buttonWidth% h%buttonHeight% Disabled, &Manage Launchers
-        posX += buttonWidth + margin
-        Gui Add, Button, gMainWindowBuild x%posX% y%posY% w%buttonWidth% h%buttonHeight%, &Build Launchers
-        posY += buttonHeight + margin
+        btn := this.guiObj.AddButton("x" . posX . " y" . posY . " w" . buttonWidth . " h" . buttonHeight, "&Manage Launchers")
+        btn.OnEvent("Click", "OnManageLaunchers")
+        posX += buttonWidth + this.margin
+        btn := this.guiObj.AddButton("x" . posX . " y" . posY . " w" . buttonWidth . " h" . buttonHeight, "&Build Launchers")
+        btn.OnEvent("Click", "OnBuildLaunchers")
+        posY += buttonHeight + this.margin
 
         buttonWidth := this.ButtonWidth(3, areaW)
         buttonHeight := 30
         posX := areaX
-        Gui Add, Button, gMainWindowTools x%posX% y%posY% w%buttonWidth% h%buttonHeight%, &Tools
-        posX += buttonWidth + margin
-        Gui Add, Button, gMainWindowSettings x%posX% y%posY% w%buttonWidth% h%buttonHeight%, &Settings
-        posX += buttonWidth + margin
-        Gui Add, Button, gMainWindowClose x%posX% y%posY% w%buttonWidth% h%buttonHeight%, &Exit
-        posY += buttonHeight + (margin * 3)
-
-        bottomMargin := margin * 3
-        Gui, Margin, %margin%, %bottomMargin%
+        btn := this.guiObj.AddButton("x" . posX . " y" . posY . " w" . buttonWidth . " h" . buttonHeight, "&Tools")
+        btn.OnEvent("Click", "OnTools")
+        posX += buttonWidth + this.margin
+        btn := this.guiObj.AddButton("x" . posX . " y" . posY . " w" . buttonWidth . " h" . buttonHeight, "&Settings")
+        btn.OnEvent("Click", "OnSettings")
+        posX += buttonWidth + this.margin
+        btn := this.guiObj.AddButton("x" . posX . " y" . posY . " w" . buttonWidth . " h" . buttonHeight, "&Exit")
+        btn.OnEvent("Click", "OnClose")
+        posY += buttonHeight + (this.margin * 3)
 
         return posY
     }
-}
 
-MainWindowEscape:
-MainWindowClose:
-{
-    app.ExitApp()
-    Return
-}
+    OnClose(guiObj) {
+        super.OnClose(guiObj)
+        this.app.ExitApp()
+    }
 
-MainWindowLogo:
-{
-    Run, https://github.com/bmcclure/Launchpad
-    Return
-}
+    OnEscape(guiObj) {
+        super.OnEscape(guiObj)
+        this.app.ExitApp()
+    }
 
-MainWindowBuild:
-{
-    app.BuildLaunchers(app.AppConfig.UpdateExistingLaunchers)
-    Return
-}
+    OnLogo(img) {
+        this.app.OpenHomepage()
+    }
 
-MainWindowManageLaunchers:
-{
-    app.LaunchManageWindow()
-    Return
-}
+    OnBuildLaunchers(btn) {
+        this.app.BuildLaunchers(this.app.AppConfig.UpdateExistingLaunchers)
+    }
 
-MainWindowTools:
-{
-    app.LaunchToolsWindow()
-    Return
-}
+    OnManageLaunchers(btn) {
+        this.app.Guis.OpenLauncherManager()
+    }
 
-MainWindowSettings:
-{
-    app.LaunchSettingsWindow()
-    Return
+    OnTools(btn) {
+        this.app.Guis.OpenToolsWindow()
+    }
+
+    OnSettings(btn) {
+        this.app.Guis.OpenSettingsWindow()
+    }
 }

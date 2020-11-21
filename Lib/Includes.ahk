@@ -1,6 +1,6 @@
 ; Automatically-generated file, do not edit manually.
-#Include E:\Tools\Launchpad\Lib\LauncherGame.ahk
-#Include E:\Tools\Launchpad\Lib\LauncherGen.ahk
+#Include E:\Tools\Launchpad\Lib\GuiService.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad.ahk
 #Include E:\Tools\Launchpad\Lib\ApiEndpoint\ApiEndpoint.ahk
 #Include E:\Tools\Launchpad\Lib\ApiItem\ApiAsset.ahk
 #Include E:\Tools\Launchpad\Lib\ApiItem\ApiDependency.ahk
@@ -23,24 +23,23 @@
 #Include E:\Tools\Launchpad\Lib\Cache\FileCache.ahk
 #Include E:\Tools\Launchpad\Lib\Cache\ObjectCache.ahk
 #Include E:\Tools\Launchpad\Lib\Config\AppConfig.ahk
-#Include E:\Tools\Launchpad\Lib\Config\Config.ahk
+#Include E:\Tools\Launchpad\Lib\Config\ConfigBase.ahk
 #Include E:\Tools\Launchpad\Lib\Config\FileConfig.ahk
-#Include E:\Tools\Launchpad\Lib\Config\GameConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Config\IniConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Config\JsonConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Config\JsonWithDefaultsConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Config\LauncherConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Dependency\Dependency.ahk
+#Include E:\Tools\Launchpad\Lib\Deprecated\GameConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\DialogBox.ahk
-#Include E:\Tools\Launchpad\Lib\Gui\Gui.ahk
+#Include E:\Tools\Launchpad\Lib\Gui\GuiBase.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\LauncherManager.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\MainWindow.ahk
+#Include E:\Tools\Launchpad\Lib\Gui\ProgressIndicator.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\SettingsWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\SingleInputBox.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\ToolsWindow.ahk
-#Include E:\Tools\Launchpad\Lib\Vendor\AutoXYWH.ahk
-#Include E:\Tools\Launchpad\Lib\Vendor\HTTPRequest.ahk
+#Include E:\Tools\Launchpad\Lib\HttpReq\HttpReq.ahk
+#Include E:\Tools\Launchpad\Lib\Toolbar\Toolbar.ahk
 #Include E:\Tools\Launchpad\Lib\Vendor\JSON.ahk
-#Include E:\Tools\Launchpad\Lib\Vendor\Jxon.ahk
-#Include E:\Tools\Launchpad\Lib\Vendor\Toolbar.ahk
 ; End of auto-generated includes.

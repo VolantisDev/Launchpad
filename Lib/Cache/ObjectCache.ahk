@@ -1,15 +1,17 @@
+#Include Cache.ahk
+
 class ObjectCache extends Cache {
-    cacheObj := {}
+    cacheObj := Map()
 
     __New(app, cacheObj := "") {
         if (cacheObj != "") {
             this.cacheObj := cacheObj
         }
-        base.__New(app)
+        super.__New(app)
     }
 
     ItemExists(key) {
-        return this.cacheObj.HasKey(key)
+        return this.cacheObj.Has(key)
     }
 
     GetItemTimestamp(key) {
@@ -17,8 +19,7 @@ class ObjectCache extends Cache {
     }
 
     WriteItem(key, content) {
-        FormatTime, now,,yyyyMMddHHmmss
-        this.cacheObj[key] := {content: content, timestamp: now}
+        this.cacheObj[key] := {content: content, timestamp: FormatTime(,"yyyyMMddHHmmss")}
     }
 
     ReadItem(key) {
@@ -30,6 +31,6 @@ class ObjectCache extends Cache {
     }
 
     FlushCache() {
-        this.cacheObj := {}
+        this.cacheObj := Map()
     }
 }

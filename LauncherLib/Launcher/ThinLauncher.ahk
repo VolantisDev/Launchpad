@@ -1,6 +1,8 @@
+#Include Launcher.ahk
+
 class ThinLauncher extends Launcher {
     LaunchGame() {
-        base.LaunchGame()
+        super.LaunchGame()
         this.ExitLauncher()
     }
 }

@@ -1,254 +1,220 @@
-﻿class SettingsWindow extends Gui {
+﻿#Include GuiBase.ahk
+
+class SettingsWindow extends GuiBase {
     windowOptions := "-MaximizeBox -SysMenu"
     windowSize := "w370"
-    label := "SettingsWindow"
     contentWidth := 350
 
     __New(app, owner := 0) {
-        base.__New(app, "Settings", owner)
+        super.__New(app, "Settings", owner)
     }
 
     Controls(posY) {
-        global ChkCleanLaunchersOnBuild, ChkCleanLaunchersOnExit, ChkFlushCacheOnExit, ChkUpdateExistingLaunchers, ChkIndividualDirs, ChkCopyAssets, TxtLauncherFile, TxtLauncherDir, TxtAssetsDir, TxtApiEndpoint, TxtCacheDir
-
-        posY := base.Controls(posY)
-        
-        updateExistingLaunchersChecked := this.app.AppConfig.UpdateExistingLaunchers
-        individualDirsChecked := this.app.AppConfig.IndividualDirs
-        copyAssetsChecked := this.app.AppConfig.CopyAssets
-        cleanLaunchersOnBuildChecked := this.app.AppConfig.CleanLaunchersOnBuild
-        cleanLaunchersOnExitChecked := this.app.AppConfig.CleanLaunchersOnExit
-        flushCacheOnExitChecked := this.app.AppConfig.FlushCacheOnExit
-
-        launcherFile := this.app.AppConfig.LauncherFile ? this.app.AppConfig.LauncherFile : "Not selected"
-        launcherDir := this.app.AppConfig.LauncherDir ? this.app.AppConfig.LauncherDir : "Not selected"
-        assetsDir := this.app.AppConfig.AssetsDir ? this.app.AppConfig.AssetsDir : "Not selected"
-        apiEndpointVal := this.app.AppConfig.ApiEndpoint ? this.app.AppConfig.ApiEndpoint : "Not selected"
-        cacheDir := this.app.AppConfig.CacheDir ? this.app.AppConfig.CacheDir : "Not selected"
-
-        margin := this.margin
-        width := this.contentWidth
-        groupX := margin * 2
-        groupW := width - (margin * 2)
-        labelW := 75
-        textX := groupX + labelW + 5
-        textW := groupW - labelW - 5
+        posY := super.Controls(posY)
+        groupX := this.margin * 2
+        groupW := this.contentWidth - (this.margin * 2)
         smallButtonW := 80
-        buttonRightFirstX := groupX + groupW - (smallbuttonW * 2) - margin
-        buttonRightSecondX := buttonRightFirstX + smallButtonW + margin
+        buttonRightFirstX := groupX + groupW - (smallbuttonW * 2) - this.margin
+        buttonRightSecondX := buttonRightFirstX + smallButtonW + this.margin
 
-        Gui Add, GroupBox, x%margin% y%posY% w%width% h255, Launchers
-        posY += 5 + margin
-        Gui Add, Text, x%groupX% y%posY% w%labelW% h20 +0x200, Launcher File:
-        Gui, Font, Bold
-        Gui Add, Text, vTxtLauncherFile x%textX% y%posY% w%textW% h20 +0x200, %launcherFile%
-        Gui, Font, Norm
-        posY += 20 + margin
-        buttonX := groupX
-        Gui Add, Button, gSettingsWindowReloadLauncherFile x%buttonX% y%posY% w%smallButtonW% h20, &Reload
-        buttonX += smallButtonW + margin
-        Gui Add, Button, gSettingsWindowOpenLauncherFile x%buttonRightFirstX% y%posY% w%smallButtonW% h20, Open
-        Gui Add, Button, gSettingsWindowChangeLauncherFile x%buttonRightSecondX% y%posY% w%smallButtonW% h20, Change
-        posY += 20 + margin
-        Gui Add, Text, x%groupX% y%posY% w%labelW% h20 +0x200, Launcher Dir:
-        Gui, Font, Bold
-        Gui Add, Text, vTxtLauncherDir x%textX% y%posY% w%textW% h20 +0x200, %launcherDir%
-        Gui, Font, Norm
-        posY += 20 + margin
-        Gui Add, Button, gSettingsWindowOpenLauncherDir x%buttonRightFirstX% y%posY% w%smallButtonW% h20, Open
-        Gui Add, Button, gSettingsWindowChangeLauncherDir x%buttonRightSecondX% y%posY% w%smallButtonW% h20, Change
-        posY += 20 + margin
-        Gui Add, CheckBox, x%groupX% y%posY% w%groupW% h20 gSettingsWindowIndividualDirs vChkIndividualDirs checked%individualDirsChecked%, Create individual launcher directories
-        posY += 20 + margin
-        Gui Add, CheckBox, x%groupX% y%posY% w%groupW% h20 gSettingsWindowUpdateExistingLaunchers vChkUpdateExistingLaunchers checked%updateExistingLaunchersChecked%, Update existing launchers on build
-        posY += 20 + margin
-        Gui Add, CheckBox, x%groupX% y%posY% w%groupW% h20 gSettingsWindowCleanLaunchersOnBuild vChkCleanLaunchersOnBuild checked%cleanLaunchersOnBuildChecked%, Clean launchers on build
-        posY += 20 + margin
-        Gui Add, CheckBox, x%groupX% y%posY% w%groupW% h20 gSettingsWindowCleanLaunchersOnExit vChkCleanLaunchersOnExit checked%cleanLaunchersOnExitChecked%, Clean launchers on exit
-        posY += 20 + margin + margin
+        posY := this.AddGroupBox("Launchers", posY, 255)
+        launcherFile := this.app.AppConfig.LauncherFile ? this.app.AppConfig.LauncherFile : "Not selected"
+        posY := this.AddTextWithLabel("Launcher File", launcherFile, "TxtLauncherFile", posY)
+        posY := this.AddButton("&Reload", "OnReloadLauncherFile", groupX, posY)
+        posY := this.AddButton("Open", "OnOpenLauncherFile", buttonRightFirstX, posY)
+        posY := this.AddButton("Change", "OnChangeLauncherFile", buttonRightSecondX, posY, true)
+        launcherDir := this.app.AppConfig.LauncherDir ? this.app.AppConfig.LauncherDir : "Not selected"
+        posY := this.AddTextWithLabel("Launcher Dir", launcherDir, "TxtLauncherDir", posY)
+        posY := this.AddButton("Open", "OnOpenLauncherDir", buttonRightFirstX, posY)
+        posY := this.AddButton("Change", "OnChangeLauncherDir", buttonRightSecondX, posY, true)
+        posY := this.AddCheckBox("Create individual launcher directories", "ChkIndividualDirs", "OnIndividualDirs", this.app.AppConfig.IndividualDirs, posY)
+        posY := this.AddCheckBox("Update existing launchers on build", "ChkUpdateExistingLaunchers", "OnUpdateExistingLaunchers", this.app.AppConfig.UpdateExistingLaunchers, posY)
+        posY := this.AddCheckBox("Clean launchers on build", "ChkCleanLaunchersOnBuild", "OnCleanLaunchersOnBuild", this.app.AppConfig.CleanLaunchersOnBuild, posY)
+        posY := this.AddCheckBox("Clean launchers on exit", "ChkCleanLaunchersOnExit", "OnCleanLaunchersOnExit", this.app.AppConfig.CleanLaunchersOnExit, posY)
+        posY += this.margin
 
-        Gui Add, GroupBox, x%margin% y%posY% w%width% h105, Assets
-        posY += 5 + margin
-        Gui Add, Text, x%groupX% y%posY% w%labelW% h20 +0x200, Assets Dir:
-        Gui, Font, Bold
-        Gui Add, Text, vTxtAssetsDir x%textX% y%posY% w%textW% h20 +0x200, %assetsDir%
-        Gui, Font, Norm
-        posY += 20 + margin
-        Gui Add, Button, gSettingsWindowOpenAssetsDir x%buttonRightFirstX% y%posY% w%smallButtonW% h20, Open
-        Gui Add, Button, gSettingsWindowChangeAssetsDir x%buttonRightSecondX% y%posY% w%smallButtonW% h20, Change
-        posY += 20 + margin
-        Gui Add, CheckBox, x%groupX% y%posY% w%groupW% h20 gSettingsWindowCopyAssets vChkCopyAssets checked%copyAssetsChecked%, Copy assets to launcher directory
-        posY += 20 + margin + margin
+        posY := this.AddGroupBox("Assets", posY, 105)
+        assetsDir := this.app.AppConfig.AssetsDir ? this.app.AppConfig.AssetsDir : "Not selected"
+        posY := this.AddTextWithLabel("Assets Dir", assetsDir, "TxtAssetsDir", posY)
+        posY := this.AddButton("Open", "OnOpenAssetsDir", buttonRightFirstX, posY)
+        posY := this.AddButton("Change", "OnChangeAssetsDir", buttonRightSecondX, posY, true)
+        posY := this.AddCheckBox("Copy assets to launcher directory", "ChkCopyAssets", "OnCopyAssets", this.app.AppConfig.CopyAssets, posY)
+        posY += this.margin
 
-        Gui Add, GroupBox, x%margin% y%posY% w%width% h80, API
-        posY += 5 + margin
-        Gui Add, Text, x%groupX% y%posY% w%labelW% h20 +0x200, Endpoint URL:
-        Gui, Font, Bold
-        Gui Add, Text, vTxtApiEndpoint x%textX% y%posY% w%textW% h20 +0x200, %apiEndpointVal%
-        Gui, Font, Norm
-        posY += 20 + margin
-        Gui Add, Button, gSettingsWindowOpenApiEndpoint x%buttonRightFirstX% y%posY% w%smallButtonW% h20, Open
-        Gui Add, Button, gSettingsWindowChangeApiEndpoint x%buttonRightSecondX% y%posY% w%smallButtonW% h20, Change
-        posY += 20 + margin + margin
+        posY := this.AddGroupBox("API", posY, 80)
+        apiEndpointVal := this.app.AppConfig.ApiEndpoint ? this.app.AppConfig.ApiEndpoint : "Not selected"
+        posY := this.AddTextWithLabel("Endpoint URL", apiEndpointVal, "TxtApiEndpoint", posY)
+        posY := this.AddButton("Open", "OnOpenApiEndpoint", buttonRightFirstX, posY)
+        posY := this.AddButton("Change", "OnChangeApiEndpoint", buttonRightSecondX, posY, true)
+        posY += this.margin
 
-        Gui, Add, GroupBox, x%margin% y%posY% w%width% h105, Cache
-        posY += 5 + margin
-        Gui Add, Text, x%groupX% y%posY% w%labelW% h20 +0x200, Cache Dir:
-        Gui, Font, Bold
-        Gui Add, Text, vTxtCacheDir x%textX% y%posY% w%textW% h20 +0x200, %cacheDir%
-        Gui, Font, Norm
-        posY += 20 + margin
-        Gui Add, Button, gSettingsWindowFlushCache x%groupX% y%posY% w%smallButtonW% h20, &Flush
-        Gui Add, Button, gSettingsWindowOpenCacheDir x%buttonRightFirstX% y%posY% w%smallButtonW% h20, Open
-        Gui Add, Button, gSettingsWindowChangeCacheDir x%buttonRightSecondX% y%posY% w%smallButtonW% h20, Change
-        posY += 20 + margin
-        Gui Add, CheckBox, x%groupX% y%posY% w%groupW% h20 gSettingsWindowFlushCacheOnExit vChkFlushCacheOnExit checked%flushCacheOnExitChecked%, Flush cache on exit
-        posY += 20 + margin + margin
+        posY := this.AddGroupBox("Cache", posY, 105)
+        cacheDir := this.app.AppConfig.CacheDir ? this.app.AppConfig.CacheDir : "Not selected"
+        posY := this.AddTextWithLabel("Cache Dir", cacheDir, "TxtCacheDir", posY)
+        posY := this.AddButton("&Flush", "OnFlushCache", groupX, posY)
+        posY := this.AddButton("Open", "OnOpenCacheDir", buttonRightFirstX, posY)
+        posY := this.AddButton("Change", "OnChangeCacheDir", buttonRightSecondX, posY, true)
+        posY := this.AddCheckBox("Flush cache on exit", "ChkFlushCacheOnExit", "OnFlushCacheOnExit", this.app.AppConfig.FlushCacheOnExit, posY)
+        posY += this.margin
 
-        Gui Add, Button, gSettingsWindowClose x%margin% y%posY% w%width% h30, &Save && Close
-        posY += 30 + margin
+        posY := this.AddButton("&Save && Close", "OnClose", this.margin, posY, true, this.contentWidth, 30)
 
         return posY
     }
-}
 
-SettingsWindowEscape:
-{
-    Gui, SettingsWindow:Cancel
-    Return
-}
+    AddGroupBox(groupText, posY, height) {
+        this.guiObj.AddGroupBox("x" . this.margin . " y" . posY . " w" . this.contentWidth . " h" . height, groupText)
+        return posY + 5 + this.margin
+    }
 
-SettingsWindowClose:
-{
-    Gui, SettingsWindow:Submit
-    Return
-}
+    AddButton(buttonText, callback, posX, posY, advanceY := false, width := 80, height := 20) {
+        btn := this.guiObj.AddButton("x" . posX . " y" . posY . " w" . width . " h" . height, buttonText)
 
-SettingsWindowReloadLauncherFile:
-{
-    app.ReloadLauncherFile()
-    Return
-}
+        if (callback) {
+            btn.OnEvent("Click", "OnReloadLauncherFile")
+        }
 
-SettingsWindowOpenLauncherFile:
-{
-    app.OpenLauncherFile()
-    Return
-}
+        if (advanceY) {
+            posY += height + this.margin
+        }
 
-SettingsWindowChangeLauncherFile:
-{
-    app.ChangeLauncherFile()
-    Gui, SettingsWindow:Font, Bold
-    GuiControl, SettingsWindow:Text, TxtLauncherFile, % app.AppConfig.LauncherFile
-    Gui, SettingsWindow:Font, Norm
-    Return
-}
+        return posY
+    }
 
-SettingsWindowOpenLauncherDir:
-{
-    app.OpenLauncherDir()
-    Return
-}
+    AddCheckBox(checkboxText, ctlName, callback, checked, posY, posX := 0, width := 0, height := 20) {
+        if (posX == 0) {
+            posX := this.margin * 2
+        }
 
-SettingsWindowChangeLauncherDir:
-{
-    app.ChangeLauncherDir()
-    Gui, SettingsWindow:Font, Bold
-    GuiControl, SettingsWindow:Text, TxtLauncherDir, % app.AppConfig.LauncherDir
-    Gui, SettingsWindow:Font, Norm
-    Return
-}
+        if (width == 0) {
+            width := this.contentWidth - (this.margin * 2)
+        }
 
-SettingsWindowIndividualDirs:
-{
-    Gui, SettingsWindow:Submit, NoHide
-    app.AppConfig.IndividualDirs := ChkIndividualDirs
-    Return
-}
+        chk := this.guiObj.AddCheckBox("x" . posX . " y" . posY . " w" . width . " h" . height . " v" . ctlName . " checked" . checked, checkboxText)
 
-SettingsWindowUpdateExistingLaunchers:
-{
-    Gui, SettingsWindow:Submit, NoHide
-    app.AppConfig.UpdateExistingLaunchers := ChkUpdateExistingLaunchers
-    Return
-}
+        if (callback) {
+            chk.OnEvent("Click", callback)
+        }
 
-SettingsWindowCleanLaunchersOnBuild:
-{
-    Gui, SettingsWindow:Submit, NoHide
-    app.AppConfig.CleanLaunchersOnBuild := ChkCleanLaunchersOnBuild
-    Return
-}
+        return posY + height + this.margin
+    }
 
-SettingsWindowCleanLaunchersOnExit:
-{
-    Gui, SettingsWindow:Submit, NoHide
-    app.AppConfig.CleanLaunchersOnExit := ChkCleanLaunchersOnExit
-    Return
-}
+    AddTextWithLabel(labelText, content, ctlName, posY, posX := 0, width := 0, labelWidth := 75, height := 20) {
+        if (posX == 0) {
+            posX := this.margin * 2
+        }
 
-SettingsWindowOpenAssetsDir:
-{
-    app.OpenAssetsDir()
-    Return
-}
+        if (width == 0) {
+            width := this.contentWidth - (this.margin * 2)
+        }
 
-SettingsWindowChangeAssetsDir:
-{
-    app.ChangeAssetsDir()
-    Gui, SettingsWindow:Font, Bold
-    GuiControl, SettingsWindow:Text, TxtAssetsDir, % app.AppConfig.AssetsDir
-    Gui, SettingsWindow:Font, Norm
-    Return
-}
+        textX := posX + labelWidth + 5
+        textWidth := width - labelWidth - 5
 
-SettingsWindowCopyAssets:
-{
-    Gui, SettingsWindow:Submit, NoHide
-    app.AppConfig.CopyAssets := ChkCopyAssets
-    Return
-}
+        this.guiObj.AddText("x" . posX . " y" . posY . " w" . labelWidth . " h" . height . " +0x200", labelText . ":")
+        this.guiObj.SetFont("Bold")
+        this.guiObj.AddText("v" . ctlName . " x" . textX . " y" . posY . " w" . textWidth . " h" . height . " +0x200", content)
+        this.guiObj.SetFont()
 
-SettingsWindowOpenApiEndpoint:
-{
-    Run, % app.AppConfig.ApiEndpoint
-    Return
-}
+        return posY + height + this.margin
+    }
 
-SettingsWindowChangeApiEndpoint:
-{
-    app.ChangeApiEndpoint()
-    Gui, SettingsWindow:Font, Bold
-    GuiControl, SettingsWindow:Text, TxtApiEndpoint, % app.AppConfig.ApiEndpoint
-    Gui, SettingsWindow:Font, Norm
-    Return
-}
+    OnClose(guiObj) {
+        this.guiObj.Submit()
+        super.OnEscape(guiObj)
+    }
 
-SettingsWindowFlushCache:
-{
-    app.FlushCache()
-    Return
-}
+    OnEscape(guiObj) {
+        this.guiObj.Cancel()
+        super.OnEscape(guiObj)
+    }
 
-SettingsWindowOpenCacheDir:
-{
-    Run, % app.AppConfig.CacheDir
-    Return
-}
+    OnReloadLauncherFile(btn) {
+        this.app.ReloadLauncherFile()
+    }
 
-SettingsWindowChangeCacheDir:
-{
-    app.ChangeCacheDir()
-    Gui, SettingsWindow:Font, Bold
-    GuiControl, SettingsWindow:Text, TxtCacheDir, % app.AppConfig.CacheDir
-    Gui, SettingsWindow:Font, Norm
-    Return
-}
+    OnOpenLauncherFile(btn) {
+        this.app.OpenLauncherFile()
+    }
 
-SettingsWindowFlushCacheOnExit:
-{
-    Gui, SettingsWindow:Submit, NoHide
-    app.AppConfig.FlushCacheOnExit := ChkFlushCacheOnExit
-    Return
+    SetText(ctlName, ctlText, fontStyle := "") {
+        this.guiObj.SetFont(fontStyle)
+        this.guiObj[ctlName].Text := ctlText
+        this.guiObj.SetFont()
+    }
+
+    OnChangeLauncherFile(btn) {
+        this.app.ChangeLauncherFile()
+        this.SetText("TxtLauncherFile", this.app.AppConfig.LauncherFile, "Bold")
+    }
+
+    OnOpenLauncherDir(btn) {
+        this.app.OpenLauncherDir()
+    }
+
+    OnChangeLauncherDir(btn) {
+        this.app.ChangeLauncherDir()
+        this.SetText("TxtLauncherDir", this.app.AppConfig.LauncherDir, "Bold")
+    }
+
+    OnIndividualDirs(chk) {
+        this.guiObj.Submit(false)
+        this.app.AppConfig.IndividualDirs := chk.Value
+    }
+
+    OnUpdateExistingLaunchers(chk) {
+        this.guiObj.Submit(false)
+        this.app.AppConfig.UpdateExistingLaunchers := chk.Value
+    }
+
+    OnCleanLaunchersOnBuild(chk) {
+        this.guiObj.Submit(false)
+        this.app.AppConfig.CleanLaunchersOnBuild := chk.Value
+    }
+
+    OnCleanLaunchersOnExit(chk) {
+        this.guiObj.Submit(false)
+        this.app.AppConfig.CleanLaunchersOnExit := chk.Value
+    }
+
+    OnOpenAssetsDir(btn) {
+        this.app.OpenAssetsDir()
+    }
+
+    OnChangeAssetsDir(btn) {
+        this.app.ChangeAssetsDir()
+        this.SetText("TxtAssetsDir", this.app.AppConfig.AssetsDir, "Bold")
+    }
+
+    OnCopyAssets(chk) {
+        this.guiObj.Submit(false)
+        this.app.AppConfig.CopyAssets := chk.Value
+    }
+
+    OnOpenApiEndpoint(btn) {
+        this.app.OpenApiEndpoint()
+    }
+
+    OnChangeApiEndpoint(btn) {
+        this.app.ChangeApiEndpoint("SettingsWindow")
+        this.SetText("TxtApiEndpoint", this.app.AppConfig.ApiEndpoint, "Bold")
+    }
+
+    OnFlushCache(btn) {
+        this.app.FlushCache()
+    }
+
+    OnOpenCacheDir(btn) {
+        this.app.OpenCacheDir()
+    }
+
+    OnChangeCacheDir(btn) {
+        this.app.ChangeCacheDir()
+        this.SetText("TxtCacheDir", this.app.AppConfig.CacheDir, "Bold")
+    }
+
+    OnFlushCacheOnExit(chk) {
+        this.guiObj.Submit(false)
+        this.app.AppConfig.FlushCacheOnExit := chk.Value
+    }
 }

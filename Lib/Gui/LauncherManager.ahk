@@ -1,11 +1,50 @@
-﻿class LauncherManager extends Gui {
-    windowOptions := "+Resize MinSize330x330"
-    windowSize := "w500 h330"
+﻿#Include GuiBase.ahk
+
+class LauncherManager extends GuiBase {
+    windowOptions := "+Resize MinSize380x380"
     contentWidth := 510
-    label := "LauncherManager"
 
     __New(app, owner := 0) {
-        base.__New(app, app.AppConfig.LauncherFile, owner)
+        super.__New(app, app.AppConfig.LauncherFile, owner)
+    }
+
+    Controls(posY) {
+        posY := super.Controls(posY)
+        sidebarWidth := 85
+        lvWidth := this.contentWidth - sidebarWidth - this.margin
+        lvHeight := 300
+        lvPos := "x" . this.margin . " y" . posY . " w" . lvWidth . "h" . lvHeight
+
+        lv := this.guiObj.AddListView("vListView " . lvPos . " +Report -Multi +LV0x4000 +NoSortHdr", ["Game", "Launcher Type"])
+
+        sidebarX := lvWidth + (this.margin * 2)
+        buttonX := sidebarX + 10
+        buttonWidth := sidebarWidth - (this.margin * 2)
+
+        this.guiObj.AddGroupBox("vLauncherGroup x" . sidebarX . " " . " y" . posY . "  w" . sidebarWidth . " h175", "Launcher")
+        posY += 5 + this.margin
+        this.guiObj.AddButton("vAddButton x" . buttonX . " y" . posY . " w" . buttonWidth . " h25", "Add")
+        posY += 25 + this.margin
+        this.guiObj.AddButton("vEditButton x" . buttonX . " y" . posY . " w" . buttonWidth . " h25", "Edit")
+        posY += 25 + this.margin
+        this.guiObj.AddButton("vRemoveButton x" . buttonX . " y" . posY . " w" . buttonWidth . " h25", "Remove")
+        posY += 25 + (this.margin * 2)
+        this.guiObj.AddButton("vMoveUpButton x" . buttonX . " y" . posY . " w" . buttonWidth . " h25", "Move Up")
+        posY += 25 + this.margin
+        this.guiObj.AddButton("vMoveDownButton x" . buttonX . " y" . posY . " w" . buttonWidth . " h25", "Move Down")
+        posY += 25 + (this.margin * 2)
+        
+        this.guiObj.AddGroupBox("vSortGroup x" . sidebarX . " " . " y" . posY . "  w" . sidebarWidth . " h75", "Sort All")
+        posY += 5 + this.margin
+        this.guiObj.AddButton("vByNameButton x" . buttonX . " y" . posY . " w" . buttonWidth . " h25", "By Name")
+        posY += 25 + this.margin
+        this.guiObj.AddButton("vByTypeButton x" . buttonX . " y" . posY . " w" . buttonWidth . " h25", "By Type")
+        posY += 25 + (this.margin * 2)
+
+        this.guiObj.AddButton("vExitButton x" . sidebarX . " y" . posY . " w" . sidebarWidth . " h30", "E&xit")
+        posY += 30 + this.margin
+
+        return posY
     }
 
     AddToolbar() {
@@ -18,7 +57,7 @@
         IL_Add(ImageList, "shell32.dll", 297)
         IL_Add(ImageList, "shell32.dll", 320)
 
-        Buttons = 
+        buttonList := "
         (LTrim
             New
             Open
@@ -29,120 +68,45 @@
             Activate in Launchpad,, DISABLED
             -
             Flush Cache
-        )
+        )"
 
-        return this.CreateToolbar("OnLauncherManagerToolbar", ImageList, Buttons)
+        return this.CreateToolbar("OnLauncherManagerToolbar", ImageList, buttonList)
     }
 
-    Controls(posY) {
-        static
-        global hToolbar
-
-        posY := base.Controls(posY)
-
-        margin := this.margin
-
-        sidebarWidth := 85
-        lvWidth := this.contentWidth - sidebarWidth - this.margin
-        lvHeight := 300
-
-        Gui Add, ListView, hWndhLVItems x%margin% y%posY% w%lvWidth% h%lvHeight% +Report -Multi +LV0x4000 +NoSortHdr, ListView
-
-        sidebarX := lvWidth + this.margin
-        buttonX := sidebarX + 10
-        buttonWidth := sidebarWidth - (this.margin * 2)
-
-        Gui Add, GroupBox, hWndhGrpLauncher x%sidebarX% y%posY% w%sidebarWidth% h175, Launcher
-        posY += 5 + this.margin
-        Gui Add, Button, hWndhBtnAdd x%buttonX% y%posY% w%buttonWidth% h25, Add
-        posY += 25 + this.margin
-        Gui Add, Button, hWndhBtnEdit Disabled x%buttonX% y%posY% w%buttonWidth% h25, Edit
-        posY += 25 + this.margin
-        Gui Add, Button, hWndhBtnRemove Disabled x%buttonX% y%posY% w%buttonWidth% h25, Remove
-        posY += 25 + (this.margin * 2)
-        Gui Add, Button, hWndhBtnMoveUp Disabled x%buttonX% y%posY% w%buttonWidth% h25, Move Up
-        posY += 25 + this.margin
-        Gui Add, Button, hWndhBtnMoveDown Disabled x%buttonX% y%posY% w%buttonWidth% h25, Move Down
-        posY += 25 + this.margin + this.margin
-        
-        Gui Add, GroupBox, hWndhGrpSortAll x%sidebarX% y%posY% w85 h75, Sort All
-        posY += 5 + this.margin
-        Gui Add, Button, hWndhBtnByName x%buttonX% y%posY% w%buttonWidth% h25, By Name
-        posY += 25 + this.margin
-        Gui Add, Button, hWndhBtnByType x%buttonX% y%posY% w%buttonWidth% h25, By Type
-        posY += 25 + this.margin + this.margin
-
-        Gui Add, Button, hWndhBtnExit x%sidebarX% y%posY% w%sidebarWidth% h30, E&xit
-        posY += 30 + this.margin
-
-        return posY
-
-        LauncherManagerSize:
-            If (A_EventInfo == 1) {
-                Return
-            }
-
-            AutoXYWH("wh", hLVItems)
-            AutoXYWH("x*", hGrpLauncher)
-            AutoXYWH("x*", hBtnAdd)
-            AutoXYWH("x*", hBtnEdit)
-            AutoXYWH("x*", hBtnRemove)
-            AutoXYWH("x*", hBtnMoveUp)
-            AutoXYWH("x*", hBtnMoveDown)
-            AutoXYWH("x*", hGrpSortAll)
-            AutoXYWH("x*", hBtnByName)
-            AutoXYWH("x*", hBtnByType)
-            AutoXYWH("xy*", hBtnExit)
-
-            GuiControl Move, %hToolbar%, w%A_GuiWidth%
-            Return
-
-        LauncherManagerEscape:
-        LauncherManagerClose:
-        {
-            Gui LauncherManager:Cancel
+    OnLauncherManagerToolbar(hWnd, Event, Text, Pos, Id) {
+        If (Event != "Click") {
             Return
         }
 
-        ; ReloadLauncherFile:
-        ; {
-        ;     app.ReloadLauncherFile()
-        ;     Return
-        ; }
+        If (Text == "New") {
 
-        ; ChangeLauncherFile:
-        ; {
-        ;     app.ChangeLauncherFile()
-        ;     GuiControl, Launchpad:Text, TxtLauncherFile, % app.AppConfig.LauncherFile
-        ;     Return
-        ; }
+        } Else If (Text == "Open") {
 
-        ; FlushCache:
-        ; {
-        ;     app.FlushCache()
-        ;     Return
-        ; }
-    }
-}
+        } Else If (Text == "Save") {
 
-OnLauncherManagerToolbar(hWnd, Event, Text, Pos, Id) {
-    If (Event != "Click") {
-        Return
+        } Else If (Text == "Save As") {
+
+        } Else If (Text == "Reload From Disk") {
+
+        } Else If (Text == "Activate in Launchpad") {
+
+        } Else If (Text == "Flush Cache") {
+
+        }
     }
 
-    If (Text == "New") {
+    OnSize(guiObj, minMax, width, height) {
+        if (minMax == -1) {
+            return
+        }
 
-    } Else If (Text == "Open") {
+        this.AutoXYWH("wh", ["ListView"])
+        this.AutoXYWH("x*", ["LauncherGroup", "SortGroup"])
+        this.AutoXYWH("x", ["AddButton", "EditButton", "RemoveButton", "MoveUpButton", "MoveDownButton", "ByNameButton", "ByTypeButton"])
+        this.AutoXYWH("xy*", ["ExitButton"])
 
-    } Else If (Text == "Save") {
-
-    } Else If (Text == "Save As") {
-
-    } Else If (Text == "Reload From Disk") {
-
-    } Else If (Text == "Activate in Launchpad") {
-
-    } Else If (Text == "Flush Cache") {
-
+        if (this.hToolbar) {
+            this.guiObj["Toolbar"].Move(,,width)
+        }
     }
 }

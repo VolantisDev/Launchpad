@@ -1,88 +1,76 @@
-class DialogBox extends Gui {
+#Include GuiBase.ahk
+
+class DialogBox extends GuiBase {
     text := ""
     buttons := ""
-    label := "DialogBox"
     contentWidth := 320
     windowOptions := "+Toolwindow +AlwaysOnTop"
+    result := ""
+    waitForResult := true
 
     __New(app, title, text, owner := 0, buttons := "*&Yes|&No") {
         this.text := text
         this.buttons := buttons
-        base.__New(app, title, owner)
+        super.__New(app, title, owner)
     }
 
     Controls(posY) {
-        global DialogBox_Result
-
-        DialogBox_Result := ""
-
-        posY := base.Controls(posY)
-        width := this.contentWidth
-        margin := this.margin
+        posY := super.Controls(posY)
         height := 40
-        guiLabel := this.label
-
-        Gui, %guiLabel%:Add, Text, x%margin% y%posY% w%width% h%height%, % this.text
+        this.guiObj.AddText("x" . this.margin . " y" . posY . " w" . this.contentWidth . " h" . height, this.text)
         posY += height + this.margin
-
         return posY
     }
 
     End() {
-        global DialogBox_Result
+        super.End()
+        result := ""
 
-        base.End()
-
-        Loop
-        {
-            If (DialogBox_Result) {
-                Break
+        if (this.waitForResult) {
+            Loop
+            {
+                If (this.result) {
+                    Break
+                }
             }
-        }
 
-        this.Close()
-        result := this.ProcessResult(DialogBox_Result)
-        this.Destroy()
+            this.Close(true)
+            result := this.ProcessResult(this.result)
+            this.Destroy()
+        } else {
+            result := this
+        }
 
         return result
     }
 
     AddButtons(posY) {
-        base.AddButtons(posY)
-
-        guiLabel := this.label
+        super.AddButtons(posY)
         buttons := StrSplit(this.buttons, "|")
 
-        Loop % buttons.MaxIndex()
-        {
+        loop buttons.MaxIndex() {
             position := (A_Index == 1) ? "x" . this.margin . " y" . posY . " ": "x+" . this.margin . " y" . posY . " "
             defaultOption := InStr(buttons[A_Index], "*") ? "Default " : " "
-            Gui %guiLabel%:Add, Button, % position . defaultOption . "w100 gDialogBoxButton", % RegExReplace(buttons[A_Index], "\*")
+            btn := this.guiObj.AddButton(position . defaultOption . "w100", RegExReplace(buttons[A_Index], "\*"))
+            btn.OnEvent("Click", "OnDialogBoxButton")
         }
+    }
+
+    OnDialogBoxButton(btn) {
+        this.result := StrReplace(btn.Text, "&")
     }
 
     ProcessResult(result) {
         return result
     }
 
-    Cleanup() {
-        global DialogBox_Result
-
-        DialogBox_Result := ""
-
-        base.Cleanup()
+    OnClose(guiObj) {
+        DialogBox_Result := "Close"
+        super.OnClose(guiObj)
     }
-}
 
-DialogBoxGuiEscape:
-DialogBoxGuiClose:
-{
-    ;DialogBox_Result := "Close"
-    Return
-}
-
-DialogBoxButton:
-{
-    StringReplace, DialogBox_Result, A_GuiControl, &,, All
-    Return
+    OnEscape(guiObj) {
+        DialogBox_Result := "Close"
+        super.OnClose(guiObj)
+    }
 }

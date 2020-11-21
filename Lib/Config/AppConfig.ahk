@@ -1,4 +1,6 @@
-﻿class AppConfig extends IniConfig {
+﻿#Include IniConfig.ahk
+
+class AppConfig extends IniConfig {
     appNameValue := ""
 
     AppName[] {

@@ -2,13 +2,13 @@
     appDir := ""
     key := ""
     name := ""
-    gameType := {}
+    gameType := ""
     launcherType := "Game"
-    options := {}
+    options := Map()
 
     __New(appDir, key, gameType, options := "") {
         if (options == "") {
-            options := {}
+            options := Map()
         }
 
         this.appDir := appDir
@@ -16,27 +16,28 @@
         this.name := key
         this.gameType := gameType
 
-        if (!options.hasKey("useAhkClass")) {
-            options.useAhkClass := false
+        if (!options.Has("useAhkClass")) {
+            options["useAhkClass"] := false
         }
 
-        if (!options.hasKey("workingDir")) {
-            options.workingDir := A_WorkingDir
+        if (!options.Has("workingDir")) {
+            options["workingDir"] := A_WorkingDir
         }
 
         this.options := options
     }
 
     RunGame() {
+        return 0
     }
 
     WaitForClose() {
-        If (this.options.useAhkClass) {
-            WinWait, % "ahk_class " . this.options.gameId
-            WinWaitClose, % "ahk_class " . this.options.gameId
+        If (this.options["useAhkClass"]) {
+            WinWait("ahk_class " . this.options["gameId"])
+            WinWaitClose("ahk_class " . this.options["gameId"])
         } Else {
-            WinWait, % "ahk_exe " . this.options.gameId
-            WinWaitClose, % "ahk_exe " . this.options.gameId
+            WinWait("ahk_exe " . this.options["gameId"])
+            WinWaitClose("ahk_exe " . this.options["gameId"])
         }
     }
 }

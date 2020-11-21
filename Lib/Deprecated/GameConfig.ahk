@@ -4,7 +4,7 @@ class GameConfig extends ConfigBase {
     nameValue := ""
     gameClassValue := ""
     launcherClassValue := ""
-    optionsValue := {}
+    optionsValue := Map()
 
     Key[] {
         get {

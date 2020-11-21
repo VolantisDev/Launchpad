@@ -1,18 +1,17 @@
+#Include ComposableBuildFile.ahk
+
 class GameAhkFile extends ComposableBuildFile {
     __New(app, config, launcherDir, key, filePath := "") {
-        base.__New(app, config, launcherDir, key, ".ahk", filePath)
+        super.__New(app, config, launcherDir, key, ".ahk", filePath)
     }
 
     ComposeFile() {
-        FileAppend, % "#NoEnv`n", % this.FilePath
-        FileAppend, % "#Warn`n", % this.FilePath
-        FileAppend, % "SendMode Input`n", % this.FilePath
-        FileAppend, % "SetWorkingDir %A_ScriptDir%`n`n", % this.FilePath
-        FileAppend, % "#Include " . this.appDir . "\LauncherLib\Includes.ahk`n", % this.FilePath
-        FileAppend, % "config := " . this.ConvertObjectToCode(this.config) . "`n", % this.FilePath
-        FileAppend, % "gameObj := new " . this.config.gameClass . "(""" . this.appDir . """, """ . this.key . """, """ . this.config.gameType . """, config)`n", % this.FilePath
-        FileAppend, % "launcherObj := new " . this.config.launcherClass . "(""" . this.appDir . """, """ . this.key . """, """ . this.config.launcherType . """, gameObj, config)`n", % this.FilePath
-        FileAppend, % "launcherObj.LaunchGame()`n", % this.FilePath
+        FileAppend("#Warn`n", this.FilePath)
+        FileAppend("#Include " . this.appDir . "\LauncherLib\Includes.ahk`n", this.FilePath)
+        FileAppend("config := " . this.ConvertObjectToCode(this.config) . "`n", this.FilePath)
+        FileAppend("gameObj := " . this.config.gameClass . ".new(`"" . this.appDir . "`", `"" . this.key . "`", `"" . this.config.gameType . "`", config)`n", this.FilePath)
+        FileAppend("launcherObj := " . this.config.launcherClass . ".new(`"" . this.appDir . "`", `"" . this.key . "`", `"" . this.config.launcherType . "`", gameObj, config)`n", this.FilePath)
+        FileAppend("launcherObj.LaunchGame()`n", this.FilePath)
 
         return this.FilePath
     }
@@ -37,9 +36,10 @@ class GameAhkFile extends ComposableBuildFile {
     ConvertValueToCode(value) {
         if (IsObject(value)) {
             value := this.ConvertObjectToCode(value)
-        } else if value is not number 
-            value := """" . value . """"
-
+        } else if (!IsNumber(value)) {
+            value := "`"" . value . "`""
+        }
+        
         return value
     }
 }

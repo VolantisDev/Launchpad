@@ -1,7 +1,7 @@
 class ConfigBase {
-    appNameValue := {}
-    appDirValue := {}
-    app := {}
+    appNameValue := ""
+    appDirValue := ""
+    app := ""
 
     AppName[] {
         get {

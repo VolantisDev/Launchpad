@@ -1,5 +1,7 @@
+#Include JsonItem.ahk
+
 class ApiListing extends JsonItem {
     __New(app, path) {
-        base.__New(app, "index", path)
+        super.__New(app, "index", path)
     }
 }
