@@ -23,23 +23,43 @@
         psh.Namespace(this.path).CopyHere(psh.Namespace(file).items, 4|16)
     }
 
-    Download() {
+    Download(force := false) {
         DirCreate(this.path)
         Download(this.config["url"], this.downloadPath)
         return this.downloadPath
     }
 
-    Extract() {
+    Extract(force := false) {
         if (this.zipped and FileExist(this.downloadPath)) {
             this.Unzip(this.downloadPath)
             FileDelete(this.downloadPath)
         }
     }
 
-    DownloadAssets() {
-        for apiPath, localPath in this.config["assets"] {
-            asset := ApiAsset.new(this.app, apiPath, "dependencies/" . this.key)
-            asset.Copy(this.path . "\" . localPath)
+    DownloadAssets(force := false) {
+        for (key, assetConfig in this.config["assets"]) {
+            if (Type(assetConfig) == "String") {
+                assetConfig := Map("type", "default", "asset", key, "path", assetConfig)
+            }
+
+            assetPath := this.path . "\" . assetConfig["path"]
+
+            if (force or !FileExist(assetPath)) {
+                SplitPath(assetPath,,assetDir)
+                
+                if (!DirExist(assetDir)) {
+                    DirCreate(assetDir)
+                }
+
+                if (assetConfig["type"] == "default" or assetConfig["type"] == "asset") {
+                    asset := ApiAsset.new(this.app, assetConfig["asset"], "dependencies/" . this.key)
+                    asset.Copy(assetPath)
+                } else if (assetConfig["type"] == "download") {
+                    Download(assetConfig["url"], assetPath)
+                } else {
+                    this.app.Toast(this.key . ": Skipping asset " . key . " because it is of an unknown type.")
+                }
+            }
         }
     }
 
@@ -47,16 +67,20 @@
         return FileExist(this.path . "\" . this.config["mainFile"])
     }
 
-    Install() {
+    Install(force := false) {
+        if (DirExist(this.path)) {
+            DirDelete(this.path, true)
+        }
+
         DirCreate(this.path)
-        this.Download()
-        this.Extract()
-        this.DownloadAssets()
+        this.Download(force)
+        this.Extract(force)
+        this.DownloadAssets(force)
     }
 
     Update(force := false) {
         if (this.NeedsUpdate(force)) {
-            this.Install()
+            this.Install(force)
         }
     }
 }
