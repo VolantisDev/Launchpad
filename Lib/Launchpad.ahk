@@ -317,7 +317,15 @@
         Run(this.AppConfig.CacheDir)
     }
 
-    OpenHomepage() {
+    CheckForUpdates() {
+        Run("https://github.com/bmcclure/Launchpad/releases")
+    }
+
+    OpenWebsite() {
         Run("https://github.com/bmcclure/Launchpad")
+    }
+
+    ProvideFeedback() {
+        Run("https://github.com/bmcclure/Launchpad/issues")
     }
 }

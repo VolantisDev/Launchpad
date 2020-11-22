@@ -8,11 +8,9 @@ class SingleInputBox extends DialogBox {
         super.__New(app, title, text, owner, "*&OK|&Cancel")
     }
 
-    Controls(posY) {
-        posY := super.Controls(posY)
-        this.guiObj.AddEdit("x" . this.margin . " y" . posY . " w" . this.contentWidth . " h20 -VScroll vDialogEdit" . (this.isPassword ? " Password" : ""), this.defaultValue)
-        posY += 20 + this.margin
-        return posY
+    Controls() {
+        super.Controls()
+        this.guiObj.AddEdit("xm w" . this.contentWidth . " -VScroll vDialogEdit" . (this.isPassword ? " Password" : ""), this.defaultValue)
     }
 
     ProcessResult(result) {

@@ -1,34 +1,31 @@
 ﻿class ToolsWindow extends GuiBase {
     windowOptions := "+AlwaysOnTop -Caption Border"
-    windowSize := "w220"
-    contentWidth := 200
+    contentWidth := 400
+    buttonHeight := 40
     positionAtMouseCursor := true
+    nextPos := "xm"
 
     __New(app, owner := "", windowKey := "") {
+        this.backgroundColor := this.accentDarkColor
         super.__New(app, "Tools", owner, windowKey)
     }
 
-    Controls(posY) {
-        posY := super.Controls(posY)
-        controlWidth := this.contentWidth
+    Controls() {
+        super.Controls()
+        this.AddToolButton("&Reload Launcher File", "ReloadLauncherFile")
+        this.AddToolButton("&Clean Launchers", "CleanLaunchers")
+        this.AddToolButton("&Flush Cache", "FlushCache")
+        this.AddToolButton("&Update Launchpad", "CheckForUpdates")
+        this.AddToolButton("Update &Dependencies", "UpdateDependencies")
+        this.AddToolButton("&Open Website", "OpenWebsite")
+        this.AddToolButton("Provide &Feedback", "ProvideFeedback")
+    }
 
-        btn := this.guiObj.AddButton("x" . this.margin . " y" . posY . " w" . controlWidth . " h40", "&Reload Launcher File")
-        btn.OnEvent("Click", "OnReloadLauncherFile")
-        posY += 40 + this.margin
-
-        btn := this.guiObj.AddButton("x" . this.margin . " y" . posY . " w" . controlWidth . " h40", "&Clean Launchers")
-        btn.OnEvent("Click", "OnCleanLaunchers")
-        posY += 40 + this.margin
-
-        btn := this.guiObj.AddButton("x" . this.margin . " y" . posY . " w" . controlWidth . " h40", "&Update Dependencies")
-        btn.OnEvent("Click", "OnUpdateDependencies")
-        posY += 40 + this.margin
-
-        btn := this.guiObj.AddButton("x" . this.margin . " y" . posY . " w" . controlWidth . " h40", "&Flush Cache")
-        btn.OnEvent("Click", "OnFlushCache")
-        posY += 40 + this.margin
-
-        return posY
+    AddToolButton(buttonLabel, ctlName) {
+        width := (this.contentWidth - this.margin) / 2
+        btn := this.guiObj.AddButton("v" . ctlName . " " . this.nextPos . " w" . width . " h" . this.buttonHeight, buttonLabel)
+        btn.OnEvent("Click", "On" . ctlName)
+        this.nextPos := this.nextPos == "xm" ? "x+m yp" : "xm"
     }
 
     OnReloadLauncherFile(btn, info) {
@@ -59,5 +56,17 @@
     OnEscape(guiObj) {
         this.Close()
         super.OnEscape(guiObj)
+    }
+
+    OnCheckForUpdates(btn, info) {
+        this.app.CheckForUpdates()
+    }
+
+    OnOpenWebsite(btn, info) {
+        this.app.OpenWebsite()
+    }
+
+    OnProvideFeedback(btn, info) {
+        this.app.ProvideFeedback()
     }
 }

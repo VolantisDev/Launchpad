@@ -47,18 +47,14 @@ class ProgressIndicator extends DialogBox {
         return result
     }
 
-    Controls(posY) {
-        posY := super.Controls(posY)
+    Controls() {
+        super.Controls()
 
-        this.guiObj.AddProgress("x" . this.margin . " y" . posY . " w" . this.contentWidth . " h20 vDialogProgress c9466FC BackgroundEEE6FF Range" . this.progressRange, this.initialPosition)
-        posY += 20 + this.margin
+        this.guiObj.AddProgress("xm w" . this.contentWidth . " h5 vDialogProgress c9466FC BackgroundEEE6FF Range" . this.progressRange, this.initialPosition)
 
         if (this.enableDetailText) {
-            this.guiObj.AddText("x" . this.margin . " y" . posY . " w" . this.contentWidth . " h20 vDialogDetailText", this.detailText)
-            posY += 20 + this.margin
+            this.guiObj.AddText("xm w" . this.contentWidth . " r2 vDialogDetailText", this.detailText)
         }
-
-        return posY
     }
 
     ProcessResult(result) {

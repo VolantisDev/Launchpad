@@ -17,6 +17,7 @@ class GuiBase {
     accentColor := "9466FC"
     accentLightColor := "EEE6FF"
     accentDarkColor := "8A57F0"
+    openWindowWithinScreenBounds := true
 
     __New(app, title, owner := "", windowKey := "") {
         this.app := app
@@ -44,17 +45,15 @@ class GuiBase {
 
     Show() {
         global hToolbar
-        posY := this.margin
 
         if (this.hasToolbar) {
             this.hToolbar := this.AddToolbar()
             hToolbar := this.hToolbar
-            posY := hToolbar ? 20 + this.margin : this.margin
         }
 
-        posY := this.Start(posY)
-        posY := this.Controls(posY)
-        this.AddButtons(posY)
+        this.Start()
+        this.Controls()
+        this.AddButtons()
         return this.End()
     }
 
@@ -78,6 +77,7 @@ class GuiBase {
     }
 
     OnEscape(guiObj) {
+        this.guiObj.Cancel()
         this.WinClose()
     }
 
@@ -94,20 +94,17 @@ class GuiBase {
         ;return ToolbarCreate(callback, buttons, imageList, "Flat List Tooltips")
     }
 
-    Start(posY) {
+    Start() {
         if (this.owner != "") {
             this.owner.Opt("Disabled")
             this.guiObj.Opt("+Owner" . this.owner.Hwnd)
 	    }
-
-        return posY
     }
 
-    Controls(posY) {
-        return posY
+    Controls() {
     }
 
-    AddButtons(posY) {
+    AddButtons() {
 
     }
 
@@ -129,7 +126,54 @@ class GuiBase {
             WinSetTransColor(this.transColor, "ahk_id " . this.guiObj.Hwnd)
         }
 
+        this.AdjustWindowPosition()
+
         return this
+    }
+
+    AdjustWindowPosition() {
+        this.guiObj.GetPos(guiX, guiY, guiW, guiH)
+
+        if (this.openWindowWithinScreenBounds) {
+            ; Check which monitor the user completed the last action on and use that
+            monitorId := MonitorGetPrimary()
+            MonitorGetWorkArea(monitorId, screenL, screenT, screenR, screenB)
+
+            moveGui := false
+
+            if (guiX < screenL) {
+                guiX := screenL
+                moveGui := true
+            } else if ((guiX + guiW) > screenR) {
+                guiX := screenR - guiW
+                moveGui := true
+            }
+
+            if (guiY < screenT) {
+                guiY := screenT
+                moveGui := true
+            } else if ((guiY + guiH) > screenB) {
+                guiY := screenB - guiH
+                moveGui := true
+            }
+
+            screenW := screenR - screenL
+            screenH := screenB - screenT
+
+            if (guiW > screenW) {
+                guiW := screenW
+                moveGui := true
+            }
+
+            if (guiH > screenH) {
+                guiH := screenH
+                moveGUi := true
+            }
+
+            if (moveGui) {
+                this.guiObj.Move(guiX, guiY, guiW, guiH)
+            }
+        }
     }
 
     Close(submit := false) {

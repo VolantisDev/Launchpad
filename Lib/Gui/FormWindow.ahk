@@ -12,16 +12,12 @@ class FormWindow extends GuiBase {
         super.__New(app, title, owner, windowKey)
     }
 
-    Controls(posY) {
-        posY := super.Controls(posY)
-        height := 40
+    Controls() {
+        super.Controls()
 
         if (this.text != "") {
-            this.guiObj.AddText("x" . this.margin . " y" . posY . " w" . this.contentWidth . " h" . height, this.text)
-            posY += height + this.margin
+            this.guiObj.AddText("w" . this.contentWidth . " r2", this.text)
         }
-        
-        return posY
     }
 
     End() {
@@ -46,12 +42,13 @@ class FormWindow extends GuiBase {
         return result
     }
 
-    AddButtons(posY) {
-        super.AddButtons(posY)
+    AddButtons() {
+        super.AddButtons()
+
         buttons := StrSplit(this.buttons, "|")
 
         loop buttons.Length {
-            position := (A_Index == 1) ? "x" . this.margin . " y" . posY . " ": "x+" . this.margin . " y" . posY . " "
+            position := (A_Index == 1) ? "xm Section ": "ys+" . this.margin . " "
             defaultOption := InStr(buttons[A_Index], "*") ? "Default " : " "
             btn := this.guiObj.AddButton(position . defaultOption . "w100", RegExReplace(buttons[A_Index], "\*"))
             btn.OnEvent("Click", "OnFormWindowButton")

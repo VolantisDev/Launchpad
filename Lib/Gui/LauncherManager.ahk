@@ -1,48 +1,47 @@
 ﻿class LauncherManager extends GuiBase {
     windowOptions := "+Resize MinSize380x380"
     contentWidth := 510
+    listViewHeight := 300
+    sidebarWidth := 85
+    listViewColumns := Array("Order", "Game", "Launcher")
+    launcherFile := ""
 
-    __New(app, owner := "", windowKey := "") {
-        super.__New(app, app.AppConfig.LauncherFile, owner, windowKey)
+    __New(app, launcherFile := "", owner := "", windowKey := "") {
+        if (launcherFile == "") {
+            launcherFile := app.AppConfig.LauncherFile
+        }
+
+        this.launcherFile := launcherFile
+
+        super.__New(app, "Manage", owner, windowKey)
     }
 
-    Controls(posY) {
-        posY := super.Controls(posY)
-        sidebarWidth := 85
-        lvWidth := this.contentWidth - sidebarWidth - this.margin
-        lvHeight := 300
-        lvPos := "x" . this.margin . " y" . posY . " w" . lvWidth . "h" . lvHeight
+    GetTitle(title) {
+        return super.GetTitle(this.launcherFile . " - " . title)
+    }
 
-        lv := this.guiObj.AddListView("vListView " . lvPos . " +Report -Multi +LV0x4000 +NoSortHdr", ["Game", "Launcher Type"])
+    Controls() {
+        super.Controls()
 
-        sidebarX := lvWidth + (this.margin * 2)
-        buttonX := sidebarX + 10
-        buttonWidth := sidebarWidth - (this.margin * 2)
+        listViewWidth := this.contentWidth - this.sidebarWidth - this.margin
+        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.listViewHeight . " Section +Report -Multi +LV0x4000", this.listViewColumns)
 
-        this.guiObj.AddGroupBox("vLauncherGroup x" . sidebarX . " " . " y" . posY . "  w" . sidebarWidth . " h175", "Launcher")
-        posY += 5 + this.margin
-        this.guiObj.AddButton("vAddButton x" . buttonX . " y" . posY . " w" . buttonWidth . " h25", "Add")
-        posY += 25 + this.margin
-        this.guiObj.AddButton("vEditButton x" . buttonX . " y" . posY . " w" . buttonWidth . " h25", "Edit")
-        posY += 25 + this.margin
-        this.guiObj.AddButton("vRemoveButton x" . buttonX . " y" . posY . " w" . buttonWidth . " h25", "Remove")
-        posY += 25 + (this.margin * 2)
-        this.guiObj.AddButton("vMoveUpButton x" . buttonX . " y" . posY . " w" . buttonWidth . " h25", "Move Up")
-        posY += 25 + this.margin
-        this.guiObj.AddButton("vMoveDownButton x" . buttonX . " y" . posY . " w" . buttonWidth . " h25", "Move Down")
-        posY += 25 + (this.margin * 2)
+        buttonWidth := this.sidebarWidth - (this.margin * 2)
+
+        gbY := this.margin * 2
+
+        this.guiObj.AddGroupBox("vLauncherGroup ys+" . this.margin . " w" . this.sidebarWidth . " r5 Section", "Launcher")
+        this.guiObj.AddButton("vAddButton xs+" . this.margin . " ys+" . gbY . " w" . buttonWidth, "Add")
+        this.guiObj.AddButton("vEditButton xs+" . this.margin . " w" . buttonWidth, "Edit")
+        this.guiObj.AddButton("vRemoveButton xs+" . this.margin . " w" . buttonWidth, "Remove")
+        this.guiObj.AddButton("vMoveUpButton xs+" . this.margin . " w" . buttonWidth, "Move Up")
+        this.guiObj.AddButton("vMoveDownButton xs+" . this.margin . " w" . buttonWidth, "Move Down")
         
-        this.guiObj.AddGroupBox("vSortGroup x" . sidebarX . " " . " y" . posY . "  w" . sidebarWidth . " h75", "Sort All")
-        posY += 5 + this.margin
-        this.guiObj.AddButton("vByNameButton x" . buttonX . " y" . posY . " w" . buttonWidth . " h25", "By Name")
-        posY += 25 + this.margin
-        this.guiObj.AddButton("vByTypeButton x" . buttonX . " y" . posY . " w" . buttonWidth . " h25", "By Type")
-        posY += 25 + (this.margin * 2)
+        this.guiObj.AddGroupBox("vSortGroup xs y+m w" . this.sidebarWidth . " r2 Section", "Sort All")
+        this.guiObj.AddButton("vByNameButton xs+" . this.margin . " ys+" . gbY . " w" . buttonWidth, "By Name")
+        this.guiObj.AddButton("vByTypeButton xs+" . this.margin . " w" . buttonWidth, "By Type")
 
-        this.guiObj.AddButton("vExitButton x" . sidebarX . " y" . posY . " w" . sidebarWidth . " h30", "E&xit")
-        posY += 30 + this.margin
-
-        return posY
+        this.guiObj.AddButton("vExitButton xs y+m w" . this.sidebarWidth . " h30", "E&xit")
     }
 
     AddToolbar() {
