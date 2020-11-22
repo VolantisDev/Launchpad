@@ -19,12 +19,15 @@ if (!FileExist(ahk2Exe)) {
     ahk2Exe := FileSelect(3,, "Please select your Ahk2Exe.exe file", "EXE Files (*.exe)")
 
     if (ahk2Exe == "") {
-        MsgBox, Could not find Ahk2Exe.exe
+        MsgBox("Could not find Ahk2Exe.exe.")
         ExitApp -1
     }
 }
 
-DirDelete(buildDir, true)
+if (DirExist(buildDir)) {
+    DirDelete(buildDir, true)
+}
+
 DirCreate(buildDir)
 
 pid := RunWait(ahk2Exe . " /in " . ahkScript . " /out " . exeFile . " /icon " . iconFile)
@@ -67,9 +70,19 @@ Zip(zipDir, zipFile) {
 CreateZipFile(zipFile)
 {
 	Header1 := "PK" . Chr(5) . Chr(6)
-	VarSetStrCapacity(Header2, 18)
+    Header2 := BufferAlloc(18)
 	file := FileOpen(zipFile,"w")
 	file.Write(Header1)
 	file.RawWrite(Header2,18)
+	file.close()
+
+
+
+    Header1 := "PK" . Chr(5) . Chr(6)
+	Header2 := BufferAlloc(18, 0)
+
+	file := FileOpen(zipFile, "w")
+	file.Write(Header1)
+	file.RawWrite(Header2, 18)
 	file.close()
 }
