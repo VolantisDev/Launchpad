@@ -53,7 +53,7 @@ class JsonConfig extends FileConfig {
 
     CountItems() {
         count := 0
-        for (key, value in this.config[this.primaryConfigKey]) {
+        for key, value in this.config[this.primaryConfigKey] {
             count++
         }
         return count
