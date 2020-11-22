@@ -1,10 +1,5 @@
-class GuiService {
-    app := ""
+class GuiService extends ServiceBase {
     guis := Map()
-
-    __New(app) {
-        this.app := app
-    }
 
     DialogBox(title, text, owner := "", buttons := "*&Yes|&No") {
         return this.ShowDialog(DialogBox.new(this.app, title, text, owner, buttons))
@@ -26,12 +21,12 @@ class GuiService {
         return this.ShowWindow("MainWindow")
     }
 
-    OpenLauncherManager() {
-        if (!this.WindowExists("LauncherManager")) {
-            this.AddWindow("LauncherManager", LauncherManager.new(this.app, "MainWindow", "LauncherManager"))
+    OpenManageWindow() {
+        if (!this.WindowExists("ManageWindow")) {
+            this.AddWindow("ManageWindow", ManageWindow.new(this.app, "MainWindow", "ManageWindow"))
         }
 
-        return this.ShowWindow("LauncherManager")
+        return this.ShowWindow("ManageWindow")
     }
 
     OpenSettingsWindow() {

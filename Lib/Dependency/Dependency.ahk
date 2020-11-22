@@ -57,7 +57,7 @@
                 } else if (assetConfig["type"] == "download") {
                     Download(assetConfig["url"], assetPath)
                 } else {
-                    this.app.Toast(this.key . ": Skipping asset " . key . " because it is of an unknown type.")
+                    this.app.Notifications.Warning(this.key . ": Skipping asset " . key . " because it is of an unknown type.")
                 }
             }
         }

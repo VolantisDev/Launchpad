@@ -68,7 +68,7 @@ class CopyableBuildFile extends BuildFile {
         file := FileSelect(1,, this.key . ": " . this.RequestMessage, this.SelectFilter)
         
         if (file == "") {
-            this.app.Toast("No file selected. Skipping build file.", "Launchpad", 10, 3)
+            this.app.Notifications.Warning("No file selected. Skipping build file.")
         }
 
         return file

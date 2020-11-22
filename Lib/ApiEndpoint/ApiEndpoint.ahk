@@ -55,4 +55,29 @@ class ApiEndpoint {
 
         return this.cache.CopyItem(path, destination)
     }
+
+    OpenApiEndpoint() {
+        Run(this.endpointUrl)
+    }
+
+    ChangeApiEndpoint(existingEndpoint := "", owner := "MainWindow") {
+        if (existingEndpoint == "") {
+            existingEndpoint := this.app.AppConfig.ApiEndpoint
+        }
+
+        text := "Enter the base URL of the API endpoint you would like Launchpad to connect to. Leave blank to revert to the default."
+        apiEndpointUrl := this.GuiManager.SingleInputBox("API Endpoint URL", text, existingEndpoint, owner)
+
+        if (apiEndpointUrl != existingEndpoint) {
+            this.app.AppConfig.ApiEndpoint := apiEndpointUrl
+            apiEndpointUrl := this.app.AppConfig.ApiEndpoint
+
+            if (apiEndpointUrl != existingEndpoint) {
+                this.endpointUrl := apiEndpointUrl
+                this.cache.FlushCache()
+            }
+        }
+        
+        return apiEndpointUrl
+    }
 }

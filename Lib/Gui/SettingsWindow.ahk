@@ -163,55 +163,55 @@
     }
 
     OnReloadLauncherFile(btn, info) {
-        this.app.ReloadLauncherFile()
+        this.app.LauncherManager.ReloadLauncherFile()
     }
 
     OnOpenLauncherFile(btn, info) {
-        this.app.OpenLauncherFile()
+        this.app.LauncherManager.OpenLauncherFile()
     }
 
     OnChangeLauncherFile(btn, info) {
-        this.app.ChangeLauncherFile()
+        this.app.LauncherManager.ChangeLauncherFile()
         this.SetText("LauncherFile", this.app.AppConfig.LauncherFile, "Bold")
     }
 
     OnOpenLauncherDir(btn, info) {
-        this.app.OpenLauncherDir()
+        this.app.LauncherManager.OpenLauncherDir()
     }
 
     OnChangeLauncherDir(btn, info) {
-        this.app.ChangeLauncherDir()
+        this.app.LauncherManager.ChangeLauncherDir()
         this.SetText("LauncherDir", this.app.AppConfig.LauncherDir, "Bold")
     }
 
     OnOpenAssetsDir(btn, info) {
-        this.app.OpenAssetsDir()
+        this.app.LauncherManager.OpenAssetsDir()
     }
 
     OnChangeAssetsDir(btn, info) {
-        this.app.ChangeAssetsDir()
+        this.app.LauncherManager.ChangeAssetsDir()
         this.SetText("AssetsDir", this.app.AppConfig.AssetsDir, "Bold")
     }
 
     OnOpenApiEndpoint(btn, info) {
-        this.app.OpenApiEndpoint()
+        this.app.ApiEndpoint.OpenApiEndpoint()
     }
 
     OnChangeApiEndpoint(btn, info) {
-        this.app.ChangeApiEndpoint("SettingsWindow")
+        this.app.ApiEndpoint.ChangeApiEndpoint(, "SettingsWindow")
         this.SetText("ApiEndpoint", this.app.AppConfig.ApiEndpoint, "Bold")
     }
 
     OnFlushCache(btn, info) {
-        this.app.FlushCache()
+        this.app.CacheManager.FlushCaches()
     }
 
     OnOpenCacheDir(btn, info) {
-        this.app.OpenCacheDir()
+        this.app.CacheManager.OpenCacheDir()
     }
 
     OnChangeCacheDir(btn, info) {
-        this.app.ChangeCacheDir()
+        this.app.CacheManager.ChangeCacheDir()
         this.SetText("TxtCacheDir", this.app.AppConfig.CacheDir, "Bold")
     }
 }

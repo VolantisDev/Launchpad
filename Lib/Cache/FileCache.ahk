@@ -1,15 +1,14 @@
 class FileCache extends Cache {
     cachePath := ""
 
-    __New(app, cachePath := "") {
-        if (cachePath == "") {
-            cachePath := A_Temp . "\Launchpad\Cache"
-        }
-
+    __New(app, cachePath) {
         this.cachePath := cachePath
-        DirCreate(this.cachePath)
 
         super.__New(app)
+
+        if (!DirExist(this.cachePath)) {
+            DirCreate(this.cachePath)
+        }
     }
 
     ItemExists(path) {

@@ -30,22 +30,22 @@
 
     OnReloadLauncherFile(btn, info) {
         this.Close()
-        this.app.ReloadLauncherFile()
+        this.app.LauncherManager.ReloadLauncherFile()
     }
 
     OnCleanLaunchers(btn, info) {
         this.Close()
-        this.app.Cleanup()
+        this.app.LauncherManager.CleanLaunchers()
     }
 
     OnFlushCache(btn, info) {
         this.Close()
-        this.app.FlushCache()
+        this.app.CacheManager.FlushCaches()
     }
 
     OnUpdateDependencies(btn, info) {
         this.Close()
-        this.app.UpdateDependencies(true)
+        this.app.Dependencies.UpdateDependencies(true)
     }
 
     OnClose(guiObj) {

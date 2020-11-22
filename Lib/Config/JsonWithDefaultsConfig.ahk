@@ -9,12 +9,14 @@ class JsonWithDefaultsConfig extends JsonConfig {
         super.__New(app, configPath, autoLoad)
     }
 
-    LoadConfig() {
-        super.LoadConfig()
+    LoadConfig(configPath := "") {
+        super.LoadConfig(configPath)
 
         if (this.autoMerge) {
             this.MergeConfig()
         }
+
+        return this
     }
 
     MergeConfig() {

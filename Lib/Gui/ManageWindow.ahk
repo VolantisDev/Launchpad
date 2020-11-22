@@ -1,4 +1,4 @@
-﻿class LauncherManager extends GuiBase {
+﻿class ManageWindow extends GuiBase {
     windowOptions := "+Resize MinSize380x380"
     contentWidth := 510
     listViewHeight := 300
@@ -67,10 +67,10 @@
             Flush Cache
         )"
 
-        return this.CreateToolbar("OnLauncherManagerToolbar", ImageList, buttonList)
+        return this.CreateToolbar("OnToolbar", ImageList, buttonList)
     }
 
-    OnLauncherManagerToolbar(hWnd, Event, Text, Pos, Id) {
+    OnToolbar(hWnd, Event, Text, Pos, Id) {
         If (Event != "Click") {
             Return
         }

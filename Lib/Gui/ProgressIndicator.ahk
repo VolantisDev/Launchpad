@@ -40,6 +40,14 @@ class ProgressIndicator extends DialogBox {
             this.SetDetailText(detailText)
         }
     }
+
+    IncrementValue(amount := 1, detailText := false) {
+        this.guiObj["DialogProgress"].Value += amount
+
+        if (detailText != false) {
+            this.SetDetailText(detailText)
+        }
+    }
     
     Finish() {
         result := this.ProcessResult("OK")

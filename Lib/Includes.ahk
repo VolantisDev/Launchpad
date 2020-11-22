@@ -1,5 +1,4 @@
 ; Automatically-generated file, do not edit manually.
-#Include E:\Tools\Launchpad\Lib\GuiService.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad.ahk
 #Include E:\Tools\Launchpad\Lib\ApiEndpoint\ApiEndpoint.ahk
 #Include E:\Tools\Launchpad\Lib\ApiItem\ApiAsset.ahk
@@ -30,17 +29,26 @@
 #Include E:\Tools\Launchpad\Lib\Config\JsonWithDefaultsConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Config\LauncherConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Dependency\Dependency.ahk
-#Include E:\Tools\Launchpad\Lib\Deprecated\GameConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\DialogBox.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\FormWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\GuiBase.ahk
-#Include E:\Tools\Launchpad\Lib\Gui\LauncherManager.ahk
+#Include E:\Tools\Launchpad\Lib\Gui\LauncherEditor.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\MainWindow.ahk
+#Include E:\Tools\Launchpad\Lib\Gui\ManageWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\ProgressIndicator.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\SettingsWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\SingleInputBox.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\ToolsWindow.ahk
 #Include E:\Tools\Launchpad\Lib\HttpReq\HttpReq.ahk
+#Include E:\Tools\Launchpad\Lib\LauncherGame\LauncherGame.ahk
+#Include E:\Tools\Launchpad\Lib\Notifier\NotifierBase.ahk
+#Include E:\Tools\Launchpad\Lib\Notifier\ToastNotifier.ahk
+#Include E:\Tools\Launchpad\Lib\Service\CacheManager.ahk
+#Include E:\Tools\Launchpad\Lib\Service\DependencyManager.ahk
+#Include E:\Tools\Launchpad\Lib\Service\GuiService.ahk
+#Include E:\Tools\Launchpad\Lib\Service\LauncherManager.ahk
+#Include E:\Tools\Launchpad\Lib\Service\NotificationService.ahk
+#Include E:\Tools\Launchpad\Lib\Service\ServiceBase.ahk
 #Include E:\Tools\Launchpad\Lib\Toolbar\Toolbar.ahk
 #Include E:\Tools\Launchpad\Lib\Vendor\Jxon.ahk
 ; End of auto-generated includes.

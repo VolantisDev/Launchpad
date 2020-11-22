@@ -6,13 +6,17 @@ class JsonConfig extends FileConfig {
         super.__New(app, configPath, ".json", autoLoad)
     }
 
-    LoadConfig() {
-        if (this.ConfigPath == "") {
-            this.app.Toast("Config file path not provided.", "Launchpad", 10, 3)
+    LoadConfig(configPath := "") {
+        if (configPath == "") {
+            configPath := this.configPath
+        }
+
+        if (configPath == "") {
+            this.app.Notifications.Error("Config file path not provided.")
             return this
         }
 
-        jsonString := FileRead(this.ConfigPath)
+        jsonString := FileRead(configPath)
 
         if (jsonString != "") {
             this.config := Jxon_Load(jsonString)
@@ -20,27 +24,31 @@ class JsonConfig extends FileConfig {
             this.config := Map()
         }
 
-        return this
+        return super.LoadConfig(configPath)
     }
 
-    SaveConfig() {
-        if (this.ConfigPath == "") {
+    SaveConfig(configPath := "") {
+        if (configPath == "") {
+            configPath := this.configPath
+        }
+
+        if (configPath == "") {
             this.AskForPath()
         }
 
-        if (this.ConfigPath == "") {
-            this.app.Toast("Config file path not provided.", "Launchpad", 10, 3)
+        if (configPath == "") {
+            this.app.Notifications.Error("Config file path not provided.")
             return this
         }
 
-        if (FileExist(this.ConfigPath)) {
-            FileDelete(this.ConfigPath)
+        if (FileExist(configPath)) {
+            FileDelete(configPath)
         }
         
         jsonString := Jxon_Dump(this.config, "", 4)
-        FileAppend(jsonString, this.ConfigPath)
+        FileAppend(jsonString, configPath)
 
-        return this
+        return super.SaveConfig(configPath)
     }
 
     CountItems() {

@@ -1,37 +1,33 @@
 class Builder {
     app := ""
-    key := ""
-    config := Map()
 
-    __New(app, key, config) {
+    __New(app) {
         this.app := app
-        this.key := key
-        this.config := config
     }
 
-    Build() {
+    Build(key, config) {
         launcherDir := this.app.AppConfig.LauncherDir
         assetsDir := this.app.AppConfig.AssetsDir
 
         if (launcherDir == "" or assetsDir == "") {
-            this.app.Toast(this.key . ": Required directories not set. Skipping build.", "Launchpad", 10, 2)
+            this.app.Notifications.Warning(key . ": Required directories not set. Skipping build.")
             return false
         }
 
         if (this.app.AppConfig.IndividualDirs) {
-            launcherDir .= "\" . this.key
+            launcherDir .= "\" . key
         }
-        assetsDir .= "\" . this.key
+        assetsDir .= "\" . key
 
         DirCreate(launcherDir)
         DirCreate(assetsDir)
 
-        iconObj := IconFile.new(this.app, this.config, assetsDir, this.key)
+        iconObj := IconFile.new(this.app, config, assetsDir, key)
         iconResult := iconObj.Build()
         
-        shortcutResult := !this.config["requiresShortcutFile"] ; Default to true if shortcut isn't required
-        if (this.config["requiresShortcutFile"]) {
-            shortcutObj := ShortcutFile.new(this.app, this.config, assetsDir, this.key)
+        shortcutResult := !config["requiresShortcutFile"] ; Default to true if shortcut isn't required
+        if (config["requiresShortcutFile"]) {
+            shortcutObj := ShortcutFile.new(this.app, config, assetsDir, key)
             shortcutResult := shortcutObj.Build()
         }
 
@@ -39,11 +35,11 @@ class Builder {
         exeResult := false
 
         if (iconResult and shortcutResult) {
-            gameAhkObj := GameAhkFile.new(this.app, this.config, assetsDir, this.key)
+            gameAhkObj := GameAhkFile.new(this.app, config, assetsDir, key)
             ahkResult := gameAhkObj.Build()
 
             if (ahkResult) {
-                gameExeObj := GameExeFile.new(this.app, this.config, launcherDir, this.key)
+                gameExeObj := GameExeFile.new(this.app, config, launcherDir, key)
                 exeResult := gameExeObj.Build()
             }
             

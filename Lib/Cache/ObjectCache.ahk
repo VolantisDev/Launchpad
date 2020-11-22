@@ -5,6 +5,7 @@ class ObjectCache extends Cache {
         if (cacheObj != "") {
             this.cacheObj := cacheObj
         }
+        
         super.__New(app)
     }
 

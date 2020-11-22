@@ -1,5 +1,7 @@
 ﻿class AppConfig extends IniConfig {
     appNameValue := ""
+    defaultTempDir := ""
+    defaultCacheDir := ""
 
     AppName[] {
         get {
@@ -14,10 +16,10 @@
         get {
             returnVal := this.GetIniValue("LauncherDir")
 
-            if (returnVal == "") {
-                returnVal := this.app.ChangeLauncherDir()
+            if (this.LauncherManagerLoaded()) {
+                returnVal := this.app.LauncherManager.DetectLauncherDir(returnVal)
             }
-
+            
             return returnVal
         }
         set {
@@ -29,10 +31,10 @@
         get {
             returnVal := this.GetIniValue("LauncherFile")
 
-            if (returnVal == "") {
-                returnVal := this.app.ChangeLauncherFile()
+            if (this.LauncherManagerLoaded()) {
+                returnVal := this.app.LauncherManager.DetectLauncherFile(returnVal)
             }
-            
+
             return returnVal
         }
         set {
@@ -44,10 +46,10 @@
         get {
             returnVal := this.GetIniValue("AssetsDir")
 
-            if (returnVal == "") {
-                returnVal := this.LauncherDir
+            if (this.LauncherManagerLoaded()) {
+                returnVal := this.app.LauncherManager.DetectAssetsDir(returnVal)
             }
-            
+
             return returnVal
         }
         set {
@@ -55,15 +57,18 @@
         }
     }
 
+    ApiEndpoint[] {
+        get {
+            return this.GetIniValue("ApiEndpoint") || "https://benmcclure.com/launcher-db"
+        }
+        set {
+            return this.SetIniValue("ApiEndpoint", value)
+        }
+    }
+
     TempDir[] {
         get {
-            returnVal := this.GetIniValue("TempDir")
-
-            if (returnVal == "") {
-                returnVal := A_Temp . "\Launchpad"
-            }
-            
-            return returnVal
+            return this.GetIniValue("TempDir") || this.defaultTempDir
         }
         set {
             return this.SetIniValue("TempDir", value)
@@ -72,13 +77,7 @@
 
     CacheDir[] {
         get {
-            returnVal := this.GetIniValue("CacheDir")
-
-            if (returnVal == "") {
-                returnVal := this.TempDir . "\Cache"
-            }
-            
-            return returnVal
+            return this.GetIniValue("CacheDir") || this.TempDir . "\Cache"
         }
         set {
             return this.SetIniValue("CacheDir", value)
@@ -87,13 +86,7 @@
 
     UpdateExistingLaunchers[] {
         get {
-            returnVal := this.GetIniValue("UpdateExistingLaunchers")
-
-            if (returnVal == "") {
-                returnVal := true
-            }
-
-            return returnVal
+            return this.GetBooleanValue("UpdateExistingLaunchers", true)
         }
         set {
             return this.SetIniValue("UpdateExistingLaunchers", value)
@@ -102,91 +95,73 @@
 
     IndividualDirs[] {
         get {
-            returnVal := this.GetIniValue("IndividualDirs")
-
-            if (returnVal == "") {
-                returnVal := false
-            }
-
-            return returnVal
+            return this.GetBooleanValue("IndividualDirs", false)
         }
         set {
-            return this.SetIniValue("IndividualDirs", value)
+            return this.SetBooleanValue("IndividualDirs", value)
         }
     }
 
     CopyAssets[] {
         get {
-            returnVal := this.GetIniValue("CopyAssets")
-
-            if (returnVal == "") {
-                returnVal := false
-            }
-
-            return returnVal
+            return this.GetBooleanValue("CopyAssets", false)
         }
         set {
-            return this.SetIniValue("CopyAssets", value)
+            return this.SetBooleanValue("CopyAssets", value)
         }
     }
 
     CleanLaunchersOnBuild[] {
         get {
-            returnVal := this.GetIniValue("CleanLaunchersOnBuild")
-
-            if (returnVal == "") {
-                returnVal := true
-            }
-
-            return returnVal
+            return this.GetBooleanValue("CleanLaunchersOnBuild", true)
         }
         set {
-            return this.SetIniValue("CleanLaunchersOnBuild", value)
+            return this.SetBooleanValue("CleanLaunchersOnBuild", value)
         }
     }
 
     CleanLaunchersOnExit[] {
         get {
-            returnVal := this.GetIniValue("CleanLaunchersOnExit")
-
-            if (returnVal == "") {
-                returnVal := false
-            }
-
-            return returnVal
+            return this.GetBooleanValue("CleanLaunchersOnExit", false)
         }
         set {
-            return this.SetIniValue("CleanLaunchersOnExit", value)
+            return this.SetBooleanValue("CleanLaunchersOnExit", value)
         }
     }
 
     FlushCacheOnExit[] {
         get {
-            returnVal := this.GetIniValue("FlushCacheOnExit")
-
-            if (returnVal == "") {
-                returnVal := false
-            }
-
-            return returnVal
+            return this.GetBooleanValue("FlushCacheOnExit", false)
         }
         set {
-            return this.SetIniValue("FlushCacheOnExit", value)
+            return this.SetBooleanValue("FlushCacheOnExit", value)
         }
     }
 
-    ApiEndpoint[] {
-        get {
-            returnVal := this.GetIniValue("ApiEndpoint")
+    __New(app, defaultTempDir) {
+        this.defaultTempDir := defaultTempDir
+        super.__New(app)
+    }
 
-            if (returnVal == "") {
-                returnVal := "https://benmcclure.com/launcher-db"
-            }
+    LauncherManagerLoaded() {
+        return (this.app.LauncherManager != "")
+    }
 
-            return returnVal
+    GetBooleanValue(key, defaultValue) {
+        returnVal := this.GetIniValue(key)
+
+        if (returnVal == "") {
+            returnVal := defaultValue
         }
-        set {
-            return this.SetIniValue("ApiEndpoint", value)
-        }
+
+        return returnVal
+    }
+
+    SetBooleanValue(key, booleanValue) {
+        this.SetIniValue(key, !!(booleanValue))
+    }
+
+    GetRawValue(key) {
+        return this.GetIniValue("ApiEndpoint")
     }
 }

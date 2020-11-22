@@ -24,11 +24,17 @@ class FileConfig extends ConfigBase {
         }
     }
 
-    LoadConfig() {
-
+    LoadConfig(configPath := "") {
+        if (configPath != "") {
+            this.configPathValue := ""
+        }
+        return this
     }
 
-    SaveConfig() {
-        
+    SaveConfig(configPath := "") {
+        if (configPath != "") {
+            this.configPathValue := ""
+        }
+        return this
     }
 }

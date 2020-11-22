@@ -58,11 +58,11 @@
     }
 
     OnBuildLaunchers(btn, info) {
-        this.app.BuildLaunchers(this.app.AppConfig.UpdateExistingLaunchers)
+        this.app.LauncherManager.BuildLaunchers(this.app.AppConfig.UpdateExistingLaunchers)
     }
 
     OnManageLaunchers(btn, info) {
-        this.app.GuiManager.OpenLauncherManager()
+        this.app.GuiManager.OpenManageWindow()
     }
 
     OnTools(btn, info) {
