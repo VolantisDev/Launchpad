@@ -2,8 +2,8 @@
     windowSize := "w535"
     contentWidth := 515
 
-    GetTitle() {
-        return this.title
+    GetTitle(title) {
+        return title
     }
 
     Controls(posY) {
@@ -23,7 +23,7 @@
         buttonWidth := this.ButtonWidth(2, areaW)
         buttonHeight := 80
         posX := areaX
-        btn := this.guiObj.AddButton("x" . posX . " y" . posY . " w" . buttonWidth . " h" . buttonHeight, "&Manage Launchers")
+        btn := this.guiObj.AddButton("x" . posX . " y" . posY . " w" . buttonWidth . " h" . buttonHeight . " +0x8000 BackgroundFFFFFF", "&Manage Launchers")
         btn.OnEvent("Click", "OnManageLaunchers")
         posX += buttonWidth + this.margin
         btn := this.guiObj.AddButton("x" . posX . " y" . posY . " w" . buttonWidth . " h" . buttonHeight, "&Build Launchers")

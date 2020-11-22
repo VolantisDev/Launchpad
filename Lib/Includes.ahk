@@ -32,6 +32,7 @@
 #Include E:\Tools\Launchpad\Lib\Dependency\Dependency.ahk
 #Include E:\Tools\Launchpad\Lib\Deprecated\GameConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\DialogBox.ahk
+#Include E:\Tools\Launchpad\Lib\Gui\FormWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\GuiBase.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\LauncherManager.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\MainWindow.ahk

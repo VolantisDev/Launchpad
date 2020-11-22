@@ -11,6 +11,12 @@ class GuiBase {
     hToolbar := ""
     positionAtMouseCursor := false
     windowKey := ""
+    transColor := ""
+    backgroundColor := "FFFFFF"
+    textColor := "000000"
+    accentColor := "9466FC"
+    accentLightColor := "EEE6FF"
+    accentDarkColor := "8A57F0"
 
     __New(app, title, owner := "", windowKey := "") {
         this.app := app
@@ -32,8 +38,8 @@ class GuiBase {
         return this.guiObj.Hwnd
     }
 
-    GetTitle() {
-        return this.title . " - Launchpad"
+    GetTitle(title) {
+        return title . " - Launchpad"
     }
 
     Show() {
@@ -56,8 +62,9 @@ class GuiBase {
         options := this.windowOptions
         margin := this.margin
 
-        this.guiObj := Gui.New(this.windowOptions, this.GetTitle(), this)
-        this.guiObj.BackColor := "FFFFFF"
+        this.guiObj := Gui.New(this.windowOptions, this.GetTitle(this.title), this)
+        this.guiObj.BackColor := this.backgroundColor
+        this.guiObj.Color := this.textColor
         this.guiObj.MarginX := this.margin
         this.guiObj.MarginY := this.margin
 
@@ -117,6 +124,11 @@ class GuiBase {
         }
 
         this.guiObj.Show(windowSize)
+
+        if (this.transColor != "") {
+            WinSetTransColor(this.transColor, "ahk_id " . this.guiObj.Hwnd)
+        }
+
         return this
     }
 
@@ -240,5 +252,9 @@ class GuiBase {
     GetControlDimensions(ctlObj) {
         ctlObj.GetPos(ix, iy, iw, ih)
         return {x: ix, y: iy, w: iw, h: ih}
+    }
+
+    Submit(hide := true) {
+        this.guiObj.Submit(hide)
     }
 }

@@ -14,6 +14,10 @@
         buttonRightFirstX := groupX + groupW - (smallbuttonW * 2) - this.margin
         buttonRightSecondX := buttonRightFirstX + smallButtonW + this.margin
 
+        tabs := this.guiObj.Add("Tab3", "", ["Launchers", "Advanced"])
+
+        tabs.UseTab("Launchers", true)
+
         posY := this.AddGroupBox("Launchers", posY, 255)
         launcherFile := this.app.AppConfig.LauncherFile ? this.app.AppConfig.LauncherFile : "Not selected"
         posY := this.AddTextWithLabel("Launcher File", launcherFile, "TxtLauncherFile", posY)
@@ -38,6 +42,8 @@
         posY := this.AddCheckBox("Copy assets to launcher directory", "ChkCopyAssets", "OnCopyAssets", this.app.AppConfig.CopyAssets, posY)
         posY += this.margin
 
+        tabs.UseTab("Advanced", true)
+
         posY := this.AddGroupBox("API", posY, 80)
         apiEndpointVal := this.app.AppConfig.ApiEndpoint ? this.app.AppConfig.ApiEndpoint : "Not selected"
         posY := this.AddTextWithLabel("Endpoint URL", apiEndpointVal, "TxtApiEndpoint", posY)
@@ -54,13 +60,15 @@
         posY := this.AddCheckBox("Flush cache on exit", "ChkFlushCacheOnExit", "OnFlushCacheOnExit", this.app.AppConfig.FlushCacheOnExit, posY)
         posY += this.margin
 
+        tabs.UseTab()
+
         posY := this.AddButton("&Save && Close", "OnCloseButton", this.margin, posY, true, this.contentWidth, 30)
 
         return posY
     }
 
     AddGroupBox(groupText, posY, height) {
-        this.guiObj.AddGroupBox("x" . this.margin . " y" . posY . " w" . this.contentWidth . " h" . height, groupText)
+        this.guiObj.AddGroupBox("x" . this.margin . " y" . posY . " w" . this.contentWidth . " h" . height . " Background" . this.backgroundColor, groupText)
         return posY + 5 + this.margin
     }
 
@@ -110,7 +118,7 @@
 
         this.guiObj.AddText("x" . posX . " y" . posY . " w" . labelWidth . " h" . height . " +0x200", labelText . ":")
         this.guiObj.SetFont("Bold")
-        this.guiObj.AddText("v" . ctlName . " x" . textX . " y" . posY . " w" . textWidth . " h" . height . " +0x200", content)
+        this.guiObj.AddText("v" . ctlName . " x" . textX . " y" . posY . " w" . textWidth . " h" . height . " +0x200 c" . this.accentDarkColor, content)
         this.guiObj.SetFont()
 
         return posY + height + this.margin
