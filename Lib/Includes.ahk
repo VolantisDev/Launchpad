@@ -1,6 +1,5 @@
 ; Automatically-generated file, do not edit manually.
 #Include E:\Tools\Launchpad\Lib\Launchpad.ahk
-#Include E:\Tools\Launchpad\Lib\ApiEndpoint\ApiEndpoint.ahk
 #Include E:\Tools\Launchpad\Lib\ApiItem\ApiAsset.ahk
 #Include E:\Tools\Launchpad\Lib\ApiItem\ApiDependency.ahk
 #Include E:\Tools\Launchpad\Lib\ApiItem\ApiGame.ahk
@@ -43,6 +42,7 @@
 #Include E:\Tools\Launchpad\Lib\LauncherGame\LauncherGame.ahk
 #Include E:\Tools\Launchpad\Lib\Notifier\NotifierBase.ahk
 #Include E:\Tools\Launchpad\Lib\Notifier\ToastNotifier.ahk
+#Include E:\Tools\Launchpad\Lib\Service\ApiEndpoint.ahk
 #Include E:\Tools\Launchpad\Lib\Service\CacheManager.ahk
 #Include E:\Tools\Launchpad\Lib\Service\DependencyManager.ahk
 #Include E:\Tools\Launchpad\Lib\Service\GuiService.ahk

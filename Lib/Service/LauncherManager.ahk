@@ -56,7 +56,7 @@ class LauncherManager extends ServiceBase {
             currentItem := 1
 
             for key, config in this.Launchers.Games {
-                success := this.BuildLauncher(key, config, updateExisting, owner, progress)
+                success := this.BuildLauncher(key, updateExisting, owner, progress)
 
                 if (success) {
                     built++
@@ -71,12 +71,15 @@ class LauncherManager extends ServiceBase {
         this.app.Notifications.Info("Built " . built . " launchers.")
     }
 
-    BuildLauncher(key, config, updateExisting := false, owner := "MainWindow", progress := "") {
+    BuildLauncher(key, updateExisting := false, owner := "MainWindow", progress := "") {
         manageProgress := (progress == "")
 
         if (manageProgress) {
             progress := this.app.GuiManager.ProgressIndicator("Building Launchers", "Please wait while your launcher is built.", owner, true, "0-1", 0, "Initializing...")
         }
+
+        launcherGameObj := this.GetLauncherGame(key)
+        config := launcherGameObj.Config
 
         progress.IncrementValue(1, key . ": Discovering...")
         success := false
@@ -86,7 +89,7 @@ class LauncherManager extends ServiceBase {
             detailText := exists ? "Rebuilding launcher..." : "Building launcher..."
             progress.SetDetailText(key . ": " . detailText)
 
-            success := this.Builder.Build(key, config)
+            success := this.Builder.Build(launcherGameObj)
         }
 
         progress.SetDetailText(key . ": Launcher built successfully.")
@@ -275,5 +278,9 @@ class LauncherManager extends ServiceBase {
 
     OpenAssetsDir() {
         Run(this.app.AppConfig.AssetsDir)
+    }
+    
+    GetLauncherGame(key) {
+        return this.Launchers.Games.Has(key) ? LauncherGame.new(this.app, key, this.Launchers.Games[key]) : ""
     }
 }

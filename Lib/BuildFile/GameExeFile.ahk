@@ -1,6 +1,6 @@
 class GameExeFile extends ComposableBuildFile {
-    __New(app, config, launcherDir, key, filePath := "") {
-        super.__New(app, config, launcherDir, key, ".exe", filePath)
+    __New(app, launcherGameObj, launcherDir, key, filePath := "") {
+        super.__New(app, launcherGameObj, launcherDir, key, ".exe", filePath)
     }
 
     ComposeFile() {

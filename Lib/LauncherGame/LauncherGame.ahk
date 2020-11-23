@@ -1,52 +1,98 @@
 class LauncherGame {
+    app := ""
     keyVal := ""
-    displayNameVal := ""
-    gameTypeVal := ""
-    launcherTypeVal := ""
     configVal := Map()
-    requiredConfigKeysVal := Map()
+    requiredConfigKeysVal := Array("gameType", "gameClass", "launcherType", "launcherClass")
 
-    __New(key, config := "") {
+    __New(app, key, config, requiredConfigKeys := "") {
+        this.app := app
         this.keyVal := key
+
+        if (requiredConfigKeys != "") {
+            this.AddRequiredConfigKeys(requiredConfigKeys)
+        }
 
         if (config != "") {
             this.configVal := config
+
+            if (config.Has("requiredConfigKeys")) {
+                this.AddRequiredConfigKeys(config["requiredConfigKeys"])
+            }
         }
+    }
+
+    AddRequiredConfigKeys(configKeys) {
+        for index, requiredKey in configKeys {
+            if (!this.ConfigKeyIsRequired(requiredKey)) {
+                this.requiredConfigKeysVal.push(requiredKey)
+            }
+        }
+    }
+
+    ConfigKeyIsRequired(configKey) {
+        isRequired := false
+
+        for index, requiredKey in this.requiredConfigKeysVal {
+            if (configKey == requiredKey) {
+                isRequired := true
+                break
+            }
+        }
+
+        return isRequired
     }
 
     Key[] {
         get {
-            return this.keyValue
+            return this.keyVal
         }
         set {
-            return this.keyValue := value
+            return this.keyVal := value
         }
     }
 
     DisplayName[] {
         get {
-            return this.displayNameValue
+            return this.configVal.Has("displayName") ? this.configVal["displayName"] : this.Key
         }
         set {
-            return this.displayNameValue := value
+            return this.configVal["displayName"] := value
         }
     }
 
     GameType[] {
         get {
-            return this.gameTypeVal
+            return this.configVal.Has("gameType") ? this.configVal["gameType"] : "default"
         }
         set {
-            return this.gameTypeVal := value
+            return this.configVal["gameType"] := value
+        }
+    }
+
+    GameClass[] {
+        get {
+            return this.configVal.Has("gameClass") ? this.configVal["gameClass"] : "ShortcutGame"
+        }
+        set {
+            return this.configVal["gameClass"] := value
         }
     }
 
     LauncherType[] {
         get {
-            return this.launcherTypeVal
+            return this.configVal.Has("launcherType") ? this.configVal["launcherType"] : "default"
         }
         set {
-            return this.launcherTypeVal := value
+            return this.configVal["launcherType"] := value
+        }
+    }
+
+    LauncherClass[] {
+        get {
+            return this.configVal.Has("launcherClass") ? this.configVal["launcherClass"] : "ThinLauncher"
+        }
+        set {
+            return this.configVal["launcherClass"] := value
         }
     }
 
@@ -72,11 +118,7 @@ class LauncherGame {
         ; Check for missing values and pop up a configuration screen to fill them out if needed
     }
 
-    Edit(launcherFileObj := "") {
+    Edit(launcherFileObj := "", mode := "config") {
         ; Edit this game, saving it back to the referenced launcher file if supplied
-    }
-
-    Build(isInBatch := false) {
-        ; Show a progress window if not in a batch process already
     }
 }

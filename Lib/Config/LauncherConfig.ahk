@@ -38,7 +38,17 @@
                 defaults := this.MergeData(defaults, apiGameData["defaults"])
             }
 
-            launcherType := configItem.Has("launcherType") ? configItem["launcherType"] : "default"
+            launcherType := "default"
+            if (configItem.Has("launcherType")) {
+                launcherType := configItem["launcherType"]
+            } else if (defaults.Has("launcherType")) {
+                launcherType := defaults["launcherType"]
+            }
+            defaults["launcherType"] := launcherType
+            
+            if (!defaults.Has("launcherClass")) {
+                defaults["launcherClass"] := ""
+            }
 
             ; Dereference launcher type and merge defaults from game launcher data
             if (apiGameData.Has("launchers")) {
@@ -68,6 +78,11 @@
                 gameType := configItem["gameType"]
             } else if (defaults.Has("gameType")) {
                 gameType := defaults["gameType"]
+            }
+            defaults["gameType"] := gameType
+
+            if (!defaults.Has("gameClass")) {
+                defaults["gameClass"] := ""
             }
 
             ; Merge defaults from game type

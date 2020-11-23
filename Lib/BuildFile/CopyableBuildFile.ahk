@@ -30,9 +30,9 @@ class CopyableBuildFile extends BuildFile {
         }
     }
 
-    __New(app, config, launcherDir, key, extension, filePath := "", sourcePath := "") {
+    __New(app, launcherGameObj, launcherDir, key, extension, filePath := "", sourcePath := "") {
         this.sourcePathValue := sourcePath
-        super.__New(app, config, launcherDir, key, extension, filePath)
+        super.__New(app, launcherGameObj, launcherDir, key, extension, filePath)
     }
 
     Build() {

@@ -6,7 +6,7 @@ class BuildFile {
     key := ""
     extension := ""
     launcherDir := ""
-    config := Map()
+    launcherGameObj := ""
 
     FilePath[] {
         get {
@@ -17,11 +17,11 @@ class BuildFile {
         }
     }
 
-    __New(app, config, launcherDir, key, extension, filePath := "") {
+    __New(app, launcherGameObj, launcherDir, key, extension, filePath := "") {
         this.app := app
         this.appDir := app.AppConfig.AppDir
         this.tempDir := app.AppConfig.TempDir . "\BuildFiles\" . key
-        this.config := config
+        this.launcherGameObj := launcherGameObj
         this.launcherDir := launcherDir
         this.key := key
         this.extension := extension

@@ -1,12 +1,11 @@
-class ApiEndpoint {
-    app := ""
+class ApiEndpoint extends ServiceBase {
     cache := ""
     endpointUrl := ""
 
     __New(app, endpointUrl, cache) {
-        this.app := app
         this.endpointUrl := endpointUrl
         this.cache := cache
+        super.__New(app)
     }
 
     GetApiUrl(path) {
