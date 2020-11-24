@@ -79,4 +79,17 @@ class ApiEndpoint extends ServiceBase {
         
         return apiEndpointUrl
     }
+
+    GetListing(path) {
+        listingInstance := ApiListing.new(this.app, path)
+
+        listingItems := Array()
+
+        if (listingInstance.Exists()) {
+            listing := listingInstance.Read()
+            listingItems := listing["items"]
+        }
+
+        return listingItems
+    }
 }
