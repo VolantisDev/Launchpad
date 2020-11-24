@@ -12,22 +12,20 @@ class DependencyManager extends ServiceBase {
 
     InitializeDependencies(owner := "MainWindow") {
         if (!this.initialized) {
-            progress := this.app.GuiManager.ProgressIndicator(this.initializeTitle, this.initializeText, owner, true, "0-100", 0, "Initializing...")
+            listing := this.app.ApiEndpoint.GetListing("dependencies")
 
-            listingInstance := ApiListing.new(this.app, "dependencies")
+            progress := this.app.GuiManager.ProgressIndicator(this.initializeTitle, this.initializeText, owner, true, "0-" . listing.Length, 0, "Initializing...")
 
-            if (listingInstance.Exists()) {
-                listing := listingInstance.Read()
-                progress.SetRange("0-" . listing["items"].Length)
+            for index, key in listing {
+                progress.IncrementValue(1, key . ": Discovering...")
 
-                for index, key in listing["items"] {
-                    progress.IncrementValue(1, key . ": Discovering...")
+                item := ApiDependency.new(this.app, key)
 
-                    item := ApiDependency.new(this.app, key)
-
-                    if (item.Exists()) {
-                        this.dependencies[key] := item.Read()
-                    }
+                if (item.Exists()) {
+                    this.dependencies[key] := item.Read()
+                    progress.SetDetailText(key . ": Finished")
+                } else {
+                    progress.SetDetailText(key . ": Not found")
                 }
             }
 
