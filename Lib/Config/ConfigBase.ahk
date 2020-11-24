@@ -4,21 +4,13 @@ class ConfigBase {
     app := ""
 
     AppName[] {
-        get {
-            return this.appNameValue
-        }
-        set {
-            this.appNameValue := value
-        }
+        get => this.appNameValue
+        set => this.appNameValue := value
     }
 
     AppDir[] {
-        get {
-            return this.appDirValue
-        }
-        set {
-            return this.appDirValue := value
-        }
+        get => this.appDirValue
+        set => this.appDirValue := value
     }
 
     __New(app) {

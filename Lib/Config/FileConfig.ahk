@@ -2,12 +2,8 @@ class FileConfig extends ConfigBase {
     configPathValue := ""
 
     ConfigPath[] {
-        get {
-            return this.configPathValue
-        }
-        set {
-            this.configPathValue := value
-        }
+        get => this.configPathValue
+        set => this.configPathValue := value
     }
 
     __New(app, configPath := "", extension := ".conf", autoLoad := true) {

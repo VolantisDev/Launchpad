@@ -4,30 +4,18 @@ class CopyableBuildFile extends BuildFile {
     selectFilterValue := "All Files (*.*)"
 
     SourcePath[] {
-        get {
-            return this.sourcePathValue
-        }
-        set {
-            this.sourcePathValue := value
-        }
+        get => this.sourcePathValue
+        set => this.sourcePathValue := value
     }
 
     RequestMessage[] {
-        get {
-            return this.requestMessageValue
-        }
-        set {
-            this.requestMessageValue := value
-        }
+        get => this.requestMessageValue
+        set => this.requestMessageValue := value
     }
 
     SelectFilter[] {
-        get {
-            return this.selectFilterValue
-        }
-        set {
-            this.selectFilterValue := value
-        }
+        get => this.selectFilterValue
+        set => this.selectFilterValue := value
     }
 
     __New(app, launcherGameObj, launcherDir, key, extension, filePath := "", sourcePath := "") {

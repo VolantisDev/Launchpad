@@ -10,66 +10,38 @@
     notificationServiceObj := ""
     
     AppConfig[] {
-        get {
-            return this.appConfigObj
-        }
-        set {
-            return this.appConfigObj := value
-        }
+        get => this.appConfigObj
+        set => this.appConfigObj := value
     }
 
     ApiEndpoint[] {
-        get {
-            return this.apiEndpointObj
-        }
-        set {
-            return this.apiEndpointObj := value
-        }
+        get => this.apiEndpointObj
+        set => this.apiEndpointObj := value
     }
 
     GuiManager[] {
-        get {
-            return this.guiServiceObj
-        }
-        set {
-            return this.guiServiceObj := value
-        }
+        get => this.guiServiceObj
+        set => this.guiServiceObj := value
     }
 
     Dependencies[] {
-        get {
-            return this.dependencyManagerObj
-        }
-        set {
-            return this.dependencyManagerObj := value
-        }
+        get => this.dependencyManagerObj
+        set => this.dependencyManagerObj := value
     }
 
     LauncherManager[] {
-        get {
-            return this.launcherManagerObj
-        }
-        set {
-            return this.launcherManagerObj := value
-        }
+        get => this.launcherManagerObj
+        set => this.launcherManagerObj := value
     }
 
     CacheManager[] {
-        get {
-            return this.cacheManagerObj
-        }
-        set {
-            return this.cacheManagerObj := value
-        }
+        get => this.cacheManagerObj
+        set => this.cacheManagerObj := value
     }
 
     Notifications[] {
-        get {
-            return this.notificationServiceObj
-        }
-        set {
-            return this.notificationServiceObj := value
-        }
+        get => this.notificationServiceObj
+        set => this.notificationServiceObj := value
     }
 
     __New(appName, appDir) {

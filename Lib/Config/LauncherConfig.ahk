@@ -5,16 +5,8 @@
     gameDefaults := Map()
 
     Games[] {
-        get {
-            if (this.config["Games"]) {
-                return this.config["Games"]
-            } else {
-                return Map()
-            }
-        }
-        set {
-            return this.config["Games"] := value
-        }
+        get => (this.config["Games"] != "") ? this.config["Games"] : Map()
+        set => this.config["Games"] := value
     }
 
     __New(app, configPath := "", autoLoad := true, autoMerge := true) {

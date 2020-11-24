@@ -9,12 +9,8 @@ class BuildFile {
     launcherGameObj := ""
 
     FilePath[] {
-        get {
-            return this.filePathValue
-        }
-        set {
-            this.filePathValue := value
-        }
+        get => this.filePathValue
+        set => this.filePathValue := value
     }
 
     __New(app, launcherGameObj, launcherDir, key, extension, filePath := "") {
