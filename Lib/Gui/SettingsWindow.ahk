@@ -1,10 +1,6 @@
 ﻿class SettingsWindow extends GuiBase {
     windowOptions := "-MaximizeBox -SysMenu"
     contentWidth := 400
-    tabHeight := 350
-    labelWidth := 75
-    buttonSmallW := 80
-    buttonSmallH := 20
 
     __New(app, owner := "", windowKey := "") {
         super.__New(app, "Settings", owner, windowKey)
@@ -12,6 +8,7 @@
 
     Controls() {
         super.Controls()
+        
         groupW := this.contentWidth - (this.margin * 2)
         openX := groupW - (this.buttonSmallW * 2) ; this assumes the group starts at this.margin
 
@@ -61,24 +58,8 @@
         this.AddButton("&Done", "CloseButton", closeW, 30, "x" . closeX)
     }
 
-    AddHeading(groupLabel, position := "") {
-        if (position == "") {
-            position := "xm y+" . (this.margin * 2.5)
-        }
-
-        this.guiObj.SetFont("Bold")
-        this.guiObj.AddText(position . " w" . this.contentWidth . " Section +0x200", groupLabel)
-        this.guiObj.SetFont()
-    }
-
     AddConfigLocationBlock(settingName, extraButton := "", inGroupBox := true) {
         location := this.app.AppConfig.%settingName% ? this.app.AppConfig.%settingName% : "Not selected"
-
-        startX := this.contentWidth - (this.buttonSmallW * 2) - this.margin
-
-        if (inGroupBox) {
-            startX += this.margin
-        }
 
         this.AddLocationText(location, settingName, inGroupBox)
 
