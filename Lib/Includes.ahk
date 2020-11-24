@@ -1,14 +1,5 @@
 ; Automatically-generated file, do not edit manually.
 #Include E:\Tools\Launchpad\Lib\Launchpad.ahk
-#Include E:\Tools\Launchpad\Lib\ApiItem\ApiAsset.ahk
-#Include E:\Tools\Launchpad\Lib\ApiItem\ApiDependency.ahk
-#Include E:\Tools\Launchpad\Lib\ApiItem\ApiGame.ahk
-#Include E:\Tools\Launchpad\Lib\ApiItem\ApiGameType.ahk
-#Include E:\Tools\Launchpad\Lib\ApiItem\ApiItemBase.ahk
-#Include E:\Tools\Launchpad\Lib\ApiItem\ApiLauncherType.ahk
-#Include E:\Tools\Launchpad\Lib\ApiItem\ApiListing.ahk
-#Include E:\Tools\Launchpad\Lib\ApiItem\ApiTypeItem.ahk
-#Include E:\Tools\Launchpad\Lib\ApiItem\JsonItem.ahk
 #Include E:\Tools\Launchpad\Lib\Builder\AhkLauncherBuilder.ahk
 #Include E:\Tools\Launchpad\Lib\Builder\BuilderBase.ahk
 #Include E:\Tools\Launchpad\Lib\BuildFile\BuildFileBase.ahk
@@ -26,9 +17,14 @@
 #Include E:\Tools\Launchpad\Lib\Config\FileConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Config\IniConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Config\JsonConfig.ahk
-#Include E:\Tools\Launchpad\Lib\Config\JsonWithDefaultsConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Config\LauncherConfig.ahk
+#Include E:\Tools\Launchpad\Lib\DataSource\ApiDataSource.ahk
 #Include E:\Tools\Launchpad\Lib\DataSource\DataSourceBase.ahk
+#Include E:\Tools\Launchpad\Lib\DataSourceItem\DataSourceItemBase.ahk
+#Include E:\Tools\Launchpad\Lib\DataSourceItem\DSAssetFile.ahk
+#Include E:\Tools\Launchpad\Lib\DataSourceItem\DSFile.ahk
+#Include E:\Tools\Launchpad\Lib\DataSourceItem\DSJson.ahk
+#Include E:\Tools\Launchpad\Lib\DataSourceItem\DSListing.ahk
 #Include E:\Tools\Launchpad\Lib\Dependency\DependencyBase.ahk
 #Include E:\Tools\Launchpad\Lib\Dependency\DownloadableDependency.ahk
 #Include E:\Tools\Launchpad\Lib\Gui\DialogBox.ahk
@@ -47,10 +43,10 @@
 #Include E:\Tools\Launchpad\Lib\LauncherGame\LauncherGameBase.ahk
 #Include E:\Tools\Launchpad\Lib\Notifier\NotifierBase.ahk
 #Include E:\Tools\Launchpad\Lib\Notifier\ToastNotifier.ahk
-#Include E:\Tools\Launchpad\Lib\Service\ApiEndpoint.ahk
 #Include E:\Tools\Launchpad\Lib\Service\CacheManager.ahk
+#Include E:\Tools\Launchpad\Lib\Service\DataSourceManager.ahk
 #Include E:\Tools\Launchpad\Lib\Service\DependencyManager.ahk
-#Include E:\Tools\Launchpad\Lib\Service\GuiService.ahk
+#Include E:\Tools\Launchpad\Lib\Service\WindowManager.ahk
 #Include E:\Tools\Launchpad\Lib\Service\LauncherManager.ahk
 #Include E:\Tools\Launchpad\Lib\Service\NotificationService.ahk
 #Include E:\Tools\Launchpad\Lib\Service\ServiceBase.ahk

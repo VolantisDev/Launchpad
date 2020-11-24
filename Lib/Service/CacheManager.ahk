@@ -16,8 +16,8 @@ class CacheManager extends ServiceBase {
     }
 
     SetCacheDir(cacheDir) {
-        this.app.AppConfig.CacheDir := cacheDir
-        this.cacheDir := this.app.AppConfig.CacheDir
+        this.app.Config.CacheDir := cacheDir
+        this.cacheDir := this.app.Config.CacheDir
     }
 
     GetCache(key) {
@@ -50,7 +50,7 @@ class CacheManager extends ServiceBase {
     }
 
     ChangeCacheDir() {
-        cacheDir := DirSelect("*" . this.app.AppConfig.CacheDir, 3, "Create or select the folder to save Launchpad's cache files to")
+        cacheDir := DirSelect("*" . this.app.Config.CacheDir, 3, "Create or select the folder to save Launchpad's cache files to")
         
         if (cacheDir != "") {
             this.SetCacheDir(cacheDir)

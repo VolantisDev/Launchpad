@@ -1,4 +1,4 @@
-class AhkLauncherBuilder {
+class AhkLauncherBuilder extends BuilderBase {
     BuildAction(launcherGameObj, launcherDir, assetsDir) {
         result := false
 

@@ -121,10 +121,10 @@ class LauncherEditor extends FormWindow {
 
     Create() {
         super.Create()
-
-        this.knownGames := this.app.ApiEndpoint.GetListing("games")
-        this.launcherTypes := this.app.ApiEndpoint.GetListing("types/launchers")
-        this.gameTypes := this.app.ApiEndpoint.GetListing("types/games")
+        dataSource := this.app.DataSources.GetDataSource("api")
+        this.knownGames := dataSource.ReadListing("games")
+        this.launcherTypes := dataSource.ReadListing("types/launchers")
+        this.gameTypes := dataSource.ReadListing("types/games")
     }
 
     GetItemIndex(arr, itemValue) {

@@ -11,7 +11,7 @@
     LauncherDir[] {
         get {
             returnVal := this.GetIniValue("LauncherDir")
-            return this.LauncherManagerLoaded() ? this.app.LauncherManager.DetectLauncherDir(returnVal) : returnVal
+            return this.LaunchersLoaded() ? this.app.Launchers.DetectLauncherDir(returnVal) : returnVal
         }
         set => this.SetIniValue("LauncherDir", value)
     }
@@ -19,7 +19,7 @@
     LauncherFile[] {
         get {
             returnVal := this.GetIniValue("LauncherFile")
-            return this.LauncherManagerLoaded() ? this.app.LauncherManager.DetectLauncherFile(returnVal) : returnVal
+            return this.LaunchersLoaded() ? this.app.Launchers.DetectLauncherFile(returnVal) : returnVal
         }
         set => this.SetIniValue("LauncherFile", value)
     }
@@ -27,9 +27,14 @@
     AssetsDir[] {
         get {
             returnVal := this.GetIniValue("AssetsDir")
-            return this.LauncherManagerLoaded() ? this.app.LauncherManager.DetectAssetsDir(returnVal) : returnVal
+            return this.LaunchersLoaded() ? this.app.Launchers.DetectAssetsDir(returnVal) : returnVal
         }
         set => this.SetIniValue("AssetsDir", value)
+    }
+
+    DataSourceKey[] {
+        get => this.GetIniValue("DataSourceKey") || "api"
+        set => this.SetIniValue("DataSourceKey", value)
     }
 
     ApiEndpoint[] {
@@ -87,8 +92,8 @@
         super.__New(app)
     }
 
-    LauncherManagerLoaded() {
-        return (this.app.LauncherManager != "")
+    LaunchersLoaded() {
+        return (this.app.Launchers != "")
     }
 
     GetBooleanValue(key, defaultValue) {
@@ -106,6 +111,6 @@
     }
 
     GetRawValue(key) {
-        return this.GetIniValue("ApiEndpoint")
+        return this.GetIniValue(key)
     }
 }

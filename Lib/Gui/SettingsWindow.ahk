@@ -59,7 +59,7 @@
     }
 
     AddConfigLocationBlock(settingName, extraButton := "", inGroupBox := true) {
-        location := this.app.AppConfig.%settingName% ? this.app.AppConfig.%settingName% : "Not selected"
+        location := this.app.Config.%settingName% ? this.app.Config.%settingName% : "Not selected"
 
         this.AddLocationText(location, settingName, inGroupBox)
 
@@ -91,14 +91,14 @@
     }
 
     AddConfigCheckBox(checkboxText, settingName, inGroupBox := true) {
-        isChecked := this.app.AppConfig.%settingName%
+        isChecked := this.app.Config.%settingName%
         this.AddCheckBox(checkboxText, settingName, isChecked, inGroupBox, "OnSettingsCheckBox")
     }
 
     OnSettingsCheckBox(chk, info) {
         this.guiObj.Submit(false)
         ctlName := chk.Name
-        this.app.AppConfig.%ctlName% := chk.Value
+        this.app.Config.%ctlName% := chk.Value
     }
 
     AddCheckBox(checkboxText, ctlName, checked, inGroupBox := true, callback := "") {
@@ -144,55 +144,55 @@
     }
 
     OnReloadLauncherFile(btn, info) {
-        this.app.LauncherManager.ReloadLauncherFile()
+        this.app.Launchers.ReloadLauncherFile()
     }
 
     OnOpenLauncherFile(btn, info) {
-        this.app.LauncherManager.OpenLauncherFile()
+        this.app.Launchers.OpenLauncherFile()
     }
 
     OnChangeLauncherFile(btn, info) {
-        this.app.LauncherManager.ChangeLauncherFile()
-        this.SetText("LauncherFile", this.app.AppConfig.LauncherFile, "Bold")
+        this.app.Launchers.ChangeLauncherFile()
+        this.SetText("LauncherFile", this.app.Config.LauncherFile, "Bold")
     }
 
     OnOpenLauncherDir(btn, info) {
-        this.app.LauncherManager.OpenLauncherDir()
+        this.app.Launchers.OpenLauncherDir()
     }
 
     OnChangeLauncherDir(btn, info) {
-        this.app.LauncherManager.ChangeLauncherDir()
-        this.SetText("LauncherDir", this.app.AppConfig.LauncherDir, "Bold")
+        this.app.Launchers.ChangeLauncherDir()
+        this.SetText("LauncherDir", this.app.Config.LauncherDir, "Bold")
     }
 
     OnOpenAssetsDir(btn, info) {
-        this.app.LauncherManager.OpenAssetsDir()
+        this.app.Launchers.OpenAssetsDir()
     }
 
     OnChangeAssetsDir(btn, info) {
-        this.app.LauncherManager.ChangeAssetsDir()
-        this.SetText("AssetsDir", this.app.AppConfig.AssetsDir, "Bold")
+        this.app.Launchers.ChangeAssetsDir()
+        this.SetText("AssetsDir", this.app.Config.AssetsDir, "Bold")
     }
 
     OnOpenApiEndpoint(btn, info) {
-        this.app.ApiEndpoint.OpenApiEndpoint()
+        this.app.DataSources.GetDataSource("api").Open()
     }
 
     OnChangeApiEndpoint(btn, info) {
-        this.app.ApiEndpoint.ChangeApiEndpoint(, "SettingsWindow")
-        this.SetText("ApiEndpoint", this.app.AppConfig.ApiEndpoint, "Bold")
+        this.app.DataSources.GetDataSource("api").ChangeApiEndpoint(, "SettingsWindow")
+        this.SetText("ApiEndpoint", this.app.Config.ApiEndpoint, "Bold")
     }
 
     OnFlushCache(btn, info) {
-        this.app.CacheManager.FlushCaches()
+        this.app.Cache.FlushCaches()
     }
 
     OnOpenCacheDir(btn, info) {
-        this.app.CacheManager.OpenCacheDir()
+        this.app.Cache.OpenCacheDir()
     }
 
     OnChangeCacheDir(btn, info) {
-        this.app.CacheManager.ChangeCacheDir()
-        this.SetText("TxtCacheDir", this.app.AppConfig.CacheDir, "Bold")
+        this.app.Cache.ChangeCacheDir()
+        this.SetText("TxtCacheDir", this.app.Config.CacheDir, "Bold")
     }
 }

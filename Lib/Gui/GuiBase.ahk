@@ -29,7 +29,7 @@ class GuiBase {
         this.windowKey := windowKey
 
         if (owner != "") {
-            this.owner := (Type(owner) == "String") ? this.app.GuiManager.GetGuiObj(owner) : owner
+            this.owner := (Type(owner) == "String") ? this.app.Windows.GetGuiObj(owner) : owner
         }
 
         this.Create()
@@ -213,7 +213,7 @@ class GuiBase {
         this.guiObj.Destroy()
 
         if (this.windowKey != "") {
-            this.app.GuiManager.RemoveWindow(this.windowKey)
+            this.app.Windows.RemoveWindow(this.windowKey)
         }
     }
 

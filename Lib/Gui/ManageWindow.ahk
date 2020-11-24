@@ -8,7 +8,7 @@
 
     __New(app, launcherFile := "", owner := "", windowKey := "") {
         if (launcherFile == "") {
-            launcherFile := app.AppConfig.LauncherFile
+            launcherFile := app.Config.LauncherFile
         }
 
         this.launcherFile := launcherFile

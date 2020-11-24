@@ -2,26 +2,21 @@
     appName := ""
     appDir := ""
     appConfigObj := ""
-    apiEndpointObj := ""
-    guiServiceObj := ""
+    windowManagerObj := ""
     dependencyManagerObj := ""
     launcherManagerObj := ""
     cacheManagerObj := ""
     notificationServiceObj := ""
+    dataSourceManagerObj := ""
     
-    AppConfig[] {
+    Config[] {
         get => this.appConfigObj
         set => this.appConfigObj := value
     }
 
-    ApiEndpoint[] {
-        get => this.apiEndpointObj
-        set => this.apiEndpointObj := value
-    }
-
-    GuiManager[] {
-        get => this.guiServiceObj
-        set => this.guiServiceObj := value
+    Windows[] {
+        get => this.windowManagerObj
+        set => this.windowManagerObj := value
     }
 
     Dependencies[] {
@@ -29,12 +24,12 @@
         set => this.dependencyManagerObj := value
     }
 
-    LauncherManager[] {
+    Launchers[] {
         get => this.launcherManagerObj
         set => this.launcherManagerObj := value
     }
 
-    CacheManager[] {
+    Cache[] {
         get => this.cacheManagerObj
         set => this.cacheManagerObj := value
     }
@@ -44,29 +39,46 @@
         set => this.notificationServiceObj := value
     }
 
+    DataSources[] {
+        get => this.dataSourceManagerObj
+        set => this.dataSourceManagerObj := value
+    }
+
     __New(appName, appDir) {
         this.appName := appName
         this.appDir := appDir
-    
-        this.appConfigObj := AppConfig.new(this, A_Temp . "\Launchpad", )
+
+        config := AppConfig.new(this, A_Temp . "\Launchpad")
+
+        this.appConfigObj := config
+        this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
         this.notificationServiceObj := NotificationService.new(this, ToastNotifier.new(this))
-        this.guiServiceObj := GuiService.new(this)
-        this.cacheManagerObj := CacheManager.new(this, this.appConfigObj.CacheDir)
-        this.apiEndpointObj := ApiEndpoint.new(this, this.appConfigObj.ApiEndpoint, this.cacheManagerObj.GetCache("api"))
+        this.windowManagerObj := WindowManager.new(this)
+        this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
+        this.dataSourceManagerObj := DataSourceManager.new(this)
         this.dependencyManagerObj := DependencyManager.new(this)
         this.launcherManagerObj := LauncherManager.new(this, AhkLauncherBuilder.new(this))
 
+        this.InitializeApp()
+    }
+
+    InitializeApp() {
+        api := ApiDataSource.new(this, this.Cache.GetCache("api"), this.Config.ApiEndpoint)
+
+        this.dataSourceManagerObj.SetDataSource("api", api, true)
         this.dependencyManagerObj.InitializeDependencies()
-        this.launcherManagerObj.LoadLauncherFile(this.appConfigObj.LauncherFile)
+
+        this.launcherManagerObj.SetDataSource(api)
+        this.launcherManagerObj.LoadLaunchers(this.appConfigObj.LauncherFile)
     }
 
     ExitApp() {
-        if (this.AppConfig.CleanLaunchersOnExit) {
-            this.LauncherManager.CleanLaunchers(false)
+        if (this.Config.CleanLaunchersOnExit) {
+            this.Launchers.CleanLaunchers(false)
         }
 
-        if (this.AppConfig.FlushCacheOnExit) {
-            this.CacheManager.FlushCaches(false)
+        if (this.Config.FlushCacheOnExit) {
+            this.Cache.FlushCaches(false)
         }
 
         ExitApp

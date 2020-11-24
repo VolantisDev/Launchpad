@@ -38,7 +38,7 @@
                 }
 
                 if (assetConfig["type"] == "default" or assetConfig["type"] == "asset") {
-                    asset := ApiAsset.new(this.app, assetConfig["asset"], "dependencies/" . this.key)
+                    asset := DSAssetFile.new(this.app, assetConfig["asset"], this.key, "assets/dependencies")
                     asset.Copy(assetPath)
                 } else if (assetConfig["type"] == "download") {
                     Download(assetConfig["url"], assetPath)

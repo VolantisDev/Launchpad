@@ -17,13 +17,7 @@ class JsonConfig extends FileConfig {
         }
 
         jsonString := FileRead(configPath)
-
-        if (jsonString != "") {
-            this.config := Jxon_Load(jsonString)
-        } else {
-            this.config := Map()
-        }
-
+        this.config := (jsonString != "") ? Jxon_Load(jsonString) : Map()
         return super.LoadConfig(configPath)
     }
 
@@ -45,17 +39,17 @@ class JsonConfig extends FileConfig {
             FileDelete(configPath)
         }
         
-        jsonString := Jxon_Dump(this.config, "", 4)
-        FileAppend(jsonString, configPath)
-
+        FileAppend(Jxon_Dump(this.config, "", 4), configPath)
         return super.SaveConfig(configPath)
     }
 
     CountItems() {
         count := 0
+        
         for key, value in this.config[this.primaryConfigKey] {
             count++
         }
+
         return count
     }
 }

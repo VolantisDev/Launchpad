@@ -7,7 +7,7 @@
     logo := ""
 
     __New(app, title, owner := "", windowKey := "") {
-        this.logo := app.AppConfig.AppDir . "\Graphics\Logo.png"
+        this.logo := app.Config.AppDir . "\Graphics\Logo.png"
         super.__New(app, title, owner, windowKey)
     }
 
@@ -58,18 +58,18 @@
     }
 
     OnBuildLaunchers(btn, info) {
-        this.app.LauncherManager.BuildLaunchers(this.app.AppConfig.UpdateExistingLaunchers)
+        this.app.Launchers.BuildLaunchers(this.app.Config.UpdateExistingLaunchers)
     }
 
     OnManageLaunchers(btn, info) {
-        this.app.GuiManager.OpenManageWindow()
+        this.app.Windows.OpenManageWindow()
     }
 
     OnTools(btn, info) {
-        this.app.GuiManager.OpenToolsWindow()
+        this.app.Windows.OpenToolsWindow()
     }
 
     OnSettings(btn, info) {
-        this.app.GuiManager.OpenSettingsWindow()
+        this.app.Windows.OpenSettingsWindow()
     }
 }

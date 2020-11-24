@@ -31,22 +31,22 @@
 
     OnReloadLauncherFile(btn, info) {
         this.Close()
-        this.app.LauncherManager.ReloadLauncherFile()
+        this.app.Launchers.ReloadLauncherFile()
     }
 
     OnCleanLaunchers(btn, info) {
         this.Close()
-        this.app.LauncherManager.CleanLaunchers()
+        this.app.Launchers.CleanLaunchers()
     }
 
     OnValidateLaunchers(btn, info) {
         this.Close()
-        this.app.LauncherManager.ValidateLaunchers()
+        this.app.Launchers.ValidateLaunchers()
     }
 
     OnFlushCache(btn, info) {
         this.Close()
-        this.app.CacheManager.FlushCaches()
+        this.app.Cache.FlushCaches()
     }
 
     OnUpdateDependencies(btn, info) {

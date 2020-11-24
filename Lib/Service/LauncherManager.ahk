@@ -1,33 +1,58 @@
 class LauncherManager extends ServiceBase {
-    launchersObj := ""
+    launcherConfigObj := ""
     builderObj := ""
+    launchersMap := Map()
+    dataSource := ""
 
     Launchers[] {
-        get => this.launchersObj
-        set => this.launchersObj := value
+        get => this.launchersMap
+        set => this.launchersMap := value
     }
 
     Builder[] {
-        get {
-            return this.builderObj
-        }
-        set {
-            return this.builderObj := value
-        }
+        get => this.builderObj
+        set => this.builderObj := value
     }
 
-    __New(app, builderObj, launcherFile := "", autoLoad := false) {
-        this.launchersObj := LauncherConfig.new(app, launcherFile, autoLoad)
+    __New(app, builderObj, launcherFile := "", dataSource := "") {
+        this.launcherConfigObj := LauncherConfig.new(app, launcherFile, false)
         this.builderObj := builderObj
+
+        if (dataSource == "") {
+            dataSource := app.Config.DataSourceKey
+        }
+
+        this.dataSource := IsObject(dataSource) ? dataSource : app.DataSources.GetDataSource(dataSource)
         super.__New(app)
     }
 
+    SetDataSource(dataSource) {
+        this.dataSource := dataSource
+    }
+
+    LoadLaunchers(launcherFile := "") {
+        progress := this.app.Windows.ProgressIndicator("Loading Launchers", "Please wait while your configuration is processed.", this.app.Windows.GetGuiObj("MainWindow"), false, "0-100", 0, "Initializing...")
+        this.launcherConfigObj.LoadConfig(launcherFile)
+        progress.SetRange("0-" . this.launcherConfigObj.Games.Count)
+        launchersMap := Map()
+
+        for key, config in this.launcherConfigObj.Games {
+            requiredKeys := "" ; @todo Figure out how to get these
+            launcherGame := EditableLauncherGame.new(this.app, key, config, requiredKeys, this.dataSource)
+            launcherGame.MergeDefaults(true)
+            launchersMap[key] := launcherGame
+        }
+
+        this.launchersMap := launchersMap
+        progress.Finish()
+    }
+
     VerifyRequirements() {
-        if (this.app.AppConfig.LauncherDir == "") {
+        if (this.app.Config.LauncherDir == "") {
             return false
         }
         
-        if (this.app.AppConfig.AssetsDir == "") {
+        if (this.app.Config.AssetsDir == "") {
             return false
         }
 
@@ -35,7 +60,7 @@ class LauncherManager extends ServiceBase {
     }
 
     CountLaunchers() {
-        return this.Launchers.Games.Count
+        return this.Launchers.Count
     }
 
     BuildLaunchers(updateExisting := false, owner := "MainWindow") {
@@ -48,10 +73,10 @@ class LauncherManager extends ServiceBase {
         built := 0
 
         if (itemCount > 0) {
-            progress := this.app.GuiManager.ProgressIndicator("Building Launchers", "Please wait while your launchers are built.", owner, true, "0-" . itemCount, 0, "Initializing...")
+            progress := this.app.Windows.ProgressIndicator("Building Launchers", "Please wait while your launchers are built.", owner, true, "0-" . itemCount, 0, "Initializing...")
             currentItem := 1
 
-            for key, config in this.Launchers.Games {
+            for key, launcherGame in this.Launchers {
                 success := this.BuildLauncher(key, updateExisting, owner, progress)
 
                 if (success) {
@@ -71,24 +96,26 @@ class LauncherManager extends ServiceBase {
         manageProgress := (progress == "")
 
         if (manageProgress) {
-            progress := this.app.GuiManager.ProgressIndicator("Building Launchers", "Please wait while your launcher is built.", owner, true, "0-1", 0, "Initializing...")
+            progress := this.app.Windows.ProgressIndicator("Building Launchers", "Please wait while your launcher is built.", owner, true, "0-1", 0, "Initializing...")
         }
 
-        launcherGameObj := this.GetLauncherGame(key)
-        config := launcherGameObj.Config
+        if (this.Launchers.Has(key)) {
+            launcherGameObj := this.Launchers[key]
+            config := launcherGameObj.Config
 
-        progress.IncrementValue(1, key . ": Discovering...")
-        success := false
-        exists := this.LauncherExists(key, config)
+            progress.IncrementValue(1, key . ": Discovering...")
+            success := false
+            exists := this.LauncherExists(key, config)
 
-        if (updateExisting or !exists) {
-            detailText := exists ? "Rebuilding launcher..." : "Building launcher..."
-            progress.SetDetailText(key . ": " . detailText)
+            if (updateExisting or !exists) {
+                detailText := exists ? "Rebuilding launcher..." : "Building launcher..."
+                progress.SetDetailText(key . ": " . detailText)
 
-            success := this.Builder.Build(launcherGameObj)
+                success := this.Builder.Build(launcherGameObj)
+            }
+
+            progress.SetDetailText(key . ": Launcher built successfully.")
         }
-
-        progress.SetDetailText(key . ": Launcher built successfully.")
 
         if (manageProgress) {
             progress.Finish()
@@ -103,10 +130,10 @@ class LauncherManager extends ServiceBase {
         cleaned := 0
 
         if (itemCount > 0) {
-            progress := this.app.GuiManager.ProgressIndicator("Cleaning Launchers", "Please wait while your launchers are cleaned.", owner, true, "0-" . itemCount, 0, "Initializing...")
+            progress := this.app.Windows.ProgressIndicator("Cleaning Launchers", "Please wait while your launchers are cleaned.", owner, true, "0-" . itemCount, 0, "Initializing...")
             currentItem := 1
 
-            for key, config in this.Launchers.Games {
+            for key, launcherGame in this.Launchers {
                 success := this.CleanLauncher(key, owner, progress)
                 
                 if (success) {
@@ -126,13 +153,13 @@ class LauncherManager extends ServiceBase {
         manageProgress := (progress == "")
 
         if (manageProgress) {
-            progress := this.app.GuiManager.ProgressIndicator("Cleaning Launcher", "Please wait while your launcher is cleaned.", owner, true, "0-1", 0, "Initializing...")
+            progress := this.app.Windows.ProgressIndicator("Cleaning Launcher", "Please wait while your launcher is cleaned.", owner, true, "0-1", 0, "Initializing...")
         }
 
         progress.IncrementValue(1, key . ": Cleaning launcher...")
         wasCleaned := false
 
-        filePath := this.AppConfig.AssetsDir . "\" . key . "\" . key . ".ahk"
+        filePath := this.app.Config.AssetsDir . "\" . key . "\" . key . ".ahk"
 
         if (FileExist(filePath)) {
             FileDelete(filePath)
@@ -148,9 +175,9 @@ class LauncherManager extends ServiceBase {
     }
 
     GetLauncherFile(key, getAHkFile := false) {
-        gameDir := getAhkFile ? this.app.AppConfig.AssetsDir : this.app.AppConfig.LauncherDir
+        gameDir := getAhkFile ? this.app.Config.AssetsDir : this.app.Config.LauncherDir
 
-        if (getAhkFile or this.AppConfig.IndividualDirs) {
+        if (getAhkFile or this.app.Config.IndividualDirs) {
             gameDir .= "\" . key
         }
 
@@ -162,13 +189,9 @@ class LauncherManager extends ServiceBase {
         return (FileExist(this.GetLauncherFile(key, checkAhkFile)) != "")
     }
 
-    LoadLauncherFile(launcherFile := "") {
-        this.Launchers.LoadConfig(launcherFile)
-    }
-
     DetectLauncherFile(launcherFile := "") {
         if (launcherFile == "") {
-            launcherFile := this.app.AppConfig.GetRawValue("LauncherFile")
+            launcherFile := this.app.Config.GetRawValue("LauncherFile")
         }
         
         if (!launcherFile) {
@@ -180,13 +203,13 @@ class LauncherManager extends ServiceBase {
 
     ChangeLauncherFile(launcherFile := "") {
         if (launcherFile == "") {
-            launcherFile := this.app.AppConfig.GetRawValue("LauncherFile")
+            launcherFile := this.app.Config.GetRawValue("LauncherFile")
         }
 
         launcherFile := this.SelectLauncherFile(launcherFile)
 
         if (launcherFile != "") {
-            this.app.AppConfig.LauncherFile := launcherFile
+            this.app.Config.LauncherFile := launcherFile
         }
 
         return launcherFile
@@ -197,12 +220,12 @@ class LauncherManager extends ServiceBase {
     }
 
     OpenLauncherFile() {
-        Run(this.app.AppConfig.LauncherFile)
+        Run(this.app.Config.LauncherFile)
     }
 
     DetectLauncherDir(launcherDir := "") {
         if (launcherDir == "") {
-            launcherDir := this.app.AppConfig.GetRawValue("LauncherDir")
+            launcherDir := this.app.Config.GetRawValue("LauncherDir")
         }
 
         if (!launcherDir) {
@@ -214,13 +237,13 @@ class LauncherManager extends ServiceBase {
 
     ChangeLauncherDir(launcherDir := "") {
         if (launcherDir == "") {
-            launcherDir := this.app.AppConfig.GetRawValue("LauncherDir")
+            launcherDir := this.app.Config.GetRawValue("LauncherDir")
         }
 
         launcherDir := this.SelectLauncherDir(launcherDir)
 
         if (launcherDir != "") {
-            this.app.AppConfig.LauncherDir := launcherDir
+            this.app.Config.LauncherDir := launcherDir
         }
 
         return launcherDir
@@ -235,12 +258,12 @@ class LauncherManager extends ServiceBase {
     }
 
     OpenLauncherDir() {
-        Run(this.app.AppConfig.LauncherDir)
+        Run(this.app.Config.LauncherDir)
     }
 
     DetectAssetsDir(assetsDir := "") {
         if (assetsDir == "") {
-            assetsDir := this.app.AppConfig.GetRawValue("AssetsDir")
+            assetsDir := this.app.Config.GetRawValue("AssetsDir")
         }
 
         if (!assetsDir) {
@@ -252,13 +275,13 @@ class LauncherManager extends ServiceBase {
 
     ChangeAssetsDir(assetsDir := "") {
         if (assetsDir == "") {
-            assetsDir := this.app.AppConfig.GetRawValue("AssetsDir")
+            assetsDir := this.app.Config.GetRawValue("AssetsDir")
         }
 
         assetsDir := this.SelectAssetsDir(assetsDir)
 
         if (assetsDir != "") {
-            this.app.AppConfig.AssetsDir := assetsDir
+            this.app.Config.AssetsDir := assetsDir
         }
 
         return assetsDir
@@ -273,27 +296,19 @@ class LauncherManager extends ServiceBase {
     }
 
     OpenAssetsDir() {
-        Run(this.app.AppConfig.AssetsDir)
-    }
-    
-    GetLauncherGame(key, launcherFileObj := "") {
-        if (launcherFileObj == "") {
-            launcherFileObj := this.launchersObj
-        }
-
-        return launcherFileObj.Games.Has(key) ? EditableLauncherGame.new(this.app, key, launcherFileObj.Games[key]) : ""
+        Run(this.app.Config.AssetsDir)
     }
 
     ValidateLaunchers(launcherFileObj := "", mode := "config", owner := "MainWindow") {
         if (launcherFileObj == "") {
-            launcherFileObj := this.launchersObj
+            launcherFileObj := this.launcherConfigObj
         }
 
         itemCount := launcherFileObj.Games.Count
         results := Map()
 
         if (itemCount > 0) {
-            progress := this.app.GuiManager.ProgressIndicator("Validating Launchers", "Please wait while your launcher configuration is validated.", owner, true, "0-" . itemCount, 0, "Initializing...")
+            progress := this.app.Windows.ProgressIndicator("Validating Launchers", "Please wait while your launcher configuration is validated.", owner, true, "0-" . itemCount, 0, "Initializing...")
             currentItem := 1
 
             for key, config in launcherFileObj.Games {
@@ -309,26 +324,30 @@ class LauncherManager extends ServiceBase {
 
     ValidateLauncher(key, launcherFileObj := "", mode := "config", owner := "MainWindow", progress := "") {
         if (launcherFileObj == "") {
-            launcherFileObj := this.launchersObj
+            launcherFileObj := this.launcherConfigObj
         }
 
         manageProgress := (progress == "")
 
         if (manageProgress) {
-            progress := this.app.GuiManager.ProgressIndicator("Validating Launchers", "Please wait while your launcher configuration is validated.", owner, true, "0-1", 0, "Initializing...")
+            progress := this.app.Windows.ProgressIndicator("Validating Launchers", "Please wait while your launcher configuration is validated.", owner, true, "0-1", 0, "Initializing...")
         }
 
-        launcherGameObj := this.GetLauncherGame(key, launcherFileObj)
+        result := false
 
-        progress.IncrementValue(1, key . ": Validating...")
-        result := launcherGameObj.Validate()
+        if (this.Launchers.Has(key)) {
+            launcherGameObj := this.Launchers[key]
 
-        if (!result["success"]) {
-            result := launcherGameObj.Edit(launcherFileObj, mode, owner)
+            progress.IncrementValue(1, key . ": Validating...")
+            result := launcherGameObj.Validate()
+
+            if (!result["success"]) {
+                result := launcherGameObj.Edit(launcherFileObj, mode, owner)
+            }
+
+            message := result["success"] ? "Validation successful." : "Validateion failed."
+            progress.SetDetailText(key . ": " . message)
         }
-
-        message := result["success"] ? "Validation successful." : "Validateion failed."
-        progress.SetDetailText(key . ": " . message)
 
         if (manageProgress) {
             progress.Finish()

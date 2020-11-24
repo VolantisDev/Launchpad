@@ -1,5 +1,5 @@
-class GuiService extends ServiceBase {
-    guis := Map()
+class WindowManager extends ServiceBase {
+    windows := Map()
 
     DialogBox(title, text, owner := "", buttons := "*&Yes|&No") {
         return this.ShowDialog(DialogBox.new(this.app, title, text, owner, buttons))
@@ -62,15 +62,15 @@ class GuiService extends ServiceBase {
     }
 
     AddWindow(key, instance) {
-        this.guis[key] := instance
+        this.windows[key] := instance
     }
 
     WindowExists(key) {
-        return this.guis.Has(key)
+        return this.windows.Has(key)
     }
 
     ShowWindow(key) {
-        return (this.guis.Has(key)) ? this.guis[key].Show() : false
+        return (this.windows.Has(key)) ? this.windows[key].Show() : false
     }
 
     WindowIsOpen(key) {
@@ -80,21 +80,21 @@ class GuiService extends ServiceBase {
 
     CloseWindow(key) {
         if (this.WindowExists(key)) {
-            this.guis[key].Close()
+            this.windows[key].Close()
         }
     }
 
     RemoveWindow(key) {
         if (this.WindowExists(key)) {
-            this.guis.Delete(key)
+            this.windows.Delete(key)
         }
     }
 
     GetGuiObj(key) {
         guiObject := ""
 
-        if (this.guis.Has(key)) {
-            guiObject := this.guis[key].guiObj
+        if (this.windows.Has(key)) {
+            guiObject := this.windows[key].guiObj
         }
 
         return guiObject

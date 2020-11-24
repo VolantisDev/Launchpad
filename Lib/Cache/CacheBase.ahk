@@ -30,8 +30,8 @@ class CacheBase {
     }
 
     ImportItemFromUrl(reference, url) {
-        tempFile := this.app.AppConfig.TempDir . "\cacheDownload"
-        DirCreate(this.app.AppConfig.TempDir)
+        tempFile := this.app.Config.TempDir . "\cacheDownload"
+        DirCreate(this.app.Config.TempDir)
         tempFile := this.DownloadItem(tempFile, url)
         content := FileRead(tempFile)
         

@@ -15,8 +15,8 @@ class BuildFileBase {
 
     __New(app, launcherGameObj, launcherDir, key, extension, filePath := "") {
         this.app := app
-        this.appDir := app.AppConfig.AppDir
-        this.tempDir := app.AppConfig.TempDir . "\BuildFiles\" . key
+        this.appDir := app.Config.AppDir
+        this.tempDir := app.Config.TempDir . "\BuildFiles\" . key
         this.launcherGameObj := launcherGameObj
         this.launcherDir := launcherDir
         this.key := key

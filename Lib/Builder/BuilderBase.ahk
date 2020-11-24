@@ -1,4 +1,4 @@
-class Builder {
+class BuilderBase {
     app := ""
 
     __New(app) {
@@ -6,15 +6,15 @@ class Builder {
     }
 
     Build(launcherGameObj) {
-        launcherDir := this.app.AppConfig.LauncherDir
-        assetsDir := this.app.AppConfig.AssetsDir
+        launcherDir := this.app.Config.LauncherDir
+        assetsDir := this.app.Config.AssetsDir
 
         if (launcherDir == "" or assetsDir == "") {
             this.app.Notifications.Warning(launcherGameObj.Key . ": Required directories not set. Skipping build.")
             return false
         }
 
-        if (this.app.AppConfig.IndividualDirs) {
+        if (this.app.Config.IndividualDirs) {
             launcherDir .= "\" . launcherGameObj.Key
         }
         assetsDir .= "\" . launcherGameObj.Key

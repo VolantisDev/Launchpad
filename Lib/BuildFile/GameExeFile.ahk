@@ -4,7 +4,7 @@ class GameExeFile extends ComposableBuildFile {
     }
 
     ComposeFile() {
-        assetsDir := this.app.AppConfig.AssetsDir . "\" . this.key
+        assetsDir := this.app.Config.AssetsDir . "\" . this.key
 
         exePath := this.FilePath
         iconPath := assetsDir . "\" . this.key . ".ico"
