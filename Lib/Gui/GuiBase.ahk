@@ -18,6 +18,10 @@ class GuiBase {
     accentLightColor := "EEE6FF"
     accentDarkColor := "8A57F0"
     openWindowWithinScreenBounds := true
+    tabHeight := 350
+    labelWidth := 75
+    buttonSmallW := 80
+    buttonSmallH := 20
 
     __New(app, title, owner := "", windowKey := "") {
         this.app := app
@@ -29,6 +33,16 @@ class GuiBase {
         }
 
         this.Create()
+    }
+
+    AddHeading(groupLabel, position := "") {
+        if (position == "") {
+            position := "xm y+" . (this.margin * 2.5)
+        }
+
+        this.guiObj.SetFont("Bold")
+        this.guiObj.AddText(position . " w" . this.contentWidth . " Section +0x200", groupLabel)
+        this.guiObj.SetFont()
     }
 
     SetWindowKey(windowKey) {
@@ -232,22 +246,22 @@ class GuiBase {
 
             if (!controlInfo.Has(ctl.Hwnd)) {
                 info := this.GetControlDimensions(ctl)
-                info.redraw := InStr(options, "*")
-                info.optionSplit := StrSplit(RegExReplace(options, "i)[^xywh]"))
+                info["redraw"] := InStr(options, "*")
+                info["optionSplit"] := StrSplit(RegExReplace(options, "i)[^xywh]"))
                 info := this.ParseDimensions(options, info)
                 info := this.GetParentXY(ctl, options, info)
                 this.guiObj.GetPos(,,guiWidth, guiHeight)
-                info.gw := guiWidth
-                info.gh := guiHeight
+                info["gw"] := guiWidth
+                info["gh"] := guiHeight
                 controlInfo[ctl.Hwnd] := info
             } else {
                 info := controlInfo[ctl.Hwnd]
                 this.guiObj.GetPos(,,guiWidth, guiHeight)
-                dgx := dgw := guiWidth - info.gw
-                dgy := dgh := guiHeight - info.gh
+                dgx := dgw := guiWidth - info["gw"]
+                dgy := dgh := guiHeight - info["gh"]
                 ctl.GetPos(newX, newY, newW, newH)
 
-                for (i, dim in controlInfo[ctlID]["optionSplit"]) {
+                for (i, dim in controlInfo[ctl.Hwnd]["optionSplit"]) {
                     new%dim% := dg%dim% * info["f" . dim] + info[dim]
                 }
 
@@ -260,7 +274,7 @@ class GuiBase {
         }
     }
 
-    GetParentXY(ctl, options, infoObject) {
+    GetParentXY(ctl, options, infoMap) {
         if (InStr(options, "t")) {
             hParentWnd := DllCall("GetParent", "Ptr", ctl.Hwnd, "Ptr")
 
@@ -268,14 +282,14 @@ class GuiBase {
             DllCall("GetWindowRect", "Ptr", hParentWnd, "Ptr", StrPtr(RECT))
             DllCall("MapWindowPoints", "Ptr", 0, "Ptr", DllCall("GetParent", "Ptr", hParentWnd, "Ptr"), "Ptr", StrPtr(RECT), "UInt", 1)
 
-            infoObject.x -= NumGet(RECT, 0, "Int")
-            infoObject.y -= NumGet(RECT, 4, "Int")
+            infoMap["x"] -= NumGet(RECT, 0, "Int")
+            infoMap["y"] -= NumGet(RECT, 4, "Int")
         }
 
-        return infoObject
+        return infoMap
     }
 
-    ParseDimensions(options, infoObject) {
+    ParseDimensions(options, infoMap) {
         optionSplit := StrSplit(RegExReplace(options, "i)[^xywh]"))
         fx := fy := fw := fh := 0
 
@@ -285,17 +299,17 @@ class GuiBase {
             }
         }
 
-        infoObject.fx := fx
-        infoObject.fy := fy
-        infoObject.fw := fw
-        infoObject.fh := fh
+        infoMap["fx"] := fx
+        infoMap["fy"] := fy
+        infoMap["fw"] := fw
+        infoMap["fh"] := fh
 
-        return infoObject
+        return infoMap
     }
 
     GetControlDimensions(ctlObj) {
         ctlObj.GetPos(ix, iy, iw, ih)
-        return {x: ix, y: iy, w: iw, h: ih}
+        return Map("x", ix, "y", iy, "w", iw, "h", ih)
     }
 
     Submit(hide := true) {
