@@ -281,7 +281,7 @@ class LauncherManager extends ServiceBase {
             launcherFileObj := this.launchersObj
         }
 
-        return launcherFileObj.Games.Has(key) ? LauncherGame.new(this.app, key, launcherFileObj.Games[key]) : ""
+        return launcherFileObj.Games.Has(key) ? EditableLauncherGame.new(this.app, key, launcherFileObj.Games[key]) : ""
     }
 
     ValidateLaunchers(launcherFileObj := "", mode := "config", owner := "MainWindow") {

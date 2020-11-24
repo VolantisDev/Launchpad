@@ -54,7 +54,7 @@
         this.cacheManagerObj := CacheManager.new(this, this.appConfigObj.CacheDir)
         this.apiEndpointObj := ApiEndpoint.new(this, this.appConfigObj.ApiEndpoint, this.cacheManagerObj.GetCache("api"))
         this.dependencyManagerObj := DependencyManager.new(this)
-        this.launcherManagerObj := LauncherManager.new(this, Builder.new(this))
+        this.launcherManagerObj := LauncherManager.new(this, AhkLauncherBuilder.new(this))
 
         this.dependencyManagerObj.InitializeDependencies()
         this.launcherManagerObj.LoadLauncherFile(this.appConfigObj.LauncherFile)

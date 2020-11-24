@@ -1,4 +1,4 @@
-class Cache {
+class CacheBase {
     app := ""
 
     __New(app) {

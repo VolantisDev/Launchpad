@@ -13,7 +13,8 @@ class ApiEndpoint extends ServiceBase {
     }
 
     ItemExistsInApi(path) {
-        request := HttpReq.new(this.GetApiUrl(path))
+        request := Http
+        request := WinHttpReq.new(this.GetApiUrl(path))
         result := request.Send("HEAD")
         response := (result == -1 && request.GetStatusCode() == 200)
         return response

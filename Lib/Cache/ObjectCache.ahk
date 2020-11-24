@@ -1,4 +1,4 @@
-class ObjectCache extends Cache {
+class ObjectCache extends CacheBase {
     cacheObj := Map()
 
     __New(app, cacheObj := "") {

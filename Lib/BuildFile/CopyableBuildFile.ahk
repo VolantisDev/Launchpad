@@ -1,4 +1,4 @@
-class CopyableBuildFile extends BuildFile {
+class CopyableBuildFile extends BuildFileBase {
     sourcePathValue := ""
     requestMessageValue := "Select the file"
     selectFilterValue := "All Files (*.*)"

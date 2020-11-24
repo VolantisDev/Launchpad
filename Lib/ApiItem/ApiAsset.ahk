@@ -1,4 +1,4 @@
-class ApiAsset extends ApiItem {
+class ApiAsset extends ApiItemBase {
     basePath := "assets"
 
     Read() {

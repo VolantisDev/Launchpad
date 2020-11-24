@@ -1,4 +1,4 @@
-class JsonItem extends ApiItem {
+class JsonItem extends ApiItemBase {
     itemSuffix := ".json"
     
     Read() {

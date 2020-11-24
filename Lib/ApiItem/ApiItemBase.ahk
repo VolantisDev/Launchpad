@@ -1,4 +1,4 @@
-class ApiItem {
+class ApiItemBase {
     app := ""
     endpoint := ""
     basePath := ""

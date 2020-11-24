@@ -1,4 +1,4 @@
-class Toolbar {
+class ToolbarBase {
     app := ""
     guiObj := ""
     toolbarButtons := Map()

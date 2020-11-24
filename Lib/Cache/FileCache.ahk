@@ -1,4 +1,4 @@
-class FileCache extends Cache {
+class FileCache extends CacheBase {
     cachePath := ""
 
     __New(app, cachePath) {

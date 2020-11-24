@@ -1,4 +1,4 @@
-class BuildFile {
+class BuildFileBase {
     app := ""
     appDir := ""
     tempDir := ""

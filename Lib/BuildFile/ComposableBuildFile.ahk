@@ -1,4 +1,4 @@
-class ComposableBuildFile extends BuildFile {
+class ComposableBuildFile extends BuildFileBase {
     Build() {
         super.Build()
         this.Delete()
