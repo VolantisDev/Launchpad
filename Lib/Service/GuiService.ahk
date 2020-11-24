@@ -13,6 +13,10 @@ class GuiService extends ServiceBase {
         return this.ShowDialog(ProgressIndicator.new(this.app, title, text, owner, allowCancel, progressRange, initialPosition, detailText))
     }
 
+    LauncherEditor(launcherGameObj, mode := "config", owner := "") {
+        return this.ShowForm(LauncherEditor.new(this.app, launcherGameObj, mode, owner))
+    }
+
     OpenMainWindow() {
         if (!this.WindowExists("MainWindow")) {
             this.AddWindow("MainWindow", MainWindow.new(this.app, "Launchpad", "", "MainWindow"))
@@ -50,6 +54,10 @@ class GuiService extends ServiceBase {
     }
 
     ShowDialog(instance) {
+        return instance.Show()
+    }
+
+    ShowForm(instance) {
         return instance.Show()
     }
 

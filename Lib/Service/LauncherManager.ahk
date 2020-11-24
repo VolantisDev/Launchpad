@@ -3,12 +3,8 @@ class LauncherManager extends ServiceBase {
     builderObj := ""
 
     Launchers[] {
-        get {
-            return this.launchersObj
-        }
-        set {
-            return this.launchersObj := value
-        }
+        get => this.launchersObj
+        set => this.launchersObj := value
     }
 
     Builder[] {
@@ -280,7 +276,64 @@ class LauncherManager extends ServiceBase {
         Run(this.app.AppConfig.AssetsDir)
     }
     
-    GetLauncherGame(key) {
-        return this.Launchers.Games.Has(key) ? LauncherGame.new(this.app, key, this.Launchers.Games[key]) : ""
+    GetLauncherGame(key, launcherFileObj := "") {
+        if (launcherFileObj == "") {
+            launcherFileObj := this.launchersObj
+        }
+
+        return launcherFileObj.Games.Has(key) ? LauncherGame.new(this.app, key, launcherFileObj.Games[key]) : ""
+    }
+
+    ValidateLaunchers(launcherFileObj := "", mode := "config", owner := "MainWindow") {
+        if (launcherFileObj == "") {
+            launcherFileObj := this.launchersObj
+        }
+
+        itemCount := launcherFileObj.Games.Count
+        results := Map()
+
+        if (itemCount > 0) {
+            progress := this.app.GuiManager.ProgressIndicator("Validating Launchers", "Please wait while your launcher configuration is validated.", owner, true, "0-" . itemCount, 0, "Initializing...")
+            currentItem := 1
+
+            for key, config in launcherFileObj.Games {
+                results[key] := this.ValidateLauncher(key, launcherFileObj, mode, owner, progress)
+                currentItem++
+            }
+
+            progress.Finish()
+        }
+
+        return results
+    }
+
+    ValidateLauncher(key, launcherFileObj := "", mode := "config", owner := "MainWindow", progress := "") {
+        if (launcherFileObj == "") {
+            launcherFileObj := this.launchersObj
+        }
+
+        manageProgress := (progress == "")
+
+        if (manageProgress) {
+            progress := this.app.GuiManager.ProgressIndicator("Validating Launchers", "Please wait while your launcher configuration is validated.", owner, true, "0-1", 0, "Initializing...")
+        }
+
+        launcherGameObj := this.GetLauncherGame(key, launcherFileObj)
+
+        progress.IncrementValue(1, key . ": Validating...")
+        result := launcherGameObj.Validate()
+
+        if (!result["success"]) {
+            result := launcherGameObj.Edit(launcherFileObj, mode, owner)
+        }
+
+        message := result["success"] ? "Validation successful." : "Validateion failed."
+        progress.SetDetailText(key . ": " . message)
+
+        if (manageProgress) {
+            progress.Finish()
+        }
+        
+        return result
     }
 }

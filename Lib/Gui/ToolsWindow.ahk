@@ -14,6 +14,7 @@
         super.Controls()
         this.AddToolButton("&Reload Launcher File", "ReloadLauncherFile")
         this.AddToolButton("&Clean Launchers", "CleanLaunchers")
+        this.AddToolButton("&Validate Launchers", "ValidateLaunchers")
         this.AddToolButton("&Flush Cache", "FlushCache")
         this.AddToolButton("&Update Launchpad", "CheckForUpdates")
         this.AddToolButton("Update &Dependencies", "UpdateDependencies")
@@ -36,6 +37,11 @@
     OnCleanLaunchers(btn, info) {
         this.Close()
         this.app.LauncherManager.CleanLaunchers()
+    }
+
+    OnValidateLaunchers(btn, info) {
+        this.Close()
+        this.app.LauncherManager.ValidateLaunchers()
     }
 
     OnFlushCache(btn, info) {
