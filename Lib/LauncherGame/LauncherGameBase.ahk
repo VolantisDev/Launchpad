@@ -34,6 +34,11 @@ class LauncherGameBase {
         set => this.configVal["apiKey"] := value
     }
 
+    GameId[] {
+        get => this.configVal.Has("gameId") ? this.configVal["gameId"] : ""
+        set => this.configVal["gameId"] := value
+    }
+
     DisplayName[] {
         get => this.configVal.Has("displayName") ? this.configVal["displayName"] : this.Key
         set => this.configVal["displayName"] := value

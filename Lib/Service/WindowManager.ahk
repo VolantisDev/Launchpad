@@ -9,7 +9,7 @@ class WindowManager extends ServiceBase {
         return this.ShowDialog(SingleInputBox.new(this.app, title, text, defaultValue, owner, isPassword))
     }
 
-    ProgressIndicator(title, text, owner := "", allowCancel := false, progressRange := "0-100", initialPosition := 0, detailText := true) {
+    ProgressIndicator(title, text, owner := "", allowCancel := false, progressRange := 100, initialPosition := 0, detailText := true) {
         return this.ShowDialog(ProgressIndicator.new(this.app, title, text, owner, allowCancel, progressRange, initialPosition, detailText))
     }
 
@@ -71,7 +71,7 @@ class WindowManager extends ServiceBase {
 
     GetWindow(key) {
         window := ""
-        
+
         if (this.WindowExists(key)) {
             window := this.windows[key]
         }

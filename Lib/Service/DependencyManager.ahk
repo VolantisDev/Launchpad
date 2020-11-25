@@ -13,7 +13,7 @@ class DependencyManager extends ServiceBase {
     InitializeDependencies(owner := "MainWindow") {
         if (!this.initialized) {
             listing := this.app.DataSources.GetDataSource("api").ReadListing("dependencies")
-            progress := this.app.Windows.ProgressIndicator(this.initializeTitle, this.initializeText, owner, true, "0-" . listing.Length, 0, "Initializing...")
+            progress := this.app.Windows.ProgressIndicator(this.initializeTitle, this.initializeText, owner, true, listing.Length, 0, "Initializing...")
 
             for index, key in listing {
                 progress.IncrementValue(1, key . ": Discovering...")
@@ -47,12 +47,12 @@ class DependencyManager extends ServiceBase {
             this.InitializeDependencies(owner)
         }
 
-        progress := this.app.Windows.ProgressIndicator(this.updateTitle, this.updateText, owner, true, "0-100", 0, "Initializing...")
+        progress := this.app.Windows.ProgressIndicator(this.updateTitle, this.updateText, owner, true, "", 0, "Initializing...")
         updated := 0
 
         itemCount := this.CountDependencies(owner)
         if (itemCount > 0) {
-            progress.SetRange("0-" . itemCount)
+            progress.SetRange(0, itemCount)
 
             for key, dependencyConfig in this.dependencies {
                 if (this.UpdateDependency(key, force, owner, progress)) {
@@ -76,7 +76,7 @@ class DependencyManager extends ServiceBase {
         manageProgress := (progress == "")
 
         if (manageProgress) {
-            progress := this.app.Windows.ProgressIndicator(this.updateTitle, this.updateText, owner, true, "0-1", 0, "Initializing...")
+            progress := this.app.Windows.ProgressIndicator(this.updateTitle, this.updateText, owner, true, 1, 0, "Initializing...")
         }
 
         updated := false

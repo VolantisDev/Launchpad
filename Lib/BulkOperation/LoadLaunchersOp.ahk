@@ -24,7 +24,7 @@ class LoadLaunchersOp extends BulkOperationBase {
         this.launcherConfigObj.LoadConfig()
 
         if (this.useProgress) {
-            this.progress.SetRange("0-" . this.launcherConfigObj.Games.Count)
+            this.progress.SetRange(0, this.launcherConfigObj.Games.Count)
         }
 
         for key, config in this.launcherConfigObj.Games {

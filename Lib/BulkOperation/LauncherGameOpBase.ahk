@@ -42,7 +42,7 @@ class LauncherGameOpBase extends BulkOperationBase {
         itemCount := this.launcherGames.Count
 
         if (this.useProgress) {
-            this.progress.SetRange("0-" . itemCount)
+            this.progress.SetRange(0, itemCount)
         }
 
         for key, launcherGame in this.launcherGames {

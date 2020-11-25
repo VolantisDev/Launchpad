@@ -13,7 +13,7 @@ class BulkOperationBase {
     progressTitle := "Bulk Operation"
     progressText := "Please stand by..."
     progressInitialDetailText := "Initializing..."
-    progressInitialRange := "0-100"
+    progressRangeEnd := 100
     progressInitialValue := 0
     notify := false
     successMessage := "Processed {n} item(s) successfully."
@@ -81,7 +81,7 @@ class BulkOperationBase {
     ShowProgressWindow() {
         if (this.useProgress) {
             if (!IsObject(this.progress)) {
-                this.progress := this.app.Windows.ProgressIndicator(this.progressTitle, this.progressText, this.owner, this.allowCancel, this.progressInitialRange, this.progressInitialValue, this.progressInitialDetailText)
+                this.progress := this.app.Windows.ProgressIndicator(this.progressTitle, this.progressText, this.owner, this.allowCancel, this.progressRangeEnd, this.progressInitialValue, this.progressInitialDetailText)
             } else {
                 this.progress.Show()
             }

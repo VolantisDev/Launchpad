@@ -1,14 +1,18 @@
 class ProgressIndicator extends DialogBox {
-    progressRange := "0-100"
-    initialPosition := 0
+    rangeStart := 0
+    rangeStop := 100
+    currentPosition := 0
     waitForResult := false
     detailText := ""
     enableDetailText := true
     cancelCallback := ""
 
-    __New(app, title, text, owner := "", allowCancel := false, progressRange := "0-100", initialPosition := 0, detailText := true) {
-        this.progressRange := progressRange
-        this.initialPosition := initialPosition
+    __New(app, title, text, owner := "", allowCancel := false, rangeStop := "", currentPosition := 0, detailText := true) {
+        if (rangeStop != "") {
+            this.rangeStop := rangeStop
+        }
+
+        this.currentPosition := currentPosition
         this.enableDetailText := (detailText != false)
 
         if (detailText != true and detailText != false) {
@@ -25,16 +29,27 @@ class ProgressIndicator extends DialogBox {
         this.guiObj["DialogDetailText"].Text := detailText
     }
 
+    SetProgressIndicator() {
+        ;this.guiObj.SetFont("s9")
+        this.guiObj["DialogStatusIndicator"].Text := this.currentPosition . "/" . this.rangeStop
+        ;this.ResetFont()
+    }
+
     SetCancelCallback(callback) {
         this.cancelCallback := callback
     }
 
-    SetRange(range) {
-        this.guiObj["DialogProgress"].Opt("Range" . range)
+    SetRange(start := 0, stop := 100) {
+        this.rangeStart := start
+        this.rangeStop := stop
+        this.guiObj["DialogProgress"].Opt("Range" . start . "-" . stop)
     }
 
     SetValue(value, detailText := false) {
+        this.currentPosition := value
         this.guiObj["DialogProgress"].Value := value
+
+        this.SetProgressIndicator()
 
         if (detailText != false) {
             this.SetDetailText(detailText)
@@ -42,7 +57,10 @@ class ProgressIndicator extends DialogBox {
     }
 
     IncrementValue(amount := 1, detailText := false) {
+        this.currentPosition += amount
         this.guiObj["DialogProgress"].Value += amount
+
+        this.SetProgressIndicator()
 
         if (detailText != false) {
             this.SetDetailText(detailText)
@@ -58,7 +76,11 @@ class ProgressIndicator extends DialogBox {
     Controls() {
         super.Controls()
 
-        this.guiObj.AddProgress("xm w" . this.contentWidth . " h5 vDialogProgress c9466FC BackgroundEEE6FF Range" . this.progressRange, this.initialPosition)
+        this.guiObj.AddProgress("xm w" . this.contentWidth . " h5 vDialogProgress c9466FC BackgroundEEE6FF Range" . this.rangeStart . "-" . this.rangeStop, this.currentPosition)
+
+        this.guiObj.SetFont("s9")
+        this.guiObj.AddText("xm w" . this.contentWidth . " Right vDialogStatusIndicator", this.currentPosition . "/" . this.rangeStop)
+        this.ResetFont()
 
         if (this.enableDetailText) {
             this.guiObj.AddText("xm w" . this.contentWidth . " r2 vDialogDetailText", this.detailText)
