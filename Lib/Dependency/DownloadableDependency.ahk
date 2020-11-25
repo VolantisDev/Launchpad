@@ -4,6 +4,10 @@
     __New(app, key, config) {
         super.__New(app, key, config)
         this.downloadPath := this.path . "\" . config["downloadFile"]
+
+        if (this.zipped) {
+            this.zipPath := this.downloadPath
+        }
     }
 
     InstallAction(force := false) {
@@ -38,7 +42,7 @@
                 }
 
                 if (assetConfig["type"] == "default" or assetConfig["type"] == "asset") {
-                    asset := DSAssetFile.new(this.app, assetConfig["asset"], this.key, "assets/dependencies")
+                    asset := DSAssetFile.new(this.app, assetConfig["asset"], "assets/dependencies/" . this.key)
                     asset.Copy(assetPath)
                 } else if (assetConfig["type"] == "download") {
                     Download(assetConfig["url"], assetPath)

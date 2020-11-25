@@ -15,7 +15,7 @@ class DataSourceManager extends ServiceBase {
         if (key == "") {
             key := this.primaryDataSourceKey
         }
-        
+
         return (this.dataSources.Has(key)) ? this.dataSources[key] : ""
     }
 
@@ -28,23 +28,11 @@ class DataSourceManager extends ServiceBase {
     }
 
     ReadListing(path, dataSourceKey := "") {
-        if (dataSourceKey == "") {
-            dataSourceKey := this.app.Config.DataSourceKey
-        }
-
-        itemListing := ""
-
         dataSource := this.GetDataSource(dataSourceKey)
         return dataSource.ReadListing(path)
     }
 
     ReadJson(key, path := "", dataSourceKey := "") {
-        if (dataSourceKey == "") {
-            dataSourceKey := this.app.Config.DataSourceKey
-        }
-
-        jsonData := ""
-
         dataSource := this.GetDataSource(dataSourceKey)
         return dataSource.ReadJson(key, path)
     }

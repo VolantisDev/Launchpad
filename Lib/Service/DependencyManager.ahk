@@ -18,10 +18,10 @@ class DependencyManager extends ServiceBase {
             for index, key in listing {
                 progress.IncrementValue(1, key . ": Discovering...")
 
-                item := DSJson.new(this.app, key, "dependencies")
+                item := this.app.DataSources.ReadJson(key, "dependencies")
 
-                if (item.Exists()) {
-                    this.dependencies[key] := item.Read()
+                if (item != "") {
+                    this.dependencies[key] := item
                     progress.SetDetailText(key . ": Finished")
                 } else {
                     progress.SetDetailText(key . ": Not found")
@@ -29,6 +29,8 @@ class DependencyManager extends ServiceBase {
             }
 
             progress.Finish()
+
+            this.initialized := true
         }
     }
 

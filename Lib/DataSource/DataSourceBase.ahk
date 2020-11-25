@@ -38,7 +38,7 @@ class DataSourceBase {
             this.RetrieveItem(path)
         }
 
-        return this.useCahe ? this.cache.CopyItem(path, destination) : destination
+        return this.useCache ? this.cache.CopyItem(path, destination) : destination
     }
 
     GetRemoteLocation(path) {

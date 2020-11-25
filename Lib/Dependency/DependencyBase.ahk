@@ -4,6 +4,8 @@ class DependencyBase {
     config := Map()
     path := ""
     zipped := false
+    zipPath := ""
+    static psh := ComObjCreate("Shell.Application")
 
     __New(app, key, config) {
         this.app := app
@@ -18,14 +20,13 @@ class DependencyBase {
     }
 
     Unzip(file) {
-        psh := ComObjCreate("Shell.Application")
-        psh.Namespace(this.path).CopyHere(psh.Namespace(file).items, 4|16)
+        DependencyBase.psh.Namespace(this.path).CopyHere(DependencyBase.psh.Namespace(file).items, 4|16)
     }
 
     Extract(force := false) {
-        if (this.zipped and FileExist(this.downloadPath)) {
-            this.Unzip(this.downloadPath)
-            FileDelete(this.downloadPath)
+        if (this.zipped and this.zipPath != "" and FileExist(this.zipPath)) {
+            this.Unzip(this.zipPath)
+            FileDelete(this.zipPath)
         }
     }
 

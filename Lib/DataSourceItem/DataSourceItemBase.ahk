@@ -7,12 +7,8 @@ class DataSourceItemBase {
     key := ""
 
     __New(app, key, path := "", dataSource := "") {
-        if (dataSource == "") {
-            dataSourceKey := app.Config.DataSourceKey
-        }
-        
         this.app := app
-        this.endpoint := IsObject(dataSource) ? dataSource : app.DataSources.GetDataSource(dataSourceKey)
+        this.endpoint := Type(dataSource) == "String" ? app.DataSources.GetDataSource(dataSource) : dataSource
         this.key := key
         this.path := path
     }
