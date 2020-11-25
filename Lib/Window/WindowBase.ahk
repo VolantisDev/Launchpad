@@ -14,6 +14,7 @@ class WindowBase {
     transColor := ""
     backgroundColor := "FFFFFF"
     textColor := "000000"
+    lightTextColor := "959595"
     accentColor := "9466FC"
     accentLightColor := "EEE6FF"
     accentDarkColor := "8A57F0"
@@ -22,6 +23,8 @@ class WindowBase {
     labelWidth := 75
     buttonSmallW := 80
     buttonSmallH := 20
+    defaultFontSize := 11
+    smallFontSize := 10
 
     __New(app, title, owner := "", windowKey := "") {
         this.app := app
@@ -42,7 +45,41 @@ class WindowBase {
 
         this.guiObj.SetFont("Bold")
         this.guiObj.AddText(position . " w" . this.contentWidth . " Section +0x200", groupLabel)
+        this.ResetFont()
+    }
+
+    AddHelpText(helpText, position := "") {
+        if (position == "") {
+            position := "xs y+m"
+        }
+
+        this.guiObj.SetFont("s" . this.smallFontSize . " w200")
+        this.guiObj.AddText(position . " w" . this.contentWidth . " c" . this.lightTextColor, helpText)
+        this.ResetFont()
+    }
+
+    AddCheckBox(checkboxText, ctlName, checked, inGroupBox := true, callback := "") {
+        if (callback == "") {
+            callback := "On" . ctlName
+        }
+
+        width := this.contentWidth
+        position := "xs"
+
+        if (inGroupBox) {
+            position .= "+" . this.margin
+            width -= this.margin * 2
+        }
+
+        position .= " y+m"
+
+        chk := this.guiObj.AddCheckBox(position . " w" . width . " v" . ctlName . " checked" . checked, checkboxText)
+        chk.OnEvent("Click", callback)
+    }
+
+    ResetFont() {
         this.guiObj.SetFont()
+        this.guiObj.SetFont("s" . this.defaultFontSize)
     }
 
     SetWindowKey(windowKey) {
@@ -80,6 +117,8 @@ class WindowBase {
         this.guiObj.Color := this.textColor
         this.guiObj.MarginX := this.margin
         this.guiObj.MarginY := this.margin
+
+        this.ResetFont()
 
         this.guiObj.OnEvent("Close", "OnClose")
         this.guiObj.OnEvent("Escape", "OnEscape")

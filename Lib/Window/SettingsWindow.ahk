@@ -101,25 +101,6 @@
         this.app.Config.%ctlName% := chk.Value
     }
 
-    AddCheckBox(checkboxText, ctlName, checked, inGroupBox := true, callback := "") {
-        if (callback == "") {
-            callback := "On" . ctlName
-        }
-
-        width := this.contentWidth
-        position := "xs"
-
-        if (inGroupBox) {
-            position .= "+" . this.margin
-            width -= this.margin * 2
-        }
-
-        position .= " y+m"
-
-        chk := this.guiObj.AddCheckBox(position . " w" . width . " v" . ctlName . " checked" . checked, checkboxText)
-        chk.OnEvent("Click", callback)
-    }
-
     AddButton(buttonLabel, ctlName, width := "", height := "", position := "xs y+m") {
         if (width == "") {
             width := this.buttonSmallW

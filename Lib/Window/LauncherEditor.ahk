@@ -14,6 +14,7 @@ class LauncherEditor extends FormWindow {
     knownGames := ""
     launcherTypes := ""
     gameTypes := ""
+    tabHeight := 550
 
     __New(app, launcherGameObj, mode := "config", owner := "", windowKey := "") {
         this.launcherGameObj := launcherGameObj
@@ -65,33 +66,42 @@ class LauncherEditor extends FormWindow {
         ctl := this.guiObj.AddComboBox("vKey xs y+m w" . this.contentWidth, this.knownGames)
         ctl.Text := this.launcherGameObj.Key
         ctl.OnEvent("Change", "OnKeyChange")
+        this.AddHelpText("Select an existing game from the API, or enter a custom game key to create your own. Use caution when changing this value, as it will change which data is requested from the API.")
 
         this.AddHeading("Display Name")
         ctl := this.guiObj.AddEdit("vDisplayName xs y+m w" . this.contentWidth, this.launcherGameObj.DisplayName)
         ctl.OnEvent("Change", "OnDisplayNameChange")
+        this.AddHelpText("You can change the display name of the game if it differs from the key. The launcher filename will still be created using the key.")
 
         this.AddHeading("Launcher Type")
         chosen := this.GetItemIndex(this.launcherTypes, this.launcherGameObj.LauncherType)
         ctl := this.guiObj.AddDDL("vLauncherType xs y+m Choose" . chosen . " w" . this.contentWidth, this.launcherTypes)
         ctl.OnEvent("Change", "OnLauncherTypeChange")
+        this.AddHelpText("This tells Launchpad how to interact with any launcher your game might require. If no specific options match, or your game doesn't have a separate launcher, simply choose 'default'.")
         
         this.AddHeading("Game Type")
         chosen := this.GetItemIndex(this.gameTypes, this.launcherGameObj.GameType)
         ctl := this.guiObj.AddDDL("vGameType xs y+m Choose" . chosen . " w" . this.contentWidth, this.gameTypes)
         ctl.OnEvent("Change", "OnGameTypeChange")
+        this.AddHelpText("This tells Launchpad how to launch your game. Most games can use 'default', but some launchers support multiple game types.")
 
         tabs.UseTab("Sources", true)
 
         this.AddHeading("Game Icon")
-        this.AddLocationBlock("IconFile")
+        this.AddLocationBlock("IconFile", "Clear")
+        this.AddHelpText("You can select either an .ico file or an .exe file to extract the icon from. An icon named " . this.launcherGameObj.Key . ".ico in the game asset directory will be auto-detected without adding it here.")
 
         this.AddHeading("Shortcut File")
-        this.AddLocationBlock("ShortcutFile")
+        this.AddLocationBlock("ShortcutFile", "Clear")
+        this.AddHelpText("You can select a shortcut file that launches the game, or the game's .exe file itself. Leave this empty to use a Run command instead.")
 
         this.AddHeading("Run Command")
-        this.AddLocationBlock("RunCmd")
+        this.AddLocationBlock("RunCmd", "Clear")
+        this.AddHelpText("Instead of a shortcut file, you can enter a command directly that will launch the game. Leave this empty if you are using a shortcut.")
 
         tabs.UseTab("Advanced", true)
+
+        this.AddHeading("Use AHK Class")
     }
 
     AddLocationBlock(settingName, extraButton := "") {
@@ -173,6 +183,10 @@ class LauncherEditor extends FormWindow {
 
     }
 
+    OnClearIconFile(ctlObj, info) {
+
+    }
+
     OnChangeShortcutFile(ctlObj, info) {
 
     }
@@ -181,11 +195,19 @@ class LauncherEditor extends FormWindow {
 
     }
 
-    OnChangeRunCommand(ctlObj, info) {
+    OnClearShortcutFile(ctlObj, info) {
 
     }
 
-    OnOpenRunCommand(ctlObj, info) {
+    OnChangeRunCmd(ctlObj, info) {
+
+    }
+
+    OnOpenRunCmd(ctlObj, info) {
+
+    }
+
+    OnClearRunCmd(ctlObj, info) {
 
     }
 }
