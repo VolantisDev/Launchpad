@@ -69,6 +69,16 @@ class WindowManager extends ServiceBase {
         return this.windows.Has(key)
     }
 
+    GetWindow(key) {
+        window := ""
+        
+        if (this.WindowExists(key)) {
+            window := this.windows[key]
+        }
+
+        return window
+    }
+
     ShowWindow(key) {
         return (this.windows.Has(key)) ? this.windows[key].Show() : false
     }

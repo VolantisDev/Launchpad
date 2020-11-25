@@ -302,4 +302,19 @@ class LauncherGameBase {
 
         return launcherType
     }
+
+    LauncherExists(checkSourceFile := false) {
+        return (FileExist(this.GetLauncherFile(this.Key, checkSourceFile)) != "")
+    }
+
+    GetLauncherFile(key, checkSourceFile := false) {
+        gameDir := checkSourceFile ? this.app.Config.AssetsDir : this.app.Config.LauncherDir
+
+        if (checkSourceFile or this.app.Config.IndividualDirs) {
+            gameDir .= "\" . key
+        }
+
+        ext := checkSourceFile ? ".ahk" : ".exe"
+        return gameDir . "\" . key . ext
+    }
 }

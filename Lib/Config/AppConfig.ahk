@@ -37,6 +37,11 @@
         set => this.SetIniValue("DataSourceKey", value)
     }
 
+    BuilderKey[] {
+        get => this.GetIniValue("BuilderKey") || "ahk"
+        set => this.SetIniValue("BuilderKey", value)
+    }
+
     ApiEndpoint[] {
         get => this.GetIniValue("ApiEndpoint") || "https://benmcclure.com/launcher-db"
         set => this.SetIniValue("ApiEndpoint", value)

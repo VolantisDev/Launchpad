@@ -36,12 +36,13 @@
 
     OnCleanLaunchers(btn, info) {
         this.Close()
-        this.app.Launchers.CleanLaunchers()
+        this.app.Builders.CleanLaunchers()
     }
 
     OnValidateLaunchers(btn, info) {
         this.Close()
-        this.app.Launchers.ValidateLaunchers()
+        op := ValidateLaunchersOp.new(this.app)
+        op.Run()
     }
 
     OnFlushCache(btn, info) {

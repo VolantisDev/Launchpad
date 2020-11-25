@@ -37,4 +37,8 @@ class BuilderBase {
     BuildAction(launcherGameObj, launcherDir, assetsDir) {
         ; This must be overridden for all subclasses
     }
+
+    Clean(launcherGameObj) {
+        return false
+    }
 }

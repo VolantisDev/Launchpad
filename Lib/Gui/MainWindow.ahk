@@ -58,7 +58,7 @@
     }
 
     OnBuildLaunchers(btn, info) {
-        this.app.Launchers.BuildLaunchers(this.app.Config.UpdateExistingLaunchers)
+        this.app.Builders.BuildLaunchers(this.app.Launchers.Launchers, this.app.Config.UpdateExistingLaunchers)
     }
 
     OnManageLaunchers(btn, info) {

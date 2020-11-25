@@ -1,0 +1,3 @@
+class BasicOpError extends OpErrorBase {
+
+}

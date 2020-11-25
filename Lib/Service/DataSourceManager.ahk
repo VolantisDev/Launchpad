@@ -11,7 +11,11 @@ class DataSourceManager extends ServiceBase {
         super.__New(app)
     }
 
-    GetDataSource(key) {
+    GetDataSource(key := "") {
+        if (key == "") {
+            key := this.primaryDataSourceKey
+        }
+        
         return (this.dataSources.Has(key)) ? this.dataSources[key] : ""
     }
 

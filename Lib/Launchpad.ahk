@@ -8,6 +8,7 @@
     cacheManagerObj := ""
     notificationServiceObj := ""
     dataSourceManagerObj := ""
+    builderManagerObj := ""
     
     Config[] {
         get => this.appConfigObj
@@ -44,6 +45,11 @@
         set => this.dataSourceManagerObj := value
     }
 
+    Builders[] {
+        get => this.builderManagerObj
+        set => this.builderManagerObj := value
+    }
+
     __New(appName, appDir) {
         this.appName := appName
         this.appDir := appDir
@@ -57,24 +63,24 @@
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
         this.dataSourceManagerObj := DataSourceManager.new(this)
         this.dependencyManagerObj := DependencyManager.new(this)
-        this.launcherManagerObj := LauncherManager.new(this, AhkLauncherBuilder.new(this))
+        this.builderManagerObj := BuilderManager.new(this)
+        this.launcherManagerObj := LauncherManager.new(this)
 
         this.InitializeApp()
     }
 
     InitializeApp() {
-        api := ApiDataSource.new(this, this.Cache.GetCache("api"), this.Config.ApiEndpoint)
-
-        this.dataSourceManagerObj.SetDataSource("api", api, true)
+        this.Builders.SetBuilder("ahk", AhkLauncherBuilder.new(this), true)
+        this.dataSourceManagerObj.SetDataSource("api", ApiDataSource.new(this, this.Cache.GetCache("api"), this.Config.ApiEndpoint), true)
         this.dependencyManagerObj.InitializeDependencies()
 
-        this.launcherManagerObj.SetDataSource(api)
-        this.launcherManagerObj.LoadLaunchers(this.appConfigObj.LauncherFile)
+        this.launcherManagerObj.SetDataSource("api")
+        this.launcherManagerObj.LoadLaunchers(this.Config.LauncherFile)
     }
 
     ExitApp() {
         if (this.Config.CleanLaunchersOnExit) {
-            this.Launchers.CleanLaunchers(false)
+            this.Builders.CleanLaunchers()
         }
 
         if (this.Config.FlushCacheOnExit) {

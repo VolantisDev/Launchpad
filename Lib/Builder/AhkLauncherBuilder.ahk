@@ -12,4 +12,17 @@ class AhkLauncherBuilder extends BuilderBase {
 
         return result
     }
+
+    Clean(launcherGameObj) {
+        wasCleaned := false
+
+        filePath := this.app.Config.AssetsDir . "\" . launcherGameObj.Key . "\" . launcherGameObj.Key . ".ahk"
+
+        if (FileExist(filePath)) {
+            FileDelete(filePath)
+            wasCleaned := true
+        }
+
+        return wasCleaned
+    }
 }

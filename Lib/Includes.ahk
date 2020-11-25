@@ -9,6 +9,12 @@
 #Include E:\Tools\Launchpad\Lib\BuildFile\GameExeFile.ahk
 #Include E:\Tools\Launchpad\Lib\BuildFile\IconFile.ahk
 #Include E:\Tools\Launchpad\Lib\BuildFile\ShortcutFile.ahk
+#Include E:\Tools\Launchpad\Lib\BulkOperation\BuildLaunchersOp.ahk
+#Include E:\Tools\Launchpad\Lib\BulkOperation\BulkOperationBase.ahk
+#Include E:\Tools\Launchpad\Lib\BulkOperation\CleanLaunchersOp.ahk
+#Include E:\Tools\Launchpad\Lib\BulkOperation\LauncherGameOpBase.ahk
+#Include E:\Tools\Launchpad\Lib\BulkOperation\LoadLaunchersOp.ahk
+#Include E:\Tools\Launchpad\Lib\BulkOperation\ValidateLaunchersOp.ahk
 #Include E:\Tools\Launchpad\Lib\Cache\CacheBase.ahk
 #Include E:\Tools\Launchpad\Lib\Cache\FileCache.ahk
 #Include E:\Tools\Launchpad\Lib\Cache\ObjectCache.ahk
@@ -43,13 +49,18 @@
 #Include E:\Tools\Launchpad\Lib\LauncherGame\LauncherGameBase.ahk
 #Include E:\Tools\Launchpad\Lib\Notifier\NotifierBase.ahk
 #Include E:\Tools\Launchpad\Lib\Notifier\ToastNotifier.ahk
+#Include E:\Tools\Launchpad\Lib\OpError\BasicOpError.ahk
+#Include E:\Tools\Launchpad\Lib\OpError\OpErrorBase.ahk
+#Include E:\Tools\Launchpad\Lib\OpStatus\BasicOpStatus.ahk
+#Include E:\Tools\Launchpad\Lib\OpStatus\OpStatusBase.ahk
+#Include E:\Tools\Launchpad\Lib\Service\BuilderManager.ahk
 #Include E:\Tools\Launchpad\Lib\Service\CacheManager.ahk
 #Include E:\Tools\Launchpad\Lib\Service\DataSourceManager.ahk
 #Include E:\Tools\Launchpad\Lib\Service\DependencyManager.ahk
-#Include E:\Tools\Launchpad\Lib\Service\WindowManager.ahk
 #Include E:\Tools\Launchpad\Lib\Service\LauncherManager.ahk
 #Include E:\Tools\Launchpad\Lib\Service\NotificationService.ahk
 #Include E:\Tools\Launchpad\Lib\Service\ServiceBase.ahk
+#Include E:\Tools\Launchpad\Lib\Service\WindowManager.ahk
 #Include E:\Tools\Launchpad\Lib\Toolbar\ToolbarBase.ahk
 #Include E:\Tools\Launchpad\Lib\Vendor\Jxon.ahk
 ; End of auto-generated includes.
