@@ -33,16 +33,6 @@
 #Include E:\Tools\Launchpad\Lib\DataSourceItem\DSListing.ahk
 #Include E:\Tools\Launchpad\Lib\Dependency\DependencyBase.ahk
 #Include E:\Tools\Launchpad\Lib\Dependency\DownloadableDependency.ahk
-#Include E:\Tools\Launchpad\Lib\Gui\DialogBox.ahk
-#Include E:\Tools\Launchpad\Lib\Gui\FormWindow.ahk
-#Include E:\Tools\Launchpad\Lib\Gui\GuiBase.ahk
-#Include E:\Tools\Launchpad\Lib\Gui\LauncherEditor.ahk
-#Include E:\Tools\Launchpad\Lib\Gui\MainWindow.ahk
-#Include E:\Tools\Launchpad\Lib\Gui\ManageWindow.ahk
-#Include E:\Tools\Launchpad\Lib\Gui\ProgressIndicator.ahk
-#Include E:\Tools\Launchpad\Lib\Gui\SettingsWindow.ahk
-#Include E:\Tools\Launchpad\Lib\Gui\SingleInputBox.ahk
-#Include E:\Tools\Launchpad\Lib\Gui\ToolsWindow.ahk
 #Include E:\Tools\Launchpad\Lib\HttpReq\HttpReqBase.ahk
 #Include E:\Tools\Launchpad\Lib\HttpReq\WinHttpReq.ahk
 #Include E:\Tools\Launchpad\Lib\LauncherGame\EditableLauncherGame.ahk
@@ -63,4 +53,14 @@
 #Include E:\Tools\Launchpad\Lib\Service\WindowManager.ahk
 #Include E:\Tools\Launchpad\Lib\Toolbar\ToolbarBase.ahk
 #Include E:\Tools\Launchpad\Lib\Vendor\Jxon.ahk
+#Include E:\Tools\Launchpad\Lib\Window\DialogBox.ahk
+#Include E:\Tools\Launchpad\Lib\Window\FormWindow.ahk
+#Include E:\Tools\Launchpad\Lib\Window\LauncherEditor.ahk
+#Include E:\Tools\Launchpad\Lib\Window\MainWindow.ahk
+#Include E:\Tools\Launchpad\Lib\Window\ManageWindow.ahk
+#Include E:\Tools\Launchpad\Lib\Window\ProgressIndicator.ahk
+#Include E:\Tools\Launchpad\Lib\Window\SettingsWindow.ahk
+#Include E:\Tools\Launchpad\Lib\Window\SingleInputBox.ahk
+#Include E:\Tools\Launchpad\Lib\Window\ToolsWindow.ahk
+#Include E:\Tools\Launchpad\Lib\Window\WindowBase.ahk
 ; End of auto-generated includes.

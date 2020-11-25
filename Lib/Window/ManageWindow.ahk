@@ -1,4 +1,4 @@
-﻿class ManageWindow extends GuiBase {
+﻿class ManageWindow extends WindowBase {
     windowOptions := "+Resize MinSize380x380"
     contentWidth := 510
     listViewHeight := 300

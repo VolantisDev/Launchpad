@@ -1,4 +1,4 @@
-class FormWindow extends GuiBase {
+class FormWindow extends WindowBase {
     text := ""
     buttons := ""
     contentWidth := 320

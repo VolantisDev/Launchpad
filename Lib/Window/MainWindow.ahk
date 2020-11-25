@@ -1,4 +1,4 @@
-﻿class MainWindow extends GuiBase {
+﻿class MainWindow extends WindowBase {
     windowSize := "w535"
     contentWidth := 515
     areaW := 430

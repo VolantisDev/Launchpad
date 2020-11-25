@@ -1,4 +1,4 @@
-class GuiBase {
+class WindowBase {
     app := ""
     guiObj := ""
     title := ""

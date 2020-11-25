@@ -1,4 +1,4 @@
-﻿class ToolsWindow extends GuiBase {
+﻿class ToolsWindow extends WindowBase {
     windowOptions := "+AlwaysOnTop -Caption Border"
     contentWidth := 400
     buttonHeight := 40

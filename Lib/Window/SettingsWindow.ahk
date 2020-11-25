@@ -1,4 +1,4 @@
-﻿class SettingsWindow extends GuiBase {
+﻿class SettingsWindow extends WindowBase {
     windowOptions := "-MaximizeBox -SysMenu"
     contentWidth := 400
 
