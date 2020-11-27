@@ -7,8 +7,8 @@
         set => this.config["Games"] := value
     }
 
-    LoadConfig(configPath := "") {
-        result := super.LoadConfig(configPath)
+    LoadConfig() {
+        result := super.LoadConfig()
 
         for key, config in this.Games {
             if (Type(config) == "String") {
@@ -19,13 +19,13 @@
         return result
     }
 
-    SaveConfig(configPath := "") {
+    SaveConfig() {
         for key, config in this.Games {
             if (Type(config) == "Map" and config.Has("launcherType") and config.Count == 1) {
                 this.Games[key] := config["launcherType"]
             }
         }
 
-        return super.SaveConfig(configPath)
+        return super.SaveConfig()
     }
 }

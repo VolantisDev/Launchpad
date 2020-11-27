@@ -1,32 +1,32 @@
 class CleanLaunchersOp extends LauncherGameOpBase {
     builder := ""
     updateExisting := false
-    verb := "building"
-    verbProper := "Building"
-    verbPast := "built"
-    verbPastProper := "Built"
+    verb := "cleaning"
+    verbProper := "Cleaning"
+    verbPast := "cleaned"
+    verbPastProper := "Cleaned"
 
-    __New(app, launcherGames := "", builder := "", owner := "") {
+    __New(app, launcherEntities := "", builder := "", owner := "") {
         if (builder == "") {
             builder := app.Config.BuilderKey
         }
 
         this.builder := IsObject(builder) ? builder : app.Builders.GetBuilder(builder)
 
-        super.__New(app, launcherGames, owner)
+        super.__New(app, launcherEntities, owner)
     }
 
-    ProcessLauncherGame(launcherGame) {
+    ProcessLauncherGame(launcherEntityObj) {
         if (this.useProgress) {
-            this.progress.SetDetailText(launcherGame.Key . ": Cleaning launcher...")
+            this.progress.SetDetailText(launcherEntityObj.Key . ": Cleaning launcher...")
         }
 
-        cleaned := this.builder.Clean(launcherGame)
+        cleaned := this.builder.Clean(launcherEntityObj)
 
         message := cleaned ? "Cleaned successfully." : "Cleaning not required."
 
         if (this.useProgress) {
-            this.progress.SetDetailText(launcherGame.Key . ": " . message)
+            this.progress.SetDetailText(launcherEntityObj.Key . ": " . message)
         }
 
         return true

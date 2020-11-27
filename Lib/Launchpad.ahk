@@ -71,10 +71,8 @@
 
     InitializeApp() {
         this.Builders.SetBuilder("ahk", AhkLauncherBuilder.new(this), true)
-        
         this.DataSources.SetDataSource("api", ApiDataSource.new(this, this.Cache.GetCache("api"), this.Config.ApiEndpoint), true)
         this.Dependencies.InitializeDependencies()
-        this.Launchers.SetDataSource("api")
         this.Launchers.LoadLaunchers(this.Config.LauncherFile)
     }
 

@@ -12,7 +12,7 @@
         groupW := this.contentWidth - (this.margin * 2)
         openX := groupW - (this.buttonSmallW * 2) ; this assumes the group starts at this.margin
 
-        tabs := this.guiObj.Add("Tab3", "h" . this.tabHeight . " +0x100", ["Launchers", "Assets", "Sources", "Advanced"])
+        tabs := this.guiObj.Add("Tab3", "x" . this.windowMargin . " y" . this.windowMargin . " h" . this.tabHeight . " +0x100", ["Launchers", "Assets", "Sources", "Advanced"])
 
         tabs.UseTab("Launchers", true)
 
@@ -21,10 +21,10 @@
         this.AddConfigLocationBlock("LauncherFile", "Reload")
 
         this.AddHeading("Launcher Directory")
-        this.AddConfigLocationBlock("LauncherDir")
+        this.AddConfigLocationBlock("DestinationDir")
 
         this.AddHeading("Launcher Settings")
-        this.AddConfigCheckBox("Create individual launcher directories", "IndividualDirs")
+        this.AddConfigCheckBox("Create individual launcher directories", "CreateIndividualDirs")
         this.AddConfigCheckBox("Update existing launchers on build", "UpdateExistingLaunchers")
         this.AddConfigCheckBox("Clean launchers on build", "CleanLaunchersOnBuild")
         this.AddConfigCheckBox("Clean launchers on exit", "CleanLaunchersOnExit")
@@ -137,13 +137,13 @@
         this.SetText("LauncherFile", this.app.Config.LauncherFile, "Bold")
     }
 
-    OnOpenLauncherDir(btn, info) {
-        this.app.Launchers.OpenLauncherDir()
+    OnOpenDestinationDir(btn, info) {
+        this.app.Launchers.OpenDestinationDir()
     }
 
-    OnChangeLauncherDir(btn, info) {
-        this.app.Launchers.ChangeLauncherDir()
-        this.SetText("LauncherDir", this.app.Config.LauncherDir, "Bold")
+    OnChangeDestinationDir(btn, info) {
+        this.app.Launchers.ChangeDestinationDir()
+        this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
     }
 
     OnOpenAssetsDir(btn, info) {

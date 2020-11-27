@@ -7,8 +7,8 @@
             options := Map()
         }
 
-        if (options.Has("uri")) {
-            this.uri := options["uri"]
+        if (options.Has("runCmd")) {
+            this.uri := options["runCmd"]
         }
         
         super.__New(appDir, key, gameType, options)
@@ -16,9 +16,9 @@
 
     RunGame() {
         if (this.uri != "") {
-            Run(this.uri,, "Hide")
+            Run(this.runCmd,, "Hide")
         }
 
-        return 0
+        return super.RunGame()
     }
 }

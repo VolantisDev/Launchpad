@@ -6,6 +6,7 @@ class WindowBase {
     windowOptions := ""
     windowSize := ""
     margin := 10
+    windowMargin := 10
     contentWidth := 320
     hasToolbar := false
     hToolbar := ""
@@ -40,7 +41,7 @@ class WindowBase {
 
     AddHeading(groupLabel, position := "") {
         if (position == "") {
-            position := "xm y+" . (this.margin * 2.5)
+            position := "x" . this.windowMargin . " y+" . (this.margin * 2.5)
         }
 
         this.guiObj.SetFont("Bold")
@@ -58,7 +59,7 @@ class WindowBase {
         this.ResetFont()
     }
 
-    AddCheckBox(checkboxText, ctlName, checked, inGroupBox := true, callback := "") {
+    AddCheckBox(checkboxText, ctlName, checked, inGroupBox := true, callback := "", check3 := false) {
         if (callback == "") {
             callback := "On" . ctlName
         }
@@ -72,6 +73,10 @@ class WindowBase {
         }
 
         position .= " y+m"
+
+        if (check3) {
+            checked .= " Check3"
+        }
 
         chk := this.guiObj.AddCheckBox(position . " w" . width . " v" . ctlName . " checked" . checked, checkboxText)
         chk.OnEvent("Click", callback)
@@ -143,8 +148,8 @@ class WindowBase {
         return false
     }
 
-    CreateToolbar(callback, imageList, buttons) {
-        ;return ToolbarCreate(callback, buttons, imageList, "Flat List Tooltips")
+    CreateToolbar(callback, imageList, btns) {
+        ;return ToolbarCreate(callback, btns, imageList, "Flat List Tooltips")
     }
 
     Start() {

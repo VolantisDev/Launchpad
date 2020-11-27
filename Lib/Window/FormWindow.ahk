@@ -1,14 +1,14 @@
 class FormWindow extends WindowBase {
     text := ""
-    buttons := ""
+    btns := ""
     contentWidth := 320
     windowOptions := "+Toolwindow +AlwaysOnTop"
     result := ""
     waitForResult := true
 
-    __New(app, title, text := "", owner := "", windowKey := "", buttons := "*&Yes|&No") {
+    __New(app, title, text := "", owner := "", windowKey := "", btns := "*&Submit") {
         this.text := text
-        this.buttons := buttons
+        this.btns := btns
         super.__New(app, title, owner, windowKey)
     }
 
@@ -16,7 +16,7 @@ class FormWindow extends WindowBase {
         super.Controls()
 
         if (this.text != "") {
-            this.guiObj.AddText("w" . this.contentWidth . " r2", this.text)
+            this.guiObj.AddText("w" . this.contentWidth . "", this.text)
         }
     }
 
@@ -45,12 +45,12 @@ class FormWindow extends WindowBase {
     AddButtons() {
         super.AddButtons()
 
-        buttons := StrSplit(this.buttons, "|")
+        btns := StrSplit(this.btns, "|")
 
-        loop buttons.Length {
-            position := (A_Index == 1) ? "xm Section ": "ys+" . this.margin . " "
-            defaultOption := InStr(buttons[A_Index], "*") ? "Default " : " "
-            btn := this.guiObj.AddButton(position . defaultOption . "w100", RegExReplace(buttons[A_Index], "\*"))
+        loop btns.Length {
+            position := (A_Index == 1) ? "x" . this.windowMargin . " Section ": "x+m yp "
+            defaultOption := InStr(btns[A_Index], "*") ? "Default " : " "
+            btn := this.guiObj.AddButton(position . defaultOption . "w100", RegExReplace(btns[A_Index], "\*"))
             btn.OnEvent("Click", "OnFormWindowButton")
         }
     }

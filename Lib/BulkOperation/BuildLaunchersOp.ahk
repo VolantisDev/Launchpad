@@ -6,7 +6,7 @@ class BuildLaunchersOp extends LauncherGameOpBase {
     verbPast := "built"
     verbPastProper := "Built"
 
-    __New(app, launcherGames := "", builder := "", updateExisting := false, owner := "") {
+    __New(app, launcherEntities := "", builder := "", updateExisting := false, owner := "") {
         if (builder == "") {
             builder := app.Config.BuilderKey
         }
@@ -15,11 +15,11 @@ class BuildLaunchersOp extends LauncherGameOpBase {
 
         this.builder := IsObject(builder) ? builder : app.Builders.GetBuilder(builder)
 
-        super.__New(app, launcherGames, owner)
+        super.__New(app, launcherEntities, owner)
     }
 
-    ProcessLauncherGame(launcherGame) {
-        exists := launcherGame.LauncherExists()
+    ProcessLauncherGame(launcherEntityObj) {
+        exists := launcherEntityObj.LauncherExists()
         success := true
         message := "Launcher skipped."
 
@@ -27,10 +27,10 @@ class BuildLaunchersOp extends LauncherGameOpBase {
             detailText := exists ? "Rebuilding launcher..." : "Building launcher..."
 
             if (this.useProgress) {
-                this.progress.SetDetailText(launcherGame.Key . ": " . detailText)
+                this.progress.SetDetailText(launcherEntityObj.Key . ": " . detailText)
             }
 
-            success := this.Builder.Build(launcherGame)
+            success := this.Builder.Build(launcherEntityObj)
 
             if (success) {
                  message := exists ? "Rebuilt launcher successfully." : "Built launcher successfully."
@@ -39,7 +39,7 @@ class BuildLaunchersOp extends LauncherGameOpBase {
             }
 
             if (this.useProgress) {
-                this.progress.SetDetailText(launcherGame.Key . ": " . message)
+                this.progress.SetDetailText(launcherEntityObj.Key . ": " . message)
             }
         }
 

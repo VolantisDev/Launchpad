@@ -28,7 +28,9 @@
     }
 
     RunGame() {
-        return 0
+        if (this.options["runThenWait"]) {
+            this.game.WaitForClose()
+        }
     }
 
     WaitForClose() {

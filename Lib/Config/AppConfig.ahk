@@ -8,12 +8,12 @@
         set => this.appNameValue := value
     }
 
-    LauncherDir[] {
+    DestinationDir[] {
         get {
-            returnVal := this.GetIniValue("LauncherDir")
-            return this.LaunchersLoaded() ? this.app.Launchers.DetectLauncherDir(returnVal) : returnVal
+            returnVal := this.GetIniValue("DestinationDir")
+            return this.LaunchersLoaded() ? this.app.Launchers.DetectDestinationDir(returnVal) : returnVal
         }
-        set => this.SetIniValue("LauncherDir", value)
+        set => this.SetIniValue("DestinationDir", value)
     }
 
     LauncherFile[] {
@@ -62,9 +62,9 @@
         set => this.SetIniValue("UpdateExistingLaunchers", value)
     }
 
-    IndividualDirs[] {
-        get => this.GetBooleanValue("IndividualDirs", false)
-        set => this.SetBooleanValue("IndividualDirs", value)
+    CreateIndividualDirs[] {
+        get => this.GetBooleanValue("CreateIndividualDirs", false)
+        set => this.SetBooleanValue("CreateIndividualDirs", value)
     }
 
     CopyAssets[] {

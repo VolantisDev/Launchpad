@@ -10,7 +10,7 @@ class SingleInputBox extends DialogBox {
 
     Controls() {
         super.Controls()
-        this.guiObj.AddEdit("xm w" . this.contentWidth . " -VScroll vDialogEdit" . (this.isPassword ? " Password" : ""), this.defaultValue)
+        this.guiObj.AddEdit("x" . this.windowMargin . " w" . this.contentWidth . " -VScroll vDialogEdit" . (this.isPassword ? " Password" : ""), this.defaultValue)
     }
 
     ProcessResult(result) {

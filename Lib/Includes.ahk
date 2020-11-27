@@ -33,10 +33,14 @@
 #Include E:\Tools\Launchpad\Lib\DataSourceItem\DSListing.ahk
 #Include E:\Tools\Launchpad\Lib\Dependency\DependencyBase.ahk
 #Include E:\Tools\Launchpad\Lib\Dependency\DownloadableDependency.ahk
+#Include E:\Tools\Launchpad\Lib\Entity\EntityBase.ahk
+#Include E:\Tools\Launchpad\Lib\Entity\LauncherEntity.ahk
+#Include E:\Tools\Launchpad\Lib\Entity\ManagedEntityBase.ahk
+#Include E:\Tools\Launchpad\Lib\Entity\ManagedGameEntity.ahk
+#Include E:\Tools\Launchpad\Lib\Entity\ManagedLauncherEntity.ahk
 #Include E:\Tools\Launchpad\Lib\HttpReq\HttpReqBase.ahk
 #Include E:\Tools\Launchpad\Lib\HttpReq\WinHttpReq.ahk
-#Include E:\Tools\Launchpad\Lib\LauncherGame\EditableLauncherGame.ahk
-#Include E:\Tools\Launchpad\Lib\LauncherGame\LauncherGameBase.ahk
+#Include E:\Tools\Launchpad\Lib\Installer\InstallerBase.ahk
 #Include E:\Tools\Launchpad\Lib\Notifier\NotifierBase.ahk
 #Include E:\Tools\Launchpad\Lib\Notifier\ToastNotifier.ahk
 #Include E:\Tools\Launchpad\Lib\OpError\BasicOpError.ahk
@@ -47,6 +51,7 @@
 #Include E:\Tools\Launchpad\Lib\Service\CacheManager.ahk
 #Include E:\Tools\Launchpad\Lib\Service\DataSourceManager.ahk
 #Include E:\Tools\Launchpad\Lib\Service\DependencyManager.ahk
+#Include E:\Tools\Launchpad\Lib\Service\InstallerManager.ahk
 #Include E:\Tools\Launchpad\Lib\Service\LauncherManager.ahk
 #Include E:\Tools\Launchpad\Lib\Service\NotificationService.ahk
 #Include E:\Tools\Launchpad\Lib\Service\ServiceBase.ahk

@@ -19,9 +19,9 @@ class ProgressIndicator extends DialogBox {
             this.detailText := detailText
         }
 
-        buttons := allowCancel ? "&Cancel" : ""
+        btns := allowCancel ? "&Cancel" : ""
 
-        super.__New(app, title, text, owner, buttons)
+        super.__New(app, title, text, owner, btns)
     }
 
     SetDetailText(detailText) {
@@ -31,7 +31,7 @@ class ProgressIndicator extends DialogBox {
 
     SetProgressIndicator() {
         ;this.guiObj.SetFont("s9")
-        this.guiObj["DialogStatusIndicator"].Text := this.currentPosition . "/" . this.rangeStop
+        this.guiObj["DialogStatusIndicator"].Text := this.currentPosition . " / " . this.rangeStop
         ;this.ResetFont()
     }
 
@@ -76,14 +76,14 @@ class ProgressIndicator extends DialogBox {
     Controls() {
         super.Controls()
 
-        this.guiObj.AddProgress("xm w" . this.contentWidth . " h5 vDialogProgress c9466FC BackgroundEEE6FF Range" . this.rangeStart . "-" . this.rangeStop, this.currentPosition)
+        this.guiObj.AddProgress("x" . this.windowMargin . " w" . this.contentWidth . " h5 vDialogProgress c9466FC BackgroundEEE6FF Range" . this.rangeStart . "-" . this.rangeStop, this.currentPosition)
 
         this.guiObj.SetFont("s9")
-        this.guiObj.AddText("xm w" . this.contentWidth . " Right vDialogStatusIndicator", this.currentPosition . "/" . this.rangeStop)
+        this.guiObj.AddText("x" . this.windowMargin . " w" . this.contentWidth . " Right vDialogStatusIndicator", this.currentPosition . " / " . this.rangeStop)
         this.ResetFont()
 
         if (this.enableDetailText) {
-            this.guiObj.AddText("xm w" . this.contentWidth . " r2 vDialogDetailText", this.detailText)
+            this.guiObj.AddText("x" . this.windowMargin . " w" . this.contentWidth . " vDialogDetailText", this.detailText)
         }
     }
 

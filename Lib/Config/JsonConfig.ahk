@@ -6,10 +6,8 @@ class JsonConfig extends FileConfig {
         super.__New(app, configPath, ".json", autoLoad)
     }
 
-    LoadConfig(configPath := "") {
-        if (configPath == "") {
-            configPath := this.configPath
-        }
+    LoadConfig() {
+        configPath := this.configPath
 
         if (configPath == "") {
             this.app.Notifications.Error("Config file path not provided.")
@@ -18,13 +16,11 @@ class JsonConfig extends FileConfig {
 
         jsonString := FileRead(configPath)
         this.config := (jsonString != "") ? Jxon_Load(jsonString) : Map()
-        return super.LoadConfig(configPath)
+        return super.LoadConfig()
     }
 
-    SaveConfig(configPath := "") {
-        if (configPath == "") {
-            configPath := this.configPath
-        }
+    SaveConfig() {
+        configPath := this.ConfigPath
 
         if (configPath == "") {
             this.AskForPath()
@@ -40,7 +36,7 @@ class JsonConfig extends FileConfig {
         }
         
         FileAppend(Jxon_Dump(this.config, "", 4), configPath)
-        return super.SaveConfig(configPath)
+        return super.SaveConfig()
     }
 
     CountItems() {
@@ -51,5 +47,22 @@ class JsonConfig extends FileConfig {
         }
 
         return count
+    }
+
+    ; Performs a deep clone of the JSON map
+    Clone() {
+        newEntity := super.Clone()
+        newEntity.config := this.config.Clone()
+        newEntity := this.CloneChildMaps(newEntity)
+    }
+
+    CloneChildMaps(parentMap) {
+        for key, child in parentMap {
+            if (Type(child) == "Map") {
+                parentMap[key] := this.CloneChildMaps(child)
+            }
+        }
+
+        return parentMap
     }
 }

@@ -1,5 +1,5 @@
 class LauncherGameOpBase extends BulkOperationBase {
-    launcherGames := ""
+    launcherEntities := ""
     verb := "processing"
     verbProper := "Processing"
     verbPast := "processed"
@@ -12,7 +12,7 @@ class LauncherGameOpBase extends BulkOperationBase {
     itemSuccessText := "Succeeded."
     itemFailedText := "Failed."
 
-    __New(app, launcherGames := "", owner := "") {
+    __New(app, launcherEntities := "", owner := "") {
         if (this.progressTitle == "") {
             this.progressTitle := this.verbProper . " Launchers"
         }
@@ -29,36 +29,36 @@ class LauncherGameOpBase extends BulkOperationBase {
             this.failedMessage := "{n} launcher(s) could not be " . this.verbPast . " due to errors."
         }
 
-        if (launcherGames == "") {
-            launcherGames := app.Launchers.Launchers
+        if (launcherEntities == "") {
+            launcherEntities := app.Launchers.Launchers
         }
 
-        this.launcherGames := launcherGames
+        this.launcherEntities := launcherEntities
 
         super.__New(app, owner)
     }
 
     RunAction() {
-        itemCount := this.launcherGames.Count
+        itemCount := this.launcherEntities.Count
 
         if (this.useProgress) {
             this.progress.SetRange(0, itemCount)
         }
 
-        for key, launcherGame in this.launcherGames {
+        for key, launcherEntityObj in this.launcherEntities {
             this.StartItem(key, key . ": Discovering...")
-            success := this.ProcessLauncherGame(launcherGame)
+            success := this.ProcessLauncherGame(launcherEntityObj)
             message := success ? this.itemSuccessText : this.itemFailedText
             this.FinishItem(key, success, key . ": " . message)
         }
     }
 
-    ProcessLauncherGame(launcherGame) {
+    ProcessLauncherGame(launcherEntityObj) {
         return true
     }
 
     VerifyRequirements() {
-        if (this.app.Config.LauncherDir == "") {
+        if (this.app.Config.DestinationDir == "") {
             this.app.Notifications.Error("Launcher directory is not set.")
             return false
         }

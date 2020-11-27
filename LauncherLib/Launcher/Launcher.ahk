@@ -36,9 +36,5 @@ class Launcher {
 
     LaunchGame() {
         this.game.RunGame()
-
-        if (this.options["runThenWait"]) {
-            this.game.WaitForClose()
-        }
     }
 }

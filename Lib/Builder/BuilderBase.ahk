@@ -6,7 +6,7 @@ class BuilderBase {
     }
 
     Build(launcherGameObj) {
-        launcherDir := this.app.Config.LauncherDir
+        launcherDir := this.app.Config.DestinationDir
         assetsDir := this.app.Config.AssetsDir
 
         if (launcherDir == "" or assetsDir == "") {
@@ -14,7 +14,7 @@ class BuilderBase {
             return false
         }
 
-        if (this.app.Config.IndividualDirs) {
+        if (this.app.Config.CreateIndividualDirs) {
             launcherDir .= "\" . launcherGameObj.Key
         }
         assetsDir .= "\" . launcherGameObj.Key
@@ -25,13 +25,17 @@ class BuilderBase {
         iconObj := IconFile.new(this.app, launcherGameObj, assetsDir, launcherGameObj.Key)
         iconResult := iconObj.Build()
         
-        shortcutResult := !launcherGameObj.Config["requiresShortcutFile"] ; Default to true if shortcut isn't required
-        if (launcherGameObj.Config["requiresShortcutFile"]) {
+        shortcutResult := !this.NeedsShortcutFile(launcherGameObj) ; Default to true if shortcut isn't required
+        if (this.NeedsShortcutFile(launcherGameObj)) {
             shortcutObj := ShortcutFile.new(this.app, launcherGameObj, assetsDir, launcherGameObj.Key)
             shortcutResult := shortcutObj.Build()
         }
 
         return this.BuildAction(launcherGameObj, launcherDir, assetsDir)
+    }
+
+    NeedsShortcutFile(launcherGameObj) {
+        return (launcherGameObj.SupportsShortcut && launcherGameObj.RunCmd == "")
     }
 
     BuildAction(launcherGameObj, launcherDir, assetsDir) {

@@ -1,25 +1,16 @@
 class LauncherManager extends ServiceBase {
     launcherConfigObj := ""
-    launchersMap := Map()
-    dataSource := ""
+    launcherEntities := Map()
+    launchersLoaded := false
 
     Launchers[] {
-        get => this.launchersMap
-        set => this.launchersMap := value
+        get => this.launcherEntities
+        set => this.launcherEntities := value
     }
 
-    __New(app, launcherFile := "", dataSource := "") {
+    __New(app, launcherFile := "") {
         this.launcherConfigObj := LauncherConfig.new(app, launcherFile, false)
         super.__New(app)
-        this.SetDataSource(dataSource)
-    }
-
-     SetDataSource(dataSource) {
-        if (dataSource == "") {
-            dataSource := this.app.Config.DataSourceKey
-        }
-
-        this.dataSource := IsObject(dataSource) ? dataSource : this.app.DataSources.GetDataSource(dataSource)
     }
 
     LoadLaunchers(launcherFile := "") {
@@ -33,9 +24,10 @@ class LauncherManager extends ServiceBase {
 
         this.launchersConfigObj := launcherFile
 
-        operation := LoadLaunchersOp.new(this.app, launcherFile, this.dataSource)
+        operation := LoadLaunchersOp.new(this.app, launcherFile)
         success := operation.Run()
-        this.launchersMap := operation.GetResults()
+        this.launcherEntities := operation.GetResults()
+        this.launchersLoaded := true
         return success
     }
 
@@ -81,33 +73,33 @@ class LauncherManager extends ServiceBase {
         Run(this.app.Config.LauncherFile)
     }
 
-    DetectLauncherDir(launcherDir := "") {
+    DetectDestinationDir(launcherDir := "") {
         if (launcherDir == "") {
-            launcherDir := this.app.Config.GetRawValue("LauncherDir")
+            launcherDir := this.app.Config.GetRawValue("DestinationDir")
         }
 
         if (!launcherDir) {
-            launcherDir := this.ChangeLauncherDir()
+            launcherDir := this.ChangeDestinationDir()
         }
 
         return launcherDir
     }
 
-    ChangeLauncherDir(launcherDir := "") {
+    ChangeDestinationDir(launcherDir := "") {
         if (launcherDir == "") {
-            launcherDir := this.app.Config.GetRawValue("LauncherDir")
+            launcherDir := this.app.Config.GetRawValue("DestinationDir")
         }
 
-        launcherDir := this.SelectLauncherDir(launcherDir)
+        launcherDir := this.SelectDestinationDir(launcherDir)
 
         if (launcherDir != "") {
-            this.app.Config.LauncherDir := launcherDir
+            this.app.Config.DestinationDir := launcherDir
         }
 
         return launcherDir
     }
 
-    SelectLauncherDir(existingDir := "") {
+    SelectDestinationDir(existingDir := "") {
         if (existingDir != "") {
             existingDir := "*" . existingDir
         }
@@ -115,8 +107,8 @@ class LauncherManager extends ServiceBase {
         return DirSelect(existingDir, 3, "Create or select the folder to create game launchers within")
     }
 
-    OpenLauncherDir() {
-        Run(this.app.Config.LauncherDir)
+    OpenDestinationDir() {
+        Run(this.app.Config.DestinationDir)
     }
 
     DetectAssetsDir(assetsDir := "") {

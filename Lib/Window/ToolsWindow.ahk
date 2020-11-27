@@ -12,7 +12,7 @@
 
     Controls() {
         super.Controls()
-        this.AddToolButton("&Reload Launcher File", "ReloadLauncherFile")
+        this.AddToolButton("&Reload Launchers", "ReloadLaunchers")
         this.AddToolButton("&Clean Launchers", "CleanLaunchers")
         this.AddToolButton("&Validate Launchers", "ValidateLaunchers")
         this.AddToolButton("&Flush Cache", "FlushCache")
@@ -29,9 +29,9 @@
         this.nextPos := this.nextPos == "xm" ? "x+m yp" : "xm"
     }
 
-    OnReloadLauncherFile(btn, info) {
+    OnReloadLaunchers(btn, info) {
         this.Close()
-        this.app.Launchers.ReloadLauncherFile()
+        this.app.Launchers.LoadLaunchers()
     }
 
     OnCleanLaunchers(btn, info) {

@@ -26,6 +26,6 @@
             Run(this.shortcut,, "Hide")
         }
 
-        return 0
+        return super.RunGame()
     }
 }

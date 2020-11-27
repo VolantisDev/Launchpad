@@ -1,42 +1,34 @@
 class ValidateLaunchersOp extends LauncherGameOpBase {
     mode := ""
-    launcherFileObj := ""
     verb := "validating"
     verbProper := "Validating"
     verbPast := "validated"
     verbPastProper := "Validated"
 
-    __New(app, launcherGames := "", mode := "", launcherFileObj := "", owner := "") {
+    __New(app, launcherEntities := "", mode := "", owner := "") {
         if (mode == "") {
             mode := "config"
         }
 
         this.mode := mode
-
-        if (launcherFileObj == "") {
-            launcherFileObj := app.Launchers.GetLauncherConfig()
-        }
-
-        this.launcherFileObj := launcherFileObj
-
-        super.__New(app, launcherGames, owner)
+        super.__New(app, launcherEntities, owner)
     }
 
-    ProcessLauncherGame(launcherGame) {
+    ProcessLauncherGame(launcherEntityObj) {
         if (this.useProgress) {
-            this.progress.SetDetailText(launcherGame.Key . ": Validating...")
+            this.progress.SetDetailText("Validating " . launcherEntityObj.Key . "...")
         }
 
-        result := launcherGame.Validate()
+        result := launcherEntityObj.Validate()
 
         if (!result["success"]) {
-            result := launcherGame.Edit(this.launcherFileObj, this.mode, this.owner)
+            result := launcherEntityObj.Edit(this.mode, this.owner)
         }
 
         message := result["success"] ? "Validation successful." : "Validateion failed."
         
         if (this.useProgress) {
-            this.progress.SetDetailText(launcherGame.Key . ": " . message)
+            this.progress.SetDetailText(launcherEntityObj.Key . ": " . message)
         }
 
         return result["success"]
