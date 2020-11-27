@@ -181,7 +181,7 @@ class LauncherEntity extends EntityBase {
                 }
 
                 if (dsGameData.Has("Launchers")) {
-                    for launcherKey, launcherConfigObj in dsGameData.Has("Launchers") {
+                    for launcherKey, launcherConfigObj in dsGameData["Launchers"] {
                         if (!launchers.Has(launcherKey)) {
                             launchers[launcherKey] := Map()
                         }

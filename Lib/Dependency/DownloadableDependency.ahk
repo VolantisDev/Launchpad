@@ -3,7 +3,7 @@
 
     __New(app, key, config) {
         super.__New(app, key, config)
-        this.downloadPath := this.path . "\" . config["downloadFile"]
+        this.downloadPath := this.path . "\" . config["DownloadFile"]
 
         if (this.zipped) {
             this.zipPath := this.downloadPath
@@ -22,17 +22,17 @@
 
     Download(force := false) {
         DirCreate(this.path)
-        Download(this.config["url"], this.downloadPath)
+        Download(this.config["Url"], this.downloadPath)
         return this.downloadPath
     }
 
     DownloadAssets(force := false) {
-        for (key, assetConfig in this.config["assets"]) {
+        for (key, assetConfig in this.config["Assets"]) {
             if (Type(assetConfig) == "String") {
-                assetConfig := Map("type", "default", "asset", key, "path", assetConfig)
+                assetConfig := Map("Type", "Default", "Asset", key, "Path", assetConfig)
             }
 
-            assetPath := this.path . "\" . assetConfig["path"]
+            assetPath := this.path . "\" . assetConfig["Path"]
 
             if (force or !FileExist(assetPath)) {
                 SplitPath(assetPath,,assetDir)
@@ -41,13 +41,13 @@
                     DirCreate(assetDir)
                 }
 
-                if (assetConfig["type"] == "default" or assetConfig["type"] == "asset") {
-                    asset := DSAssetFile.new(this.app, assetConfig["asset"], "assets/dependencies/" . this.key)
+                if (assetConfig["Type"] == "Default" or assetConfig["Type"] == "Asset") {
+                    asset := DSAssetFile.new(this.app, assetConfig["Asset"], "Assets/Dependencies/" . this.key)
                     asset.Copy(assetPath)
-                } else if (assetConfig["type"] == "download") {
-                    Download(assetConfig["url"], assetPath)
+                } else if (assetConfig["Type"] == "Download") {
+                    Download(assetConfig["Url"], assetPath)
                 } else {
-                    this.app.Notifications.Warning(this.key . ": Skipping asset " . key . " because it is of an unknown type.")
+                    this.app.Notifications.Warning(this.key . ": Skipping asset " . this.key . " because it is of an unknown type.")
                 }
             }
         }

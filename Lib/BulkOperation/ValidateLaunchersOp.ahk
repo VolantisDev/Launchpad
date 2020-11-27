@@ -25,7 +25,7 @@ class ValidateLaunchersOp extends LauncherGameOpBase {
             result := launcherEntityObj.Edit(this.mode, this.owner)
         }
 
-        message := result["success"] ? "Validation successful." : "Validateion failed."
+        message := !result["success"] ? "Validateion failed." : "Validation successful."
         
         if (this.useProgress) {
             this.progress.SetDetailText(launcherEntityObj.Key . ": " . message)

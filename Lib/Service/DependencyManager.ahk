@@ -12,13 +12,13 @@ class DependencyManager extends ServiceBase {
 
     InitializeDependencies(owner := "MainWindow") {
         if (!this.initialized) {
-            listing := this.app.DataSources.GetDataSource("api").ReadListing("dependencies")
+            listing := this.app.DataSources.GetDataSource("api").ReadListing("Dependencies")
             progress := this.app.Windows.ProgressIndicator(this.initializeTitle, this.initializeText, owner, true, listing.Length, 0, "Initializing...")
 
             for index, key in listing {
                 progress.IncrementValue(1, key . ": Discovering...")
 
-                item := this.app.DataSources.ReadJson(key, "dependencies")
+                item := this.app.DataSources.ReadJson(key, "Dependencies")
 
                 if (item != "") {
                     this.dependencies[key] := item
@@ -84,7 +84,7 @@ class DependencyManager extends ServiceBase {
 
         if (this.dependencies.Has(key)) {
             dependencyInstance := this.GetDependency(key)
-            dependencyName := this.dependencies[key]["name"]
+            dependencyName := this.dependencies[key]["Name"]
             progress.IncrementValue(1, dependencyName . ": Discovering...")
 
             if (dependencyInstance.NeedsUpdate(force)) {
@@ -111,8 +111,12 @@ class DependencyManager extends ServiceBase {
         result := ""
 
         if (this.dependencies.Has(key)) {
-            dependencyClass := this.dependencies[key]["class"]
-            result :=  %dependencyClass%.new(this.app, key, this.dependencies[key])
+            if (this.dependencies[key] != "" and this.dependencies[key].Has("Class")) {
+                dependencyClass := this.dependencies[key]["Class"]
+                result :=  %dependencyClass%.new(this.app, key, this.dependencies[key])
+            } else {
+                this.app.Notifications.Error("Dependency " . key . " does not specify a valid class.")
+            }
         }
         
         return result

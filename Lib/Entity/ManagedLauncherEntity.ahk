@@ -30,7 +30,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
     ; How to attempt to close the launcher if running. Can be one of:
     ; - "Prompt" - Show a prompt to the user that they can click Continue to trigger a recheck or Cancel to stop trying to close the launcher.
     ; - "Wait" - Waits up to WaitTimeout seconds for the launcher to close on its own and fails if not
-    ; - "Autokill" - Automatically attempts to end the launcher process, forcefully if needed
+    ; - "AutoKill" - Automatically attempts to end the launcher process, forcefully if needed
     CloseMethod {
         get => this.GetConfigValue("CloseMethod")
         set => this.SetConfigValue("CloseMethod", value)

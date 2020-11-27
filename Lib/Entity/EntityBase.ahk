@@ -260,7 +260,7 @@ class EntityBase {
 
         if (result == "Cancel" || result == "Skip") {
             this.ManagedLauncher := this.Original.ManagedLauncher
-            return false
+            return Map("success", false)
         }
 
         valid := this.Validate()

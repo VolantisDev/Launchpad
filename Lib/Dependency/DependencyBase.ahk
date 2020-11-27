@@ -12,7 +12,7 @@ class DependencyBase {
         this.key := key
         this.config := config
         this.path := app.appDir . "\Vendor\" . key
-        this.zipped := config.Has("zipped") ? config["zipped"] : false
+        this.zipped := config.Has("Zipped") ? config["Zipped"] : false
     }
 
     NeedsUpdate(force := false) {
@@ -31,7 +31,7 @@ class DependencyBase {
     }
 
     IsInstalled() {
-        return FileExist(this.path . "\" . this.config["mainFile"])
+        return FileExist(this.path . "\" . this.config["MainFile"])
     }
 
     Install(force := false) {
