@@ -89,14 +89,14 @@
     }
 
     CheckForUpdates() {
-        Run("https://github.com/bmcclure/Launchpad/releases")
+        Run("https://github.com/VolantisDev/Launchpad/releases/latest")
     }
 
     OpenWebsite() {
-        Run("https://github.com/bmcclure/Launchpad")
+        Run("https://github.com/VolantisDev/Launchpad")
     }
 
     ProvideFeedback() {
-        Run("https://github.com/bmcclure/Launchpad/issues")
+        Run("https://github.com/VolantisDev/Launchpad/issues")
     }
 }

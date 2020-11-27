@@ -72,7 +72,7 @@ class BulkOperationBase {
         }
 
         if (!this.status.Has(key)) {
-            this.status[key] := BasicOpStatus.new(this.app)
+            this.status[key] := BasicOpStatus.new()
         }
 
         return this.status[key]

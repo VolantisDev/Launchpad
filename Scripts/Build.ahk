@@ -35,7 +35,9 @@ pid := RunWait(ahk2Exe . " /in " . ahkScript . " /out " . exeFile . " /icon " . 
 FileCopy(appDir . "\Launchers.json.sample", buildDir . "\Launchers.json.sample")
 FileCopy(appDir . "\LICENSE.txt", buildDir . "\LICENSE.txt")
 FileCopy(appDir . "\README.md", buildDir . "\README.md")
-DirCopy(appDir . "\LauncherLib", buildDir . "\LauncherLib")
+DirCreate(buildDir . "\Lib")
+DirCopy(appDir . "\Lib\LauncherLib", buildDir . "\Lib\LauncherLib")
+DirCopy(appDir . "\Lib\Shared", buildDir . "\Lib\Shared")
 
 result := MsgBox("You may now modify the Build directory if needed. Click OK to build zip archive or Cancel to stop here.", "Post-Build Modification", "OC")
 if (result == "Cancel") {

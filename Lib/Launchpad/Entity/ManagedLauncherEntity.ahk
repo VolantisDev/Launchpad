@@ -30,6 +30,8 @@ class ManagedLauncherEntity extends ManagedEntityBase {
     ; How to attempt to close the launcher if running. Can be one of:
     ; - "Prompt" - Show a prompt to the user that they can click Continue to trigger a recheck or Cancel to stop trying to close the launcher.
     ; - "Wait" - Waits up to WaitTimeout seconds for the launcher to close on its own and fails if not
+    ; - "Auto" - Make one polite attempt, wait a defined number of seconds, and kill the process if it is still running
+    ; - "AutoPolite" - Automatically attempt to politely close the launcher, or fail if it can't be closed politely
     ; - "AutoKill" - Automatically attempts to end the launcher process, forcefully if needed
     CloseMethod {
         get => this.GetConfigValue("CloseMethod")
@@ -60,6 +62,11 @@ class ManagedLauncherEntity extends ManagedEntityBase {
         set => this.SetConfigValue("KillPostDelay", value)
     }
 
+    PoliteCloseWait {
+        get => this.GetConfigValue("PoliteCloseWait")
+        set => this.SetConfigValue("PoliteCloseWait", value)
+    }
+
     InitializeDefaults() {
         defaults := super.InitializeDefaults()
         defaults[this.configPrefix . "CloseBeforeRun"] := false
@@ -71,6 +78,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
         defaults[this.configPrefix . "WaitTimeout"] := 30
         defaults[this.configPrefix . "KillPreDelay"] := 10
         defaults[this.configPrefix . "KillPostDelay"] := 5
+        defaults[this.configPrefix . "PoliteCloseWait"] := 10
         return defaults
     }
 }

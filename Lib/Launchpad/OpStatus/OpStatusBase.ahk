@@ -1,15 +1,10 @@
 class OpStatusBase {
-    app := ""
     started := false
     finished := false
     result := false
     hasResult := false
     hasErrors := false
     errors := Array()
-
-    __New(app) {
-        this.app := app
-    }
 
     Start() {
         this.started := true
@@ -62,7 +57,7 @@ class OpStatusBase {
                 this.errors.push(errItem)
             }
         } else if (Type(err) == "String") {
-            this.errors.push(BasicOpError.new(this.app, err, code))
+            this.errors.push(BasicOpError.new(err, code))
         } else {
             this.errors.push(err)
         }

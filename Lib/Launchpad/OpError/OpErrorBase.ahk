@@ -1,5 +1,4 @@
 class OpErrorBase {
-    app := ""
     errorCodeVal := 0
     errorMsgVal := ""
 
@@ -13,9 +12,7 @@ class OpErrorBase {
         set => this.errorMsgVal := value
     }
 
-    __New(app, errorMsg := "", errorCode := "") {
-        this.app := app
-
+    __New(errorMsg := "", errorCode := "") {
         if (errorMsg != "") {
             this.ErrorMsg := errorMsg
         }

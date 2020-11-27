@@ -2,14 +2,16 @@
 
 appDir := RegExReplace(A_ScriptDir, "\\[^\\]+$")
 
-GenerateIncludeFile(file, glob) {
+GenerateIncludeFile(libDir) {
+    file := libDir . "\Includes.ahk"
+
     if (FileExist(file)) {
         FileDelete(file)
     }
     
     FileAppend("; Automatically-generated file, do not edit manually.`n", file)
 
-    Loop Files glob, "R"
+    Loop Files libDir . "\*.ahk", "R"
     {
         if (A_LoopFileFullPath != file) {
             FileAppend("#Include " . A_LoopFileFullPath . "`n", file)
@@ -19,5 +21,6 @@ GenerateIncludeFile(file, glob) {
     FileAppend("; End of auto-generated includes.`n", file)
 }
 
-GenerateIncludeFile(appDir . "\Lib\Includes.ahk", appDir . "\Lib\*.ahk")
-GenerateIncludeFile(appDir . "\LauncherLib\Includes.ahk", appDir . "\LauncherLib\*.ahk")
+Loop Files appDir . "\Lib\*", "D" {
+    GenerateIncludeFile(A_LoopFileFullPath)
+}

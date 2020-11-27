@@ -1,5 +1,6 @@
 ﻿#Warn
-#Include Lib\Includes.ahk
+#Include Lib\Shared\Includes.ahk
+#Include Lib\Launchpad\Includes.ahk
 
 TraySetIcon("Graphics\Launchpad.ico")
 
