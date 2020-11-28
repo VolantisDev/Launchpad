@@ -28,13 +28,13 @@ class InstallerManager extends ServiceBase {
         return op.Run()
     }
 
-    UpdateApp() {
+    UpdateApp(owner := "UpdateWindow") {
         installerKeys := ["LaunchpadExe"]
         op := UpdateOp.new(this.app, installerKeys, owner)
         return op.Run()
     }
 
-    UpdateDependencies() {
+    UpdateDependencies(owner := "MainWindow") {
         installerKeys := ["Dependencies"]
         op := UpdateOp.new(this.app, installerKeys, owner)
         return op.Run()

@@ -4,7 +4,14 @@ class LogoInstallerAsset extends FileInstallerAssetBase {
     }
 
     InstallFilesAction() {
-        FileInstall "Graphics\Logo.png", "Graphics\Logo.png", !!(this.overwrite)
+        if (this.overwrite and this.destPath != "Graphics\Logo.png" and FileExist(this.destPath)) {
+            FileDelete(this.destPath)
+        }
+
+        if (!FileExist(this.destPath)) {
+            FileInstall "Graphics\Logo.png", "Graphics\Logo.png", !!(this.overwrite)
+        }
+        
         return super.InstallFilesAction()
     }
 }

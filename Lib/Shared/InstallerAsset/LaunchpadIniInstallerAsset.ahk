@@ -4,7 +4,14 @@ class LaunchpadIniInstallerAsset extends FileInstallerAssetBase {
     }
     
     InstallFilesAction() {
-        FileInstall "Launchpad.default.ini", "Launchpad.ini", !!(this.overwrite)
+        if (this.overwrite and this.destPath != "Examples\Launchpad.ini.example" and FileExist(this.destPath)) {
+            FileDelete(this.destPath)
+        }
+
+        if (!FileExist(this.destPath)) {
+            FileInstall "Examples\Launchpad.ini.example", this.destPath, !!(this.overwrite)
+        }
+        
         return super.InstallFilesAction()
     }
 }

@@ -4,7 +4,14 @@ class LaunchpadUpdaterInstallerAsset extends FileInstallerAssetBase {
     }
 
     InstallFilesAction() {
-        FileInstall "Launchpad Updater.exe", "Launchpad Updater.exe", !!(this.overwrite)
+        if (this.overwrite and this.destPath != "Launchpad Updater.exe" and FileExist(this.destPath)) {
+            FileDelete(this.destPath)
+        }
+
+        if (!FileExist(this.destPath)) {
+            FileInstall "Launchpad Updater.exe", "Launchpad Updater.exe", !!(this.overwrite)
+        }
+
         return super.InstallFilesAction()
     }
 }

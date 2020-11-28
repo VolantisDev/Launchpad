@@ -6,7 +6,14 @@ class SharedLibInstallerAsset extends FileInstallerAssetBase {
     }
 
     InstallFilesAction() {
-        FileInstall "Build\SharedLib.zip", this.GetTmpFile(), !!(this.overwrite)
+        if (this.overwrite and this.destPath != "Build\SharedLib.zip" and FileExist(this.destPath)) {
+            FileDelete(this.destPath)
+        }
+
+        if (!FileExist(this.destPath)) {
+            FileInstall "Build\SharedLib.zip", this.GetTmpFile(), !!(this.overwrite)
+        }
+
         return super.InstallFilesAction()
     }
 }

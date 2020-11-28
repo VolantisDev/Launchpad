@@ -11,7 +11,7 @@ class LaunchpadExeInstaller extends InstallerBase {
         assets := []
 
         if (this.isUpdater) {
-            asset := GitHubReleaseInstallerAsset.new("VolantisDev/Launchpad", this.appName . ".exe", false, "", appState, cache, "LaunchpadExe", this.appName, true, tmpDir, true)
+            asset := GitHubReleaseInstallerAsset.new("VolantisDev/Launchpad", this.appName . ".exe", false, "", appState, "LaunchpadExe", cache, this.appName, true, tmpDir, true)
             asset.version := this.version
             assets.Push(asset)
         }

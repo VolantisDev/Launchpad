@@ -4,7 +4,14 @@ class LightpadThemeInstallerAsset extends FileInstallerAssetBase {
     }
 
     InstallFilesAction() {
-        FileInstall "Themes\Lightpad.json", "Themes\Lightpad.json", !!(this.overwrite)
+        if (this.overwrite and this.destPath != "Themes\Lightpad.json" and FileExist(this.destPath)) {
+            FileDelete(this.destPath)
+        }
+
+        if (!FileExist(this.destPath)) {
+            FileInstall "Themes\Lightpad.json", "Themes\Lightpad.json", !!(this.overwrite)
+        }
+
         return super.InstallFilesAction()
     }
 }

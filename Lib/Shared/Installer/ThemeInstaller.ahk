@@ -3,7 +3,7 @@ class ThemeInstaller extends InstallerBase {
 
     __New(appState, cache, downloadThemes := "", tmpDir := "") {
         assets := []
-        ;assets.Push(LightpadThemeInstallerAsset.new(appState, cache, "LightpadTheme", "Themes", true, tmpDir, true))
+        assets.Push(LightpadThemeInstallerAsset.new(appState, cache, "LightpadTheme", "Themes", true, tmpDir, true))
 
         if (downloadThemes != "") {
             for key, url in downloadThemes {

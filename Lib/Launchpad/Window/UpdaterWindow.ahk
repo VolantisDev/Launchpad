@@ -53,10 +53,10 @@
     }
 
     OnUpdateLaunchpad(btn, info) {
-        this.app.Installers.UpdateApp()
+        this.app.Installers.UpdateApp("UpdateWindow")
     }
 
     OnUpdateDependencies(btn, info) {
-        this.app.Installers.UpdateDependencies()
+        this.app.Installers.UpdateDependencies("UpdateWindow")
     }
 }
