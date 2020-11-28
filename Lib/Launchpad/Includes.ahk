@@ -17,9 +17,6 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\LoadLaunchersOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\UpdateOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\ValidateLaunchersOp.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Cache\CacheBase.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Cache\FileCache.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Cache\ObjectCache.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Config\AppConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Config\ConfigBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Config\FileConfig.ahk

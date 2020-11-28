@@ -91,7 +91,7 @@ class LauncherBase {
         isRunning := this.LauncherIsRunning()
 
         if (isRunning) {
-            startTime := FormatTime()
+            startTime := FormatTime(,"yyyyMMddHHmmss")
 
             Loop {
                 isRunning := this.LauncherIsRunning()
@@ -100,7 +100,7 @@ class LauncherBase {
                     break
                 }
 
-                if (DateDiff(FormatTime(), startTime, "Seconds") >= this.config["WaitTimeout"]) {
+                if (DateDiff(FormatTime(,"yyyyMMddHHmmss"), startTime, "Seconds") >= this.config["WaitTimeout"]) {
                     break
                 }
 

@@ -1,5 +1,6 @@
 class InstallerAssetBase {
     appState := ""
+    cache := ""
     stateKey := ""
     parentStateKey := ""
     scriptFile := ""
@@ -8,9 +9,12 @@ class InstallerAssetBase {
     tmpDir := ""
     tmpFile := ""
     version := ""
+    onlyCompiled := false
 
-    __New(appState, stateKey, parentStateKey := "", overwrite := false, tmpDir := "") {
-        if (tmpDir == "") {
+    __New(appState, stateKey, cache, parentStateKey := "", overwrite := false, tmpDir := "", onlyCompiled := false) {
+        this.cache := cache
+        
+        if (!tmpDir) {
             tmpDir := A_Temp . "\Launchpad\Installers"
         }
 
@@ -27,29 +31,63 @@ class InstallerAssetBase {
         this.scriptFile := scriptFile
         this.scriptDir := scriptDir
         this.tmpDir := tmpDir
-        
+        this.onlyCompiled := onlyCompiled
 
         DirCreate(tmpDir)
     }
 
     Exists() {
-        return (this.appState.GetVersion(this.stateKey) != "" and this.appState.IsComponentInstalled(this.stateKey))
+        if (this.onlyCompiled and !A_IsCompiled) {
+            return true
+        }
+
+        exists := this.ExistsAction()
+
+        return (exists and this.appState.GetVersion(this.stateKey) != "" and this.appState.IsComponentInstalled(this.stateKey))
+    }
+
+    ExistsAction() {
+        return true
     }
 
     Install() {
+        if (this.onlyCompiled and !A_IsCompiled) {
+            return true
+        }
+
+        this.InstallAction()
+
         this.appState.SetVersion(this.stateKey, this.version)
         this.appState.SetComponentInstalled(this.stateKey, true)
         return true
     }
 
+    InstallAction() {
+        return true
+    }
+
     Uninstall() {
+        if (this.onlyCompiled and !A_IsCompiled) {
+            return true
+        }
+
+        this.UninstallAction()
+
         this.appState.RemoveVersion(this.stateKey)
         this.appState.SetComponentInstalled(this.stateKey, false)
 
         return true
     }
 
+    UninstallAction() {
+        return true
+    }
+
     IsOutdated() {
+        if (this.onlyCompiled and !A_IsCompiled) {
+            return false
+        }
+
         isOutdated := true
 
         if (this.Exists() and this.parentStateKey != "") {
@@ -58,6 +96,8 @@ class InstallerAssetBase {
             isOutdated := this.VersionIsOutdated(parentVersion, assetVersion)
         }
 
+        this.appState.SetLastUpdateCheck(this.stateKey)
+
         return isOutdated
     }
 
@@ -65,14 +105,16 @@ class InstallerAssetBase {
         return this.appState.GetVersion(this.parentStateKey)
     }
 
-    VersionIsOutdated(latestVersion,installedVersion) {
+    VersionIsOutdated(latestVersion, installedVersion) {
         splitLatestVersion := StrSplit(latestVersion, ".")
         splitInstalledVersion := StrSplit(installedVersion, ".")
 
         for (index, numPart in splitInstalledVersion) {
-            if ((splitLatestVersion[index] + 0) > (numPart + 0)) {
+            latestVersionPart := splitLatestVersion.Has(index) ? splitLatestVersion[index] : 0
+
+            if ((latestVersionPart + 0) > (numPart + 0)) {
                 return true
-            } else if ((splitLatestVersion[index] + 0) < (numPart + 0)) {
+            } else if ((latestVersionPart + 0) < (numPart + 0)) {
                 return false
             } 
         }

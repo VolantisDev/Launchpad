@@ -4,11 +4,14 @@ class InstallerManager extends ServiceBase {
     SetupInstallers() {
         extraThemes := Map()
         extraDependencyAssets := []
-        this.SetInstaller("LaunchpadExe", LaunchpadExeInstaller.new(this.app.AppState, this.app.tmpDir))
-        this.SetInstaller("Launchpad", LaunchpadInstaller.new(this.app.AppState, this.app.tmpDir))
-        this.SetInstaller("Libraries", LibraryInstaller.new(this.app.AppState, this.app.tmpDir))
-        this.SetInstaller("Themes", ThemeInstaller.new(this.app.AppState, extraThemes, this.app.tmpDir))
-        this.SetInstaller("Dependencies", DependencyInstaller.new(this.app.AppState, extraDependencyAssets, this.app.tmpDir))
+
+        tmpDir := this.app.tmpDir . "\Installers"
+        cache := this.app.Cache.GetCache("file")
+        this.SetInstaller("LaunchpadExe", LaunchpadExeInstaller.new(this.app.AppState, cache, tmpDir))
+        this.SetInstaller("Launchpad", LaunchpadInstaller.new(this.app.AppState, cache, tmpDir))
+        this.SetInstaller("Libraries", LibraryInstaller.new(this.app.AppState, cache, tmpDir))
+        this.SetInstaller("Themes", ThemeInstaller.new(this.app.AppState, cache, extraThemes, tmpDir))
+        this.SetInstaller("Dependencies", DependencyInstaller.new(this.app.AppState, cache, extraDependencyAssets, tmpDir))
     }
 
     GetInstaller(key) {

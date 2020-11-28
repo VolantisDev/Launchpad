@@ -2,53 +2,61 @@
 
 appDir := RegExReplace(A_ScriptDir, "\\[^\\]+$")
 
-SplitPath(A_AhkPath,,ahkDir)
 
-if (ahkDir == "") {
-    ahkDir := appDir . "\Vendor\AutoHotKey"
-}
 
 buildDir := appDir . "\Build"
 ahkScript := appDir . "\Launchpad.ahk"
 exeFile := buildDir . "\Launchpad.exe"
 iconFile := appDir . "\Graphics\Launchpad.ico"
 zipPath := appDir . "\Launchpad.zip"
-ahk2Exe := ahkDir . "\Compiler\Ahk2Exe.exe"
 
-if (!FileExist(ahk2Exe)) {
-    ahk2Exe := FileSelect(3,, "Please select your Ahk2Exe.exe file", "EXE Files (*.exe)")
-
-    if (ahk2Exe == "") {
-        MsgBox("Could not find Ahk2Exe.exe.")
-        ExitApp -1
-    }
-}
 
 if (DirExist(buildDir)) {
     DirDelete(buildDir, true)
 }
 
 DirCreate(buildDir)
-
-pid := RunWait(ahk2Exe . " /in " . ahkScript . " /out " . exeFile . " /icon " . iconFile)
-
-FileCopy(appDir . "\Launchers.json.sample", buildDir . "\Launchers.json.sample")
-FileCopy(appDir . "\LICENSE.txt", buildDir . "\LICENSE.txt")
-FileCopy(appDir . "\README.md", buildDir . "\README.md")
-DirCreate(buildDir . "\Lib")
-DirCopy(appDir . "\Lib\LauncherLib", buildDir . "\Lib\LauncherLib")
-DirCopy(appDir . "\Lib\Shared", buildDir . "\Lib\Shared")
-
-result := MsgBox("You may now modify the Build directory if needed. Click OK to build zip archive or Cancel to stop here.", "Post-Build Modification", "OC")
-if (result == "Cancel") {
-    ExitApp
-}
-
-Zip(buildDir, zipPath)
+ZipLibDir("LauncherLib")
+ZipLibDir("SharedLib", "Shared")
+BuildExe("Launchpad Updater", iconFile)
+BuildExe("Launchpad", iconFile)
 DirDelete(buildDir, true)
 
-MsgBox("Finished building Launchpad! The archive is available at " . zipPath, "Launchpad Build Finished")
+TrayTip("Finished building Launchpad.exe and Launchpad Updater.exe", "Launchpad Build", 1)
 ExitApp
+
+BuildExe(scriptName, iconFile) {
+    global appDir
+
+    SplitPath(A_AhkPath,, ahkDir)
+
+    if (ahkDir == "") {
+        ahkDir := appDir . "\Vendor\AutoHotKey"
+    }
+
+    ahk2Exe := ahkDir . "\Compiler\Ahk2Exe.exe"
+
+    if (!FileExist(ahk2Exe)) {
+        ahk2Exe := FileSelect(3,, "Please select your Ahk2Exe.exe file", "EXE Files (*.exe)")
+
+        if (ahk2Exe == "") {
+            MsgBox("Could not find Ahk2Exe.exe.")
+            ExitApp -1
+        }
+    }
+
+    return RunWait(ahk2Exe . " /in " . appDir . "\" . scriptName . ".ahk" . " /out " . appDir . "\" . scriptName . ".exe" . " /icon " . iconFile)
+}
+
+ZipLibDir(name, libDir := "") {
+    global appDir
+
+    if (libDir == "") {
+        libDir := name
+    }
+
+    Zip(appDir . "\Lib\" . name, buildDir . "\" . name . ".zip")
+}
 
 Zip(zipDir, zipFile) {
     if (FileExist(zipFile)) {
@@ -72,15 +80,6 @@ Zip(zipDir, zipFile) {
 CreateZipFile(zipFile)
 {
 	Header1 := "PK" . Chr(5) . Chr(6)
-    Header2 := BufferAlloc(18)
-	file := FileOpen(zipFile,"w")
-	file.Write(Header1)
-	file.RawWrite(Header2,18)
-	file.close()
-
-
-
-    Header1 := "PK" . Chr(5) . Chr(6)
 	Header2 := BufferAlloc(18, 0)
 
 	file := FileOpen(zipFile, "w")

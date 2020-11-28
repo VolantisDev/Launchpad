@@ -1,19 +1,19 @@
 class DownloadableInstallerAsset extends FileInstallerAssetBase {
     downloadUrl := ""
 
-    __New(downloadUrl, zipped, destPath, appState, stateKey, parentStateKey := "", overwrite := false, tmpDir := "") {
+    __New(downloadUrl, zipped, destPath, appState, stateKey, cache, parentStateKey := "", overwrite := false, tmpDir := "", onlyCompiled := false) {
         this.zipped := zipped
         this.downloadUrl := downloadUrl
-        super.__New(destPath, appState, stateKey, parentStateKey, overwrite, tmpDir)
+        super.__New(destPath, appState, stateKey, cache, parentStateKey, overwrite, tmpDir, onlyCompiled)
     }
 
-    InstallAction() {
+    InstallFilesAction() {
         destPath := this.zipped ? this.tmpDir . "\" . this.tmpFile : this.GetDestPath()
         Download(this.GetDownloadUrl(), destPath)
-        return super.InstallAction()
+        return super.InstallFilesAction()
     }
 
     GetDownloadUrl() {
-        return this.getDownloadUrl
+        return this.downloadUrl
     }
 }

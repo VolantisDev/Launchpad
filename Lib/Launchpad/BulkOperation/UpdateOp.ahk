@@ -17,9 +17,9 @@ class UpdateOp extends BulkOperationBase {
 
         for index, installerKey in this.installerKeys {
             installer := this.app.Installers.GetInstaller(installerKey)
-            this.StartItem(installer.name, installer.name . ": Updating...")
-            this.results[installerKey] := installer.Update()
-            this.FinishItem(key, true, key . ": Finished update.")
+            this.StartItem(installer.name, installer.name . " updating...")
+            this.results[installerKey] := installer.Update(this.progress)
+            this.FinishItem(installer.name, true, installer.name . " update finished.")
         }
     }
 }

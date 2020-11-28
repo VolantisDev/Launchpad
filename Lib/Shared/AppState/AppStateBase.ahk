@@ -3,8 +3,8 @@ class AppStateBase {
     stateLoaded := false
 
     State {
-        get => (this.stateLoaded) ? this.stateMap : this.LoadState()
-        set => this.stateMap := this.SaveState(newState)
+        get => this.GetState()
+        set => this.stateMap := this.SaveState(value)
     }
 
     Versions {
@@ -15,6 +15,11 @@ class AppStateBase {
     InstalledComponents {
         get => this.State.Has("InstalledComponents") ? this.State["InstalledComponents"] : this.State["InstalledComponents"] := Map()
         set => this.SetInstalledComponents(value)
+    }
+
+    LastUpdateChecks {
+        get => this.State.Has("LastUpdateChecks") ? this.State["LastUpdateChecks"] : this.State["LastUpdateChecks"] := Map()
+        set => this.SetLastUpdateChecks(value)
     }
 
     __New(state := "", autoLoad := false) {
@@ -37,6 +42,23 @@ class AppStateBase {
         this.SaveState()
     }
 
+    SetLastUpdateChecks(components) {
+        this.State["LastUpdateChecks"] := components
+        this.SaveState()
+    }
+
+    SetLastUpdateCheck(key, timestamp := "") {
+        if (timestamp == "") {
+            timestamp := FormatTime(,"yyyyMMddHHmmss")
+        }
+
+        this.LastUpdateChecks[key] := timestamp
+    }
+
+    GetLastUpdateCheck(key) {
+        return (this.LastUpdateChecks.Has(key)) ? this.LastUpdateChecks[key] : ""
+    }
+
     SaveState(newState := "") {
         if (newState != "") {
             this.stateMap := newState
@@ -46,12 +68,13 @@ class AppStateBase {
     }
 
     LoadState() {
+        this.stateLoaded := true
         return this.stateMap
     }
 
     SetVersion(key, version := "") {
         if (version == "") {
-            version := FormatTime()
+            version := FormatTime(,"yyyyMMddHHmmss")
         }
 
         this.Versions[key] := version
@@ -60,11 +83,12 @@ class AppStateBase {
     }
 
     GetVersion(key) {
-        if (this.Versions.Has(key)) {
-            return this.Versions[key]
-        }
-
         return (this.Versions.Has(key)) ? this.Versions[key] : ""
+    }
+
+    GetState() {
+        stateMap := this.stateLoaded ? this.stateMap : this.LoadState()
+        return stateMap
     }
 
     RemoveVersion(key) {

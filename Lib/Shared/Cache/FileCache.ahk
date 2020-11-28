@@ -1,14 +1,14 @@
 class FileCache extends CacheBase {
     cachePath := ""
 
-    __New(app, cachePath) {
+    __New(cachePath) {
         this.cachePath := cachePath
 
-        super.__New(app)
-
-        if (!DirExist(this.cachePath)) {
-            DirCreate(this.cachePath)
+        if (!DirExist(cachePath)) {
+            DirCreate(cachePath)
         }
+
+        super.__New()
     }
 
     ItemExists(path) {

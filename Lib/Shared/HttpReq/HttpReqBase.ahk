@@ -30,4 +30,8 @@ class HttpReqBase {
     GetResponseBody() {
         return this.responseBody
     }
+
+    GetResponseData() {
+        return this.responseData
+    }
 }

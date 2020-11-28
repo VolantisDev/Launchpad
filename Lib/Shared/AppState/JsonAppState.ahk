@@ -6,26 +6,42 @@ class JsonAppState extends AppStateBase {
         super.__New("", autoLoad)
     }
 
-    SaveState() {
+    SaveState(newState := "") {
+        newState := super.SaveState(newState)
+
         if (this.filePath == "") {
-            return false
+            return newState
         }
 
-        if (FileExist(this.filePath)) {
-            FileDelete(this.filePath)
+        stateToSave := Map("State", newState)
+        jsonString := Jxon_Dump(stateToSave, "", 4)
+
+        if (jsonString != "") {
+            if (FileExist(this.filePath)) {
+                FileDelete(this.filePath)
+            }
+            
+            FileAppend(jsonString, this.filePath)
         }
         
-        FileAppend(Jxon_Dump(this.State, "", 4), this.filePath)
-        return super.SaveConfig()
+        return newState
     }
 
     LoadState() {
-        if (this.filePath == "" or !FileExist(this.filePath)) {
-            return false
-        }
+        if (this.filePath != "" and FileExist(this.filePath)) {
+            jsonString := Trim(FileRead(this.filePath))
 
-        jsonString := FileRead(this.filePath)
-        this.State := (jsonString != "") ? Jxon_Load(jsonString) : Map()
+            if (jsonString != "") {
+                jsonObj := Jxon_Load(jsonString)
+
+                if (jsonObj.Has("State")) {
+                    this.State := jsonObj["State"]
+                }
+            } else {
+                this.State := Map()
+            }
+        }
+        
         return super.LoadState()
     }
 }

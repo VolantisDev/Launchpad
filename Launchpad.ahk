@@ -1,4 +1,7 @@
 ﻿#Warn
+
+A_IconHidden := A_IsCompiled
+
 #Include Lib\Shared\Includes.ahk
 #Include Lib\Launchpad\Includes.ahk
 

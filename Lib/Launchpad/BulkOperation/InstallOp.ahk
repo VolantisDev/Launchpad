@@ -12,19 +12,19 @@ class InstallOp extends BulkOperationBase {
 
     RunAction() {
         if (this.useProgress) {
-            this.progress.SetRange(0, this.CountInstallerAssets())
+            this.progress.SetRange(0, this.CountInstallerItems())
         }
 
         for index, installerKey in this.installerKeys {
             installer := this.app.Installers.GetInstaller(installerKey)
-            this.StartItem(installer.name, installer.name . ": Running...")
-            this.results[installerKey] := installer.InstallOrUpdate()
-            this.FinishItem(key, true, key . ": Finished.")
+            this.StartItem(installer.name, installer.name . " running...")
+            this.results[installerKey] := installer.InstallOrUpdate(this.progress)
+            this.FinishItem(installer.name, true, installer.name . " finished.")
         }
     }
 
-    CountInstallerAssets() {
-        count := 0
+    CountInstallerItems() {
+        count := this.installerKeys.Length
 
         for index, installerKey in this.installerKeys {
             installer := this.app.Installers.GetInstaller(installerKey)

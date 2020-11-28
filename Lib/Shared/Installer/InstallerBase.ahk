@@ -2,6 +2,7 @@
 class InstallerBase {
     name := "Launchpad Installer"
     appName := "Launchpad"
+    cache := ""
     onlyInstallWhenCompiled := false
     appState := ""
     stateKey := ""
@@ -11,7 +12,8 @@ class InstallerBase {
     tmpDir := ""
     parentComponent := ""
 
-    __New(appState, stateKey, assets := "", tmpDir := "") {
+    __New(appState, stateKey, cache, assets := "", tmpDir := "") {
+        this.cache := cache
         this.appState := appState
         this.stateKey := stateKey
         SplitPath(A_ScriptFullPath, scriptFile, scriptDir)
@@ -56,17 +58,17 @@ class InstallerBase {
             return true
         }
 
-        this.appState.SetVersions(this.stateKey)
+        this.appState.SetVersion(this.stateKey)
         success := true
 
         if (progress != "") {
-            progress.SetDetailText(this.name . ": Installing assets")
+            progress.SetDetailText(this.name . " components installing...")
         }
         
 
         for index, asset in this.installerAssets {
             if (progress != "") {
-                progress.IncrementValue(1)
+                progress.IncrementValue(1, this.name . " installing " . asset.stateKey . "...")
             }
 
             if (!asset.Exists() || asset.IsOutdated()) {
@@ -117,7 +119,7 @@ class InstallerBase {
         }
 
         if (!isOutdated) {
-            for index, asset in this.assets {
+            for index, asset in this.installerAssets {
                 if (asset.IsOutdated()) {
                     isOutdated := true
                 }
@@ -132,9 +134,11 @@ class InstallerBase {
         splitInstalledVersion := StrSplit(installedVersion, ".")
 
         for (index, numPart in splitInstalledVersion) {
-            if ((splitLatestVersion[index] + 0) > (numPart + 0)) {
+            latestVersionPart := splitLatestVersion.Has(index) ? splitLatestVersion[index] : 0
+
+            if ((latestVersionPart + 0) > (numPart + 0)) {
                 return true
-            } else if ((splitLatestVersion[index] + 0) < (numPart + 0)) {
+            } else if ((latestVersionPart + 0) < (numPart + 0)) {
                 return false
             } 
         }
@@ -151,7 +155,7 @@ class InstallerBase {
             progress.SetDetailText(this.name . ": Uninstalling assets")
         }
 
-        for index, asset in this.assets {
+        for index, asset in this.installerAssets {
             if (progress != "") {
                 progress.IncrementValue(1)
             }

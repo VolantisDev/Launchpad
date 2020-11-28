@@ -10,9 +10,9 @@ class CacheManager extends ServiceBase {
     }
 
     SetupCaches() {
-        this.caches["app"] := ObjectCache.new(this.app)
-        this.caches["file"] := FileCache.new(this.app, this.cacheDir)
-        this.caches["api"] := FileCache.new(this.app, this.cacheDir . "\API")
+        this.caches["app"] := ObjectCache.new()
+        this.caches["file"] := FileCache.new(this.cacheDir)
+        this.caches["api"] := FileCache.new(this.cacheDir . "\API")
     }
 
     SetCacheDir(cacheDir) {

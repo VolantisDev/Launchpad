@@ -1,10 +1,4 @@
 class CacheBase {
-    app := ""
-
-    __New(app) {
-        this.app := app
-    }
-
     ItemExists(reference) {
         ; Check if the referenced item exists in this cache
     }

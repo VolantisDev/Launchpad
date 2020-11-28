@@ -1,12 +1,12 @@
 class ObjectCache extends CacheBase {
     cacheObj := Map()
 
-    __New(app, cacheObj := "") {
+    __New(cacheObj := "") {
         if (cacheObj != "") {
             this.cacheObj := cacheObj
         }
         
-        super.__New(app)
+        super.__New()
     }
 
     ItemExists(key) {
