@@ -26,4 +26,8 @@ class HttpReqBase {
     GetStatusCode() {
         return this.statusCode
     }
+
+    GetResponseBody() {
+        return this.responseBody
+    }
 }

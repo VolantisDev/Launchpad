@@ -114,7 +114,7 @@ class BulkOperationBase {
         statusObj := this.GetStatus(key)
         statusObj.Start()
 
-        if (this.useProgress and statusText) {
+        if (this.useProgress) {
             this.progress.IncrementValue(1, statusText)
         }
     }

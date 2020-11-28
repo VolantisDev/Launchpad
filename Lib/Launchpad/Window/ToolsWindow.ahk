@@ -52,7 +52,7 @@
 
     OnUpdateDependencies(btn, info) {
         this.Close()
-        this.app.Dependencies.UpdateDependencies(true)
+        this.app.Installers.UpdateDependencies()
     }
 
     OnClose(guiObj) {

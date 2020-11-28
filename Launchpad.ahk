@@ -7,7 +7,8 @@ TraySetIcon("Graphics\Launchpad.ico")
 SplitPath(A_ScriptName,,,, appName)
 
 app := Launchpad.new(appName, A_ScriptDir)
-app.Dependencies.UpdateDependencies()
+app.Installers.InstallRequirements()
+app.Launchers.LoadLaunchers()
 app.Windows.OpenMainWindow()
 
 ; OnError("HandleError")

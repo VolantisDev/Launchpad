@@ -1,10 +1,7 @@
 class NotifierBase {
-    app := ""
     config := Map()
 
-    __New(app, config := "") {
-        this.app := app
-
+    __New(config := "") {
         if (config != "") {
             this.config := config
         }
