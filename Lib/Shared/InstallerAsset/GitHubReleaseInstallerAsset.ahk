@@ -50,7 +50,7 @@ class GitHubReleaseInstallerAsset extends DownloadableInstallerAsset {
 
     GetParentVersion() {
         parentVersion := super.GetParentVersion()
-        response := GetGitHubResponse()
+        response := this.GetGitHubResponse()
 
         if (response.Has("tag_name")) {
             ghVersion := response["tag_name"]

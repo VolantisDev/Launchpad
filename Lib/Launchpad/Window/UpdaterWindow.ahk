@@ -1,4 +1,4 @@
-﻿class MainWindow extends WindowBase {
+﻿class UpdaterWindow extends WindowBase {
     contentWidth := 515
     areaW := 430
     row1Height := 80
@@ -34,7 +34,7 @@
 
         ; Second row
         buttonWidth := this.ButtonWidth(1, this.areaW)
-        btn := this.guiObj.AddButton("ys wp hp", "&Exit")
+        btn := this.guiObj.AddButton("x" . buttonX . " y+" . this.margin . " w" . buttonWidth . " h" . this.row2Height . " Section", "&Exit")
         btn.OnEvent("Click", "OnClose")
     }
 

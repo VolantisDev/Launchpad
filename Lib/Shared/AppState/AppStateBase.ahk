@@ -49,7 +49,7 @@ class AppStateBase {
         return this.stateMap
     }
 
-    SetVersions(key, version := "") {
+    SetVersion(key, version := "") {
         if (version == "") {
             version := FormatTime()
         }

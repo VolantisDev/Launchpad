@@ -62,18 +62,19 @@ class FileInstallerAssetBase extends InstallerAssetBase {
         SplitPath(this.destPath,,destDir)
 
         if (!DirExist(destDir)) {
-            DirCreate(destDir))
+            DirCreate(destDir)
         }
     }
 
     ExtractZip(deleteZip := true) {
         static psh := ComObjCreate("Shell.Application")
         destinationPath := this.GetDestPath()
-        archiveItems := psh.Namespace(this.archiveFile).items
+        zipFile := this.tmpDir . "\" . this.tmpFile
+        archiveItems := psh.Namespace(zipFile).items
         psh.Namespace(destinationPath).CopyHere(archiveItems, 4|16)
 
         if (deleteZip) {
-            FileDelete(tmpFile)
+            FileDelete(zipFile)
         }
 
         return true

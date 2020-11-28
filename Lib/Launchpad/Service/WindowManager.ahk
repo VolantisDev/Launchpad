@@ -25,6 +25,14 @@ class WindowManager extends ServiceBase {
         return this.ShowWindow("MainWindow")
     }
 
+    OpenUpdaterWindow() {
+        if (!this.WindowExists("UpdaterWindow")) {
+            this.AddWindow("UpdaterWindow", UpdaterWindow.new(this.app, "", "MainWindow"))
+        }
+
+        return this.ShowWindow("UpdaterWindow")
+    }
+
     OpenManageWindow() {
         if (!this.WindowExists("ManageWindow")) {
             this.AddWindow("ManageWindow", ManageWindow.new(this.app, "MainWindow", "ManageWindow"))

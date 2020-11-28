@@ -5,7 +5,7 @@ class LaunchpadExeInstaller extends InstallerBase {
     isUpdater := false
 
     __New(appState, tmpDir := "") {
-        SplitPath,A_ScriptFullPath,,,,scriptNameNoExt
+        SplitPath(A_ScriptFullPath,,,,scriptNameNoExt)
         this.isUpdater := scriptNameNoExt == this.appName . " Updater"
 
         assets := []
@@ -54,7 +54,7 @@ class LaunchpadExeInstaller extends InstallerBase {
         }
 
         if (installDir == "") {
-            installDir := PromptForInstallDir()
+            installDir := this.PromptForInstallDir()
         }
 
         return installDir

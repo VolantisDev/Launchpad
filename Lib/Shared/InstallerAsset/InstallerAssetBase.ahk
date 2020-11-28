@@ -14,8 +14,8 @@ class InstallerAssetBase {
             tmpDir := A_Temp . "\Launchpad\Installers"
         }
 
-        if (tmpFile == "") {
-            tmpFile := "Installer" . Random()
+        if (this.tmpFile == "") {
+            this.tmpFile := "Installer" . Random()
         }
 
 
@@ -27,7 +27,7 @@ class InstallerAssetBase {
         this.scriptFile := scriptFile
         this.scriptDir := scriptDir
         this.tmpDir := tmpDir
-        this.tmpFile := tmpFile
+        
 
         DirCreate(tmpDir)
     }
@@ -66,8 +66,8 @@ class InstallerAssetBase {
     }
 
     VersionIsOutdated(latestVersion,installedVersion) {
-        splitLatestVersion := StrSplit(latestVersion,".")
-        splitInstalledVersion:=StrSplit(installedVersion,".")
+        splitLatestVersion := StrSplit(latestVersion, ".")
+        splitInstalledVersion := StrSplit(installedVersion, ".")
 
         for (index, numPart in splitInstalledVersion) {
             if ((splitLatestVersion[index] + 0) > (numPart + 0)) {

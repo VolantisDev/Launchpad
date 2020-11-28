@@ -113,7 +113,7 @@ class InstallerBase {
         if (this.IsInstalled() and this.parentComponent != "") {
             parentLastInstalled := this.appState.GetVersion(this.parentComponent)
             lastInstalled := this.appState.GetVersion(this.stateKey)
-            isOutdated := (DateDiff(parentLastInstalled, lastInstalled) <= 0)
+            isOutdated := (this.VersionIsOutdated(parentLastInstalled, lastInstalled))
         }
 
         if (!isOutdated) {
@@ -125,6 +125,21 @@ class InstallerBase {
         }
 
         return isOutdated
+    }
+
+    VersionIsOutdated(latestVersion, installedVersion) {
+        splitLatestVersion := StrSplit(latestVersion, ".")
+        splitInstalledVersion := StrSplit(installedVersion, ".")
+
+        for (index, numPart in splitInstalledVersion) {
+            if ((splitLatestVersion[index] + 0) > (numPart + 0)) {
+                return true
+            } else if ((splitLatestVersion[index] + 0) < (numPart + 0)) {
+                return false
+            } 
+        }
+
+        return false
     }
 
     Uninstall(progress := "") {
@@ -140,7 +155,7 @@ class InstallerBase {
             if (progress != "") {
                 progress.IncrementValue(1)
             }
-            
+
             asset.Uninstall()
         }
 

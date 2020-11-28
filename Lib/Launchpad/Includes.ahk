@@ -12,8 +12,10 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\BuildLaunchersOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\BulkOperationBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\CleanLaunchersOp.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\InstallOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\LauncherGameOpBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\LoadLaunchersOp.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\UpdateOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\ValidateLaunchersOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Cache\CacheBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Cache\FileCache.ahk
@@ -31,23 +33,14 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\DataSourceItem\DSFile.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\DataSourceItem\DSJson.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\DataSourceItem\DSListing.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Dependency\DependencyBase.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Dependency\DownloadableDependency.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\EntityBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\LauncherEntity.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\ManagedEntityBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\ManagedGameEntity.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\ManagedLauncherEntity.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Notifier\NotifierBase.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Notifier\ToastNotifier.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\OpError\BasicOpError.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\OpError\OpErrorBase.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\OpStatus\BasicOpStatus.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\OpStatus\OpStatusBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\BuilderManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\CacheManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\DataSourceManager.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Service\DependencyManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\InstallerManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\LauncherManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\NotificationService.ahk
@@ -63,5 +56,6 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\SettingsWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\SingleInputBox.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\ToolsWindow.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Window\UpdaterWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\WindowBase.ahk
 ; End of auto-generated includes.

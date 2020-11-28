@@ -22,10 +22,9 @@ class DependencyInstaller extends InstallerBase {
         ahk2ExePath := "Vendor\AutoHotKey\Compiler\Ahk2Exe.exe"
         ahk2ExeAsset := DownloadableInstallerAsset.new(ahk2ExeUrl, false, ahk2ExePath, appState, "Ahk2Exe", "AutoHotKey", true, tmpDir)
         ahk2ExeAsset.version := dbVersion
-        assets.Psuh(ahk2ExeAsset)
+        assets.Push(ahk2ExeAsset)
 
         asset := GitHubReleaseInstallerAsset.new("dafzor/bnetlauncher", "", true, "Vendor\BnetLauncher", appState, "BnetLauncher", "Dependencies", true, tmpDir)
-        asset.version := this.version
         assets.Push(asset)
 
         assetUrl := "https://benmcclure.com/launcher-db/Assets/Dependencies/BnetLauncher/gamedb.ini"
@@ -37,7 +36,7 @@ class DependencyInstaller extends InstallerBase {
         assets.Push(DownloadableInstallerAsset.new(iconsExtUrl, true, iconsExtPath, "IconsExt", "Dependencies", false, tmpDir))
 
         if (extraAssets != "") {
-            for index, asset in extraAssets) {
+            for (index, asset in extraAssets) {
                 assets.Push(asset)
             }
         }

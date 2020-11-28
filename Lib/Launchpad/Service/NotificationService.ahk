@@ -1,9 +1,9 @@
 class NotificationService extends ServiceBase {
     notifierObj := ""
 
-    __New(notifierObj) {
+    __New(app, notifierObj) {
         this.notifierObj := notifierObj
-        super.__New()
+        super.__New(app)
     }
 
     SetNotifier(notifierObj) {
