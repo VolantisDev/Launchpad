@@ -43,11 +43,8 @@ class LauncherEntity extends EntityBase {
     }
 
     __New(app, key, config, requiredConfigKeys := "", defaultDataSource := "") {
-        ; @todo instantiate managedLauncherObj and managedGameObj here?
-
         this.ManagedLauncher := ManagedLauncherEntity.new(app, key, config, "", defaultDataSource)
         this.ManagedGame := ManagedGameEntity.new(app, key, config, "", defaultDataSource)
-
         super.__New(app, key, config, requiredConfigKeys, defaultDataSource)
     }
 

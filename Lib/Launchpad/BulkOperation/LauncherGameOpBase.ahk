@@ -13,6 +13,12 @@ class LauncherGameOpBase extends BulkOperationBase {
     itemFailedText := "Failed."
 
     __New(app, launcherEntities := "", owner := "") {
+        if (launcherEntities == "") {
+            launcherEntities := app.Launchers.Launchers
+        }
+
+        InvalidParameterException.CheckTypes("LauncherGameOpBase", "launcherEntities", launcherEntities, "Map")
+
         if (this.progressTitle == "") {
             this.progressTitle := this.verbProper . " Launchers"
         }
@@ -29,12 +35,7 @@ class LauncherGameOpBase extends BulkOperationBase {
             this.failedMessage := "{n} launcher(s) could not be " . this.verbPast . " due to errors."
         }
 
-        if (launcherEntities == "") {
-            launcherEntities := app.Launchers.Launchers
-        }
-
         this.launcherEntities := launcherEntities
-
         super.__New(app, owner)
     }
 

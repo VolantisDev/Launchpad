@@ -20,18 +20,25 @@ class BulkOperationBase {
     failedMessage := "There were {n} item(s) that failed."
 
     __New(app, owner := "") {
-        this.app := app
-
-        if (!IsObject(owner)) {
-            if (owner == "") {
-                owner := this.owner
-            }
-
-            if (!IsObject(owner)) {
-                owner := app.Windows.GetGuiObj(owner)
-            }
+        InvalidParameterException.CheckTypes("BulkOperationBase", "app", app, "Launchpad")
+        
+        if (owner == "") {
+            owner := "MainWindow"
         }
 
+        if (Type(owner) == "String") {
+            owner := app.Windows.GetGuiObj(owner)
+        }
+
+        if (owner != "") {
+            if (owner.HasBase(GuiBase.Prototype)) {
+                owner := owner.guiObj
+            }
+
+            InvalidParameterException.CheckTypes("BulkOperationBase", "owner", owner, "Gui")
+        }
+        
+        this.app := app
         this.owner := owner
     }
 

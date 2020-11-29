@@ -1,4 +1,9 @@
 ; Automatically-generated file, do not edit manually.
+#Include E:\Tools\Launchpad\Lib\Shared\AppException\AppException.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\AppException\FileSystemException.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\AppException\InvalidParameterException.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\AppException\MethodNotImplementedException.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\AppException\OperationFailedException.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\AppState\AppStateBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\AppState\JsonAppState.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\AppState\LaunchpadAppState.ahk

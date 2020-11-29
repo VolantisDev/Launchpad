@@ -6,11 +6,8 @@ class ValidateLaunchersOp extends LauncherGameOpBase {
     verbPastProper := "Validated"
 
     __New(app, launcherEntities := "", mode := "", owner := "") {
-        if (mode == "") {
-            mode := "config"
-        }
-
-        this.mode := mode
+        InvalidParameterException.CheckTypes("ValidateLaunchersOp", "mode", mode, "")
+        this.mode := mode != "" ? mode : "config"
         super.__New(app, launcherEntities, owner)
     }
 

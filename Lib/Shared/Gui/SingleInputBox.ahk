@@ -3,6 +3,7 @@ class SingleInputBox extends DialogBox {
     isPassword := false
 
     __New(title, text, defaultValue := "", owner := "", isPassword := false) {
+        InvalidParameterException.CheckTypes("SingleInputBox", "defaultValue", defaultValue, "")
         this.defaultValue := defaultValue
         this.isPassword := isPassword
         super.__New(title, text, owner, "*&OK|&Cancel")

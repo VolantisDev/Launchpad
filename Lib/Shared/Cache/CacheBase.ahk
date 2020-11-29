@@ -1,32 +1,41 @@
 class CacheBase {
+
+    /**
+    * ABSTRACT METHODS
+    */
+
     ItemExists(reference) {
-        ; Check if the referenced item exists in this cache
+        throw(MethodNotImplementedException.new("CacheBase", "ItemExists"))
     }
 
     GetItemTimestamp(reference) {
-        ; Get the timestamp of the referenced item in seconds
+        throw(MethodNotImplementedException.new("CacheBase", "GetItemTimestamp"))
     }
 
     WriteItem(reference, content) {
-        ; Adds or updates an item in the cache
+        throw(MethodNotImplementedException.new("CacheBase", "WriteItem"))
     }
 
     ReadItem(reference) {
-        ; Reads the referenced item from the cache and returns its contents
+        throw(MethodNotImplementedException.new("CacheBase", "ReadItem"))
     }
 
     RemoveItem(reference) {
-        ; Removes the referenced item from the cache
+        throw(MethodNotImplementedException.new("CacheBase", "RemoveItem"))
     }
 
     FlushCache() {
-        ; Removes all items from the cache   
+        throw(MethodNotImplementedException.new("CacheBase", "FlushCache"))
     }
+
+    /**
+    * IMPLEMENTED METHODS
+    */
 
     ImportItemFromUrl(reference, url) {
         tempFile := this.app.Config.TempDir . "\cacheDownload"
         DirCreate(this.app.Config.TempDir)
-        tempFile := this.DownloadItem(tempFile, url)
+        Download(url, tempFile)
         content := FileRead(tempFile)
         
         if (FileExist(tempFile)) {
@@ -36,11 +45,6 @@ class CacheBase {
         this.WriteItem(reference, content)
 
         return content
-    }
-
-    DownloadItem(path, url) {
-        Download(url, path)
-        return path
     }
 
     GetCacheAge(reference) {

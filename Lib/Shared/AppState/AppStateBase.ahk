@@ -24,6 +24,7 @@ class AppStateBase {
 
     __New(state := "", autoLoad := false) {
         if (state != "") {
+            InvalidParameterException.CheckTypes("AppStateBase", "state", state, "Map")
             this.stateMap := state
         }
 
@@ -31,6 +32,22 @@ class AppStateBase {
             this.LoadState()
         }
     }
+
+    /**
+    * ABSTRACT METHODS
+    */
+
+    SaveState(newState := "") {
+        throw(MethodNotImplementedException.new("AppStateBase", "SaveState"))
+    }
+
+    LoadState() {
+        throw(MethodNotImplementedException.new("AppStateBase", "LoadState"))
+    }
+
+    /**
+    * IMPLEMENTED METHODS
+    */
 
     SetVersions(versions) {
         this.State["Versions"] := versions
@@ -57,19 +74,6 @@ class AppStateBase {
 
     GetLastUpdateCheck(key) {
         return (this.LastUpdateChecks.Has(key)) ? this.LastUpdateChecks[key] : ""
-    }
-
-    SaveState(newState := "") {
-        if (newState != "") {
-            this.stateMap := newState
-        }
-
-        return this.stateMap
-    }
-
-    LoadState() {
-        this.stateLoaded := true
-        return this.stateMap
     }
 
     SetVersion(key, version := "") {

@@ -10,9 +10,14 @@ class GameBase {
             config := Map()
         }
 
+        InvalidParameterException.CheckTypes("GameBase", "key", key, "", "config", config, "Map")
         this.key := key
         this.config := config
     }
+
+    /**
+    * IMPLEMENTED METHODS
+    */
 
     RunGame(progress := "") {
         pid := this.GameIsRunning()

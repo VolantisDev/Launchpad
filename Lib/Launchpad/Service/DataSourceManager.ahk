@@ -3,6 +3,8 @@ class DataSourceManager extends ServiceBase {
     primaryDataSourceKey := ""
 
     __New(app, primaryKey := "", primaryDataSource := "") {
+        InvalidParameterException.CheckTypes("DataSourceManager", "primaryKey", primaryKey, "", "primaryDataSource", primaryDataSource, "")
+
         if (primaryKey != "" and primaryDataSource != "") {
             this.primaryDataSourceKey := primaryKey
             this.dataSources[primaryKey] := primaryDataSource

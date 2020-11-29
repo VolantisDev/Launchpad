@@ -3,9 +3,10 @@ class CacheManager extends ServiceBase {
     caches := Map()
 
     __New(app, cacheDir) {
+        InvalidParameterException.CheckTypes("CacheManager", "cacheDir", cacheDir, "")
+        InvalidParameterException.CheckEmpty("CacheManager", "cacheDir", cacheDir)
         this.cacheDir := cacheDir
         super.__New(app)
-
         this.SetupCaches()
     }
 

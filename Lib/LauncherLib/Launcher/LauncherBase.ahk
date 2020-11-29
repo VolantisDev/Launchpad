@@ -10,6 +10,7 @@ class LauncherBase {
             config := Map()
         }
 
+        InvalidParameterException.CheckTypes("LauncherBase", "key", key, "", "game", game, "GameBase", "config", config, "Map")
         this.key := key
         this.game := game
         this.config := config
@@ -18,6 +19,10 @@ class LauncherBase {
             this.CreateProgressGui()
         }
     }
+
+    /**
+    * IMPLEMENTED METHODS
+    */
 
     CreateProgressGui() {
         if (this.progress == "") {

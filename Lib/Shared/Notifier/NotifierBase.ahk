@@ -7,6 +7,11 @@ class NotifierBase {
         }
     }
 
+    /**
+    * ABSTRACT METHODS
+    */
+
     Notify(message, title := "", level := "info") {
+        throw MethodNotImplementedException.new("NotifierBase", "Notify")
     }
 }

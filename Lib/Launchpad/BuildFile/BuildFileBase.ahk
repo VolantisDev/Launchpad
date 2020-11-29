@@ -6,18 +6,21 @@ class BuildFileBase {
     key := ""
     extension := ""
     launcherDir := ""
-    launcherGameObj := ""
+    launcherEntityObj := ""
 
     FilePath[] {
         get => this.filePathValue
         set => this.filePathValue := value
     }
 
-    __New(app, launcherGameObj, launcherDir, key, extension, filePath := "") {
+    __New(app, launcherEntityObj, launcherDir, key, extension, filePath := "") {
+        InvalidParameterException.CheckTypes("BuildFileBase", "app", app, "Launchpad", "launcherEntityObj", launcherEntityObj, "LauncherEntity", "launcherDir", launcherDir, "", "key", key, "", "extension", extension, "", "filePath", filePath, "")
+        InvalidParameterException.CheckEmpty("BuildFileBase", "LauncherDir", launcherDir)
+
         this.app := app
         this.appDir := app.Config.AppDir
         this.tempDir := app.Config.TempDir . "\BuildFiles\" . key
-        this.launcherGameObj := launcherGameObj
+        this.launcherEntityObj := launcherEntityObj
         this.launcherDir := launcherDir
         this.key := key
         this.extension := extension

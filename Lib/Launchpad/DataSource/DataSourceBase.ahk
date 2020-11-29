@@ -4,10 +4,14 @@ class DataSourceBase {
     useCache := false
     maxCacheAge := 86400
 
-    __New(app, cache) {
+    __New(app, cache := "") {
+        InvalidParameterException.CheckTypes("ValidateLaunchersOp", "app", app, "Launchpad")
+
         this.app := app
-       
-        if (cache) {
+
+        if (cache != "") {
+            InvalidParameterException.CheckTypes("ValidateLaunchersOp", "cache", cache, "CacheBase")
+
             this.useCache := true
             this.cache := cache
         }

@@ -14,6 +14,6 @@ class LauncherLibInstallerAsset extends FileInstallerAssetBase {
             ;FileInstall "Build\LauncherLib.zip", this.GetTmpFile(), !!(this.overwrite)
         }
 
-        return super.InstallFilesAction()
+        return true
     }
 }

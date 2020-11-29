@@ -13,6 +13,7 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\BulkOperationBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\CleanLaunchersOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\InstallOp.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\LauncherBuilderOpBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\LauncherGameOpBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\LoadLaunchersOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\UpdateOp.ahk

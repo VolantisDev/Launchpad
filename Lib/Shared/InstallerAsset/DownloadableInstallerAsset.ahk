@@ -10,7 +10,7 @@ class DownloadableInstallerAsset extends FileInstallerAssetBase {
     InstallFilesAction() {
         destPath := this.zipped ? this.tmpDir . "\" . this.tmpFile : this.GetDestPath()
         Download(this.GetDownloadUrl(), destPath)
-        return super.InstallFilesAction()
+        return true
     }
 
     GetDownloadUrl() {

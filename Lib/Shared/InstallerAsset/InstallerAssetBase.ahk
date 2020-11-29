@@ -36,6 +36,26 @@ class InstallerAssetBase {
         DirCreate(tmpDir)
     }
 
+    /**
+    * ABSTRACT METHODS
+    */
+
+    ExistsAction() {
+        throw MethodNotImplementedException.new("InstallerAssetBase", "ExistsAction")
+    }
+
+    InstallAction() {
+        throw MethodNotImplementedException.new("InstallerAssetBase", "InstallAction")
+    }
+
+    UninstallAction() {
+        throw MethodNotImplementedException.new("InstallerAssetBase", "UninstallAction")
+    }
+
+    /**
+    * IMPLEMENTED METHODS
+    */
+
     Exists() {
         if (this.onlyCompiled and !A_IsCompiled) {
             return true
@@ -44,10 +64,6 @@ class InstallerAssetBase {
         exists := this.ExistsAction()
 
         return (exists and this.appState.GetVersion(this.stateKey) != "" and this.appState.IsComponentInstalled(this.stateKey))
-    }
-
-    ExistsAction() {
-        return true
     }
 
     Install() {
@@ -62,10 +78,6 @@ class InstallerAssetBase {
         return true
     }
 
-    InstallAction() {
-        return true
-    }
-
     Uninstall() {
         if (this.onlyCompiled and !A_IsCompiled) {
             return true
@@ -76,10 +88,6 @@ class InstallerAssetBase {
         this.appState.RemoveVersion(this.stateKey)
         this.appState.SetComponentInstalled(this.stateKey, false)
 
-        return true
-    }
-
-    UninstallAction() {
         return true
     }
 

@@ -2,6 +2,8 @@ class FileCache extends CacheBase {
     cachePath := ""
 
     __New(cachePath) {
+        InvalidParameterException.CheckTypes("FileCache", "cachePath", cachePath, "")
+        InvalidParameterException.CheckEmpty("FileCache", "cachePath", cachePath)
         this.cachePath := cachePath
 
         if (!DirExist(cachePath)) {

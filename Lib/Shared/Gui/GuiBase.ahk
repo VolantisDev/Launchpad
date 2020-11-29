@@ -28,15 +28,27 @@ class GuiBase {
     showInNotificationArea := false
 
     __New(title, owner := "", windowKey := "") {
-        this.title := title
-        this.windowKey := windowKey
+        InvalidParameterException.CheckTypes("GuiBase", "title", title, "", "windowKey", windowKey, "")
+        InvalidParameterException.CheckEmpty("GuiBase", "title", title)
 
         if (owner != "") {
+            if (owner.HasBase(GuiBase.Prototype)) {
+                owner := owner.guiObj
+            }
+
+            InvalidParameterException.CheckTypes("GuiBase", "owner", owner, "Gui")
+
             this.owner := owner
         }
 
+        this.title := title
+        this.windowKey := windowKey
         this.Create()
     }
+
+    /**
+    * IMPLEMENTED METHODS
+    */
 
     AddHeading(groupLabel, position := "") {
         if (position == "") {
@@ -163,7 +175,6 @@ class GuiBase {
     }
 
     AddButtons() {
-
     }
 
     End() {

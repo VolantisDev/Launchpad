@@ -6,6 +6,10 @@ class OpStatusBase {
     hasErrors := false
     errors := Array()
 
+    /**
+    * IMPLEMENTED METHODS
+    */
+
     Start() {
         this.started := true
     }

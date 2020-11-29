@@ -9,7 +9,13 @@ class ProgressIndicator extends DialogBox {
 
     __New(title, text, owner := "", allowCancel := false, rangeStop := "", currentPosition := 0, detailText := true, showInNotificationArea := true) {
         if (rangeStop != "") {
+            InvalidParameterException.CheckTypes("ProgressIndicator", "rangeStop", rangeStop, "Integer")
             this.rangeStop := rangeStop
+        }
+
+        if (currentPosition != "") {
+            InvalidParameterException.CheckTypes("ProgressIndicator", "currentPosition", currentPosition, "Integer")
+            InvalidParameterException.CheckBetween("ProgressIndicator", "currentPosition", currentPosition, this.rangeStart, this.RangeStop)
         }
 
         this.currentPosition := currentPosition
@@ -20,7 +26,7 @@ class ProgressIndicator extends DialogBox {
         }
         
         btns := allowCancel ? "&Cancel" : ""
-        this.showInNotificationArea := showInNotificationArea
+        this.showInNotificationArea := !!(showInNotificationArea)
         super.__New(title, text, owner, btns)
     }
 

@@ -93,9 +93,17 @@ class EntityBase {
     }
 
     __New(app, key, configObj, requiredConfigKeys := "", defaultDataSourceKey := "") {
+        InvalidParameterException.CheckTypes("EntityBase", "app", app, "Launchpad", "key", key, "String", "configObj", configObj, "Map", "defaultDataSourceKey", defaultDataSourceKey, "")
+        
+        if (defaultDataSourceKey == "") {
+            defaultDataSourceKey := app.Config.DataSourceKey
+        }
+
+        InvalidParameterException.CheckEmpty("EntityBase", "key", key, "defaultDataSourceKey", defaultDataSourceKey)
+
         this.app := app
         this.keyVal := key
-        this.defaultDataSourceKey := (defaultDataSourceKey != "") ? defaultDataSourceKey : app.Config.DataSourceKey
+        this.defaultDataSourceKey := defaultDataSourceKey
         this.configObj := configObj
         this.unmergedConfigVal := configObj.Clone()
         this.initialDefaults := this.InitializeDefaults()

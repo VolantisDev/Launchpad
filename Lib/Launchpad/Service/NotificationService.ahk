@@ -2,6 +2,7 @@ class NotificationService extends ServiceBase {
     notifierObj := ""
 
     __New(app, notifierObj) {
+        InvalidParameterException.CheckTypes("NotificationService", "notifierObj", notifierObj, "NotifierBase")
         this.notifierObj := notifierObj
         super.__New(app)
     }

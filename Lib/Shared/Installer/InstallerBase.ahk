@@ -31,6 +31,10 @@ class InstallerBase {
         }
     }
 
+    /**
+    * IMPLEMENTED METHODS
+    */
+
     AddAssets(assets) {
         if (Type(assets) != "Array") {
             assets := [assets]
@@ -65,7 +69,6 @@ class InstallerBase {
             progress.SetDetailText(this.name . " components installing...")
         }
         
-
         for index, asset in this.installerAssets {
             if (progress != "") {
                 progress.IncrementValue(1, this.name . " installing " . asset.stateKey . "...")

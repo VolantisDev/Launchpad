@@ -18,9 +18,10 @@ class CopyableBuildFile extends BuildFileBase {
         set => this.selectFilterValue := value
     }
 
-    __New(app, launcherGameObj, launcherDir, key, extension, filePath := "", sourcePath := "") {
+    __New(app, launcherEntityObj, launcherDir, key, extension, filePath := "", sourcePath := "") {
+        InvalidParameterException.CheckTypes("BuilderBase", "app", app, "Launchpad", "sourcePath", sourcePath, "")
         this.sourcePathValue := sourcePath
-        super.__New(app, launcherGameObj, launcherDir, key, extension, filePath)
+        super.__New(app, launcherEntityObj, launcherDir, key, extension, filePath)
     }
 
     Build() {

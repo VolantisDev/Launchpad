@@ -14,6 +14,8 @@ class ConfigBase {
     }
 
     __New(app) {
+        InvalidParameterException.CheckTypes("ConfigBase", "app", app, "Launchpad")
+
         this.appNameValue := app.appName
         this.appDirValue := app.appDir
         this.app := app

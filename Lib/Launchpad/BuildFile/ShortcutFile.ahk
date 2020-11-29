@@ -2,8 +2,8 @@ class ShortcutFile extends CopyableBuildFile {
     requestMessage := "Select the game shortcut"
     selectFilter := "Shortcuts (*.lnk; *.url; *.exe)"
     
-    __New(app, launcherGameObj, launcherDir, key, filePath := "") {
-        super.__New(app, launcherGameObj, launcherDir, key, ".lnk", filePath, launcherGameObj.ManagedGame.ShortcutSrc)
+    __New(app, launcherEntityObj, launcherDir, key, filePath := "") {
+        super.__New(app, launcherEntityObj, launcherDir, key, ".lnk", filePath, launcherEntityObj.ManagedGame.ShortcutSrc)
     }
 
     Locate() {

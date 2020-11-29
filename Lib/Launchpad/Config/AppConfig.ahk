@@ -93,6 +93,8 @@
     }
 
     __New(app, defaultTempDir) {
+        InvalidParameterException.CheckTypes("ValidateLaunchersOp", "defaultTempDir", defaultTempDir, "")
+        InvalidParameterException.CheckEmpty("ValidateLaunchersOp", "defaultTempDir", defaultTempDir)
         this.defaultTempDir := defaultTempDir
         super.__New(app)
     }

@@ -58,6 +58,7 @@
     }
 
     __New(appName, appDir) {
+        InvalidParameterException.CheckTypes("Launchpad", "appName", appName, "", "appDir", appDir, "")
         this.appName := appName
         this.appDir := appDir
 

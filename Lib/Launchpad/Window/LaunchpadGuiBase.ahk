@@ -2,6 +2,7 @@ class LaunchpadGuiBase extends GuiBase {
     app := ""
 
     __New(app, title, owner := "", windowKey := "") {
+        InvalidParameterException.CheckTypes("LauncherGameOpBase", "app", app, "Launchpad")
         this.app := app
 
         if (Type(owner) == "String") {

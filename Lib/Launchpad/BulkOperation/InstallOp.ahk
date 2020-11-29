@@ -6,6 +6,7 @@ class InstallOp extends BulkOperationBase {
     failedMessage := "{n} requirements(s) could not be loaded due to errors."
 
     __New(app, installerKeys, owner := "") {
+        InvalidParameterException.CheckTypes("InstallOp", "installerKeys", installerKeys, "Array")
         this.installerKeys := installerKeys
         super.__New(app, owner)
     }

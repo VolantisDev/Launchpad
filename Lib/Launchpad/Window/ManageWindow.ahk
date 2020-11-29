@@ -11,8 +11,8 @@
             launcherFile := app.Config.LauncherFile
         }
 
+        InvalidParameterException.CheckTypes("ManageWindow", "launcherFile", launcherFile, "")
         this.launcherFile := launcherFile
-
         super.__New(app, "Manage", owner, windowKey)
     }
 

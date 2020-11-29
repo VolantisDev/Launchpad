@@ -6,7 +6,7 @@
       - "build" - Launcher is being built and requires information
 */
 
-class LauncherEditor extends FormWindowBase {
+class LauncherEditor extends LaunchpadFormGuiBase {
     contentWidth := 500
     launcherEntityObj := ""
     mode := "config" ; Options: config, build
@@ -18,6 +18,7 @@ class LauncherEditor extends FormWindowBase {
     margin := 6
 
     __New(app, launcherEntityObj, mode := "config", owner := "", windowKey := "") {
+        InvalidParameterException.CheckTypes("LauncherEditor", "launcherEntityObj", launcherEntityObj, "LauncherEntity", "mode", mode, "")
         this.launcherEntityObj := launcherEntityObj
         this.mode := mode
 

@@ -12,6 +12,18 @@ class FileInstallerAssetBase extends InstallerAssetBase {
         }
     }
 
+    /**
+    * ABSTRACT METHODS
+    */
+
+    InstallFilesAction() {
+        throw MethodNotImplementedException.new("FileInstallerAssetBase", "InstallFilesAction")
+    }
+
+    /**
+    * IMPLEMENTED METHODS
+    */
+
     InstallAction() {
         this.CreateParentDir()
 
@@ -25,14 +37,6 @@ class FileInstallerAssetBase extends InstallerAssetBase {
             }
         }
 
-        if (result) {
-            superResult := super.InstallAction()
-
-            if (!superResult) {
-                result := false
-            }
-        }
-
         return result
     }
 
@@ -42,10 +46,6 @@ class FileInstallerAssetBase extends InstallerAssetBase {
         if (destDrive != "" and destDir != "" and !DirExist(destDir)) {
             DirCreate(destDir)
         }
-    }
-
-    InstallFilesAction() {
-        return true
     }
 
     GetTmpFile() {
@@ -97,7 +97,7 @@ class FileInstallerAssetBase extends InstallerAssetBase {
             return false
         }
 
-        return super.ExistsAction()
+        return true
     }
 
     UninstallAction() {
@@ -109,6 +109,6 @@ class FileInstallerAssetBase extends InstallerAssetBase {
             FileDelete(this.destPath)
         }
 
-        return super.UninstallAction()
+        return true
     }
 }

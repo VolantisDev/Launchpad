@@ -1,5 +1,4 @@
-class BuildLaunchersOp extends LauncherGameOpBase {
-    builder := ""
+class BuildLaunchersOp extends LauncherBuilderOpBase {
     updateExisting := false
     verb := "building"
     verbProper := "Building"
@@ -7,15 +6,8 @@ class BuildLaunchersOp extends LauncherGameOpBase {
     verbPastProper := "Built"
 
     __New(app, launcherEntities := "", builder := "", updateExisting := false, owner := "") {
-        if (builder == "") {
-            builder := app.Config.BuilderKey
-        }
-
-        this.updateExisting := updateExisting
-
-        this.builder := IsObject(builder) ? builder : app.Builders.GetBuilder(builder)
-
-        super.__New(app, launcherEntities, owner)
+        this.updateExisting := !!(updateExisting)
+        super.__New(app, launcherEntities, builder, owner)
     }
 
     ProcessLauncherGame(launcherEntityObj) {

@@ -2,6 +2,8 @@ class ApiDataSource extends DataSourceBase {
     endpointUrl := ""
 
     __New(app, cache, endpointUrl) {
+        InvalidParameterException.CheckTypes("ApiDataSource", "endpointUrl", endpointUrl, "")
+        InvalidParameterException.CheckEmpty("ApiDataSource", "cache", cache)
         this.endpointUrl := endpointUrl
         super.__New(app, cache)
     }

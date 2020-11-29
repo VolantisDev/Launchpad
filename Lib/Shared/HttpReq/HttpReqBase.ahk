@@ -19,9 +19,17 @@ class HttpReqBase {
         this.url := url
     }
 
+    /**
+    * ABSTRACT METHODS
+    */
+
     Send(method := "GET", data := "") {
-        return this.returnCode
+        throw MethodNotImplementedException.new("HttpReqBase", "Send")
     }
+
+    /**
+    * IMPLEMENTED METHODS
+    */
 
     GetStatusCode() {
         return this.statusCode

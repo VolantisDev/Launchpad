@@ -2,6 +2,7 @@ class BuilderBase {
     app := ""
 
     __New(app) {
+        InvalidParameterException.CheckTypes("BuilderBase", "app", app, "Launchpad")
         this.app := app
     }
 

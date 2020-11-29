@@ -2,46 +2,53 @@ class JsonAppState extends AppStateBase {
     filePath := ""
 
     __New(filePath, autoLoad := false) {
+        InvalidParameterException.CheckTypes("JsonAppState", "filePath", filePath, "")
+        InvalidParameterException.CheckEmpty("JsonAppState", "filePath", filePath)
         this.filePath := filePath
         super.__New("", autoLoad)
     }
 
     SaveState(newState := "") {
-        newState := super.SaveState(newState)
-
-        if (this.filePath == "") {
-            return newState
+        if (newState != "") {
+            this.stateMap := newState
         }
 
-        stateToSave := Map("State", newState)
+        stateToSave := Map("State", this.stateMap)
         jsonString := Jxon_Dump(stateToSave, "", 4)
 
-        if (jsonString != "") {
-            if (FileExist(this.filePath)) {
-                FileDelete(this.filePath)
-            }
-            
-            FileAppend(jsonString, this.filePath)
+        if (jsonString == "") {
+            throw(OperationFailedException.new("Converting state map to JSON failed", "AppState", stateToSave))
         }
+
+        if (FileExist(this.filePath)) {
+            FileDelete(this.filePath)
+        }
+            
+        FileAppend(jsonString, this.filePath)
         
-        return newState
+        return this.stateMap
     }
 
     LoadState() {
-        if (this.filePath != "" and FileExist(this.filePath)) {
-            jsonString := Trim(FileRead(this.filePath))
+        if (!this.stateLoaded) {
+            newState := Map()
 
-            if (jsonString != "") {
-                jsonObj := Jxon_Load(jsonString)
+            if (FileExist(this.filePath)) {
+                jsonString := Trim(FileRead(this.filePath))
 
-                if (jsonObj.Has("State")) {
-                    this.State := jsonObj["State"]
+                if (jsonString != "") {
+                    jsonObj := Jxon_Load(jsonString)
+
+                    if (jsonObj.Has("State")) {
+                        newState := jsonObj["State"]
+                    }
                 }
-            } else {
-                this.State := Map()
             }
+
+            this.stateMap := newState
+            this.stateLoaded := true
         }
         
-        return super.LoadState()
+        return this.stateMap
     }
 }

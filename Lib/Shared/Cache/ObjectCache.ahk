@@ -3,6 +3,7 @@ class ObjectCache extends CacheBase {
 
     __New(cacheObj := "") {
         if (cacheObj != "") {
+            InvalidParameterException.CheckTypes("ObjectCache", "cacheObj", cacheObj, "Map")
             this.cacheObj := cacheObj
         }
         
