@@ -12,7 +12,7 @@
 
         for key, config in this.Games {
             if (Type(config) == "String") {
-                this.Games[key] := Map("launcherType", config)
+                this.Games[key] := Map("LauncherType", config)
             }
         }
 
@@ -21,8 +21,8 @@
 
     SaveConfig() {
         for key, config in this.Games {
-            if (Type(config) == "Map" and config.Has("launcherType") and config.Count == 1) {
-                this.Games[key] := config["launcherType"]
+            if (Type(config) == "Map" and config.Has("LauncherType") and config.Count == 1) {
+                this.Games[key] := config["LauncherType"]
             }
         }
 

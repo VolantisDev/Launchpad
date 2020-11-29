@@ -3,8 +3,7 @@ class IconFile extends CopyableBuildFile {
     selectFilter := "Icons (*.ico; *.exe; *.ocx; *.dll; *.cpl)"
 
     __New(app, launcherGameObj, launcherDir, key, filePath := "") {
-        sourcePath := launcherGameObj.Config.Has("iconSrc") ? launcherGameObj.Config["iconSrc"] : ""
-        super.__New(app, launcherGameObj, launcherDir, key, ".ico", filePath, sourcePath)
+        super.__New(app, launcherGameObj, launcherDir, key, ".ico", filePath, launcherGameObj.IconSrc)
     }
 
     Cleanup() {

@@ -117,10 +117,6 @@ class LauncherEntity extends EntityBase {
         launcherType := this.DetectLauncherType(defaults, config)
         defaults["LauncherType"] := launcherType
 
-        if (!defaults.Has("LauncherClass")) {
-            defaults["LauncherClass"] := ""
-        }
-
         if (gameData != "" and gameData.Has("Launchers")) {
             launcherType := this.DereferenceLauncherType(launcherType, gameData["Launchers"])
 
@@ -135,11 +131,7 @@ class LauncherEntity extends EntityBase {
 
         ; Determine game type
         gameType := this.DetectGameType(defaults, config)
-        defaults["gameType"] := gameType
-
-        if (!defaults.Has("GameClass")) {
-            defaults["GameClass"] := ""
-        }
+        defaults["GameType"] := gameType
 
         ; Merge defaults from game type
         gameTypeData := this.AggregateTypeData(gameType, "Games", dataSources)
@@ -198,6 +190,13 @@ class LauncherEntity extends EntityBase {
         gameData["Launchers"] := launchers
 
         return gameData
+    }
+
+    MergeEntityDefaults(update := false) {
+        super.MergeEntityDefaults(update)
+
+        this.ManagedLauncher.Config := this.Config
+        this.ManagedGame.Config := this.Config
     }
 
     AggregateTypeData(typeKey, typeName, dataSources) {
@@ -280,6 +279,10 @@ class LauncherEntity extends EntityBase {
         defaults := super.InitializeDefaults()
         defaults["DestinationDir"] := this.GetDefaultDestinationDir()
         defaults["IconSrc"] := ""
+
+        defaults := this.MergeFromObject(defaults, this.ManagedLauncher.initialDefaults)
+        defaults := this.MergeFromObject(defaults, this.ManagedGame.initialDefaults)
+
         return defaults
     }
 }

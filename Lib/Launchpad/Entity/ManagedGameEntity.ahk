@@ -1,7 +1,7 @@
 class ManagedGameEntity extends ManagedEntityBase {
     configPrefix := "Game"
-    defaultEntityType := "Default"
-    defaultEntityClass := "ShortcutGame"
+    defaultType := "Default"
+    defaultClass := "SimpleGame"
 
     ; If the game is known to its launcher by a specific ID, it should be stored here.
     LauncherSpecificId {

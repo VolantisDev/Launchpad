@@ -14,16 +14,16 @@ class LauncherBase {
         this.game := game
         this.config := config
 
-        if (this.config["ShowProgress"]) {
+        if (this.config["LauncherShowProgress"]) {
             this.CreateProgressGui()
         }
     }
 
     CreateProgressGui() {
         if (this.progress == "") {
-            progressTitle := StrReplace(this.config["ProgressTitle"], "{g}", this.config["DisplayName"])
-            progressText := StrReplace(this.config["ProgressText"], "{g}", this.config["DisplayName"])
-            this.progress := (progressTitle, progressText, "", false, this.CountLaunchSteps())
+            progressTitle := StrReplace(this.config["LauncherProgressTitle"], "{g}", this.config["DisplayName"])
+            progressText := StrReplace(this.config["LauncherProgressText"], "{g}", this.config["DisplayName"])
+            this.progress := ProgressIndicator.new(progressTitle, progressText, "", false, this.CountLaunchSteps())
         }
     }
 
@@ -43,14 +43,14 @@ class LauncherBase {
 
     LaunchGame() {
         if (this.progress != "") {
-            this.progress.SetDetailText("Initializing launcher...")
             this.progress.Show()
+            this.progress.SetDetailText("Initializing launcher...")
         }
         
 
         if (this.config["LauncherCloseBeforeRun"]) {
             if (this.progress != "") {
-                this.progress.Increment(1, "Closing existing game launcher...")
+                this.progress.IncrementValue(1, "Closing existing game launcher...")
             }
 
             this.CloseLauncher("BeforeRun")
@@ -60,7 +60,7 @@ class LauncherBase {
 
         if (this.config["LauncherCloseAfterRun"]) {
             if (this.progress != "") {
-                this.progress.Increment(1, "Closing existing game launcher...")
+                this.progress.IncrementValue(1, "Closing existing game launcher...")
             }
 
             this.CloseLauncher("AfterRun")
@@ -119,7 +119,7 @@ class LauncherBase {
         if (this.config["LauncherProcessType"] == "Title") {
             pid := WinGetPID(this.config["LauncherProcessId"])
         } else if (this.config["LauncherProcessType"] == "Class") {
-            pid := WinGetPID("ahk_class " . this.config["LauncherProcessId"]))
+            pid := WinGetPID("ahk_class " . this.config["LauncherProcessId"])
         } else { ; Default to Exe
             pid := ProcessExist(this.config["LauncherProcessId"])
         }
@@ -175,7 +175,7 @@ class LauncherBase {
             isRunning := this.KillLauncher()
         }
         
-        return KillLauncher
+        return isRunning
     }
 
     AutoCloseAction() {

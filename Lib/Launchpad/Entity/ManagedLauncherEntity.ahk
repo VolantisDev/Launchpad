@@ -1,7 +1,7 @@
 class ManagedLauncherEntity extends ManagedEntityBase {
     configPrefix := "Launcher"
-    defaultEntityType := "Default"
-    defaultEntityClass := "ThinLauncher"
+    defaultType := "Default"
+    defaultClass := "SimpleLauncher"
 
     ; Indicates whether or not the launcher should be closed (if it is running) before starting the game
     CloseBeforeRun {
@@ -68,8 +68,8 @@ class ManagedLauncherEntity extends ManagedEntityBase {
     }
 
     ShowProgress {
-        get => this.GetConfigValue("PoliteCloseWait")
-        set => this.SetConfigValue("PoliteCloseWait", value)
+        get => this.GetConfigValue("ShowProgress")
+        set => this.SetConfigValue("ShowProgress", value)
     }
 
     ProgressTitle {

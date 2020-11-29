@@ -3,7 +3,7 @@ class ProgressIndicator extends DialogBox {
     rangeStop := 100
     currentPosition := 0
     waitForResult := false
-    detailText := ""
+    detailText := "Initializing..."
     enableDetailText := true
     cancelCallback := ""
 
@@ -13,22 +13,23 @@ class ProgressIndicator extends DialogBox {
         }
 
         this.currentPosition := currentPosition
-        this.enableDetailText := (detailText != false)
+        this.enableDetailText := !!(detailText)
 
-        if (detailText != true and detailText != false) {
+        if (Type(detailText) == "String") {
             this.detailText := detailText
         }
-
+        
         btns := allowCancel ? "&Cancel" : ""
-
         this.showInNotificationArea := showInNotificationArea
-
         super.__New(title, text, owner, btns)
     }
 
     SetDetailText(detailText) {
-        this.detailText := detailText
-        this.guiObj["DialogDetailText"].Text := detailText
+        if (this.enableDetailText) {
+            this.detailText := detailText
+            this.guiObj["DialogDetailText"].Text := detailText
+        }
+        
     }
 
     SetProgressIndicator() {

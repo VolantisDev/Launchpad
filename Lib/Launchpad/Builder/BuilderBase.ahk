@@ -5,44 +5,44 @@ class BuilderBase {
         this.app := app
     }
 
-    Build(launcherGameObj) {
+    Build(launcherEntityObj) {
         launcherDir := this.app.Config.DestinationDir
         assetsDir := this.app.Config.AssetsDir
 
         if (launcherDir == "" or assetsDir == "") {
-            this.app.Notifications.Warning(launcherGameObj.Key . ": Required directories not set. Skipping build.")
+            this.app.Notifications.Warning(launcherEntityObj.Key . ": Required directories not set. Skipping build.")
             return false
         }
 
         if (this.app.Config.CreateIndividualDirs) {
-            launcherDir .= "\" . launcherGameObj.Key
+            launcherDir .= "\" . launcherEntityObj.Key
         }
-        assetsDir .= "\" . launcherGameObj.Key
+        assetsDir .= "\" . launcherEntityObj.Key
 
         DirCreate(launcherDir)
         DirCreate(assetsDir)
 
-        iconObj := IconFile.new(this.app, launcherGameObj, assetsDir, launcherGameObj.Key)
+        iconObj := IconFile.new(this.app, launcherEntityObj, assetsDir, launcherEntityObj.Key)
         iconResult := iconObj.Build()
         
-        shortcutResult := !this.NeedsShortcutFile(launcherGameObj) ; Default to true if shortcut isn't required
-        if (this.NeedsShortcutFile(launcherGameObj)) {
-            shortcutObj := ShortcutFile.new(this.app, launcherGameObj, assetsDir, launcherGameObj.Key)
+        shortcutResult := !this.NeedsShortcutFile(launcherEntityObj) ; Default to true if shortcut isn't required
+        if (this.NeedsShortcutFile(launcherEntityObj)) {
+            shortcutObj := ShortcutFile.new(this.app, launcherEntityObj, assetsDir, launcherEntityObj.Key)
             shortcutResult := shortcutObj.Build()
         }
 
-        return this.BuildAction(launcherGameObj, launcherDir, assetsDir)
+        return this.BuildAction(launcherEntityObj, launcherDir, assetsDir)
     }
 
-    NeedsShortcutFile(launcherGameObj) {
-        return (launcherGameObj.SupportsShortcut && launcherGameObj.RunCmd == "")
+    NeedsShortcutFile(launcherEntityObj) {
+        return (launcherEntityObj.ManagedGame.UsesShortcut && launcherEntityObj.ManagedGame.RunCmd == "")
     }
 
-    BuildAction(launcherGameObj, launcherDir, assetsDir) {
+    BuildAction(launcherEntityObj, launcherDir, assetsDir) {
         ; This must be overridden for all subclasses
     }
 
-    Clean(launcherGameObj) {
+    Clean(launcherEntityObj) {
         return false
     }
 }

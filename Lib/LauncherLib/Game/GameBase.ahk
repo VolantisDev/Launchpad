@@ -15,16 +15,16 @@ class GameBase {
     }
 
     RunGame(progress := "") {
-        this.pid := this.GameIsRunning()
+        pid := this.GameIsRunning()
         isRunWait := (this.config["GameRunMethod"] == "RunWait")
 
         if (progress != "") {
             statusText := isRunWait ? "Starting and monitoring game..." : "Starting game..."
-            progress.Increment(1, statusText)
+            progress.IncrementValue(1, statusText)
         }
 
-        if (this.pid == 0) {
-            this.pid := this.RunGameAction(progress) ; Can change progress text but should not increment
+        if (pid == 0) {
+            pid := this.RunGameAction(progress) ; Can change progress text but should not increment
         }
 
         result := this.WaitForGame(progress) ; this should always add 2 steps
@@ -37,17 +37,21 @@ class GameBase {
     }
 
     GameIsRunning() {
-        pid := ""
+        pid := 0
 
         if (this.config["GameProcessType"] == "Title") {
-            pid := WinGetPID(this.config["GameProcessId"])
+            if (WinExist(this.config["GameProcessId"])) {
+                pid := WinGetPID(this.config["GameProcessId"])
+            }
         } else if (this.config["GameProcessType"] == "Class") {
-            pid := WinGetPID("ahk_class " . this.config["GameProcessId"]))
+            if (WinExist(this.config["GameProcessId"])) {
+                pid := WinGetPID("ahk_class " . this.config["GameProcessId"])
+            }
         } else { ; Default to Exe
             pid := ProcessExist(this.config["GameProcessId"])
         }
 
-        if (pid == "") {
+        if (!pid) {
             pid := 0
         }
 
@@ -59,12 +63,12 @@ class GameBase {
         winId := 0
 
         if (this.config["GameProcessType"] == "Title") {
-            winId := WinGetID(this.config["GameProcessId"])
+            winId := WinExist(this.config["GameProcessId"])
         } else if (this.config["GameProcessType"] == "Class") {
-            winId := WinGetID("ahk_class " . this.config["GameProcessId"])
+            winId := WinExist("ahk_class " . this.config["GameProcessId"])
         } else { ; Default to Exe
             pid := ProcessExist(this.config["GameProcessId"])
-            winId := WinGetID("ahk_pid " . this.config["GameProcessId"])
+            winId := WinExist("ahk_pid " . this.config["GameProcessId"])
         }
 
         if (winId == "") {
@@ -77,6 +81,7 @@ class GameBase {
 
     RunGameAction(progress := "") {
         runMethod := this.config["GameRunMethod"]
+        
         if (runMethod == "Scheduled") {
             this.RunGameScheduled()
         } else { ; Assume Run or RunWait
@@ -103,13 +108,13 @@ class GameBase {
     }
 
     GetRunCmd() {
-        return this.config["GameRunType"] == "Shortcut") ? this.config["GameShortcutSrc"] : this.config["GameRunCmd"]
+        return (this.config["GameRunType"] == "Shortcut") ? this.config["GameShortcutSrc"] : this.config["GameRunCmd"]
     }
 
     WaitForGame(progress := "") {
         if (this.isFinished) {
             if (progress != "") {
-                progress.Increment(2)
+                progress.IncrementValue(2)
             }
 
             return true
@@ -119,22 +124,22 @@ class GameBase {
 
         if (this.winId == 0) {
             if (progress != "") {
-                progress.Increment(1, "Waiting for game to open...")
+                progress.IncrementValue(1, "Waiting for game to open...")
             }
 
             winId := this.WaitForGameOpen()
         } else if (progress != "") {
-            progress.Increment(1)
+            progress.IncrementValue(1)
         }
 
         if (winId != 0) {
             if (progress != "") {
-                progress.Increment(1, "Monitoring game...")
+                progress.IncrementValue(1, "Monitoring game...")
             }
 
             this.WaitForGameClose()
         } else if (progress != "") {
-            progress.Increment(1)
+            progress.IncrementValue(1)
         }
 
         this.isFinished := !this.GameIsRunning()

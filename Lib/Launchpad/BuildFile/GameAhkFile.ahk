@@ -5,10 +5,12 @@ class GameAhkFile extends ComposableBuildFile {
 
     ComposeFile() {
         FileAppend("#Warn`n", this.FilePath)
-        FileAppend("#Include " . this.appDir . "\LauncherLib\Includes.ahk`n", this.FilePath)
-        FileAppend("config := " . this.ConvertMapToCode(this.launcherGameObj.Config) . "`n", this.FilePath)
-        FileAppend("gameObj := " . this.launcherGameObj.Config["gameClass"] . ".new(`"" . this.appDir . "`", `"" . this.key . "`", " . this.launcherGameObj.Config["gameType"] . ", config)`n", this.FilePath)
-        FileAppend("launcherObj := " . this.launcherGameObj.Config["launcherClass"] . ".new(`"" . this.appDir . "`", `"" . this.key . "`", " . this.launcherGameObj.Config["launcherType"] . ", gameObj, config)`n", this.FilePath)
+        FileAppend("#Include " . this.appDir . "\Lib\LauncherLib\Includes.ahk`n", this.FilePath)
+        FileAppend("#Include " . this.appDir . "\Lib\Shared\Includes.ahk`n", this.FilePath)
+        FileAppend("gameConfig := " . this.ConvertMapToCode(this.launcherGameObj.ManagedGame.Config) . "`n", this.FilePath)
+        FileAppend("launcherConfig := " . this.ConvertMapToCode(this.launcherGameObj.ManagedLauncher.Config) . "`n", this.FilePath)
+        FileAppend("gameObj := " . this.launcherGameObj.ManagedGame.EntityClass . ".new(`"" . this.key . "`", gameConfig)`n", this.FilePath)
+        FileAppend("launcherObj := " . this.launcherGameObj.ManagedLauncher.EntityClass . ".new(`"" . this.key . "`", gameObj, launcherConfig)`n", this.FilePath)
         FileAppend("launcherObj.LaunchGame()`n", this.FilePath)
 
         return this.FilePath

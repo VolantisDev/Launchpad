@@ -1,6 +1,6 @@
 class ManagedEntityBase extends EntityBase {
-    defaultEntityType := "Default"
-    defaultEntityClass := "Default"
+    defaultType := "Default"
+    defaultClass := "Default"
 
     ; The key of the entity type to load settings and defaults from.
     EntityType {
@@ -125,8 +125,8 @@ class ManagedEntityBase extends EntityBase {
 
     InitializeDefaults() {
         defaults := super.InitializeDefaults()
-        defaults[this.configPrefix . "EntityType"] := this.defaultEntityType
-        defaults[this.configPrefix . "EntityClass"] := this.defaultEntityClass
+        defaults[this.configPrefix . "Type"] := this.defaultType
+        defaults[this.configPrefix . "Class"] := this.defaultClass
         defaults[this.configPrefix . "SearchDirs"] := []
         defaults[this.configPrefix . "Exe"] := ""
         defaults[this.configPrefix . "WorkingDir"] := ""
