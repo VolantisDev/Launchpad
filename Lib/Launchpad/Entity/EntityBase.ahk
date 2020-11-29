@@ -86,6 +86,12 @@ class EntityBase {
         set => this.SetConfigValue("AssetsDir", value, false)
     }
 
+    ; The directory where dependencies which have been installed for this entity can be accessed
+    DependenciesDir {
+        get => this.GetConfigValue("DependenciesDir", false)
+        set => this.SetConfigValue("DependenciesDir", value, false)
+    }
+
     __New(app, key, configObj, requiredConfigKeys := "", defaultDataSourceKey := "") {
         this.app := app
         this.keyVal := key
@@ -228,6 +234,10 @@ class EntityBase {
         return this.app.Config.AssetsDir . "\" . this.Key
     }
 
+    GetDefaultDependenciesDir() {
+        return this.app.appDir . "\Vendor"
+    }
+
     /**
     * ENTITY ACTIONS
     */
@@ -302,6 +312,7 @@ class EntityBase {
         defaults["DataSourceItemKey"] := this.Key
         defaults["DisplayName"] := this.Key
         defaults["AssetsDir"] := this.GetDefaultAssetsDir()
+        defaults["DependenciesDir"] := this.GetDefaultDependenciesDir()
         return defaults
     }
 

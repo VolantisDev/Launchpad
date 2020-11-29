@@ -5,7 +5,7 @@ class LauncherBase {
     pid := 0
     progress := ""
 
-    __New(key, launcherType, game, config := "") {
+    __New(key, game, config := "") {
         if (config == "") {
             config := Map()
         }
@@ -117,11 +117,11 @@ class LauncherBase {
         pid := ""
 
         if (this.config["LauncherProcessType"] == "Title") {
-            pid := WinGetPID(this.config["ProcessId"])
+            pid := WinGetPID(this.config["LauncherProcessId"])
         } else if (this.config["LauncherProcessType"] == "Class") {
-            pid := WinGetPID("ahk_class " . this.config["ProcessId"]))
+            pid := WinGetPID("ahk_class " . this.config["LauncherProcessId"]))
         } else { ; Default to Exe
-            pid := ProcessExist(this.config["ProcessId"])
+            pid := ProcessExist(this.config["LauncherProcessId"])
         }
 
         if (pid == "") {

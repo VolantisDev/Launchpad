@@ -1,5 +1,5 @@
-﻿class BnetlauncherGame extends Game {
-    RunGame() {
-        return RunWait(this.appDir . "\Vendor\bnetlauncher\bnetlauncher.exe " . this.options["gameId"])
+﻿class BnetlauncherGame extends GameBase {
+    GetRunCmd() {
+        return this.config["DependenciesDir"] . "\BnetLauncher\bnetlauncher.exe " . this.config["LauncherSpecificId"]
     }
 }

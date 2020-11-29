@@ -1,0 +1,3 @@
+﻿class SimpleGame extends GameBase {
+    
+}
