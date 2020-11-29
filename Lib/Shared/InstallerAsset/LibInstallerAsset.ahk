@@ -2,7 +2,7 @@ class LauncherLibInstallerAsset extends FileInstallerAssetBase {
     zipped := true
 
     __New(appState, stateKey, cache, parentStateKey := "", overwrite := false, tmpDir := "", onlyCompiled := false) {
-        super.__New("Lib\LauncherLib", appState, stateKey, cache, parentStateKey, overwrite, tmpDir, onlyCompiled)
+        super.__New("Lib", appState, stateKey, cache, parentStateKey, overwrite, tmpDir, onlyCompiled)
     }
 
     InstallFilesAction() {
@@ -11,7 +11,7 @@ class LauncherLibInstallerAsset extends FileInstallerAssetBase {
         }
 
         if (!FileExist(this.destPath)) {
-            FileInstall "Build\LauncherLib.zip", this.GetTmpFile(), !!(this.overwrite)
+            ;FileInstall "Build\LauncherLib.zip", this.GetTmpFile(), !!(this.overwrite)
         }
 
         return super.InstallFilesAction()

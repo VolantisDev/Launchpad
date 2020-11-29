@@ -1,6 +1,7 @@
 ﻿class SettingsWindow extends LaunchpadGuiBase {
     windowOptions := "-MaximizeBox -SysMenu"
     contentWidth := 400
+    tabHeight := 400
 
     __New(app, owner := "", windowKey := "") {
         super.__New(app, "Settings", owner, windowKey)

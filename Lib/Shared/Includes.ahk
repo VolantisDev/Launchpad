@@ -24,12 +24,7 @@
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerAsset\FileInstallerAssetBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerAsset\GitHubReleaseInstallerAsset.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerAsset\InstallerAssetBase.ahk
-#Include E:\Tools\Launchpad\Lib\Shared\InstallerAsset\LauncherLibInstallerAsset.ahk
-#Include E:\Tools\Launchpad\Lib\Shared\InstallerAsset\LaunchpadIniInstallerAsset.ahk
-#Include E:\Tools\Launchpad\Lib\Shared\InstallerAsset\LaunchpadUpdaterInstallerAsset copy.ahk
-#Include E:\Tools\Launchpad\Lib\Shared\InstallerAsset\LightpadThemeInstallerAsset.ahk
-#Include E:\Tools\Launchpad\Lib\Shared\InstallerAsset\LogoInstallerAsset.ahk
-#Include E:\Tools\Launchpad\Lib\Shared\InstallerAsset\SharedLibInstallerAsset.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\InstallerAsset\LibInstallerAsset.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Notifier\NotifierBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Notifier\ToastNotifier.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\OpError\BasicOpError.ahk

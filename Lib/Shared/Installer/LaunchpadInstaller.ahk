@@ -1,12 +1,19 @@
 class LaunchpadInstaller extends InstallerBase {
     name := "Launchpad Installer"
     parentComponent := "LaunchpadExe"
+    version := "latest"
 
     __New(appState, cache, tmpDir := "") {
         assets := []
-        assets.Push(LaunchpadUpdaterInstallerAsset.new(appState, "Updater", cache, this.appName, true, tmpDir, true))
-        assets.Push(LaunchpadIniInstallerAsset.new(appState, "IniFile", cache, this.appName, false, tmpDir, false))
-        assets.Push(LogoInstallerAsset.new(appState, "Logo", cache, this.appName, true, tmpDir, false))
+
+        asset := GitHubReleaseInstallerAsset.new("VolantisDev/Launchpad", "Launchpad Updater.exe", true, "", appState, "LaunchpadUpdater", cache, this.appName, true, tmpDir, true)
+        asset.version := this.version
+        assets.Push(asset)
+
+        asset := GitHubReleaseInstallerAsset.new("VolantisDev/Launchpad", "Launchpad Graphics.zip", true, "Graphics", appState, "LaunchpadGraphics", cache, this.appName, true, tmpDir, true)
+        asset.version := this.version
+        assets.Push(asset)
+
         super.__New(appState, this.appName, cache, assets, tmpDir)
     }
 }

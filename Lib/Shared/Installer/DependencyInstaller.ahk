@@ -1,5 +1,6 @@
 class DependencyInstaller extends InstallerBase {
     name := "Launchpad Dependency Installer"
+    version := "latest"
 
     __New(appState, cache, extraAssets := "", tmpDir := "") {
         assets := []

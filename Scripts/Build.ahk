@@ -2,8 +2,6 @@
 
 appDir := RegExReplace(A_ScriptDir, "\\[^\\]+$")
 
-
-
 buildDir := appDir . "\Build"
 ahkScript := appDir . "\Launchpad.ahk"
 exeFile := buildDir . "\Launchpad.exe"
@@ -16,17 +14,24 @@ if (DirExist(buildDir)) {
 }
 
 DirCreate(buildDir)
-ZipLibDir("LauncherLib")
-ZipLibDir("SharedLib", "Shared")
+
+DirCreate(buildDir . "\Lib")
+DirCopy(appDir . "\Lib\LauncherLib", buildDir . "\Lib\LauncherLib")
+DirCopy(appDir . "\Lib\Shared", buildDir . "\Lib\Shared")
+Zip(buildDir . "\Lib", buildDir . "\Launchpad Lib.zip")
+DirDelete(buildDir . "\Lib", true)
+
+Zip(appDir . "\Graphics", buildDir . "\Launchpad Graphics.zip")
+Zip(appDir . "\Themes", buildDir . "\Launchpad Themes.zip")
+
 BuildExe("Launchpad Updater", iconFile)
 BuildExe("Launchpad", iconFile)
-DirDelete(buildDir, true)
 
 TrayTip("Finished building Launchpad.exe and Launchpad Updater.exe", "Launchpad Build", 1)
 ExitApp
 
 BuildExe(scriptName, iconFile) {
-    global appDir
+    global appDir, buildDir
 
     SplitPath(A_AhkPath,, ahkDir)
 
@@ -45,20 +50,10 @@ BuildExe(scriptName, iconFile) {
         }
     }
 
-    return RunWait(ahk2Exe . " /in " . appDir . "\" . scriptName . ".ahk" . " /out " . appDir . "\" . scriptName . ".exe" . " /icon " . iconFile)
+    return RunWait(ahk2Exe . " /in `"" . appDir . "\" . scriptName . ".ahk`" /out `"" . buildDir . "\" . scriptName . ".exe`" /icon `"" . iconFile . "`"", appDir)
 }
 
-ZipLibDir(name, libDir := "") {
-    global appDir
-
-    if (libDir == "") {
-        libDir := name
-    }
-
-    Zip(appDir . "\Lib\" . name, buildDir . "\" . name . ".zip")
-}
-
-Zip(zipDir, zipFile) {
+Zip(zipDir, zipFile, includeDir := false) {
     if (FileExist(zipFile)) {
         FileDelete(zipFile)
     }
@@ -68,7 +63,11 @@ Zip(zipDir, zipFile) {
     psh := ComObjCreate("Shell.Application")
     pshZip := psh.Namespace(zipFile)
 
-    Loop Files zipDir . "\*", "DF"
+    if (!includeDir) {
+        zipDir .= "\*"
+    }
+
+    Loop Files zipDir, "DF"
     {
         Sleep(1000)
         pshZip.CopyHere(A_LoopFileFullPath, 4|16)

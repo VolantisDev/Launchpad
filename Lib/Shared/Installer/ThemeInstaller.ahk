@@ -1,9 +1,13 @@
 class ThemeInstaller extends InstallerBase {
     name := "Launchpad Theme Installer"
+    version := "latest"
 
     __New(appState, cache, downloadThemes := "", tmpDir := "") {
         assets := []
-        assets.Push(LightpadThemeInstallerAsset.new(appState, cache, "LightpadTheme", "Themes", true, tmpDir, true))
+
+        asset := GitHubReleaseInstallerAsset.new("VolantisDev/Launchpad", "Launchpad Themes.zip", true, "Themes", appState, "LaunchpadThemes", cache, "Themes", true, tmpDir, true)
+        asset.version := this.version
+        assets.Push(asset)
 
         if (downloadThemes != "") {
             for key, url in downloadThemes {

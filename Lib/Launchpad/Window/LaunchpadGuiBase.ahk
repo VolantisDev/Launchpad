@@ -8,7 +8,7 @@ class LaunchpadGuiBase extends GuiBase {
             owner := app.Windows.GetGuiObj(owner)
         }
         
-        super.__New("Launchpad Updater", owner, windowKey)
+        super.__New(title, owner, windowKey)
     }
 
     Destroy() {
