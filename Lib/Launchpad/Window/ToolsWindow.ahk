@@ -1,4 +1,4 @@
-﻿class ToolsWindow extends WindowBase {
+﻿class ToolsWindow extends LaunchpadGuiBase {
     windowOptions := "+AlwaysOnTop -Caption Border"
     contentWidth := 400
     buttonHeight := 40

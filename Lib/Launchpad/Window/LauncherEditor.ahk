@@ -6,7 +6,7 @@
       - "build" - Launcher is being built and requires information
 */
 
-class LauncherEditor extends FormWindow {
+class LauncherEditor extends FormWindowBase {
     contentWidth := 500
     launcherEntityObj := ""
     mode := "config" ; Options: config, build

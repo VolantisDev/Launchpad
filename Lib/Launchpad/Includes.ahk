@@ -44,15 +44,12 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\ServiceBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\WindowManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Toolbar\ToolbarBase.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Window\DialogBox.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Window\FormWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\LauncherEditor.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Window\LaunchpadFormGuiBase.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Window\LaunchpadGuiBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\MainWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\ManageWindow.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Window\ProgressIndicator.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\SettingsWindow.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Window\SingleInputBox.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\ToolsWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\UpdaterWindow.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Window\WindowBase.ahk
 ; End of auto-generated includes.

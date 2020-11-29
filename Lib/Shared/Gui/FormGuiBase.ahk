@@ -1,4 +1,4 @@
-class FormWindow extends WindowBase {
+class FormGuiBase extends GuiBase {
     text := ""
     btns := ""
     contentWidth := 320
@@ -6,10 +6,10 @@ class FormWindow extends WindowBase {
     result := ""
     waitForResult := true
 
-    __New(app, title, text := "", owner := "", windowKey := "", btns := "*&Submit") {
+    __New(title, text := "", owner := "", windowKey := "", btns := "*&Submit") {
         this.text := text
         this.btns := btns
-        super.__New(app, title, owner, windowKey)
+        super.__New(title, owner, windowKey)
     }
 
     Controls() {
@@ -51,11 +51,11 @@ class FormWindow extends WindowBase {
             position := (A_Index == 1) ? "x" . this.windowMargin . " Section ": "x+m yp "
             defaultOption := InStr(btns[A_Index], "*") ? "Default " : " "
             btn := this.guiObj.AddButton(position . defaultOption . "w100", RegExReplace(btns[A_Index], "\*"))
-            btn.OnEvent("Click", "OnFormWindowButton")
+            btn.OnEvent("Click", "OnFormGuiButton")
         }
     }
 
-    OnFormWindowButton(btn, info) {
+    OnFormGuiButton(btn, info) {
         this.result := StrReplace(btn.Text, "&")
     }
 

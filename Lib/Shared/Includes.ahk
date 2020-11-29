@@ -7,6 +7,11 @@
 #Include E:\Tools\Launchpad\Lib\Shared\Cache\CacheBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Cache\FileCache.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Cache\ObjectCache.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Gui\DialogBox.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Gui\FormGuiBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Gui\GuiBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Gui\ProgressIndicator.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Gui\SingleInputBox.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\HttpReq\HttpReqBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\HttpReq\WinHttpReq.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Installer\DependencyInstaller.ahk

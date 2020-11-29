@@ -7,7 +7,7 @@ class ProgressIndicator extends DialogBox {
     enableDetailText := true
     cancelCallback := ""
 
-    __New(app, title, text, owner := "", allowCancel := false, rangeStop := "", currentPosition := 0, detailText := true) {
+    __New(title, text, owner := "", allowCancel := false, rangeStop := "", currentPosition := 0, detailText := true) {
         if (rangeStop != "") {
             this.rangeStop := rangeStop
         }
@@ -21,7 +21,7 @@ class ProgressIndicator extends DialogBox {
 
         btns := allowCancel ? "&Cancel" : ""
 
-        super.__New(app, title, text, owner, btns)
+        super.__New(title, text, owner, btns)
     }
 
     SetDetailText(detailText) {

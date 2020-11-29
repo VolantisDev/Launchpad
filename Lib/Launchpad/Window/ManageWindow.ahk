@@ -1,4 +1,4 @@
-﻿class ManageWindow extends WindowBase {
+﻿class ManageWindow extends LaunchpadGuiBase {
     windowOptions := "+Resize MinSize380x380"
     contentWidth := 510
     listViewHeight := 300

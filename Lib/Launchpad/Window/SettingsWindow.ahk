@@ -1,4 +1,4 @@
-﻿class SettingsWindow extends WindowBase {
+﻿class SettingsWindow extends LaunchpadGuiBase {
     windowOptions := "-MaximizeBox -SysMenu"
     contentWidth := 400
 

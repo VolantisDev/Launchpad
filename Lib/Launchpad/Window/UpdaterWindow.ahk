@@ -1,4 +1,4 @@
-﻿class UpdaterWindow extends WindowBase {
+﻿class UpdaterWindow extends LaunchpadGuiBase {
     contentWidth := 515
     areaW := 430
     row1Height := 80

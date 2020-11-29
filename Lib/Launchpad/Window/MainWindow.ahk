@@ -1,4 +1,4 @@
-﻿class MainWindow extends WindowBase {
+﻿class MainWindow extends LaunchpadGuiBase {
     windowSize := "w535"
     contentWidth := 515
     areaW := 430

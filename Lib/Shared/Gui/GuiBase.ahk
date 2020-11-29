@@ -1,5 +1,4 @@
-class WindowBase {
-    app := ""
+class GuiBase {
     guiObj := ""
     title := ""
     owner := ""
@@ -27,13 +26,12 @@ class WindowBase {
     defaultFontSize := 11
     smallFontSize := 10
 
-    __New(app, title, owner := "", windowKey := "") {
-        this.app := app
+    __New(title, owner := "", windowKey := "") {
         this.title := title
         this.windowKey := windowKey
 
         if (owner != "") {
-            this.owner := (Type(owner) == "String") ? this.app.Windows.GetGuiObj(owner) : owner
+            this.owner := owner
         }
 
         this.Create()
@@ -255,10 +253,6 @@ class WindowBase {
 
         this.Cleanup()
         this.guiObj.Destroy()
-
-        if (this.windowKey != "") {
-            this.app.Windows.RemoveWindow(this.windowKey)
-        }
     }
 
     Cleanup() {
