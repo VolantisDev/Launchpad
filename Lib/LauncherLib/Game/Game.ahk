@@ -27,7 +27,15 @@
         this.options := options
     }
 
-    RunGame() {
+    CountRunSteps() {
+        runSteps := 1 ; The run command
+
+        ; @todo add additional steps
+
+        return runSteps
+    }
+
+    RunGame(progress := "") {
         if (this.options["runThenWait"]) {
             this.game.WaitForClose()
         }

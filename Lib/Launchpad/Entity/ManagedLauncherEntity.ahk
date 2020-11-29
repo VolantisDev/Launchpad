@@ -67,6 +67,21 @@ class ManagedLauncherEntity extends ManagedEntityBase {
         set => this.SetConfigValue("PoliteCloseWait", value)
     }
 
+    ShowProgress {
+        get => this.GetConfigValue("PoliteCloseWait")
+        set => this.SetConfigValue("PoliteCloseWait", value)
+    }
+
+    ProgressTitle {
+        get => this.GetConfigValue("ProgressTitle")
+        set => this.SetConfigValue("ProgressTitle", value)
+    }
+
+    ProgressText {
+        get => this.GetConfigValue("ProgressText")
+        set => this.SetConfigValue("ProgressText", value)
+    }
+
     InitializeDefaults() {
         defaults := super.InitializeDefaults()
         defaults[this.configPrefix . "CloseBeforeRun"] := false
@@ -79,6 +94,9 @@ class ManagedLauncherEntity extends ManagedEntityBase {
         defaults[this.configPrefix . "KillPreDelay"] := 10
         defaults[this.configPrefix . "KillPostDelay"] := 5
         defaults[this.configPrefix . "PoliteCloseWait"] := 10
+        defaults[this.configPrefix . "ShowProgress"] := true
+        defaults[this.configPrefix . "ProgressTitle"] := "Running {g}"
+        defaults[this.configPrefix . "ProgressText"] := "{g} is running, please wait."
         return defaults
     }
 }

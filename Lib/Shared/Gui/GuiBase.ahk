@@ -25,6 +25,7 @@ class GuiBase {
     buttonSmallH := 20
     defaultFontSize := 11
     smallFontSize := 10
+    showInNotificationArea := false
 
     __New(title, owner := "", windowKey := "") {
         this.title := title
@@ -108,6 +109,7 @@ class GuiBase {
         this.Start()
         this.Controls()
         this.AddButtons()
+
         return this.End()
     }
 
@@ -166,17 +168,32 @@ class GuiBase {
 
     End() {
         windowSize := this.windowSize
+        width := this.contentWidth + (this.margin * 2)
 
         if (this.positionAtMouseCursor) {
-            width := this.contentWidth + (this.margin * 2)
+            
             CoordMode("Mouse", "Screen")
             MouseGetPos(windowX, windowY)
             CoordMode("Mouse")
             windowX -= width/2
             windowSize .= " x" . windowX . " y" . windowY
+        } else if (this.showInNotificationArea) {
+            this.guiObj.GetPos(,,guiW, guiH)
+            MonitorGetWorkArea(, monitorL, monitorT, monitorR, monitorB)
+            windowX := monitorR - this.margin - width
+            windowY := monitorB - this.margin - guiH
+            windowSize .= " x" . windowX . " y" . windowY
         }
 
         this.guiObj.Show(windowSize)
+
+        if (!this.positionAtMouseCursor and this.showInNotificationArea) {
+            this.guiObj.GetPos(,,guiW, guiH)
+            MonitorGetWorkArea(, monitorL, monitorT, monitorR, monitorB)
+            windowX := monitorR - this.margin - guiW
+            windowY := monitorB - this.margin - guiH
+            this.guiObj.Move(windowX, windowY)
+        }
 
         if (this.transColor != "") {
             WinSetTransColor(this.transColor, "ahk_id " . this.guiObj.Hwnd)

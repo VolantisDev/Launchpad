@@ -1,8 +1,8 @@
 class InstallOp extends BulkOperationBase {
     installerKeys := ""
-    progressTitle := "Installing Requirements"
-    progressText := "Please wait while Launchpad finishes setting up..."
-    successMessage := "Installed {n} requirements(s) successfully."
+    progressTitle := "Initializing Launchpad"
+    progressText := "Please wait while Launchpad finishes initializing..."
+    successMessage := "Finished initializing Launchpad."
     failedMessage := "{n} requirements(s) could not be loaded due to errors."
 
     __New(app, installerKeys, owner := "") {

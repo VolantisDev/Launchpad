@@ -3,6 +3,7 @@ class LauncherBase {
     game := ""
     config := ""
     pid := 0
+    progress := ""
 
     __New(key, launcherType, game, config := "") {
         if (config == "") {
@@ -12,24 +13,68 @@ class LauncherBase {
         this.key := key
         this.game := game
         this.config := config
+
+        if (this.config["ShowProgress"]) {
+            this.CreateProgressGui()
+        }
+    }
+
+    CreateProgressGui() {
+        if (this.progress == "") {
+            progressTitle := StrReplace(this.config["ProgressTitle"], "{g}", this.config["DisplayName"])
+            progressText := StrReplace(this.config["ProgressText"], "{g}", this.config["DisplayName"])
+            this.progress := (progressTitle, progressText, "", false, this.CountLaunchSteps())
+        }
+    }
+
+    CountLaunchSteps() {
+        launchSteps := 0
+
+        if (this.config["LauncherCloseBeforeRun"]) {
+            launchSteps++
+        }
+
+        if (this.config["LauncherCloseAfterRun"]) {
+            launchSteps++
+        }
+
+        return launchSteps + this.game.CountRunSteps()
     }
 
     LaunchGame() {
+        if (this.progress != "") {
+            this.progress.SetDetailText("Initializing launcher...")
+            this.progress.Show()
+        }
+        
+
         if (this.config["LauncherCloseBeforeRun"]) {
+            if (this.progress != "") {
+                this.progress.Increment(1, "Closing existing game launcher...")
+            }
+
             this.CloseLauncher("BeforeRun")
         }
 
         result := this.LaunchGameAction()
 
         if (this.config["LauncherCloseAfterRun"]) {
+            if (this.progress != "") {
+                this.progress.Increment(1, "Closing existing game launcher...")
+            }
+
             this.CloseLauncher("AfterRun")
+        }
+
+        if (this.progress != "") {
+            this.progress.Finish()
         }
 
         return result
     }
 
     LaunchGameAction() {
-        return this.game.RunGame()
+        return this.game.RunGame(this.progress)
     }
 
     CloseLauncher(eventName) {
