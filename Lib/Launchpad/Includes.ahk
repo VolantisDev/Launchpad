@@ -36,6 +36,11 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\ManagedEntityBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\ManagedGameEntity.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\ManagedLauncherEntity.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Installer\DependencyInstaller.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Installer\LaunchpadExeInstaller.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Installer\LaunchpadInstaller.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Installer\LibraryInstaller.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Installer\ThemeInstaller.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\BuilderManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\CacheManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\DataSourceManager.ahk
@@ -44,7 +49,6 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\NotificationService.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\ServiceBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\WindowManager.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Toolbar\ToolbarBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\LauncherEditor.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\LaunchpadFormGuiBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\LaunchpadGuiBase.ahk
