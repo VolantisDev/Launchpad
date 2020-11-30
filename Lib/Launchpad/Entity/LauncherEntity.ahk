@@ -37,6 +37,12 @@ class LauncherEntity extends EntityBase {
         set => this.SetConfigValue("IconSrc", value, false)
     }
 
+    ; The name of the theme to render GUI windows in the launcher with.
+    ThemeName {
+        get => this.GetConfigValue("ThemeName", false)
+        set => this.SetConfigValue("ThemeName", value, false)
+    }
+
     __New(app, key, config, requiredConfigKeys := "", defaultDataSource := "", parentEntity := "") {
         this.children["ManagedLauncher"] := ManagedLauncherEntity.new(app, key, config, "", defaultDataSource, this)
         super.__New(app, key, config, requiredConfigKeys, defaultDataSource, parentEntity)

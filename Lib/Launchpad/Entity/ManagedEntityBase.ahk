@@ -121,14 +121,20 @@ class ManagedEntityBase extends EntityBase {
     }
 
     SetDependentDefaults(config) {
+        processTypeKey := this.configPrefix . "ProcessType"
+
+        if (!config.Has(processTypeKey) or config[processTypeKey] == "") {
+            config[processTypeKey] := this.RunMethod == "RunWait" ? "" : "Exe"
+        }
+
         key := this.configPrefix . "ProcessId"
 
         if (!config.Has(key) or config[key] == "") {
             processId := ""
 
-            if (this.ProcessType == "Exe") {
+            if (config[processTypeKey] == "Exe") {
                 SplitPath(this.Exe, processId)
-            } else if (this.ProcessType == "Title") {
+            } else if (config[processTypeKey] == "Title") {
                 processId := this.Key
             }
 
@@ -139,12 +145,6 @@ class ManagedEntityBase extends EntityBase {
 
         if (!config.Has(key) or config[key] == "") {
             config[key] := (this.RunType == "Shortcut")
-        }
-
-        key := this.configPrefix . "ProcessType"
-
-        if (!config.Has(key) or config[key] == "") {
-            config[key] := this.RunMethod == "RunWait" ? "" : "Exe"
         }
 
         return config
