@@ -101,6 +101,11 @@ class ManagedEntityBase extends EntityBase {
         set => this.SetConfigValue("RunCmd", value)
     }
 
+    InitializeRequiredConfigKeys(requiredConfigKeys := "") {
+        super.InitializeRequiredConfigKeys(requiredConfigKeys)
+        this.AddRequiredConfigKeys([this.configPrefix . "Type", this.configPrefix . "Class"])
+    }
+
     GetSearchDirs() {
         dirs := this.GetConfigValue("SearchDirs")
 
@@ -111,16 +116,38 @@ class ManagedEntityBase extends EntityBase {
         return dirs
     }
 
-    GetDefaultProcessId() {
-        defaultValue := ""
+    GetDataSourceItemKey() {
+        return this.EntityType
+    }
 
-        if (this.ProcessType == "Exe") {
-            SplitPath(this.Exe, defaultValue)
-        } else if (this.ProcessType == "Title") {
-            defaultValue := this.Key
+    SetDependentDefaults(config) {
+        key := this.configPrefix . "ProcessId"
+
+        if (!config.Has(key) or config[key] == "") {
+            processId := ""
+
+            if (this.ProcessType == "Exe") {
+                SplitPath(this.Exe, processId)
+            } else if (this.ProcessType == "Title") {
+                processId := this.Key
+            }
+
+            config[key] := processId
+        }
+        
+        key := this.configPrefix . "UsesShortcut"
+
+        if (!config.Has(key) or config[key] == "") {
+            config[key] := (this.RunType == "Shortcut")
         }
 
-        return defaultValue
+        key := this.configPrefix . "ProcessType"
+
+        if (!config.Has(key) or config[key] == "") {
+            config[key] := this.RunMethod == "RunWait" ? "" : "Exe"
+        }
+
+        return config
     }
 
     InitializeDefaults() {
@@ -131,11 +158,10 @@ class ManagedEntityBase extends EntityBase {
         defaults[this.configPrefix . "Exe"] := ""
         defaults[this.configPrefix . "WorkingDir"] := ""
         defaults[this.configPrefix . "RunType"] := "Command"
-        defaults[this.configPrefix . "UsesShortcut"] := (defaults[this.configPrefix . "RunType"] == "Shortcut")
         defaults[this.configPrefix . "ShortcutSrc"] := ""
         defaults[this.configPrefix . "RunMethod"] := "RunWait"
-        defaults[this.configPrefix . "ProcessType"] := (this.RunMethod == "RunWait") ? "" : "Exe"
-        defaults[this.configPrefix . "ProcessId"] := this.GetDefaultProcessId()
+        defaults[this.configPrefix . "ProcessType"] := ""
+        defaults[this.configPrefix . "ProcessId"] := ""
         defaults[this.configPrefix . "ProcessTimeout"] := 30
         defaults[this.configPrefix . "RunCmd"] := ""
         return defaults

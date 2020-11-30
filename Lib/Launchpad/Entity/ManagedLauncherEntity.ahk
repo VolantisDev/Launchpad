@@ -2,6 +2,12 @@ class ManagedLauncherEntity extends ManagedEntityBase {
     configPrefix := "Launcher"
     defaultType := "Default"
     defaultClass := "SimpleLauncher"
+    dataSourcePath := "Types/Launchers"
+
+    ManagedGame {
+        get => this.children["ManagedGame"]
+        set => this.children["ManagedGame"] := value
+    }
 
     ; Indicates whether or not the launcher should be closed (if it is running) before starting the game
     CloseBeforeRun {
@@ -80,6 +86,11 @@ class ManagedLauncherEntity extends ManagedEntityBase {
     ProgressText {
         get => this.GetConfigValue("ProgressText")
         set => this.SetConfigValue("ProgressText", value)
+    }
+
+    __New(app, key, config, requiredConfigKeys := "", defaultDataSource := "", parentEntity := "") {
+        this.children["ManagedGame"] := ManagedGameEntity.new(app, key, config, "", defaultDataSource, this)
+        super.__New(app, key, config, requiredConfigKeys, defaultDataSource, parentEntity)
     }
 
     InitializeDefaults() {

@@ -2,13 +2,17 @@ class EntityBase {
     app := ""
     keyVal := ""
     defaultDataSourceKey := ""
+    dataSourcePath := ""
     mergedConfigVal := ""
     configPrefix := "Launcher"
     unmergedConfigVal := Map()
     configObj := ""
     initialDefaults := Map()
-    requiredConfigKeysVal := Array()
+    dataSourceDefaults := ""
+    requiredConfigKeysVal := []
     originalObj := ""
+    children := Map()
+    parentEntity := ""
 
     /**
     * BASE SETTINGS
@@ -92,11 +96,15 @@ class EntityBase {
         set => this.SetConfigValue("DependenciesDir", value, false)
     }
 
-    __New(app, key, configObj, requiredConfigKeys := "", defaultDataSourceKey := "") {
+    __New(app, key, configObj, requiredConfigKeys := "", defaultDataSourceKey := "", parentEntity := "") {
         InvalidParameterException.CheckTypes("EntityBase", "app", app, "Launchpad", "key", key, "String", "configObj", configObj, "Map", "defaultDataSourceKey", defaultDataSourceKey, "")
         
         if (defaultDataSourceKey == "") {
             defaultDataSourceKey := app.Config.DataSourceKey
+        }
+
+        if (parentEntity != "") {
+            InvalidParameterException.CheckTypes("EntityBase", "parentEntity", parentEntity, "EntityBase")
         }
 
         InvalidParameterException.CheckEmpty("EntityBase", "key", key, "defaultDataSourceKey", defaultDataSourceKey)
@@ -105,6 +113,7 @@ class EntityBase {
         this.keyVal := key
         this.defaultDataSourceKey := defaultDataSourceKey
         this.configObj := configObj
+        this.parentEntity := parentEntity
         this.unmergedConfigVal := configObj.Clone()
         this.initialDefaults := this.InitializeDefaults()
         this.InitializeRequiredConfigKeys(requiredConfigKeys)
@@ -118,6 +127,10 @@ class EntityBase {
         if (update or this.originalObj == "") {
             this.originalObj := this.Clone()
             this.originalObj.configVal := this.unmergedConfigVal.Clone()
+
+            for key, child in this.children {
+                this.originalObj.children[key] := child.Original
+            }
         }
         
         return this.originalObj
@@ -129,6 +142,8 @@ class EntityBase {
                 if (name != "Original" and name != "ConfigObject")
                 this.%name% := this.Original.%name%
             }
+
+            ; @todo make sure this restores the children properly
         }
     }
 
@@ -260,6 +275,18 @@ class EntityBase {
             }
         }
 
+        for key, child in this.children {
+            childValidateResult := child.Validate()
+
+            if (!childValidateResult["success"]) {
+                validateResult["success"] := false
+
+                for index, invalidKey in childValidateResult["invalidKeys"] {
+                    validateResult["invalidKeys"].Push(invalidKey)
+                }
+            }
+        }
+
         return validateResult
     }
 
@@ -268,8 +295,87 @@ class EntityBase {
             this.initialDefaults := this.InitializeDefaults() ; Ensure defaults are up-to-date
             this.Config := this.MergeDefaultsIntoConfig(this.UnmergedConfig)
         }
+
+        this.Config := this.SetDependentDefaults(this.Config)
+
+        for key, child in this.children {
+            child.MergeEntityDefaults(update)
+        }
         
         return this.Config
+    }
+
+    SetDependentDefaults(config) {
+        ; Override this to set default values for items that depend on other values
+        return config
+    }
+
+    AggregateDataSourceDefaults() {
+        if (this.dataSourceDefaults == "") {
+            dataSources := this.GetAllDataSources()
+
+            defaults := this.parentEntity != "" ? this.parentEntity.AggregateDataSourceDefaults() : Map()
+
+            for index, dataSource in dataSources {
+                defaults := this.MergeFromObject(defaults, this.GetDataSourceDefaults(dataSource))
+            }
+
+            this.dataSourceDefaults := defaults
+
+            this.OverrideChildDefaults(defaults)
+
+            for key, child in this.children {
+                child.AggregateDataSourceDefaults()
+            }
+        }
+
+        return this.dataSourceDefaults
+    }
+
+    OverrideChildDefaults(defaults) {
+
+    }
+
+    GetAllDatasources() {
+        dataSources := Map()
+
+        if (this.DataSourceKeys != "") {
+            dataSourceKeys := (Type(this.DataSourceKeys) == "Array") ? this.DataSourceKeys : [this.DataSourceKeys]
+
+            for index, dataSourceKey in dataSourceKeys {
+                dataSource := this.app.DataSources.GetDataSource(dataSourceKey)
+
+                if (dataSource != "") {
+                    dataSources[dataSourceKey] := dataSource
+                }
+            }
+        }
+
+        return dataSources
+    }
+
+    GetDataSourceDefaults(dataSource) {
+        defaults := Map()
+        dsData := dataSource.ReadJson(this.GetDataSourceItemKey(), this.GetDataSourceItemPath())
+
+        if (dsData != "" and dsData.Has("Defaults")) {
+            defaults := this.MergeFromObject(defaults, dsData["Defaults"], false)
+            defaults := this.MergeAdditionalDataSourceDefaults(defaults, dsData)
+        }
+
+        return defaults
+    }
+
+    MergeAdditionalDataSourceDefaults(defaults, dataSourceData) {
+        return defaults
+    }
+
+    GetDataSourceItemKey() {
+        return this.Key
+    }
+
+    GetDataSourceItemPath() {
+        return this.dataSourcePath
     }
 
     Edit(mode := "config", owner := "MainWindow") {
@@ -290,7 +396,7 @@ class EntityBase {
         return valid
     }
 
-    GetModifiedData() {
+    GetModifiedData(includeChildren := false) {
         modifiedData := Map()
 
         if (this.originalObj == "") {
@@ -303,11 +409,25 @@ class EntityBase {
             }
         }
 
+        if (includeChildren) {
+            for key, child in this.children {
+                childModifiedData := child.GetModifiedData()
+
+                for modifiedKey, modifiedVal in childModifiedData {
+                    modifiedData[modifiedKey] := modifiedVal
+                }
+            }
+        }
+
         return modifiedData
     }
 
     SaveModifiedData() {
         this.configObj.SetValues(this.GetModifiedData())
+
+        for key, child in this.children {
+            child.SaveModifiedData()
+        }
     }
 
     /**
@@ -338,7 +458,8 @@ class EntityBase {
     }
 
     MergeDefaultsIntoConfig(config) {
-        return this.MergeFromObject(Map(), this.initialDefaults)
+        defaults := this.MergeFromObject(this.AggregateDataSourceDefaults(), this.initialDefaults, false)
+        return this.MergeFromObject(config, defaults, false)
     }
 
     LaunchEditWindow(mode, owner) {
@@ -347,5 +468,13 @@ class EntityBase {
 
     GetAssetPath(filePath) {
         return this.AssetsDir . "\" . filePath
+    }
+
+    DereferenceKey(key, map) {
+        if (map.Has(key) && Type(map[key]) == "String") {
+            key := this.DereferenceKey(map[key], map)
+        }
+
+        return key
     }
 }

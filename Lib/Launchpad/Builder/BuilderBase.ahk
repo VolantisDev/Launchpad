@@ -36,7 +36,7 @@ class BuilderBase {
     }
 
     NeedsShortcutFile(launcherEntityObj) {
-        return (launcherEntityObj.ManagedGame.UsesShortcut && launcherEntityObj.ManagedGame.RunCmd == "")
+        return (launcherEntityObj.ManagedLauncher.ManagedGame.UsesShortcut && launcherEntityObj.ManagedLauncher.ManagedGame.RunCmd == "")
     }
 
     BuildAction(launcherEntityObj, launcherDir, assetsDir) {

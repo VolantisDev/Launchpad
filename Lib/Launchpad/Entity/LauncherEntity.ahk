@@ -1,23 +1,18 @@
 class LauncherEntity extends EntityBase {
-    managedLauncherObj := ""
-    managedGameObj := ""
+    dataSourcePath := "Games"
+    additionalManagedLauncherDefaults := Map()
 
     /**
     * Entity references
     */
 
     ManagedLauncher {
-        get => this.managedLauncherObj
-        set => this.managedLauncherObj := value
-    }
-
-    ManagedGame {
-        get => this.managedGameObj
-        set => this.managedGameObj := value
+        get => this.children["ManagedLauncher"]
+        set => this.children["ManagedLauncher"] := value
     }
 
     /**
-    * LAUNCHER SETTINGS
+    * CONFIGURATION PROPERTIES
     */
 
     ; The directory where the entity build artifact(s) will be saved.
@@ -42,33 +37,33 @@ class LauncherEntity extends EntityBase {
         set => this.SetConfigValue("IconSrc", value, false)
     }
 
-    __New(app, key, config, requiredConfigKeys := "", defaultDataSource := "") {
-        this.ManagedLauncher := ManagedLauncherEntity.new(app, key, config, "", defaultDataSource)
-        this.ManagedGame := ManagedGameEntity.new(app, key, config, "", defaultDataSource)
-        super.__New(app, key, config, requiredConfigKeys, defaultDataSource)
+    __New(app, key, config, requiredConfigKeys := "", defaultDataSource := "", parentEntity := "") {
+        this.children["ManagedLauncher"] := ManagedLauncherEntity.new(app, key, config, "", defaultDataSource, this)
+        super.__New(app, key, config, requiredConfigKeys, defaultDataSource, parentEntity)
     }
 
-    StoreOriginal(update := false) {
-        originalObj := super.StoreOriginal(update)
-        originalObj.managedLauncherObj := this.managedLauncherObj.StoreOriginal()
-        originalObj.managedGameObj := this.managedGameObj.StoreOriginal()
-        return this.originalObj
+    /**
+    * NEW METHODS
+    */
+
+    LauncherExists(checkSourceFile := false) {
+        return (FileExist(this.GetLauncherFile(this.Key, checkSourceFile)) != "")
     }
 
-    GetDefaultDestinationDir() {
-        defaultDir := this.app.Config.DestinationDir
+    GetLauncherFile(key, checkSourceFile := false) {
+        gameDir := checkSourceFile ? this.app.Config.AssetsDir : this.app.Config.DestinationDir
 
-        if (this.app.Config.CreateIndividualDirs) {
-            defaultDir .= "\" . this.Key
+        if (checkSourceFile or this.app.Config.CreateIndividualDirs) {
+            gameDir .= "\" . key
         }
 
-        return defaultDir
+        ext := checkSourceFile ? ".ahk" : ".exe"
+        return gameDir . "\" . key . ext
     }
 
-    InitializeRequiredConfigKeys(requiredConfigKeys := "") {
-        super.InitializeRequiredConfigKeys(requiredConfigKeys)
-        this.AddRequiredConfigKeys(["LauncherType", "LauncherClass", "GameType", "GameClass"])
-    }
+    /**
+    * OVERRIDES
+    */
 
     Validate() {
         validateResult := super.Validate()
@@ -92,194 +87,63 @@ class LauncherEntity extends EntityBase {
         return this.app.Windows.LauncherEditor(this, mode, owner)
     }
 
-    RestoreFromOriginal() {
-        super.RestoreFromOriginal()
-        this.ManagedLauncher.RestoreFromOriginal()
-        this.ManagedGame.RestoreFromOriginal()
+    OverrideChildDefaults(defaults) {
+        this.ManagedLauncher.UnmergedConfig["LauncherType"] := defaults["LauncherType"]
+        this.ManagedLauncher.initialDefaults := this.MergeFromObject(this.ManagedLauncher.initialDefaults, this.additionalManagedLauncherDefaults, true)
     }
 
-    SaveModifiedData() {
-        this.UnmergedConfig := this.MergeFromObject(this.UnmergedConfig, this.ManagedLauncher.GetModifiedData(), true)
-        this.UnmergedConfig := this.MergeFromObject(this.UnmergedConfig, this.ManagedGame.GetModifiedData(), true)
-        return super.SaveModifiedData()
-    }
+    MergeAdditionalDataSourceDefaults(defaults, dataSourceData) {
+        launcherType := this.DetectLauncherType(defaults, dataSourceData)
 
-    MergeDefaultsIntoConfig(config) {
-        defaults := super.MergeDefaultsIntoConfig(config)
-        dataSources := this.GetAllDataSources()
-        gameData := Map()
-
-        gameData := this.AggregateGameData(dataSources)
-        defaults := this.MergeFromObject(defaults, gameData["Defaults"], true)
-        launcherType := this.DetectLauncherType(defaults, config)
-        defaults["LauncherType"] := launcherType
-
-        if (gameData != "" and gameData.Has("Launchers")) {
-            launcherType := this.DereferenceLauncherType(launcherType, gameData["Launchers"])
-
-            if (gameData["Launchers"].Has(launcherType) and Type(gameData["Launchers"][launcherType]) == "Map") {
-                defaults := this.MergeFromObject(defaults, gameData["Launchers"][launcherType], true)
-            }
+        checkType := (launcherType == "") ? "Default" : launcherType
+        if (dataSourceData.Has("Launchers") and dataSourceData["Launchers"].Has(checkType) and Type(dataSourceData["Launchers"][checkType]) == "Map") {
+            this.additionalManagedLauncherDefaults := this.MergeFromObject(this.additionalManagedLauncherDefaults, dataSourceData["Launchers"][checkType], false)
+            defaults := this.MergeFromObject(defaults, dataSourceData["Launchers"][checkType], true)
         }
 
-        launcherTypeData := this.AggregateTypeData(launcherType, "Launchers", dataSources)
-        defaults := this.MergeFromObject(defaults, launcherTypeData["Defaults"])
-
-
-        ; Determine game type
-        gameType := this.DetectGameType(defaults, config)
-        defaults["GameType"] := gameType
-
-        ; Merge defaults from game type
-        gameTypeData := this.AggregateTypeData(gameType, "Games", dataSources)
-        defaults := this.MergeFromObject(defaults, gameTypeData["Defaults"])
-
+        defaults["LauncherType"] := launcherType
+        
         return defaults
     }
 
-    GetAllDatasources() {
-        dataSources := Map()
-
-        if (this.DataSourceKeys != "") {
-            dataSourceKeys := (Type(this.DataSourceKeys) == "Array") ? this.DataSourceKeys : [this.DataSourceKeys]
-
-            for index, dataSourceKey in dataSourceKeys {
-                dataSource := this.app.DataSources.GetDataSource(dataSourceKey)
-
-                if (dataSource != "") {
-                    dataSources[dataSourceKey] := dataSource
-                }
-            }
-        }
-        
-
-        return dataSources
-    }
-
-    AggregateGameData(dataSources) {
-        gameData := Map()
-        defaults := Map()
-        launchers := Map()
-
-        for index, dataSource in dataSources {
-            dsGameData := dataSource.ReadJson(this.Key, "Games")
-
-            if (dsGameData != "") {
-                if (dsGameData.Has("Defaults")) {
-                    defaults := this.MergeFromObject(defaults, dsGameData["Defaults"])
-                }
-
-                if (dsGameData.Has("Launchers")) {
-                    for launcherKey, launcherConfigObj in dsGameData["Launchers"] {
-                        if (!launchers.Has(launcherKey)) {
-                            launchers[launcherKey] := Map()
-                        }
-
-                        launchers[launcherKey] := this.MergeFromObject(launchers[launcherKey], dsGameData["Launchers"])
-                    }
-                }
-
-                gameData := this.MergeFromObject(gameData, dsGameData)
-            }
-        }
-
-        gameData["Defaults"] := defaults
-        gameData["Launchers"] := launchers
-
-        return gameData
-    }
-
-    MergeEntityDefaults(update := false) {
-        super.MergeEntityDefaults(update)
-
-        this.ManagedLauncher.Config := this.Config
-        this.ManagedGame.Config := this.Config
-    }
-
-    AggregateTypeData(typeKey, typeName, dataSources) {
-        typeData := Map()
-        defaults := Map()
-
-        for index, dataSource in dataSources {
-            dsTypeData := dataSource.ReadJson(typeKey, "Types/" . typeName)
-
-            if (dsTypeData != "") {
-                 if (dsTypeData.Has("Defaults")) {
-                    defaults := this.MergeFromObject(defaults, dsTypeData["Defaults"])
-                }
-
-                typeData := this.MergeFromObject(typeData, dsTypeData)
-            }
-        }
-
-        typeData["Defaults"] := defaults
-
-        return typeData
-    }
-
-    DetectLauncherType(defaults, config) {
+    DetectLauncherType(defaults, dataSourceData := "") {
         launcherType := ""
 
-        if (config.Has("LauncherType")) {
-            launcherType := config["LauncherType"]
+        if (this.UnmergedConfig.Has("LauncherType")) {
+            launcherType := this.UnmergedConfig["LauncherType"]
         } else if (defaults.Has("LauncherType")) {
             launcherType := defaults["LauncherType"]
         }
 
-        return (launcherType != "") ? launcherType : "Default"
-    }
-
-    DetectGameType(defaults, config) {
-        gameType := ""
-
-        if (config.Has("GameType")) {
-            gameType := config["GameType"]
-        } else if (defaults.Has("GameType")) {
-            gameType := defaults["GameType"]
+        if (launcherType == "") {
+            launcherType := "Default"
         }
 
-        if (gameType == "") {
-            gameType := "Default"
-        }
-
-        return gameType
-    }
-
-    DereferenceLauncherType(launcherType, launchersConfig) {
-        if (launchersConfig.Has(launcherType) && !IsObject(launchersConfig[launcherType])) {
-            launcherType := this.DereferenceLauncherType(launchersConfig[launcherType], launchersConfig)
+        if (dataSourceData != "" and dataSourceData.Has("Launchers")) {
+            launcherType := this.DereferenceKey(launcherType, dataSourceData["Launchers"])
         }
 
         return launcherType
     }
 
-    LauncherExists(checkSourceFile := false) {
-        return (FileExist(this.GetLauncherFile(this.Key, checkSourceFile)) != "")
-    }
-
-    GetLauncherFile(key, checkSourceFile := false) {
-        gameDir := checkSourceFile ? this.app.Config.AssetsDir : this.app.Config.DestinationDir
-
-        if (checkSourceFile or this.app.Config.CreateIndividualDirs) {
-            gameDir .= "\" . key
-        }
-
-        ext := checkSourceFile ? ".ahk" : ".exe"
-        return gameDir . "\" . key . ext
-    }
-
     AutoDetectValues() {
-        
+        ; @todo Detect icon src
     }
 
     InitializeDefaults() {
         defaults := super.InitializeDefaults()
         defaults["DestinationDir"] := this.GetDefaultDestinationDir()
         defaults["IconSrc"] := ""
-
-        defaults := this.MergeFromObject(defaults, this.ManagedLauncher.initialDefaults)
-        defaults := this.MergeFromObject(defaults, this.ManagedGame.initialDefaults)
-
         return defaults
+    }
+
+    GetDefaultDestinationDir() {
+        defaultDir := this.app.Config.DestinationDir
+
+        if (this.app.Config.CreateIndividualDirs) {
+            defaultDir .= "\" . this.Key
+        }
+
+        return defaultDir
     }
 }
