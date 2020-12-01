@@ -3,6 +3,7 @@ class GameBase {
     config := ""
     pid := 0
     winId := 0
+    loadingWinId := 0
     isFinished := false
 
     __New(key, config := "") {
@@ -28,7 +29,7 @@ class GameBase {
             progress.IncrementValue(1, statusText)
         }
 
-        if (pid == 0) {
+        if (pid == 0 && !this.LoadingWindowIsOpen()) {
             pid := this.RunGameAction(progress) ; Can change progress text but should not increment
         }
 
@@ -72,8 +73,26 @@ class GameBase {
         } else if (this.config["GameProcessType"] == "Class") {
             winId := WinExist("ahk_class " . this.config["GameProcessId"])
         } else { ; Default to Exe
-            pid := ProcessExist(this.config["GameProcessId"])
-            winId := WinExist("ahk_pid " . this.config["GameProcessId"])
+            winId := WinExist("ahk_exe " . this.config["GameProcessId"])
+        }
+
+        if (winId == "") {
+            winId := 0
+        }
+
+        this.winId := winId
+        return winId
+    }
+
+    LoadingWindowIsOpen() {
+        winId := 0
+
+        if (this.config["GameLoadingWindowProcessType"] == "Title") {
+            winId := WinExist(this.config["GameLoadingWindowProcessId"])
+        } else if (this.config["GameLoadingWindowProcessType"] == "Class") {
+            winId := WinExist("ahk_class " . this.config["GameLoadingWindowProcessId"])
+        } else { ; Default to Exe
+            winId := WinExist("ahk_exe " . this.config["GameLoadingWindowProcessId"])
         }
 
         if (winId == "") {
@@ -126,15 +145,26 @@ class GameBase {
         }
 
         winId := this.GameWindowIsOpen()
+        loadingWinId := this.LoadingWindowIsOpen()
 
-        if (this.winId == 0) {
-            if (progress != "") {
-                progress.IncrementValue(1, "Waiting for game to open...")
+        if (progress != "") {
+            progress.IncrementValue(1, this.config["GameHasLoadingWindow"] ? "Waiting for loading screen..." : "Waiting for game window...")
+        }
+
+        if (this.config["GameHasLoadingWindow"]) {
+            if (winId == 0 and loadingWinId == 0) {
+                loadingWinId := this.WaitForLoadingWindow()
             }
 
+            if (progress != "") {
+                progress.IncrementValue(1, "Game is loading...")
+            }
+        }
+
+        winId := this.GameWindowIsOpen()
+
+        if (winId == 0) {
             winId := this.WaitForGameOpen()
-        } else if (progress != "") {
-            progress.IncrementValue(1)
         }
 
         if (winId != 0) {
@@ -143,12 +173,32 @@ class GameBase {
             }
 
             this.WaitForGameClose()
+
+            if (progress != "") {
+                progress.IncrementValue(1, "Game window closed.")
+                Sleep(1000)
+            }
+
+           
         } else if (progress != "") {
             progress.IncrementValue(1)
         }
 
         this.isFinished := !this.GameIsRunning()
         return this.isFinished
+    }
+
+    WaitForLoadingWindow() {
+        ; @todo Run this in a loop that checks for both the loading screen and the game window
+        if (this.config["GameLoadingWindowProcessType"] == "Title") {
+            WinWait(this.config["GameLoadingWindowProcessId"])
+        } else if (this.config["GameLoadingWindowProcessType"] == "Class") {
+            WinWait("ahk_class " . this.config["GameLoadingWindowProcessId"])
+        } else { ; Default to Exe
+            WinWait("ahk_exe " . this.config["GameLoadingWindowProcessId"])
+        }
+
+        return this.LoadingWindowIsOpen()
     }
 
     WaitForGameOpen() {
@@ -180,6 +230,12 @@ class GameBase {
     }
 
     CountRunSteps() {
-        return 3 ; Run, wait for open, wait for close
+        steps := 3 ; Run, wait for open, wait for close
+
+        if (this.config["GameHasLoadingWindow"]) {
+            steps++
+        }
+
+        return steps
     }
 }

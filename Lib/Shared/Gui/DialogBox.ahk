@@ -1,4 +1,6 @@
 class DialogBox extends FormGuiBase {
+    windowOptions := "+AlwaysOnTop"
+    
     __New(title, text := "", owner := "", btns := "*&Yes|&No") {
         super.__New(title, text, owner, "", btns)
     }

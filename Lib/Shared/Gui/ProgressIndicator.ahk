@@ -1,6 +1,7 @@
-class ProgressIndicator extends DialogBox {
+class ProgressIndicator extends FormGuiBase {
     rangeStart := 0
     rangeStop := 100
+    contentWidth := 420
     currentPosition := 0
     waitForResult := false
     detailText := "Initializing..."

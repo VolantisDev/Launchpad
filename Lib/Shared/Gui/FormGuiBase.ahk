@@ -2,7 +2,6 @@ class FormGuiBase extends GuiBase {
     text := ""
     btns := ""
     contentWidth := 320
-    windowOptions := "+Toolwindow +AlwaysOnTop"
     result := ""
     waitForResult := true
 
