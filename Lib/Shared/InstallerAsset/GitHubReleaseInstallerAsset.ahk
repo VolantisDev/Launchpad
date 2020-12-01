@@ -31,7 +31,7 @@ class GitHubReleaseInstallerAsset extends DownloadableInstallerAsset {
                 this.cache.WriteItem(cacheKey, responseBody)
             }
 
-            response := Jxon_Load(this.cache.ReadItem(cacheKey))
+            response := Json.FromString(this.cache.ReadItem(cacheKey))
             
             if (this.version == "latest") {
                 this.version := this.GetVersionFromTagName(response["tag_name"])

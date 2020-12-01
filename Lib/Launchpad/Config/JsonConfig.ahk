@@ -15,7 +15,7 @@ class JsonConfig extends FileConfig {
         }
 
         jsonString := FileRead(configPath)
-        this.config := (jsonString != "") ? Jxon_Load(jsonString) : Map()
+        this.config := (jsonString != "") ? Json.FromString(jsonString) : Map()
         return super.LoadConfig()
     }
 
@@ -34,8 +34,8 @@ class JsonConfig extends FileConfig {
         if (FileExist(configPath)) {
             FileDelete(configPath)
         }
-        
-        FileAppend(Jxon_Dump(this.config, "", 4), configPath)
+
+        Json.ToFile(this.config, configPath, "", 4)
         return super.SaveConfig()
     }
 

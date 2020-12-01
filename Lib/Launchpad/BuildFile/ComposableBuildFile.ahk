@@ -1,6 +1,5 @@
 class ComposableBuildFile extends BuildFileBase {
     Build() {
-        super.Build()
         this.Delete()
         result := this.ComposeFile()
         this.Cleanup()
@@ -9,6 +8,6 @@ class ComposableBuildFile extends BuildFileBase {
     }
 
     ComposeFile() {
-        return this.FilePath
+        throw MethodNotImplementedException.new("ComposableBuildFile", "ComposeFile")
     }
 }

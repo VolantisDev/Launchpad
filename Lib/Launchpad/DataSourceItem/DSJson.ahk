@@ -3,6 +3,6 @@ class DSJson extends DSFile {
     
     Read() {
         content := super.Read()
-        return (content != "") ? Jxon_Load(content) : Map()
+        return (content != "") ? Json.FromString(content) : Map()
     }
 }

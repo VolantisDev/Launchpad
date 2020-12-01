@@ -14,7 +14,7 @@ class JsonAppState extends AppStateBase {
         }
 
         stateToSave := Map("State", this.stateMap)
-        jsonString := Jxon_Dump(stateToSave, "", 4)
+        jsonString := Json.ToString(stateToSave, "", 4)
 
         if (jsonString == "") {
             throw(OperationFailedException.new("Converting state map to JSON failed", "AppState", stateToSave))
@@ -37,7 +37,7 @@ class JsonAppState extends AppStateBase {
                 jsonString := Trim(FileRead(this.filePath))
 
                 if (jsonString != "") {
-                    jsonObj := Jxon_Load(jsonString)
+                    jsonObj := Json.FromString(jsonString)
 
                     if (jsonObj.Has("State")) {
                         newState := jsonObj["State"]

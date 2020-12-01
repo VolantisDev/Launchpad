@@ -2,37 +2,27 @@ class BuildFileBase {
     app := ""
     appDir := ""
     tempDir := ""
-    filePathValue := ""
-    key := ""
-    extension := ""
-    launcherDir := ""
+    destPathValue := ""
     launcherEntityObj := ""
 
     FilePath[] {
-        get => this.filePathValue
-        set => this.filePathValue := value
+        get => this.destPathValue
+        set => this.destPathValue := value
     }
 
-    __New(app, launcherEntityObj, launcherDir, key, extension, filePath := "") {
-        InvalidParameterException.CheckTypes("BuildFileBase", "app", app, "Launchpad", "launcherEntityObj", launcherEntityObj, "LauncherEntity", "launcherDir", launcherDir, "", "key", key, "", "extension", extension, "", "filePath", filePath, "")
-        InvalidParameterException.CheckEmpty("BuildFileBase", "LauncherDir", launcherDir)
+    __New(launcherEntityObj, destPath) {
+        InvalidParameterException.CheckTypes("BuildFileBase", "launcherEntityObj", launcherEntityObj, "LauncherEntity", "destPath", destPath, "")
+        InvalidParameterException.CheckEmpty("BuildFileBase", "destPath", destPath)
 
-        this.app := app
-        this.appDir := app.Config.AppDir
-        this.tempDir := app.Config.TempDir . "\BuildFiles\" . key
+        this.app := launcherEntityObj.app
+        this.appDir := this.app.Config.AppDir
+        this.tempDir := this.app.Config.TempDir . "\BuildFiles\" . launcherEntityObj.Key
         this.launcherEntityObj := launcherEntityObj
-        this.launcherDir := launcherDir
-        this.key := key
-        this.extension := extension
-        this.filePathValue := filePath
-
-        if (this.FilePath == "") {
-            this.FilePath := this.launcherDir . "\" . this.key . this.extension
-        }
+        this.destPathValue := destPath
     }
 
     Build() {
-        return this.FilePath
+        throw MethodNotImplementedException.new("BuildFileBase", "Build")
     }
 
     Cleanup() {

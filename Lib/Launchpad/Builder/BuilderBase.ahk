@@ -23,12 +23,11 @@ class BuilderBase {
         DirCreate(launcherDir)
         DirCreate(assetsDir)
 
-        iconObj := IconFile.new(this.app, launcherEntityObj, assetsDir, launcherEntityObj.Key)
+        iconObj := IconFile.new(launcherEntityObj)
         iconResult := iconObj.Build()
         
-        shortcutResult := !this.NeedsShortcutFile(launcherEntityObj) ; Default to true if shortcut isn't required
         if (this.NeedsShortcutFile(launcherEntityObj)) {
-            shortcutObj := ShortcutFile.new(this.app, launcherEntityObj, assetsDir, launcherEntityObj.Key)
+            shortcutObj := ShortcutFile.new(launcherEntityObj)
             shortcutResult := shortcutObj.Build()
         }
 
@@ -36,7 +35,7 @@ class BuilderBase {
     }
 
     NeedsShortcutFile(launcherEntityObj) {
-        return (launcherEntityObj.ManagedLauncher.ManagedGame.UsesShortcut && launcherEntityObj.ManagedLauncher.ManagedGame.RunCmd == "")
+        return (launcherEntityObj.ManagedLauncher.ManagedGame.UsesShortcut)
     }
 
     BuildAction(launcherEntityObj, launcherDir, assetsDir) {

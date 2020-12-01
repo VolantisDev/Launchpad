@@ -54,7 +54,7 @@ class ManagedEntityBase extends EntityBase {
     ; - The filename of an existing shortcut (.url or .lnk file, or even another .exe) that will be used to run the game.
     ; - The path of another shortcut file (.url or .lnk) on the system, which will be copied to the AssetsDir if it doesn't already exist
     ; - The path of an .exe file on the system to which a shortcut will be created in AssetsDir if it doesn't already exist. Using this option
-    ;   is usually not recommended, as you could simply 
+    ;   is usually not necessary, since you can run the .exe directly instead.
     ;
     ; This is typically only needed if the "Shortcut" LauncherRunType is selected.
     ShortcutSrc {
@@ -120,7 +120,7 @@ class ManagedEntityBase extends EntityBase {
         return this.EntityType
     }
 
-    SetDependentDefaults(config) {
+    SetDependentValues(config) {
         processTypeKey := this.configPrefix . "ProcessType"
 
         if (!config.Has(processTypeKey) or config[processTypeKey] == "") {
@@ -140,11 +140,29 @@ class ManagedEntityBase extends EntityBase {
 
             config[key] := processId
         }
-        
-        key := this.configPrefix . "UsesShortcut"
 
-        if (!config.Has(key) or config[key] == "") {
-            config[key] := (this.RunType == "Shortcut")
+        ; @ Run Type
+        runTypeKey := this.configPrefix . "RunType"
+        shortcutSrcKey := this.configPrefix . "ShortcutSrc"
+        runCmdKey := this.configPrefix . "RunCmd"
+        hasShortcutSrc := (config.Has(shortcutSrcKey) and config[shortcutSrcKey] != "")
+        hasRunCmd := (config.Has(runCmdKey) and config[runCmdKey] != "")
+        usesShortcutKey := this.configPrefix . "UsesShortcut"
+
+        if (config.Has(usesShortcutKey) and config[usesShortcutKey]) {
+            config[runTypeKey] := "Shortcut"
+        } else if (config.Has(usesShortcutKey) and !config[usesShortcutKey] and config[runTypeKey] == "Shortcut") {
+            config[runTypeKey] := "Command"
+        } else if (config.Has(runTypeKey)) {
+            if (config[runTypeKey] == "Shortcut" and !hasShortcutSrc and hasRunCmd) {
+                config[runTypeKey] := "Command"
+            } else if (config[runTypeKey] == "Command" and !hasRunCmd and hasShortcutSrc ) {
+                config[runTypeKey] := "Shortcut"
+            }
+        }
+
+        if (!config.Has(usesShortcutKey) or config[usesShortcutKey] == "") {
+            config[usesShortcutKey] := (this.RunType == "Shortcut")
         }
 
         return config
@@ -154,7 +172,7 @@ class ManagedEntityBase extends EntityBase {
         defaults := super.InitializeDefaults()
         defaults[this.configPrefix . "Type"] := this.defaultType
         defaults[this.configPrefix . "Class"] := this.defaultClass
-        defaults[this.configPrefix . "SearchDirs"] := []
+        defaults[this.configPrefix . "SearchDirs"] := [A_ProgramFiles]
         defaults[this.configPrefix . "Exe"] := ""
         defaults[this.configPrefix . "WorkingDir"] := ""
         defaults[this.configPrefix . "RunType"] := "Command"
@@ -197,5 +215,38 @@ class ManagedEntityBase extends EntityBase {
         }
 
         return exists
+    }
+
+    LocateExe() {
+        exePath := ""
+
+        if (this.Exe != "") {
+            SplitPath(this.Exe, exeFile, exeDir,,, exeDrive)
+            
+            if (exeDrive != "") {
+                exePath := this.Exe
+            } else if (Type(this.SearchDirs) == "Array" and this.SearchDirs.Length > 0) {
+                exePath := this.LocateFileInSearchDirs(this.Exe)
+            }
+        }
+
+        return exePath
+    }
+
+    LocateFileInSearchDirs(filePattern) {
+        path := ""
+
+        for index, searchDir in this.SearchDirs {
+            Loop Files, searchDir . "\" . filePattern, "R" {
+                path := A_LoopFileFullPath
+                break
+            }
+
+            if (path != "") {
+                break
+            }
+        }
+
+        return path
     }
 }

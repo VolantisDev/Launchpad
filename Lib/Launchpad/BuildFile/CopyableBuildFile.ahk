@@ -18,14 +18,13 @@ class CopyableBuildFile extends BuildFileBase {
         set => this.selectFilterValue := value
     }
 
-    __New(app, launcherEntityObj, launcherDir, key, extension, filePath := "", sourcePath := "") {
-        InvalidParameterException.CheckTypes("BuilderBase", "app", app, "Launchpad", "sourcePath", sourcePath, "")
+    __New(launcherEntityObj, sourcePath, destPath) {
+        InvalidParameterException.CheckTypes("CopyableBuildFile", "sourcePath", sourcePath, "")
         this.sourcePathValue := sourcePath
-        super.__New(app, launcherEntityObj, launcherDir, key, extension, filePath)
+        super.__New(launcherEntityObj, destPath)
     }
 
     Build() {
-        super.Build()
         path := this.Locate()
         result := path
 
@@ -54,7 +53,7 @@ class CopyableBuildFile extends BuildFileBase {
     }
 
     AskForPath() {
-        file := FileSelect(1,, this.key . ": " . this.RequestMessage, this.SelectFilter)
+        file := FileSelect(1,, this.launcherEntityObj.Key . ": " . this.RequestMessage, this.SelectFilter)
         
         if (file == "") {
             this.app.Notifications.Warning("No file selected. Skipping build file.")

@@ -25,6 +25,7 @@
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerAsset\GitHubReleaseInstallerAsset.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerAsset\InstallerAssetBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerAsset\LibInstallerAsset.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Json\Json.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Notifier\NotifierBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Notifier\ToastNotifier.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\OpError\BasicOpError.ahk
@@ -33,5 +34,4 @@
 #Include E:\Tools\Launchpad\Lib\Shared\OpStatus\OpStatusBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Theme\ThemeBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Toolbar\ToolbarBase.ahk
-#Include E:\Tools\Launchpad\Lib\Shared\Vendor\Jxon.ahk
 ; End of auto-generated includes.

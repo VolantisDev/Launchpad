@@ -93,6 +93,11 @@ class ManagedLauncherEntity extends ManagedEntityBase {
         super.__New(app, key, config, requiredConfigKeys, defaultDataSource, parentEntity)
     }
 
+    OverrideChildDefaults(defaults) {
+        this.ManagedGame.UnmergedConfig["GameType"] := defaults["GameType"]
+        this.ManagedGame.initialDefaults := this.MergeFromObject(this.ManagedGame.initialDefaults, this.initialDefaults, true)
+    }
+
     InitializeDefaults() {
         defaults := super.InitializeDefaults()
         defaults[this.configPrefix . "CloseBeforeRun"] := false

@@ -133,13 +133,26 @@ class LauncherEntity extends EntityBase {
     }
 
     AutoDetectValues() {
-        ; @todo Detect icon src
+        if (this.IconSrc == "") {
+            iconSrc := ""
+
+            checkPath := this.AssetsDir . "\" . this.Key . ".ico"
+            if (FileExist(checkPath)) {
+                iconSrc := checkPath
+            } else if (this.ManagedLauncher.ManagedGame.Exe != "") {
+                iconSrc := this.ManagedLauncher.ManagedGame.LocateExe()
+            }
+
+            if (iconSrc != "") {
+                this.IconSrc := iconSrc
+            }
+        }
     }
 
     InitializeDefaults() {
         defaults := super.InitializeDefaults()
         defaults["DestinationDir"] := this.GetDefaultDestinationDir()
-        defaults["IconSrc"] := ""
+        ;defaults["IconSrc"] := ""
         return defaults
     }
 

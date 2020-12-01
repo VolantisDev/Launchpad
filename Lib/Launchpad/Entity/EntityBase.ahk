@@ -150,7 +150,11 @@ class EntityBase {
     MergeFromObject(mainObject, defaults, overwriteKeys := false) {
         for key, value in defaults {
             if (overwriteKeys or !mainObject.Has(key)) {
-                mainObject[key] := value
+                if (value == "true" or value == "false") {
+                    mainObject[key] := (value == "true")
+                } else {
+                    mainObject[key] := value
+                }
             }
         }
 
@@ -292,11 +296,13 @@ class EntityBase {
 
     MergeEntityDefaults(update := false) {
         if (update or this.mergedConfigVal == "") {
-            this.initialDefaults := this.InitializeDefaults() ; Ensure defaults are up-to-date
+            this.initialDefaults := this.InitializeDefaults()
             this.Config := this.MergeDefaultsIntoConfig(this.UnmergedConfig)
         }
 
-        this.Config := this.SetDependentDefaults(this.Config)
+        this.Config := this.SetDependentValues(this.Config)
+
+        this.AutoDetectValues()
 
         for key, child in this.children {
             child.MergeEntityDefaults(update)
@@ -305,69 +311,9 @@ class EntityBase {
         return this.Config
     }
 
-    SetDependentDefaults(config) {
+    SetDependentValues(config) {
         ; Override this to set default values for items that depend on other values
         return config
-    }
-
-    AggregateDataSourceDefaults() {
-        if (this.dataSourceDefaults == "") {
-            dataSources := this.GetAllDataSources()
-
-            defaults := this.parentEntity != "" ? this.parentEntity.AggregateDataSourceDefaults() : Map()
-
-            for index, dataSource in dataSources {
-                defaults := this.MergeFromObject(defaults, this.GetDataSourceDefaults(dataSource))
-            }
-
-            this.dataSourceDefaults := defaults
-
-            this.OverrideChildDefaults(defaults)
-
-            for key, child in this.children {
-                child.AggregateDataSourceDefaults()
-            }
-        }
-
-        return this.dataSourceDefaults
-    }
-
-    OverrideChildDefaults(defaults) {
-
-    }
-
-    GetAllDatasources() {
-        dataSources := Map()
-
-        if (this.DataSourceKeys != "") {
-            dataSourceKeys := (Type(this.DataSourceKeys) == "Array") ? this.DataSourceKeys : [this.DataSourceKeys]
-
-            for index, dataSourceKey in dataSourceKeys {
-                dataSource := this.app.DataSources.GetDataSource(dataSourceKey)
-
-                if (dataSource != "") {
-                    dataSources[dataSourceKey] := dataSource
-                }
-            }
-        }
-
-        return dataSources
-    }
-
-    GetDataSourceDefaults(dataSource) {
-        defaults := Map()
-        dsData := dataSource.ReadJson(this.GetDataSourceItemKey(), this.GetDataSourceItemPath())
-
-        if (dsData != "" and dsData.Has("Defaults")) {
-            defaults := this.MergeFromObject(defaults, dsData["Defaults"], false)
-            defaults := this.MergeAdditionalDataSourceDefaults(defaults, dsData)
-        }
-
-        return defaults
-    }
-
-    MergeAdditionalDataSourceDefaults(defaults, dataSourceData) {
-        return defaults
     }
 
     GetDataSourceItemKey() {
@@ -428,6 +374,66 @@ class EntityBase {
         for key, child in this.children {
             child.SaveModifiedData()
         }
+    }
+
+    AggregateDataSourceDefaults() {
+        if (this.dataSourceDefaults == "") {
+            dataSources := this.GetAllDataSources()
+
+            defaults := this.parentEntity != "" ? this.parentEntity.AggregateDataSourceDefaults() : Map()
+
+            for index, dataSource in dataSources {
+                defaults := this.MergeFromObject(defaults, this.GetDataSourceDefaults(dataSource))
+            }
+
+            this.dataSourceDefaults := defaults
+
+            this.OverrideChildDefaults(defaults)
+
+            for key, child in this.children {
+                child.AggregateDataSourceDefaults()
+            }
+        }
+
+        return this.dataSourceDefaults
+    }
+
+    OverrideChildDefaults(defaults) {
+
+    }
+
+    GetAllDatasources() {
+        dataSources := Map()
+
+        if (this.DataSourceKeys != "") {
+            dataSourceKeys := (Type(this.DataSourceKeys) == "Array") ? this.DataSourceKeys : [this.DataSourceKeys]
+
+            for index, dataSourceKey in dataSourceKeys {
+                dataSource := this.app.DataSources.GetDataSource(dataSourceKey)
+
+                if (dataSource != "") {
+                    dataSources[dataSourceKey] := dataSource
+                }
+            }
+        }
+
+        return dataSources
+    }
+
+    GetDataSourceDefaults(dataSource) {
+        defaults := Map()
+        dsData := dataSource.ReadJson(this.GetDataSourceItemKey(), this.GetDataSourceItemPath())
+
+        if (dsData != "" and dsData.Has("Defaults")) {
+            defaults := this.MergeFromObject(defaults, dsData["Defaults"], false)
+            defaults := this.MergeAdditionalDataSourceDefaults(defaults, dsData)
+        }
+
+        return defaults
+    }
+
+    MergeAdditionalDataSourceDefaults(defaults, dataSourceData) {
+        return defaults
     }
 
     /**

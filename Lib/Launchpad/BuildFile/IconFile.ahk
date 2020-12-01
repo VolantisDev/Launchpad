@@ -2,17 +2,20 @@ class IconFile extends CopyableBuildFile {
     requestMessage := "Select an icon file or an exe to extract the icon from"
     selectFilter := "Icons (*.ico; *.exe; *.ocx; *.dll; *.cpl)"
 
-    __New(app, launcherEntityObj, launcherDir, key, filePath := "") {
-        super.__New(app, launcherEntityObj, launcherDir, key, ".ico", filePath, launcherEntityObj.IconSrc)
+    __New(launcherEntityObj, destPath := "") {
+        if (destPath == "") {
+            destPath := launcherEntityObj.AssetsDir . "\" . launcherEntityObj.Key . ".ico"
+        }
+
+        super.__New(launcherEntityObj, launcherEntityObj.IconSrc, destPath)
     }
 
     Cleanup() {
-        super.Cleanup()
         if (DirExist(this.tempDir . "\icons")) {
             DirDelete(this.tempDir . "\icons", true)
         }
         
-        return true
+        return super.Cleanup()
     }
 
     Locate() {

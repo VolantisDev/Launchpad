@@ -1,6 +1,10 @@
 class GameAhkFile extends ComposableBuildFile {
-    __New(app, launcherEntityObj, launcherDir, key, filePath := "") {
-        super.__New(app, launcherEntityObj, launcherDir, key, ".ahk", filePath)
+    __New(launcherEntityObj, destPath := "") {
+        if (destPath == "") {
+            destPath := launcherEntityObj.AssetsDir . "\" . launcherEntityObj.Key . ".ahk"
+        }
+
+        super.__New(launcherEntityObj, destPath)
     }
 
     ComposeFile() {
@@ -9,8 +13,8 @@ class GameAhkFile extends ComposableBuildFile {
         FileAppend("#Include " . this.appDir . "\Lib\Shared\Includes.ahk`n", this.FilePath)
         FileAppend("gameConfig := " . this.ConvertMapToCode(this.launcherEntityObj.ManagedLauncher.ManagedGame.Config) . "`n", this.FilePath)
         FileAppend("launcherConfig := " . this.ConvertMapToCode(this.launcherEntityObj.ManagedLauncher.Config) . "`n", this.FilePath)
-        FileAppend("gameObj := " . this.launcherEntityObj.ManagedLauncher.ManagedGame.EntityClass . ".new(`"" . this.key . "`", gameConfig)`n", this.FilePath)
-        FileAppend("launcherObj := " . this.launcherEntityObj.ManagedLauncher.EntityClass . ".new(`"" . this.key . "`", gameObj, launcherConfig)`n", this.FilePath)
+        FileAppend("gameObj := " . this.launcherEntityObj.ManagedLauncher.ManagedGame.EntityClass . ".new(`"" . this.launcherEntityObj.Key . "`", gameConfig)`n", this.FilePath)
+        FileAppend("launcherObj := " . this.launcherEntityObj.ManagedLauncher.EntityClass . ".new(`"" . this.launcherEntityObj.Key . "`", gameObj, launcherConfig)`n", this.FilePath)
         FileAppend("launcherObj.LaunchGame()`n", this.FilePath)
 
         return this.FilePath
@@ -30,6 +34,25 @@ class GameAhkFile extends ComposableBuildFile {
         }
 
         code .= ")"
+
+        return code
+    }
+
+    ConvertArrayToCode(typeConfig) {
+        code := "["
+        empty := true
+
+        for index, value in typeConfig {
+            if (!empty) {
+                code .= ", "
+            }
+
+            code .= this.ConvertValueToCode(value)
+            empty := false
+        }
+
+        code .= "]"
+
         return code
     }
 
@@ -37,6 +60,7 @@ class GameAhkFile extends ComposableBuildFile {
 
         code := "{"
         empty := true
+
         for key, value in typeConfig {
             if (!empty) {
                 code .= ", "
@@ -47,11 +71,16 @@ class GameAhkFile extends ComposableBuildFile {
         }
 
         code .= "}"
+
         return code
     }
 
     ConvertValueToCode(value) {
-        if (IsObject(value)) {
+        if (Type(value) == "Map") {
+            value := this.ConvertMapToCode(value)
+        } else if (Type(value) == "Array") {
+            value := this.ConvertArrayToCode(value)
+        } else if (IsObject(value)) {
             value := this.ConvertObjectToCode(value)
         } else if (Type(value) == "String" && value != "true" && value != "false") {
             value := "`"" . value . "`""
