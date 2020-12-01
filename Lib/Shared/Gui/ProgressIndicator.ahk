@@ -28,7 +28,7 @@ class ProgressIndicator extends FormGuiBase {
         
         btns := allowCancel ? "&Cancel" : ""
         this.showInNotificationArea := !!(showInNotificationArea)
-        super.__New(title, text, owner, btns)
+        super.__New(title, text, owner, "", btns)
     }
 
     SetDetailText(detailText) {
