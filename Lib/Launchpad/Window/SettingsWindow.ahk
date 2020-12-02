@@ -26,7 +26,7 @@
 
         this.AddHeading("Launcher Settings")
         this.AddConfigCheckBox("Create individual launcher directories", "CreateIndividualDirs")
-        this.AddConfigCheckBox("Update existing launchers on build", "UpdateExistingLaunchers")
+        this.AddConfigCheckBox("Rebuild existing launchers", "RebuildExistingLaunchers")
         this.AddConfigCheckBox("Clean launchers on build", "CleanLaunchersOnBuild")
         this.AddConfigCheckBox("Clean launchers on exit", "CleanLaunchersOnExit")
 

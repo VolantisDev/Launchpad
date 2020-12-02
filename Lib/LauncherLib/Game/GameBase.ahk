@@ -35,26 +35,30 @@ class GameBase {
 
         result := this.WaitForGame(progress) ; this should always add 2 steps
 
-        if (this.config["GameRunMethod"] == "Scheduled") {
-            this.CleanupScheduledTask()
+        if (progress != "") {
+            progress.IncrementValue(1, "Game finished.")
         }
         
+        this.CleanupAfterRun(progress)
         return result
+    }
+
+    CleanupAfterRun(progress := "") {
+        if (this.config["GameRunMethod"] == "Scheduled") {
+            if (progress != "") {
+                progress.SetDetailText("Cleaning up scheduled task.")
+            }
+
+            this.CleanupScheduledTask()
+        }
     }
 
     GameIsRunning() {
         pid := 0
 
-        if (this.config["GameProcessType"] == "Title") {
-            if (WinExist(this.config["GameProcessId"])) {
-                pid := WinGetPID(this.config["GameProcessId"])
-            }
-        } else if (this.config["GameProcessType"] == "Class") {
-            if (WinExist(this.config["GameProcessId"])) {
-                pid := WinGetPID("ahk_class " . this.config["GameProcessId"])
-            }
-        } else { ; Default to Exe
-            pid := ProcessExist(this.config["GameProcessId"])
+        winId := this.GameWindowIsOpen()
+        if (winId > 0) {
+            pid := WinGetPID("ahk_id " . winId)
         }
 
         if (!pid) {
@@ -69,11 +73,11 @@ class GameBase {
         winId := 0
 
         if (this.config["GameProcessType"] == "Title") {
-            winId := WinExist(this.config["GameProcessId"])
+            winId := WinExist(this.config["GameProcessId"],, " - Launchpad")
         } else if (this.config["GameProcessType"] == "Class") {
-            winId := WinExist("ahk_class " . this.config["GameProcessId"])
+            winId := WinExist("ahk_class " . this.config["GameProcessId"],, " - Launchpad")
         } else { ; Default to Exe
-            winId := WinExist("ahk_exe " . this.config["GameProcessId"])
+            winId := WinExist("ahk_exe " . this.config["GameProcessId"],, " - Launchpad")
         }
 
         if (winId == "") {
@@ -99,8 +103,8 @@ class GameBase {
             winId := 0
         }
 
-        this.winId := winId
-        return winId
+        this.loadingWinId := winId
+        return (winId > 0)
     }
 
     RunGameAction(progress := "") {
@@ -110,7 +114,7 @@ class GameBase {
             this.RunGameScheduled()
         } else { ; Assume Run or RunWait
             runCmd := this.config["GameRunMethod"]
-            %runCmd%(this.GetRunCmd(),, "Hide")
+            %runCmd%(this.GetRunCmd(), this.config["GameWorkingDir"], "Hide")
         }
 
         return this.GameIsRunning()
@@ -191,11 +195,11 @@ class GameBase {
     WaitForLoadingWindow() {
         ; @todo Run this in a loop that checks for both the loading screen and the game window
         if (this.config["GameLoadingWindowProcessType"] == "Title") {
-            WinWait(this.config["GameLoadingWindowProcessId"])
+            WinWait(this.config["GameLoadingWindowProcessId"],,, " - Launchpad")
         } else if (this.config["GameLoadingWindowProcessType"] == "Class") {
-            WinWait("ahk_class " . this.config["GameLoadingWindowProcessId"])
+            WinWait("ahk_class " . this.config["GameLoadingWindowProcessId"],,, " - Launchpad")
         } else { ; Default to Exe
-            WinWait("ahk_exe " . this.config["GameLoadingWindowProcessId"])
+            WinWait("ahk_exe " . this.config["GameLoadingWindowProcessId"],,, " - Launchpad")
         }
 
         return this.LoadingWindowIsOpen()
@@ -203,11 +207,11 @@ class GameBase {
 
     WaitForGameOpen() {
         if (this.config["GameProcessType"] == "Title") {
-            WinWait(this.config["GameProcessId"])
+            WinWait(this.config["GameProcessId"],,, " - Launchpad")
         } else if (this.config["GameProcessType"] == "Class") {
-            WinWait("ahk_class " . this.config["GameProcessId"])
+            WinWait("ahk_class " . this.config["GameProcessId"],,, " - Launchpad")
         } else { ; Default to Exe
-            WinWait("ahk_exe " . this.config["GameProcessId"])
+            WinWait("ahk_exe " . this.config["GameProcessId"],,, " - Launchpad")
         }
 
         return this.GameWindowIsOpen()
@@ -215,11 +219,11 @@ class GameBase {
 
     WaitForGameClose() {
         if (this.config["GameProcessType"] == "Title") {
-            WinWaitClose(this.config["GameProcessId"])
+            WinWaitClose(this.config["GameProcessId"],,, " - Launchpad")
         } else if (this.config["GameProcessType"] == "Class") {
-            WinWaitClose("ahk_class " . this.config["GameProcessId"])
+            WinWaitClose("ahk_class " . this.config["GameProcessId"],,, " - Launchpad")
         } else { ; Default to Exe
-            WinWaitClose("ahk_exe " . this.config["GameProcessId"])
+            WinWaitClose("ahk_exe " . this.config["GameProcessId"],,, " - Launchpad")
         }
 
         if (this.GameIsRunning()) {
@@ -230,7 +234,7 @@ class GameBase {
     }
 
     CountRunSteps() {
-        steps := 3 ; Run, wait for open, wait for close
+        steps := 4 ; Run, wait for open, wait for close, cleanup
 
         if (this.config["GameHasLoadingWindow"]) {
             steps++

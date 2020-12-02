@@ -121,6 +121,11 @@ class ManagedEntityBase extends EntityBase {
     }
 
     SetDependentValues(config) {
+        exeKey := this.configPrefix . "Exe"
+        if (!config.Has(exeKey) or config[exeKey] == "") {
+            config[exeKey] := config[exeKey] := this.Key . ".exe"
+        }
+
         processTypeKey := this.configPrefix . "ProcessType"
 
         if (!config.Has(processTypeKey) or config[processTypeKey] == "") {

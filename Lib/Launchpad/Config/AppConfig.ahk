@@ -57,9 +57,9 @@
         set => this.SetIniValue("CacheDir", value)
     }
 
-    UpdateExistingLaunchers[] {
-        get => this.GetBooleanValue("UpdateExistingLaunchers", true)
-        set => this.SetIniValue("UpdateExistingLaunchers", value)
+    RebuildExistingLaunchers[] {
+        get => this.GetBooleanValue("RebuildExistingLaunchers", true)
+        set => this.SetIniValue("RebuildExistingLaunchers", value)
     }
 
     CreateIndividualDirs[] {
