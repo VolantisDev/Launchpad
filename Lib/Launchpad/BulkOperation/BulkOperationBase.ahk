@@ -114,7 +114,7 @@ class BulkOperationBase {
     }
 
     RunAction() {
-
+        throw MethodNotImplementedException.new("BulkOperationBase", "RunAction")
     }
 
     StartItem(key, statusText := "") {
@@ -129,6 +129,12 @@ class BulkOperationBase {
     FinishItem(key, success := true, statusText := "", err := "", errCode := "") {
         statusObj := this.GetStatus(key)
         statusObj.Finish(success, err, errCode)
+
+        if (success) {
+            this.successCount++
+        } else {
+            this.failedCount++
+        }
 
         if (this.useProgress and statusText) {
             this.progress.SetDetailText(statusText)
