@@ -33,7 +33,7 @@ class GameBase {
             pid := this.RunGameAction(progress) ; Can change progress text but should not increment
         }
 
-        result := this.WaitForGame(progress) ; this should always add 2 steps
+        result := this.WaitForGame(progress) ; this should always add 3 steps
 
         if (progress != "") {
             progress.IncrementValue(1, "Game finished.")
@@ -161,7 +161,7 @@ class GameBase {
             }
 
             if (progress != "") {
-                progress.IncrementValue(1, "Game is loading...")
+                progress.SetDetailText("Game is loading...")
             }
         }
 
@@ -179,7 +179,7 @@ class GameBase {
             this.WaitForGameClose()
 
             if (progress != "") {
-                progress.IncrementValue(1, "Game window closed.")
+                progress.SetDetailText("Game window closed.")
                 Sleep(1000)
             }
 
@@ -235,11 +235,6 @@ class GameBase {
 
     CountRunSteps() {
         steps := 4 ; Run, wait for open, wait for close, cleanup
-
-        if (this.config["GameHasLoadingWindow"]) {
-            steps++
-        }
-
         return steps
     }
 }

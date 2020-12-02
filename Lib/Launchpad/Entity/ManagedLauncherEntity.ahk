@@ -46,8 +46,8 @@ class ManagedLauncherEntity extends ManagedEntityBase {
 
     ; If the CloseMethod requires a loop, this is the delay it will use between checks whether the launcher is running.
     RecheckDelay {
-        get => this.GetConfigValue("PromptRecheckDelay")
-        set => this.SetConfigValue("PromptRecheckDelay", value)
+        get => this.GetConfigValue("RecheckDelay")
+        set => this.SetConfigValue("RecheckDelay", value)
     }
 
     ; If CloseMethod is Wait, this is how long the launcher will attempt to wait before giving up

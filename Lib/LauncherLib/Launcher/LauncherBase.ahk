@@ -83,7 +83,7 @@ class LauncherBase {
     }
 
     CloseLauncher(eventName) {
-        if (this.LauncherIsRunning()) {
+        if (!this.LauncherIsRunning()) {
             return true
         }
 
@@ -103,13 +103,13 @@ class LauncherBase {
     CloseLauncherAction() {
         closed := false
 
-        if (this.config["CloseMethod"] == "Wait") {
+        if (this.config["LauncherCloseMethod"] == "Wait") {
             closed := this.WaitForLauncherToClose()
-        } else if (this.config["CloseMethod"] == "Auto") {
+        } else if (this.config["LauncherCloseMethod"] == "Auto") {
             closed := this.AutoCloseLauncher(true)
-        } else if (this.config["CloseMethod"] == "AutoPolite") {
+        } else if (this.config["LauncherCloseMethod"] == "AutoPolite") {
             closed := this.AutoCloseLauncher()
-        } else if (this.config["CloseMethod"] == "AutoKill") {
+        } else if (this.config["LauncherCloseMethod"] == "AutoKill") {
             closed := this.KillLauncher()
         } else { ; Default to "Prompt"
             closed := this.PromptForLauncherToClose()
@@ -121,12 +121,14 @@ class LauncherBase {
     LauncherIsRunning() {
         pid := ""
 
-        if (this.config["LauncherProcessType"] == "Title") {
-            pid := WinGetPID(this.config["LauncherProcessId"])
-        } else if (this.config["LauncherProcessType"] == "Class") {
-            pid := WinGetPID("ahk_class " . this.config["LauncherProcessId"])
-        } else { ; Default to Exe
-            pid := ProcessExist(this.config["LauncherProcessId"])
+        if (this.config["LauncherProcessId"] != "") {
+            if (this.config["LauncherProcessType"] == "Title") {
+                pid := WinGetPID(this.config["LauncherProcessId"],, " - Launchpad")
+            } else if (this.config["LauncherProcessType"] == "Class") {
+                pid := WinGetPID("ahk_class " . this.config["LauncherProcessId"],, " - Launchpad")
+            } else { ; Default to Exe
+                pid := ProcessExist(this.config["LauncherProcessId"])
+            }
         }
 
         if (pid == "") {
@@ -162,8 +164,8 @@ class LauncherBase {
     }
 
     WaitLoopAction() {
-        if (this.config["RecheckDelay"] > 0) {
-            Sleep(this.config["RecheckDelay"] * 1000)
+        if (this.config["LauncherRecheckDelay"] > 0) {
+            Sleep(this.config["LauncherRecheckDelay"] * 1000)
         }
     }
 
@@ -184,8 +186,8 @@ class LauncherBase {
     }
 
     AutoCloseAction() {
-        if (this.pid > 0) {
-            WinClose("ahk_pid " . this.pid, "", this.config["PoliteCloseWait"])
+        if (this.pid > 0 and WinExist("ahk_pid " . this.pid,, " - Launchpad")) {
+            WinClose("ahk_pid " . this.pid, "", this.config["LauncherPoliteCloseWait"],, " - Launchpad")
         }
     }
 
@@ -213,7 +215,7 @@ class LauncherBase {
     }
 
     KillLauncherAction() {
-        if (this.pid > 0) {
+        if (this.pid > 0 and ProcessExist(this.pid)) {
             ProcessClose(this.pid)
         }
     }

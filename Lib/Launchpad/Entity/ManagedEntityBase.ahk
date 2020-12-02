@@ -121,11 +121,6 @@ class ManagedEntityBase extends EntityBase {
     }
 
     SetDependentValues(config) {
-        exeKey := this.configPrefix . "Exe"
-        if (!config.Has(exeKey) or config[exeKey] == "") {
-            config[exeKey] := config[exeKey] := this.Key . ".exe"
-        }
-
         processTypeKey := this.configPrefix . "ProcessType"
 
         if (!config.Has(processTypeKey) or config[processTypeKey] == "") {
@@ -183,7 +178,7 @@ class ManagedEntityBase extends EntityBase {
         defaults[this.configPrefix . "RunType"] := "Command"
         defaults[this.configPrefix . "ShortcutSrc"] := ""
         defaults[this.configPrefix . "RunMethod"] := "RunWait"
-        defaults[this.configPrefix . "ProcessType"] := ""
+        defaults[this.configPrefix . "ProcessType"] := "Exe"
         defaults[this.configPrefix . "ProcessId"] := ""
         defaults[this.configPrefix . "ProcessTimeout"] := 30
         defaults[this.configPrefix . "RunCmd"] := ""

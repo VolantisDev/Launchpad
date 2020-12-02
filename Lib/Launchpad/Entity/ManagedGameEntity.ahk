@@ -56,16 +56,8 @@ class ManagedGameEntity extends ManagedEntityBase {
     ShouldDetectShortcutSrc() {
         detectShortcut := false
 
-        if (this.ShortcutSrc == "") {
-            usesShortcutIsSet := this.UnmergedConfig.Has("GameUsesShortcut")
-
-            if (usesShortcutIsSet and this.UnmergedConfig["GameUsesShortcut"]) {
-                detectShortcut := true
-            }
-
-            if (this.RunType == "Shortcut" or this.RunCmd == "") {
-                detectShortcut := true
-            }
+        if (this.ShortcutSrc == "" and this.UsesShortcut) {
+            detectShortcut := (this.RunType == "Shortcut" or this.RunCmd == "")
         }
 
         return detectShortcut
@@ -77,5 +69,14 @@ class ManagedGameEntity extends ManagedEntityBase {
         defaults[this.configPrefix . "LoadingWindowProcessType"] := "Exe"
         defaults[this.configPrefix . "LoadingWindowProcessId"] := ""
         return defaults
+    }
+
+    SetDependentValues(config) {
+        exeKey := this.configPrefix . "Exe"
+        if (!config.Has(exeKey) or config[exeKey] == "") {
+            config[exeKey] := config[exeKey] := this.Key . ".exe"
+        }
+
+        return super.SetDependentValues(config)
     }
 }

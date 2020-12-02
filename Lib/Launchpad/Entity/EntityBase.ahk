@@ -301,8 +301,10 @@ class EntityBase {
         }
 
         this.Config := this.SetDependentValues(this.Config)
+        this.Config := this.ExpandPlaceholders(this.Config)
 
         this.AutoDetectValues()
+        
 
         for key, child in this.children {
             child.MergeEntityDefaults(update)
@@ -314,6 +316,25 @@ class EntityBase {
     SetDependentValues(config) {
         ; Override this to set default values for items that depend on other values
         return config
+    }
+
+    ExpandPlaceholders(config) {
+        ; Override this to send additional variables through ExpandPlaceholders() or stop this functionality if not needed.
+        for key, value in config {
+            if (Type(config[key]) == "String") {
+                config[key] := this.ExpandPlaceholderInValue(config[key])
+            }
+        }
+
+        return config
+    }
+
+    ExpandPlaceholderInValue(value) {
+        for varName, varVal in this.Config {
+            value := StrReplace(value, "{{" . varName . "}}", varVal)
+        }
+
+        return value
     }
 
     GetDataSourceItemKey() {
