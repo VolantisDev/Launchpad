@@ -50,12 +50,10 @@ class ThemeManager extends ServiceBase {
 
         themeObj := ""
 
-        if (this.themes.Has(key)) {
-            if (!this.ThemeIsLoaded(key)) {
-                themeObj := this.LoadTheme(key)
-            } else {
-                themeObj := this.themes[key]
-            }
+        if (!this.ThemeIsLoaded(key)) {
+            themeObj := this.LoadTheme(key)
+        } else {
+            themeObj := this.themes[key]
         }
 
         return themeObj

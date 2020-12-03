@@ -33,7 +33,7 @@ class InstallOp extends BulkOperationBase {
 
         for index, installerKey in this.installerKeys {
             installer := this.app.Installers.GetInstaller(installerKey)
-            count += installer.CountAssets()
+            count += installer.CountComponents()
         }
 
         return count

@@ -8,15 +8,15 @@ class LaunchpadExeInstaller extends InstallerBase {
         SplitPath(A_ScriptFullPath,,,,scriptNameNoExt)
         this.isUpdater := scriptNameNoExt == this.appName . "Updater"
 
-        assets := []
+        components := []
 
         if (this.isUpdater) {
-            asset := GitHubReleaseInstallerAsset.new("VolantisDev/Launchpad", this.appName . ".exe", false, "", appState, "LaunchpadExe", cache, this.appName, true, tmpDir, true)
-            asset.version := this.version
-            assets.Push(asset)
+            component := GitHubReleaseInstallerComponent.new("VolantisDev/Launchpad", this.appName . ".exe", false, "", appState, "LaunchpadExe", cache, this.appName, true, tmpDir, true)
+            component.version := this.version
+            components.Push(component)
         }
 
-        super.__New(appState, "LaunchpadExeInstaller", cache, assets, tmpDir)
+        super.__New(appState, "LaunchpadExeInstaller", cache, components, tmpDir)
     }
 
     Install(progress := "") {
@@ -29,8 +29,8 @@ class LaunchpadExeInstaller extends InstallerBase {
                 this.movedApp := true
                 this.scriptDir := installDir
 
-                for (index, asset in this.installerAssets) {
-                    asset.scriptDir := installDir
+                for (index, component in this.installerComponents) {
+                    component.scriptDir := installDir
                 }
             }
         }

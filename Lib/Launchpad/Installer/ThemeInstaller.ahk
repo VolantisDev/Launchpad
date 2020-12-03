@@ -3,19 +3,19 @@ class ThemeInstaller extends InstallerBase {
     version := "latest"
 
     __New(appState, cache, downloadThemes := "", tmpDir := "") {
-        assets := []
+        components := []
 
-        asset := GitHubReleaseInstallerAsset.new("VolantisDev/Launchpad", "LaunchpadThemes.zip", true, "Themes", appState, "LaunchpadThemes", cache, "Themes", true, tmpDir, true)
-        asset.version := this.version
-        assets.Push(asset)
+        component := GitHubReleaseInstallerComponent.new("VolantisDev/Launchpad", "LaunchpadThemes.zip", true, "Themes", appState, "LaunchpadThemes", cache, "Themes", true, tmpDir, true)
+        component.version := this.version
+        components.Push(component)
 
         if (downloadThemes != "") {
             for key, url in downloadThemes {
                 path := "Themes\" . key . ".json"
-                assets.Push(DownloadableInstallerAsset.new(url, false, path, appState, cache, key . "Theme", "Themes", false, tmpDir, false))
+                components.Push(DownloadableInstallerComponent.new(url, false, path, appState, cache, key . "Theme", "Themes", false, tmpDir, false))
             }
         }
 
-        super.__New(appState, "Themes", cache, assets, tmpDir)
+        super.__New(appState, "Themes", cache, components, tmpDir)
     }
 }

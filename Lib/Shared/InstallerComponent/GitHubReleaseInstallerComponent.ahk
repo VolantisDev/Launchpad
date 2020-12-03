@@ -1,7 +1,8 @@
-class GitHubReleaseInstallerAsset extends DownloadableInstallerAsset {
+class GitHubReleaseInstallerComponent extends DownloadableInstallerComponent {
     repositoryUrl := ""
     parentStateKey := "LatestRelease"
     version := "latest"
+    response := ""
 
     __New(repositoryName, releaseFile, zipped, destPath, appState, stateKey, cache, parentStateKey := "", overwrite := false, tmpDir := "", onlyCompiled := false) {
         this.repositoryUrl := "https://api.github.com/repos/" . repositoryName . "/releases/" . this.version
@@ -9,10 +10,8 @@ class GitHubReleaseInstallerAsset extends DownloadableInstallerAsset {
     }
 
     GetGitHubResponse() {
-        static response := ""
-
-        if (response == "") {
-            cacheKey := "GitHubInstallerAssets\" . this.stateKey . ".json"
+        if (this.response == "") {
+            cacheKey := "GitHubInstallerComponents\" . this.stateKey . ".json"
 
             if (this.cache.ItemNeedsUpdate(cacheKey)) {
                 req := WinHttpReq.new(this.repositoryUrl)
@@ -30,15 +29,15 @@ class GitHubReleaseInstallerAsset extends DownloadableInstallerAsset {
 
                 this.cache.WriteItem(cacheKey, responseBody)
             }
-
-            response := Json.FromString(this.cache.ReadItem(cacheKey))
             
-            if (this.version == "latest") {
-                this.version := this.GetVersionFromTagName(response["tag_name"])
-            }
+            this.response := Json.FromString(this.cache.ReadItem(cacheKey))
+        }
+
+        if (this.version == "latest") {
+            this.version := this.GetVersionFromTagName(this.response["tag_name"])
         }
         
-        return response
+        return this.response
     }
 
     GetVersionFromTagName(tagName) {
@@ -55,9 +54,9 @@ class GitHubReleaseInstallerAsset extends DownloadableInstallerAsset {
         downloadUrl := ""
 
         if (Type(response) == "Map" and response.Has("assets")) {
-            for (index, asset in response["assets"]) {
-                if (filename == "" or asset["name"] == filename) {
-                    downloadUrl := asset["browser_download_url"]
+            for (index, component in response["assets"]) {
+                if (filename == "" or component["name"] == filename) {
+                    downloadUrl := component["browser_download_url"]
                     break
                 }
             }

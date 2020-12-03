@@ -20,11 +20,11 @@
 #Include E:\Tools\Launchpad\Lib\Shared\HttpReq\HttpReqBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\HttpReq\WinHttpReq.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Installer\InstallerBase.ahk
-#Include E:\Tools\Launchpad\Lib\Shared\InstallerAsset\DownloadableInstallerAsset.ahk
-#Include E:\Tools\Launchpad\Lib\Shared\InstallerAsset\FileInstallerAssetBase.ahk
-#Include E:\Tools\Launchpad\Lib\Shared\InstallerAsset\GitHubReleaseInstallerAsset.ahk
-#Include E:\Tools\Launchpad\Lib\Shared\InstallerAsset\InstallerAssetBase.ahk
-#Include E:\Tools\Launchpad\Lib\Shared\InstallerAsset\LibInstallerAsset.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\DownloadableInstallerComponent.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\FileInstallerComponentBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\GitHubReleaseInstallerComponent.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\InstallerComponentBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\LibInstallerComponent.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Json\Json.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Notifier\NotifierBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Notifier\ToastNotifier.ahk

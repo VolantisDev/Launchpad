@@ -3,7 +3,7 @@ class InstallerManager extends ServiceBase {
 
     SetupInstallers() {
         extraThemes := Map()
-        extraDependencyAssets := []
+        extraDependencyComponents := []
 
         tmpDir := this.app.tmpDir . "\Installers"
         cache := this.app.Cache.GetCache("file")
@@ -11,7 +11,7 @@ class InstallerManager extends ServiceBase {
         this.SetInstaller("Launchpad", LaunchpadInstaller.new(this.app.AppState, cache, tmpDir))
         this.SetInstaller("Libraries", LibraryInstaller.new(this.app.AppState, cache, tmpDir))
         this.SetInstaller("Themes", ThemeInstaller.new(this.app.AppState, cache, extraThemes, tmpDir))
-        this.SetInstaller("Dependencies", DependencyInstaller.new(this.app.AppState, cache, extraDependencyAssets, tmpDir))
+        this.SetInstaller("Dependencies", DependencyInstaller.new(this.app.AppState, cache, extraDependencyComponents, tmpDir))
     }
 
     GetInstaller(key) {

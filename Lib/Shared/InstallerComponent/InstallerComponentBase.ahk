@@ -1,4 +1,4 @@
-class InstallerAssetBase {
+class InstallerComponentBase {
     appState := ""
     cache := ""
     stateKey := ""
@@ -41,15 +41,15 @@ class InstallerAssetBase {
     */
 
     ExistsAction() {
-        throw MethodNotImplementedException.new("InstallerAssetBase", "ExistsAction")
+        throw MethodNotImplementedException.new("InstallerComponentBase", "ExistsAction")
     }
 
     InstallAction() {
-        throw MethodNotImplementedException.new("InstallerAssetBase", "InstallAction")
+        throw MethodNotImplementedException.new("InstallerComponentBase", "InstallAction")
     }
 
     UninstallAction() {
-        throw MethodNotImplementedException.new("InstallerAssetBase", "UninstallAction")
+        throw MethodNotImplementedException.new("InstallerComponentBase", "UninstallAction")
     }
 
     /**
@@ -99,9 +99,9 @@ class InstallerAssetBase {
         isOutdated := true
 
         if (this.Exists() and this.parentStateKey != "") {
-            assetVersion := this.appState.GetVersion(this.stateKey)
+            componentVersion := this.appState.GetVersion(this.stateKey)
             parentVersion := this.GetParentVersion()
-            isOutdated := this.VersionIsOutdated(parentVersion, assetVersion)
+            isOutdated := this.VersionIsOutdated(parentVersion, componentVersion)
         }
 
         this.appState.SetLastUpdateCheck(this.stateKey)

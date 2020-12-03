@@ -2,45 +2,45 @@ class DependencyInstaller extends InstallerBase {
     name := "Launchpad Dependency Installer"
     version := "latest"
 
-    __New(appState, cache, extraAssets := "", tmpDir := "") {
-        assets := []
+    __New(appState, cache, extraComponents := "", tmpDir := "") {
+        components := []
 
         dbVersion := "1.0.2"
 
         ahkUrl := "https://www.autohotkey.com/download/2.0/AutoHotkey_" . A_AhkVersion . ".zip"
         ahkPath := "Vendor\AutoHotKey"
-        ahkAsset := DownloadableInstallerAsset.new(ahkUrl, true, ahkPath, appState, "AutoHotKey", cache, "Dependencies", true, tmpDir, false)
-        ahkAsset.version := A_AhkVersion
-        assets.Push(ahkAsset)
+        ahkComponent := DownloadableInstallerComponent.new(ahkUrl, true, ahkPath, appState, "AutoHotKey", cache, "Dependencies", true, tmpDir, false)
+        ahkComponent.version := A_AhkVersion
+        components.Push(ahkComponent)
 
         mpressUrl := "https://github.com/bmcclure/launcher-db/releases/download/" . dbVersion . "/mpress.exe"
         mpressPath := "Vendor\AutoHotKey\Compiler\mpress.exe"
-        mpressAsset := DownloadableInstallerAsset.new(mpressUrl, false, mpressPath, appState, "Mpress", cache, "AutoHotKey", true, tmpDir, false)
-        mpressAsset.version := dbVersion
-        assets.Push(mpressAsset)
+        mpressComponent := DownloadableInstallerComponent.new(mpressUrl, false, mpressPath, appState, "Mpress", cache, "AutoHotKey", true, tmpDir, false)
+        mpressComponent.version := dbVersion
+        components.Push(mpressComponent)
 
         ahk2ExeUrl := "https://github.com/bmcclure/launcher-db/releases/download/" . dbVersion . "/Ahk2Exe.exe"
         ahk2ExePath := "Vendor\AutoHotKey\Compiler\Ahk2Exe.exe"
-        ahk2ExeAsset := DownloadableInstallerAsset.new(ahk2ExeUrl, false, ahk2ExePath, appState, "Ahk2Exe", cache, "AutoHotKey", true, tmpDir, false)
-        ahk2ExeAsset.version := dbVersion
-        assets.Push(ahk2ExeAsset)
+        ahk2ExeComponent := DownloadableInstallerComponent.new(ahk2ExeUrl, false, ahk2ExePath, appState, "Ahk2Exe", cache, "AutoHotKey", true, tmpDir, false)
+        ahk2ExeComponent.version := dbVersion
+        components.Push(ahk2ExeComponent)
 
-        assets.Push(GitHubReleaseInstallerAsset.new("dafzor/bnetlauncher", "", true, "Vendor\BnetLauncher", appState, "BnetLauncher", cache, "Dependencies", true, tmpDir, false))
+        components.Push(GitHubReleaseInstallerComponent.new("dafzor/bnetlauncher", "", true, "Vendor\BnetLauncher", appState, "BnetLauncher", cache, "Dependencies", true, tmpDir, false))
 
-        assetUrl := "https://benmcclure.com/launcher-db/Assets/Dependencies/BnetLauncher/gamedb.ini"
-        assetPath := "Vendor\BnetLauncher\gamedb.ini"
-        assets.Push(DownloadableInstallerAsset.new(assetUrl, false, assetPath, appState, "GameDbIni", cache, "BnetLauncher", true, tmpDir, false))
+        componentUrl := "https://benmcclure.com/launcher-db/Components/Dependencies/BnetLauncher/gamedb.ini"
+        componentPath := "Vendor\BnetLauncher\gamedb.ini"
+        components.Push(DownloadableInstallerComponent.new(componentUrl, false, componentPath, appState, "GameDbIni", cache, "BnetLauncher", true, tmpDir, false))
 
         iconsExtUrl := "https://www.nirsoft.net/utils/iconsext.zip"
         iconsExtPath := "Vendor\IconsExt"
-        assets.Push(DownloadableInstallerAsset.new(iconsExtUrl, true, iconsExtPath, appState, "IconsExt", cache, "Dependencies", false, tmpDir, false))
+        components.Push(DownloadableInstallerComponent.new(iconsExtUrl, true, iconsExtPath, appState, "IconsExt", cache, "Dependencies", false, tmpDir, false))
 
-        if (extraAssets != "") {
-            for (index, asset in extraAssets) {
-                assets.Push(asset)
+        if (extraComponents != "") {
+            for (index, component in extraComponents) {
+                components.Push(component)
             }
         }
 
-        super.__New(appState, "Dependencies", cache, assets, tmpDir := "")
+        super.__New(appState, "Dependencies", cache, components, tmpDir := "")
     }
 }

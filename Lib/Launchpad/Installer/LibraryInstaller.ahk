@@ -4,10 +4,10 @@ class LibraryInstaller extends InstallerBase {
     version := "latest"
 
     __New(appState, cache, tmpDir := "") {
-        assets := []
-        asset := GitHubReleaseInstallerAsset.new("VolantisDev/Launchpad", "LaunchpadLib.zip", true, "Lib", appState, "LibDirs", cache, "Libraries", true, tmpDir, true)
-        asset.version := this.version
-        assets.Push(asset)
-        super.__New(appState, "Libraries", cache, assets, tmpDir)
+        components := []
+        component := GitHubReleaseInstallerComponent.new("VolantisDev/Launchpad", "LaunchpadLib.zip", true, "Lib", appState, "LibDirs", cache, "Libraries", true, tmpDir, true)
+        component.version := this.version
+        components.Push(component)
+        super.__New(appState, "Libraries", cache, components, tmpDir)
     }
 }

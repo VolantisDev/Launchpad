@@ -1,4 +1,4 @@
-class LauncherLibInstallerAsset extends FileInstallerAssetBase {
+class LauncherLibInstallerComponent extends FileInstallerComponentBase {
     zipped := true
 
     __New(appState, stateKey, cache, parentStateKey := "", overwrite := false, tmpDir := "", onlyCompiled := false) {

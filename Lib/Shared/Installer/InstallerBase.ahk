@@ -6,13 +6,13 @@ class InstallerBase {
     onlyInstallWhenCompiled := false
     appState := ""
     stateKey := ""
-    installerAssets := []
+    installerComponents := []
     scriptFile := ""
     scriptDir := ""
     tmpDir := ""
     parentComponent := ""
 
-    __New(appState, stateKey, cache, assets := "", tmpDir := "") {
+    __New(appState, stateKey, cache, components := "", tmpDir := "") {
         this.cache := cache
         this.appState := appState
         this.stateKey := stateKey
@@ -26,8 +26,8 @@ class InstallerBase {
 
         this.tmpDir := tmpDir
 
-        if (assets != "") {
-            this.addAssets(assets)
+        if (components != "") {
+            this.addComponents(components)
         }
     }
 
@@ -35,13 +35,13 @@ class InstallerBase {
     * IMPLEMENTED METHODS
     */
 
-    AddAssets(assets) {
-        if (Type(assets) != "Array") {
-            assets := [assets]
+    AddComponents(components) {
+        if (Type(components) != "Array") {
+            components := [components]
         }
 
-        for index, asset in assets {
-            this.installerAssets.push(asset)
+        for index, component in components {
+            this.installerComponents.push(component)
         }
     }
 
@@ -53,8 +53,8 @@ class InstallerBase {
         return this.IsInstalled() ? this.Update(progress) : this.Install(progress)
     }
 
-    CountAssets() {
-        return this.installerAssets.Length
+    CountComponents() {
+        return this.installerComponents.Length
     }
 
     Install(progress := "") {
@@ -69,15 +69,15 @@ class InstallerBase {
             progress.SetDetailText(this.name . " components installing...")
         }
         
-        for index, asset in this.installerAssets {
+        for index, component in this.installerComponents {
             if (progress != "") {
-                progress.IncrementValue(1, this.name . " installing " . asset.stateKey . "...")
+                progress.IncrementValue(1, this.name . " installing " . component.stateKey . "...")
             }
 
-            if (!asset.Exists() || asset.IsOutdated()) {
-                assetSuccess := asset.Install()
+            if (!component.Exists() || component.IsOutdated()) {
+                componentSuccess := component.Install()
                 
-                if (!assetSuccess) {
+                if (!componentSuccess) {
                     success := false
                 }
             }
@@ -93,8 +93,8 @@ class InstallerBase {
             return true
         }
 
-        for index, asset in this.installerAssets {
-            if (!asset.Exists()) {
+        for index, component in this.installerComponents {
+            if (!component.Exists()) {
                 return false
             }
         }
@@ -122,8 +122,8 @@ class InstallerBase {
         }
 
         if (!isOutdated) {
-            for index, asset in this.installerAssets {
-                if (asset.IsOutdated()) {
+            for index, component in this.installerComponents {
+                if (component.IsOutdated()) {
                     isOutdated := true
                 }
             }
@@ -155,15 +155,15 @@ class InstallerBase {
         }
 
         if (progress != "") {
-            progress.SetDetailText(this.name . ": Uninstalling assets")
+            progress.SetDetailText(this.name . ": Uninstalling components")
         }
 
-        for index, asset in this.installerAssets {
+        for index, component in this.installerComponents {
             if (progress != "") {
                 progress.IncrementValue(1)
             }
 
-            asset.Uninstall()
+            component.Uninstall()
         }
 
         this.appState.RemoveVersion(this.stateKey)

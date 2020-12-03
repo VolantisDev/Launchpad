@@ -23,6 +23,14 @@ class ThemeBase {
         }
     }
 
+    InitializeTheme() {
+        iconSrc := this.GetGraphic("icon")
+
+        if (iconSrc != "" and FileExist(iconSrc)) {
+            TraySetIcon(iconSrc)
+        }
+    }
+
     GetColor(id) {
         colorHex := "000000"
 
@@ -211,6 +219,8 @@ class ThemeBase {
         this.name := themeMap.Has("name") ? themeMap["name"] : themeName
 
         this.LoadValuesIntoTheme(themeMap)
+
+        this.InitializeTheme()
 
         return this
     }

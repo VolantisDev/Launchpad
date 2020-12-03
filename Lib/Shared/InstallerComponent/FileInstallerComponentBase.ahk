@@ -1,4 +1,4 @@
-class FileInstallerAssetBase extends InstallerAssetBase {
+class FileInstallerComponentBase extends InstallerComponentBase {
     destPath := ""
     recurse := true
     zipped := false
@@ -17,7 +17,7 @@ class FileInstallerAssetBase extends InstallerAssetBase {
     */
 
     InstallFilesAction() {
-        throw MethodNotImplementedException.new("FileInstallerAssetBase", "InstallFilesAction")
+        throw MethodNotImplementedException.new("FileInstallerComponentBase", "InstallFilesAction")
     }
 
     /**
