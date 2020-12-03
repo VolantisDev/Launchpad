@@ -18,16 +18,16 @@ DirCreate(buildDir)
 DirCreate(buildDir . "\Lib")
 DirCopy(appDir . "\Lib\LauncherLib", buildDir . "\Lib\LauncherLib")
 DirCopy(appDir . "\Lib\Shared", buildDir . "\Lib\Shared")
-Zip(buildDir . "\Lib", buildDir . "\Launchpad Lib.zip")
+Zip(buildDir . "\Lib", buildDir . "\LaunchpadLib.zip")
 DirDelete(buildDir . "\Lib", true)
 
-Zip(appDir . "\Graphics", buildDir . "\Launchpad Graphics.zip")
-Zip(appDir . "\Themes", buildDir . "\Launchpad Themes.zip")
+Zip(appDir . "\Graphics", buildDir . "\LaunchpadGraphics.zip")
+Zip(appDir . "\Themes", buildDir . "\LaunchpadThemes.zip")
 
-BuildExe("Launchpad Updater", iconFile)
+BuildExe("LaunchpadUpdater", iconFile)
 BuildExe("Launchpad", iconFile)
 
-TrayTip("Finished building Launchpad.exe and Launchpad Updater.exe", "Launchpad Build", 1)
+TrayTip("Finished building Launchpad.exe and LaunchpadUpdater.exe", "Launchpad Build", 1)
 ExitApp
 
 BuildExe(scriptName, iconFile) {

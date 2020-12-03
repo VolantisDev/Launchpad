@@ -31,7 +31,7 @@ class WindowManager extends ServiceBase {
 
     OpenUpdaterWindow() {
         if (!this.WindowExists("UpdaterWindow")) {
-            this.AddWindow("UpdaterWindow", UpdaterWindow.new(this.app, "", "MainWindow"))
+            this.AddWindow("UpdaterWindow", UpdaterWindow.new(this.app, "Updater - Launchpad", "MainWindow"))
         }
 
         return this.ShowWindow("UpdaterWindow")

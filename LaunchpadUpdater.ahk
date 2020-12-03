@@ -9,6 +9,16 @@ TraySetIcon("Graphics\Launchpad.ico")
 
 SplitPath(A_ScriptName,,,, appName)
 
+try {
+    app := Launchpad.new(appName, A_ScriptDir)
+    app.Windows.OpenUpdaterWindow()
+} catch e {
+    extra := (e.HasProp("Extra") and e.Extra != "") ? "`n`nAdditional info:`n" . e.Extra : ""
+    MsgBox "An unhandled exception has occurred in " . e.What . ".`n`n" . e.Message . extra . "`n`nLaunchpad will now exit."
+    ExitApp
+}
+
+
 app := Launchpad.new(appName, A_ScriptDir)
 app.Windows.OpenUpdaterWindow()
 

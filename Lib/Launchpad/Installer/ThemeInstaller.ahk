@@ -5,7 +5,7 @@ class ThemeInstaller extends InstallerBase {
     __New(appState, cache, downloadThemes := "", tmpDir := "") {
         assets := []
 
-        asset := GitHubReleaseInstallerAsset.new("VolantisDev/Launchpad", "Launchpad Themes.zip", true, "Themes", appState, "LaunchpadThemes", cache, "Themes", true, tmpDir, true)
+        asset := GitHubReleaseInstallerAsset.new("VolantisDev/Launchpad", "LaunchpadThemes.zip", true, "Themes", appState, "LaunchpadThemes", cache, "Themes", true, tmpDir, true)
         asset.version := this.version
         assets.Push(asset)
 

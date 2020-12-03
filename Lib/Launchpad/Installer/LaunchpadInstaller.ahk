@@ -6,11 +6,11 @@ class LaunchpadInstaller extends InstallerBase {
     __New(appState, cache, tmpDir := "") {
         assets := []
 
-        asset := GitHubReleaseInstallerAsset.new("VolantisDev/Launchpad", "Launchpad Updater.exe", true, "", appState, "LaunchpadUpdater", cache, this.appName, true, tmpDir, true)
+        asset := GitHubReleaseInstallerAsset.new("VolantisDev/Launchpad", "LaunchpadUpdater.exe", true, "", appState, "LaunchpadUpdater", cache, this.appName, true, tmpDir, true)
         asset.version := this.version
         assets.Push(asset)
 
-        asset := GitHubReleaseInstallerAsset.new("VolantisDev/Launchpad", "Launchpad Graphics.zip", true, "Graphics", appState, "LaunchpadGraphics", cache, this.appName, true, tmpDir, true)
+        asset := GitHubReleaseInstallerAsset.new("VolantisDev/Launchpad", "LaunchpadGraphics.zip", true, "Graphics", appState, "LaunchpadGraphics", cache, this.appName, true, tmpDir, true)
         asset.version := this.version
         assets.Push(asset)
 

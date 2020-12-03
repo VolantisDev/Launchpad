@@ -6,7 +6,7 @@ class LaunchpadExeInstaller extends InstallerBase {
 
     __New(appState, cache, tmpDir := "") {
         SplitPath(A_ScriptFullPath,,,,scriptNameNoExt)
-        this.isUpdater := scriptNameNoExt == this.appName . " Updater"
+        this.isUpdater := scriptNameNoExt == this.appName . "Updater"
 
         assets := []
 
