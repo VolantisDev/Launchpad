@@ -1,34 +1,22 @@
 class GuiBase {
     guiObj := ""
     title := ""
+    themeObj := ""
     owner := ""
+    windowKey := ""
+    isDialog := false
+    windowSettings := Map()
+    margin := ""
     windowOptions := ""
-    windowSize := ""
-    margin := 10
-    windowMargin := 10
-    contentWidth := 320
     hasToolbar := false
     hToolbar := ""
+
     positionAtMouseCursor := false
-    windowKey := ""
-    transColor := ""
-    backgroundColor := "FFFFFF"
-    textColor := "000000"
-    lightTextColor := "959595"
-    accentColor := "9466FC"
-    accentLightColor := "EEE6FF"
-    accentDarkColor := "8A57F0"
     openWindowWithinScreenBounds := true
-    tabHeight := 350
-    labelWidth := 75
-    buttonSmallW := 80
-    buttonSmallH := 20
-    defaultFontSize := 11
-    smallFontSize := 10
     showInNotificationArea := false
 
-    __New(title, owner := "", windowKey := "") {
-        InvalidParameterException.CheckTypes("GuiBase", "title", title, "", "windowKey", windowKey, "")
+    __New(title, themeObj, owner := "", windowKey := "") {
+        InvalidParameterException.CheckTypes("GuiBase", "title", title, "", "themeObj", themeObj, "ThemeBase", "windowKey", windowKey, "")
         InvalidParameterException.CheckEmpty("GuiBase", "title", title)
 
         if (owner != "") {
@@ -42,6 +30,10 @@ class GuiBase {
         }
 
         this.title := title
+        this.themeObj := themeObj
+        this.windowSettings := themeObj.GetWindowSettings(windowKey)
+        this.margin := themeObj.GetSpacing()
+        this.windowOptions := themeObj.GetWindowOptions(this.windowKey, this.isDialog)
         this.windowKey := windowKey
         this.Create()
     }
@@ -50,13 +42,26 @@ class GuiBase {
     * IMPLEMENTED METHODS
     */
 
+    GetItemIndex(arr, itemValue) {
+        result := ""
+
+        for index, value in arr {
+            if (value == itemValue) {
+                result := index
+                break
+            }
+        }
+
+        return result
+    }
+
     AddHeading(groupLabel, position := "") {
         if (position == "") {
-            position := "x" . this.windowMargin . " y+" . (this.margin * 2.5)
+            position := "x" . this.margin . " y+" . (this.margin * 2.5)
         }
 
         this.guiObj.SetFont("Bold")
-        this.guiObj.AddText(position . " w" . this.contentWidth . " Section +0x200", groupLabel)
+        this.guiObj.AddText(position . " w" . this.windowSettings["contentWidth"] . " Section +0x200", groupLabel)
         this.ResetFont()
     }
 
@@ -65,8 +70,8 @@ class GuiBase {
             position := "xs y+m"
         }
 
-        this.guiObj.SetFont("s" . this.smallFontSize . " w200")
-        this.guiObj.AddText(position . " w" . this.contentWidth . " c" . this.lightTextColor, helpText)
+        this.guiObj.SetFont(this.themeObj.GetFont("small"))
+        this.guiObj.AddText(position . " w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("textLight"), helpText)
         this.ResetFont()
     }
 
@@ -75,7 +80,7 @@ class GuiBase {
             callback := "On" . ctlName
         }
 
-        width := this.contentWidth
+        width := this.windowSettings["contentWidth"]
         position := "xs"
 
         if (inGroupBox) {
@@ -95,11 +100,12 @@ class GuiBase {
 
     ResetFont() {
         this.guiObj.SetFont()
-        this.guiObj.SetFont("s" . this.defaultFontSize)
+        this.guiObj.SetFont(this.themeObj.GetFont("normal"))
     }
 
     SetWindowKey(windowKey) {
         this.windowKey := windowKey
+        this.windowSettings := this.themeObj.GetWindowSettings(windowKey)
     }
 
     GetHwnd() {
@@ -126,12 +132,9 @@ class GuiBase {
     }
 
     Create() {
-        options := this.windowOptions
-        margin := this.margin
-
         this.guiObj := Gui.New(this.windowOptions, this.GetTitle(this.title), this)
-        this.guiObj.BackColor := this.backgroundColor
-        this.guiObj.Color := this.textColor
+        this.guiObj.BackColor := this.themeObj.GetColor("background")
+        this.guiObj.Color := this.themeObj.GetColor("text")
         this.guiObj.MarginX := this.margin
         this.guiObj.MarginY := this.margin
 
@@ -178,11 +181,11 @@ class GuiBase {
     }
 
     End() {
-        windowSize := this.windowSize
-        width := this.contentWidth + (this.margin * 2)
+        windowSize := ""
 
-        if (this.positionAtMouseCursor) {
-            
+        width := this.windowSettings["contentWidth"] + (this.margin * 2)
+
+        if (this.positionAtMouseCursor) {    
             CoordMode("Mouse", "Screen")
             MouseGetPos(windowX, windowY)
             CoordMode("Mouse")
@@ -206,8 +209,9 @@ class GuiBase {
             this.guiObj.Move(windowX, windowY)
         }
 
-        if (this.transColor != "") {
-            WinSetTransColor(this.transColor, "ahk_id " . this.guiObj.Hwnd)
+        transColorVal := this.themeObj.GetColor("transColor")
+        if (transColorVal != "") {
+            WinSetTransColor(transColorVal, "ahk_id " . this.guiObj.Hwnd)
         }
 
         this.AdjustWindowPosition()
@@ -289,7 +293,7 @@ class GuiBase {
 
     ButtonWidth(numberOfButtons, availableWidth := 0) {
         if (availableWidth == 0) {
-            availableWidth := this.contentWidth
+            availableWidth := this.windowSettings["contentWidth"]
         }
 
         marginWidth := (numberOfButtons <= 1) ? 0 : (this.margin * (numberOfButtons - 1))

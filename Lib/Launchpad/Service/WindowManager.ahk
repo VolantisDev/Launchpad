@@ -1,16 +1,20 @@
 class WindowManager extends ServiceBase {
     windows := Map()
 
+    GetTheme() {
+        return this.app.Themes.GetTheme()
+    }
+
     DialogBox(title, text, owner := "", buttons := "*&Yes|&No") {
-        return this.ShowDialog(DialogBox.new(title, text, owner, buttons))
+        return this.ShowDialog(DialogBox.new(title, this.GetTheme(), text, owner, buttons))
     }
 
     SingleInputBox(title, text, defaultValue := "", owner := "", isPassword := false) {
-        return this.ShowDialog(SingleInputBox.new(title, text, defaultValue, owner, isPassword))
+        return this.ShowDialog(SingleInputBox.new(title, this.GetTheme(), text, defaultValue, owner, isPassword))
     }
 
     ProgressIndicator(title, text, owner := "", allowCancel := false, progressRange := 100, initialPosition := 0, detailText := true) {
-        return this.ShowDialog(ProgressIndicator.new(title, text, owner, allowCancel, progressRange, initialPosition, detailText))
+        return this.ShowDialog(ProgressIndicator.new(title, this.GetTheme(), text, owner, allowCancel, progressRange, initialPosition, detailText))
     }
 
     LauncherEditor(launcherGameObj, mode := "config", owner := "") {

@@ -1,17 +1,14 @@
 ﻿class ToolsWindow extends LaunchpadGuiBase {
-    windowOptions := "+AlwaysOnTop -Caption Border"
-    contentWidth := 400
-    buttonHeight := 40
     positionAtMouseCursor := true
     nextPos := "xm"
 
     __New(app, owner := "", windowKey := "") {
-        this.backgroundColor := this.accentDarkColor
         super.__New(app, "Tools", owner, windowKey)
     }
 
     Controls() {
         super.Controls()
+        this.guiObj.BackColor := this.themeObj.GetColor("accentDark")
         this.AddToolButton("&Reload Launchers", "ReloadLaunchers")
         this.AddToolButton("&Clean Launchers", "CleanLaunchers")
         this.AddToolButton("&Validate Launchers", "ValidateLaunchers")
@@ -23,8 +20,12 @@
     }
 
     AddToolButton(buttonLabel, ctlName) {
-        width := (this.contentWidth - this.margin) / 2
-        btn := this.guiObj.AddButton("v" . ctlName . " " . this.nextPos . " w" . width . " h" . this.buttonHeight, buttonLabel)
+        width := (this.windowSettings["contentWidth"] - this.margin) / 2
+
+        buttonSize := this.themeObj.GetButtonSize("big")
+        buttonH := (buttonSize.Has("h") and buttonSize["h"] != "auto") ? buttonSize["h"] : 40
+
+        btn := this.guiObj.AddButton("v" . ctlName . " " . this.nextPos . " w" . width . " h" . buttonH, buttonLabel)
         btn.OnEvent("Click", "On" . ctlName)
         this.nextPos := this.nextPos == "xm" ? "x+m yp" : "xm"
     }

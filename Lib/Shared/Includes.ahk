@@ -32,6 +32,7 @@
 #Include E:\Tools\Launchpad\Lib\Shared\OpError\OpErrorBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\OpStatus\BasicOpStatus.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\OpStatus\OpStatusBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Theme\JsonTheme.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Theme\ThemeBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Toolbar\ToolbarBase.ahk
 ; End of auto-generated includes.

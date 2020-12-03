@@ -1,22 +1,22 @@
 ﻿class SettingsWindow extends LaunchpadGuiBase {
-    windowOptions := "-MaximizeBox -SysMenu"
-    contentWidth := 400
-    tabHeight := 400
+    availableThemes := Map()
 
     __New(app, owner := "", windowKey := "") {
+        this.availableThemes := app.Themes.GetAvailableThemes(true)
         super.__New(app, "Settings", owner, windowKey)
     }
 
     Controls() {
         super.Controls()
         
-        groupW := this.contentWidth - (this.margin * 2)
-        openX := groupW - (this.buttonSmallW * 2) ; this assumes the group starts at this.margin
+        groupW := this.windowSettings["contentWidth"] - (this.margin * 2)
 
-        tabs := this.guiObj.Add("Tab3", "x" . this.windowMargin . " y" . this.windowMargin . " h" . this.tabHeight . " +0x100", ["Launchers", "Assets", "Sources", "Advanced"])
+        buttonSize := this.themeObj.GetButtonSize("smallFixed")
+        buttonW := (buttonSize.Has("w") and buttonSize["w"] != "auto") ? buttonSize["w"] : 80
+        openX := groupW - (buttonW * 2)
+        tabs := this.guiObj.Add("Tab3", "x" . this.margin . " y" . this.margin . " h" . this.windowSettings["tabHeight"] . " +0x100", ["Launchers", "Assets", "Sources", "Appearance", "Advanced"])
 
         tabs.UseTab("Launchers", true)
-
 
         this.AddHeading("Launcher File")
         this.AddConfigLocationBlock("LauncherFile", "Reload")
@@ -43,6 +43,16 @@
         this.AddHeading("API Endpoint")
         this.AddConfigLocationBlock("ApiEndpoint")
 
+        tabs.UseTab("Appearance", true)
+
+        this.AddHeading("Theme")
+        chosen := this.GetItemIndex(this.availableThemes, this.app.Config.ThemeName)
+        ctl := this.guiObj.AddDDL("vThemeName xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"], this.availableThemes)
+        ctl.OnEvent("Change", "OnThemeNameChange")
+        this.AddHelpText("Select a theme for Launchpad to use.")
+
+        ; @todo finish this
+
         tabs.UseTab("Advanced", true)
 
         this.AddHeading("Cache Dir")
@@ -54,7 +64,7 @@
         tabs.UseTab()
 
         closeW := 100
-        closeX := this.margin + (this.contentWidth / 2) - (closeW / 2)
+        closeX := this.margin + (this.windowSettings["contentWidth"] / 2) - (closeW / 2)
 
         this.AddButton("&Done", "CloseButton", closeW, 30, "x" . closeX)
     }
@@ -64,15 +74,19 @@
 
         this.AddLocationText(location, settingName, inGroupBox)
 
+        buttonSize := this.themeObj.GetButtonSize("smallFixed")
+        buttonW := (buttonSize.Has("w") and buttonSize["w"] != "auto") ? buttonSize["w"] : 80
+        buttonH := (buttonSize.Has("h") and buttonSize["h"] != "auto") ? buttonSize["h"] : 20
+
         position := inGroupBox ? "xs+" . this.margin . " y+m" : "xs y+m"
-        btn := this.guiObj.AddButton(position . " w" . this.buttonSmallW . " h" . this.buttonSmallH, "Change")
+        btn := this.guiObj.AddButton(position . " w" . buttonW . " h" . buttonH, "Change")
         btn.OnEvent("Click", "OnChange" . settingName)
 
-        btn := this.guiObj.AddButton("x+m yp w" . this.buttonSmallW . " h" . this.buttonSmallH, "Open")
+        btn := this.guiObj.AddButton("x+m yp w" . buttonW . " h" . buttonH, "Open")
         btn.OnEvent("Click", "OnOpen" . settingName)
 
         if (extraButton != "") {
-            btn := this.guiObj.AddButton("x+m yp w" . this.buttonSmallW . " h" . this.buttonSmallH, extraButton)
+            btn := this.guiObj.AddButton("x+m yp w" . buttonW . " h" . buttonH, extraButton)
             btn.OnEvent("Click", "On" . extraButton . settingName)
         }
     }
@@ -87,7 +101,7 @@
         position .= " y+m"
 
         this.guiObj.SetFont("Bold")
-        this.guiObj.AddText("v" . ctlName . " " . position . " w" . this.contentWidth . " +0x200 c" . this.accentDarkColor, locationText)
+        this.guiObj.AddText("v" . ctlName . " " . position . " w" . this.windowSettings["contentWidth"] . " +0x200 c" . this.themeObj.GetColor("accentDark"), locationText)
         this.guiObj.SetFont()
     }
 
@@ -103,12 +117,14 @@
     }
 
     AddButton(buttonLabel, ctlName, width := "", height := "", position := "xs y+m") {
+        buttonSize := this.themeObj.GetButtonSize("smallFixed")
+
         if (width == "") {
-            width := this.buttonSmallW
+            width := (buttonSize.Has("w") and buttonSize["w"] != "auto") ? buttonSize["w"] : 80
         }
 
         if (height == "") {
-            height := this.buttonSmallH
+            height := (buttonSize.Has("h") and buttonSize["h"] != "auto") ? buttonSize["h"] : 20
         }
 
         btn := this.guiObj.AddButton("v" . ctlName . " " . position . " w" . width . " h" . height, buttonLabel)
@@ -118,7 +134,7 @@
     SetText(ctlName, ctlText, fontStyle := "") {
         this.guiObj.SetFont(fontStyle)
         this.guiObj[ctlName].Text := ctlText
-        this.guiObj.SetFont()
+        this.ResetFont()
     }
 
     OnCloseButton(btn, info) {
@@ -176,5 +192,11 @@
     OnChangeCacheDir(btn, info) {
         this.app.Cache.ChangeCacheDir()
         this.SetText("TxtCacheDir", this.app.Config.CacheDir, "Bold")
+    }
+
+    OnThemeNameChange(ctl, info) {
+        this.guiObj.Submit(false)
+        this.app.Config.ThemeName := this.availableThemes[ctl.Value]
+        this.app.Themes.LoadMainTheme()
     }
 }

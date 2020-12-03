@@ -1,15 +1,14 @@
 class FormGuiBase extends GuiBase {
     text := ""
     btns := ""
-    contentWidth := 320
     result := ""
     waitForResult := true
 
-    __New(title, text := "", owner := "", windowKey := "", btns := "*&Submit") {
+    __New(title, themeObj, text := "", owner := "", windowKey := "", btns := "*&Submit") {
         InvalidParameterException.CheckTypes("FormGuiBase", "btns", btns, "", "text", text, "")
         this.text := text
         this.btns := btns
-        super.__New(title, owner, windowKey)
+        super.__New(title, themeObj, owner, windowKey)
     }
 
     /**
@@ -20,7 +19,7 @@ class FormGuiBase extends GuiBase {
         super.Controls()
 
         if (this.text != "") {
-            this.guiObj.AddText("w" . this.contentWidth . "", this.text)
+            this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . "", this.text)
         }
     }
 
@@ -52,7 +51,7 @@ class FormGuiBase extends GuiBase {
         btns := StrSplit(this.btns, "|")
 
         loop btns.Length {
-            position := (A_Index == 1) ? "x" . this.windowMargin . " Section ": "x+m yp "
+            position := (A_Index == 1) ? "x" . this.margin . " Section ": "x+m yp "
             defaultOption := InStr(btns[A_Index], "*") ? "Default " : " "
             btn := this.guiObj.AddButton(position . defaultOption . "w100", RegExReplace(btns[A_Index], "\*"))
             btn.OnEvent("Click", "OnFormGuiButton")

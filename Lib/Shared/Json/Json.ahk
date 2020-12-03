@@ -181,4 +181,8 @@ class Json {
 	static ToFile(obj, filePath, indent:="", lbl:=1, args*) {
 		FileAppend(Json.ToString(obj, indent, lbl, args*), filePath)
 	}
+
+	static FromFile(filePath, args*) {
+		return Json.FromString(FileRead(filePath), args*)
+	}
 }

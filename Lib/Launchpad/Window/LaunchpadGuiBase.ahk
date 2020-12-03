@@ -9,7 +9,7 @@ class LaunchpadGuiBase extends GuiBase {
             owner := app.Windows.GetGuiObj(owner)
         }
         
-        super.__New(title, owner, windowKey)
+        super.__New(title, app.Themes.GetTheme(), owner, windowKey)
     }
 
     Destroy() {

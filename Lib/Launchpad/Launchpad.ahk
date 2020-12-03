@@ -11,6 +11,7 @@
     dataSourceManagerObj := ""
     builderManagerObj := ""
     installerManagerObj := ""
+    themeManagerObj := ""
     
     Config[] {
         get => this.appConfigObj
@@ -57,6 +58,11 @@
         set => this.installerManagerObj := value
     }
 
+    Themes[] {
+        get => this.themeManagerObj
+        set => this.themeManagerObj := value
+    }
+
     __New(appName, appDir) {
         InvalidParameterException.CheckTypes("Launchpad", "appName", appName, "", "appDir", appDir, "")
         this.appName := appName
@@ -73,6 +79,7 @@
         this.appStateObj := appStateObj
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
         this.notificationServiceObj := NotificationService.new(this, ToastNotifier.new(this))
+        this.themeManagerObj := ThemeManager.new(this, appDir . "\Themes")
         this.windowManagerObj := WindowManager.new(this)
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
         this.dataSourceManagerObj := DataSourceManager.new(this)

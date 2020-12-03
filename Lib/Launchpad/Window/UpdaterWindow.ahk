@@ -1,14 +1,5 @@
 ﻿class UpdaterWindow extends LaunchpadGuiBase {
-    contentWidth := 515
-    areaW := 430
-    row1Height := 80
-    row2Height := 30
-    logo := ""
-
-    __New(app, owner := "", windowKey := "") {
-        this.logo := app.Config.AppDir . "\Graphics\Logo.png"
-        super.__New(app, "Launchpad Updater", owner, windowKey)
-    }
+    buttonAreaRatio := 0.8
 
     GetTitle(title) {
         return title
@@ -20,21 +11,26 @@
         this.guiObj.marginX := this.margin
         this.guiObj.marginY := this.margin * 3
 
-        img := this.guiObj.AddPicture("w" . this.contentWidth . " h-1 +BackgroundTrans", this.logo)
+        img := this.guiObj.AddPicture("w" . this.windowSettings["contentWidth"] . " h-1 +BackgroundTrans", this.themeObj.GetGraphic("logo"))
         img.OnEvent("Click", "OnLogo")
 
-        buttonX := this.margin + ((this.contentWidth - this.areaW) / 2)
+        areaW := this.windowSettings["contentWidth"] * this.buttonAreaRatio
+        buttonX := this.margin + ((this.windowSettings["contentWidth"] - areaW) / 2)
+        hugeButtonSize := this.themeObj.GetButtonSize("huge")
+        hugeButtonH := hugeButtonSize.Has("h") ? hugeButtonSize["h"] : 80
+        normalButtonSize := this.themeObj.GetButtonSize("normal")
+        normalButtonH := normalButtonSize.Has("h") ? normalButtonSize["h"] : 30
 
         ; First row
-        buttonWidth := this.ButtonWidth(2, this.areaW)
-        btn := this.guiObj.AddButton("x" . buttonX . " w" . buttonWidth . " h" . this.row1Height . " Section", "Update &Launchpad")
+        buttonWidth := this.ButtonWidth(2, areaW)
+        btn := this.guiObj.AddButton("x" . buttonX . " w" . buttonWidth . " h" . hugeButtonH . " Section", "Update &Launchpad")
         btn.OnEvent("Click", "OnUpdateLaunchpad")
         btn := this.guiObj.AddButton("ys wp hp", "Update &Dependencies")
         btn.OnEvent("Click", "OnUpdateDependencies")
 
         ; Second row
-        buttonWidth := this.ButtonWidth(1, this.areaW)
-        btn := this.guiObj.AddButton("x" . buttonX . " y+" . this.margin . " w" . buttonWidth . " h" . this.row2Height . " Section", "&Exit")
+        buttonWidth := this.ButtonWidth(1, areaW)
+        btn := this.guiObj.AddButton("x" . buttonX . " y+" . this.margin . " w" . buttonWidth . " h" . normalButtonH . " Section", "&Exit")
         btn.OnEvent("Click", "OnClose")
     }
 

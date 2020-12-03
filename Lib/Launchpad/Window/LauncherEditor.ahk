@@ -7,14 +7,12 @@
 */
 
 class LauncherEditor extends LaunchpadFormGuiBase {
-    contentWidth := 500
     launcherEntityObj := ""
     mode := "config" ; Options: config, build
     missingFields := Map()
     knownGames := ""
     launcherTypes := ""
     gameTypes := ""
-    tabHeight := 520
     margin := 6
 
     __New(app, launcherEntityObj, mode := "config", owner := "", windowKey := "") {
@@ -60,30 +58,30 @@ class LauncherEditor extends LaunchpadFormGuiBase {
     Controls() {
         super.Controls()
 
-        tabs := this.guiObj.Add("Tab3", " x" . this.windowMargin . " h" . this.tabHeight . " +0x100", ["General", "Sources", "Advanced"])
+        tabs := this.guiObj.Add("Tab3", " x" . this.margin . " h" . this.windowSettings["tabHeight"] . " +0x100", ["General", "Sources", "Advanced"])
 
         tabs.UseTab("General", true)
 
         this.AddHeading("Game")
-        ctl := this.guiObj.AddComboBox("vKey xs y+m w" . this.contentWidth, this.knownGames)
+        ctl := this.guiObj.AddComboBox("vKey xs y+m w" . this.windowSettings["contentWidth"], this.knownGames)
         ctl.Text := this.launcherEntityObj.Key
         ctl.OnEvent("Change", "OnKeyChange")
         this.AddHelpText("Select an existing game from the API, or enter a custom game key to create your own. Use caution when changing this value, as it will change which data is requested from the API.")
 
         this.AddHeading("Display Name")
-        ctl := this.guiObj.AddEdit("vDisplayName xs y+m w" . this.contentWidth, this.launcherEntityObj.DisplayName)
+        ctl := this.guiObj.AddEdit("vDisplayName xs y+m w" . this.windowSettings["contentWidth"], this.launcherEntityObj.DisplayName)
         ctl.OnEvent("Change", "OnDisplayNameChange")
         this.AddHelpText("You can change the display name of the game if it differs from the key. The launcher filename will still be created using the key.")
 
         this.AddHeading("Launcher Type")
         chosen := this.GetItemIndex(this.launcherTypes, this.launcherEntityObj.ManagedLauncher.EntityType)
-        ctl := this.guiObj.AddDDL("vLauncherType xs y+m Choose" . chosen . " w" . this.contentWidth, this.launcherTypes)
+        ctl := this.guiObj.AddDDL("vLauncherType xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"], this.launcherTypes)
         ctl.OnEvent("Change", "OnLauncherTypeChange")
         this.AddHelpText("This tells Launchpad how to interact with any launcher your game might require. If no specific options match, or your game doesn't have a separate launcher, simply choose 'default'.")
         
         this.AddHeading("Game Type")
         chosen := this.GetItemIndex(this.gameTypes, this.launcherEntityObj.ManagedGame.EntityType)
-        ctl := this.guiObj.AddDDL("vGameType xs y+m Choose" . chosen . " w" . this.contentWidth, this.gameTypes)
+        ctl := this.guiObj.AddDDL("vGameType xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"], this.gameTypes)
         ctl.OnEvent("Change", "OnGameTypeChange")
         this.AddHelpText("This tells Launchpad how to launch your game. Most games can use 'default', but some launchers support multiple game types.")
 
@@ -160,16 +158,27 @@ class LauncherEditor extends LaunchpadFormGuiBase {
 
         this.AddLocationText(location, settingName)
 
-        btn := this.guiObj.AddButton("xs y+m w" . this.buttonSmallW . " h" . this.buttonSmallH, "Change")
+        buttonSize := this.themeObj.GetButtonSize("smallFixed")
+        buttonDims := ""
+        
+        if (buttonSize.Has("h") and buttonSize["h"] != "auto") {
+            buttonDims .= " h" . buttonSize["h"]
+        }
+
+        if (buttonSize.Has("w") and buttonSize["w"] != "auto") {
+            buttonDims .= " w" . buttonSize["w"]
+        }
+
+        btn := this.guiObj.AddButton("xs y+m" . buttonDims, "Change")
         btn.OnEvent("Click", "OnChange" . settingName)
 
         if (showOpen) {
-            btn := this.guiObj.AddButton("x+m yp w" . this.buttonSmallW . " h" . this.buttonSmallH, "Open")
+            btn := this.guiObj.AddButton("x+m yp" . buttonDims, "Open")
             btn.OnEvent("Click", "OnOpen" . settingName)
         }
 
         if (extraButton != "") {
-            btn := this.guiObj.AddButton("x+m yp w" . this.buttonSmallW . " h" . this.buttonSmallH, extraButton)
+            btn := this.guiObj.AddButton("x+m yp" . buttonDims, extraButton)
             btn.OnEvent("Click", "On" . extraButton . settingName)
         }
     }
@@ -178,7 +187,7 @@ class LauncherEditor extends LaunchpadFormGuiBase {
         position := "xs y+m"
 
         this.guiObj.SetFont("Bold")
-        this.guiObj.AddText("v" . ctlName . " " . position . " w" . this.contentWidth . " +0x200 c" . this.accentDarkColor, locationText)
+        this.guiObj.AddText("v" . ctlName . " " . position . " w" . this.windowSettings["contentWidth"] . " +0x200 c" . this.themeObj.GetColor("accentDark"), locationText)
         this.guiObj.SetFont()
     }
 
@@ -188,19 +197,6 @@ class LauncherEditor extends LaunchpadFormGuiBase {
         this.knownGames := dataSource.ReadListing("Games")
         this.launcherTypes := dataSource.ReadListing("Types/Launchers")
         this.gameTypes := dataSource.ReadListing("Types/Games")
-    }
-
-    GetItemIndex(arr, itemValue) {
-        result := ""
-
-        for index, value in arr {
-            if (value == itemValue) {
-                result := index
-                break
-            }
-        }
-
-        return result
     }
 
     OnKeyChange(ctlObj, info) {

@@ -1,7 +1,4 @@
 ﻿class ManageWindow extends LaunchpadGuiBase {
-    windowOptions := "+Resize MinSize380x380"
-    contentWidth := 510
-    listViewHeight := 300
     sidebarWidth := 85
     listViewColumns := Array("Order", "Game", "Launcher")
     launcherFile := ""
@@ -23,7 +20,7 @@
     Controls() {
         super.Controls()
 
-        listViewWidth := this.contentWidth - this.sidebarWidth - this.margin
+        listViewWidth := this.windowSettings["contentWidth"] - this.sidebarWidth - this.margin
         lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.listViewHeight . " Section +Report -Multi +LV0x4000", this.listViewColumns)
 
         buttonWidth := this.sidebarWidth - (this.margin * 2)

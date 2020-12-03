@@ -32,6 +32,11 @@
         set => this.SetIniValue("AssetsDir", value)
     }
 
+    ThemeName[] {
+        get => this.GetIniValue("ThemeName", false) || "Lightpad"
+        set => this.SetIniValue("ThemeName", value, false)
+    }
+
     DataSourceKey[] {
         get => this.GetIniValue("DataSourceKey") || "api"
         set => this.SetIniValue("DataSourceKey", value)
