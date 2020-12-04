@@ -37,7 +37,7 @@ help you control how you launch your games.
 Some of the many features Launchpad offers to help you run your games include:
 - Generate .exe files that can be added to any game platform
 - Automate the tedious steps required to open and close third party game launchers at the right times
-- Launch any game that can be run via shortcut or command through Steam and other platforms!
+- Launch any game that can be run via shortcut, command, or URI through Steam and other platforms!
 - A simple installation process for new users
 - A themeable GUI that lets you manage your launchers and access all settings and features
 - Themeable progress windows that can optionally show you what Launchpad is doing when launching a game
