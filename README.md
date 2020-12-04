@@ -2,96 +2,109 @@
 
 Create beautifully-simple .exe files to launch any game seamlessly though Steam and other platforms.
 
-## Latest News
-
-I have completely rewritten Launchpad in the current codebase. This version is highly experimental and likely will not work for you yet.
-
-Once fully released, the new version contains many enhancements, such as:
-
-- A Launchpad GUI. You can now configure Launchpad and access all of its functionality from a single window.
-- An online API for getting the latest game and launcher data, as well as build dependencies (https://benmcclure.com/game-launcher-db/). You may contribute your own data to the API now: https://github.com/bmcclure/game-launcher-db
-- Open your Launchers.json file in your associated .json editor with a single click, and reload its contents without having to quit Launchpad.
-- Open your launchers folder or your game assets folder easily from within the app
-- Separate the game assets dir (icons, shortcut files, etc) from the launcher files if desired (or continue mixing the assets in)
-- Optionally copy the game assets into the launcher directory if you've chosen to store them separately
-- Keep all launcher .exes in a single directory if desired (or continue using one directory per game)
-- Update Launchpad's dependency files anytime via a click of a button
-
-
-Things that won't yet be in this release, but I am working on for a future release:
-- A Launcher Manager GUI which allows you to visually build your Launchers.json file.
-- A button to automatically remove all generated files when you want to start from scratch.
-
-## Contribute to the Game Launcher DB!
-- Public API endpoint: https://benmcclure.com/game-launcher-db/
-- GitHub page: https://github.com/bmcclure/game-launcher-db
-
 ## Introduction
 
-Non-Steam games have some issues on Steam:
-- Some types of games that open via URL or the Windows Store can't be added to Steam at all.
-- The Steam overlay doesn't work consistently with all games.
-- Steam often says you're playing a game for a second and then stops, even though you're still playing.
-- Because of the previous issue, Steam doesn't track play time for many Non-Steam games properly.
-- Changing a game's icon in Steam adds an ugly shortcut arrow to the game.
-- It's hard to remember when to close or open external launchers to make them compatible with Steam.
+Many game platforms (such as Steam) allow you to add games from other platforms to your list and launch 
+them with added benefits (such as the Steam overlay). This rocks when it works, but it doesn't
+always work quite as well as it should.
+
+Launchpad attempts to bridge the gap and bring your games into whatever platform you want to run them. 
+While this is a lofty feat, Launchpad can handle many advanced and custom scenarios. But for most 
+scenarios, you can utilize Launchpad's online Launcher DB to pre-configure everything for you nearly
+effortlessly.
+
+## Why Use Launchpad
+
+Let's take Steam as an example, because that was the original use case for Launchpad's creation.
+
+Adding Non-Steam games to Steam often works well, but it is a bit quirky, and sometimes features are broken
+or it might not work at all. Some common issues include:
+- Some games that open via URL or the Windows Store can't be added to Steam.
+- Some games cause Steam to say you're playing only for a moment and then stop even though you're still in-game. 
+  In these cases, playtime cannot be tracked and your friends don't know you're playing a game.
+- Some games launch in ways where the Steam overlay doesn't hook into their process
+- Some games that use external launchers continue to say you're playing the game after you exit--sometimes for 
+  days if you don't notice.
+- Changing a game's icon in Steam adds a shortcut arrow that obscures the icon and makes it obvious it doesn't 
+  belong
 
 Launchpad was created to solve all of these issues, and give you a simple way to create a lightweight .exe 
-file for any game that makes it compatible with Steam.
+file for any game. You can add them to Steam, or any other launcher. Or you can simply run them directly to
+help you control how you launch your games.
 
-Out of the box, it has support for the following:
-- Battle.net (Blizzard Launcher) games
-- Epic Games Launcher games
-- Origin games
-- Bethesda Launcher games
-- Games with their own launcher
-- Games without any launcher
+## Features
+
+Some of the many features Launchpad offers to help you run your games include:
+- Generate .exe files that can be added to any game platform
+- Automate the tedious steps required to open and close third party game launchers at the right times
+- Launch any game that can be run via shortcut or command through Steam and other platforms!
+- A simple installation process for new users
+- A themeable GUI that lets you manage your launchers and access all settings and features
+- Themeable progress windows that can optionally show you what Launchpad is doing when launching a game
+
+Launchpad inherently knows how to launch games in several of the main game launcher platforms out there,
+including:
+- Blizzard (Battle.net)
+- Epic Games Launcher
+- Origin
+- Bethesda Launcher
+- Microsoft Store
+
+More launchers are being added all the time, but there's no need to wait! Those launchers are all just presets
+for Launchpad, but you can define your own settings and run pretty much any game through pretty much any launcher.
+You can also launch games directly that don't use any launcher.
 
 ## How To Use
 
-Start by creating a simple Launchers.json file containing the configuration for the games you wish to generate 
-launchers for.
+If you're a new user, head over to the Releases page and get the "Launchpad.exe" file from the latest release.
+You can ignore all the other files (Launchpad will download them as required).
 
-In the future, there will be a configuration GUI for this purpose. For now, the configuration is simple and can 
-be done in any text editor.
+Simply run Launchpad.exe right from your download folder to get started. You will be able to choose the folder
+to install Launchpad to and create a desktop shortcut if desired.
 
-I've included my own Launchers.json file in the application as Launchers.json.sample. I recommend using it as a 
-template and copying any entries you want directly into your own file. You can see how easy it is to add your 
-own entries to the file, as well.
+Once it's installed, simply run Launchpad from the installation folder or shortcut, and it will walk you through
+the initial settings.
 
-Once Launchers.json is in place, you're ready to roll. Just run Launchpad.exe and answer some basic questions,
-such as:
-- The location of your Launchers.json file
-- The location of the folder you wish to create your new game launchers within
-- The location of an icon file (or an .exe to extract the icon from) for each game
-- The location of a shortcut file for many types of games
+From there, you can use the Launcher Manager to create and manage your Launcher File, and then you can build
+your launchers with the click of a button.
 
-After you configure each of these options once, you should not have to do it again. The application will remember 
-your selections next time and run automatically.
+There are many advanced settings available by clicking on the Settings button. Help text is being added/expanded
+but most of the options should be self-explanatory.
 
-Each time you run the application, you're given the option to update all of your existing launchers if you wish.
+## Using Launchpad with Steam
 
-Once you have built your launcher, simply add the newly-generated "[Game Name].exe" file to Steam as a Non-Steam 
-game. If set up properly, you should find Steam properly tracks your gameplay, and you should be able to use the
-Steam overlay within your games.
+Launchpad was built specifically with Steam in mind!
 
-You can also add these .exe files to any other game platform or launcher you wish, as there is nothing
-Steam-specific about them.
+Generate your launchers through the Launchpad app, then simply add the new "[Game Name].exe" file that
+Launchpad generated as a Non-Steam Game.
 
-Some of the generated .exe files may depend on vendor files within the main Launchpad directory), but you can
-copy the .exe file anywhere on your system that you would like without having to copy any other dependencies 
-around.
+It'll show up in your Steam Library with the name and icon you've selected, and if everything worked right, 
+launching it should work flawlessly, track your gameplay properly, and give you full Steam overlay support.
+
+## Note on Portability
+
+Your Launcher File and all other Launchpad configuration files are portable, but the launchers that Launchpad
+generates will often only work on the system they were generated on, or an equivalent system where everything
+is located at the same paths.
+
+If you reinstall your OS or move your games, you'll probably need to open Launchpad and rebuild your launchers 
+before using them.
 
 ## Credits
 
-Launchpad was conceived and developed by Ben McClure <ben.mcclure@gmail.com> using AutoHotKey.
+Launchpad was conceived and developed by Ben McClure of Volantis Development (ben@volantisdev.com) using the 
+powerful scripting language AutoHotKey.
 
-Launchpad automatically downloads the following dependencies:
+Launchpad automatically downloads a few dependencies for use during its operation. The dependencies it installs are:
 - [AutoHotKey](https://www.autohotkey.com/)
 - [Bnetlauncher](https://github.com/dafzor/bnetlauncher)
 - [IconsExt](https://www.nirsoft.net/utils/iconsext.html)
 
-These dependencies each use different licensing from Launchpad, and so Launchpad doesn't include them in your initial download. They are added later, and you are free to put your own versions of the dependencies there as well.
+These dependencies each use different licensing from Launchpad, and they have their own release cycles, so Launchpad doesn't include them in your initial download.  Don't worry, Launchpad downloads them for you and you won't even notice them.
+
+## Contribute to the Game Launcher DB!
+- Public API endpoint: https://benmcclure.com/game-launcher-db/
+- GitHub page: https://github.com/bmcclure/game-launcher-db
 
 ## Contributing
 
