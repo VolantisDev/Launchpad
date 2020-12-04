@@ -71,6 +71,18 @@ your launchers with the click of a button.
 There are many advanced settings available by clicking on the Settings button. Help text is being added/expanded
 but most of the options should be self-explanatory.
 
+# Updating Launchpad
+
+When there's a new version of Launchpad available, you only have to update Launchpad.exe. All of the other files
+Launchpad uses will be updated auotmatically next time you run Launchpad.
+
+To update Launchpad.exe, you have two options:
+1. Download the latest Launchpad.exe file from the Releases page and replace your existing file.
+1. Run LaunchpadUpdater.exe from the installation directory, which automates that process.
+
+Launchpad currently does not notify you when a new release is available, so make sure to check periodically.
+Update notifications are coming soon!
+
 ## Using Launchpad with Steam
 
 Launchpad was built specifically with Steam in mind!
