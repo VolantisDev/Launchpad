@@ -71,7 +71,7 @@ your launchers with the click of a button.
 There are many advanced settings available by clicking on the Settings button. Help text is being added/expanded
 but most of the options should be self-explanatory.
 
-# Updating Launchpad
+## Updating Launchpad
 
 When there's a new version of Launchpad available, you only have to update Launchpad.exe. All of the other files
 Launchpad uses will be updated auotmatically next time you run Launchpad.
