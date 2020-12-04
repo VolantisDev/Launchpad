@@ -66,7 +66,9 @@ class LauncherManager extends ServiceBase {
     }
 
     SelectLauncherFile(existingFile := "") {
-        return FileSelect(3, existingFile, "Select the Launchers file to use", "JSON Documents (*.json)")
+        MsgBox("Launchpad uses a Launcher File to keep a list of games and settings for your launchers. The file is in JSON format and can be edited by hand or through the Launcher Manager in Launchpad.`n`nIf you have an existing Launcher File, select it on the following screen. If you want to create a new one, browse to the folder you would like and type in a new .json filename to use.", "Launchpad Launcher File", "OK")
+        return FileSelect(3, existingFile, "Select the or create the Launcher File you would like Launchpad to use.", "JSON Documents (*.json)")
+        ; @todo Improve the UI of this selector
     }
 
     OpenLauncherFile() {
@@ -100,6 +102,8 @@ class LauncherManager extends ServiceBase {
     }
 
     SelectDestinationDir(existingDir := "") {
+        MsgBox("Launchpad creates .exe files for each of the launchers you define in your Launcher File.`n`nOn the following dialog, select the destination directory that Launchpad should create your launchers within.", "Launchpad Destination Dir", "OK")
+        
         if (existingDir != "") {
             existingDir := "*" . existingDir
         }
@@ -124,6 +128,8 @@ class LauncherManager extends ServiceBase {
     }
 
     ChangeAssetsDir(assetsDir := "") {
+        MsgBox("Launchpad both creates and uses other files when building and/or running your launchers. These files are known as Assets, and they are stored in a separate directory for each launcher you create.`n`nOn the following dialog, select the parent directory that Launchpad should create launcher assets within.", "Launchpad Assets Dir", "OK")
+
         if (assetsDir == "") {
             assetsDir := this.app.Config.GetRawValue("AssetsDir")
         }
