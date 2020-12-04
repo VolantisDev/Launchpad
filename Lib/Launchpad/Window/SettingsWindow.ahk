@@ -134,7 +134,7 @@
     SetText(ctlName, ctlText, fontStyle := "") {
         this.guiObj.SetFont(fontStyle)
         this.guiObj[ctlName].Text := ctlText
-        this.ResetFont()
+        this.SetFont()
     }
 
     OnCloseButton(btn, info) {

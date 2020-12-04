@@ -2,9 +2,7 @@
     "theme": {
         "name": "Lightpad",
         "parentTheme": "",
-        "vars": {
-
-        },
+        "vars": {},
         "colors": {
             "background": "FFFFFF",
             "text": "000000",

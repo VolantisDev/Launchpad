@@ -1,0 +1,23 @@
+{
+    "theme": {
+        "name": "Darkpad",
+        "parentTheme": "Lightpad",
+        "vars": {},
+        "colors": {
+            "background": "000000",
+            "text": "FFFFFF",
+            "textLight": "EEEEEE",
+            "accent": "9466FC",
+            "accentLight": "EEE6FF",
+            "accentDark": "8A57F0"
+        },
+        "graphics": {
+            "logo": ""
+        },
+        "fonts": {
+            "small": "s10 w200",
+            "normal": "s11",
+            "large": "s13"
+        }
+    }
+}

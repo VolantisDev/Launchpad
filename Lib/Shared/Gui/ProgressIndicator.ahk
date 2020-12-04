@@ -42,7 +42,7 @@ class ProgressIndicator extends FormGuiBase {
     SetProgressIndicator() {
         ;this.guiObj.SetFont("s9")
         this.guiObj["DialogStatusIndicator"].Text := this.currentPosition . " / " . this.rangeStop
-        ;this.ResetFont()
+        ;this.SetFont()
     }
 
     SetCancelCallback(callback) {
@@ -90,7 +90,7 @@ class ProgressIndicator extends FormGuiBase {
 
         this.guiObj.SetFont("s9")
         this.guiObj.AddText("x" . this.margin . " w" . this.windowSettings["contentWidth"] . " Right vDialogStatusIndicator", this.currentPosition . " / " . this.rangeStop)
-        this.ResetFont()
+        this.SetFont()
 
         if (this.enableDetailText) {
             this.guiObj.AddText("x" . this.margin . " w" . this.windowSettings["contentWidth"] . " vDialogDetailText", this.detailText)

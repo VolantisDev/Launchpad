@@ -60,9 +60,9 @@ class GuiBase {
             position := "x" . this.margin . " y+" . (this.margin * 2.5)
         }
 
-        this.guiObj.SetFont("Bold")
+        this.SetFont("normal", "Bold")
         this.guiObj.AddText(position . " w" . this.windowSettings["contentWidth"] . " Section +0x200", groupLabel)
-        this.ResetFont()
+        this.SetFont()
     }
 
     AddHelpText(helpText, position := "") {
@@ -72,7 +72,7 @@ class GuiBase {
 
         this.guiObj.SetFont(this.themeObj.GetFont("small"))
         this.guiObj.AddText(position . " w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("textLight"), helpText)
-        this.ResetFont()
+        this.SetFont()
     }
 
     AddCheckBox(checkboxText, ctlName, checked, inGroupBox := true, callback := "", check3 := false) {
@@ -98,9 +98,9 @@ class GuiBase {
         chk.OnEvent("Click", callback)
     }
 
-    ResetFont() {
+    SetFont(fontPreset := "normal", extraStyles := "") {
         this.guiObj.SetFont()
-        this.guiObj.SetFont(this.themeObj.GetFont("normal"))
+        this.guiObj.SetFont("c" . this.themeObj.GetColor("text") . " " . this.themeObj.GetFont(fontPreset) . " " . extraStyles)
     }
 
     SetWindowKey(windowKey) {
@@ -131,14 +131,14 @@ class GuiBase {
         return this.End()
     }
 
+
     Create() {
         this.guiObj := Gui.New(this.windowOptions, this.GetTitle(this.title), this)
         this.guiObj.BackColor := this.themeObj.GetColor("background")
-        this.guiObj.Color := this.themeObj.GetColor("text")
         this.guiObj.MarginX := this.margin
         this.guiObj.MarginY := this.margin
 
-        this.ResetFont()
+        this.SetFont()
 
         this.guiObj.OnEvent("Close", "OnClose")
         this.guiObj.OnEvent("Escape", "OnEscape")
