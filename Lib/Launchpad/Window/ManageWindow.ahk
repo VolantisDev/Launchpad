@@ -3,14 +3,14 @@
     listViewColumns := Array("Order", "Game", "Launcher")
     launcherFile := ""
 
-    __New(app, launcherFile := "", owner := "", windowKey := "") {
+    __New(app, launcherFile := "", windowKey := "", owner := "", parent := "") {
         if (launcherFile == "") {
             launcherFile := app.Config.LauncherFile
         }
 
         InvalidParameterException.CheckTypes("ManageWindow", "launcherFile", launcherFile, "")
         this.launcherFile := launcherFile
-        super.__New(app, "Manage", owner, windowKey)
+        super.__New(app, "Manage", windowKey, owner, parent)
     }
 
     GetTitle(title) {
@@ -21,7 +21,7 @@
         super.Controls()
 
         listViewWidth := this.windowSettings["contentWidth"] - this.sidebarWidth - this.margin
-        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.listViewHeight . " Section +Report -Multi +LV0x4000", this.listViewColumns)
+        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " Section +Report -Multi +LV0x4000", this.listViewColumns)
 
         buttonWidth := this.sidebarWidth - (this.margin * 2)
 

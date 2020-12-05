@@ -1,9 +1,9 @@
 ﻿class SettingsWindow extends LaunchpadGuiBase {
     availableThemes := Map()
 
-    __New(app, owner := "", windowKey := "") {
+    __New(app, windowKey := "", owner := "", parent := "") {
         this.availableThemes := app.Themes.GetAvailableThemes(true)
-        super.__New(app, "Settings", owner, windowKey)
+        super.__New(app, "Settings", windowKey, owner, parent)
     }
 
     Controls() {
@@ -11,7 +11,7 @@
         
         groupW := this.windowSettings["contentWidth"] - (this.margin * 2)
 
-        buttonSize := this.themeObj.GetButtonSize("smallFixed")
+        buttonSize := this.themeObj.GetButtonSize("s", true)
         buttonW := (buttonSize.Has("w") and buttonSize["w"] != "auto") ? buttonSize["w"] : 80
         openX := groupW - (buttonW * 2)
         tabs := this.guiObj.Add("Tab3", "x" . this.margin . " y" . this.margin . " h" . this.windowSettings["tabHeight"] . " +0x100", ["Launchers", "Assets", "Sources", "Appearance", "Advanced"])
@@ -74,7 +74,7 @@
 
         this.AddLocationText(location, settingName, inGroupBox)
 
-        buttonSize := this.themeObj.GetButtonSize("smallFixed")
+        buttonSize := this.themeObj.GetButtonSize("s", true)
         buttonW := (buttonSize.Has("w") and buttonSize["w"] != "auto") ? buttonSize["w"] : 80
         buttonH := (buttonSize.Has("h") and buttonSize["h"] != "auto") ? buttonSize["h"] : 20
 
@@ -100,9 +100,9 @@
 
         position .= " y+m"
 
-        this.guiObj.SetFont("Bold")
+        this.SetFont("", "Bold")
         this.guiObj.AddText("v" . ctlName . " " . position . " w" . this.windowSettings["contentWidth"] . " +0x200 c" . this.themeObj.GetColor("accentDark"), locationText)
-        this.guiObj.SetFont()
+        this.SetFont()
     }
 
     AddConfigCheckBox(checkboxText, settingName, inGroupBox := true) {
@@ -117,7 +117,7 @@
     }
 
     AddButton(buttonLabel, ctlName, width := "", height := "", position := "xs y+m") {
-        buttonSize := this.themeObj.GetButtonSize("smallFixed")
+        buttonSize := this.themeObj.GetButtonSize("s", true)
 
         if (width == "") {
             width := (buttonSize.Has("w") and buttonSize["w"] != "auto") ? buttonSize["w"] : 80

@@ -3,19 +3,20 @@ class GuiBase {
     title := ""
     themeObj := ""
     owner := ""
+    parent := ""
     windowKey := ""
     isDialog := false
     windowSettings := Map()
-    margin := ""
     windowOptions := ""
     hasToolbar := false
     hToolbar := ""
+    margin := ""
 
     positionAtMouseCursor := false
     openWindowWithinScreenBounds := true
     showInNotificationArea := false
 
-    __New(title, themeObj, owner := "", windowKey := "") {
+    __New(title, themeObj, windowKey, owner := "", parent := "") {
         InvalidParameterException.CheckTypes("GuiBase", "title", title, "", "themeObj", themeObj, "ThemeBase", "windowKey", windowKey, "")
         InvalidParameterException.CheckEmpty("GuiBase", "title", title)
 
@@ -25,15 +26,23 @@ class GuiBase {
             }
 
             InvalidParameterException.CheckTypes("GuiBase", "owner", owner, "Gui")
-
             this.owner := owner
+        }
+
+        if (parent != "") {
+            if (parent.HasBase(GuiBase.Prototype)) {
+                parent := parent.guiObj
+            }
+
+            InvalidParameterException.CheckTypes("GuiBase", "parent", parent, "Gui")
+            this.parent := parent
         }
 
         this.title := title
         this.themeObj := themeObj
         this.windowSettings := themeObj.GetWindowSettings(windowKey)
-        this.margin := themeObj.GetSpacing()
-        this.windowOptions := themeObj.GetWindowOptions(this.windowKey, this.isDialog)
+        this.windowOptions := themeObj.GetWindowOptionsString(windowKey)
+        this.margin := this.windowSettings["spacing"]["margin"]
         this.windowKey := windowKey
         this.Create()
     }
@@ -98,9 +107,9 @@ class GuiBase {
         chk.OnEvent("Click", callback)
     }
 
-    SetFont(fontPreset := "normal", extraStyles := "") {
+    SetFont(fontPreset := "normal", extraStyles := "", colorName := "text") {
         this.guiObj.SetFont()
-        this.guiObj.SetFont("c" . this.themeObj.GetColor("text") . " " . this.themeObj.GetFont(fontPreset) . " " . extraStyles)
+        this.guiObj.SetFont("c" . this.themeObj.GetColor(colorName) . " " . this.themeObj.GetFont(fontPreset) . " " . extraStyles)
     }
 
     SetWindowKey(windowKey) {
@@ -184,6 +193,7 @@ class GuiBase {
         windowSize := ""
 
         width := this.windowSettings["contentWidth"] + (this.margin * 2)
+        MonitorGetWorkArea(, monitorL, monitorT, monitorR, monitorB)
 
         if (this.positionAtMouseCursor) {    
             CoordMode("Mouse", "Screen")
@@ -193,7 +203,6 @@ class GuiBase {
             windowSize .= " x" . windowX . " y" . windowY
         } else if (this.showInNotificationArea) {
             this.guiObj.GetPos(,,guiW, guiH)
-            MonitorGetWorkArea(, monitorL, monitorT, monitorR, monitorB)
             windowX := monitorR - this.margin - width
             windowY := monitorB - this.margin - guiH
             windowSize .= " x" . windowX . " y" . windowY
@@ -201,9 +210,9 @@ class GuiBase {
 
         this.guiObj.Show(windowSize)
 
+        ; @todo is this really needed?
         if (!this.positionAtMouseCursor and this.showInNotificationArea) {
             this.guiObj.GetPos(,,guiW, guiH)
-            MonitorGetWorkArea(, monitorL, monitorT, monitorR, monitorB)
             windowX := monitorR - this.margin - guiW
             windowY := monitorB - this.margin - guiH
             this.guiObj.Move(windowX, windowY)

@@ -89,8 +89,8 @@ class LauncherEntity extends EntityBase {
         return FileExist(iconSrc)
     }
 
-    LaunchEditWindow(mode, owner) {
-        return this.app.Windows.LauncherEditor(this, mode, owner)
+    LaunchEditWindow(mode, owner := "", parent := "") {
+        return this.app.Windows.LauncherEditor(this, mode, owner, parent)
     }
 
     OverrideChildDefaults(defaults) {

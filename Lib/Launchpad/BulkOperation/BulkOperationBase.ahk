@@ -3,6 +3,7 @@ class BulkOperationBase {
     results := Map()
     status := Map()
     owner := "MainWindow"
+    parent := ""
     running := false
     completed := false
     successCount := 0
@@ -88,7 +89,7 @@ class BulkOperationBase {
     ShowProgressWindow() {
         if (this.useProgress) {
             if (!IsObject(this.progress)) {
-                this.progress := this.app.Windows.ProgressIndicator(this.progressTitle, this.progressText, this.owner, this.allowCancel, this.progressRangeEnd, this.progressInitialValue, this.progressInitialDetailText)
+                this.progress := this.app.Windows.ProgressIndicator(this.progressTitle, this.progressText, this.owner, this.parent, this.allowCancel, this.progressRangeEnd, this.progressInitialValue, this.progressInitialDetailText)
             } else {
                 this.progress.Show()
             }

@@ -11,13 +11,8 @@
             "accentLight": "EEE6FF",
             "accentDark": "8A57F0"
         },
-        "graphics": {
+        "themeAssets": {
             "logo": ""
-        },
-        "fonts": {
-            "small": "s10 w200",
-            "normal": "s11",
-            "large": "s13"
         }
     }
 }

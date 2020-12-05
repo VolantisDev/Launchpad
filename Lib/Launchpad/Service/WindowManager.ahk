@@ -5,25 +5,25 @@ class WindowManager extends ServiceBase {
         return this.app.Themes.GetTheme()
     }
 
-    DialogBox(title, text, owner := "", buttons := "*&Yes|&No") {
-        return this.ShowDialog(DialogBox.new(title, this.GetTheme(), text, owner, buttons))
+    DialogBox(title, text, owner := "", parent := "", buttons := "*&Yes|&No") {
+        return this.ShowDialog(DialogBox.new(title, this.GetTheme(), text, "", owner, parent, buttons))
     }
 
-    SingleInputBox(title, text, defaultValue := "", owner := "", isPassword := false) {
-        return this.ShowDialog(SingleInputBox.new(title, this.GetTheme(), text, defaultValue, owner, isPassword))
+    SingleInputBox(title, text, defaultValue := "", owner := "", parent := "", isPassword := false) {
+        return this.ShowDialog(SingleInputBox.new(title, this.GetTheme(), text, defaultValue, "", owner, parent, isPassword))
     }
 
-    ProgressIndicator(title, text, owner := "", allowCancel := false, progressRange := 100, initialPosition := 0, detailText := true) {
-        return this.ShowDialog(ProgressIndicator.new(title, this.GetTheme(), text, owner, allowCancel, progressRange, initialPosition, detailText))
+    ProgressIndicator(title, text, owner := "", parent := "", allowCancel := false, progressRange := 100, initialPosition := 0, detailText := true) {
+        return this.ShowDialog(ProgressIndicator.new(title, this.GetTheme(), text, "", owner, parent, allowCancel, progressRange, initialPosition, detailText))
     }
 
-    LauncherEditor(launcherGameObj, mode := "config", owner := "") {
-        return this.ShowForm(LauncherEditor.new(this.app, launcherGameObj, mode, owner))
+    LauncherEditor(launcherGameObj, mode := "config", owner := "", parent := "") {
+        return this.ShowForm(LauncherEditor.new(this.app, launcherGameObj, mode, "", owner, parent))
     }
 
     OpenMainWindow() {
         if (!this.WindowExists("MainWindow")) {
-            this.AddWindow("MainWindow", MainWindow.new(this.app, "Launchpad", "", "MainWindow"))
+            this.AddWindow("MainWindow", MainWindow.new(this.app, "Launchpad", "MainWindow"))
         }
 
         return this.ShowWindow("MainWindow")
@@ -37,25 +37,25 @@ class WindowManager extends ServiceBase {
         return this.ShowWindow("UpdaterWindow")
     }
 
-    OpenManageWindow() {
+    OpenManageWindow(parent := "MainWindow") {
         if (!this.WindowExists("ManageWindow")) {
-            this.AddWindow("ManageWindow", ManageWindow.new(this.app, "MainWindow", "ManageWindow"))
+            this.AddWindow("ManageWindow", ManageWindow.new(this.app, "", "ManageWindow", "", parent))
         }
 
         return this.ShowWindow("ManageWindow")
     }
 
-    OpenSettingsWindow() {
+    OpenSettingsWindow(parent := "MainWindow") {
         if (!this.WindowExists("SettingsWindow")) {
-            this.AddWindow("SettingsWindow", SettingsWindow.new(this.app, "MainWindow", "SettingsWindow"))
+            this.AddWindow("SettingsWindow", SettingsWindow.new(this.app, "SettingsWindow", "", parent))
         }
 
         return this.ShowWindow("SettingsWindow")
     }
 
-    OpenToolsWindow() {
+    OpenToolsWindow(parent := "MainWindow") {
         if (!this.WindowExists("ToolsWindow")) {
-            this.AddWindow("ToolsWindow", ToolsWindow.new(this.app, "MainWindow", "ToolsWindow"))
+            this.AddWindow("ToolsWindow", ToolsWindow.new(this.app, "ToolsWindow", "", parent))
         }
 
         return this.ShowWindow("ToolsWindow")

@@ -4,73 +4,156 @@
         "parentTheme": "",
         "vars": {},
         "colors": {
+            "default": "000000",
             "background": "FFFFFF",
-            "text": "000000",
+            "text": "{{default}}",
             "textLight": "959595",
             "accent": "9466FC",
             "accentLight": "EEE6FF",
             "accentDark": "8A57F0",
             "transColor": ""
         },
-        "graphics": {
-            "logo": "Graphics\\Logo.png",
-            "icon": "Graphics\\Launchpad.ico"
+        "themeAssets": {
+            "icon": "Graphics\\Launchpad.ico",
+            "logo": "Graphics\\Logo.png"
         },
-        "buttonSizes": {
-            "small": {"h": 20, "w": "auto"},
-            "smallFixed": {"h": 20, "w": 80},
-            "normal": {"h": 30, "w": "auto"},
-            "big": {"h": 40, "w": "auto"},
-            "huge": {"h": 80, "w": "auto"}
+        "buttons": {
+            "height": {
+                "s": 20,
+                "m": 30,
+                "l": 40,
+                "xl": 80
+            },
+            "fixedWidth": {
+                "s": 80,
+                "m": 100,
+                "l": 120,
+                "xl": 140
+            }
         },
-        "spacing": {
-            "margin": 10,
-            "windowMargin": "{{margin}}",
-            "buttonSpacing": "{{margin}}"
+        "labels": {
+            "height": "auto",
+            "fixedWidth": 75,
+            "font": "normal"
         },
         "fonts": {
             "small": "s10 w200",
             "normal": "s11",
             "large": "s13"
         },
-        "fixedLabelW": 75,
-        "defaultWindowOptions": "",
-        "dialogWindowOptions": "",
-        "defaultWindowSettings": {
-            "saveSize": true,
-            "savePosition": true,
-            "contentWidth": 420,
-            "tabHeight": 350,
-            "listViewHeight": "{{tabHeight}}",
-            "x": "auto",
-            "y": "auto",
-            "w": "auto",
-            "h": "auto"
+        "windowStyles": {
+            "Child": "E0x40000000L",
+            "Popup": "E0x80000000L",
+            "HScroll": "E0x00100000L",
+            "Tiles": "E0x00000000L",
+            "SendClickedToParent": "0x100"
         },
-        "windowOverrides": {
+        "windowSettings": {
+            "default": {
+                "base": "",
+                "size": {
+                    "width": "auto",
+                    "height": "auto"
+                },
+                "position": {
+                    "x": "auto",
+                    "y": "auto",
+                    "w": "auto",
+                    "h": "auto"
+                },
+                "spacing": {
+                    "margin": 10,
+                    "windowMargin": "{{margin}}",
+                    "buttonSpacing": "{{margin}}"
+                },
+                "saveSize": true,
+                "savePosition": true,
+                "contentWidth": 420,
+                "tabHeight": 350,
+                "listViewHeight": "{{tabHeight}}",
+                "options": {
+                    "AlwaysOnTop": "",
+                    "Border": "",
+                    "Caption": "",
+                    "Disabled": "",
+                    "DPIScale": "",
+                    "MaximizeBox": "",
+                    "MaxSize": "",
+                    "MinimizeBox": "",
+                    "MinSize": "",
+                    "OwnDialogs": "",
+                    "Resize": "",
+                    "SystemMenu": "",
+                    "Theme": "",
+                    "ToolWindow": ""
+                }
+            },
+            "dialog": {
+                "base": "default",
+                "saveSize": false,
+                "savePosition": false,
+                "options": {
+                    "AlwaysOnTop": true,
+                    "Border": true,
+                    "Caption": true,
+                    "OwnDialogs": false,
+                    "Resize": false,
+                    "SystemMenu": true,
+                    "Popup": true
+                }
+            },
+            "form": {
+                "base": "dialog",
+                "options": {
+                    "Tiled": true
+                }
+            }
+        },
+        "windows": {
             "MainWindow": {
-                "contentWidth": 515
+                "settings": "default",
+                "contentWidth": 515,
+                "options": {
+                    "Owner": false
+                }
             },
             "UpdaterWindow": {
-                "contentWidth": 515
+                "settings": "default",
+                "contentWidth": 515,
+                "options": {
+                    "Owner": false
+                }
             },
             "LauncherEditor": {
+                "settings": "form",
                 "contentWidth": 500,
                 "tabHeight": 520
             },
             "ManageWindow": {
-                "windowOptions": "+Resize MinSize380x380",
+                "settings": "default",
                 "contentWidth": 510,
-                "listViewHeight": 300
+                "listViewHeight": 300,
+                "options": {
+                    "Resize": true,
+                    "MinSize": "380x380"
+                }
             },
             "SettingsWindow": {
-                "windowOptions": "-MaximizeBox -SysMenu",
+                "settings": "form",
                 "contentWidth": 400,
-                "tabHeight": 400
+                "tabHeight": 400,
+                "options": {
+                    "Popup": true
+                }
             },
             "ToolsWindow": {
-                "windowOptions": "+AlwaysOnTop -Caption Border",
-                "contentWidth": 400
+                "settings": "default",
+                "contentWidth": 400,
+                "options": {
+                    "AlwaysOnTop": true,
+                    "Caption": false,
+                    "Border": true
+                }
             }
         }
     }

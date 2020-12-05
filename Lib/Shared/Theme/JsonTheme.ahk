@@ -1,7 +1,7 @@
 class JsonTheme extends ThemeBase {
     GetThemeMap(themeName) {
         themeFile := ""
-        basePath := this.baseDir . "\" . themeName
+        basePath := this.themesDir . "\" . themeName
 
         if (FileExist(basePath . ".json")) {
             themeFile := basePath . ".json"

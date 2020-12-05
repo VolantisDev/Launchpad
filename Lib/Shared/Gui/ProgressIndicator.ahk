@@ -8,7 +8,7 @@ class ProgressIndicator extends FormGuiBase {
     enableDetailText := true
     cancelCallback := ""
 
-    __New(title, themeObj, text, owner := "", allowCancel := false, rangeStop := "", currentPosition := 0, detailText := true, showInNotificationArea := true) {
+    __New(title, themeObj, text, windowKey := "", owner := "", parent := "", allowCancel := false, rangeStop := "", currentPosition := 0, detailText := true, showInNotificationArea := true) {
         if (rangeStop != "") {
             InvalidParameterException.CheckTypes("ProgressIndicator", "rangeStop", rangeStop, "Integer")
             this.rangeStop := rangeStop
@@ -28,7 +28,7 @@ class ProgressIndicator extends FormGuiBase {
         
         btns := allowCancel ? "&Cancel" : ""
         this.showInNotificationArea := !!(showInNotificationArea)
-        super.__New(title, themeObj, text, owner, "", btns)
+        super.__New(title, themeObj, text, windowKey, owner, parent, btns)
     }
 
     SetDetailText(detailText) {
@@ -86,9 +86,8 @@ class ProgressIndicator extends FormGuiBase {
     Controls() {
         super.Controls()
 
-        this.guiObj.AddProgress("x" . this.margin . " w" . this.windowSettings["contentWidth"] . " h5 vDialogProgress c9466FC BackgroundEEE6FF Range" . this.rangeStart . "-" . this.rangeStop, this.currentPosition)
-
-        this.guiObj.SetFont("s9")
+        this.guiObj.AddProgress("x" . this.margin . " w" . this.windowSettings["contentWidth"] . " h5 vDialogProgress c" . this.themeObj.GetColor("accent") . " Background" . this.themeObj.GetColor("accentLight") . " Range" . this.rangeStart . "-" . this.rangeStop, this.currentPosition)
+        this.SetFont("small")
         this.guiObj.AddText("x" . this.margin . " w" . this.windowSettings["contentWidth"] . " Right vDialogStatusIndicator", this.currentPosition . " / " . this.rangeStop)
         this.SetFont()
 

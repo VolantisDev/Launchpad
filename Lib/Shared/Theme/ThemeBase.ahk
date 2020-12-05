@@ -1,22 +1,21 @@
 class ThemeBase {
     name := ""
-    baseDir := ""
-
+    themesDir := ""
+    parentTheme := ""
+    defaultTheme := "Lightpad"
     vars := Map()
     colors := Map("background", "FFFFFF", "text", "000000", "textLight", "959595", "accent", "9466FC", "accentLight", "EEE6FF", "accentDark", "8A57F0", "transColor", "")
-    graphics := Map("logo", "Graphics\Logo.png", "icon", "Graphics\Launchpad.ico")
-    buttonSizes := Map("smallFixed", Map("h", 20, "w", 80), "small", Map("h", 20, "w", "auto"), "normal", Map("h", 30, "w", "auto"), "big", Map("h", 40, "w", "auto"), "huge", Map("h", 80, "w", "auto"))
-    spacing := Map("margin", 10, "windowMargin", 10, "buttonMargin", 10)
-    fonts := Map("normal", "s11", "small", "s10 w200", "large", "s13")
-    defaultWindowOptions := ""
-    dialogWindowOptions := ""
-    defaultWindowSettings := Map("windowOptions", "", "saveSize", true, "savePosition", true, "contentWidth", 420, "tabHeight", 350, "listViewHeight", 350, "x", "auto", "y", "auto", "w", "auto", "h", "auto")
-    windowOverrides := Map()
-    fixedLabelW := 75
+    themeAssets := Map("logo", "Graphics\Logo.png", "icon", "Graphics\Launchpad.ico")
+    buttons := Map("height", Map("s", 20, "m", 30, "l", 40, "xl", 80), "fixedWidth", Map("s", 80, "m", 100, "l", 120, "xl", 140))
+    labels := Map("height", "auto", "fixedWidth", 75, "font", "normal")
+    fonts := Map("normal", "s10 w200", "small", "s11", "large", "s13")
+    windowStyles := Map("Child", "E0x40000000L", "Popup", "E0x80000000L", "HScroll", "E0x00100000L", "Tiles", "E0x00000000L")
+    windowSettings := Map("default", Map("base", "", "size", Map("width", "auto", "height", "auto"), "position", Map("x", "auto", "y", "auto", "w", "auto", "h", "auto"), "spacing", Map("margin", 10, "windowMargin", "{{margin}}", "buttonSpacing", "{{margin}}"), "saveSize", true, "savePosition", true, "contentWidth", 420, "tabHeight", 350, "listViewHeight", "{{tabHeight}}", "options", Map()), "dialog", Map("base", "default", "saveSize", false, "savePosition", false, "options", Map("Border", true, "Caption", true, "OwnDialogs", false, "Resize", false, "Popup", true)), "form", Map("base", "dialog", "options", Map("Tiled", true)))
+    windows := Map()
 
-    __New(name, baseDir, autoLoad := false) {
+    __New(name, themesDir, autoLoad := false) {
         this.name := name
-        this.baseDir := baseDir
+        this.themesDir := themesDir
         
         if (autoLoad) {
             this.LoadTheme()
@@ -24,7 +23,7 @@ class ThemeBase {
     }
 
     InitializeTheme() {
-        iconSrc := this.GetGraphic("icon")
+        iconSrc := this.GetThemeAsset("icon")
 
         if (iconSrc != "" and FileExist(iconSrc)) {
             TraySetIcon(iconSrc)
@@ -32,102 +31,116 @@ class ThemeBase {
     }
 
     GetColor(id) {
-        colorHex := "000000"
-
-        if (this.colors.Has(id)) {
-            colorHex := this.DereferenceValue(this.colors[id], this.colors) 
-        }
-
-        return colorHex
+        return this.colors.Has(id) ? this.colors[id] : "000000"
     }
 
-    GetGraphic(id) {
-        graphic := (this.graphics.Has(id)) ? this.DereferenceValue(this.graphics[id], this.graphics) : ""
-
-        if (graphic != "") {
-            SplitPath(graphic,,,,,driveLetter)
-
-            if (driveLetter == "") {
-                themeLocalPath := this.baseDir . "\Themes\" . this.name . "\" . graphic
-                appLocalPath := this.baseDir . "\" . graphic
-
-                if (FileExist(themeLocalPath)) {
-                    graphic := themeLocalPath
-                } else if (FileExist(appLocalPath)) {
-                    graphic := appLocalPath
-                }
-            }
-        }
-
-        return graphic
+    GetThemeAsset(id) {
+        return (this.themeAssets.Has(id)) ? this.themeAssets[id] : ""
     }
 
-    GetButtonSize(id) {
+    GetButtonSize(id, fixedWidth := false) {
         buttonSize := Map("h", "auto", "w", "auto")
 
-        if (this.buttonSizes.Has(id)) {
-            configuredButtonSize := this.DereferenceValue(this.buttonSizes[id], this.buttonSizes)
+        if (this.buttons["height"].Has(id)) {
+            buttonSize["h"] := this.buttons["height"][id]
+        }
 
-            if (Type(configuredButtonSize) == "Map") {
-                for key, value in configuredButtonSize {
-                    buttonSize[key] := value
-                }
-            }
+        if (fixedWidth and this.buttons["fixedWidth"].Has(id)) {
+            buttonSize["w"] := this.buttons["fixedWidth"][id]
         }
 
         return buttonSize
     }
 
-    GetSpacing(id := "margin") {
-        spacing := ""
-
-        if (this.spacing.Has(id)) {
-            spacing := this.DereferenceValue(this.spacing[id], this.spacing)
-        }
-
-        if (!IsNumber(spacing)) {
-            spacing := 10
-        }
-
-        return spacing
-    }
-
     GetFont(id) {
-        fontSize := this.fonts["normal"]
-
-        if (this.fonts.Has(id)) {
-            fontSize := this.fonts[id]
-        }
-
-        return this.DereferenceValue(fontSize, this.fonts)
+        return (this.fonts.Has(id)) ? this.fonts[id] : this.fonts["normal"]
     }
 
-    GetWindowOptions(windowKey := "", isDialog := false) {
-        windowOptions := ""
-        
-        if (this.windowOverrides.Has(windowKey) and this.windowOverrides[windowKey].Has("windowOptions")) {
-            windowOptions := this.windowOverrides[windowKey]["windowOptions"]
+    GetWindowSettings(windowKey) {
+        windowConfig := (this.windows.Has(windowKey)) ? this.windows[windowKey] : Map("settings", "default")
+
+        if (windowConfig.Has("settings") and windowConfig["settings"] != "") {
+            windowConfig := this.MergeProperty(windowConfig, this.LoadWindowSettings(windowKey))
+        }
+
+        return windowConfig
+    }
+
+    LoadWindowSettings(settingsKey) {
+        windowSettings := ""
+
+        if (this.windowSettings.Has(settingsKey)) {
+            windowSettings := this.windowSettings[settingsKey]
         } else {
-            windowOptions := isDialog ? this.dialogWindowOptions : this.defaultWindowOptions
+            windowSettings := this.windowSettings["default"]
+        }
+
+        if (windowSettings.Has("base") and windowSettings["base"] != "") {
+            parentSettings := this.GetWindowSettings(windowSettings["base"])
+            windowSettings := this.MergeProperty(windowSettings, parentSettings, false)
+        }
+
+        return this.DereferenceEnumerable(windowSettings)
+    }
+
+    GetWindowOptionsString(windowKey) {
+        windowOptions := ""
+        windowSettings := this.GetWindowSettings(windowKey)
+
+        if (windowSettings.Has("options") and windowSettings["options"] != "") {
+            for key, val in windowSettings["options"] {
+                if (val != "") {
+                    if this.windowStyles.Has(key) {
+                        key := this.DereferenceValue(this.windowStyles[key], this.windowStyles)
+                    }
+
+                    if (windowOptions != "") {
+                        windowOptions .= " "
+                    }
+
+                    if (val) {
+                        windowOptions .= "+" . key
+                    } else if (val == false) {
+                        windowOptions .= "-" . key
+                    }
+
+                    if (Type(val) == "String" and val != "") {
+                        windowOptions .= val
+                    }
+                }
+            }
         }
 
         return windowOptions
     }
 
-    GetWindowSettings(windowKey) {
-        windowSettings := this.defaultWindowSettings
+    DereferenceValues(themeMap := "") {
+        if (themeMap == "") {
+            this.name := this.DereferenceValue(this.name, this.vars)
+            this.vars := this.DereferenceEnumerable(this.vars)
+            this.colors := this.DereferenceEnumerable(this.colors)
+            this.themeAssets := this.DereferenceEnumerable(this.themeAssets)
+            this.buttons := this.DereferenceEnumerable(this.buttons)
+            this.labels := this.DereferenceEnumerable(this.labels)
+            this.fonts := this.DereferenceEnumerable(this.fonts)
+            this.windowStyles := this.DereferenceEnumerable(this.windowStyles)
+            this.windowSettings := this.DereferenceEnumerable(this.windowSettings)
+            this.windows := this.DereferenceEnumerable(this.windows)
+        } else {
+            return this.DereferenceEnumerable(themeMap)
+        }
+    }
 
-        if (this.windowOverrides.Has(windowKey)) {
-            for key, val in this.windowOverrides[windowKey] {
-                windowSettings[key] := val
+    DereferenceEnumerable(enum) {
+        for key, val in enum {
+            if (Type(val) == "Map" || Type(val) == "Array") {
+                enum[key] := this.DereferenceEnumerable(val)
+            } else {
+                enum[key] := this.DereferenceValue(val, enum)
             }
         }
 
-        for key, val in windowSettings {
-            windowSettings[key] := this.DereferenceValue(windowSettings[key], windowSettings)
-        }
-
-        return windowSettings
+        return enum
     }
 
     DereferenceValue(value, valueMap, endRecursion := false) {
@@ -138,6 +151,45 @@ class ThemeBase {
         }
 
         return endRecursion ? value : this.DereferenceValue(value, this.vars, true)
+    }
+
+    ExpandPaths(themeMap := "") {
+        if (themeMap == "" or themeMap.Has("themeAssets")) {
+            themeAssets := themeMap != "" ? themeMap["themeAssets"] : this.themeAssets
+        }
+
+        themeAssets := themeMap == "" ? this.themeAssets : themeMap["themeAssets"]
+
+        themeName := themeMap != "" ? themeMap["name"] : this.name
+        parentTheme := themeMap != "" ? themeMap["parentTheme"] : this.parentTheme
+        
+        for key, val in themeAssets {
+            themeAssets[key] := this.ExpandPath(val, themeName, parentTheme)
+        }
+
+        return themeMap
+    }
+
+    ExpandPath(value, themeName := "", parentTheme := "") {
+        if (value != "") {
+            SplitPath(value,,,,, driveLetter)
+
+            if (driveLetter == "") {
+                themePath := this.themesDir . "\" . this.name . "\" . value
+                parentThemePath := parentTheme ? this.themesDir . "\" . parentTheme . "\" . value : ""
+                defaultThemePath := this.themesDir . "\" . this.defaultTheme . "\" . value
+
+                if (FileExist(themePath)) {
+                    value := themePath
+                } else if (FileExist(parentThemePath)) {
+                    value := parentThemePath
+                } else if (FileExist(defaultThemePath)) {
+                    value := defaultThemePath
+                }
+            }
+        }
+
+        return value
     }
 
     LoadValuesIntoTheme(themeMap) {
@@ -151,8 +203,11 @@ class ThemeBase {
             }
         }
 
+        themeMap := this.DereferenceValues(themeMap)
+        themeMap := this.ExpandPaths(themeMap)
+
         for key, val in themeMap {
-            if (key == "name" or key == "parentTheme" or key == "baseDir") {
+            if (key == "name" or key == "parentTheme" or key == "themesDir") {
                 continue
             }
 
@@ -217,11 +272,11 @@ class ThemeBase {
         }
 
         this.name := themeMap.Has("name") ? themeMap["name"] : themeName
-
+        this.parentTheme := themeMap.Has("parentTheme") ? themeMap["parentTheme"] : ""
         this.LoadValuesIntoTheme(themeMap)
-
+        this.DereferenceValues()
+        this.ExpandPaths()
         this.InitializeTheme()
-
         return this
     }
 

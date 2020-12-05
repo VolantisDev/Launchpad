@@ -2,8 +2,8 @@
     positionAtMouseCursor := true
     nextPos := "xm"
 
-    __New(app, owner := "", windowKey := "") {
-        super.__New(app, "Tools", owner, windowKey)
+    __New(app, windowKey := "", owner := "", parent := "") {
+        super.__New(app, "Tools", windowKey, owner, parent)
     }
 
     Controls() {
@@ -22,7 +22,7 @@
     AddToolButton(buttonLabel, ctlName) {
         width := (this.windowSettings["contentWidth"] - this.margin) / 2
 
-        buttonSize := this.themeObj.GetButtonSize("big")
+        buttonSize := this.themeObj.GetButtonSize("l")
         buttonH := (buttonSize.Has("h") and buttonSize["h"] != "auto") ? buttonSize["h"] : 40
 
         btn := this.guiObj.AddButton("v" . ctlName . " " . this.nextPos . " w" . width . " h" . buttonH, buttonLabel)

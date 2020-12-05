@@ -15,16 +15,20 @@ class LauncherEditor extends LaunchpadFormGuiBase {
     gameTypes := ""
     margin := 6
 
-    __New(app, launcherEntityObj, mode := "config", owner := "", windowKey := "") {
+    __New(app, launcherEntityObj, mode := "config", windowKey := "", owner := "", parent := "") {
         InvalidParameterException.CheckTypes("LauncherEditor", "launcherEntityObj", launcherEntityObj, "LauncherEntity", "mode", mode, "")
         this.launcherEntityObj := launcherEntityObj
         this.mode := mode
+
+        if (windowKey == "") {
+            windowKey := "LauncherEditor"
+        }
 
         if (owner == "") {
             owner := "MainWindow"
         }
 
-        super.__New(app, "Launcher Editor", this.GetTextDefinition(), owner, windowKey, this.GetButtonsDefinition())
+        super.__New(app, "Launcher Editor", this.GetTextDefinition(), windowKey, owner, parent, this.GetButtonsDefinition())
     }
 
     GetTextDefinition() {
@@ -158,7 +162,7 @@ class LauncherEditor extends LaunchpadFormGuiBase {
 
         this.AddLocationText(location, settingName)
 
-        buttonSize := this.themeObj.GetButtonSize("smallFixed")
+        buttonSize := this.themeObj.GetButtonSize("s", true)
         buttonDims := ""
         
         if (buttonSize.Has("h") and buttonSize["h"] != "auto") {
