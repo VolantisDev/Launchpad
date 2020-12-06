@@ -28,7 +28,8 @@ class LauncherBase {
         if (this.progress == "") {
             progressTitle := StrReplace(this.config["LauncherProgressTitle"], "{g}", this.config["DisplayName"])
             progressText := StrReplace(this.config["LauncherProgressText"], "{g}", this.config["DisplayName"])
-            this.progress := ProgressIndicator.new(progressTitle, progressText, "", false, this.CountLaunchSteps())
+            themeObj := JsonTheme.new("Lightpad", this.config["ThemesDir"], true)
+            this.progress := ProgressIndicator.new(progressTitle, themeObj, progressText, "", "", "", false, this.CountLaunchSteps())
         }
     }
 

@@ -50,7 +50,7 @@ class GitHubReleaseInstallerComponent extends DownloadableInstallerComponent {
 
     GetDownloadUrl() {
         response := this.GetGitHubResponse()
-        filename := this.downloadUrl
+        filename := StrReplace(this.downloadUrl, "{{version}}", this.version)
         downloadUrl := ""
 
         if (Type(response) == "Map" and response.Has("assets")) {

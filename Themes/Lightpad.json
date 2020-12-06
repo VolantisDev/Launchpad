@@ -5,19 +5,24 @@
         "vars": {},
         "colors": {
             "default": "000000",
-            "background": "FFFFFF",
+            "background": "ffffff",
             "text": "{{default}}",
             "textLight": "959595",
-            "accent": "9466FC",
-            "accentLight": "EEE6FF",
-            "accentDark": "8A57F0",
-            "transColor": ""
+            "accent": "9466fc",
+            "accentLight": "eee6ff",
+            "accentDark": "8a57f0",
+            "transColor": "",
+            "border": "{{accentDark}}",
+            "buttonBackground": "{{background}}",
+            "buttonBackgroundHover": "{{accentLight}}",
+            "buttonText": "{{text}}"
         },
         "themeAssets": {
             "icon": "Graphics\\Launchpad.ico",
             "logo": "Graphics\\Logo.png"
         },
         "buttons": {
+            "borderWidth": 3,
             "height": {
                 "s": 20,
                 "m": 30,
@@ -46,7 +51,8 @@
             "Popup": "E0x80000000L",
             "HScroll": "E0x00100000L",
             "Tiles": "E0x00000000L",
-            "SendClickedToParent": "0x100"
+            "SendClickedToParent": "0x100",
+            "LayeredWindow": "E0x80000"
         },
         "windowSettings": {
             "default": {

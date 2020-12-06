@@ -17,6 +17,8 @@
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\GuiBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\ProgressIndicator.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\SingleInputBox.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\GuiShape\ButtonShape.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\GuiShape\GuiShapeBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\HttpReq\HttpReqBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\HttpReq\WinHttpReq.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Installer\InstallerBase.ahk
@@ -35,4 +37,5 @@
 #Include E:\Tools\Launchpad\Lib\Shared\Theme\JsonTheme.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Theme\ThemeBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Toolbar\ToolbarBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Vendor\Gdip_All.ahk
 ; End of auto-generated includes.

@@ -23,7 +23,8 @@
 
         ; First row
         buttonWidth := this.ButtonWidth(2, areaW)
-        btn := this.guiObj.AddButton("x" . buttonX . " w" . buttonWidth . " h" . hugeButtonH . " Section", "&Manage Launchers")
+        btn := this.guiObj.AddButton("x" . buttonX . " w" . buttonWidth . " h" . hugeButtonH . " Section vManageLaunchers", "&Manage Launchers")
+        this.buttons.Push(btn)
         btn.OnEvent("Click", "OnManageLaunchers")
         btn := this.guiObj.AddButton("ys wp hp", "&Build Launchers")
         btn.OnEvent("Click", "OnBuildLaunchers")

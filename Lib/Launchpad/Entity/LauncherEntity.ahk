@@ -43,6 +43,11 @@ class LauncherEntity extends EntityBase {
         set => this.SetConfigValue("ThemeName", value, false)
     }
 
+    ThemesDir {
+        get => this.GetConfigValue("ThemesDir", false)
+        set => this.SetConfigValue("ThemesDir", value, false)
+    }
+
     __New(app, key, config, requiredConfigKeys := "", defaultDataSource := "", parentEntity := "") {
         this.children["ManagedLauncher"] := ManagedLauncherEntity.new(app, key, config, "", defaultDataSource, this)
         super.__New(app, key, config, requiredConfigKeys, defaultDataSource, parentEntity)
@@ -154,6 +159,7 @@ class LauncherEntity extends EntityBase {
         defaults["DestinationDir"] := this.GetDefaultDestinationDir()
         ;defaults["IconSrc"] := ""
         defaults["ThemeName"] := this.app.Config.ThemeName
+        defaults["ThemesDir"] := this.app.Config.AppDir . "\Themes"
         return defaults
     }
 

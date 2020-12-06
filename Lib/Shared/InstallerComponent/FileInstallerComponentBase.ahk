@@ -67,6 +67,7 @@ class FileInstallerComponentBase extends InstallerComponentBase {
         zipFile := this.tmpDir . "\" . this.tmpFile
 
         if (FileExist(zipFile)) {
+            MsgBox destinationPath
             archiveItems := psh.Namespace(zipFile).items
             psh.Namespace(destinationPath).CopyHere(archiveItems, 4|16)
 

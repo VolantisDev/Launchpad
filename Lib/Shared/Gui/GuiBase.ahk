@@ -11,6 +11,7 @@ class GuiBase {
     hasToolbar := false
     hToolbar := ""
     margin := ""
+    buttons := []
 
     positionAtMouseCursor := false
     openWindowWithinScreenBounds := true
@@ -209,6 +210,10 @@ class GuiBase {
         }
 
         this.guiObj.Show(windowSize)
+
+        for (index, btn in this.buttons) {
+            this.themeObj.DrawButtonOverlay(btn, this.guiObj)
+        }
 
         ; @todo is this really needed?
         if (!this.positionAtMouseCursor and this.showInNotificationArea) {

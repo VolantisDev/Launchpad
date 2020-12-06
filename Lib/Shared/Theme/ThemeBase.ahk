@@ -1,4 +1,5 @@
 class ThemeBase {
+    static Gdip := ""
     name := ""
     themesDir := ""
     parentTheme := ""
@@ -14,6 +15,10 @@ class ThemeBase {
     windows := Map()
 
     __New(name, themesDir, autoLoad := false) {
+        if (ThemeBase.Gdip == "") {
+            ThemeBase.Gdip := Gdip_Startup()
+        }
+
         this.name := name
         this.themesDir := themesDir
         
@@ -282,5 +287,10 @@ class ThemeBase {
 
     GetThemeMap(themeName) {
         throw MethodNotImplementedException.new("ThemeBase", "GetThemeMap")
+    }
+
+    DrawButtonOverlay(ctlObj, guiObj) {
+        shape := ButtonShape.new(ctlObj.Text, this.GetColor("buttonBackground"), this.GetColor("buttonText"), this.GetColor("border"), this.buttons["borderWidth"])
+        shape.DrawOver(ctlObj, guiObj)
     }
 }
