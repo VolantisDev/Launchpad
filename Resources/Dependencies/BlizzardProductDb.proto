@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+message ProductInstall {
+    string uid = 1;
+    string productCode = 2;
+    UserSettings settings = 3;
+    CachedProductState cachedProductState = 4;
+    ProductOperations productOperations = 5;
+    string keyword = 6;
+}
+
+message UserSettings {
+    enum ShortcutOption {
+        SHORTCUT_NONE = 0;
+        SHORTCUT_USER = 1;
+        SHORTCUT_ALL_USERS = 2;
+    }
+
+    enum LanguageSettingType {
+        LANGSETTING_NONE = 0;
+        LANGSETING_SINGLE = 1;
+        LANGSETTING_SIMPLE = 2;
+        LANGSETTING_ADVANCED = 3;
+    }
+
+    string installPath = 1;
+    string playRegion = 2;
+    ShortcutOption desktopShortcut = 3;
+    ShortcutOption startmenuShortcut = 4;
+    LanguageSettingType languageSettings = 5;
+    string selectedTextLanguage = 6;
+    string selectedSpeechLanguage = 7;
+    repeated LanguageSetting languages = 8;
+    string gfxOverrideTags = 9;
+    string versionbranch = 10;
+    string countryCode3Letter = 11;
+    string countryCode2Letter = 12;
+    string productExtra = 13;
+}
+
+message LanguageSetting {
+    enum LanguageOption {
+        LANGOPTION_NONE = 0;
+        LANGOPTION_TEXT = 1;
+        LANGOPTION_SPEECH = 2;
+        LANGOPTION_TEXT_AND_SPEECH = 3;
+    }
+
+    string language = 1;
+    LanguageOption option = 2;
+}
+
+message CachedProductState {
+    BaseProductState baseProductState = 1;
+    BackfillProgress backfillProgress = 2;
+    RepairProgress repairProgress = 3;
+    UpdateProgress updateProgress = 4;
+}
+
+message BaseProductState {
+    bool installed = 1;
+    bool playable = 2;
+    bool updateComplete = 3;
+    bool backgroundDownloadAvailable = 4;
+    bool backgroundDownloadComplete = 5;
+    string currentVersion = 6;
+    string currentVersionStr = 7;
+    repeated BuildConfig installedBuildConfig = 8;
+    repeated BuildConfig backgroundDownloadBuildConfig = 9;
+    string decryptionKey = 10;
+    repeated string completedInstallActions = 11;
+    string tags = 17;
+}
+
+message BuildConfig {
+    string region = 1;
+    string buildConfig = 2;
+}
+
+message BackfillProgress {
+    double progress = 1;
+    bool backgrounddownload = 2;
+    bool paused = 3;
+    bool downloadLimit = 4;
+}
+
+message RepairProgress {
+    double progress = 1;
+}
+
+message UpdateProgress {
+    string lastDiscSetUsed = 1;
+    double progress = 2;
+    bool discIgnored = 3;
+    uint64 totalToDownload = 4;
+}
+
+message ProductOperations {
+    enum Operation {
+        OP_UPDATE = 0;
+        OP_BACKFILL = 1;
+        OP_REPAIR = 2;
+    }
+
+    Operation activeOperation = 1;
+    uint64 priority = 2;
+}
+
+message ProductConfig {
+    string productCode = 1;
+    string metadataHash = 2;
+    string timestamp = 3;
+}
+
+message ActiveProcess {
+    string processName = 1;
+    int32 pid = 2;
+    repeated string uri = 3;
+}
+
+message InstallHandshake {
+    string product = 1;
+    string uid = 2;
+    UserSettings settings = 3;
+}
+
+message DownloadSettings {
+    int32 downloadLimit = 1;
+    int32 backfillLimit = 2;
+}
+
+message Database {
+    repeated ProductInstall productInstall = 1;
+    repeated InstallHandshake activeInstalls = 2;
+    repeated ActiveProcess activeProcesses = 3;
+    repeated ProductConfig productConfigs = 4;
+    DownloadSettings downloadSettings = 5;
+}

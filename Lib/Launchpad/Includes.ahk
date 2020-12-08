@@ -37,9 +37,7 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\ManagedGameEntity.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\ManagedLauncherEntity.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Installer\DependencyInstaller.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Installer\LaunchpadExeInstaller.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Installer\LaunchpadInstaller.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Installer\LibraryInstaller.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Installer\LaunchpadUpdate.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Installer\ThemeInstaller.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\BuilderManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\CacheManager.ahk

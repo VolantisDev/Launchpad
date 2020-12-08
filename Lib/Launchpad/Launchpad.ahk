@@ -79,7 +79,7 @@
         this.appStateObj := appStateObj
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
         this.notificationServiceObj := NotificationService.new(this, ToastNotifier.new(this))
-        this.themeManagerObj := ThemeManager.new(this, appDir . "\Themes")
+        this.themeManagerObj := ThemeManager.new(this, appDir . "\Resources\Themes")
         this.windowManagerObj := WindowManager.new(this)
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
         this.dataSourceManagerObj := DataSourceManager.new(this)

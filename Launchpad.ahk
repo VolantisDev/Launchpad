@@ -10,11 +10,7 @@ A_IconHidden := A_IsCompiled
 #Include Lib\Shared\Includes.ahk
 #Include Lib\Launchpad\Includes.ahk
 
-if (FileExist("Graphics\Launchpad.ico")) {
-    TraySetIcon("Graphics\Launchpad.ico")
-}
-
-
+TraySetIcon("Resources\Graphics\Launchpad.ico")
 SplitPath(A_ScriptName,,,, appName)
 
 try {

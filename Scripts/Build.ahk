@@ -3,7 +3,7 @@
 makensis := "C:\Program Files (x86)\NSIS\makensis.exe"
 appDir := RegExReplace(A_ScriptDir, "\\[^\\]+$")
 buildDir := appDir . "\Build"
-iconFile := appDir . "\Graphics\Launchpad.ico"
+iconFile := appDir . "\Resources\Graphics\Launchpad.ico"
 version := GetLatestVersionTag()
 
 result := InputBox("This is the version of Launchpad that will be built. Entering a different version will create (but not push) a new git tag for you.", "Launchpad Build Version",, version)
@@ -16,14 +16,12 @@ if (result.Value != version) {
 ResetBuildDir()
 DirCreate(buildDir . "\Lib")
 DirCopy(appDir . "\Lib\Shared", buildDir . "\Lib\Shared")
-DirCopy(appDir . "\Graphics", buildDir . "\Graphics")
-DirCopy(appDir . "\Themes", buildDir . "\Themes")
+DirCopy(appDir . "\Resources", buildDir . "\Resources")
 BuildExe("LaunchpadUpdater", iconFile)
 BuildExe("Launchpad", iconFile)
 GenerateInstaller()
 DirDelete(buildDir . "\Lib", true)
-DirDelete(buildDir . "\Graphics", true)
-DirDelete(buildDir . "\Themes", true)
+DirDelete(buildDir . "\Resources", true)
 FileDelete(buildDir . "\Launchpad.exe")
 FileDelete(buildDir . "\LaunchpadUpdater.exe")
 

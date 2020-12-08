@@ -6,7 +6,7 @@ class ThemeBase {
     defaultTheme := "Lightpad"
     vars := Map()
     colors := Map("background", "FFFFFF", "text", "000000", "textLight", "959595", "accent", "9466FC", "accentLight", "EEE6FF", "accentDark", "8A57F0", "transColor", "")
-    themeAssets := Map("logo", "Graphics\Logo.png", "icon", "Graphics\Launchpad.ico")
+    themeAssets := Map("logo", "Resources\Graphics\Logo.png", "icon", "Resources\Graphics\Launchpad.ico")
     buttons := Map("height", Map("s", 20, "m", 30, "l", 40, "xl", 80), "fixedWidth", Map("s", 80, "m", 100, "l", 120, "xl", 140))
     labels := Map("height", "auto", "fixedWidth", 75, "font", "normal")
     fonts := Map("normal", "s10 w200", "small", "s11", "large", "s13")

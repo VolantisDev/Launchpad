@@ -3,7 +3,7 @@
 !define COPYRIGHT "Ben McClure � 2020"
 !define DESCRIPTION "Game Launching Multitool"
 !define INSTALLER_NAME "Build\LaunchpadInstaller.exe"
-!define MAIN_APP_EXE "Build\Launchpad.exe"
+!define MAIN_APP_EXE "Launchpad.exe"
 !define INSTALL_TYPE "SetShellVarContext current"
 !define REG_ROOT "HKCU"
 !define REG_APP_PATH "Software\Microsoft\Windows\CurrentVersion\App Paths\${MAIN_APP_EXE}"
@@ -39,7 +39,7 @@ InstallDir "$PROGRAMFILES\Launchpad"
 
 !include "MUI2.nsh"
 
-!define MUI_ICON "Graphics\Launchpad.ico"
+!define MUI_ICON "Resources\Graphics\Launchpad.ico"
 
 !define MUI_ABORTWARNING
 !define MUI_UNABORTWARNING
@@ -131,11 +131,8 @@ ${INSTALL_TYPE}
 Delete "$INSTDIR\Launchpad.exe"
 Delete "$INSTDIR\LaunchpadUpdater.exe"
 Delete "$INSTDIR\Uninstall ${APP_NAME}.exe"
-RMDir /r "$INSTDIR\Graphics"
+RMDir /r "$INSTDIR\Resources"
 RMDir /r "$INSTDIR\Lib"
-Delete "$INSTDIR\Themes\Lightpad.json"
-Delete "$INSTDIR\Themes\Darkpad.json"
-RMDir "$INSTDIR\Themes"
 RMDir /r "$INSTDIR\Vendor"
 
 !ifdef WEB_SITE

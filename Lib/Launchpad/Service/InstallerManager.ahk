@@ -7,9 +7,7 @@ class InstallerManager extends ServiceBase {
 
         tmpDir := this.app.tmpDir . "\Installers"
         cache := this.app.Cache.GetCache("file")
-        this.SetInstaller("LaunchpadExe", LaunchpadExeInstaller.new(this.app.AppState, cache, tmpDir))
-        this.SetInstaller("Launchpad", LaunchpadInstaller.new(this.app.AppState, cache, tmpDir))
-        this.SetInstaller("Libraries", LibraryInstaller.new(this.app.AppState, cache, tmpDir))
+        this.SetInstaller("LaunchpadUpdate", LaunchpadUpdate.new(this.app.AppState, cache, tmpDir))
         this.SetInstaller("Themes", ThemeInstaller.new(this.app.AppState, cache, extraThemes, tmpDir))
         this.SetInstaller("Dependencies", DependencyInstaller.new(this.app.AppState, cache, extraDependencyComponents, tmpDir))
     }
@@ -23,13 +21,13 @@ class InstallerManager extends ServiceBase {
     }
 
     InstallRequirements(owner := "Mainwindow") {
-        installerKeys := ["LaunchpadExe", "Launchpad", "Libraries", "Themes", "Dependencies"]
+        installerKeys := ["Themes", "Dependencies"]
         op := InstallOp.new(this.app, installerKeys, owner)
         return op.Run()
     }
 
     UpdateApp(owner := "UpdateWindow") {
-        installerKeys := ["LaunchpadExe"]
+        installerKeys := ["LaunchpadUpdate"]
         op := UpdateOp.new(this.app, installerKeys, owner)
         return op.Run()
     }

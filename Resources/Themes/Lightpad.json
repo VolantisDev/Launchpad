@@ -18,8 +18,8 @@
             "buttonText": "{{text}}"
         },
         "themeAssets": {
-            "icon": "Graphics\\Launchpad.ico",
-            "logo": "Graphics\\Logo.png"
+            "icon": "Resources\\Graphics\\Launchpad.ico",
+            "logo": "Resources\\Graphics\\Logo.png"
         },
         "buttons": {
             "borderWidth": 3,
