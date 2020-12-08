@@ -129,7 +129,6 @@ SectionEnd
 Section Uninstall
 ${INSTALL_TYPE}
 Delete "$INSTDIR\Launchpad.exe"
-Delete "$INSTDIR\LaunchpadUpdater.exe"
 Delete "$INSTDIR\Uninstall ${APP_NAME}.exe"
 RMDir /r "$INSTDIR\Resources"
 RMDir /r "$INSTDIR\Lib"

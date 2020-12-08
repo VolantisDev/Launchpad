@@ -17,16 +17,14 @@ ResetBuildDir()
 DirCreate(buildDir . "\Lib")
 DirCopy(appDir . "\Lib\Shared", buildDir . "\Lib\Shared")
 DirCopy(appDir . "\Resources", buildDir . "\Resources")
-BuildExe("LaunchpadUpdater", iconFile)
 BuildExe("Launchpad", iconFile)
 GenerateInstaller()
 DirDelete(buildDir . "\Lib", true)
 DirDelete(buildDir . "\Resources", true)
 FileDelete(buildDir . "\Launchpad.exe")
-FileDelete(buildDir . "\LaunchpadUpdater.exe")
 
 Run(buildDir)
-TrayTip("Finished building Launchpad.exe and LaunchpadUpdater.exe", "Launchpad Build", 1)
+TrayTip("Finished building Launchpad!", "Launchpad Build", 1)
 ExitApp
 
 GetLatestVersionTag() {
