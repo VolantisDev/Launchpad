@@ -20,7 +20,6 @@ DirCopy(appDir . "\Graphics", buildDir . "\Graphics")
 DirCopy(appDir . "\Themes", buildDir . "\Themes")
 BuildExe("LaunchpadUpdater", iconFile)
 BuildExe("Launchpad", iconFile)
-Sleep(2000) ; Make sure all files are written before the installer generates
 GenerateInstaller()
 DirDelete(buildDir . "\Lib", true)
 DirDelete(buildDir . "\Graphics", true)
@@ -108,7 +107,6 @@ BuildExe(scriptName, iconFile) {
 
     FileAppend(scriptContent, buildFile)
     runResult := RunWait(ahk2Exe . " /in `"" . buildFile . "`" /out `"" . exeFile . "`" /icon `"" . iconFile . "`"", appDir)
-    Sleep(1000)
     FileDelete(buildFile)
     return runResult
 }

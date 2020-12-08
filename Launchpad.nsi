@@ -44,8 +44,8 @@ InstallDir "$PROGRAMFILES\Launchpad"
 !define MUI_ABORTWARNING
 !define MUI_UNABORTWARNING
 
-!define MUI_WELCOMEPAGE_TITLE "${APP_NAME} ${VERSION} Installer"
-!define MUI_WELCOMEPAGE_TEXT "Welcome to the Launchpad Installer! This tool makes it simple to install Launchpad to the location of your choosing."
+!define MUI_WELCOMEPAGE_TITLE "${APP_NAME} ${VERSION}"
+!define MUI_WELCOMEPAGE_TEXT "Thanks for your interest in Launchpad! This setup tool will install Launchpad to a folder of your choosing, optionally create a Start Menu shortcut, and have you on your way to taking control of your game library in seconds."
 
 !insertmacro MUI_PAGE_WELCOME
 
@@ -81,11 +81,7 @@ Section -MainProgram
 ${INSTALL_TYPE}
 SetOverwrite ifnewer
 SetOutPath "$INSTDIR"
-File "Build\Launchpad.exe"
-File "Build\LaunchpadUpdater.exe"
-File /r "Build\Graphics\*"
-File /r "Build\Lib\*"
-File /r "Build\Themes\*"
+File /r "Build\*"
 SectionEnd
 
 ######################################################################
