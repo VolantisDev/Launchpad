@@ -78,7 +78,7 @@ ResetBuildDir() {
 }
 
 BuildExe(scriptName, iconFile) {
-    global appDir, buildDir
+    global appDir, buildDir, version
 
     SplitPath(A_AhkPath,, ahkDir)
 
@@ -97,7 +97,20 @@ BuildExe(scriptName, iconFile) {
         }
     }
 
-    return RunWait(ahk2Exe . " /in `"" . appDir . "\" . scriptName . ".ahk`" /out `"" . buildDir . "\" . scriptName . ".exe`" /icon `"" . iconFile . "`"", appDir)
+    scriptContent := FileRead(appDir . "\" . scriptName . ".ahk")
+    scriptContent := StrReplace(scriptContent, "{{VERSION}}", version)
+    buildFile := appDir . "\" . scriptName . "-build.ahk"
+    exeFile := buildDir . "\" . scriptName . ".exe"
+
+    if (FileExist(buildFile)) {
+        FileDelete(buildFile)
+    }
+
+    FileAppend(scriptContent, buildFile)
+    runResult := RunWait(ahk2Exe . " /in `"" . buildFile . "`" /out `"" . exeFile . "`" /icon `"" . iconFile . "`"", appDir)
+    Sleep(1000)
+    FileDelete(buildFile)
+    return runResult
 }
 
 Zip(zipDir, zipFile, includeDir := false) {

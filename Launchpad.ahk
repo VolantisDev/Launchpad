@@ -1,4 +1,9 @@
-﻿#Warn
+﻿;@Ahk2Exe-SetName "Launchpad"
+;@Ahk2Exe-SetVersion "{{VERSION}}"
+;@Ahk2Exe-SetCompanyName "Volantis Development"
+;@Ahk2Exe-SetCopyright "Copyright 2020 Ben McClure"
+;@Ahk2Exe-SetDescription "Game Launching Multitool"
+#Warn
 
 A_IconHidden := A_IsCompiled
 

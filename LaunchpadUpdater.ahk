@@ -1,4 +1,9 @@
-﻿#Warn
+﻿;@Ahk2Exe-SetName "Launchpad Updater"
+;@Ahk2Exe-SetVersion "{{VERSION}}"
+;@Ahk2Exe-SetCompanyName "Volantis Development"
+;@Ahk2Exe-SetCopyright "Copyright 2020 Ben McClure"
+;@Ahk2Exe-SetDescription "Update tool for Launchpad"
+#Warn
 
 A_IconHidden := A_IsCompiled
 
