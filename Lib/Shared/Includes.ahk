@@ -12,6 +12,9 @@
 #Include E:\Tools\Launchpad\Lib\Shared\Cache\CacheBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Cache\FileCache.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Cache\ObjectCache.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Game\BnetlauncherGame.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Game\GameBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Game\SimpleGame.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\DialogBox.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\FormGuiBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\GuiBase.ahk
@@ -28,12 +31,15 @@
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\InstallerComponentBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\LibInstallerComponent.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Json\Json.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Launcher\LauncherBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Launcher\SimpleLauncher.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Notifier\NotifierBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Notifier\ToastNotifier.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\OpError\BasicOpError.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\OpError\OpErrorBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\OpStatus\BasicOpStatus.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\OpStatus\OpStatusBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Protobuf\Protobuf.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Theme\JsonTheme.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Theme\ThemeBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Toolbar\ToolbarBase.ahk

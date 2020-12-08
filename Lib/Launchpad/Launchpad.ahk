@@ -1,7 +1,8 @@
 ﻿class Launchpad {
     appName := ""
     appDir := ""
-    tmpDir := ""
+    tmpDir := A_Temp . "\Launchpad"
+    appDataDir := A_AppData . "\Volantis\Launchpad"
     appConfigObj := ""
     appStateObj := ""
     windowManagerObj := ""
@@ -68,12 +69,11 @@
         this.appName := appName
         this.appDir := appDir
 
-        tmpDir := A_Temp . "\Launchpad"
-        this.tmpDir := tmpDir
-        DirCreate(tmpDir)
+        DirCreate(this.tmpDir)
+        DirCreate(this.appDataDir)
 
-        config := AppConfig.new(this, tmpDir)
-        appStateObj := LaunchpadAppState.new(tmpDir . "\State.json")
+        config := AppConfig.new(this, this.tmpDir, this.appDataDir)
+        appStateObj := LaunchpadAppState.new(this.appDataDir . "\State.json")
 
         this.appConfigObj := config
         this.appStateObj := appStateObj

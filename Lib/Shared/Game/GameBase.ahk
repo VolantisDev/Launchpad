@@ -2,6 +2,7 @@ class GameBase {
     key := ""
     config := ""
     pid := 0
+    launchTime := ""
     winId := 0
     loadingWinId := 0
     isFinished := false
@@ -109,15 +110,34 @@ class GameBase {
 
     RunGameAction(progress := "") {
         runMethod := this.config["GameRunMethod"]
+
+        this.launchTime := A_Now
         
         if (runMethod == "Scheduled") {
             this.RunGameScheduled()
         } else { ; Assume Run or RunWait
             runCmd := this.config["GameRunMethod"]
-            %runCmd%(this.GetRunCmd(), this.config["GameWorkingDir"], "Hide")
+            %runCmd%(this.GetRunCmd(), this.config["GameWorkingDir"], "Hide", this.pid)
+        }
+
+        if (runMethod != "RunWait" and this.config["GameReplaceProcess"]) {
+            this.ReplaceGameProcess()
         }
 
         return this.GameIsRunning()
+    }
+
+    ReplaceGameProcess() {
+        ; @todo wait for game process to exist using LocateGameProcess()
+        ; @todo get existing process info
+        ; @todo kill existing process
+        ; @todo launch new process under Launchpad.exe with existing process info
+    }
+
+    LocateGameProcess() {
+        ;wmi := ComObjGet("winmgmts:")
+        ;queryEnum := wmi.ExecQuery("SELECT ProcessId, CreationDate FROM Win32_Process WHERE CreationDate > '{0}' AND Name LIKE '{1}%'")
+        ; @todo finish the above
     }
 
     RunGameScheduled() {

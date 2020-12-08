@@ -1,6 +1,7 @@
 ﻿class AppConfig extends IniConfig {
     appNameValue := ""
     defaultTempDir := ""
+    defaultAppDataDir := ""
     defaultCacheDir := ""
 
     AppName[] {
@@ -33,8 +34,8 @@
     }
 
     ThemeName[] {
-        get => this.GetIniValue("ThemeName", false) || "Lightpad"
-        set => this.SetIniValue("ThemeName", value, false)
+        get => this.GetIniValue("ThemeName") || "Lightpad"
+        set => this.SetIniValue("ThemeName", value)
     }
 
     DataSourceKey[] {
@@ -55,6 +56,11 @@
     TempDir[] {
         get => this.GetIniValue("TempDir") || this.defaultTempDir
         set => this.SetIniValue("TempDir", value)
+    }
+
+    AppDataDir[] {
+        get => this.GetIniValue("AppDataDir") || this.defaultAppDataDir
+        set => this.SetIniValue("AppDataDir", value)
     }
 
     CacheDir[] {
@@ -97,10 +103,11 @@
         set => this.SetBooleanValue("FlushCacheOnExit", value)
     }
 
-    __New(app, defaultTempDir) {
-        InvalidParameterException.CheckTypes("ValidateLaunchersOp", "defaultTempDir", defaultTempDir, "")
-        InvalidParameterException.CheckEmpty("ValidateLaunchersOp", "defaultTempDir", defaultTempDir)
+    __New(app, defaultTempDir, defaultAppDataDir) {
+        InvalidParameterException.CheckTypes("ValidateLaunchersOp", "defaultTempDir", defaultTempDir, "", "defaultAppDataDir", defaultAppDataDir, "")
+        InvalidParameterException.CheckEmpty("ValidateLaunchersOp", "defaultTempDir", defaultTempDir, "defaultAppDataDir", defaultAppDataDir)
         this.defaultTempDir := defaultTempDir
+        this.defaultAppDataDir := defaultAppDataDir
         super.__New(app)
     }
 

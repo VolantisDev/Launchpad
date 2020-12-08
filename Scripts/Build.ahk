@@ -1,34 +1,81 @@
 ﻿#Warn
 
+makensis := "C:\Program Files (x86)\NSIS\makensis.exe"
 appDir := RegExReplace(A_ScriptDir, "\\[^\\]+$")
-
 buildDir := appDir . "\Build"
-ahkScript := appDir . "\Launchpad.ahk"
-exeFile := buildDir . "\Launchpad.exe"
 iconFile := appDir . "\Graphics\Launchpad.ico"
-zipPath := appDir . "\Launchpad.zip"
+version := GetLatestVersionTag()
 
+result := InputBox("This is the version of Launchpad that will be built. Entering a different version will create (but not push) a new git tag for you.", "Launchpad Build Version",, version)
 
-if (DirExist(buildDir)) {
-    DirDelete(buildDir, true)
+if (result.Value != version) {
+    version := result.Value
+    CreateGitTag(version)
 }
 
-DirCreate(buildDir)
-
+ResetBuildDir()
 DirCreate(buildDir . "\Lib")
-DirCopy(appDir . "\Lib\LauncherLib", buildDir . "\Lib\LauncherLib")
 DirCopy(appDir . "\Lib\Shared", buildDir . "\Lib\Shared")
-Zip(buildDir . "\Lib", buildDir . "\LaunchpadLib.zip")
-DirDelete(buildDir . "\Lib", true)
-
-Zip(appDir . "\Graphics", buildDir . "\LaunchpadGraphics.zip")
-Zip(appDir . "\Themes", buildDir . "\LaunchpadThemes.zip")
-
+DirCopy(appDir . "\Graphics", buildDir . "\Graphics")
+DirCopy(appDir . "\Themes", buildDir . "\Themes")
 BuildExe("LaunchpadUpdater", iconFile)
 BuildExe("Launchpad", iconFile)
+Sleep(2000) ; Make sure all files are written before the installer generates
+GenerateInstaller()
+DirDelete(buildDir . "\Lib", true)
+DirDelete(buildDir . "\Graphics", true)
+DirDelete(buildDir . "\Themes", true)
+FileDelete(buildDir . "\Launchpad.exe")
+FileDelete(buildDir . "\LaunchpadUpdater.exe")
 
+Run(buildDir)
 TrayTip("Finished building Launchpad.exe and LaunchpadUpdater.exe", "Launchpad Build", 1)
 ExitApp
+
+GetLatestVersionTag() {
+    return Trim(GetCommandOutput("git describe --tags --abbrev=0"), " `r`n`t")
+}
+
+CreateGitTag(tagName) {
+    global appDir
+    tagExists := GetCommandOutput("git show-ref " . tagName)
+
+    if (tagExists == "") {
+        RunWait("git tag " . tagName, appDir)
+
+        push := MsgBox("Created new tag `"" . tagName . "`" in local git repository. Would you like to push this tag to origin now?", "Git Tag Created", "YesNo")
+
+        if (push == "Yes") {
+            RunWait("git push origin " . tagName, appDir)
+        }
+    }
+}
+
+GenerateInstaller() {
+    global appDir, makensis, version, buildDir
+    RunWait(makensis . " /DVERSION=" . version . ".0 Launchpad.nsi", appDir)
+
+    if (FileExist(buildDir . "\LaunchpadInstaller.exe")) {
+        FileMove(buildDir . "\LaunchpadInstaller.exe", buildDir . "\Launchpad-" . version . ".exe")
+    }
+}
+
+GetCommandOutput(command) {
+    global appDir
+    shell := ComObjCreate("WScript.Shell")
+    shell.CurrentDirectory := appDir
+    exec := shell.Exec(A_ComSpec " /C " command)
+    return exec.StdOut.ReadAll()
+}
+
+ResetBuildDir() {
+    global buildDir
+    if (DirExist(buildDir)) {
+        DirDelete(buildDir, true)
+    }
+
+    DirCreate(buildDir)
+}
 
 BuildExe(scriptName, iconFile) {
     global appDir, buildDir
@@ -80,7 +127,6 @@ CreateZipFile(zipFile)
 {
 	Header1 := "PK" . Chr(5) . Chr(6)
 	Header2 := BufferAlloc(18, 0)
-
 	file := FileOpen(zipFile, "w")
 	file.Write(Header1)
 	file.RawWrite(Header2, 18)
