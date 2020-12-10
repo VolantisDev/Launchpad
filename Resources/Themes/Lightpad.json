@@ -12,10 +12,14 @@
             "accentLight": "eee6ff",
             "accentDark": "8a57f0",
             "transColor": "",
-            "border": "{{accentDark}}",
+            "border": "{{accent}}",
+            "borderHover": "{{border}}",
             "buttonBackground": "{{background}}",
             "buttonBackgroundHover": "{{accentLight}}",
-            "buttonText": "{{text}}"
+            "buttonBackgroundClick": "{{accentDark}}",
+            "buttonText": "{{text}}",
+            "buttonTextHover": "{{textLight}}",
+            "buttonTextClick": "{{textLight}}"
         },
         "themeAssets": {
             "icon": "Resources\\Graphics\\Launchpad.ico",
