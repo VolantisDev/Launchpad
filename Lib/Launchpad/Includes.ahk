@@ -56,5 +56,4 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\ManageWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\SettingsWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\ToolsWindow.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Window\UpdaterWindow.ahk
 ; End of auto-generated includes.

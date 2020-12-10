@@ -66,7 +66,7 @@
         closeW := 100
         closeX := this.margin + (this.windowSettings["contentWidth"] / 2) - (closeW / 2)
 
-        this.AddButton("&Done", "CloseButton", closeW, 30, "x" . closeX)
+        this.AddSettingsButton("&Done", "CloseButton", closeW, 30, "x" . closeX)
     }
 
     AddConfigLocationBlock(settingName, extraButton := "", inGroupBox := true) {
@@ -79,18 +79,11 @@
         buttonH := (buttonSize.Has("h") and buttonSize["h"] != "auto") ? buttonSize["h"] : 20
 
         position := inGroupBox ? "xs+" . this.margin . " y+m" : "xs y+m"
-        btn := this.guiObj.AddButton(position . " w" . buttonW . " h" . buttonH, "Change")
-        ;this.buttons.Push(btn)
-        btn.OnEvent("Click", "OnChange" . settingName)
-
-        btn := this.guiObj.AddButton("x+m yp w" . buttonW . " h" . buttonH, "Open")
-        ;this.buttons.Push(btn)
-        btn.OnEvent("Click", "OnOpen" . settingName)
+        btn := this.AddButton(position . " w" . buttonW . " h" . buttonH . " vChange" . settingName, "Change")
+        btn := this.AddButton("x+m yp w" . buttonW . " h" . buttonH . " vOpen" . settingName, "Open")
 
         if (extraButton != "") {
-            btn := this.guiObj.AddButton("x+m yp w" . buttonW . " h" . buttonH, extraButton)
-            ;this.buttons.Push(btn)
-            btn.OnEvent("Click", "On" . extraButton . settingName)
+            btn := this.AddButton("x+m yp w" . buttonW . " h" . buttonH . " v" . extraButton . settingName, extraButton)
         }
     }
 
@@ -119,7 +112,7 @@
         this.app.Config.%ctlName% := chk.Value
     }
 
-    AddButton(buttonLabel, ctlName, width := "", height := "", position := "xs y+m") {
+    AddSettingsButton(buttonLabel, ctlName, width := "", height := "", position := "xs y+m") {
         buttonSize := this.themeObj.GetButtonSize("s", true)
 
         if (width == "") {
@@ -130,9 +123,7 @@
             height := (buttonSize.Has("h") and buttonSize["h"] != "auto") ? buttonSize["h"] : 20
         }
 
-        btn := this.guiObj.AddButton("v" . ctlName . " " . position . " w" . width . " h" . height, buttonLabel)
-        this.buttons.Push(btn)
-        btn.OnEvent("Click", "On" . ctlName)
+        btn := this.AddButton("v" . ctlName . " " . position . " w" . width . " h" . height, buttonLabel)
     }
 
     SetText(ctlName, ctlText, fontStyle := "") {

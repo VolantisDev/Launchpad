@@ -27,14 +27,6 @@ class WindowManager extends AppComponentServiceBase {
         return this.ShowWindow("MainWindow")
     }
 
-    OpenUpdaterWindow() {
-        if (!this.WindowExists("UpdaterWindow")) {
-            this.SetItem("UpdaterWindow", UpdaterWindow.new(this.app, "Updater - Launchpad", "MainWindow"))
-        }
-
-        return this.ShowWindow("UpdaterWindow")
-    }
-
     OpenManageWindow(parent := "MainWindow") {
         if (!this.WindowExists("ManageWindow")) {
             this.SetItem("ManageWindow", ManageWindow.new(this.app, "", "ManageWindow", "", parent))

@@ -127,13 +127,6 @@
                     "Owner": false
                 }
             },
-            "UpdaterWindow": {
-                "settings": "default",
-                "contentWidth": 515,
-                "options": {
-                    "Owner": false
-                }
-            },
             "LauncherEditor": {
                 "settings": "form",
                 "contentWidth": 500,

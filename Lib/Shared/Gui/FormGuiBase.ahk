@@ -53,9 +53,7 @@ class FormGuiBase extends GuiBase {
         loop btns.Length {
             position := (A_Index == 1) ? "x" . this.margin . " Section ": "x+m yp "
             defaultOption := InStr(btns[A_Index], "*") ? "Default " : " "
-            btn := this.guiObj.AddButton(position . defaultOption . "w100", RegExReplace(btns[A_Index], "\*"))
-            this.buttons.Push(btn)
-            btn.OnEvent("Click", "OnFormGuiButton")
+            btn := this.AddButton(position . defaultOption . "w100", RegExReplace(btns[A_Index], "\*"), "OnFormGuiButton")
         }
     }
 

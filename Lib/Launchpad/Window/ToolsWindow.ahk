@@ -25,9 +25,7 @@
         buttonSize := this.themeObj.GetButtonSize("l")
         buttonH := (buttonSize.Has("h") and buttonSize["h"] != "auto") ? buttonSize["h"] : 40
 
-        btn := this.guiObj.AddButton("v" . ctlName . " " . this.nextPos . " w" . width . " h" . buttonH, buttonLabel)
-        this.buttons.Push(btn)
-        btn.OnEvent("Click", "On" . ctlName)
+        btn := this.AddButton("v" . ctlName . " " . this.nextPos . " w" . width . " h" . buttonH, buttonLabel)
         this.nextPos := this.nextPos == "xm" ? "x+m yp" : "xm"
     }
 

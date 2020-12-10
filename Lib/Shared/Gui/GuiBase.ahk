@@ -190,6 +190,19 @@ class GuiBase {
     AddButtons() {
     }
 
+    AddButton(options, text, eventName := "") {
+        btn := this.guiObj.AddButton(options, text)
+        this.buttons.Push(btn)
+
+        if (eventName == "") {
+            eventName := "On" . btn.Name
+        }
+
+        btn.OnEvent("Click", eventName)
+        this.themeObj.DrawButtonOverlay(btn, this.guiObj)
+        return btn
+    }
+
     End() {
         windowSize := ""
 
@@ -210,12 +223,6 @@ class GuiBase {
         }
 
         this.guiObj.Show(windowSize)
-
-        for (index, btn in this.buttons) {
-            if (btn.Hwnd) {
-                this.themeObj.DrawButtonOverlay(btn, this.guiObj)
-            }
-        }
 
         ; @todo is this really needed?
         if (!this.positionAtMouseCursor and this.showInNotificationArea) {

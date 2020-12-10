@@ -173,17 +173,14 @@ class LauncherEditor extends LaunchpadFormGuiBase {
             buttonDims .= " w" . buttonSize["w"]
         }
 
-        btn := this.guiObj.AddButton("xs y+m" . buttonDims, "Change")
-        btn.OnEvent("Click", "OnChange" . settingName)
+        btn := this.AddButton("xs y+m" . buttonDims . " vChange" . settingName, "Change")
 
         if (showOpen) {
-            btn := this.guiObj.AddButton("x+m yp" . buttonDims, "Open")
-            btn.OnEvent("Click", "OnOpen" . settingName)
+            btn := this.AddButton("x+m yp" . buttonDims . " vOpen" . settingName, "Open")
         }
 
         if (extraButton != "") {
-            btn := this.guiObj.AddButton("x+m yp" . buttonDims, extraButton)
-            btn.OnEvent("Click", "On" . extraButton . settingName)
+            btn := this.AddButton("x+m yp" . buttonDims . " v" . extraButton . settingName, extraButton)
         }
     }
 
