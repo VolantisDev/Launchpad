@@ -1,6 +1,5 @@
-class CacheManager extends ServiceBase {
+class CacheManager extends AppComponentServiceBase {
     cacheDir := ""
-    caches := Map()
 
     __New(app, cacheDir) {
         InvalidParameterException.CheckTypes("CacheManager", "cacheDir", cacheDir, "")
@@ -11,9 +10,9 @@ class CacheManager extends ServiceBase {
     }
 
     SetupCaches() {
-        this.caches["app"] := ObjectCache.new()
-        this.caches["file"] := FileCache.new(this.cacheDir)
-        this.caches["api"] := FileCache.new(this.cacheDir . "\API")
+        this.SetItem("app", ObjectCache.new())
+        this.SetItem("file", FileCache.new(this.cacheDir))
+        this.SetItem("api", FileCache.new(this.cacheDir . "\API"))
     }
 
     SetCacheDir(cacheDir) {
@@ -21,16 +20,8 @@ class CacheManager extends ServiceBase {
         this.cacheDir := this.app.Config.CacheDir
     }
 
-    GetCache(key) {
-        return (this.caches.Has(key)) ? this.caches[key] : ""
-    }
-
-    SetCache(key, cacheObj) {
-        this.caches[key] := cacheObj
-    }
-
     FlushCaches(notify := true) {
-        for key, cacheObj in this.caches
+        for key, cacheObj in this._components
         {
             this.FlushCache(key, false)
         }
@@ -41,8 +32,8 @@ class CacheManager extends ServiceBase {
     }
 
     FlushCache(key, notify := false) {
-        if (this.caches.Has(key)) {
-            this.caches[key].FlushCache()
+        if (this._components.Has(key)) {
+            this._components[key].FlushCache()
 
             if (notify) {
                 this.app.Notifications.Info("Flushed cache: " . key . ".")

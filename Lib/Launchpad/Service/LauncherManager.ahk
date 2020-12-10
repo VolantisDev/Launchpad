@@ -1,11 +1,10 @@
-class LauncherManager extends ServiceBase {
+class LauncherManager extends AppComponentServiceBase {
     launcherConfigObj := ""
-    launcherEntities := Map()
     launchersLoaded := false
 
     Launchers[] {
-        get => this.launcherEntities
-        set => this.launcherEntities := value
+        get => this._components
+        set => this._components := value
     }
 
     __New(app, launcherFile := "") {
@@ -26,7 +25,7 @@ class LauncherManager extends ServiceBase {
 
         operation := LoadLaunchersOp.new(this.app, launcherFile)
         success := operation.Run()
-        this.launcherEntities := operation.GetResults()
+        this._components := operation.GetResults()
         this.launchersLoaded := true
         return success
     }

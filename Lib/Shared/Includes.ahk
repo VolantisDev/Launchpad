@@ -12,6 +12,7 @@
 #Include E:\Tools\Launchpad\Lib\Shared\Cache\CacheBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Cache\FileCache.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Cache\ObjectCache.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Events\Events.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Game\BnetlauncherGame.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Game\GameBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Game\SimpleGame.ahk
@@ -40,6 +41,9 @@
 #Include E:\Tools\Launchpad\Lib\Shared\OpStatus\BasicOpStatus.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\OpStatus\OpStatusBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Protobuf\Protobuf.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Service\ComponentServiceBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Service\EventManager.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Service\ServiceBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Theme\JsonTheme.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Theme\ThemeBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Toolbar\ToolbarBase.ahk

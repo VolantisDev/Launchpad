@@ -1,12 +1,13 @@
-class ThemeManager extends ServiceBase {
+class ThemeManager extends AppComponentServiceBase {
     themesDir := ""
     defaultTheme := "Lightpad"
-    themes := Map()
+    eventManager := ""
 
-    __New(app, themesDir) {
-        InvalidParameterException.CheckTypes("ThemeManager", "themesDir", themesDir, "")
-        InvalidParameterException.CheckEmpty("ThemeManager", "themesDir", themesDir)
+    __New(app, themesDir, eventManager) {
+        InvalidParameterException.CheckTypes("ThemeManager", "themesDir", themesDir, "", "eventManager", eventManager, "EventManager")
+        InvalidParameterException.CheckEmpty("ThemeManager", "themesDir", themesDir, "eventManager", eventManager)
         this.themesDir := themesDir
+        this.eventManager := eventManager
         super.__New(app)
         this.LocateThemes()
     }
@@ -35,7 +36,7 @@ class ThemeManager extends ServiceBase {
             themes[themeName] := false
         }
 
-        this.themes := themes
+        this._components := themes
     }
 
     SetThemesDir(themesDir) {
@@ -43,20 +44,16 @@ class ThemeManager extends ServiceBase {
         this.LocateThemes()
     }
 
-    GetTheme(key := "") {
+    GetItem(key := "") {
         if (key == "") {
             key := this.GetMainThemeName()
         }
 
-        themeObj := ""
-
         if (!this.ThemeIsLoaded(key)) {
-            themeObj := this.LoadTheme(key)
-        } else {
-            themeObj := this.themes[key]
+            return this.LoadTheme(key)
         }
 
-        return themeObj
+        return super.GetItem(key)
     }
 
     GetAvailableThemes(locate := false) {
@@ -66,7 +63,7 @@ class ThemeManager extends ServiceBase {
 
         themes := []
 
-        for key, val in this.themes {
+        for key, val in this._components {
             themes.Push(key)
         }
 
@@ -74,12 +71,12 @@ class ThemeManager extends ServiceBase {
     }
 
     ThemeIsLoaded(key) {
-        return (this.themes.Has(key) and this.themes[key] != false)
+        return (this._components.Has(key) and this._components[key] != false)
     }
 
     LoadTheme(key) {
-        this.themes[key] := JsonTheme.new(key, this.themesDir, true)
-        return this.themes[key]
+        this._components[key] := JsonTheme.new(key, this.themesDir, this.eventManager, true)
+        return this._components[key]
     }
 
     OpenThemeDir() {

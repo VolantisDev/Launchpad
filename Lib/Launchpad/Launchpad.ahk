@@ -13,6 +13,7 @@
     builderManagerObj := ""
     installerManagerObj := ""
     themeManagerObj := ""
+    eventManagerObj := ""
     
     Config[] {
         get => this.appConfigObj
@@ -64,6 +65,11 @@
         set => this.themeManagerObj := value
     }
 
+    Events[] {
+        get => this.eventManagerObj
+        set => this.eventManagerObj := value
+    }
+
     __New(appName, appDir) {
         InvalidParameterException.CheckTypes("Launchpad", "appName", appName, "", "appDir", appDir, "")
         this.appName := appName
@@ -74,12 +80,14 @@
 
         config := AppConfig.new(this, this.tmpDir, this.appDataDir)
         appStateObj := LaunchpadAppState.new(this.appDataDir . "\State.json")
+        eventManagerObj := EventManager.new()
 
         this.appConfigObj := config
         this.appStateObj := appStateObj
+        this.eventManagerObj := eventManagerObj
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
         this.notificationServiceObj := NotificationService.new(this, ToastNotifier.new(this))
-        this.themeManagerObj := ThemeManager.new(this, appDir . "\Resources\Themes")
+        this.themeManagerObj := ThemeManager.new(this, appDir . "\Resources\Themes", eventManagerObj)
         this.windowManagerObj := WindowManager.new(this)
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
         this.dataSourceManagerObj := DataSourceManager.new(this)
@@ -91,8 +99,8 @@
     }
 
     InitializeApp() {
-        this.Builders.SetBuilder("ahk", AhkLauncherBuilder.new(this), true)
-        this.DataSources.SetDataSource("api", ApiDataSource.new(this, this.Cache.GetCache("api"), this.Config.ApiEndpoint), true)
+        this.Builders.SetItem("ahk", AhkLauncherBuilder.new(this), true)
+        this.DataSources.SetItem("api", ApiDataSource.new(this, this.Cache.GetItem("api"), this.Config.ApiEndpoint), true)
         this.Installers.SetupInstallers()
     }
 

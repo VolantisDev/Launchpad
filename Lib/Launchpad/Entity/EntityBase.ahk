@@ -430,7 +430,7 @@ class EntityBase {
             dataSourceKeys := (Type(this.DataSourceKeys) == "Array") ? this.DataSourceKeys : [this.DataSourceKeys]
 
             for index, dataSourceKey in dataSourceKeys {
-                dataSource := this.app.DataSources.GetDataSource(dataSourceKey)
+                dataSource := this.app.DataSources.GetItem(dataSourceKey)
 
                 if (dataSource != "") {
                     dataSources[dataSourceKey] := dataSource

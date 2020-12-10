@@ -1,8 +1,6 @@
-class WindowManager extends ServiceBase {
-    windows := Map()
-
+class WindowManager extends AppComponentServiceBase {
     GetTheme() {
-        return this.app.Themes.GetTheme()
+        return this.app.Themes.GetItem()
     }
 
     DialogBox(title, text, owner := "", parent := "", buttons := "*&Yes|&No") {
@@ -23,7 +21,7 @@ class WindowManager extends ServiceBase {
 
     OpenMainWindow() {
         if (!this.WindowExists("MainWindow")) {
-            this.AddWindow("MainWindow", MainWindow.new(this.app, "Launchpad", "MainWindow"))
+            this.SetItem("MainWindow", MainWindow.new(this.app, "Launchpad", "MainWindow"))
         }
 
         return this.ShowWindow("MainWindow")
@@ -31,7 +29,7 @@ class WindowManager extends ServiceBase {
 
     OpenUpdaterWindow() {
         if (!this.WindowExists("UpdaterWindow")) {
-            this.AddWindow("UpdaterWindow", UpdaterWindow.new(this.app, "Updater - Launchpad", "MainWindow"))
+            this.SetItem("UpdaterWindow", UpdaterWindow.new(this.app, "Updater - Launchpad", "MainWindow"))
         }
 
         return this.ShowWindow("UpdaterWindow")
@@ -39,7 +37,7 @@ class WindowManager extends ServiceBase {
 
     OpenManageWindow(parent := "MainWindow") {
         if (!this.WindowExists("ManageWindow")) {
-            this.AddWindow("ManageWindow", ManageWindow.new(this.app, "", "ManageWindow", "", parent))
+            this.SetItem("ManageWindow", ManageWindow.new(this.app, "", "ManageWindow", "", parent))
         }
 
         return this.ShowWindow("ManageWindow")
@@ -47,7 +45,7 @@ class WindowManager extends ServiceBase {
 
     OpenSettingsWindow(parent := "MainWindow") {
         if (!this.WindowExists("SettingsWindow")) {
-            this.AddWindow("SettingsWindow", SettingsWindow.new(this.app, "SettingsWindow", "", parent))
+            this.SetItem("SettingsWindow", SettingsWindow.new(this.app, "SettingsWindow", "", parent))
         }
 
         return this.ShowWindow("SettingsWindow")
@@ -55,7 +53,7 @@ class WindowManager extends ServiceBase {
 
     OpenToolsWindow(parent := "MainWindow") {
         if (!this.WindowExists("ToolsWindow")) {
-            this.AddWindow("ToolsWindow", ToolsWindow.new(this.app, "ToolsWindow", "", parent))
+            this.SetItem("ToolsWindow", ToolsWindow.new(this.app, "ToolsWindow", "", parent))
         }
 
         return this.ShowWindow("ToolsWindow")
@@ -73,26 +71,12 @@ class WindowManager extends ServiceBase {
         return instance.Show()
     }
 
-    AddWindow(key, instance) {
-        this.windows[key] := instance
-    }
-
     WindowExists(key) {
-        return this.windows.Has(key)
-    }
-
-    GetWindow(key) {
-        window := ""
-
-        if (this.WindowExists(key)) {
-            window := this.windows[key]
-        }
-
-        return window
+        return this._components.Has(key)
     }
 
     ShowWindow(key) {
-        return (this.windows.Has(key)) ? this.windows[key].Show() : false
+        return (this._components.Has(key)) ? this._components[key].Show() : false
     }
 
     WindowIsOpen(key) {
@@ -102,21 +86,15 @@ class WindowManager extends ServiceBase {
 
     CloseWindow(key) {
         if (this.WindowExists(key)) {
-            this.windows[key].Close()
-        }
-    }
-
-    RemoveWindow(key) {
-        if (this.WindowExists(key)) {
-            this.windows.Delete(key)
+            this._components[key].Close()
         }
     }
 
     GetGuiObj(key) {
         guiObject := ""
 
-        if (this.windows.Has(key)) {
-            guiObject := this.windows[key].guiObj
+        if (this._components.Has(key)) {
+            guiObject := this._components[key].guiObj
         }
 
         return guiObject

@@ -11,7 +11,7 @@ class DataSourceItemBase {
         InvalidParameterException.CheckEmpty("DataSourceItemBase", "key", key)
 
         if (Type(dataSource) == "String") {
-            dataSource := app.DataSources.GetDataSource(dataSource)
+            dataSource := app.DataSources.GetItem(dataSource)
         }
 
         InvalidParameterException.CheckTypes("DataSourceItemBase", "dataSource", dataSource, "DataSourceBase")

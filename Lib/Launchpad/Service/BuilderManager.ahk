@@ -1,17 +1,12 @@
-class BuilderManager extends ServiceBase {
-    builders := Map()
+class BuilderManager extends AppComponentServiceBase {
     defaultBuilderKey := "ahk"
 
-    GetBuilder(key) {
-        return (this.builders.Has(key)) ? this.builders[key] : ""
-    }
-
-    SetBuilder(key, builderObj, makeDefault := false) {
-        this.builders[key] := builderObj
-
+    SetItem(key, builderObj, makeDefault := false) {
         if (makeDefault) {
             this.defaultBuilderKey := key
         }
+
+        return super.SetItem(key, builderObj)
     }
 
     BuildLaunchers(launcherGames := "", updateExisting := false, owner := "", builder := "") {
@@ -19,14 +14,7 @@ class BuilderManager extends ServiceBase {
             launcherGames := this.app.Launchers.Launchers
         }
 
-        if (builder == "") {
-            builder := this.defaultBuilderKey
-        }
-
-        if (!IsObject(builder)) {
-            builder := this.GetBuilder(builder)
-        }
-
+        builder := this._GetBuilderObject(builder)
         operation := BuildLaunchersOp.new(this.app, launcherGames, builder, updateExisting, owner)
         return operation.Run()
     }
@@ -36,15 +24,20 @@ class BuilderManager extends ServiceBase {
             launcherGames := this.app.Launchers.Launchers
         }
 
+        builder := this._GetBuilderObject(builder)
+        operation := CleanLaunchersOp.new(this.app, launcherGames, builder, owner)
+        return operation.Run()
+    }
+
+    _GetBuilderObject(builder) {
         if (builder == "") {
             builder := this.defaultBuilderKey
         }
 
         if (!IsObject(builder)) {
-            builder := this.GetBuilder(builder)
+            builder := this.GetItem(builder)
         }
 
-        operation := CleanLaunchersOp.new(this.app, launcherGames, builder, owner)
-        return operation.Run()
+        return builder
     }
 }

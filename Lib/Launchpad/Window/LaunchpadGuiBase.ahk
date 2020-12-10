@@ -13,14 +13,14 @@ class LaunchpadGuiBase extends GuiBase {
             parent := app.Windows.GetGuiObj(parent)
         }
         
-        super.__New(title, app.Themes.GetTheme(), windowKey, owner, parent)
+        super.__New(title, app.Themes.GetItem(), windowKey, owner, parent)
     }
 
     Destroy() {
         super.Destroy()
 
         if (this.windowKey != "") {
-            this.app.Windows.RemoveWindow(this.windowKey)
+            this.app.Windows.RemoveItem(this.windowKey)
         }
     }
 }

@@ -17,7 +17,7 @@ class InstallOp extends BulkOperationBase {
         }
 
         for index, installerKey in this.installerKeys {
-            installer := this.app.Installers.GetInstaller(installerKey)
+            installer := this.app.Installers.GetItem(installerKey)
             this.StartItem(installer.name, installer.name . " running...")
             this.results[installerKey] := this.RunInstallerAction(installer)
             this.FinishItem(installer.name, true, installer.name . " finished.")
@@ -32,7 +32,7 @@ class InstallOp extends BulkOperationBase {
         count := this.installerKeys.Length
 
         for index, installerKey in this.installerKeys {
-            installer := this.app.Installers.GetInstaller(installerKey)
+            installer := this.app.Installers.GetItem(installerKey)
             count += installer.CountComponents()
         }
 

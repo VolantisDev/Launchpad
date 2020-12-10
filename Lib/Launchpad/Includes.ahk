@@ -39,13 +39,14 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Installer\DependencyInstaller.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Installer\LaunchpadUpdate.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Installer\ThemeInstaller.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Service\AppComponentServiceBase.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Service\AppServiceBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\BuilderManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\CacheManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\DataSourceManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\InstallerManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\LauncherManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\NotificationService.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Service\ServiceBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\ThemeManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\WindowManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\LauncherEditor.ahk

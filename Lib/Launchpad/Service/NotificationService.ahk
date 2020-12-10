@@ -1,4 +1,4 @@
-class NotificationService extends ServiceBase {
+class NotificationService extends AppServiceBase {
     notifierObj := ""
 
     __New(app, notifierObj) {

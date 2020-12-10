@@ -197,7 +197,7 @@ class LauncherEditor extends LaunchpadFormGuiBase {
 
     Create() {
         super.Create()
-        dataSource := this.app.DataSources.GetDataSource("api")
+        dataSource := this.app.DataSources.GetItem("api")
         this.knownGames := dataSource.ReadListing("Games")
         this.launcherTypes := dataSource.ReadListing("Types/Launchers")
         this.gameTypes := dataSource.ReadListing("Types/Games")

@@ -1,23 +1,13 @@
-class InstallerManager extends ServiceBase {
-    installers := Map()
-
+class InstallerManager extends AppComponentServiceBase {
     SetupInstallers() {
         extraThemes := Map()
         extraDependencyComponents := []
 
         tmpDir := this.app.tmpDir . "\Installers"
-        cache := this.app.Cache.GetCache("file")
-        this.SetInstaller("LaunchpadUpdate", LaunchpadUpdate.new(this.app.AppState, cache, tmpDir))
-        this.SetInstaller("Themes", ThemeInstaller.new(this.app.AppState, cache, extraThemes, tmpDir))
-        this.SetInstaller("Dependencies", DependencyInstaller.new(this.app.AppState, cache, extraDependencyComponents, tmpDir))
-    }
-
-    GetInstaller(key) {
-        return (this.installers.Has(key)) ? this.installers[key] : ""
-    }
-
-    SetInstaller(key, installerObj) {
-        this.installers[key] := installerObj
+        cache := this.app.Cache.GetItem("file")
+        this.SetItem("LaunchpadUpdate", LaunchpadUpdate.new(this.app.AppState, cache, tmpDir))
+        this.SetItem("Themes", ThemeInstaller.new(this.app.AppState, cache, extraThemes, tmpDir))
+        this.SetItem("Dependencies", DependencyInstaller.new(this.app.AppState, cache, extraDependencyComponents, tmpDir))
     }
 
     InstallRequirements(owner := "Mainwindow") {
