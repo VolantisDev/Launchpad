@@ -26,16 +26,20 @@
         btn := this.guiObj.AddButton("x" . buttonX . " w" . buttonWidth . " h" . hugeButtonH . " Section vManageLaunchers", "&Manage Launchers")
         this.buttons.Push(btn)
         btn.OnEvent("Click", "OnManageLaunchers")
-        btn := this.guiObj.AddButton("ys wp hp", "&Build Launchers")
+        btn := this.guiObj.AddButton("ys wp hp vBuildLaunchers", "&Build Launchers")
+        this.buttons.Push(btn)
         btn.OnEvent("Click", "OnBuildLaunchers")
 
         ; Second row
         buttonWidth := this.ButtonWidth(3, areaW)
-        btn := this.guiObj.AddButton("x" . buttonX . " y+" . this.margin . " w" . buttonWidth . " h" . normalButtonH . " Section", "&Tools")
+        btn := this.guiObj.AddButton("x" . buttonX . " y+" . this.margin . " w" . buttonWidth . " h" . normalButtonH . " Section vTools", "&Tools")
+        this.buttons.Push(btn)
         btn.OnEvent("Click", "OnTools")
-        btn := this.guiObj.AddButton("ys wp hp", "&Settings")
+        btn := this.guiObj.AddButton("ys wp hp vSettings", "&Settings")
+        this.buttons.Push(btn)
         btn.OnEvent("Click", "OnSettings")
-        btn := this.guiObj.AddButton("ys wp hp", "&Exit")
+        btn := this.guiObj.AddButton("ys wp hp vClose", "&Exit")
+        this.buttons.Push(btn)
         btn.OnEvent("Click", "OnClose")
     }
 
