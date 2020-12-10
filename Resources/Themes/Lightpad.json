@@ -12,7 +12,7 @@
             "accentLight": "eee6ff",
             "accentDark": "8a57f0",
             "transColor": "",
-            "border": "{{accent}}",
+            "border": "{{accentDark}}",
             "borderHover": "{{border}}",
             "buttonBackground": "{{background}}",
             "buttonBackgroundHover": "{{accentDark}}",
