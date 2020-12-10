@@ -117,7 +117,9 @@ class GameBase {
             this.RunGameScheduled()
         } else { ; Assume Run or RunWait
             runCmd := this.config["GameRunMethod"]
-            %runCmd%(this.GetRunCmd(), this.config["GameWorkingDir"], "Hide", this.pid)
+            pid := ""
+            %runCmd%(this.GetRunCmd(), this.config["GameWorkingDir"], "Hide", pid)
+            this.pid := pid
         }
 
         if (runMethod != "RunWait" and this.config["GameReplaceProcess"]) {

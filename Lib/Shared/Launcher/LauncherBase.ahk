@@ -1,4 +1,6 @@
 class LauncherBase {
+    eventManager := ""
+    idGenerator := ""
     key := ""
     game := ""
     config := ""
@@ -6,6 +8,9 @@ class LauncherBase {
     progress := ""
 
     __New(key, game, config := "") {
+        this.eventManager := EventManager.new()
+        this.idGenerator := UuidGenerator.new()
+
         if (config == "") {
             config := Map()
         }
@@ -28,7 +33,7 @@ class LauncherBase {
         if (this.progress == "") {
             progressTitle := StrReplace(this.config["LauncherProgressTitle"], "{g}", this.config["DisplayName"])
             progressText := StrReplace(this.config["LauncherProgressText"], "{g}", this.config["DisplayName"])
-            themeObj := JsonTheme.new("Lightpad", this.config["ThemesDir"], true)
+            themeObj := JsonTheme.new("Lightpad", this.config["ThemesDir"], this.eventManager, this.idGenerator, true)
             this.progress := ProgressIndicator.new(progressTitle, themeObj, progressText, "", "", "", false, this.CountLaunchSteps())
         }
     }
@@ -124,9 +129,15 @@ class LauncherBase {
 
         if (this.config["LauncherProcessId"] != "") {
             if (this.config["LauncherProcessType"] == "Title") {
-                pid := WinGetPID(this.config["LauncherProcessId"],, " - Launchpad")
+                hwnd := WinExist(this.config["LauncherProcessId"],, " - Launchpad")
+                if (hwnd) {
+                    pid := WinGetPID("ahk_id " . hwnd)
+                }
             } else if (this.config["LauncherProcessType"] == "Class") {
-                pid := WinGetPID("ahk_class " . this.config["LauncherProcessId"],, " - Launchpad")
+                hwnd := WinExist("ahk_class " . this.config["LauncherProcessId"],, " - Launchpad")
+                if (hwnd) {
+                    pid := WinGetPID("ahk_id " . hwnd)
+                }
             } else { ; Default to Exe
                 pid := ProcessExist(this.config["LauncherProcessId"])
             }
@@ -187,8 +198,8 @@ class LauncherBase {
     }
 
     AutoCloseAction() {
-        if (this.pid > 0 and WinExist("ahk_pid " . this.pid,, " - Launchpad")) {
-            WinClose("ahk_pid " . this.pid, "", this.config["LauncherPoliteCloseWait"],, " - Launchpad")
+        if (this.pid > 0 and WinExist("ahk_pid " . this.pid)) {
+            WinClose("ahk_pid " . this.pid, "", this.config["LauncherPoliteCloseWait"])
         }
     }
 

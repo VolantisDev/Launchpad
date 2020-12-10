@@ -34,6 +34,10 @@ class ManagedGameEntity extends ManagedEntityBase {
         set => this.SetConfigValue("LoadingWindowProcessId", value)
     }
 
+    GetBlizzardProductKey() {
+        return this.LauncherSpecificId
+    }
+
     AutoDetectValues() {
         if (this.ShouldDetectShortcutSrc()) {
             basePath := this.AssetsDir . "\" . this.Key

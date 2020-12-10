@@ -15,6 +15,11 @@ class ManagedEntityBase extends EntityBase {
         set => this.SetConfigValue("Class", value)
     }
 
+    InstallDir {
+        get => this.GetConfigValue("InstallDir")
+        set => this.SetConfigValue("InstallDir", value)
+    }
+
     ; An array of possible parent directories where the game's launcher might exist, to be used for auto-detection.
     ; These should be as specific as possible to reduce detection time.
     SearchDirs {
@@ -27,6 +32,44 @@ class ManagedEntityBase extends EntityBase {
     Exe {
         get => this.GetConfigValue("Exe")
         set => this.SetConfigValue("Exe", value)
+    }
+
+    ; How to search for the .exe if it isn't a full path already
+    ; Options include:
+    ; - Search (will search through each directory in SearchDirs until a match is found)
+    ; - BlizzardProductDb (will search Battle.net's product.db file if it can be located for the installation directory, and the file will be found from there
+    ; - Registry (will get a directory from the registry key specified by LocateRegKey and search for the file within it)
+    LocateMethod {
+        get => this.GetConfigValue("LocateMethod")
+        set => this.SetConfigValue("LocateMethod", value)
+    }
+
+    ; If using the "Registry" method for locating the exe
+    LocateRegView {
+        get => this.GetConfigValue("LocateRegView")
+        set => this.SetConfigValue("LocateRegView", value)
+    }
+
+    ; If using the "Registry" method for locating the exe
+    LocateRegKey {
+        get => this.GetConfigValue("LocateRegKey")
+        set => this.SetConfigValue("LocateRegKey", value)
+    }
+
+    ; If using the "Registry" method for locating the exe
+    LocateRegValue {
+        get => this.GetConfigValue("LocateRegValue")
+        set => this.SetConfigValue("LocateRegValue", value)
+    }
+
+    LocateRegRemovePrefix {
+        get => this.GetConfigValue("LocateRegRemovePrefix")
+        set => this.SetConfigValue("LocateRegRemovePrefix", value)
+    }
+
+    LocateRegRemoveSuffix {
+        get => this.GetConfigValue("LocateRegRemoveSuffix")
+        set => this.SetConfigValue("LocateRegRemoveSuffix", value)
     }
 
     ; The directory that the launcher should be run from, if set. If not set, it will be run without setting an explicit working directory, which is usually sufficient.
@@ -69,6 +112,11 @@ class ManagedEntityBase extends EntityBase {
     RunMethod {
         get => this.GetConfigValue("RunMethod")
         set => this.SetConfigValue("RunMethod", value)
+    }
+
+    ReplaceProcess {
+        get => this.GetConfigValue("ReplaceProcess")
+        set => this.SetConfigValue("ReplaceProcess", value)
     }
 
     ; Which method to use to wait for the game to close if the GameRunType requires it. This is not needed if the GameRunType is RunWait.
@@ -174,8 +222,16 @@ class ManagedEntityBase extends EntityBase {
         defaults[this.configPrefix . "Class"] := this.defaultClass
         defaults[this.configPrefix . "SearchDirs"] := [A_ProgramFiles]
         defaults[this.configPrefix . "Exe"] := ""
+        defaults[this.configPrefix . "LocateMethod"] := "SearchDirs"
+        defaults[this.configPrefix . "LocateRegView"] := 64
+        defaults[this.configPrefix . "LocateRegKey"] := ""
+        defaults[this.configPrefix . "LocateRegValue"] := ""
+        defaults[this.configPrefix . "LocateRegRemovePrefix"] := ""
+        defaults[this.configPrefix . "LocateRegRemoveSuffix"] := ""
+        defaults[this.configPrefix . "BlizzardProductKey"] := "bna"
         defaults[this.configPrefix . "WorkingDir"] := ""
         defaults[this.configPrefix . "RunType"] := "Command"
+        defaults[this.configPrefix . "ReplaceProcess"] := false
         defaults[this.configPrefix . "ShortcutSrc"] := ""
         defaults[this.configPrefix . "RunMethod"] := "RunWait"
         defaults[this.configPrefix . "ProcessType"] := "Exe"
@@ -217,26 +273,90 @@ class ManagedEntityBase extends EntityBase {
         return exists
     }
 
-    LocateExe() {
-        exePath := ""
+    LocateInstallDir() {
+        installDir := ""
 
-        if (this.Exe != "") {
-            SplitPath(this.Exe, exeFile, exeDir,,, exeDrive)
-            
-            if (exeDrive != "") {
-                exePath := this.Exe
-            } else if (Type(this.SearchDirs) == "Array" and this.SearchDirs.Length > 0) {
-                exePath := this.LocateFileInSearchDirs(this.Exe)
+        ; @todo Figure out more sources for determining the install dir
+
+        if (this.LocateMethod == "BlizzardProductDb") {
+            blizzardDir := this.GetBlizzardProductDir()
+
+            if (blizzardDir != "") {
+                installDir := blizzardDir
             }
         }
 
-        return exePath
+        return installDir
     }
 
-    LocateFileInSearchDirs(filePattern) {
+    LocateExe() {
+        return this.LocateFile(this.Exe)
+    }
+
+    LocateFile(filePattern) {
+        filePath := ""
+
+        if (filePattern != "") {
+            SplitPath(filePattern,,,,, fileDrive)
+            
+            if (fileDrive != "") {
+                filePath := filePattern
+            } else {
+                searchDirs := []
+
+                if (this.InstallDir != "") {
+                    searchDirs.Push(this.InstallDir)
+                } else if (this.LocateMethod == "SearchDirs") {
+                    if (Type(this.SearchDirs) == "Array" and this.SearchDirs.Length > 0) {
+                        searchDirs := this.SearchDirs
+                    }
+                } else if (this.LocateMethod == "Registry") {
+                    regKey := this.LocateRegKey
+
+                    if (regKey != "") {
+                        SetRegView(this.LocateRegView)
+                        regDir := RegRead(this.LocateRegKey, this.LocateRegValue)
+                        SetRegView("Default")
+
+                        if (regDir != "") {
+                            if (this.LocateRegRemovePrefix) {
+                                regDir := StrReplace(regDir, this.LocateRegRemovePrefix) ; @todo only remove if it's at the beginning of the string
+                            }
+
+                            if (this.LocateRegRemoveSuffix) {
+                                regDir := StrReplace(regDir, this.LocateRegRemoveSuffix) ; @todo only remove if it's at the end of the string
+                            }
+                            
+                            searchDirs.Push(regDir)
+                        }
+                    }
+                } else if (this.LocateMethod == "BlizzardProductDb") {
+                    blizzardDir := this.GetBlizzardProductDir()
+
+                    if (blizzardDir != "") {
+                        searchDirs.Push(blizzardDir)
+                    }
+                }
+
+                filePath := this.LocateFileInSearchDirs(filePattern, searchDirs)
+            }
+        }
+
+        return filePath
+    }
+
+    LocateFileInSearchDirs(filePattern, searchDirs := "") {
         path := ""
 
-        for index, searchDir in this.SearchDirs {
+        if (searchDirs == "") {
+            searchDirs := this.SearchDirs
+        }
+
+        if (!Type(searchDirs) == "Array") {
+            searchDirs := [searchDirs]
+        }
+
+        for index, searchDir in searchDirs {
             Loop Files, searchDir . "\" . filePattern, "R" {
                 path := A_LoopFileFullPath
                 break
@@ -244,6 +364,34 @@ class ManagedEntityBase extends EntityBase {
 
             if (path != "") {
                 break
+            }
+        }
+
+        return path
+    }
+
+    GetBlizzardProductKey() {
+        return "bna" ; Default to the Battle.net client itself
+    }
+
+    GetBlizzardProductDir() {
+        path := ""
+        compiledFile := A_AppDataCommon . "\Battle.net\Agent\product.db"
+        gameId := this.GetBlizzardProductKey
+
+        if (gameId != "" and FileExist(compiledFile)) {
+            protoFile := A_ScriptDir . "\Resources\Dependencies\BlizzardProductDb.proto"
+            dbMap := Protobuf.FromFile(compiledFile, "Database", protoFile)
+            
+            if (Type(dbMap) == "Map" and dbMap.Has("productInstall")) {
+                productInstalls := (Type(dbMap.Has("productInstall")) != "Array") ? dbMap["productInstall"] : Array(dbMap["productInstall"])
+
+                for index, productData in productInstalls {
+                    if (productData.Has("productCode") and productData["productCode"] == gameId) {
+                        path := (productData.Has("settings") and productData["settings"].Has("installPath")) ? productData["settings"]["installPath"] : ""
+                        break
+                    }
+                }
             }
         }
 
