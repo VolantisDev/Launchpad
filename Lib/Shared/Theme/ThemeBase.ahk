@@ -326,16 +326,27 @@ class ThemeBase {
     }
 
     DrawButtonOverlay(ctlObj, guiObj) {
-        shape := ButtonShape.new(ctlObj.Text, this.GetColor("buttonBackground"), this.GetColor("buttonText"), this.GetColor("border"), this.buttons["borderWidth"])
-        picObj := shape.DrawOver(ctlObj, guiObj)
-        this.buttonMap[ctlObj.Hwnd] := picObj
-        this.themedButtons[picObj.Hwnd] := Map("button", ctlObj, "picture", picObj)
+        try {
+            shape := ButtonShape.new(ctlObj.Text, this.GetColor("buttonBackground"), this.GetColor("buttonText"), this.GetColor("border"), this.buttons["borderWidth"])
+            picObj := shape.DrawOver(ctlObj, guiObj)
+            this.buttonMap[ctlObj.Hwnd] := picObj
+            this.themedButtons[picObj.Hwnd] := Map("button", ctlObj, "picture", picObj)
+        } catch ex {
+            ; Ignore errors
+        }
     }
 
     SetNormalButtonState(btn) {
         originalBtn := this.themedButtons[this.hoveredButton]["button"]
-        shape := ButtonShape.new(originalBtn.Text, this.GetColor("buttonBackground"), this.GetColor("buttonText"), this.GetColor("border"), this.buttons["borderWidth"])
-        return shape.DrawOn(btn)
+
+        try {
+            shape := ButtonShape.new(originalBtn.Text, this.GetColor("buttonBackground"), this.GetColor("buttonText"), this.GetColor("border"), this.buttons["borderWidth"])
+            btn := shape.DrawOn(btn)
+        } catch ex {
+            ; Ignore errors
+        }
+        
+        return btn
     }
 
     SetHoveredButton(btn) {

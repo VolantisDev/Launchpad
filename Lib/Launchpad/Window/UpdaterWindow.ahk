@@ -24,13 +24,16 @@
         ; First row
         buttonWidth := this.ButtonWidth(2, areaW)
         btn := this.guiObj.AddButton("x" . buttonX . " w" . buttonWidth . " h" . hugeButtonH . " Section", "Update &Launchpad")
+        this.buttons.Push(btn)
         btn.OnEvent("Click", "OnUpdateLaunchpad")
         btn := this.guiObj.AddButton("ys wp hp", "Update &Dependencies")
+        this.buttons.Push(btn)
         btn.OnEvent("Click", "OnUpdateDependencies")
 
         ; Second row
         buttonWidth := this.ButtonWidth(1, areaW)
         btn := this.guiObj.AddButton("x" . buttonX . " y+" . this.margin . " w" . buttonWidth . " h" . normalButtonH . " Section", "&Exit")
+        this.buttons.Push(btn)
         btn.OnEvent("Click", "OnClose")
     }
 

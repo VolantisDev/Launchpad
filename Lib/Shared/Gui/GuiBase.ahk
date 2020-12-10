@@ -212,7 +212,9 @@ class GuiBase {
         this.guiObj.Show(windowSize)
 
         for (index, btn in this.buttons) {
-            this.themeObj.DrawButtonOverlay(btn, this.guiObj)
+            if (btn.Hwnd) {
+                this.themeObj.DrawButtonOverlay(btn, this.guiObj)
+            }
         }
 
         ; @todo is this really needed?

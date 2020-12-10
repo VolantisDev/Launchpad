@@ -26,6 +26,7 @@
         buttonH := (buttonSize.Has("h") and buttonSize["h"] != "auto") ? buttonSize["h"] : 40
 
         btn := this.guiObj.AddButton("v" . ctlName . " " . this.nextPos . " w" . width . " h" . buttonH, buttonLabel)
+        this.buttons.Push(btn)
         btn.OnEvent("Click", "On" . ctlName)
         this.nextPos := this.nextPos == "xm" ? "x+m yp" : "xm"
     }

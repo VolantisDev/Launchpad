@@ -15,11 +15,11 @@
             "border": "{{accent}}",
             "borderHover": "{{border}}",
             "buttonBackground": "{{background}}",
-            "buttonBackgroundHover": "{{accentLight}}",
-            "buttonBackgroundClick": "{{accentDark}}",
+            "buttonBackgroundHover": "{{accentDark}}",
+            "buttonBackgroundClick": "{{buttonBackgroundHover}}",
             "buttonText": "{{text}}",
-            "buttonTextHover": "{{textLight}}",
-            "buttonTextClick": "{{textLight}}"
+            "buttonTextHover": "ffffff",
+            "buttonTextClick": "{{buttonTextHover}}"
         },
         "themeAssets": {
             "icon": "Resources\\Graphics\\Launchpad.ico",

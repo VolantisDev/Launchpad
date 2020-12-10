@@ -80,13 +80,16 @@
 
         position := inGroupBox ? "xs+" . this.margin . " y+m" : "xs y+m"
         btn := this.guiObj.AddButton(position . " w" . buttonW . " h" . buttonH, "Change")
+        ;this.buttons.Push(btn)
         btn.OnEvent("Click", "OnChange" . settingName)
 
         btn := this.guiObj.AddButton("x+m yp w" . buttonW . " h" . buttonH, "Open")
+        ;this.buttons.Push(btn)
         btn.OnEvent("Click", "OnOpen" . settingName)
 
         if (extraButton != "") {
             btn := this.guiObj.AddButton("x+m yp w" . buttonW . " h" . buttonH, extraButton)
+            ;this.buttons.Push(btn)
             btn.OnEvent("Click", "On" . extraButton . settingName)
         }
     }
@@ -128,6 +131,7 @@
         }
 
         btn := this.guiObj.AddButton("v" . ctlName . " " . position . " w" . width . " h" . height, buttonLabel)
+        this.buttons.Push(btn)
         btn.OnEvent("Click", "On" . ctlName)
     }
 

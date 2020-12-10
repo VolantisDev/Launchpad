@@ -28,17 +28,25 @@
         gbY := this.margin * 2
 
         this.guiObj.AddGroupBox("vLauncherGroup ys+" . this.margin . " w" . this.sidebarWidth . " r5 Section", "Launcher")
-        this.guiObj.AddButton("vAddButton xs+" . this.margin . " ys+" . gbY . " w" . buttonWidth, "Add")
-        this.guiObj.AddButton("vEditButton xs+" . this.margin . " w" . buttonWidth, "Edit")
-        this.guiObj.AddButton("vRemoveButton xs+" . this.margin . " w" . buttonWidth, "Remove")
-        this.guiObj.AddButton("vMoveUpButton xs+" . this.margin . " w" . buttonWidth, "Move Up")
-        this.guiObj.AddButton("vMoveDownButton xs+" . this.margin . " w" . buttonWidth, "Move Down")
+        btn := this.guiObj.AddButton("vAddButton xs+" . this.margin . " ys+" . gbY . " w" . buttonWidth, "Add")
+        this.buttons.Push(btn)
+        btn := this.guiObj.AddButton("vEditButton xs+" . this.margin . " w" . buttonWidth, "Edit")
+        this.buttons.Push(btn)
+        btn := this.guiObj.AddButton("vRemoveButton xs+" . this.margin . " w" . buttonWidth, "Remove")
+        this.buttons.Push(btn)
+        btn := this.guiObj.AddButton("vMoveUpButton xs+" . this.margin . " w" . buttonWidth, "Move Up")
+        this.buttons.Push(btn)
+        btn := this.guiObj.AddButton("vMoveDownButton xs+" . this.margin . " w" . buttonWidth, "Move Down")
+        this.buttons.Push(btn)
         
         this.guiObj.AddGroupBox("vSortGroup xs y+m w" . this.sidebarWidth . " r2 Section", "Sort All")
-        this.guiObj.AddButton("vByNameButton xs+" . this.margin . " ys+" . gbY . " w" . buttonWidth, "By Name")
-        this.guiObj.AddButton("vByTypeButton xs+" . this.margin . " w" . buttonWidth, "By Type")
+        btn := this.guiObj.AddButton("vByNameButton xs+" . this.margin . " ys+" . gbY . " w" . buttonWidth, "By Name")
+        this.buttons.Push(btn)
+        btn := this.guiObj.AddButton("vByTypeButton xs+" . this.margin . " w" . buttonWidth, "By Type")
+        this.buttons.Push(btn)
 
-        this.guiObj.AddButton("vExitButton xs y+m w" . this.sidebarWidth . " h30", "E&xit")
+        btn := this.guiObj.AddButton("vExitButton xs y+m w" . this.sidebarWidth . " h30", "E&xit")
+        this.buttons.Push(btn)
     }
 
     AddToolbar() {
