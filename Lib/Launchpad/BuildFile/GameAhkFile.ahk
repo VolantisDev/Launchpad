@@ -9,7 +9,6 @@ class GameAhkFile extends ComposableBuildFile {
 
     ComposeFile() {
         FileAppend("#Warn`n", this.FilePath)
-        FileAppend("#Include " . this.appDir . "\Lib\LauncherLib\Includes.ahk`n", this.FilePath)
         FileAppend("#Include " . this.appDir . "\Lib\Shared\Includes.ahk`n", this.FilePath)
         FileAppend("gameConfig := " . this.ConvertMapToCode(this.launcherEntityObj.ManagedLauncher.ManagedGame.Config) . "`n", this.FilePath)
         FileAppend("launcherConfig := " . this.ConvertMapToCode(this.launcherEntityObj.ManagedLauncher.Config) . "`n", this.FilePath)

@@ -30,7 +30,6 @@
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\FileInstallerComponentBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\GitHubReleaseInstallerComponent.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\InstallerComponentBase.ahk
-#Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\LibInstallerComponent.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Json\Json.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Launcher\LauncherBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Launcher\SimpleLauncher.ahk
