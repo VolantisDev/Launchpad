@@ -14,6 +14,7 @@
     installerManagerObj := ""
     themeManagerObj := ""
     eventManagerObj := ""
+    idGenObj := ""
     
     Config[] {
         get => this.appConfigObj
@@ -70,6 +71,11 @@
         set => this.eventManagerObj := value
     }
 
+    IdGen[] {
+        get => this.idGenObj
+        set => this.idGenObj := value
+    }
+
     __New(appName, appDir) {
         InvalidParameterException.CheckTypes("Launchpad", "appName", appName, "", "appDir", appDir, "")
         this.appName := appName
@@ -78,16 +84,18 @@
         DirCreate(this.tmpDir)
         DirCreate(this.appDataDir)
 
+        idGen := UuidGenerator.new()
         config := AppConfig.new(this, this.tmpDir, this.appDataDir)
         appStateObj := LaunchpadAppState.new(this.appDataDir . "\State.json")
         eventManagerObj := EventManager.new()
 
+        this.idGen := idGen
         this.appConfigObj := config
         this.appStateObj := appStateObj
         this.eventManagerObj := eventManagerObj
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
         this.notificationServiceObj := NotificationService.new(this, ToastNotifier.new(this))
-        this.themeManagerObj := ThemeManager.new(this, appDir . "\Resources\Themes", eventManagerObj)
+        this.themeManagerObj := ThemeManager.new(this, appDir . "\Resources\Themes", eventManagerObj, idGen)
         this.windowManagerObj := WindowManager.new(this)
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
         this.dataSourceManagerObj := DataSourceManager.new(this)

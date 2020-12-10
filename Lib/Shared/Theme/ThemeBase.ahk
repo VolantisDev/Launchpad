@@ -1,5 +1,7 @@
 class ThemeBase {
     eventManagerObj := ""
+    idGenerator := ""
+    themeId := ""
     mouseMoveCallback := ""
     static Gdip := ""
     name := ""
@@ -19,7 +21,7 @@ class ThemeBase {
     buttonMap := Map()
     hoveredButton := ""
 
-    __New(name, themesDir, eventManagerObj, autoLoad := false) {
+    __New(name, themesDir, eventManagerObj, idGenerator, autoLoad := false) {
         if (ThemeBase.Gdip == "") {
             ThemeBase.Gdip := Gdip_Startup()
         }
@@ -27,17 +29,20 @@ class ThemeBase {
         this.name := name
         this.themesDir := themesDir
         this.eventManagerObj := eventManagerObj
+        this.idGenerator := idGenerator
         this.mouseMoveCallback := ObjBindMethod(this, "OnMouseMove")
+
+        this.themeId := idGenerator.Generate()
         
         if (autoLoad) {
             this.LoadTheme()
         }
 
-        this.eventManagerObj.Register(Events.MOUSE_MOVE, "Theme" . name, this.mouseMoveCallback)
+        this.eventManagerObj.Register(Events.MOUSE_MOVE, "Theme" . this.themeId, this.mouseMoveCallback)
     }
 
     __Delete() {
-        this.eventManagerObj.Unregister(Events.MOUSE_MOVE, "Theme" . this.name)
+        this.eventManagerObj.Unregister(Events.MOUSE_MOVE, "Theme" . this.themeId)
         super.__Delete()
     }
 

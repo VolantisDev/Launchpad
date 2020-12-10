@@ -2,12 +2,14 @@ class ThemeManager extends AppComponentServiceBase {
     themesDir := ""
     defaultTheme := "Lightpad"
     eventManager := ""
+    idGenerator := ""
 
-    __New(app, themesDir, eventManager) {
+    __New(app, themesDir, eventManager, idGenerator) {
         InvalidParameterException.CheckTypes("ThemeManager", "themesDir", themesDir, "", "eventManager", eventManager, "EventManager")
         InvalidParameterException.CheckEmpty("ThemeManager", "themesDir", themesDir, "eventManager", eventManager)
         this.themesDir := themesDir
         this.eventManager := eventManager
+        this.idGenerator := idGenerator
         super.__New(app)
         this.LocateThemes()
     }
@@ -75,7 +77,7 @@ class ThemeManager extends AppComponentServiceBase {
     }
 
     LoadTheme(key) {
-        this._components[key] := JsonTheme.new(key, this.themesDir, this.eventManager, true)
+        this._components[key] := JsonTheme.new(key, this.themesDir, this.eventManager, this.idGenerator, true)
         return this._components[key]
     }
 

@@ -25,6 +25,8 @@
 #Include E:\Tools\Launchpad\Lib\Shared\GuiShape\GuiShapeBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\HttpReq\HttpReqBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\HttpReq\WinHttpReq.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\IdGenerator\IdGeneratorBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\IdGenerator\UuidGenerator.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Installer\InstallerBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\DownloadableInstallerComponent.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\FileInstallerComponentBase.ahk
