@@ -25,12 +25,6 @@ class DependencyInstaller extends InstallerBase {
         ahk2ExeComponent.version := dbVersion
         components.Push(ahk2ExeComponent)
 
-        components.Push(GitHubReleaseInstallerComponent.new("dafzor/bnetlauncher", "", true, "Vendor\BnetLauncher", appState, "BnetLauncher", cache, "Dependencies", true, tmpDir, false))
-
-        componentUrl := "https://benmcclure.com/launcher-db/Components/Dependencies/BnetLauncher/gamedb.ini"
-        componentPath := "Vendor\BnetLauncher\gamedb.ini"
-        components.Push(DownloadableInstallerComponent.new(componentUrl, false, componentPath, appState, "GameDbIni", cache, "BnetLauncher", true, tmpDir, false))
-
         iconsExtUrl := "https://www.nirsoft.net/utils/iconsext.zip"
         iconsExtPath := "Vendor\IconsExt"
         components.Push(DownloadableInstallerComponent.new(iconsExtUrl, true, iconsExtPath, appState, "IconsExt", cache, "Dependencies", false, tmpDir, false))

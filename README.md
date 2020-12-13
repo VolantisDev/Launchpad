@@ -109,7 +109,6 @@ powerful scripting language AutoHotKey.
 
 Launchpad automatically downloads a few dependencies for use during its operation. The dependencies it installs are:
 - [AutoHotKey](https://www.autohotkey.com/)
-- [Bnetlauncher](https://github.com/dafzor/bnetlauncher)
 - [IconsExt](https://www.nirsoft.net/utils/iconsext.html)
 
 These dependencies each use different licensing from Launchpad, and they have their own release cycles, so Launchpad doesn't include them in your initial download.  Don't worry, Launchpad downloads them for you and you won't even notice them.
@@ -128,4 +127,5 @@ I would greatly appreciate if you would submit a Pull Request to contribute back
 
 ## Attribution
 
-Icons made by <a href="https://www.flaticon.com/free-icon/rec_1783406" title="iconixar">iconixar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+- Icons made by [iconixar](https://www.flaticon.com/free-icon/rec_1783406) [Flaticon](https://www.flaticon.com/)
+- Some launch methods were learned by studying the excellent [BnetLauncher](https://github.com/dafzor/bnetlauncher)
