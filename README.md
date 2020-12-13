@@ -56,13 +56,9 @@ You can also launch games directly that don't use any launcher.
 
 ## How To Use
 
-If you're a new user, head over to the Releases page and get the "Launchpad.exe" file from the latest release.
-You can ignore all the other files (Launchpad will download them as required).
+If you're a new user, head over to the Releases page and get the latest "Launchpad-x.x.x.exe" file.
 
-Simply run Launchpad.exe right from your download folder to get started. You will be able to choose the folder
-to install Launchpad to and create a desktop shortcut if desired.
-
-Once it's installed, simply run Launchpad from the installation folder or shortcut, and it will walk you through
+Simply download and run it to install Launchpad to your system. Then, run Launchpad and it will walk you through
 the initial settings.
 
 From there, you can use the Launcher Manager to create and manage your Launcher File, and then you can build
