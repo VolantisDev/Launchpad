@@ -24,4 +24,13 @@
             Send("{Enter}")
         }
     }
+
+    CleanupAfterRun(progress := "") {
+        winTitle := this.launcherConfig["LauncherWindowTitle"]
+        if (WinExist(winTitle)) {
+            WinClose("ahk_id" . WinGetID(winTitle))
+        }
+        
+        super.CleanupAfterRun(progress)
+    }
 }
