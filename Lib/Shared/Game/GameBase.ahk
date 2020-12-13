@@ -1,25 +1,47 @@
 class GameBase {
     key := ""
     config := ""
+    launcherConfig := ""
+    exeProcess := ""
     pid := 0
     launchTime := ""
     winId := 0
     loadingWinId := 0
     isFinished := false
 
-    __New(key, config := "") {
+    __New(key, config := "", launcherConfig := "") {
         if (config == "") {
             config := Map()
+        }
+
+        if (launcherConfig == "") {
+            launcherConfig := Map()
         }
 
         InvalidParameterException.CheckTypes("GameBase", "key", key, "", "config", config, "Map")
         this.key := key
         this.config := config
+        this.launcherConfig := launcherConfig
+        this.exeProcess := this.GetExeProcess()
     }
 
     /**
     * IMPLEMENTED METHODS
     */
+
+    GetExeProcess() {
+        if (this.exeProcess == "") {
+            exe := ""
+
+            if (this.config.Has("GameExe") and this.config["GameExe"] != "") {
+                SplitPath(this.config["GameExe"], exe)
+            }
+
+            this.exeProcess := ExeProcess.new(exe)
+        }
+        
+        return this.exeProcess
+    }
 
     RunGame(progress := "") {
         pid := this.GameIsRunning()
@@ -58,6 +80,7 @@ class GameBase {
         pid := 0
 
         winId := this.GameWindowIsOpen()
+
         if (winId > 0) {
             pid := WinGetPID("ahk_id " . winId)
         }
@@ -111,35 +134,38 @@ class GameBase {
     RunGameAction(progress := "") {
         runMethod := this.config["GameRunMethod"]
 
-        this.launchTime := A_Now
+        this.launchTime := A_NowUTC
+
+        this.pid := 0
         
         if (runMethod == "Scheduled") {
             this.RunGameScheduled()
-        } else { ; Assume Run or RunWait
-            runCmd := this.config["GameRunMethod"]
-            pid := ""
-            %runCmd%(this.GetRunCmd(), this.config["GameWorkingDir"], "Hide", pid)
-            this.pid := pid
+        } else if (runMethod == "Macro") {
+            this.RunGameMacro()
+        } else {
+            this.pid := this.RunGameRun()
         }
 
         if (runMethod != "RunWait" and this.config["GameReplaceProcess"]) {
-            this.ReplaceGameProcess()
+            this.pid := this.ReplaceGameProcess()
         }
 
-        return this.GameIsRunning()
+        if (this.pid == 0) {
+            this.pid := this.GameIsRunning()
+        }
+
+        return this.pid
     }
 
     ReplaceGameProcess() {
-        ; @todo wait for game process to exist using LocateGameProcess()
-        ; @todo get existing process info
-        ; @todo kill existing process
-        ; @todo launch new process under Launchpad.exe with existing process info
-    }
+        newPid := this.exeProcess.ReplaceProcess(this.launchTime)
 
-    LocateGameProcess() {
-        ;wmi := ComObjGet("winmgmts:")
-        ;queryEnum := wmi.ExecQuery("SELECT ProcessId, CreationDate FROM Win32_Process WHERE CreationDate > '{0}' AND Name LIKE '{1}%'")
-        ; @todo finish the above
+        if (!newPid) {
+            throw OperationFailedException.new("Could not replace game process.")
+        }
+
+        this.pid := newPid
+        return newPid
     }
 
     RunGameScheduled() {
@@ -149,6 +175,18 @@ class GameBase {
         runTime := FormatTime(DateAdd(currentTime, 2, "Seconds"), "HH:mm")
         cmd := "SCHTASKS /CREATE /SC ONCE /TN `"" . taskName . "`" /TR `"'" . runCmd . "'`" /ST " . runTime
         Run(cmd,, "Hide")
+    }
+
+    RunGameRun() {
+        ; Assume Run or RunWait
+        runCmd := this.config["GameRunMethod"]
+        pid := ""
+        %runCmd%(this.GetRunCmd(), this.config["GameWorkingDir"], "Hide", pid)
+        return pid
+    }
+
+    RunGameMacro() {
+        ; @todo implement macro steps
     }
 
     CleanupScheduledTask() {

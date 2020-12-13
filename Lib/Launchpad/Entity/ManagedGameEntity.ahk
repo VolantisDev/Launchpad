@@ -35,7 +35,7 @@ class ManagedGameEntity extends ManagedEntityBase {
     }
 
     GetBlizzardProductKey() {
-        return this.LauncherSpecificId
+        return this.config.Has("GameBlizzardProductId") ? this.config["GameBlizzardProductId"] : this.LauncherSpecificId
     }
 
     AutoDetectValues() {

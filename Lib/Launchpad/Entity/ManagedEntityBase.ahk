@@ -34,6 +34,11 @@ class ManagedEntityBase extends EntityBase {
         set => this.SetConfigValue("Exe", value)
     }
 
+    WindowTitle {
+        get => this.GetConfigValue("WindowTitle")
+        set => this.SetConfigValue("WindowTitle", value)
+    }
+
     ; How to search for the .exe if it isn't a full path already
     ; Options include:
     ; - Search (will search through each directory in SearchDirs until a match is found)
@@ -70,6 +75,11 @@ class ManagedEntityBase extends EntityBase {
     LocateRegRemoveSuffix {
         get => this.GetConfigValue("LocateRegRemoveSuffix")
         set => this.SetConfigValue("LocateRegRemoveSuffix", value)
+    }
+
+    LocateRegStripQuotes {
+        get => this.GetConfigValue("LocateRegStripQuotes")
+        set => this.SetConfigValue("LocateRegStripQuotes", value)
     }
 
     ; The directory that the launcher should be run from, if set. If not set, it will be run without setting an explicit working directory, which is usually sufficient.
@@ -183,7 +193,7 @@ class ManagedEntityBase extends EntityBase {
             if (config[processTypeKey] == "Exe") {
                 SplitPath(this.Exe, processId)
             } else if (config[processTypeKey] == "Title") {
-                processId := this.Key
+                processId := config[this.configPrefix . "WindowTitle"] ? config[this.configPrefix . "WindowTitle"] : this.Key
             }
 
             config[key] := processId
@@ -213,6 +223,10 @@ class ManagedEntityBase extends EntityBase {
             config[usesShortcutKey] := (this.RunType == "Shortcut")
         }
 
+        if (this.InstallDir == "") {
+            this.InstallDir := this.LocateInstallDir()
+        }
+
         return config
     }
 
@@ -221,13 +235,16 @@ class ManagedEntityBase extends EntityBase {
         defaults[this.configPrefix . "Type"] := this.defaultType
         defaults[this.configPrefix . "Class"] := this.defaultClass
         defaults[this.configPrefix . "SearchDirs"] := [A_ProgramFiles]
+        defaults[this.configPrefix . "InstallDir"] := ""
         defaults[this.configPrefix . "Exe"] := ""
+        defaults[this.configPrefix . "WindowTitle"] := ""
         defaults[this.configPrefix . "LocateMethod"] := "SearchDirs"
         defaults[this.configPrefix . "LocateRegView"] := 64
         defaults[this.configPrefix . "LocateRegKey"] := ""
         defaults[this.configPrefix . "LocateRegValue"] := ""
         defaults[this.configPrefix . "LocateRegRemovePrefix"] := ""
         defaults[this.configPrefix . "LocateRegRemoveSuffix"] := ""
+        defaults[this.configPrefix . "LocateRegStripQuotes"] := false
         defaults[this.configPrefix . "BlizzardProductKey"] := "bna"
         defaults[this.configPrefix . "WorkingDir"] := ""
         defaults[this.configPrefix . "RunType"] := "Command"
@@ -319,6 +336,10 @@ class ManagedEntityBase extends EntityBase {
                         SetRegView("Default")
 
                         if (regDir != "") {
+                            if (this.LocateRegStripQuotes) {
+                                regDir := StrReplace(regDir, "`"", "")
+                            }
+
                             if (this.LocateRegRemovePrefix) {
                                 regDir := StrReplace(regDir, this.LocateRegRemovePrefix) ; @todo only remove if it's at the beginning of the string
                             }
@@ -377,14 +398,13 @@ class ManagedEntityBase extends EntityBase {
     GetBlizzardProductDir() {
         path := ""
         compiledFile := A_AppDataCommon . "\Battle.net\Agent\product.db"
-        gameId := this.GetBlizzardProductKey
-
+        gameId := this.GetBlizzardProductKey()
         if (gameId != "" and FileExist(compiledFile)) {
             protoFile := A_ScriptDir . "\Resources\Dependencies\BlizzardProductDb.proto"
             dbMap := Protobuf.FromFile(compiledFile, "Database", protoFile)
             
             if (Type(dbMap) == "Map" and dbMap.Has("productInstall")) {
-                productInstalls := (Type(dbMap.Has("productInstall")) != "Array") ? dbMap["productInstall"] : Array(dbMap["productInstall"])
+                productInstalls := (Type(dbMap["productInstall"]) == "Array") ? dbMap["productInstall"] : Array(dbMap["productInstall"])
 
                 for index, productData in productInstalls {
                     if (productData.Has("productCode") and productData["productCode"] == gameId) {

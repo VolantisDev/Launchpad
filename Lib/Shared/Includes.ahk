@@ -12,8 +12,10 @@
 #Include E:\Tools\Launchpad\Lib\Shared\Cache\CacheBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Cache\FileCache.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Cache\ObjectCache.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\CLR\CLR.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Events\Events.ahk
-#Include E:\Tools\Launchpad\Lib\Shared\Game\BnetlauncherGame.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\ExeProcess\ExeProcess.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Game\BlizzardGame.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Game\GameBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Game\SimpleGame.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\DialogBox.ahk

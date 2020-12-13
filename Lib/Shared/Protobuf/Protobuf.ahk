@@ -131,6 +131,7 @@ class Protobuf {
 
 			if (next == "") {
 				Protobuf.AddOrMergeValue(returnData, mainKey, tree[1])
+				tree.RemoveAt(1)
 				mainKey := ""
 				is_key := true
 				next := letters . numbers

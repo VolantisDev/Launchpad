@@ -12,7 +12,7 @@ class GameAhkFile extends ComposableBuildFile {
         FileAppend("#Include " . this.appDir . "\Lib\Shared\Includes.ahk`n", this.FilePath)
         FileAppend("gameConfig := " . this.ConvertMapToCode(this.launcherEntityObj.ManagedLauncher.ManagedGame.Config) . "`n", this.FilePath)
         FileAppend("launcherConfig := " . this.ConvertMapToCode(this.launcherEntityObj.ManagedLauncher.Config) . "`n", this.FilePath)
-        FileAppend("gameObj := " . this.launcherEntityObj.ManagedLauncher.ManagedGame.EntityClass . ".new(`"" . this.launcherEntityObj.Key . "`", gameConfig)`n", this.FilePath)
+        FileAppend("gameObj := " . this.launcherEntityObj.ManagedLauncher.ManagedGame.EntityClass . ".new(`"" . this.launcherEntityObj.Key . "`", gameConfig, launcherConfig)`n", this.FilePath)
         FileAppend("launcherObj := " . this.launcherEntityObj.ManagedLauncher.EntityClass . ".new(`"" . this.launcherEntityObj.Key . "`", gameObj, launcherConfig)`n", this.FilePath)
         FileAppend("launcherObj.LaunchGame()`n", this.FilePath)
 
