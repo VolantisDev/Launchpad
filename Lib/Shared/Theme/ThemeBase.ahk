@@ -325,22 +325,44 @@ class ThemeBase {
         throw MethodNotImplementedException.new("ThemeBase", "GetThemeMap")
     }
 
+    AddButton(guiObj, options, text, handlerName := "") {
+        picObj := ""
+
+        try {
+            picObj := guiObj.AddPicture(options . " 0xE")
+            shape := ButtonShape.new(text, this.GetColor("buttonBackground"), this.GetColor("buttonText"), this.GetColor("border"), this.buttons["borderWidth"])
+            shape.DrawOn(picObj)
+
+            if (handlerName or picObj.Name) {
+                if (handlerName == "") {
+                    handlerName := "On" . picObj.Name
+                }
+
+                picObj.OnEvent("Click", handlerName)
+            }
+
+            this.themedButtons[picObj.Hwnd] := Map("picture", picObj, "text", text)
+        } catch ex {
+            ; Ignore errors
+        }
+
+        return picObj
+    }
+
     DrawButtonOverlay(ctlObj, guiObj) {
         try {
             shape := ButtonShape.new(ctlObj.Text, this.GetColor("buttonBackground"), this.GetColor("buttonText"), this.GetColor("border"), this.buttons["borderWidth"])
             picObj := shape.DrawOver(ctlObj, guiObj)
             this.buttonMap[ctlObj.Hwnd] := picObj
-            this.themedButtons[picObj.Hwnd] := Map("button", ctlObj, "picture", picObj)
+            this.themedButtons[picObj.Hwnd] := Map("button", ctlObj, "picture", picObj, "text", ctlObj.Text)
         } catch ex {
             ; Ignore errors
         }
     }
 
     SetNormalButtonState(btn) {
-        originalBtn := this.themedButtons[this.hoveredButton]["button"]
-
         try {
-            shape := ButtonShape.new(originalBtn.Text, this.GetColor("buttonBackground"), this.GetColor("buttonText"), this.GetColor("border"), this.buttons["borderWidth"])
+            shape := ButtonShape.new(this.themedButtons[this.hoveredButton]["text"], this.GetColor("buttonBackground"), this.GetColor("buttonText"), this.GetColor("border"), this.buttons["borderWidth"])
             btn := shape.DrawOn(btn)
         } catch ex {
             ; Ignore errors
@@ -359,8 +381,7 @@ class ThemeBase {
             this.hoveredButton := ""
         }
 
-        originalBtn := this.themedButtons[btn.Hwnd]["button"]
-        shape := ButtonShape.new(originalBtn.Text, this.GetColor("buttonBackgroundHover"), this.GetColor("buttonTextHover"), this.GetColor("borderHover"), this.buttons["borderWidth"])
+        shape := ButtonShape.new(this.themedButtons[btn.Hwnd]["text"], this.GetColor("buttonBackgroundHover"), this.GetColor("buttonTextHover"), this.GetColor("borderHover"), this.buttons["borderWidth"])
         btn := shape.DrawOn(btn)
         this.hoveredButton := btn.Hwnd
         return btn

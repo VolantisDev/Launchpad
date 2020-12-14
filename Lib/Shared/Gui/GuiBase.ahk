@@ -190,17 +190,8 @@ class GuiBase {
     AddButtons() {
     }
 
-    AddButton(options, text, eventName := "") {
-        btn := this.guiObj.AddButton(options, text)
-        this.buttons.Push(btn)
-
-        if (eventName == "") {
-            eventName := "On" . btn.Name
-        }
-
-        btn.OnEvent("Click", eventName)
-        this.themeObj.DrawButtonOverlay(btn, this.guiObj)
-        return btn
+    AddButton(options, text, handlerName := "") {
+        return this.themeObj.AddButton(this.guiObj, options, text, handlerName)
     }
 
     End() {
