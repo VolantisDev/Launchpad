@@ -1,6 +1,6 @@
 ﻿class ManageWindow extends LaunchpadGuiBase {
     sidebarWidth := 85
-    listViewColumns := Array("Order", "Game", "Launcher Type", "Game Type")
+    listViewColumns := Array("Game", "#", "Launcher Type", "Game Type")
     launcherFile := ""
     launcherManager := ""
 
@@ -21,28 +21,18 @@
 
     Controls() {
         super.Controls()
+        this.AddLaunchersList()
+        this.AddButton("vAddButton ys w" . this.sidebarWidth . " h30", "Add")
+        this.AddButton("vEditButton xp y+m w" . this.sidebarWidth . " h30", "Edit")
+        this.AddButton("vRemoveButton xp y+m w" . this.sidebarWidth . " h30", "Remove")
+        this.AddButton("vExitButton xp y" . this.windowSettings["listViewHeight"] - 30 + this.margin . " w" . this.sidebarWidth . " h30", "E&xit")
+    }
 
+    AddLaunchersList() {
+        styling := "Background" . this.themeObj.GetColor("background") . " C" . this.themeObj.GetColor("text")
         listViewWidth := this.windowSettings["contentWidth"] - this.sidebarWidth - this.margin
-        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " Section +Report -Multi +LV0x4000", this.listViewColumns)
+        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " " . styling . " Count" . this.launcherManager.CountLaunchers() . " Section +Report -Multi +LV0x4000", this.listViewColumns)
         lv.OnEvent("DoubleClick", "OnDoubleClick")
-
-        buttonWidth := this.sidebarWidth - (this.margin * 2)
-
-        gbY := this.margin * 2
-
-        this.guiObj.AddGroupBox("vLauncherGroup ys+" . this.margin . " w" . this.sidebarWidth . " r6.5 Section", "Launcher")
-        this.AddButton("vAddButton xs+" . this.margin . " ys+" . gbY . " w" . buttonWidth . " h25", "Add")
-        this.AddButton("vEditButton xs+" . this.margin . " y+m w" . buttonWidth . " h25", "Edit")
-        this.AddButton("vRemoveButton xs+" . this.margin . " y+m w" . buttonWidth . " h25", "Remove")
-        this.AddButton("vMoveUpButton xs+" . this.margin . " y+m w" . buttonWidth . " h25", "Up")
-        this.AddButton("vMoveDownButton xs+" . this.margin . " y+m w" . buttonWidth . " h25", "Down")
-        
-        this.guiObj.AddGroupBox("vSortGroup xs y+" . this.margin*2 . " w" . this.sidebarWidth . " r2.5 Section", "Sort All")
-        this.AddButton("vByNameButton xs+" . this.margin . " ys+" . gbY . " w" . buttonWidth . " h25", "By Name")
-        this.AddButton("vByTypeButton xs+" . this.margin . " y+m w" . buttonWidth . " h25", "By Type")
-
-        this.AddButton("vExitButton xs y+m w" . this.sidebarWidth . " h30", "E&xit")
-
         this.PopulateListView()
     }
 
@@ -53,14 +43,35 @@
 
         this.guiObj["ListView"].Delete()
         order := 1
+        IL := this.CreateIconList()
+        this.guiObj["ListView"].SetImageList(IL)
 
         for key, launcher in this.launcherManager.Launchers {
-            this.guiObj["ListView"].Add(, order, launcher.DisplayName, launcher.ManagedLauncher.EntityType, launcher.ManagedLauncher.ManagedGame.EntityType)
+            this.guiObj["ListView"].Add("Icon" . order, launcher.DisplayName, order, launcher.ManagedLauncher.EntityType, launcher.ManagedLauncher.ManagedGame.EntityType)
             order++
         }
 
         this.guiObj["ListView"].ModifyCol()
-        this.guiObj["ListView"].ModifyCol(1, "Integer")
+        this.guiObj["ListView"].ModifyCol(2, "Integer")
+    }
+
+    CreateIconList() {
+        IL := IL_Create(this.launcherManager.CountLaunchers(), 1, false)
+        
+        iconNum := 1
+        for key, launcher in this.launcherManager.Launchers {
+            iconSrc := launcher.iconSrc
+            
+            assetIcon := launcher.AssetsDir . "\" . key . ".ico"
+            if ((!iconSrc || !FileExist(iconSrc)) && FileExist(assetIcon)) {
+                iconSrc := assetIcon
+            }
+
+            IL_Add(IL, iconSrc)
+            iconNum++
+        }
+
+        return IL
     }
 
     OnDoubleClick(LV, rowNum) {
@@ -77,22 +88,6 @@
 
     OnRemoveButton(btn, info) {
 
-    }
-
-    OnMoveUpButton(btn, info) {
-
-    }
-
-    OnMoveDownButton(btn, info) {
-        
-    }
-
-    OnByNameButton(btn, info) {
-        
-    }
-
-    OnByTypeButton(btn, info) {
-        
     }
 
     OnExitButton(btn, info) {
@@ -153,8 +148,7 @@
         }
 
         this.AutoXYWH("wh", ["ListView"])
-        this.AutoXYWH("x*", ["LauncherGroup", "SortGroup"])
-        this.AutoXYWH("x", ["AddButton", "EditButton", "RemoveButton", "MoveUpButton", "MoveDownButton", "ByNameButton", "ByTypeButton"])
+        this.AutoXYWH("x", ["AddButton", "EditButton", "RemoveButton"])
         this.AutoXYWH("xy*", ["ExitButton"])
 
         if (this.hToolbar) {

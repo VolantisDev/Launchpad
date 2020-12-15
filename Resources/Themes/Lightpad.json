@@ -134,8 +134,8 @@
             },
             "ManageWindow": {
                 "settings": "default",
-                "contentWidth": 510,
-                "listViewHeight": 340,
+                "contentWidth": 640,
+                "listViewHeight": 400,
                 "options": {
                     "Resize": true,
                     "MinSize": "480x380"
