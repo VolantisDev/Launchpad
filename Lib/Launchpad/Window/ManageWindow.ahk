@@ -1,9 +1,10 @@
 ﻿class ManageWindow extends LaunchpadGuiBase {
     sidebarWidth := 85
-    listViewColumns := Array("Game", "#", "Launcher Type", "Game Type")
+    listViewColumns := Array("Game", "Launcher Type", "Game Type")
     launcherFile := ""
     launcherManager := ""
     launchersModified := false
+    numSelected := 0
 
     __New(app, launcherFile := "", windowKey := "", owner := "", parent := "") {
         if (launcherFile == "") {
@@ -24,8 +25,8 @@
         super.Controls()
         this.AddLaunchersList()
         this.AddButton("vAddButton ys w" . this.sidebarWidth . " h30", "Add")
-        this.AddButton("vEditButton xp y+m w" . this.sidebarWidth . " h30", "Edit")
-        this.AddButton("vRemoveButton xp y+m w" . this.sidebarWidth . " h30", "Remove")
+        this.AddButton("vEditButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Edit")
+        this.AddButton("vRemoveButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Remove")
         this.AddButton("vExitButton xp y" . this.windowSettings["listViewHeight"] - 30 + this.margin . " w" . this.sidebarWidth . " h30", "E&xit")
     }
 
@@ -48,6 +49,7 @@
         listViewWidth := this.windowSettings["contentWidth"] - this.sidebarWidth - this.margin
         lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " " . styling . " Count" . this.launcherManager.CountLaunchers() . " Section +Report -Multi " . lvStyles, this.listViewColumns)
         lv.OnEvent("DoubleClick", "OnDoubleClick")
+        lv.OnEvent("ItemSelect", "OnItemSelect")
         this.PopulateListView()
     }
 
@@ -57,17 +59,16 @@
         }
 
         this.guiObj["ListView"].Delete()
-        order := 1
+        iconNum := 1
         IL := this.CreateIconList()
         this.guiObj["ListView"].SetImageList(IL)
 
         for key, launcher in this.launcherManager.Launchers {
-            this.guiObj["ListView"].Add("Icon" . order, launcher.Key, order, launcher.ManagedLauncher.EntityType, launcher.ManagedLauncher.ManagedGame.EntityType)
-            order++
+            this.guiObj["ListView"].Add("Icon" . iconNum, launcher.Key, launcher.ManagedLauncher.EntityType, launcher.ManagedLauncher.ManagedGame.EntityType)
+            iconNum++
         }
 
         this.guiObj["ListView"].ModifyCol()
-        this.guiObj["ListView"].ModifyCol(2, "Integer")
     }
 
     CreateIconList() {
@@ -90,15 +91,58 @@
     }
 
     OnDoubleClick(LV, rowNum) {
+        key := LV.GetText(rowNum)
+        this.EditLauncher(key)
+    }
 
+    EditLauncher(key) {
+        launcherObj := this.launcherManager.Launchers[key]
+        modifiedValues := this.app.Windows.LauncherEditor(launcherObj, "config", "ManageWindow")
+
+        if (modifiedValues.Cound > 0) {
+            this.modified := true
+
+            if (launcherObj.Key != key) {
+                this.launcherManager.RemoveLauncher(key)
+                this.launcherManager.AddLauncher(key, launcherObj)
+                launcherObj.MergeEntityDefaults(true)
+            }
+
+            this.PopulateListView()
+        }
+    }
+
+    AddLauncher() {
+        entityConfig := Map()
+        entity := LauncherEntity.new(this.app, "new", entityConfig)
+        modifiedValues := this.app.Windows.LauncherEditor(entity, "config", "ManageWindow")
+        
+        if (modifiedValues > 0 and entity.Key != "new") {
+            this.launcherManager.AddLauncher(entity.Key, entity.UnmergedConfig)
+            entity.MergeEntityDefaults()
+            this.PopulateListView()
+        }
+    }
+
+    OnItemSelect(LV, rowNum, selected) {
+        this.numSelected += (selected) ? 1 : -1
+        buttonState := this.numSelected > 0 ? "-Hidden" : "+Hidden"
+        this.guiObj["EditButton"].Opt(buttonState)
+        this.guiObj["RemoveButton"].Opt(buttonState)
     }
 
     OnAddButton(btn, info) {
-
+        this.AddLauncher()
     }
 
     OnEditButton(btn, info) {
+        selected := this.guiObj["ListView"].GetNext()
 
+        if (selected > 0) {
+            key := this.guiObj["ListView"].GetText(selected, 1)
+            this.EditLauncher(key)
+        }
+        
     }
 
     OnRemoveButton(btn, info) {

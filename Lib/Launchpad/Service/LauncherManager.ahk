@@ -43,8 +43,12 @@ class LauncherManager extends AppComponentServiceBase {
     RemoveLauncher(key) {
         if (this.Launchers.Has(key)) {
             this.Launchers.Delete(key)
-            MsgBox this.launcherConfigObj.Games.Count
             this.launcherConfigObj.Games.Delete(key)
         }
+    }
+
+    AddLauncher(key, launcher) {
+        this.Launchers[key] := launcher
+        this.launcherConfigObj.Games[key] := launcher.UnmergedConfig
     }
 }
