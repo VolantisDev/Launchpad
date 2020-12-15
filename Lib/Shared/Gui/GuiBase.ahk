@@ -160,8 +160,7 @@ class GuiBase {
     }
 
     OnEscape(guiObj) {
-        this.guiObj.Cancel()
-        this.WinClose()
+        this.Destroy()
     }
 
     OnSize(guiObj, minMax, width, height) {

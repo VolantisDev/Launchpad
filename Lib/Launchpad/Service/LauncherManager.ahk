@@ -13,17 +13,15 @@ class LauncherManager extends AppComponentServiceBase {
     }
 
     LoadLaunchers(launcherFile := "") {
-        if (launcherFile == "") {
-            launcherFile := this.app.Config.LauncherFile
+        if (launcherFile != "") {
+            this.launcherConfigObj.ConfigPath := launcherFile
         }
 
-        if (!IsObject(launcherFile)) {
-            launcherFile := LauncherConfig.new(this.app, launcherFile, false)
+        if (this.launcherConfigObj.ConfigPath == "") {
+            this.launcherConfigObj.ConfigPath := this.app.Config.LauncherFile
         }
 
-        this.launchersConfigObj := launcherFile
-
-        operation := LoadLaunchersOp.new(this.app, launcherFile)
+        operation := LoadLaunchersOp.new(this.app, this.launcherConfigObj)
         success := operation.Run()
         this._components := operation.GetResults()
         this.launchersLoaded := true
@@ -36,5 +34,17 @@ class LauncherManager extends AppComponentServiceBase {
 
     CountLaunchers() {
         return this.Launchers.Count
+    }
+
+    SaveModifiedLaunchers() {
+        this.launcherConfigObj.SaveConfig()
+    }
+
+    RemoveLauncher(key) {
+        if (this.Launchers.Has(key)) {
+            this.Launchers.Delete(key)
+            MsgBox this.launcherConfigObj.Games.Count
+            this.launcherConfigObj.Games.Delete(key)
+        }
     }
 }

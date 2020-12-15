@@ -3,7 +3,7 @@
     gameDefaults := Map()
 
     Games[] {
-        get => (this.config["Games"] != "") ? this.config["Games"] : Map()
+        get => (this.config.Has("Games") && this.config["Games"] != "") ? this.config["Games"] : Map()
         set => this.config["Games"] := value
     }
 

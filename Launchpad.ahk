@@ -16,7 +16,7 @@ SplitPath(A_ScriptName,,,, appName)
 try {
     app := Launchpad.new(appName, A_ScriptDir)
     app.Installers.InstallRequirements()
-    app.Launchers.LoadLaunchers()
+    app.Launchers.LoadLaunchers(app.Config.LauncherFile)
     app.Windows.OpenMainWindow()
 } catch e {
     extra := (e.HasProp("Extra") and e.Extra != "") ? "`n`nAdditional info:`n" . e.Extra : ""

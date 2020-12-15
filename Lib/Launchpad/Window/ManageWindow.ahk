@@ -3,6 +3,7 @@
     listViewColumns := Array("Game", "#", "Launcher Type", "Game Type")
     launcherFile := ""
     launcherManager := ""
+    launchersModified := false
 
     __New(app, launcherFile := "", windowKey := "", owner := "", parent := "") {
         if (launcherFile == "") {
@@ -28,6 +29,18 @@
         this.AddButton("vExitButton xp y" . this.windowSettings["listViewHeight"] - 30 + this.margin . " w" . this.sidebarWidth . " h30", "E&xit")
     }
 
+    Destroy() {
+        if (this.launchersModified) {
+            shouldSave := MsgBox("Your launchers have been modified. Would you like to commit your changes back to " . this.launcherFile . "?", "Save modifications?", "YesNo")
+
+            if (shouldSave) {
+                this.launcherManager.SaveModifiedLaunchers()
+            }
+        }
+
+        super.Destroy()
+    }
+
     AddLaunchersList() {
         styling := "Background" . this.themeObj.GetColor("background") . " C" . this.themeObj.GetColor("text")
         listViewWidth := this.windowSettings["contentWidth"] - this.sidebarWidth - this.margin
@@ -38,7 +51,7 @@
 
     PopulateListView() {
         if (!this.launcherManager.launchersLoaded) {
-            this.launcherManager.LoadLaunchers()
+            this.launcherManager.LoadLaunchers(this.launcherFile)
         }
 
         this.guiObj["ListView"].Delete()
@@ -47,7 +60,7 @@
         this.guiObj["ListView"].SetImageList(IL)
 
         for key, launcher in this.launcherManager.Launchers {
-            this.guiObj["ListView"].Add("Icon" . order, launcher.DisplayName, order, launcher.ManagedLauncher.EntityType, launcher.ManagedLauncher.ManagedGame.EntityType)
+            this.guiObj["ListView"].Add("Icon" . order, launcher.Key, order, launcher.ManagedLauncher.EntityType, launcher.ManagedLauncher.ManagedGame.EntityType)
             order++
         }
 
@@ -87,11 +100,22 @@
     }
 
     OnRemoveButton(btn, info) {
+        selected := this.guiObj["ListView"].GetNext()
 
+        if (selected > 0) {
+            key := this.guiObj["ListView"].GetText(selected, 1)
+            shouldRemove := MsgBox("This will delete the configuration for launcher " key . ". Are you sure?", "Delete " . key . "?", "YesNo")
+
+            if (shouldRemove) {
+                this.launcherManager.RemoveLauncher(key)
+                this.launchersModified := true
+                this.guiObj["ListView"].Delete(selected)
+            }
+        }
     }
 
     OnExitButton(btn, info) {
-        
+        this.Destroy()
     }
 
     AddToolbar() {
@@ -149,7 +173,7 @@
 
         this.AutoXYWH("wh", ["ListView"])
         this.AutoXYWH("x", ["AddButton", "EditButton", "RemoveButton"])
-        this.AutoXYWH("xy*", ["ExitButton"])
+        this.AutoXYWH("xy", ["ExitButton"])
 
         if (this.hToolbar) {
             this.guiObj["Toolbar"].Move(,,width)

@@ -31,7 +31,7 @@
 
     OnReloadLaunchers(btn, info) {
         this.Close()
-        this.app.Launchers.LoadLaunchers()
+        this.app.Launchers.LoadLaunchers(this.app.Config.LauncherFile)
     }
 
     OnCleanLaunchers(btn, info) {
