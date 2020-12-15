@@ -33,7 +33,7 @@
         if (this.launchersModified) {
             shouldSave := MsgBox("Your launchers have been modified. Would you like to commit your changes back to " . this.launcherFile . "?", "Save modifications?", "YesNo")
 
-            if (shouldSave) {
+            if (shouldSave == "Yes") {
                 this.launcherManager.SaveModifiedLaunchers()
             }
         }
@@ -106,7 +106,7 @@
             key := this.guiObj["ListView"].GetText(selected, 1)
             shouldRemove := MsgBox("This will delete the configuration for launcher " key . ". Are you sure?", "Delete " . key . "?", "YesNo")
 
-            if (shouldRemove) {
+            if (shouldRemove == "Yes") {
                 this.launcherManager.RemoveLauncher(key)
                 this.launchersModified := true
                 this.guiObj["ListView"].Delete(selected)
