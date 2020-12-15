@@ -141,29 +141,29 @@
     }
 
     OnOpenLauncherFile(btn, info) {
-        this.app.Launchers.OpenLauncherFile()
+        this.app.Config.OpenLauncherFile()
     }
 
     OnChangeLauncherFile(btn, info) {
-        this.app.Launchers.ChangeLauncherFile()
+        this.app.Config.ChangeLauncherFile()
         this.SetText("LauncherFile", this.app.Config.LauncherFile, "Bold")
     }
 
     OnOpenDestinationDir(btn, info) {
-        this.app.Launchers.OpenDestinationDir()
+        this.app.Config.OpenDestinationDir()
     }
 
     OnChangeDestinationDir(btn, info) {
-        this.app.Launchers.ChangeDestinationDir()
+        this.app.Config.ChangeDestinationDir()
         this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
     }
 
     OnOpenAssetsDir(btn, info) {
-        this.app.Launchers.OpenAssetsDir()
+        this.app.Config.OpenAssetsDir()
     }
 
     OnChangeAssetsDir(btn, info) {
-        this.app.Launchers.ChangeAssetsDir()
+        this.app.Config.ChangeAssetsDir()
         this.SetText("AssetsDir", this.app.Config.AssetsDir, "Bold")
     }
 
