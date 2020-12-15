@@ -1,7 +1,8 @@
 ﻿class ManageWindow extends LaunchpadGuiBase {
     sidebarWidth := 85
-    listViewColumns := Array("Order", "Game", "Launcher")
+    listViewColumns := Array("Order", "Game", "Launcher Type", "Game Type")
     launcherFile := ""
+    launcherManager := ""
 
     __New(app, launcherFile := "", windowKey := "", owner := "", parent := "") {
         if (launcherFile == "") {
@@ -10,6 +11,7 @@
 
         InvalidParameterException.CheckTypes("ManageWindow", "launcherFile", launcherFile, "")
         this.launcherFile := launcherFile
+        this.launcherManager := LauncherManager.new(app, launcherFile)
         super.__New(app, "Manage", windowKey, owner, parent)
     }
 
@@ -22,6 +24,7 @@
 
         listViewWidth := this.windowSettings["contentWidth"] - this.sidebarWidth - this.margin
         lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " Section +Report -Multi +LV0x4000", this.listViewColumns)
+        lv.OnEvent("DoubleClick", "OnDoubleClick")
 
         buttonWidth := this.sidebarWidth - (this.margin * 2)
 
@@ -39,6 +42,61 @@
         this.AddButton("vByTypeButton xs+" . this.margin . " y+m w" . buttonWidth . " h25", "By Type")
 
         this.AddButton("vExitButton xs y+m w" . this.sidebarWidth . " h30", "E&xit")
+
+        this.PopulateListView()
+    }
+
+    PopulateListView() {
+        if (!this.launcherManager.launchersLoaded) {
+            this.launcherManager.LoadLaunchers()
+        }
+
+        this.guiObj["ListView"].Delete()
+        order := 1
+
+        for key, launcher in this.launcherManager.Launchers {
+            this.guiObj["ListView"].Add(, order, launcher.DisplayName, launcher.ManagedLauncher.EntityType, launcher.ManagedLauncher.ManagedGame.EntityType)
+            order++
+        }
+
+        this.guiObj["ListView"].ModifyCol()
+        this.guiObj["ListView"].ModifyCol(1, "Integer")
+    }
+
+    OnDoubleClick(LV, rowNum) {
+
+    }
+
+    OnAddButton(btn, info) {
+
+    }
+
+    OnEditButton(btn, info) {
+
+    }
+
+    OnRemoveButton(btn, info) {
+
+    }
+
+    OnMoveUpButton(btn, info) {
+
+    }
+
+    OnMoveDownButton(btn, info) {
+        
+    }
+
+    OnByNameButton(btn, info) {
+        
+    }
+
+    OnByTypeButton(btn, info) {
+        
+    }
+
+    OnExitButton(btn, info) {
+        
     }
 
     AddToolbar() {
