@@ -42,9 +42,11 @@
     }
 
     AddLaunchersList() {
-        styling := "Background" . this.themeObj.GetColor("background") . " C" . this.themeObj.GetColor("text")
+        styling := "C" . this.themeObj.GetColor("text")
+        lvStyles := "+LV" . LVS_EX_LABELTIP . " +LV" . LVS_EX_AUTOSIZECOLUMNS . " +LV" . LVS_EX_DOUBLEBUFFER . " +LV" . LVS_EX_FLATSB
+        lvStyles .= " +LV" . LVS_EX_TRANSPARENTBKGND . " +LV" . LVS_EX_TRANSPARENTSHADOWTEXT
         listViewWidth := this.windowSettings["contentWidth"] - this.sidebarWidth - this.margin
-        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " " . styling . " Count" . this.launcherManager.CountLaunchers() . " Section +Report -Multi +LV0x4000", this.listViewColumns)
+        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " " . styling . " Count" . this.launcherManager.CountLaunchers() . " Section +Report -Multi " . lvStyles, this.listViewColumns)
         lv.OnEvent("DoubleClick", "OnDoubleClick")
         this.PopulateListView()
     }

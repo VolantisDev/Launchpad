@@ -22,6 +22,7 @@
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\FormGuiBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\GuiBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\IconSelector.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Gui\LV_Constants.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\ProgressIndicator.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\SingleInputBox.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\GuiShape\ButtonShape.ahk
