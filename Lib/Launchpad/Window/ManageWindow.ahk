@@ -97,7 +97,7 @@
 
     EditLauncher(key) {
         launcherObj := this.launcherManager.Launchers[key]
-        ;modifiedValues := this.app.Windows.LauncherEditor(launcherObj, "config", "ManageWindow")
+        modifiedValues := this.app.Windows.LauncherEditor(launcherObj, "config", this.guiObj)
         modifiedValues := Map()
 
         if (modifiedValues.Count > 0) {
@@ -116,7 +116,7 @@
     AddLauncher() {
         entityConfig := Map()
         entity := LauncherEntity.new(this.app, "new", entityConfig)
-        ;modifiedValues := this.app.Windows.LauncherEditor(entity, "config", "ManageWindow")
+        modifiedValues := this.app.Windows.LauncherEditor(entity, "config", this.guiObj)
         modifiedValues := Map()
         
         if (modifiedValues.Count > 0 and entity.Key != "new") {

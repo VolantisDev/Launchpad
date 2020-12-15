@@ -15,8 +15,8 @@ class WindowManager extends AppComponentServiceBase {
         return this.ShowDialog(ProgressIndicator.new(title, this.GetTheme(), text, "", owner, parent, allowCancel, progressRange, initialPosition, detailText))
     }
 
-    LauncherEditor(launcherGameObj, mode := "config", owner := "", parent := "") {
-        return this.ShowForm(LauncherEditor.new(this.app, launcherGameObj, mode, "", owner, parent))
+    LauncherEditor(entityObj, mode := "config", owner := "", parent := "") {
+        return this.ShowForm(LauncherEditor.new(this.app, entityObj, mode, "", owner, parent))
     }
 
     OpenMainWindow() {

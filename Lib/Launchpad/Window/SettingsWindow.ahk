@@ -14,7 +14,7 @@
         buttonSize := this.themeObj.GetButtonSize("s", true)
         buttonW := (buttonSize.Has("w") and buttonSize["w"] != "auto") ? buttonSize["w"] : 80
         openX := groupW - (buttonW * 2)
-        tabs := this.guiObj.Add("Tab3", "x" . this.margin . " y" . this.margin . " h" . this.windowSettings["tabHeight"] . " +0x100", ["Launchers", "Assets", "Sources", "Appearance", "Advanced"])
+        tabs := this.guiObj.Add("Tab3", "x" . this.margin . " y" . this.margin . " +0x100", ["Launchers", "Assets", "Sources", "Appearance", "Advanced"])
 
         tabs.UseTab("Launchers", true)
 

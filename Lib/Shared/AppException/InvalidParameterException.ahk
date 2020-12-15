@@ -1,5 +1,5 @@
 class InvalidParameterException extends AppException {
-    __New(className, parameterName, value := "", requiredType := "", extraInfo := "") {
+    __New(what, parameterName, value := "", requiredType := "", extraInfo := "") {
         message := "The parameter '" . parameterName . "' (type is '" . Type(value) . "') is invalid."
 
         if (requiredType != "") {
@@ -10,7 +10,7 @@ class InvalidParameterException extends AppException {
             message .= " " . extraInfo
         }
 
-        super.__New(message, className, value)
+        super.__New(message, what, value)
     }
 
     static CheckTypes(className, params*) {

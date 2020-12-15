@@ -1,22 +1,22 @@
 class AhkLauncherBuilder extends BuilderBase {
-    BuildAction(launcherGameObj, launcherDir, assetsDir) {
+    BuildAction(entityObj, launcherDir, assetsDir) {
         result := false
 
-        gameAhkObj := GameAhkFile.new(launcherGameObj)
+        gameAhkObj := GameAhkFile.new(entityObj)
         ahkResult := gameAhkObj.Build()
 
         if (ahkResult) {
-            gameExeObj := GameExeFile.new(launcherGameObj)
+            gameExeObj := GameExeFile.new(entityObj)
             result := gameExeObj.Build()
         }
 
         return result
     }
 
-    Clean(launcherGameObj) {
+    Clean(entityObj) {
         wasCleaned := false
 
-        filePath := this.app.Config.AssetsDir . "\" . launcherGameObj.Key . "\" . launcherGameObj.Key . ".ahk"
+        filePath := this.app.Config.AssetsDir . "\" . entityObj.Key . "\" . entityObj.Key . ".ahk"
 
         if (FileExist(filePath)) {
             FileDelete(filePath)

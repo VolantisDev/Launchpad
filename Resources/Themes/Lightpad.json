@@ -79,7 +79,6 @@
                 "saveSize": true,
                 "savePosition": true,
                 "contentWidth": 420,
-                "tabHeight": 350,
                 "listViewHeight": "{{tabHeight}}",
                 "options": {
                     "AlwaysOnTop": "",
@@ -129,8 +128,7 @@
             },
             "LauncherEditor": {
                 "settings": "form",
-                "contentWidth": 500,
-                "tabHeight": 520
+                "contentWidth": 500
             },
             "ManageWindow": {
                 "settings": "default",
@@ -144,7 +142,6 @@
             "SettingsWindow": {
                 "settings": "form",
                 "contentWidth": 400,
-                "tabHeight": 400,
                 "options": {
                     "Popup": true
                 }

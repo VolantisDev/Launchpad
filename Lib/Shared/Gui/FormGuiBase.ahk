@@ -5,7 +5,7 @@ class FormGuiBase extends GuiBase {
     waitForResult := true
 
     __New(title, themeObj, text := "", windowKey := "", owner := "", parent := "", btns := "*&Submit") {
-        InvalidParameterException.CheckTypes("FormGuiBase", "btns", btns, "", "text", text, "")
+        ;InvalidParameterException.CheckTypes("FormGuiBase", "btns", btns, "", "text", text, "")
         this.text := text
         this.btns := btns
         super.__New(title, themeObj, windowKey, owner, parent)
