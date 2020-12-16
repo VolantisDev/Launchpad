@@ -47,9 +47,9 @@ class LauncherEditor extends LaunchpadFormGuiBase {
         buttonDefs := ""
 
         if (this.mode == "config") {
-            buttonDefs := "*&Save|&Cancel"
+            ;buttonDefs := "*&Save|&Cancel"
         } else if (this.mode == "build") {
-            buttonDefs := "*&Continue|&Skip"
+            ;buttonDefs := "*&Continue|&Skip"
         }
 
         return buttonDefs
@@ -62,7 +62,7 @@ class LauncherEditor extends LaunchpadFormGuiBase {
     Controls() {
         super.Controls()
 
-        tabs := this.guiObj.Add("Tab3", " x" . this.margin . " h" . this.windowSettings["tabHeight"] . " +0x100", ["General", "Sources", "Advanced"])
+        tabs := this.guiObj.Add("Tab3", " x" . this.margin . " +0x100", ["General", "Sources", "Advanced"])
 
         tabs.UseTab("General", true)
 
@@ -84,7 +84,7 @@ class LauncherEditor extends LaunchpadFormGuiBase {
         this.AddHelpText("This tells Launchpad how to interact with any launcher your game might require. If no specific options match, or your game doesn't have a separate launcher, simply choose 'default'.")
         
         this.AddHeading("Game Type")
-        chosen := this.GetItemIndex(this.gameTypes, this.launcherEntityObj.ManagedGame.EntityType)
+        chosen := this.GetItemIndex(this.gameTypes, this.launcherEntityObj.ManagedLauncher.ManagedGame.EntityType)
         ctl := this.guiObj.AddDDL("vGameType xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"], this.gameTypes)
         ctl.OnEvent("Change", "OnGameTypeChange")
         this.AddHelpText("This tells Launchpad how to launch your game. Most games can use 'default', but some launchers support multiple game types.")
@@ -114,7 +114,7 @@ class LauncherEditor extends LaunchpadFormGuiBase {
 
         tabs.UseTab("Advanced", true)
 
-        this.AddHelpText("These settings can often be left at their default. A grayed-out checkboxes mean that the value will always be determined by the launcher type, game type, and/or API.")
+        ;this.AddHelpText("These settings can often be left at their default. A grayed-out checkboxes mean that the value will always be determined by the launcher type, game type, and/or API.")
         
         ;this.AddHeading("Working Directory")
         ;this.AddLocationBlock("WorkingDir", "Clear")
@@ -122,13 +122,13 @@ class LauncherEditor extends LaunchpadFormGuiBase {
         
         this.AddHeading("Additional Options")
 
-        ;val := this.launcherGameObj.ConfigIsSet("useAhkClass", false) ? this.launcherGameObj.UseAhkClass : "Gray"
+        ;val := this.entityObj.ConfigIsSet("useAhkClass", false) ? this.entityObj.UseAhkClass : "Gray"
         ;this.AddCheckBox("Use AHK class", "UseAhkClass", val, false, "", true)
 
-        ;val := this.launcherGameObj.ConfigIsSet("supportsShortcut", false) ? this.launcherGameObj.SupportsShortcut : "Gray"
+        ;val := this.entityObj.ConfigIsSet("supportsShortcut", false) ? this.entityObj.SupportsShortcut : "Gray"
         ;this.AddCheckBox("Launcher supports shortcut files", "SupportsShortcut", val, false, "", true)
 
-        ;val := this.launcherGameObj.ConfigIsSet("runThenWait", false) ? this.launcherGameObj.RunThenWait : "Gray"
+        ;val := this.entityObj.ConfigIsSet("runThenWait", false) ? this.entityObj.RunThenWait : "Gray"
         ;this.AddCheckBox("Monitor game window to detect when it closes", "RunThenWait", val, false, "", true)
 
         ; WaitAfterClose
@@ -215,7 +215,7 @@ class LauncherEditor extends LaunchpadFormGuiBase {
     }
 
     OnGameTypeChange(ctlObj, info) {
-        this.launcherEntityObj.ManagedGame.EntityType := ctlObj.Value
+        this.launcherEntityObj.ManagedLauncher.ManagedGame.EntityType := ctlObj.Value
 
         ; @todo Change the game class as well
     }
