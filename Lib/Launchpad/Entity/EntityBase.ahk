@@ -485,8 +485,9 @@ class EntityBase {
     }
 
     MergeDefaultsIntoConfig(config) {
+        merged := this.MergeFromObject(Map(), config)
         defaults := this.MergeFromObject(this.AggregateDataSourceDefaults(), this.initialDefaults, false)
-        return this.MergeFromObject(config, defaults, false)
+        return this.MergeFromObject(merged, defaults, false)
     }
 
     LaunchEditWindow(mode, owner) {

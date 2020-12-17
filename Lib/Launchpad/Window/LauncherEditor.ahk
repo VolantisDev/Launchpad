@@ -59,35 +59,48 @@ class LauncherEditor extends LaunchpadFormGuiBase {
         return super.GetTitle(this.launcherEntityObj.Key . " - " . title)
     }
 
+    DefaultCheckbox(fieldKey, entity := "") {
+        if (entity == "") {
+            entity := this.launcherEntityObj
+        }
+
+        checkedText := !entity.UnmergedConfig.Has(fieldKey) ? " Checked" : ""
+        ctl := this.guiObj.AddCheckBox("vDefault" . fieldKey . " xs h25 y+m" . checkedText, "Default")
+        ctl.OnEvent("Click", "OnDefault" . fieldKey)
+        return ctl
+    }
+
     Controls() {
         super.Controls()
 
-        tabs := this.guiObj.Add("Tab3", " x" . this.margin . " +0x100", ["General", "Sources", "Advanced"])
+        tabs := this.guiObj.Add("Tab3", " x" . this.margin . " w" . this.windowSettings["contentWidth"] . " +0x100", ["General", "Sources", "Advanced"])
 
         tabs.UseTab("General", true)
 
-        this.AddHeading("Game")
+        this.AddHeading("Key")
         ctl := this.guiObj.AddComboBox("vKey xs y+m w" . this.windowSettings["contentWidth"], this.knownGames)
         ctl.Text := this.launcherEntityObj.Key
         ctl.OnEvent("Change", "OnKeyChange")
         this.AddHelpText("Select an existing game from the API, or enter a custom game key to create your own. Use caution when changing this value, as it will change which data is requested from the API.")
 
-        this.AddHeading("Display Name")
-        ctl := this.guiObj.AddEdit("vDisplayName xs y+m w" . this.windowSettings["contentWidth"], this.launcherEntityObj.DisplayName)
-        ctl.OnEvent("Change", "OnDisplayNameChange")
-        this.AddHelpText("You can change the display name of the game if it differs from the key. The launcher filename will still be created using the key.")
-
-        this.AddHeading("Launcher Type")
+        this.AddHeading("Launcher")
+        buttonW := 150
+        launcherTypeW :=  this.windowSettings["contentWidth"] - buttonW - this.margin
         chosen := this.GetItemIndex(this.launcherTypes, this.launcherEntityObj.ManagedLauncher.EntityType)
-        ctl := this.guiObj.AddDDL("vLauncherType xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"], this.launcherTypes)
+        ctl := this.guiObj.AddDDL("vLauncherType xs y+m Choose" . chosen . " w" . launcherTypeW, this.launcherTypes)
         ctl.OnEvent("Change", "OnLauncherTypeChange")
-        this.AddHelpText("This tells Launchpad how to interact with any launcher your game might require. If no specific options match, or your game doesn't have a separate launcher, simply choose 'default'.")
-        
-        this.AddHeading("Game Type")
+        this.AddButton("vLauncherConfiguration x+m yp w" . buttonW . " h25", "Manage", "OnLauncherConfiguration")
+        this.AddHelpText("This tells Launchpad how to interact with any launcher your game might require. If your game's launcher isn't listed, or your game doesn't have a launcher, start with `"Default`".")
+
+        this.AddHeading("Game")
+        ;ctl := this.DefaultCheckbox("GameType", this.launcherEntityObj.ManagedLauncher.ManagedGame)
+        ;ctl.GetPos(,,checkW)
+        fieldW := this.windowSettings["contentWidth"] - buttonW - this.margin
         chosen := this.GetItemIndex(this.gameTypes, this.launcherEntityObj.ManagedLauncher.ManagedGame.EntityType)
-        ctl := this.guiObj.AddDDL("vGameType xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"], this.gameTypes)
+        ctl := this.guiObj.AddDDL("vGameType xs y+m Choose" . chosen . " w" . fieldW, this.gameTypes)
         ctl.OnEvent("Change", "OnGameTypeChange")
-        this.AddHelpText("This tells Launchpad how to launch your game. Most games can use 'default', but some launchers support multiple game types.")
+        this.AddButton("vGameConfiguration x+m yp w" . buttonW . " h25", "Manage", "OnGameConfiguration")
+        this.AddHelpText("This tells Launchpad how to launch your game. Most games can use 'default', but launchers can support different game types.")
 
         tabs.UseTab("Sources", true)
 
@@ -116,6 +129,14 @@ class LauncherEditor extends LaunchpadFormGuiBase {
 
         ;this.AddHelpText("These settings can often be left at their default. A grayed-out checkboxes mean that the value will always be determined by the launcher type, game type, and/or API.")
         
+        this.AddHeading("Display Name")
+        ctl := this.DefaultCheckbox("DisplayName")
+        ctl.GetPos(,,checkW)
+        fieldW := this.windowSettings["contentWidth"] - checkW - this.margin
+        ctl := this.guiObj.AddEdit("vDisplayName x+m yp w" . fieldW, this.launcherEntityObj.DisplayName)
+        ctl.OnEvent("Change", "OnDisplayNameChange")
+        this.AddHelpText("You can change the display name of the game if it differs from the key. The launcher filename will still be created using the key.")
+
         ;this.AddHeading("Working Directory")
         ;this.AddLocationBlock("WorkingDir", "Clear")
         ;this.AddHelpText("If needed, set the directory that the shortcut or Run command will be started from.")
@@ -200,6 +221,24 @@ class LauncherEditor extends LaunchpadFormGuiBase {
         this.gameTypes := dataSource.ReadListing("Types/Games")
     }
 
+    OnDefaultDisplayName(ctlObj, info) {
+        ;this.SetDefaultValue()
+    }
+
+    OnDefaultGameType(ctlObj, info) {
+        ;this.SetDefaultValue()
+    }
+
+    SetDefaultValue(fieldKey, useDefault := true) {
+        ; Get checkbox value
+
+        ; Unset config if checked
+
+        ; Gray out field and show default value if checked
+
+        ; Enable field and copy default value to config if unchecked
+    }
+
     OnKeyChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.launcherEntityObj.Key := ctlObj.Value
@@ -220,9 +259,17 @@ class LauncherEditor extends LaunchpadFormGuiBase {
         ; @todo Change the game class as well
     }
 
+    OnLauncherConfiguration(ctlObj, info) {
+
+    }
+
+    OnGameConfiguration(ctlObj, info) {
+
+    }
+
     OnDisplayNameChange(ctlObj, info) {
         this.guiObj.Submit(false)
-        this.launcherEntityObj.DisplayName := ctlObj.Value
+        ;this.launcherEntityObj.DisplayName := ctlObj.Value
     }
 
     OnChangeIconFile(btn, info) {

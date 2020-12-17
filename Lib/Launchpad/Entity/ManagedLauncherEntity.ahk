@@ -94,6 +94,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
     }
 
     OverrideChildDefaults(defaults) {
+        ; @todo avoid altering unmerged config automatically
         this.ManagedGame.UnmergedConfig["GameType"] := defaults["GameType"]
         this.ManagedGame.initialDefaults := this.MergeFromObject(this.ManagedGame.initialDefaults, this.initialDefaults, true)
     }
