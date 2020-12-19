@@ -12,6 +12,7 @@ class GuiBase {
     hToolbar := ""
     margin := ""
     buttons := []
+    isClosed := false
 
     positionAtMouseCursor := false
     openWindowWithinScreenBounds := true
@@ -119,7 +120,11 @@ class GuiBase {
     }
 
     GetHwnd() {
-        return this.guiObj.Hwnd
+        hwnd := 0
+
+        if (!this.isClosed) {
+            return this.guiObj.Hwnd
+        }
     }
 
     GetTitle(title) {
@@ -156,11 +161,19 @@ class GuiBase {
     }
 
     OnClose(guiObj) {
-        this.Destroy()
+        if (!this.isClosed) {
+            this.Destroy()
+        }
+        
+        return true
     }
 
     OnEscape(guiObj) {
-        this.Destroy()
+        if (!this.isClosed) {
+            this.Destroy()
+        }
+
+        return true
     }
 
     OnSize(guiObj, minMax, width, height) {
@@ -278,13 +291,14 @@ class GuiBase {
     }
 
     Close(submit := false) {
-        if (submit) {
+        if (submit and !this.isClosed) {
             this.guiObj.Submit(true)
-        } else {
+            this.isClosed := true
+        } else if (!this.isClosed) {
             this.guiObj.Hide()
         }
 
-        if (WinExist("ahk_id " . this.guiObj.Hwnd)) {
+        if (!this.isClosed and WinExist("ahk_id " . this.guiObj.Hwnd)) {
             WinClose("ahk_id " . this.guiObj.Hwnd)
         } else {
             this.Destroy()
@@ -293,11 +307,17 @@ class GuiBase {
 
     Destroy() {
         if (this.owner != "") {
+            ; @todo only re-enable if there are no other open children. Let WindowManager handle this...
             this.owner.Opt("-Disabled")
         }
 
         this.Cleanup()
-        this.guiObj.Destroy()
+
+        if (!this.isClosed) {
+            this.guiObj.Destroy()
+        }
+
+        this.isClosed := true
     }
 
     Cleanup() {
@@ -396,6 +416,8 @@ class GuiBase {
     }
 
     Submit(hide := true) {
-        this.guiObj.Submit(hide)
+        if (!this.isClosed) {
+            this.guiObj.Submit(hide)
+        }
     }
 }

@@ -1,4 +1,7 @@
 class WindowManager extends AppComponentServiceBase {
+    children := Map()
+    owned := Map()
+
     GetTheme() {
         return this.app.Themes.GetItem()
     }
@@ -35,17 +38,17 @@ class WindowManager extends AppComponentServiceBase {
         return this.ShowWindow("ManageWindow")
     }
 
-    OpenSettingsWindow(parent := "MainWindow") {
+    OpenSettingsWindow(owner := "MainWindow") {
         if (!this.WindowExists("SettingsWindow")) {
-            this.SetItem("SettingsWindow", SettingsWindow.new(this.app, "SettingsWindow", "", parent))
+            this.SetItem("SettingsWindow", SettingsWindow.new(this.app, "SettingsWindow", owner))
         }
 
         return this.ShowWindow("SettingsWindow")
     }
 
-    OpenToolsWindow(parent := "MainWindow") {
+    OpenToolsWindow(owner := "MainWindow") {
         if (!this.WindowExists("ToolsWindow")) {
-            this.SetItem("ToolsWindow", ToolsWindow.new(this.app, "ToolsWindow", "", parent))
+            this.SetItem("ToolsWindow", ToolsWindow.new(this.app, "ToolsWindow", owner))
         }
 
         return this.ShowWindow("ToolsWindow")
@@ -85,7 +88,7 @@ class WindowManager extends AppComponentServiceBase {
     GetGuiObj(key) {
         guiObject := ""
 
-        if (this._components.Has(key)) {
+        if (this.WindowExists(key)) {
             guiObject := this._components[key].guiObj
         }
 
