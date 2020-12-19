@@ -33,6 +33,8 @@ class FormGuiBase extends GuiBase {
                 If (this.result) {
                     Break
                 }
+                
+                Sleep(50)
             }
 
             this.Submit()
