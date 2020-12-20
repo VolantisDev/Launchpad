@@ -126,6 +126,10 @@
                     "Owner": false
                 }
             },
+            "EntityEditor": {
+                "settings": "form",
+                "contentWidth": 500
+            },
             "LauncherEditor": {
                 "settings": "form",
                 "contentWidth": 500

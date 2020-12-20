@@ -359,7 +359,6 @@ class EntityBase {
         }
 
         modified := this.CountModifiedValues(true)
-        MsgBox "Modified values: " . modified
 
         if (mode == "config") {
             this.SaveModifiedData()

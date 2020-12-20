@@ -51,6 +51,7 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\NotificationService.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\ThemeManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\WindowManager.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Window\EntityEditorBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\LauncherEditor.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\LaunchpadFormGuiBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\LaunchpadGuiBase.ahk
