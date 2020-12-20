@@ -19,7 +19,6 @@ class LauncherEditor extends LaunchpadFormGuiBase {
     __New(app, launcherEntityObj, mode := "config", windowKey := "", owner := "", parent := "") {
         InvalidParameterException.CheckTypes("LauncherEditor", "launcherEntityObj", launcherEntityObj, "LauncherEntity", "mode", mode, "")
         this.launcherEntityObj := launcherEntityObj
-        this.launcherEntityObj.StoreOriginal(true)
         this.mode := mode
 
         if (windowKey == "") {
@@ -221,18 +220,6 @@ class LauncherEditor extends LaunchpadFormGuiBase {
         }
 
         this.guiObj[fieldKey].Enabled := !useDefault
-    }
-
-    ProcessResult(result) {
-        if (result == "Save") {
-            modifiedData := this.launcherEntityObj.GetModifiedData(true)
-            this.launcherEntityObj.SaveModifiedData()
-            return modifiedData
-            ; Compare with original object, return differences in unmerged config
-        } else {
-            this.launcherEntityObj.RestoreFromOriginal()
-            return Map()
-        }
     }
 
     OnKeyChange(ctlObj, info) {

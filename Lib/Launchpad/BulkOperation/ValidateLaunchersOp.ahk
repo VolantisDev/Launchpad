@@ -19,7 +19,11 @@ class ValidateLaunchersOp extends LauncherGameOpBase {
         result := launcherEntityObj.Validate()
 
         if (!result["success"]) {
-            result := launcherEntityObj.Edit(this.mode, this.owner)
+            modified := launcherEntityObj.Edit(this.mode, this.owner)
+
+            if (modified > 0) {
+                result := launcherEntityObj.Validate()
+            }
         }
 
         message := !result["success"] ? "Validateion failed." : "Validation successful."

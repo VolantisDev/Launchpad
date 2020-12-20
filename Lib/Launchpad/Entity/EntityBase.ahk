@@ -48,14 +48,6 @@ class EntityBase {
         set => this.unmergedConfigVal := value
     }
 
-    ; This retains a copy of the entity before any modifications were made during editing so that it can be compared later.
-    ; This is populated prior to editing a entity, and deleted after the editing operation is completed.
-    ; For example, if the key is changed, this will ensure the original item will be removed when the revised item is saved with a new key.
-    Original[] {
-        get => (this.originalObj != "") ? this.originalObj : this.StoreOriginal()
-        set => this.originalObj := value
-    }
-
     ; The data source keys to load defaults from, in order.
     ; The default datasource is "api" which connects to the default api endpoint (Which can be any HTTP location compatible with Launchpad's "LauncherDB" JSON format)
     DataSourceKeys {
@@ -124,23 +116,25 @@ class EntityBase {
     */
 
     StoreOriginal(update := false) {
-        if (update or this.originalObj == "") {
+        if (this.originalObj == "" || update) {
             this.originalObj := this.Clone()
-            this.originalObj.configVal := this.unmergedConfigVal.Clone()
+            this.originalObj.unmergedConfigVal := this.unmergedConfigVal.Clone()
+            this.originalObj.mergedConfigVal := this.mergedConfigVal.Clone()
+            this.originalObj.children := Map()
 
             for key, child in this.children {
-                this.originalObj.children[key] := child.Original
+                this.originalObj.children[key] := child.StoreOriginal(update)
             }
         }
-        
+
         return this.originalObj
     }
 
     RestoreFromOriginal() {
         if (this.originalObj != "") {
-            for name, val in this.Original.OwnProps() {
+            for name, val in this.originalObj.OwnProps() {
                 if (name != "Original" and name != "ConfigObject")
-                this.%name% := this.Original.%name%
+                this.%name% := this.originalObj.%name%
             }
 
             ; @todo make sure this restores the children properly
@@ -356,33 +350,60 @@ class EntityBase {
     }
 
     Edit(mode := "config", owner := "MainWindow") {
-        this.StoreOriginal()
+        this.StoreOriginal(true)
         result := this.LaunchEditWindow(mode, owner)
 
         if (result == "Cancel" || result == "Skip") {
-            this.ManagedLauncher := this.Original.ManagedLauncher
-            return Map("success", false)
+            this.RestoreFromOriginal()
+            return Map()
         }
 
-        valid := this.Validate()
+        modified := this.CountModifiedValues(true)
+        MsgBox "Modified values: " . modified
 
-        if (valid and mode == "config") {
+        if (mode == "config") {
             this.SaveModifiedData()
         }
 
-        return valid
+        return modified
+    }
+
+    CountModifiedValues(includeChildren := false) {
+        modifiedValues := 0
+
+        if (this.originalObj == "") {
+            modifiedValues := this.UnmergedConfig.Count
+        } else {
+            for key, val in this.UnmergedConfig {
+                if (!this.originalObj.UnmergedConfig.Has(key) || val != this.originalObj.UnmergedConfig[key]) {
+                    modifiedValues++
+                }
+            }
+
+            for key, val in this.originalObj.UnmergedConfig {
+                if (!this.UnmergedConfig.Has(key)) {
+                    modifiedValues++
+                }
+            }
+        }
+
+        if (includeChildren) {
+            for key, child in this.children {
+                modifiedValues := modifiedValues + child.CountModifiedValues(includeChildren)
+            }
+        }
+
+        return modifiedValues
     }
 
     GetModifiedData(includeChildren := false) {
         modifiedData := Map()
 
         if (this.originalObj == "") {
-            MsgBox "No original"
             modifiedData := this.UnmergedConfig
         } else {
             for key, val in this.UnmergedConfig {
-                if (!this.Original.UnmergedConfig.Has(key) || val != this.Original.UnmergedConfig[key]) {
-                    MsgBox key . " has been modified. Its value is " . val
+                if (!this.originalObj.UnmergedConfig.Has(key) || val != this.originalObj.UnmergedConfig[key]) {
                     modifiedData[key] := val
                 }
             }
@@ -390,7 +411,7 @@ class EntityBase {
 
         if (includeChildren) {
             for key, child in this.children {
-                for modifiedKey, modifiedVal in child.GetModifiedData() {
+                for modifiedKey, modifiedVal in child.GetModifiedData(includeChildren) {
                     modifiedData[modifiedKey] := modifiedVal
                 }
             }
@@ -402,6 +423,14 @@ class EntityBase {
     SaveModifiedData() {
         for key, val in this.GetModifiedData() {
             this.configObj[key] := val
+        }
+
+        if (this.originalObj) {
+            for key, val in this.originalObj.UnmergedConfig {
+                if (!this.UnmergedConfig.Has(key) and this.configObj.Has(key)) {
+                    this.configObj.Delete(key)
+                }
+            }
         }
 
         for key, child in this.children {

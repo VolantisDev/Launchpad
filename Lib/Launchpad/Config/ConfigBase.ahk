@@ -2,6 +2,7 @@ class ConfigBase {
     appNameValue := ""
     appDirValue := ""
     app := ""
+    loaded := false
 
     AppName[] {
         get => this.appNameValue
@@ -32,6 +33,7 @@ class ConfigBase {
     }
 
     LoadConfig() {
+        this.loaded := true
         return this
     }
 

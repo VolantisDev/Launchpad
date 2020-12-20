@@ -397,22 +397,10 @@ class ManagedEntityBase extends EntityBase {
 
     GetBlizzardProductDir() {
         path := ""
-        compiledFile := A_AppDataCommon . "\Battle.net\Agent\product.db"
-        gameId := this.GetBlizzardProductKey()
-        if (gameId != "" and FileExist(compiledFile)) {
-            protoFile := A_ScriptDir . "\Resources\Dependencies\BlizzardProductDb.proto"
-            dbMap := Protobuf.FromFile(compiledFile, "Database", protoFile)
-            
-            if (Type(dbMap) == "Map" and dbMap.Has("productInstall")) {
-                productInstalls := (Type(dbMap["productInstall"]) == "Array") ? dbMap["productInstall"] : Array(dbMap["productInstall"])
+        productCode := this.GetBlizzardProductKey()
 
-                for index, productData in productInstalls {
-                    if (productData.Has("productCode") and productData["productCode"] == gameId) {
-                        path := (productData.Has("settings") and productData["settings"].Has("installPath")) ? productData["settings"]["installPath"] : ""
-                        break
-                    }
-                }
-            }
+        if (productCode != "") {
+            path := this.app.BlizzardProductDb.GetProductInstallPath(productCode)
         }
 
         return path

@@ -15,65 +15,71 @@
     themeManagerObj := ""
     eventManagerObj := ""
     idGenObj := ""
+    blizzardProductDbObj := ""
     
-    Config[] {
+    Config {
         get => this.appConfigObj
         set => this.appConfigObj := value
     }
 
-    Windows[] {
+    Windows {
         get => this.windowManagerObj
         set => this.windowManagerObj := value
     }
 
-    Launchers[] {
+    Launchers {
         get => this.launcherManagerObj
         set => this.launcherManagerObj := value
     }
 
-    Cache[] {
+    Cache {
         get => this.cacheManagerObj
         set => this.cacheManagerObj := value
     }
 
-    Notifications[] {
+    Notifications {
         get => this.notificationServiceObj
         set => this.notificationServiceObj := value
     }
 
-    DataSources[] {
+    DataSources {
         get => this.dataSourceManagerObj
         set => this.dataSourceManagerObj := value
     }
 
-    Builders[] {
+    Builders {
         get => this.builderManagerObj
         set => this.builderManagerObj := value
     }
 
-    AppState[] {
+    AppState {
         get => this.appStateObj
         set => this.appStateObj := value
     }
 
-    Installers[] {
+    Installers {
         get => this.installerManagerObj
         set => this.installerManagerObj := value
     }
 
-    Themes[] {
+    Themes {
         get => this.themeManagerObj
         set => this.themeManagerObj := value
     }
 
-    Events[] {
+    Events {
         get => this.eventManagerObj
         set => this.eventManagerObj := value
     }
 
-    IdGen[] {
+    IdGen {
         get => this.idGenObj
         set => this.idGenObj := value
+    }
+
+    BlizzardProductDb {
+        get => this.blizzardProductDbObj
+        set => this.blizzardProductDbObj := value
     }
 
     __New(appName, appDir) {
@@ -92,6 +98,7 @@
         this.idGen := idGen
         this.appConfigObj := config
         this.appStateObj := appStateObj
+        this.blizzardProductDbObj := BlizzardProductDb.new(this)
         this.eventManagerObj := eventManagerObj
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
         this.notificationServiceObj := NotificationService.new(this, ToastNotifier.new(this))

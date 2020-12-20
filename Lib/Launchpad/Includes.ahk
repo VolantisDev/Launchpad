@@ -19,11 +19,13 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\UpdateOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\ValidateLaunchersOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Config\AppConfig.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Config\BlizzardProductDb.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Config\ConfigBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Config\FileConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Config\IniConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Config\JsonConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Config\LauncherConfig.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Config\ProtoConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\DataSource\ApiDataSource.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\DataSource\DataSourceBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\DataSourceItem\DataSourceItemBase.ahk

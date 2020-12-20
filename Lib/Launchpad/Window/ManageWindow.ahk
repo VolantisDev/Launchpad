@@ -97,10 +97,9 @@
 
     EditLauncher(key) {
         launcherObj := this.launcherManager.Launchers[key]
-        modifiedValues := this.app.Windows.LauncherEditor(launcherObj, "config", this.guiObj)
+        modified := launcherObj.Edit("config", this.guiObj)
 
-        if (modifiedValues.Count > 0) {
-            MsgBox modifiedValues.Count . " values modified"
+        if (modified > 0) {
             this.launchersModified := true
 
             if (launcherObj.Key != key) {
@@ -116,9 +115,9 @@
     AddLauncher() {
         entityConfig := Map()
         entity := LauncherEntity.new(this.app, "new", entityConfig)
-        modifiedValues := this.app.Windows.LauncherEditor(entity, "config", this.guiObj)
+        modified := entity.Edit("config", this.guiObj)
         
-        if (modifiedValues.Count > 0 and entity.Key != "new") {
+        if (modified > 0 and entity.Key != "new") {
             this.launcherManager.AddLauncher(entity.Key, entity.UnmergedConfig)
             entity.MergeEntityDefaults()
             this.PopulateListView()
