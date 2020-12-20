@@ -326,10 +326,9 @@ class ThemeBase {
     }
 
     AddButton(guiObj, options, text, handlerName := "") {
-        picObj := ""
+        picObj := guiObj.AddPicture(options . " 0xE")
 
-        try {
-            picObj := guiObj.AddPicture(options . " 0xE")
+        try {    
             shape := ButtonShape.new(text, this.GetColor("buttonBackground"), this.GetColor("buttonText"), this.GetColor("border"), this.buttons["borderWidth"])
             shape.DrawOn(picObj)
 

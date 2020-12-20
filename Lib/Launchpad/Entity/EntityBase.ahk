@@ -170,7 +170,17 @@ class EntityBase {
             key := this.configPrefix . key
         }
 
-        return this.unmergedConfigVal.Has(key) ? this.unmergedConfigVal[key] : this.GetDefaultValue(key, false)
+        value := ""
+
+        if (this.unmergedConfigVal.Has(key)) {
+            value := this.unmergedConfigVal[key]
+        } else if (this.Config.Has(key)) {
+            value := this.Config[key]
+        } else {
+            value := this.GetDefaultValue(key, false)
+        }
+
+        return value
     }
 
     SetConfigValue(key, value, usePrefix := true) {
@@ -390,7 +400,9 @@ class EntityBase {
     }
 
     SaveModifiedData() {
-        this.configObj.SetValues(this.GetModifiedData())
+        for key, val in this.GetModifiedData() {
+            this.configObj[key] := val
+        }
 
         for key, child in this.children {
             child.SaveModifiedData()
@@ -484,10 +496,24 @@ class EntityBase {
     AutoDetectValues() {
     }
 
+    GetMergedDefaults() {
+        return this.MergeFromObject(this.AggregateDataSourceDefaults(), this.initialDefaults, false)
+    }
+
     MergeDefaultsIntoConfig(config) {
         merged := this.MergeFromObject(Map(), config)
-        defaults := this.MergeFromObject(this.AggregateDataSourceDefaults(), this.initialDefaults, false)
-        return this.MergeFromObject(merged, defaults, false)
+        return this.MergeFromObject(merged, this.GetMergedDefaults(), false)
+    }
+
+    RevertToDefault(field) {
+        if (this.UnmergedConfig.Has(field)) {
+            this.UnmergedConfig.Delete(field)
+        }
+
+        mergedDefaults := this.GetMergedDefaults()
+        if (mergedDefaults.Has(field)) {
+            this.Config[field] := mergedDefaults[field]
+        }
     }
 
     LaunchEditWindow(mode, owner) {

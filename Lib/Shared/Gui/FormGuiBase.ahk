@@ -33,7 +33,7 @@ class FormGuiBase extends GuiBase {
                 If (this.result) {
                     Break
                 }
-                
+
                 Sleep(50)
             }
 
@@ -53,14 +53,16 @@ class FormGuiBase extends GuiBase {
         btns := StrSplit(this.btns, "|")
 
         loop btns.Length {
-            position := (A_Index == 1) ? "x" . this.margin . " Section ": "x+m yp "
-            defaultOption := InStr(btns[A_Index], "*") ? "Default " : " "
-            btn := this.AddButton(position . defaultOption . "w100", RegExReplace(btns[A_Index], "\*"), "OnFormGuiButton")
+            position := (A_Index == 1) ? "xm " : "x+m yp "
+            ;defaultOption := InStr(btns[A_Index], "*") ? "Default " : " "
+            defaultOption := " "
+            btn := this.AddButton(position . defaultOption . "w100 h30", RegExReplace(btns[A_Index], "\*"), "OnFormGuiButton")
         }
     }
 
     OnFormGuiButton(btn, info) {
-        this.result := StrReplace(btn.Text, "&")
+        btnText := this.themeObj.themedButtons.Has(btn.Hwnd) ? this.themeObj.themedButtons[btn.Hwnd]["text"] : "OK"
+        this.result := StrReplace(btnText, "&")
     }
 
     ProcessResult(result) {
