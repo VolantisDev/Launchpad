@@ -83,4 +83,8 @@ class ManagedGameEntity extends ManagedEntityBase {
 
         return super.SetDependentValues(config)
     }
+
+    LaunchEditWindow(mode, owner := "", parent := "") {
+        return this.app.Windows.ManagedGameEditor(this, mode, owner, parent)
+    }
 }

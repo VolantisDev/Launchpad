@@ -116,4 +116,8 @@ class ManagedLauncherEntity extends ManagedEntityBase {
         defaults[this.configPrefix . "ProgressText"] := "Launchpad is monitoring {g}. Enjoy your game!"
         return defaults
     }
+
+    LaunchEditWindow(mode, owner := "", parent := "") {
+        return this.app.Windows.ManagedLauncherEditor(this, mode, owner, parent)
+    }
 }

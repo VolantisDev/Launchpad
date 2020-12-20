@@ -56,6 +56,9 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\LaunchpadFormGuiBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\LaunchpadGuiBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\MainWindow.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Window\ManagedEntityEditorBase.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Window\ManagedGameEditor.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Window\ManagedLauncherEditor.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\ManageWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\SettingsWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\ToolsWindow.ahk

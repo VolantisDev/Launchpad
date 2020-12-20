@@ -82,11 +82,29 @@ class LauncherEditor extends EntityEditorBase {
     }
 
     OnLauncherConfiguration(ctlObj, info) {
+        entity := this.entityObj.ManagedLauncher
+        modified := entity.Edit(this.mode, this.guiObj)
 
+        if (modified > 0) {
+            modifiedValues := entity.GetModifiedData()
+
+            if (modifiedValues.Has("LauncherType")) {
+                ; @todo change launcher type in select field to match
+            }
+        }
     }
 
     OnGameConfiguration(ctlObj, info) {
+        entity := this.entityObj.ManagedLauncher.ManagedGame
+        modified := entity.Edit(this.mode, this.guiObj)
 
+        if (modified > 0) {
+            modifiedValues := entity.GetModifiedData()
+
+            if (modifiedValues.Has("GameType")) {
+                ; @todo change game type in select field to match
+            }
+        }
     }
 
     OnDisplayNameChange(ctlObj, info) {
