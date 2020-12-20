@@ -377,10 +377,12 @@ class EntityBase {
         modifiedData := Map()
 
         if (this.originalObj == "") {
+            MsgBox "No original"
             modifiedData := this.UnmergedConfig
         } else {
             for key, val in this.UnmergedConfig {
                 if (!this.Original.UnmergedConfig.Has(key) || val != this.Original.UnmergedConfig[key]) {
+                    MsgBox key . " has been modified. Its value is " . val
                     modifiedData[key] := val
                 }
             }
@@ -388,9 +390,7 @@ class EntityBase {
 
         if (includeChildren) {
             for key, child in this.children {
-                childModifiedData := child.GetModifiedData()
-
-                for modifiedKey, modifiedVal in childModifiedData {
+                for modifiedKey, modifiedVal in child.GetModifiedData() {
                     modifiedData[modifiedKey] := modifiedVal
                 }
             }

@@ -83,7 +83,7 @@ class LauncherEditor extends LaunchpadFormGuiBase {
         this.AddEntityTypeSelect("Game", "GameType", this.launcherEntityObj.ManagedLauncher.ManagedGame.EntityType, this.gameTypes, "GameConfiguration", "This tells Launchpad how to launch your game. Most games can use 'default', but launchers can support different game types.")
 
         tabs.UseTab("Sources", true)
-        this.AddLocationBlock("Icon", "IconSrc")
+        this.AddLocationBlock("Icon Source", "IconSrc", "Clear")
         this.AddSelect("Launcher Theme", "ThemeName", this.launcherEntityObj.ThemeName, this.knownThemes)
         ; @todo Add data source keys checkboxes
         ; @todo Add data source item key
@@ -268,47 +268,15 @@ class LauncherEditor extends LaunchpadFormGuiBase {
         ;this.launcherEntityObj.DisplayName := ctlObj.Value
     }
 
-    OnChangeIconFile(btn, info) {
+    OnChangeIconSrc(btn, info) {
         
     }
 
-    OnOpenIconFile(btn, info) {
+    OnOpenIconSrc(btn, info) {
 
     }
 
-    OnClearIconFile(btn, info) {
-
-    }
-
-    OnChangeShortcutFile(btn, info) {
-
-    }
-
-    OnOpenShortcutFile(btn, info) {
-
-    }
-
-    OnClearShortcutFile(btn, info) {
-
-    }
-
-    OnChangeRunCmd(btn, info) {
-
-    }
-
-    OnClearRunCmd(btn, info) {
-
-    }
-
-    OnChangeGameId(btn, info) {
-
-    }
-
-    OnHelpGameId(btn, info) {
-
-    }
-
-    OnUseAhkClass(chk, info) {
+    OnClearIconSrc(btn, info) {
 
     }
 }

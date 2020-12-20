@@ -100,7 +100,8 @@
         modifiedValues := this.app.Windows.LauncherEditor(launcherObj, "config", this.guiObj)
 
         if (modifiedValues.Count > 0) {
-            this.modified := true
+            MsgBox modifiedValues.Count . " values modified"
+            this.launchersModified := true
 
             if (launcherObj.Key != key) {
                 this.launcherManager.RemoveLauncher(key)
@@ -121,6 +122,7 @@
             this.launcherManager.AddLauncher(entity.Key, entity.UnmergedConfig)
             entity.MergeEntityDefaults()
             this.PopulateListView()
+            this.launchersModified := true
         }
     }
 
