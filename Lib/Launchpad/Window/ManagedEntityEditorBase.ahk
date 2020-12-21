@@ -7,6 +7,8 @@
 */
 
 class ManagedEntityEditorBase extends EntityEditorBase {
+    allTypes := Map()
+
     __New(app, entityObj, title, mode := "config", windowKey := "", owner := "", parent := "") {
         if (windowKey == "") {
             windowKey := "ManagedEntityEditor"
@@ -24,7 +26,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         tabs := this.guiObj.Add("Tab3", " x" . this.margin . " w" . this.windowSettings["contentWidth"] . " +0x100", ["General", "Sources", "Advanced"])
 
         tabs.UseTab("General", true)
-
+        ;this.AddEntityTypeSelect(this.entityObj.configPrefix . " Type", this.entityObj.configPrefix . "Type", this.entityObj.EntityType, this.allTypes, "", "You can select from the available entity types if the default doesn't work for your use case.")
         
         tabs.UseTab("Sources", true)
         

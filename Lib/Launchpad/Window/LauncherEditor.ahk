@@ -70,15 +70,14 @@ class LauncherEditor extends EntityEditorBase {
 
     OnLauncherTypeChange(ctlObj, info) {
         this.entityObj.ManagedLauncher.EntityType := ctlObj.Value
+        this.entityObj.ManagedLauncher.MergeItemDefault("LauncherClass")
 
-        ; @todo Change the launcher class as well
         ; @todo If new launcher type changes the game type, change it here
     }
 
     OnGameTypeChange(ctlObj, info) {
         this.entityObj.ManagedLauncher.ManagedGame.EntityType := ctlObj.Value
-
-        ; @todo Change the game class as well
+        this.entityObj.ManagedLauncher.ManagedGame.MergeItemDefault("GameClass")
     }
 
     OnLauncherConfiguration(ctlObj, info) {
@@ -89,7 +88,7 @@ class LauncherEditor extends EntityEditorBase {
             modifiedValues := entity.GetModifiedData()
 
             if (modifiedValues.Has("LauncherType")) {
-                ; @todo change launcher type in select field to match
+                this.guiObj["LauncherType"].Value := this.GetItemIndex(this.launcherTypes, modifiedValues["LauncherType"])
             }
         }
     }
@@ -102,25 +101,42 @@ class LauncherEditor extends EntityEditorBase {
             modifiedValues := entity.GetModifiedData()
 
             if (modifiedValues.Has("GameType")) {
-                ; @todo change game type in select field to match
+                this.guiObj["GameType"].Value := this.GetItemIndex(this.gameTypes, modifiedValues["GameType"])
             }
         }
     }
 
     OnDisplayNameChange(ctlObj, info) {
         this.guiObj.Submit(false)
-        ;this.entityObj.DisplayName := ctlObj.Value
+        this.entityObj.DisplayName := ctlObj.Value
     }
 
     OnChangeIconSrc(btn, info) {
-        
+        existingVal := this.entityObj.UnmergedConfig.Has("IconSrc") ? this.entityObj.UnmergedConfig["IconSrc"] : ""
+
+        if (!existingVal and this.entityObj.Config.Has("IconSrc")) {
+            existingVal := this.entityObj.Config["IconSrc"]
+        }
+
+        file := FileSelect(1,, this.entityObj.Key . ": Select icon or .exe to extract icon from.", "Icons (*.ico; *.exe)")
+
+        if (file) {
+            this.entityObj.UnmergedConfig["IconSrc"] := file
+            this.modified := true
+            this.guiObj["IconSrc"].Text := file
+        }
     }
 
     OnOpenIconSrc(btn, info) {
-
+        if (this.entityObj.IconSrc) {
+            Run this.entityObj.IconSrc
+        }
     }
 
     OnClearIconSrc(btn, info) {
-
+        if (this.entityObj.UnmergedConfig.Has("IconSrc")) {
+            this.entityObj.UnmergedConfig.Delete("IconSrc")
+            this.guiObj["IconSrc"].Text := this.entityObj.IconSrc
+        }
     }
 }

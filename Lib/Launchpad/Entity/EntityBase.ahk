@@ -298,6 +298,16 @@ class EntityBase {
         return validateResult
     }
 
+    MergeItemDefault(key) {
+        mergedConfig := this.MergeDefaultsIntoConfig(this.UnmergedConfig)
+
+        if (mergedConfig.Has(key)) {
+            this.Config[key] := mergedConfig[key]
+        }
+
+        return this.Config[key]
+    }
+
     MergeEntityDefaults(update := false) {
         if (update or this.mergedConfigVal == "") {
             this.initialDefaults := this.InitializeDefaults()
