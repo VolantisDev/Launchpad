@@ -197,7 +197,7 @@ class GuiBase {
     }
 
     Controls() {
-        Sleep(100) ; Try to leave time to see if GDI+ works more consistently
+        
     }
 
     AddButtons() {

@@ -1,7 +1,7 @@
-class DataSourceManager extends AppComponentServiceBase {
+class DataSourceManager extends ComponentServiceBase {
     primaryDataSourceKey := ""
 
-    __New(app, primaryKey := "", primaryDataSource := "") {
+    __New(primaryKey := "", primaryDataSource := "") {
         InvalidParameterException.CheckTypes("DataSourceManager", "primaryKey", primaryKey, "", "primaryDataSource", primaryDataSource, "")
 
         if (primaryKey != "" and primaryDataSource != "") {
@@ -9,7 +9,7 @@ class DataSourceManager extends AppComponentServiceBase {
             this.dataSources[primaryKey] := primaryDataSource
         }
 
-        super.__New(app)
+        super.__New()
     }
 
     GetItem(key := "") {

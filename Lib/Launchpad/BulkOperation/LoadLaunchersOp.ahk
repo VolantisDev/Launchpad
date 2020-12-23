@@ -25,9 +25,7 @@ class LoadLaunchersOp extends BulkOperationBase {
         for key, config in this.launcherConfigObj.Games {
             this.StartItem(key, key . ": Loading...")
             requiredKeys := "" ; @todo Figure out if we need these or if they can just be passed in the config
-            launcherEntityObj := LauncherEntity.new(this.app, key, config, requiredKeys)
-            launcherEntityObj.MergeEntityDefaults()
-            this.results[key] := launcherEntityObj
+            this.results[key] := LauncherEntity.new(this.app, key, config, requiredKeys)
             this.FinishItem(key, true, key . ": Loaded successfully.")
         }
     }

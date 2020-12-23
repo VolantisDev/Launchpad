@@ -105,7 +105,7 @@
         this.themeManagerObj := ThemeManager.new(this, appDir . "\Resources\Themes", eventManagerObj, idGen)
         this.windowManagerObj := WindowManager.new(this)
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
-        this.dataSourceManagerObj := DataSourceManager.new(this)
+        this.dataSourceManagerObj := DataSourceManager.new()
         this.builderManagerObj := BuilderManager.new(this)
         this.launcherManagerObj := LauncherManager.new(this)
         this.installerManagerObj := InstallerManager.new(this)

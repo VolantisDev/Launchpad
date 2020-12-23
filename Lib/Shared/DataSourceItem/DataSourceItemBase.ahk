@@ -1,21 +1,14 @@
 class DataSourceItemBase {
-    app := ""
     endpoint := ""
     basePath := ""
     itemSuffix := ""
     path := ""
     key := ""
 
-    __New(app, key, path := "", dataSource := "") {
-        InvalidParameterException.CheckTypes("DataSourceItemBase", "app", app, "Launchpad", "key", key, "", "path", path, "")
+    __New(key, path := "", dataSource := "") {
+        InvalidParameterException.CheckTypes("DataSourceItemBase", "key", key, "", "path", path, "")
         InvalidParameterException.CheckEmpty("DataSourceItemBase", "key", key)
-
-        if (Type(dataSource) == "String") {
-            dataSource := app.DataSources.GetItem(dataSource)
-        }
-
         InvalidParameterException.CheckTypes("DataSourceItemBase", "dataSource", dataSource, "DataSourceBase")
-        this.app := app
         this.endpoint := dataSource
         this.key := key
         this.path := path

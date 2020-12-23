@@ -1,17 +1,11 @@
 class DataSourceBase {
-    app := ""
     cache := ""
     useCache := false
     maxCacheAge := 86400
 
-    __New(app, cache := "") {
-        InvalidParameterException.CheckTypes("ValidateLaunchersOp", "app", app, "Launchpad")
-
-        this.app := app
-
+    __New(cache := "") {
         if (cache != "") {
-            InvalidParameterException.CheckTypes("ValidateLaunchersOp", "cache", cache, "CacheBase")
-
+            InvalidParameterException.CheckTypes("DataSourceBase", "cache", cache, "CacheBase")
             this.useCache := true
             this.cache := cache
         }
@@ -50,7 +44,7 @@ class DataSourceBase {
     }
 
     ReadListing(path) {
-        listingInstance := DSListing.new(this.app, path, this)
+        listingInstance := DSListing.new(path, this)
 
         listingItems := Map()
 
@@ -63,7 +57,7 @@ class DataSourceBase {
     }
 
     ReadJson(key, path := "") {
-        dsItem := DSJson.new(this.app, key, path, this)
+        dsItem := DSJson.new(key, path, this)
         return dsItem.Read()
     }
 }

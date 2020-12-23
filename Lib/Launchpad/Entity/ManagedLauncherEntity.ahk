@@ -88,15 +88,9 @@ class ManagedLauncherEntity extends ManagedEntityBase {
         set => this.SetConfigValue("ProgressText", value)
     }
 
-    __New(app, key, config, requiredConfigKeys := "", defaultDataSource := "", parentEntity := "") {
-        this.children["ManagedGame"] := ManagedGameEntity.new(app, key, config, "", defaultDataSource, this)
-        super.__New(app, key, config, requiredConfigKeys, defaultDataSource, parentEntity)
-    }
-
-    OverrideChildDefaults(defaults) {
-        ; @todo avoid altering unmerged config automatically
-        this.ManagedGame.UnmergedConfig["GameType"] := defaults["GameType"]
-        this.ManagedGame.initialDefaults := this.MergeFromObject(this.ManagedGame.initialDefaults, this.initialDefaults, true)
+    __New(app, key, config, requiredConfigKeys := "", parentEntity := "") {
+        super.__New(app, key, config, requiredConfigKeys, parentEntity)
+        this.children["ManagedGame"] := ManagedGameEntity.new(app, key, config, "", this)
     }
 
     InitializeDefaults() {

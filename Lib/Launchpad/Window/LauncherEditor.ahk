@@ -70,39 +70,31 @@ class LauncherEditor extends EntityEditorBase {
 
     OnLauncherTypeChange(ctlObj, info) {
         this.entityObj.ManagedLauncher.EntityType := ctlObj.Value
-        this.entityObj.ManagedLauncher.MergeItemDefault("LauncherClass")
+        this.entityObj.ManagedLauncher.UpdateDataSourceDefaults()
 
         ; @todo If new launcher type changes the game type, change it here
     }
 
     OnGameTypeChange(ctlObj, info) {
         this.entityObj.ManagedLauncher.ManagedGame.EntityType := ctlObj.Value
-        this.entityObj.ManagedLauncher.ManagedGame.MergeItemDefault("GameClass")
+        this.entityObj.ManagedLauncher.ManagedGame.UpdateDataSourceDefaults()
     }
 
     OnLauncherConfiguration(ctlObj, info) {
         entity := this.entityObj.ManagedLauncher
-        modified := entity.Edit(this.mode, this.guiObj)
+        diff := entity.Edit(this.mode, this.guiObj)
 
-        if (modified > 0) {
-            modifiedValues := entity.GetModifiedData()
-
-            if (modifiedValues.Has("LauncherType")) {
-                this.guiObj["LauncherType"].Value := this.GetItemIndex(this.launcherTypes, modifiedValues["LauncherType"])
-            }
+        if (diff != "" and diff.ValueIsModified("LauncherType")) {
+            this.guiObj["LauncherType"].Value := this.GetItemIndex(this.launcherTypes, entity.GetValue("Type"))
         }
     }
 
     OnGameConfiguration(ctlObj, info) {
         entity := this.entityObj.ManagedLauncher.ManagedGame
-        modified := entity.Edit(this.mode, this.guiObj)
+        diff := entity.Edit(this.mode, this.guiObj)
 
-        if (modified > 0) {
-            modifiedValues := entity.GetModifiedData()
-
-            if (modifiedValues.Has("GameType")) {
-                this.guiObj["GameType"].Value := this.GetItemIndex(this.gameTypes, modifiedValues["GameType"])
-            }
+        if (diff != "" and diff.ValueIsModified("GameType")) {
+            this.guiObj["GameType"].Value := this.GetItemIndex(this.gameTypes, entity.GetValue("Type"))
         }
     }
 

@@ -38,25 +38,6 @@ class ManagedGameEntity extends ManagedEntityBase {
         return this.config.Has("GameBlizzardProductId") ? this.config["GameBlizzardProductId"] : this.LauncherSpecificId
     }
 
-    AutoDetectValues() {
-        if (this.ShouldDetectShortcutSrc()) {
-            basePath := this.AssetsDir . "\" . this.Key
-            shortcutSrc := ""
-
-            if (FileExist(basePath . ".lnk")) {
-                shortcutSrc := basePath . ".lnk"
-            } else if (FileExist(basePath . ".url")) {
-                shortcutSrc := basePath . ".url"
-            } else if (this.Exe != "") {
-                shortcutSrc := this.LocateExe()
-            }
-
-            if (shortcutSrc != "") {
-                this.ShortcutSrc := shortcutSrc
-            }
-        }
-    }
-
     ShouldDetectShortcutSrc() {
         detectShortcut := false
 
@@ -75,13 +56,32 @@ class ManagedGameEntity extends ManagedEntityBase {
         return defaults
     }
 
-    SetDependentValues(config) {
+    AutoDetectValues() {
+        detectedValues := super.AutoDetectValues()
         exeKey := this.configPrefix . "Exe"
-        if (!config.Has(exeKey) or config[exeKey] == "") {
-            config[exeKey] := config[exeKey] := this.Key . ".exe"
+
+        if (!detectedValues.Has(exeKey)) {
+            detectedValues[exeKey] := this.Key . ".exe"
         }
 
-        return super.SetDependentValues(config)
+        if (this.ShouldDetectShortcutSrc()) {
+            basePath := this.AssetsDir . "\" . this.Key
+            shortcutSrc := ""
+
+            if (FileExist(basePath . ".lnk")) {
+                shortcutSrc := basePath . ".lnk"
+            } else if (FileExist(basePath . ".url")) {
+                shortcutSrc := basePath . ".url"
+            } else if (this.Exe != "") {
+                shortcutSrc := this.LocateExe()
+            }
+
+            if (shortcutSrc != "") {
+                detectedValues[this.configPrefix . "ShortcutSrc"] := shortcutSrc
+            }
+        }
+
+        return detectedValues
     }
 
     LaunchEditWindow(mode, owner := "", parent := "") {

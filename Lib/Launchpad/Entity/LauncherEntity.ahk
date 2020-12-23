@@ -48,9 +48,9 @@ class LauncherEntity extends EntityBase {
         set => this.SetConfigValue("ThemesDir", value, false)
     }
 
-    __New(app, key, config, requiredConfigKeys := "", defaultDataSource := "", parentEntity := "") {
-        this.children["ManagedLauncher"] := ManagedLauncherEntity.new(app, key, config, "", defaultDataSource, this)
-        super.__New(app, key, config, requiredConfigKeys, defaultDataSource, parentEntity)
+    __New(app, key, config, requiredConfigKeys := "", parentEntity := "") {
+        super.__New(app, key, config, requiredConfigKeys, parentEntity)
+        this.children["ManagedLauncher"] := ManagedLauncherEntity.new(app, key, config, "", this)
     }
 
     /**
@@ -98,11 +98,6 @@ class LauncherEntity extends EntityBase {
         return this.app.Windows.LauncherEditor(this, mode, owner, parent)
     }
 
-    OverrideChildDefaults(defaults) {
-        this.ManagedLauncher.UnmergedConfig["LauncherType"] := defaults["LauncherType"]
-        this.ManagedLauncher.initialDefaults := this.MergeFromObject(this.ManagedLauncher.initialDefaults, this.additionalManagedLauncherDefaults, true)
-    }
-
     MergeAdditionalDataSourceDefaults(defaults, dataSourceData) {
         launcherType := this.DetectLauncherType(defaults, dataSourceData)
 
@@ -138,26 +133,24 @@ class LauncherEntity extends EntityBase {
     }
 
     AutoDetectValues() {
-        if (this.IconSrc == "") {
-            iconSrc := ""
-
+        detectedValues := super.AutoDetectValues()
+        
+        if (!detectedValues.Has("IconSrc")) {
             checkPath := this.AssetsDir . "\" . this.Key . ".ico"
+            
             if (FileExist(checkPath)) {
-                iconSrc := checkPath
-            } else if (this.ManagedLauncher.ManagedGame.Exe != "") {
-                iconSrc := this.ManagedLauncher.ManagedGame.LocateExe()
-            }
-
-            if (iconSrc != "") {
-                this.IconSrc := iconSrc
+                detectedValues["IconSrc"] := checkPath
+            } else if (this.ManagedLauncher.ManagedGame.GetValue("Exe") != "") {
+                detectedValues["IconSrc"] := this.ManagedLauncher.ManagedGame.LocateExe()
             }
         }
+
+        return detectedValues
     }
 
     InitializeDefaults() {
         defaults := super.InitializeDefaults()
         defaults["DestinationDir"] := this.GetDefaultDestinationDir()
-        ;defaults["IconSrc"] := ""
         defaults["ThemeName"] := this.app.Config.ThemeName
         defaults["ThemesDir"] := this.app.Config.AppDir . "\Resources\Themes"
         return defaults
@@ -167,7 +160,7 @@ class LauncherEntity extends EntityBase {
         defaultDir := this.app.Config.DestinationDir
 
         if (this.app.Config.CreateIndividualDirs) {
-            defaultDir .= "\" . this.Key
+            defaultDir .= "\" . this.keyVal
         }
 
         return defaultDir

@@ -97,15 +97,15 @@
 
     EditLauncher(key) {
         launcherObj := this.launcherManager.Launchers[key]
-        modified := launcherObj.Edit("config", this.guiObj)
+        diff := launcherObj.Edit("config", this.guiObj)
 
-        if (modified > 0) {
+        if (diff != "" and diff.HasChanges()) {
             this.launchersModified := true
 
             if (launcherObj.Key != key) {
                 this.launcherManager.RemoveLauncher(key)
                 this.launcherManager.AddLauncher(key, launcherObj)
-                launcherObj.MergeEntityDefaults(true)
+                launcherObj.UpdateDataSourceDefaults()
             }
 
             this.PopulateListView()
@@ -115,11 +115,10 @@
     AddLauncher() {
         entityConfig := Map()
         entity := LauncherEntity.new(this.app, "new", entityConfig)
-        modified := entity.Edit("config", this.guiObj)
+        diff := entity.Edit("config", this.guiObj)
         
-        if (modified > 0 and entity.Key != "new") {
-            this.launcherManager.AddLauncher(entity.Key, entity.UnmergedConfig)
-            entity.MergeEntityDefaults()
+        if (diff != "" and diff.HasChanges() and entity.Key != "new") {
+            this.launcherManager.AddLauncher(entity.Key, entity)
             this.PopulateListView()
             this.launchersModified := true
         }

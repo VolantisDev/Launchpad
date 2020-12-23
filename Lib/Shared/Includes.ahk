@@ -13,6 +13,15 @@
 #Include E:\Tools\Launchpad\Lib\Shared\Cache\FileCache.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Cache\ObjectCache.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\CLR\CLR.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\DataProcessor\DataProcessorBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\DataProcessor\PlaceholderExpander.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\DataSource\DataSourceBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\DataSourceItem\DataSourceItemBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\DataSourceItem\DSAssetFile.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\DataSourceItem\DSFile.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\DataSourceItem\DSJson.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\DataSourceItem\DSListing.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Diff\DiffResult.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Events\Events.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\ExeProcess\ExeProcess.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Game\BlizzardGame.ahk
@@ -39,6 +48,8 @@
 #Include E:\Tools\Launchpad\Lib\Shared\Json\Json.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Launcher\LauncherBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Launcher\SimpleLauncher.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\LayeredData\LayeredDataBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\LayeredData\LayeredEntityData.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Notifier\NotifierBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Notifier\ToastNotifier.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\OpError\BasicOpError.ahk
@@ -47,6 +58,7 @@
 #Include E:\Tools\Launchpad\Lib\Shared\OpStatus\OpStatusBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Protobuf\Protobuf.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Service\ComponentServiceBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Service\DataSourceManager.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Service\EventManager.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Service\ServiceBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Theme\JsonTheme.ahk

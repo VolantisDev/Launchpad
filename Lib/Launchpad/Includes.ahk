@@ -27,12 +27,6 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Config\LauncherConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Config\ProtoConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\DataSource\ApiDataSource.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\DataSource\DataSourceBase.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\DataSourceItem\DataSourceItemBase.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\DataSourceItem\DSAssetFile.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\DataSourceItem\DSFile.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\DataSourceItem\DSJson.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\DataSourceItem\DSListing.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\EntityBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\LauncherEntity.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\ManagedEntityBase.ahk
@@ -45,7 +39,6 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\AppServiceBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\BuilderManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\CacheManager.ahk
-#Include E:\Tools\Launchpad\Lib\Launchpad\Service\DataSourceManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\InstallerManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\LauncherManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\NotificationService.ahk

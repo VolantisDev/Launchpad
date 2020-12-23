@@ -178,56 +178,48 @@ class ManagedEntityBase extends EntityBase {
         return this.EntityType
     }
 
-    SetDependentValues(config) {
-        processTypeKey := this.configPrefix . "ProcessType"
+    AutoDetectValues() {
+        detectedValues := super.AutoDetectValues()
+        
+        detectedValues[this.configPrefix . "ProcessType"] := this.RunMethod == "RunWait" ? "" : "Exe"
+        processId := ""
 
-        if (!config.Has(processTypeKey) or config[processTypeKey] == "") {
-            config[processTypeKey] := this.RunMethod == "RunWait" ? "" : "Exe"
+        if (this.ProcessType == "Exe") {
+            SplitPath(this.Exe, processId)
+        } else if (this.ProcessType == "Title") {
+            processId := this.WindowTitle ? this.WindowTitle : this.Key
         }
 
-        key := this.configPrefix . "ProcessId"
-
-        if (!config.Has(key) or config[key] == "") {
-            processId := ""
-
-            if (config[processTypeKey] == "Exe") {
-                SplitPath(this.Exe, processId)
-            } else if (config[processTypeKey] == "Title") {
-                processId := config[this.configPrefix . "WindowTitle"] ? config[this.configPrefix . "WindowTitle"] : this.Key
-            }
-
-            config[key] := processId
-        }
+        detectedValues[this.configPrefix . "ProcessId"] := processId
 
         ; @ Run Type
         runTypeKey := this.configPrefix . "RunType"
         shortcutSrcKey := this.configPrefix . "ShortcutSrc"
         runCmdKey := this.configPrefix . "RunCmd"
-        hasShortcutSrc := (config.Has(shortcutSrcKey) and config[shortcutSrcKey] != "")
-        hasRunCmd := (config.Has(runCmdKey) and config[runCmdKey] != "")
+        hasShortcutSrc := this.entityData.HasValue(this.configPrefix . "ShortcutKey", "", false)
+        hasRunCmd := this.entityData.HasValue(runCmdKey, "", false)
         usesShortcutKey := this.configPrefix . "UsesShortcut"
 
-        if (config.Has(usesShortcutKey) and config[usesShortcutKey]) {
-            config[runTypeKey] := "Shortcut"
-        } else if (config.Has(usesShortcutKey) and !config[usesShortcutKey] and config[runTypeKey] == "Shortcut") {
-            config[runTypeKey] := "Command"
-        } else if (config.Has(runTypeKey)) {
-            if (config[runTypeKey] == "Shortcut" and !hasShortcutSrc and hasRunCmd) {
-                config[runTypeKey] := "Command"
-            } else if (config[runTypeKey] == "Command" and !hasRunCmd and hasShortcutSrc ) {
-                config[runTypeKey] := "Shortcut"
+        if (this.entityData.HasValue(usesShortcutKey, "", false)) {
+            detectedValues[runTypeKey] := "Shortcut"
+        } else if (this.entityData.HasValue(usesShortcutKey) and !this.entityData.GetValue(usesShortcutKey, false) and this.entityData.GetValue(runTypeKey, false) == "Shortcut") {
+            detectedValues[runTypeKey] := "Command"
+        } else if (this.entityData.HasValue(runTypeKey)) {
+            if (this.entityData.GetValue(runTypeKey) == "Shortcut" and !hasShortcutSrc and hasRunCmd) {
+                detectedValues[runTypeKey] := "Command"
+            } else if (this.entityData.GetValue(runTypeKey) == "Command" and !hasRunCmd and hasShortcutSrc) {
+                detectedValues[runTypeKey] := "Shortcut"
             }
         }
 
-        if (!config.Has(usesShortcutKey) or config[usesShortcutKey] == "") {
-            config[usesShortcutKey] := (this.RunType == "Shortcut")
+        if (!this.entityData.HasValue(usesShortcutKey) or this.entityData.GetValue(usesShortcutKey) == "") {
+            detectedValues[usesShortcutKey] := (this.entityData.GetValue(runTypeKey) == "Shortcut")
         }
 
-        if (this.InstallDir == "") {
-            this.InstallDir := this.LocateInstallDir()
-        }
+        ; @todo Can this be done JIT so it only runs for games that don't already have an install dir?
+        detectedValues[this.configPrefix . "InstallDir"] := this.LocateInstallDir()
 
-        return config
+        return detectedValues
     }
 
     InitializeDefaults() {

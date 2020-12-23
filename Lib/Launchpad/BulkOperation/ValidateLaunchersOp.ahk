@@ -19,9 +19,9 @@ class ValidateLaunchersOp extends LauncherGameOpBase {
         result := launcherEntityObj.Validate()
 
         if (!result["success"]) {
-            modified := launcherEntityObj.Edit(this.mode, this.owner)
+            diff := launcherEntityObj.Edit(this.mode, this.owner)
 
-            if (modified > 0) {
+            if (diff != "" and diff.HasChanges()) {
                 result := launcherEntityObj.Validate()
             }
         }
