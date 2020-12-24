@@ -7,18 +7,13 @@ class BuilderBase {
     }
 
     Build(launcherEntityObj) {
-        launcherDir := this.app.Config.DestinationDir
-        assetsDir := this.app.Config.AssetsDir
+        launcherDir := launcherEntityObj.DestinationDir
+        assetsDir := launcherEntityObj.AssetsDir
 
         if (launcherDir == "" or assetsDir == "") {
             this.app.Notifications.Warning(launcherEntityObj.Key . ": Required directories not set. Skipping build.")
             return false
         }
-
-        if (this.app.Config.CreateIndividualDirs) {
-            launcherDir .= "\" . launcherEntityObj.Key
-        }
-        assetsDir .= "\" . launcherEntityObj.Key
 
         DirCreate(launcherDir)
         DirCreate(assetsDir)
