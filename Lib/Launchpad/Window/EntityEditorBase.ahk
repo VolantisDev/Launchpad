@@ -135,12 +135,22 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         return ctl
     }
 
-    AddLocationBlock(heading, settingName, extraButton := "", showOpen := true) {
+    AddLocationBlock(heading, settingName, extraButton := "", showOpen := true, showDefaultCheckbox := false) {
         this.AddHeading(heading)
+        location := this.entityObj.HasConfigValue(settingName, false, false) ? this.entityObj.GetConfigValue(settingName, false) : "Not set"
+        checkW := 0
+        disabledText := ""
 
-        location := this.entityObj.%settingName% ? this.entityObj.%settingName% : "Not set"
+        if (showDefaultCheckbox) {
+            ctl := this.DefaultCheckbox(settingName)
+            ctl.GetPos(,,checkW)
+            checkW := checkW + this.margin
+            disabledText := this.entityObj.UnmergedConfig.Has(settingName) ? "" : " Hidden"
+        }
 
-        this.AddLocationText(location, settingName)
+        fieldW := this.windowSettings["contentWidth"] - checkW
+        locationPos := checkW ? "x+m yp" : "xs y+m"
+        this.AddLocationText(location, settingName, locationPos)
 
         buttonSize := this.themeObj.GetButtonSize("s", true)
         buttonDims := ""
@@ -153,20 +163,18 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
             buttonDims .= " w" . buttonSize["w"]
         }
 
-        btn := this.AddButton("xs y+m" . buttonDims . " vChange" . settingName, "Change")
+        btn := this.AddButton("xs y+m" . buttonDims . " vChange" . settingName . disabledText, "Change")
 
         if (showOpen) {
-            btn := this.AddButton("x+m yp" . buttonDims . " vOpen" . settingName, "Open")
+            btn := this.AddButton("x+m yp" . buttonDims . " vOpen" . settingName . disabledText, "Open")
         }
 
         if (extraButton != "") {
-            btn := this.AddButton("x+m yp" . buttonDims . " v" . extraButton . settingName, extraButton)
+            btn := this.AddButton("x+m yp" . buttonDims . " v" . extraButton . settingName . disabledText, extraButton)
         }
     }
 
-    AddLocationText(locationText, ctlName) {
-        position := "xs y+m"
-
+    AddLocationText(locationText, ctlName, position := "xs y+m") {
         ;this.guiObj.SetFont("Bold")
         this.guiObj.AddText("v" . ctlName . " " . position . " w" . this.windowSettings["contentWidth"] . " +0x200 c" . this.themeObj.GetColor("accentDark"), locationText)
         ;this.guiObj.SetFont()

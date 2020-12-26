@@ -254,6 +254,14 @@ class EntityBase {
         return this
     }
 
+    HasConfigValue(key, usePrefix := true, allowEmpty := true) {
+        if (usePrefix) {
+            key := this.configPrefix . key
+        }
+
+        return this.entityData.HasValue(key, "", allowEmpty)
+    }
+
     DeleteConfigValue(key, usePrefix := true) {
         if (usePrefix) {
             key := this.configPrefix . key

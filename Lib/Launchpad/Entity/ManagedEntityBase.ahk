@@ -167,8 +167,12 @@ class ManagedEntityBase extends EntityBase {
     GetSearchDirs() {
         dirs := this.GetConfigValue("SearchDirs")
 
-        if (dirs != "" and Type(dirs) == "String") {
-            dirs := [dirs]
+        if (dirs != "") {
+            if (Type(dirs) == "String") {
+                dirs := [dirs]
+            } else if (Type(dirs) == "Array") {
+                dirs := dirs.Clone()
+            }
         }
 
         return dirs
@@ -206,6 +210,31 @@ class ManagedEntityBase extends EntityBase {
         detectedValues[this.configPrefix . "InstallDir"] := this.LocateInstallDir()
 
         return detectedValues
+    }
+
+    ListEntityTypes() {
+        types := []
+        dataSources := this.GetAllDataSources()
+        dsPath := this.GetDataSourceItemPath()
+
+        for index, dataSource in dataSources {
+            for listingIndex, listingItem in dataSource.ReadListing(dsPath) {
+                exists := false
+
+                for index, item in types {
+                    if (item == listingItem) {
+                        exists := true
+                        break
+                    }
+                }
+
+                if (!exists) {
+                    types.Push(listingItem)
+                }
+            }
+        }
+
+        return types
     }
 
     InitializeDefaults() {
@@ -303,7 +332,9 @@ class ManagedEntityBase extends EntityBase {
                     searchDirs.Push(this.InstallDir)
                 } else if (this.LocateMethod == "SearchDirs") {
                     if (Type(this.SearchDirs) == "Array" and this.SearchDirs.Length > 0) {
-                        searchDirs := this.SearchDirs
+                        for index, dir in this.SearchDirs {
+                            searchDirs.Push(dir)
+                        }
                     }
                 } else if (this.LocateMethod == "Registry") {
                     regKey := this.LocateRegKey
@@ -348,7 +379,7 @@ class ManagedEntityBase extends EntityBase {
         path := ""
 
         if (searchDirs == "") {
-            searchDirs := this.SearchDirs
+            searchDirs := this.SearchDirs.Clone()
         }
 
         if (!Type(searchDirs) == "Array") {

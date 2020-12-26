@@ -7,8 +7,6 @@
 */
 
 class ManagedEntityEditorBase extends EntityEditorBase {
-    allTypes := Map()
-
     __New(app, entityObj, title, mode := "config", windowKey := "", owner := "", parent := "") {
         if (windowKey == "") {
             windowKey := "ManagedEntityEditor"
@@ -23,17 +21,26 @@ class ManagedEntityEditorBase extends EntityEditorBase {
 
     Controls() {
         super.Controls()
+        prefix := this.entityObj.configPrefix
         tabs := this.guiObj.Add("Tab3", " x" . this.margin . " w" . this.windowSettings["contentWidth"] . " +0x100", ["General", "Sources", "Advanced"])
 
         tabs.UseTab("General", true)
-        ;this.AddEntityTypeSelect(this.entityObj.configPrefix . " Type", this.entityObj.configPrefix . "Type", this.entityObj.EntityType, this.allTypes, "", "You can select from the available entity types if the default doesn't work for your use case.")
+        this.AddEntityTypeSelect(prefix . " Type", prefix . "Type", this.entityObj.EntityType, this.entityObj.ListEntityTypes(), "", "You can select from the available entity types if the default doesn't work for your use case.")
         
         tabs.UseTab("Sources", true)
-        
+        this.AddLocationBlock(prefix . " Executable", prefix . "Exe", "Clear", true, true)
+        this.AddHelpText("Select the launcher's main .exe file. The default is to use auto-detection.")
+
+        this.AddLocationBlock(prefix . " Install Directory", prefix . "InstallDir", "Clear", true, true)
+        this.AddHelpText("Select the launcher's installation folder, or use default for auto-detection.")
 
         tabs.UseTab("Advanced", true)
         
-
+        output := ""
+        for key, val in this.entityObj.UnmergedConfig {
+            output := output . key . ": " . val . "`n"
+        }
+        MsgBox output
         tabs.UseTab()
     }
 }
