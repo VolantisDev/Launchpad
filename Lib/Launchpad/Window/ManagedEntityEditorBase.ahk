@@ -36,11 +36,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
 
         tabs.UseTab("Advanced", true)
         
-        output := ""
-        for key, val in this.entityObj.UnmergedConfig {
-            output := output . key . ": " . val . "`n"
-        }
-        MsgBox output
         tabs.UseTab()
     }
 }
