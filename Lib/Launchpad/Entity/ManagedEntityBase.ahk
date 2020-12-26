@@ -192,29 +192,15 @@ class ManagedEntityBase extends EntityBase {
 
         detectedValues[this.configPrefix . "ProcessId"] := processId
 
-        ; @ Run Type
-        runTypeKey := this.configPrefix . "RunType"
-        shortcutSrcKey := this.configPrefix . "ShortcutSrc"
-        runCmdKey := this.configPrefix . "RunCmd"
-        hasShortcutSrc := this.entityData.HasValue(this.configPrefix . "ShortcutKey", "", false)
-        hasRunCmd := this.entityData.HasValue(runCmdKey, "", false)
-        usesShortcutKey := this.configPrefix . "UsesShortcut"
-
-        if (this.entityData.HasValue(usesShortcutKey, "", false)) {
-            detectedValues[runTypeKey] := "Shortcut"
-        } else if (this.entityData.HasValue(usesShortcutKey) and !this.entityData.GetValue(usesShortcutKey, false) and this.entityData.GetValue(runTypeKey, false) == "Shortcut") {
-            detectedValues[runTypeKey] := "Command"
-        } else if (this.entityData.HasValue(runTypeKey)) {
-            if (this.entityData.GetValue(runTypeKey) == "Shortcut" and !hasShortcutSrc and hasRunCmd) {
-                detectedValues[runTypeKey] := "Command"
-            } else if (this.entityData.GetValue(runTypeKey) == "Command" and !hasRunCmd and hasShortcutSrc) {
-                detectedValues[runTypeKey] := "Shortcut"
-            }
+        usesShortcut := false
+        if (this.entityData.HasValue(this.configPrefix . "UsesShortcut")) {
+            usesShortcut := this.entityData.GetValue(this.configPrefix . "UsesShortcut")
+        } else {
+            usesShortcut := (this.RunType == "Shortcut" || (this.RunCmd == "" && this.ShortcutSrc != ""))
         }
 
-        if (!this.entityData.HasValue(usesShortcutKey) or this.entityData.GetValue(usesShortcutKey) == "") {
-            detectedValues[usesShortcutKey] := (this.entityData.GetValue(runTypeKey) == "Shortcut")
-        }
+        detectedValues[this.configPrefix . "UsesShortcut"] := usesShortcut
+        detectedValues[this.configPrefix . "RunType"] := usesShortcut ? "Shortcut" : "Command"
 
         ; @todo Can this be done JIT so it only runs for games that don't already have an install dir?
         detectedValues[this.configPrefix . "InstallDir"] := this.LocateInstallDir()

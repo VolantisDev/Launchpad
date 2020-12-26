@@ -108,6 +108,10 @@ class EntityBase {
 
     UpdateDataSourceDefaults() {
         this.entityData.SetLayer("ds", this.AggregateDataSourceDefaults())
+
+        for key, child in this.children {
+            child.UpdateDataSourceDefaults()
+        }
     }
 
     ; NOTICE: Object not yet fully loaded. Might not be safe to call this.entityData
@@ -125,12 +129,10 @@ class EntityBase {
         dataSources := this.GetAllDataSources()
         defaults := this.parentEntity != "" ? this.parentEntity.AggregateDataSourceDefaults() : Map()
 
-        for index, dataSource in dataSources {
-            defaults := this.MergeFromObject(defaults, this.GetDataSourceDefaults(dataSource))
-        }
+        this.entityData.SetLayer("ds", defaults)
 
-        for key, child in this.children {
-            child.AggregateDataSourceDefaults()
+        for index, dataSource in dataSources {
+            defaults := this.MergeFromObject(defaults, this.GetDataSourceDefaults(dataSource), true)
         }
 
         return defaults
