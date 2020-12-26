@@ -26,7 +26,7 @@
         installPath := ""
 
         for index, productData in productInstalls {
-            if (productData.Has("productCode") and productData["productCode"] == productCode and productData.Has("settings") and productData["settings"].Has("installPathj")) {
+            if (productData["productCode"] == productCode and productData.Has("settings") and productData["settings"].Has("installPath")) {
                 installPath := productData["settings"]["installPath"]
                 break
             }
