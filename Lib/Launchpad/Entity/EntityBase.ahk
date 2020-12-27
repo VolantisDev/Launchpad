@@ -108,6 +108,7 @@ class EntityBase {
 
     UpdateDataSourceDefaults() {
         this.entityData.SetLayer("ds", this.AggregateDataSourceDefaults())
+        this.entityData.SetLayer("auto", this.AutoDetectValues())
 
         for key, child in this.children {
             child.UpdateDataSourceDefaults()
@@ -304,18 +305,49 @@ class EntityBase {
         this.entityData.StoreOriginal()
         result := this.LaunchEditWindow(mode, owner)
 
+        added := Map()
+        modified := Map()
+        deleted := Map()
+
         if (result == "Cancel" || result == "Skip") {
             this.entityData.RestoreFromOriginal()
-            return ""
+
+            for index, child in this.children {
+                this.child.entityData.RestoreFromOriginal()
+            }
+        } else {
+            diffs := [this.entityData.DiffChanges("config")]
+
+            for index, child in this.children {
+                diffs.Push(child.entityData.DiffChanges("config"))
+            }
+
+            for index, diff in diffs {
+                for key, item in diff.GetAdded() {
+                    if (!added.Has(key) and !modified.Has(key) and !deleted.Has(key)) {
+                        added[key] := item
+                    }
+                }
+
+                for key, item in diff.GetModified() {
+                    if (!added.Has(key) and !modified.Has(key) and !deleted.Has(key)) {
+                        modified[key] := item
+                    }
+                }
+
+                for key, item in diff.GetDeleted() {
+                    if (!added.Has(key) and !modified.Has(key) and !deleted.Has(key)) {
+                        deleted[key] := item
+                    }
+                }
+            }
+
+            if (mode == "config") {
+                this.SaveModifiedData()
+            }
         }
 
-        diff := this.entityData.DiffChanges("config")
-
-        if (mode == "config" and diff.HasChanges()) {
-            this.SaveModifiedData()
-        }
-
-        return diff
+        return DiffResult.new(added, modified, deleted)
     }
 
     LaunchEditWindow(mode, owner) {

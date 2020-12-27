@@ -64,14 +64,12 @@ class LauncherEditor extends EntityEditorBase {
     OnKeyChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.Key := ctlObj.Value
-
         ; @todo If new game type doesn't offer the selected launcher type, change to the default launcher type
     }
 
     OnLauncherTypeChange(ctlObj, info) {
         this.entityObj.ManagedLauncher.EntityType := ctlObj.Value
         this.entityObj.ManagedLauncher.UpdateDataSourceDefaults()
-
         ; @todo If new launcher type changes the game type, change it here
     }
 
@@ -84,8 +82,10 @@ class LauncherEditor extends EntityEditorBase {
         entity := this.entityObj.ManagedLauncher
         diff := entity.Edit(this.mode, this.guiObj)
 
-        if (diff != "" and diff.ValueIsModified("LauncherType")) {
-            this.guiObj["LauncherType"].Value := this.GetItemIndex(this.launcherTypes, entity.GetValue("Type"))
+        if (diff != "" and diff.HasChanges()) {
+            if (diff.ValueIsModified("LauncherType")) {
+                this.guiObj["LauncherType"].Value := this.GetItemIndex(this.launcherTypes, entity.GetValue("Type"))
+            }
         }
     }
 
@@ -93,8 +93,10 @@ class LauncherEditor extends EntityEditorBase {
         entity := this.entityObj.ManagedLauncher.ManagedGame
         diff := entity.Edit(this.mode, this.guiObj)
 
-        if (diff != "" and diff.ValueIsModified("GameType")) {
-            this.guiObj["GameType"].Value := this.GetItemIndex(this.gameTypes, entity.GetValue("Type"))
+        if (diff != "" and diff.HasChanges()) {
+            if (diff.ValueIsModified("GameType")) {
+                this.guiObj["GameType"].Value := this.GetItemIndex(this.gameTypes, entity.GetValue("Type"))
+            }
         }
     }
 
@@ -104,17 +106,11 @@ class LauncherEditor extends EntityEditorBase {
     }
 
     OnChangeIconSrc(btn, info) {
-        existingVal := this.entityObj.UnmergedConfig.Has("IconSrc") ? this.entityObj.UnmergedConfig["IconSrc"] : ""
-
-        if (!existingVal and this.entityObj.Config.Has("IconSrc")) {
-            existingVal := this.entityObj.Config["IconSrc"]
-        }
-
+        existingVal := this.entityObj.GetConfigValue("IconSrc", false)
         file := FileSelect(1,, this.entityObj.Key . ": Select icon or .exe to extract icon from.", "Icons (*.ico; *.exe)")
 
         if (file) {
-            this.entityObj.UnmergedConfig["IconSrc"] := file
-            this.modified := true
+            this.entityObj.SetConfigValue("IconSrc", file, false)
             this.guiObj["IconSrc"].Text := file
         }
     }

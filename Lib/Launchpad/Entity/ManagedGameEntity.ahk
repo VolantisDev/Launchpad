@@ -87,6 +87,8 @@ class ManagedGameEntity extends ManagedEntityBase {
             }
         }
 
+        detectedValues["WindowTitle"] := this.keyVal
+
         return detectedValues
     }
 

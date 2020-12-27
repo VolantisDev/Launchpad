@@ -56,12 +56,17 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         return super.GetTitle(this.entityObj.Key . " - " . title)
     }
 
-    DefaultCheckbox(fieldKey, entity := "") {
+    DefaultCheckbox(fieldKey, entity := "", addPrefix := false) {
         if (entity == "") {
             entity := this.entityObj
         }
 
-        checkedText := !entity.UnmergedConfig.Has(fieldKey) ? " Checked" : ""
+        prefixedName := fieldKey
+        if (addPrefix) {
+            prefixedName := entity.configPrefix . prefixedName
+        }
+
+        checkedText := !entity.UnmergedConfig.Has(prefixedName) ? " Checked" : ""
         ctl := this.guiObj.AddCheckBox("vDefault" . fieldKey . " xs h25 y+m" . checkedText, "Default")
         ctl.OnEvent("Click", "OnDefault" . fieldKey)
         return ctl
@@ -112,40 +117,50 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         }
     }
 
-    AddTextBlock(field, settingName, showDefaultCheckbox := false, helpText := "") {
+    AddTextBlock(field, settingName, showDefaultCheckbox := false, helpText := "", addPrefix := false) {
         this.AddHeading(settingName)
         checkW := 0
         disabledText := ""
 
+        prefixedName := field
+        if (addPrefix) {
+            prefixedName := this.entityObj.configPrefix . field
+        }
+
         if (showDefaultCheckbox) {
-            ctl := this.DefaultCheckbox(field)
+            ctl := this.DefaultCheckbox(field, "", addPrefix)
             ctl.GetPos(,,checkW)
             checkW := checkW + this.margin
-            disabledText := this.entityObj.UnmergedConfig.Has(field) ? "" : " Disabled"
+            disabledText := this.entityObj.UnmergedConfig.Has(prefixedName) ? "" : " Disabled"
         }
         
         fieldW := this.windowSettings["contentWidth"] - checkW
-        ctl := this.guiObj.AddEdit("v" . field . " x+m yp w" . fieldW . disabledText, this.entityObj.Config[field])
+        ctl := this.guiObj.AddEdit("v" . field . " x+m yp w" . fieldW . disabledText, this.entityObj.GetConfigValue(field, addPrefix))
         ctl.OnEvent("Change", "On" . field . "Change")
 
         if (helpText) {
-            this.AddHelpText(helpTExt)
+            this.AddHelpText(helpText)
         }
 
         return ctl
     }
 
-    AddLocationBlock(heading, settingName, extraButton := "", showOpen := true, showDefaultCheckbox := false) {
+    AddLocationBlock(heading, settingName, extraButton := "", showOpen := true, showDefaultCheckbox := false, addPrefix := false) {
         this.AddHeading(heading)
-        location := this.entityObj.HasConfigValue(settingName, false, false) ? this.entityObj.GetConfigValue(settingName, false) : "Not set"
+        location := this.entityObj.HasConfigValue(settingName, addPrefix, false) ? this.entityObj.GetConfigValue(settingName, addPrefix) : "Not set"
         checkW := 0
         disabledText := ""
 
+        prefixedName := settingName
+        if (addPrefix) {
+            prefixedName := this.entityObj.configPrefix . prefixedName
+        }
+
         if (showDefaultCheckbox) {
-            ctl := this.DefaultCheckbox(settingName)
+            ctl := this.DefaultCheckbox(settingName, "", addPrefix)
             ctl.GetPos(,,checkW)
             checkW := checkW + this.margin
-            disabledText := this.entityObj.UnmergedConfig.Has(settingName) ? "" : " Hidden"
+            disabledText := this.entityObj.UnmergedConfig.Has(prefixedName) ? "" : " Hidden"
         }
 
         fieldW := this.windowSettings["contentWidth"] - checkW
@@ -185,12 +200,17 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         this.dataSource := this.app.DataSources.GetItem("api")
     }
 
-    SetDefaultValue(fieldKey, useDefault := true) {
+    SetDefaultValue(fieldKey, useDefault := true, addPrefix := false, emptyDisplay := "") {
+        prefixedName := fieldKey
+        if (addPrefix) {
+            prefixedName := this.entityObj.configPrefix . prefixedName
+        }
+
         if (useDefault) {
-            this.entityObj.RevertToDefault(fieldKey)
-            this.guiObj[fieldKey].Value := this.entityObj.Config[fieldKey]
+            this.entityObj.RevertToDefault(prefixedName)
+            this.guiObj[fieldKey].Value := this.entityObj.Config[prefixedName] != "" ? this.entityObj.Config[prefixedName] : emptyDisplay
         } else {
-            this.entityObj.UnmergedConfig[fieldKey] := this.entityObj.Config.Has(fieldKey) ? this.entityObj.Config[fieldKey] : ""
+            this.entityObj.UnmergedConfig[prefixedName] := this.entityObj.Config.Has(prefixedName) ? this.entityObj.Config[prefixedName] : ""
         }
 
         this.guiObj[fieldKey].Enabled := !useDefault
