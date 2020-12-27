@@ -116,6 +116,11 @@
                 "options": {
                     "Tiled": true
                 }
+            },
+            "editor": {
+                "base": "form",
+                "contentWidth": 500,
+                "options": {}
             }
         },
         "windows": {
@@ -126,13 +131,14 @@
                     "Owner": false
                 }
             },
-            "EntityEditor": {
-                "settings": "form",
-                "contentWidth": 500
-            },
             "LauncherEditor": {
-                "settings": "form",
-                "contentWidth": 500
+                "settings": "editor"
+            },
+            "ManagedGameEditor": {
+                "settings": "editor"
+            },
+            "ManagedLauncherEditor": {
+                "settings": "editor"
             },
             "ManageWindow": {
                 "settings": "default",

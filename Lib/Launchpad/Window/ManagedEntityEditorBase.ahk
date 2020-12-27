@@ -7,6 +7,8 @@
 */
 
 class ManagedEntityEditorBase extends EntityEditorBase {
+    runTypes := ["Command", "Shortcut"]
+
     __New(app, entityObj, title, mode := "config", windowKey := "", owner := "", parent := "") {
         if (windowKey == "") {
             windowKey := "ManagedEntityEditor"
@@ -22,19 +24,37 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     Controls() {
         super.Controls()
         prefix := this.entityObj.configPrefix
-        tabs := this.guiObj.Add("Tab3", " x" . this.margin . " w" . this.windowSettings["contentWidth"] . " +0x100", ["General", "Sources", "Advanced"])
+        tabs := this.guiObj.Add("Tab3", " x" . this.margin . " w" . this.windowSettings["contentWidth"] . " +0x100", ["General", "Sources", "Running", "Advanced"])
 
         tabs.UseTab("General", true)
         this.AddEntityTypeSelect(prefix . " Type", "Type", this.entityObj.EntityType, this.entityObj.ListEntityTypes(), "", "You can select from the available entity types if the default doesn't work for your use case.")
-        this.AddTextBlock("Exe", prefix . " Executable", true, "The launcher's main .exe file, not including any path information.", true)
-        this.AddTextBlock("WindowTitle", prefix . " Window Title", true, "The part of the main launcher window's title which identifies it uniquely.", true)
+        this.AddTextBlock("Exe", prefix . " Executable", true, "The main .exe file, not including any path information.", true)
+        this.AddTextBlock("WindowTitle", prefix . " Window Title", true, "The part of the main window's title which identifies it uniquely.", true)
         
         tabs.UseTab("Sources", true)
         this.AddLocationBlock(prefix . " Install Directory", "InstallDir", "Clear", true, true, true)
-        this.AddHelpText("Select the launcher's installation folder, or use default for auto-detection.")
+        this.AddHelpText("Select the installation folder, or use default for auto-detection.")
         this.AddLocationBlock(prefix . " Working Directory", "WorkingDir", "Clear", true, true, true)
-        this.AddHelpText("Optionally, set a working directory for the launcher to run from. This is not often required.")
+        this.AddHelpText("Optionally, set a working directory to run from. This is not often required.")
+        
+        tabs.UseTab("Running", true)
+        this.AddSelect(prefix . " Run Type", "RunType", this.entityObj.RunType, this.runTypes, true, "", "", "", true)
+        ctl := this.AddTextBlock("RunCmd", prefix . " Run Command", true)
+        ctl := this.AddLocationBlock(prefix . " Shortcut", "ShortcutSrc", "Clear", true, true, true)
 
+
+
+
+        ; @todo RunType - Shortcut or Command
+        ; @todo ShortcutSrc conditionally shown
+        ; @todo RunCmd conditionally shown
+
+        ; @todo RunMethod
+        ; @todo ReplaceProcess
+
+        ; @todo ProcessType
+        ; @todo ProcessId
+        ; @todo ProcessTimeout
 
         ; @todo LocateMethod
         ; @todo LocateRegView
@@ -56,12 +76,20 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         return this.SetDefaultValue("WindowTitle", !!(ctlObj.Value), true)
     }
 
+    OnDefaultRunCmd(ctlObj, info) {
+        return this.SetDefaultValue("RunCmd", !!(ctlObj.Value), true)
+    }
+
     OnDefaultInstallDir(ctlObj, info) {
         return this.SetDefaultLocationValue(ctlObj, "InstallDir", true)
     }
 
     OnDefaultWorkingDir(ctlObj, info) {
         return this.SetDefaultLocationValue(ctlObj, "WorkingDir", true)
+    }
+
+    OnDefaultShortcutSrc(ctlObj, info) {
+        return this.SetDefaultLocationValue(ctlObj, "ShortcutSrc", true)
     }
 
     SetDefaultLocationValue(ctlObj, fieldName, includePrefix := false) {
@@ -139,5 +167,38 @@ class ManagedEntityEditorBase extends EntityEditorBase {
 
     OnClearWorkingDir(ctlObj, info) {
         this.entityObj.SetConfigValue("WorkingDir", "")
+    }
+
+    OnRunTypeChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.RunType := ctlObj.Text
+    }
+
+    OnRunCmdChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.RunCmd := ctlObj.Text
+    }
+
+    OnChangeShortcutSrc(btn, info) {
+        existingVal := this.entityObj.GetConfigValue("ShortcutSrc")
+        file := FileSelect(1,, this.prefix . ": Select a shortcut file or .exe that will launch the application", "Shortcuts (*.lnk; *.url; *.exe)")
+
+        if (file) {
+            this.entityObj.SetConfigValue("ShortcutSrc", file, true)
+            this.guiObj["ShortcutSrc"].Text := file
+        }
+    }
+
+    OnOpenShortcutSrc(btn, info) {
+        if (this.entityObj.ShortcutSrc) {
+            Run this.entityObj.ShortcurSrc
+        }
+    }
+
+    OnClearShortcutSrc(btn, info) {
+        if (this.entityObj.UnmergedConfig.Has("ShortcutSrc")) {
+            this.entityObj.UnmergedConfig.Delete("ShortcutSrc")
+            this.guiObj["ShortcutSrc"].Text := this.entityObj.ShortcutSrc
+        }
     }
 }

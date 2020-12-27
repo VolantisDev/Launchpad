@@ -63,18 +63,18 @@ class LauncherEditor extends EntityEditorBase {
 
     OnKeyChange(ctlObj, info) {
         this.guiObj.Submit(false)
-        this.entityObj.Key := ctlObj.Value
+        this.entityObj.Key := ctlObj.Text
         ; @todo If new game type doesn't offer the selected launcher type, change to the default launcher type
     }
 
     OnLauncherTypeChange(ctlObj, info) {
-        this.entityObj.ManagedLauncher.EntityType := ctlObj.Value
+        this.entityObj.ManagedLauncher.EntityType := ctlObj.Text
         this.entityObj.ManagedLauncher.UpdateDataSourceDefaults()
         ; @todo If new launcher type changes the game type, change it here
     }
 
     OnGameTypeChange(ctlObj, info) {
-        this.entityObj.ManagedLauncher.ManagedGame.EntityType := ctlObj.Value
+        this.entityObj.ManagedLauncher.ManagedGame.EntityType := ctlObj.Text
         this.entityObj.ManagedLauncher.ManagedGame.UpdateDataSourceDefaults()
     }
 
@@ -126,5 +126,10 @@ class LauncherEditor extends EntityEditorBase {
             this.entityObj.UnmergedConfig.Delete("IconSrc")
             this.guiObj["IconSrc"].Text := this.entityObj.IconSrc
         }
+    }
+
+    OnThemeNameChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.ThemeName := ctlObj.Text
     }
 }

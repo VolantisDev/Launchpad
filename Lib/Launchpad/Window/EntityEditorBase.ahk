@@ -88,29 +88,38 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
     }
 
     AddEntityTypeSelect(heading, field, currentValue, allItems, buttonName := "", helpText := "") {
-        ctl := this.AddSelect(heading, field, currentValue,  allItems)
-        buttonW := 150
-
-        if (buttonName) {
-            this.AddButton("v" . buttonName . " x+m yp w" . buttonW . " h25", "Manage", "On" . buttonName)
-        }
-
-        if (helpText) {
-            this.AddHelpText(helpText)
-        }
-
-        return ctl
+        return this.AddSelect(heading, field, currentValue,  allItems, false, buttonName, "Manage", helpText, false)
     }
 
-    AddSelect(heading, field, currentValue, allItems, helpText := "") {
+    AddSelect(heading, field, currentValue, allItems, showDefaultCheckbox := false, buttonName := "", buttonText := "", helpText := "", addPrefix := false) {
         this.AddHeading(heading)
-        buttonW := 150
-        ;ctl := this.DefaultCheckbox("GameType", this.entityObj.ManagedLauncher.ManagedGame)
-        ;ctl.GetPos(,,checkW)
-        fieldW := this.windowSettings["contentWidth"] - buttonW - this.margin
+
+        checkW := 0
+        buttonW := buttonName ? 150 : 0
+
+        if (showDefaultCheckbox) {
+            ctl := this.DefaultCheckbox(field, "", addPrefix)
+            ctl.GetPos(,,checkW)
+        }
+        
+        fieldW := this.windowSettings["contentWidth"]
+
+        if (checkW) {
+            fieldW := fieldW - checkW - this.margin
+        }
+
+        if (buttonW) {
+            fieldW := fieldW - buttonW - this.margin
+        }
+
         chosen := this.GetItemIndex(allItems, currentValue)
-        ctl := this.guiObj.AddDDL("v" . field . " xs y+m Choose" . chosen . " w" . fieldW, allItems)
+        pos := showDefaultCheckbox ? "x+m yp" : "xs y+m"
+        ctl := this.guiObj.AddDDL("v" . field . " " . pos . " Choose" . chosen . " w" . fieldW, allItems)
         ctl.OnEvent("Change", "On" . field . "Change")
+
+        if (buttonName) {
+            this.AddButton("v" . buttonName . " x+m yp w" . buttonW . " h25", buttonText, "On" . buttonName)
+        }
 
         if (helpText) {
             this.AddHelpText(helpText)
@@ -135,7 +144,8 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         }
         
         fieldW := this.windowSettings["contentWidth"] - checkW
-        ctl := this.guiObj.AddEdit("v" . field . " x+m yp w" . fieldW . disabledText, this.entityObj.GetConfigValue(field, addPrefix))
+        pos := showDefaultCheckbox ? "x+m yp" : "xs y+m"
+        ctl := this.guiObj.AddEdit("v" . field . " " . pos . " w" . fieldW . disabledText, this.entityObj.GetConfigValue(field, addPrefix))
         ctl.OnEvent("Change", "On" . field . "Change")
 
         if (helpText) {
