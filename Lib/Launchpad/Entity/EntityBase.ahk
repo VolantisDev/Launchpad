@@ -313,7 +313,7 @@ class EntityBase {
             this.entityData.RestoreFromOriginal()
 
             for index, child in this.children {
-                this.child.entityData.RestoreFromOriginal()
+                child.entityData.RestoreFromOriginal()
             }
         } else {
             diffs := [this.entityData.DiffChanges("config")]
