@@ -32,6 +32,16 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         tabs.UseTab("Sources", true)
         this.AddLocationBlock(prefix . " Install Directory", "InstallDir", "Clear", true, true, true)
         this.AddHelpText("Select the launcher's installation folder, or use default for auto-detection.")
+        this.AddLocationBlock(prefix . " Working Directory", "WorkingDir", "Clear", true, true, true)
+        this.AddHelpText("Optionally, set a working directory for the launcher to run from. This is not often required.")
+
+
+        ; @todo LocateMethod
+        ; @todo LocateRegView
+        ; @todo LocateRegKey
+        ; @todo LocateRegValue
+        ; @todo LocateRegStripQuotes
+
 
         tabs.UseTab("Advanced", true)
         
@@ -47,11 +57,19 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     }
 
     OnDefaultInstallDir(ctlObj, info) {
+        return this.SetDefaultLocationValue(ctlObj, "InstallDir", true)
+    }
+
+    OnDefaultWorkingDir(ctlObj, info) {
+        return this.SetDefaultLocationValue(ctlObj, "WorkingDir", true)
+    }
+
+    SetDefaultLocationValue(ctlObj, fieldName, includePrefix := false) {
         isDefault := !!(ctlObj.Value)
-        this.guiObj["ChangeInstallDir"].Opt("Hidden" . isDefault)
-        this.guiObj["OpenInstallDir"].Opt("Hidden" . isDefault)
-        this.guiObj["ClearInstallDir"].Opt("Hidden" . isDefault)
-        return this.SetDefaultValue("InstallDir", isDefault, true, "Not set")
+        this.guiObj["Change" . fieldName].Opt("Hidden" . isDefault)
+        this.guiObj["Open" . fieldName].Opt("Hidden" . isDefault)
+        this.guiObj["Clear" . fieldName].Opt("Hidden" . isDefault)
+        return this.SetDefaultValue(fieldName, isDefault, includePrefix, "Not set")
     }
 
     OnTypeChange(ctlObj, info) {
@@ -94,5 +112,32 @@ class ManagedEntityEditorBase extends EntityEditorBase {
 
     OnClearInstallDir(ctlObj, info) {
         this.entityObj.SetConfigValue("InstallDir", "")
+    }
+
+    OnChangeWorkingDir(ctlObj, info) {
+        existingVal := this.entityObj.GetConfigValue("WorkingDir")
+
+        if (existingVal) {
+            existingVal := "*" . existingVal
+        }
+
+        dir := DirSelect(existingVal, 2, this.entityObj.configPrefix . ": Select the working directory")
+
+        if (dir) {
+            this.entityObj.SetConfigValue("WorkingDir", dir)
+            this.guiObj["WorkingDir"].Text := dir
+        }
+    }
+
+    OnOpenWorkingDir(ctlObj, info) {
+        val := this.entityObj.GetConfigValue("WorkingDir")
+
+        if (val) {
+            Run val
+        }
+    }
+
+    OnClearWorkingDir(ctlObj, info) {
+        this.entityObj.SetConfigValue("WorkingDir", "")
     }
 }
