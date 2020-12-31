@@ -35,14 +35,14 @@ class LauncherEditor extends EntityEditorBase {
 
         tabs.UseTab("Sources", true)
         this.AddLocationBlock("Icon Source", "IconSrc", "Clear")
-        this.AddSelect("Launcher Theme", "ThemeName", this.entityObj.ThemeName, this.knownThemes)
         ; @todo Add data source keys checkboxes
-        ; @todo Add data source item key
+        this.AddTextBlock("DataSourceItemKey", "DataSource Item Key", true, "The key to use when looking this item up in its datasource(s). By default, this is the same as the main key.")
 
         tabs.UseTab("UI", true)
-        ; @todo ShowProgress
-        ; @todo ProgressTitle
-        ; @todo ProgressText
+        this.AddSelect("Launcher Theme", "ThemeName", this.entityObj.ThemeName, this.knownThemes, true, "", "", "The theme to use if/when the launcher shows GUI windows")
+        this.AddCheckBoxBlock("ShowProgress", "Show Progress Window", true, "Whether or not to show a window indicating the current status of the launcher")
+        this.AddTextBlock("ProgressTitle", "Progress Window Title", true, "The title that the progress window will use if shown")
+        this.AddTextBlock("ProgressText", "Progress Window Text", true, "The text displayed at the top of the progress window if shown")
 
         tabs.UseTab("Advanced", true)
         this.AddTextBlock("DisplayName", "Display Name", true, "You can change the display name of the game if it differs from the key. The launcher filename will still be created using the key.")
@@ -58,6 +58,10 @@ class LauncherEditor extends EntityEditorBase {
         this.knownThemes := this.app.Themes.GetAvailableThemes(true)
     }
 
+    OnDefaultThemeName(ctlObj, info) {
+        return this.SetDefaultSelectValue("ThemeName", this.knownThemes, !!(ctlObj.Value))
+    }
+
     OnDefaultDisplayName(ctlObj, info) {
         return this.SetDefaultValue("DisplayName", !!(ctlObj.Value))
     }
@@ -66,10 +70,31 @@ class LauncherEditor extends EntityEditorBase {
         return this.SetDefaultValue("GameType", !!(ctlObj.Value))
     }
 
+    OnDefaultDataSourceItemKey(ctlObj, info) {
+        return this.SetDefaultValue("DataSourceItemKey", !!(ctlObj.Value))
+    }
+
+    OnDefaultShowProgress(ctlObj, info) {
+        return this.SetDefaultValue("ShowProgress", !!(ctlObj.Value))
+    }
+
+    OnDefaultProgressTitle(ctlObj, info) {
+        return this.SetDefaultValue("ProgressTitle", !!(ctlObj.Value))
+    }
+
+    OnDefaultProgressText(ctlObj, info) {
+        return this.SetDefaultValue("ProgressText", !!(ctlObj.Value))
+    }
+
     OnKeyChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.Key := ctlObj.Text
         ; @todo If new game type doesn't offer the selected launcher type, change to the default launcher type
+    }
+
+    OnDataSourceItemKeyChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.DataSourceItemKey := ctlObj.Text
     }
 
     OnLauncherTypeChange(ctlObj, info) {
@@ -136,5 +161,20 @@ class LauncherEditor extends EntityEditorBase {
     OnThemeNameChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.ThemeName := ctlObj.Text
+    }
+
+    OnShowProgressChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.ShowProgress := !!(ctlObj.Value)
+    }
+
+    OnProgressTitleChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.ProgressTitle := ctlObj.Text
+    }
+
+    OnProgressTextChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.ProgressText := ctlObj.Text
     }
 }

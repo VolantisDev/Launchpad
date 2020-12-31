@@ -169,6 +169,8 @@ class LauncherEntity extends EntityBase {
         defaults["ThemeName"] := this.app.Config.ThemeName
         defaults["ThemesDir"] := this.app.Config.AppDir . "\Resources\Themes"
         defaults["ShowProgress"] := true
+        defaults["ProgressTitle"] := "Monitoring {g}"
+        defaults["ProgressText"] := "Launchpad is monitoring {g}. Enjoy your game!"
         return defaults
     }
 

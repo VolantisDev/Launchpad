@@ -90,8 +90,6 @@ class ManagedLauncherEntity extends ManagedEntityBase {
         defaults[this.configPrefix . "KillPreDelay"] := 10
         defaults[this.configPrefix . "KillPostDelay"] := 5
         defaults[this.configPrefix . "PoliteCloseWait"] := 10
-        defaults[this.configPrefix . "ProgressTitle"] := "Monitoring {g}"
-        defaults[this.configPrefix . "ProgressText"] := "Launchpad is monitoring {g}. Enjoy your game!"
         return defaults
     }
 
