@@ -124,6 +124,8 @@ class ManagedEntityBase extends EntityBase {
         set => this.SetConfigValue("RunMethod", value)
     }
 
+    ; If true, the process will be killed and re-launched as soon as it is detected, so that it runs under Launchpad's process.
+    ; This may not work with every launcher and game combination.
     ReplaceProcess {
         get => this.GetConfigValue("ReplaceProcess")
         set => this.SetConfigValue("ReplaceProcess", value)
