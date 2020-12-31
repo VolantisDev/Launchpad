@@ -8,6 +8,7 @@
 
 class ManagedEntityEditorBase extends EntityEditorBase {
     runTypes := ["Command", "Shortcut"]
+    entityTypeName := ""
 
     __New(app, entityObj, title, mode := "config", windowKey := "", owner := "", parent := "") {
         if (windowKey == "") {
@@ -18,13 +19,29 @@ class ManagedEntityEditorBase extends EntityEditorBase {
             owner := "LauncherEditor"
         }
 
+        if (this.entityTypeName == "") {
+            this.entityTypeName := entityObj.configPrefix
+        }
+
         super.__New(app, entityObj, title, mode, windowKey, owner, parent)
     }
 
     Controls() {
         super.Controls()
         prefix := this.entityObj.configPrefix
-        tabs := this.guiObj.Add("Tab3", " x" . this.margin . " w" . this.windowSettings["contentWidth"] . " +0x100", ["General", "Sources", "Running", "Advanced"])
+
+        tabNames := ["General", "Sources", "Running", "Process"]
+
+        if (this.entityTypeName) {
+            tabNames.InsertAt(1, this.entityTypeName)
+        }
+
+        tabs := this.guiObj.Add("Tab3", " x" . this.margin . " w" . this.windowSettings["contentWidth"] . " +0x100", tabNames)
+
+        if (this.entityTypeName) {
+            tabs.UseTab(this.entityTypeName, true)
+            this.CustomTabControls()
+        }
 
         tabs.UseTab("General", true)
         this.AddEntityTypeSelect(prefix . " Type", "Type", this.entityObj.EntityType, this.entityObj.ListEntityTypes(), "", "You can select from the available entity types if the default doesn't work for your use case.")
@@ -41,31 +58,25 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         this.AddSelect(prefix . " Run Type", "RunType", this.entityObj.RunType, this.runTypes, true, "", "", "", true)
         ctl := this.AddTextBlock("RunCmd", prefix . " Run Command", true)
         ctl := this.AddLocationBlock(prefix . " Shortcut", "ShortcutSrc", "Clear", true, true, true)
-
-
-
-
-        ; @todo RunType - Shortcut or Command
-        ; @todo ShortcutSrc conditionally shown
-        ; @todo RunCmd conditionally shown
-
         ; @todo RunMethod
-        ; @todo ReplaceProcess
 
+        tabs.UseTab("Process", true)
         ; @todo ProcessType
         ; @todo ProcessId
         ; @todo ProcessTimeout
+        ; @todo ReplaceProcess
 
         ; @todo LocateMethod
         ; @todo LocateRegView
         ; @todo LocateRegKey
         ; @todo LocateRegValue
         ; @todo LocateRegStripQuotes
-
-
-        tabs.UseTab("Advanced", true)
         
         tabs.UseTab()
+    }
+
+    CustomTabControls() {
+        ; Assume no custom tab controls unless overridden.
     }
 
     OnDefaultExe(ctlObj, info) {
