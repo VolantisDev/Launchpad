@@ -49,10 +49,8 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         this.AddTextBlock("WindowTitle", prefix . " Window Title", true, "The part of the main window's title which identifies it uniquely.", true)
         
         tabs.UseTab("Sources", true)
-        this.AddLocationBlock(prefix . " Install Directory", "InstallDir", "Clear", true, true, true)
-        this.AddHelpText("Select the installation folder, or use default for auto-detection.")
-        this.AddLocationBlock(prefix . " Working Directory", "WorkingDir", "Clear", true, true, true)
-        this.AddHelpText("Optionally, set a working directory to run from. This is not often required.")
+        this.AddLocationBlock(prefix . " Install Directory", "InstallDir", "Clear", true, true, true, "Select the installation folder, or use default for auto-detection.")
+        this.AddLocationBlock(prefix . " Working Directory", "WorkingDir", "Clear", true, true, true, "Optionally, set a working directory to run from. This is not often required.")
         
         tabs.UseTab("Running", true)
         this.AddSelect(prefix . " Run Type", "RunType", this.entityObj.RunType, this.runTypes, true, "", "", "", true)

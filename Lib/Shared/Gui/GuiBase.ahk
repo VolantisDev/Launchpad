@@ -1,5 +1,6 @@
 class GuiBase {
     guiObj := ""
+    guiId := ""
     title := ""
     themeObj := ""
     owner := ""
@@ -13,6 +14,7 @@ class GuiBase {
     margin := ""
     buttons := []
     isClosed := false
+    activeTooltip := false
 
     positionAtMouseCursor := false
     openWindowWithinScreenBounds := true
@@ -46,7 +48,55 @@ class GuiBase {
         this.windowOptions := themeObj.GetWindowOptionsString(windowKey)
         this.margin := this.windowSettings["spacing"]["margin"]
         this.windowKey := windowKey
+        this.eventManagerObj := themeObj.eventManagerObj
+        this.idGenerator := themeObj.idGenerator
+        this.guiId := this.idGenerator.Generate()
+        this.mouseMoveCallback := ObjBindMethod(this, "OnMouseMove")
+        this.eventManagerObj.Register(Events.MOUSE_MOVE, "Gui" . this.guiId, this.mouseMoveCallback)
         this.Create()
+    }
+
+    __Delete() {
+        this.eventManagerObj.Unregister(Events.MOUSE_MOVE, "Gui" . this.guiId, this.mouseMoveCallback)
+        
+        if (this.activeTooltip) {
+            ToolTip()
+            this.activeTooltip := false
+        }
+
+        super.__Delete()
+    }
+
+    OnMouseMove(wParam, lParam, msg, hwnd) {
+        if (this.activeTooltip == hwnd) {
+            return
+        }
+
+        guiCtl := GuiCtrlFromHwnd(hwnd)
+
+        if (guiCtl and guiCtl.HasProp("ToolTip")) {
+            this.activeTooltip := hwnd
+            tooltipText := guiCtl.ToolTip
+            SetTimer () => this.ShowTooltip(tooltipText, hwnd), -1000
+        } else {
+            ToolTip()
+            this.activeTooltip := false
+        }
+    }
+
+    ShowTooltip(text, hwnd) {
+        ctlHwnd := ""
+        
+        if (hwnd) {
+            MouseGetPos(,,,ctlHwnd, 2)
+        }
+
+        if (!hwnd or ctlHwnd == hwnd) {
+            this.activeTooltip := hwnd
+            ToolTip(text)
+        } else {
+            this.activeTooltip := false
+        }
     }
 
     /**
@@ -76,16 +126,6 @@ class GuiBase {
         this.SetFont()
     }
 
-    AddHelpText(helpText, position := "") {
-        if (position == "") {
-            position := "xs y+m"
-        }
-
-        this.guiObj.SetFont(this.themeObj.GetFont("small"))
-        this.guiObj.AddText(position . " w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("textLight"), helpText)
-        this.SetFont()
-    }
-
     AddCheckBox(checkboxText, ctlName, checked, inGroupBox := true, callback := "", check3 := false) {
         if (callback == "") {
             callback := "On" . ctlName
@@ -107,6 +147,7 @@ class GuiBase {
 
         chk := this.guiObj.AddCheckBox(position . " w" . width . " v" . ctlName . " checked" . checked, checkboxText)
         chk.OnEvent("Click", callback)
+        return chk
     }
 
     SetFont(fontPreset := "normal", extraStyles := "", colorName := "text") {

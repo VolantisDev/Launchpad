@@ -68,6 +68,7 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
 
         checkedText := !entity.UnmergedConfig.Has(prefixedName) ? " Checked" : ""
         ctl := this.guiObj.AddCheckBox("vDefault" . fieldKey . " xs h25 y+m" . checkedText, "Default")
+        ctl.ToolTip := "When checked, the default value determined by various other factors in Launchpad will be used (and shown to the right if available). When unchecked, the value you set here will be used instead."
         ctl.OnEvent("Click", "OnDefault" . fieldKey)
         return ctl
     }
@@ -83,7 +84,7 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         ctl.OnEvent("Change", "On" . field . "Change")
 
         if (helpText) {
-            this.AddHelpText(helpText)
+            ctl.ToolTip := helpText
         }
     }
 
@@ -122,7 +123,7 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         }
 
         if (helpText) {
-            this.AddHelpText(helpText)
+            ctl.ToolTip := helpText
         }
     }
 
@@ -149,13 +150,13 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         ctl.OnEvent("Change", "On" . field . "Change")
 
         if (helpText) {
-            this.AddHelpText(helpText)
+            ctl.ToolTip := helpText
         }
 
         return ctl
     }
 
-    AddLocationBlock(heading, settingName, extraButton := "", showOpen := true, showDefaultCheckbox := false, addPrefix := false) {
+    AddLocationBlock(heading, settingName, extraButton := "", showOpen := true, showDefaultCheckbox := false, addPrefix := false, helpText := "") {
         this.AddHeading(heading)
         location := this.entityObj.HasConfigValue(settingName, addPrefix, false) ? this.entityObj.GetConfigValue(settingName, addPrefix) : "Not set"
         checkW := 0
@@ -175,7 +176,11 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
 
         fieldW := this.windowSettings["contentWidth"] - checkW
         locationPos := checkW ? "x+m yp" : "xs y+m"
-        this.AddLocationText(location, settingName, locationPos)
+        ctl := this.AddLocationText(location, settingName, locationPos)
+
+        if (helpText) {
+            ctl.ToolTip := helpText
+        }
 
         buttonSize := this.themeObj.GetButtonSize("s", true)
         buttonDims := ""
@@ -201,8 +206,9 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
 
     AddLocationText(locationText, ctlName, position := "xs y+m") {
         ;this.guiObj.SetFont("Bold")
-        this.guiObj.AddText("v" . ctlName . " " . position . " w" . this.windowSettings["contentWidth"] . " +0x200 c" . this.themeObj.GetColor("accentDark"), locationText)
+        ctl := this.guiObj.AddText("v" . ctlName . " " . position . " w" . this.windowSettings["contentWidth"] . " +0x200 c" . this.themeObj.GetColor("accentDark"), locationText)
         ;this.guiObj.SetFont()
+        return ctl
     }
 
     Create() {

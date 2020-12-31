@@ -49,7 +49,7 @@
         chosen := this.GetItemIndex(this.availableThemes, this.app.Config.ThemeName)
         ctl := this.guiObj.AddDDL("vThemeName xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"], this.availableThemes)
         ctl.OnEvent("Change", "OnThemeNameChange")
-        this.AddHelpText("Select a theme for Launchpad to use.")
+        ctl.ToolTip := "Select a theme for Launchpad to use."
 
         ; @todo finish this
 
