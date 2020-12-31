@@ -144,7 +144,10 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     }
 
     OnDefaultProcessType(ctlObj, info) {
-        return this.SetDefaultSelectValue("ProcessType", this.processTypes, !!(ctlObj.Value), true)
+        val := this.SetDefaultSelectValue("ProcessType", this.processTypes, !!(ctlObj.Value), true)
+        this.entityObj.UpdateDataSourceDefaults()
+        this.guiObj["ProcessId"].Value := this.entityObj.ProcessId
+        return val
     }
 
     OnDefaultProcessId(ctlObj, info) {
