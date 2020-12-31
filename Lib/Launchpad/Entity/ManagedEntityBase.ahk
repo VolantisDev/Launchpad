@@ -82,6 +82,12 @@ class ManagedEntityBase extends EntityBase {
         set => this.SetConfigValue("LocateRegStripQuotes", value)
     }
 
+    ; If the item is known to the launcher by a specific ID, it should be stored here.
+    LauncherSpecificId {
+        get => this.GetConfigValue("LauncherSpecificId", false)
+        set => this.SetConfigValue("LauncherSpecificId", value, false)
+    }
+
     ; The directory that the launcher should be run from, if set. If not set, it will be run without setting an explicit working directory, which is usually sufficient.
     WorkingDir {
         get => this.GetConfigValue("WorkingDir")
@@ -186,19 +192,9 @@ class ManagedEntityBase extends EntityBase {
 
     AutoDetectValues() {
         detectedValues := super.AutoDetectValues()
-        
-        detectedValues[this.configPrefix . "ProcessType"] := this.RunMethod == "RunWait" ? "" : "Exe"
         processId := ""
-
-        if (this.ProcessType == "Exe") {
-            SplitPath(this.Exe, processId)
-        } else if (this.ProcessType == "Title") {
-            processId := this.WindowTitle ? this.WindowTitle : this.Key
-        }
-
-        detectedValues[this.configPrefix . "ProcessId"] := processId
-
         usesShortcut := false
+
         if (this.entityData.HasValue(this.configPrefix . "UsesShortcut")) {
             usesShortcut := this.entityData.GetValue(this.configPrefix . "UsesShortcut")
         } else {
@@ -210,6 +206,14 @@ class ManagedEntityBase extends EntityBase {
 
         ; @todo Can this be done JIT so it only runs for games that don't already have an install dir?
         detectedValues[this.configPrefix . "InstallDir"] := this.LocateInstallDir()
+
+        if (this.ProcessType == "Exe") {
+            SplitPath(this.Exe, processId)
+        } else if (this.ProcessType == "Title") {
+            processId := this.WindowTitle ? this.WindowTitle : this.Key
+        }
+
+        detectedValues[this.configPrefix . "ProcessId"] := processId
 
         return detectedValues
     }

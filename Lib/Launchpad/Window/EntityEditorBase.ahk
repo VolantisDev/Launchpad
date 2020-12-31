@@ -97,8 +97,15 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
 
         checkW := 0
         buttonW := buttonName ? 150 : 0
+        disabledText := ""
+
+        prefixedName := field
+        if (addPrefix) {
+            prefixedName := this.entityObj.configPrefix . field
+        }
 
         if (showDefaultCheckbox) {
+            disabledText := this.entityObj.UnmergedConfig.Has(prefixedName) ? "" : " Disabled"
             ctl := this.DefaultCheckbox(field, "", addPrefix)
             ctl.GetPos(,,checkW)
         }
@@ -115,6 +122,7 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
 
         chosen := this.GetItemIndex(allItems, currentValue)
         pos := showDefaultCheckbox ? "x+m yp" : "xs y+m"
+        pos := pos . disabledText
         ctl := this.guiObj.AddDDL("v" . field . " " . pos . " Choose" . chosen . " w" . fieldW, allItems)
         ctl.OnEvent("Change", "On" . field . "Change")
 
@@ -148,6 +156,36 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         pos := showDefaultCheckbox ? "x+m yp" : "xs y+m"
         ctl := this.guiObj.AddEdit("v" . field . " " . pos . " w" . fieldW . disabledText, this.entityObj.GetConfigValue(field, addPrefix))
         ctl.OnEvent("Change", "On" . field . "Change")
+
+        if (helpText) {
+            ctl.ToolTip := helpText
+        }
+
+        return ctl
+    }
+
+    AddCheckBoxBlock(field, settingName, showDefaultCheckbox := false, helpText := "", addPrefix := false) {
+        checkW := 0
+        disabledText := ""
+
+        prefixedName := field
+        if (addPrefix) {
+            prefixedName := this.entityObj.configPrefix . field
+        }
+
+        if (showDefaultCheckbox) {
+            ctl := this.DefaultCheckbox(field, "", addPrefix)
+            ctl.GetPos(,,checkW)
+            checkW := checkW + this.margin
+            disabledText := this.entityObj.UnmergedConfig.Has(prefixedName) ? "" : " Disabled"
+        }
+
+        checked := !!(this.entityObj.GetConfigValue(field, addPrefix))
+
+        fieldW := this.windowSettings["contentWidth"] - checkW
+        pos := showDefaultCheckbox ? "x+m yp" : "xs y+m"
+        pos := pos . " h25" . disabledText
+        ctl := this.AddCheckBox(settingName, field, checked, false, "On" . field . "Change", false, pos)
 
         if (helpText) {
             ctl.ToolTip := helpText
@@ -225,6 +263,34 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         if (useDefault) {
             this.entityObj.RevertToDefault(prefixedName)
             this.guiObj[fieldKey].Value := this.entityObj.Config[prefixedName] != "" ? this.entityObj.Config[prefixedName] : emptyDisplay
+        } else {
+            this.entityObj.UnmergedConfig[prefixedName] := this.entityObj.Config.Has(prefixedName) ? this.entityObj.Config[prefixedName] : ""
+        }
+
+        this.guiObj[fieldKey].Enabled := !useDefault
+    }
+
+    SetDefaultSelectValue(fieldKey, allItems, useDefault := true, addPrefix := false) {
+        prefixedName := fieldKey
+        if (addPrefix) {
+            prefixedName := this.entityObj.configPrefix . prefixedName
+        }
+
+        if (useDefault) {
+            this.entityObj.RevertToDefault(prefixedName)
+            newVal := this.entityObj.Config[prefixedName]            
+            index := 0
+
+
+            for idx, val in allItems {
+                if val == newVal {
+                    index := idx
+                }
+            }
+
+            if (index > 0) {
+                this.guiObj[fieldKey].Value := index
+            }
         } else {
             this.entityObj.UnmergedConfig[prefixedName] := this.entityObj.Config.Has(prefixedName) ? this.entityObj.Config[prefixedName] : ""
         }

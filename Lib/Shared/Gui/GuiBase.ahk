@@ -126,20 +126,31 @@ class GuiBase {
         this.SetFont()
     }
 
-    AddCheckBox(checkboxText, ctlName, checked, inGroupBox := true, callback := "", check3 := false) {
+    AddCheckBox(checkboxText, ctlName, checked, inGroupBox := true, callback := "", check3 := false, position := "") {
         if (callback == "") {
             callback := "On" . ctlName
         }
 
+        hasPos := position != ""
+
         width := this.windowSettings["contentWidth"]
-        position := "xs"
+
+        if (!hasPos) {
+            position := "xs"
+        }
+        
 
         if (inGroupBox) {
-            position .= "+" . this.margin
+            if (!hasPos) {
+                position .= "+" . this.margin
+            }
+            
             width -= this.margin * 2
         }
 
-        position .= " y+m"
+        if (!hasPos) {
+            position .= " y+m"
+        }
 
         if (check3) {
             checked .= " Check3"

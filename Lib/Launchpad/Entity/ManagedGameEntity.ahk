@@ -4,12 +4,6 @@ class ManagedGameEntity extends ManagedEntityBase {
     defaultClass := "SimpleGame"
     dataSourcePath := "Types/Games"
 
-    ; If the game is known to its launcher by a specific ID, it should be stored here.
-    LauncherSpecificId {
-        get => this.GetConfigValue("LauncherSpecificId", false)
-        set => this.SetConfigValue("LauncherSpecificId", value, false)
-    }
-
     ; Whether or not the game has a loading window to watch for.
     HasLoadingWindow {
         get => this.GetConfigValue("HasLoadingWindow")
@@ -67,7 +61,11 @@ class ManagedGameEntity extends ManagedEntityBase {
         exeKey := this.configPrefix . "Exe"
 
         if (!detectedValues.Has(exeKey)) {
-            detectedValues[exeKey] := this.Key . ".exe"
+            detectedValues[exeKey] := this.Exe ? this.Exe : this.Key . ".exe"
+        }
+
+        if (!detectedValues.Has(this.configPrefix . "ProcessId") || !detectedValues[this.configPrefix . "ProcessId"]) {
+            detectedValues[this.configPrefix . "ProcessId"] := detectedValues[exeKey]
         }
 
         if (this.ShouldDetectShortcutSrc()) {
