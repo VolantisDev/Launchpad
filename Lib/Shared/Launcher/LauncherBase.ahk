@@ -20,7 +20,7 @@ class LauncherBase {
         this.game := game
         this.config := config
 
-        if (this.config["LauncherShowProgress"]) {
+        if (this.config["ShowProgress"]) {
             this.CreateProgressGui()
         }
     }

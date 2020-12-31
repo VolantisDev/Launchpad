@@ -73,21 +73,6 @@ class ManagedLauncherEntity extends ManagedEntityBase {
         set => this.SetConfigValue("PoliteCloseWait", value)
     }
 
-    ShowProgress {
-        get => this.GetConfigValue("ShowProgress")
-        set => this.SetConfigValue("ShowProgress", value)
-    }
-
-    ProgressTitle {
-        get => this.GetConfigValue("ProgressTitle")
-        set => this.SetConfigValue("ProgressTitle", value)
-    }
-
-    ProgressText {
-        get => this.GetConfigValue("ProgressText")
-        set => this.SetConfigValue("ProgressText", value)
-    }
-
     __New(app, key, config, requiredConfigKeys := "", parentEntity := "") {
         super.__New(app, key, config, requiredConfigKeys, parentEntity)
         this.children["ManagedGame"] := ManagedGameEntity.new(app, key, config, "", this)
@@ -105,7 +90,6 @@ class ManagedLauncherEntity extends ManagedEntityBase {
         defaults[this.configPrefix . "KillPreDelay"] := 10
         defaults[this.configPrefix . "KillPostDelay"] := 5
         defaults[this.configPrefix . "PoliteCloseWait"] := 10
-        defaults[this.configPrefix . "ShowProgress"] := true
         defaults[this.configPrefix . "ProgressTitle"] := "Monitoring {g}"
         defaults[this.configPrefix . "ProgressText"] := "Launchpad is monitoring {g}. Enjoy your game!"
         return defaults

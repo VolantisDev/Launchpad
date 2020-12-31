@@ -48,6 +48,21 @@ class LauncherEntity extends EntityBase {
         set => this.SetConfigValue("ThemesDir", value, false)
     }
 
+    ShowProgress {
+        get => this.GetConfigValue("ShowProgress", false)
+        set => this.SetConfigValue("ShowProgress", value, false)
+    }
+
+    ProgressTitle {
+        get => this.GetConfigValue("ProgressTitle", false)
+        set => this.SetConfigValue("ProgressTitle", value, false)
+    }
+
+    ProgressText {
+        get => this.GetConfigValue("ProgressText", false)
+        set => this.SetConfigValue("ProgressText", value, false)
+    }
+
     __New(app, key, config, requiredConfigKeys := "", parentEntity := "") {
         super.__New(app, key, config, requiredConfigKeys, parentEntity)
         this.children["ManagedLauncher"] := ManagedLauncherEntity.new(app, key, config, "", this)
@@ -153,6 +168,7 @@ class LauncherEntity extends EntityBase {
         defaults["DestinationDir"] := this.GetDefaultDestinationDir()
         defaults["ThemeName"] := this.app.Config.ThemeName
         defaults["ThemesDir"] := this.app.Config.AppDir . "\Resources\Themes"
+        defaults["ShowProgress"] := true
         return defaults
     }
 
