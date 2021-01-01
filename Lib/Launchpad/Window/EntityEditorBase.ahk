@@ -164,6 +164,12 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         return ctl
     }
 
+    AddNumberBlock(field, settingName, showDefaultCheckbox := false, helpText := "", addPrefix := false) {
+        ctl := this.AddTextBlock(field, settingName, showDefaultCheckbox, helpText, addPrefix)
+        ctl.Opt("Number")
+        return ctl
+    }
+
     AddCheckBoxBlock(field, settingName, showDefaultCheckbox := false, helpText := "", addPrefix := false) {
         checkW := 0
         disabledText := ""

@@ -38,13 +38,15 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         return FileExist("C:\Program Files (x86)") ; @todo Make this better
     }
 
+    GetTabNames() {
+        return [this.entityTypeName, "Sources", "Registry", "Running", "Process"]
+    }
+
     Controls() {
         super.Controls()
         prefix := this.entityObj.configPrefix
 
-        tabNames := [this.entityTypeName, "Sources", "Registry", "Running", "Process"]
-
-        tabs := this.guiObj.Add("Tab3", " x" . this.margin . " w" . this.windowSettings["contentWidth"] . " +0x100", tabNames)
+        tabs := this.guiObj.Add("Tab3", " x" . this.margin . " w" . this.windowSettings["contentWidth"] . " +0x100", this.GetTabNames())
 
         tabs.UseTab(this.entityTypeName, true)
         this.AddEntityTypeSelect(prefix . " Type", "Type", this.entityObj.EntityType, this.entityObj.ListEntityTypes(), "", "You can select from the available entity types if the default doesn't work for your use case.")
@@ -73,14 +75,20 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         tabs.UseTab("Process", true)
         ctl := this.AddSelect(prefix . " Process Detection Type", "ProcessType", this.entityObj.ProcessType, this.processTypes, true, "", "", "Exe: Use the .exe filename to detect this item's process`nTitle: Use all or part of the window title to detect this item's process`nClass: Use the window class name to detect this item's process", true)
         ctl := this.AddTextBlock("ProcessId", prefix . " Process ID", true, "This value depends on the Process Type selected above, and can often be determined automatically.", true)
-        ctl := this.AddTextBlock("ProcessTimeout", "Process Timeout", true, "How long to wait when detecting this items' process", true)
+        ctl := this.AddNumberBlock("ProcessTimeout", "Process Timeout", true, "How long to wait when detecting this items' process", true)
         this.AddCheckBoxBlock("ReplaceProcess", "Replace process after launching", true, "After the process is detected, immediately kill and re-launch it so that Launchpad is its parent process.", true)
         
+        tabs.UseTab()
+        this.ExtraTabControls(tabs)
         tabs.UseTab()
     }
 
     CustomTabControls() {
         ; Assume no custom tab controls unless overridden.
+    }
+
+    ExtraTabControls(tabs) {
+        ; Assume no extra tab controls unless overridden.
     }
 
     OnDefaultExe(ctlObj, info) {
@@ -136,7 +144,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     }
 
     OnDefaultShortcutSrc(ctlObj, info) {
-        return this.SetDefaultValue("ShortcutSrc", !!(ctlObj.Value), true)
+        return this.SetDefaultLocationValue(ctlObj, "ShortcutSrc", true)
     }
 
     OnDefaultRunMethod(ctlObj, info) {
