@@ -163,7 +163,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     }
 
     OnDefaultLauncherSpecificId(ctlObj, info) {
-        return this.SetDefaultValue("LauncherSpecificId", !!(ctlObj.Value), false)
+        return this.SetDefaultValue("LauncherSpecificId", !!(ctlObj.Value), true)
     }
 
     SetDefaultLocationValue(ctlObj, fieldName, includePrefix := false) {

@@ -164,6 +164,7 @@ class LauncherEntity extends EntityBase {
     }
 
     InitializeDefaults() {
+
         defaults := super.InitializeDefaults()
         defaults["DestinationDir"] := this.GetDefaultDestinationDir()
         defaults["ThemeName"] := this.app.Config.ThemeName

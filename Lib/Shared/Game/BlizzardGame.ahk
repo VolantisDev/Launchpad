@@ -3,7 +3,7 @@
         launcherPath := this.launcherConfig["LauncherInstallDir"] . "\" . this.launcherConfig["LauncherExe"]
         
         if (launcherPath != "") {
-            gameKey := this.config["GameBlizzardProductKey"]
+            gameKey := this.config["GameLauncherSpecificId"]
             launcherPath .= " --game=" . gameKey . " --gamepath=`"" . this.config["GameInstallDir"] . "`" --productcode=" . gameKey
         }
 

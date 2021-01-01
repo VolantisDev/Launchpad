@@ -115,12 +115,14 @@ class GameBase {
     LoadingWindowIsOpen() {
         winId := 0
 
-        if (this.config["GameLoadingWindowProcessType"] == "Title") {
-            winId := WinExist(this.config["GameLoadingWindowProcessId"])
-        } else if (this.config["GameLoadingWindowProcessType"] == "Class") {
-            winId := WinExist("ahk_class " . this.config["GameLoadingWindowProcessId"])
-        } else { ; Default to Exe
-            winId := WinExist("ahk_exe " . this.config["GameLoadingWindowProcessId"])
+        if (this.config["GameHasLoadingWindow"]) {
+            if (this.config["GameLoadingWindowProcessType"] == "Title") {
+                winId := WinExist(this.config["GameLoadingWindowProcessId"])
+            } else if (this.config["GameLoadingWindowProcessType"] == "Class") {
+                winId := WinExist("ahk_class " . this.config["GameLoadingWindowProcessId"])
+            } else { ; Default to Exe
+                winId := WinExist("ahk_exe " . this.config["GameLoadingWindowProcessId"])
+            }
         }
 
         if (winId == "") {

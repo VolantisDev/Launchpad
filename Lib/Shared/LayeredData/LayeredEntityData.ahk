@@ -3,7 +3,7 @@ class LayeredEntityData extends LayeredDataBase {
     dsKey := ""
     dsPath := ""
 
-    __New(config, defaults := "", dsData := "", autoData := "") {
+    __New(config, defaults := "", dsData := "", autoData := "", parentDefaults := "") {
         if (defaults == "") {
             defaults := Map()
         }
@@ -16,8 +16,12 @@ class LayeredEntityData extends LayeredDataBase {
             autoData := Map()
         }
 
+        if (parentDefaults == "") {
+            parentDefaults := Map()
+        }
+
         processors := [PlaceholderExpander.new(this)]
-        super.__New(processors, "defaults", defaults, "auto", autoData, "ds", dsData, "config", config)
+        super.__New(processors, "parent", parentDefaults, "defaults", defaults, "auto", autoData, "ds", dsData, "config", config)
     }
 
     SetDefaults(defaults) {
@@ -30,5 +34,9 @@ class LayeredEntityData extends LayeredDataBase {
 
     SetDataSourceDefaults(defaults) {
         this.layers["ds"] := defaults
+    }
+
+    SetParentDefaults(defaults) {
+        this.layers["parent"] := defaults
     }
 }

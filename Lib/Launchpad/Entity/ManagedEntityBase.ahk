@@ -84,8 +84,8 @@ class ManagedEntityBase extends EntityBase {
 
     ; If the item is known to the launcher by a specific ID, it should be stored here.
     LauncherSpecificId {
-        get => this.GetConfigValue("LauncherSpecificId", false)
-        set => this.SetConfigValue("LauncherSpecificId", value, false)
+        get => this.GetConfigValue("LauncherSpecificId")
+        set => this.SetConfigValue("LauncherSpecificId", value)
     }
 
     ; The directory that the launcher should be run from, if set. If not set, it will be run without setting an explicit working directory, which is usually sufficient.
@@ -258,7 +258,6 @@ class ManagedEntityBase extends EntityBase {
         defaults[this.configPrefix . "LocateRegRemovePrefix"] := ""
         defaults[this.configPrefix . "LocateRegRemoveSuffix"] := ""
         defaults[this.configPrefix . "LocateRegStripQuotes"] := false
-        defaults[this.configPrefix . "BlizzardProductKey"] := "bna"
         defaults[this.configPrefix . "WorkingDir"] := ""
         defaults[this.configPrefix . "RunType"] := "Command"
         defaults[this.configPrefix . "ReplaceProcess"] := false

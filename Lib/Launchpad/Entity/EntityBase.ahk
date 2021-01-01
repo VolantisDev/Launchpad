@@ -99,6 +99,7 @@ class EntityBase {
         this.parentEntity := parentEntity
 
         this.entityData := LayeredEntityData.new(configObj.Clone(), this.InitializeDefaults())
+        this.entityData.SetLayer("parent", (parentEntity != "" ? parentEntity.InitializeDefaults() : Map()))
         this.entityData.SetLayer("ds", this.AggregateDataSourceDefaults())
         this.entityData.SetLayer("auto", this.AutoDetectValues())
         this.entityData.StoreOriginal()
