@@ -38,10 +38,28 @@ class ManagedGameEntity extends ManagedEntityBase {
         return productKey
     }
 
-    ShouldDetectShortcutSrc() {
+    ShouldDetectShortcutSrc(extraConfig) {
         detectShortcut := false
 
-        if (this.ShortcutSrc == "" and this.UsesShortcut) {
+        shortcutSrc := this.ShortcutSrc
+
+        if (extraConfig != "" and extraConfig.Has("GameShortcutSrc")) {
+            shortcutSrc := extraConfig["GameShortcutSrc"]
+        }
+
+        usesShortcut := this.UsesShortcut
+
+        if (extraConfig != "" and extraConfig.Has("GameUsesShortcut")) {
+            usesShortcut := extraConfig["GameUsesShortcut"]
+        }
+
+        if (!shortcutSrc and usesShortcut) {
+            runType := this.RunType
+
+            if (extraConfig != "" and extraConfig.Has("GameRunType")) {
+                runType := extraConfig["GameRunType"]
+            }
+
             detectShortcut := (this.RunType == "Shortcut" or this.RunCmd == "")
         }
 
@@ -74,9 +92,9 @@ class ManagedGameEntity extends ManagedEntityBase {
 
         detectedValues[this.configPrefix . "LoadingWindowProcessId"] := detectedValues[exeKey]
 
-        if (this.ShouldDetectShortcutSrc()) {
+        if (this.ShouldDetectShortcutSrc(detectedValues)) {
             basePath := this.AssetsDir . "\" . this.Key
-            shortcutSrc := ""
+            shortcutSrc := ""         
 
             if (FileExist(basePath . ".lnk")) {
                 shortcutSrc := basePath . ".lnk"

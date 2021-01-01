@@ -198,7 +198,7 @@ class ManagedEntityBase extends EntityBase {
         if (this.entityData.HasValue(this.configPrefix . "UsesShortcut")) {
             usesShortcut := this.entityData.GetValue(this.configPrefix . "UsesShortcut")
         } else {
-            usesShortcut := (this.RunType == "Shortcut" || (this.RunCmd == "" && this.ShortcutSrc != ""))
+            usesShortcut := (this.RunType == "Shortcut" || this.ShortcutSrc != "" || this.RunCmd == "")
         }
 
         detectedValues[this.configPrefix . "UsesShortcut"] := usesShortcut
