@@ -46,6 +46,7 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\WindowManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\EntityEditorBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\LauncherEditor.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Window\LauncherWizard.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\LaunchpadFormGuiBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\LaunchpadGuiBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\MainWindow.ahk

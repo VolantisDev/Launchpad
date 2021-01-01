@@ -113,11 +113,9 @@
     }
 
     AddLauncher() {
-        entityConfig := Map()
-        entity := LauncherEntity.new(this.app, "new", entityConfig)
-        diff := entity.Edit("config", this.guiObj)
-        
-        if (diff != "" and diff.HasChanges() and entity.Key != "new") {
+        entity := this.app.Windows.LauncherWizard(this.guiObj)
+
+        if (entity != "") {
             this.launcherManager.AddLauncher(entity.Key, entity)
             this.PopulateListView()
             this.launchersModified := true

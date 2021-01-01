@@ -98,12 +98,14 @@ class LauncherEditor extends EntityEditorBase {
     }
 
     OnLauncherTypeChange(ctlObj, info) {
+        this.guiObj.Submit(false)
         this.entityObj.ManagedLauncher.EntityType := ctlObj.Text
         this.entityObj.ManagedLauncher.UpdateDataSourceDefaults()
         ; @todo If new launcher type changes the game type, change it here
     }
 
     OnGameTypeChange(ctlObj, info) {
+        this.guiObj.Submit(false)
         this.entityObj.ManagedLauncher.ManagedGame.EntityType := ctlObj.Text
         this.entityObj.ManagedLauncher.ManagedGame.UpdateDataSourceDefaults()
     }
