@@ -66,6 +66,7 @@ class LauncherEntity extends EntityBase {
     __New(app, key, config, requiredConfigKeys := "", parentEntity := "") {
         super.__New(app, key, config, requiredConfigKeys, parentEntity)
         this.children["ManagedLauncher"] := ManagedLauncherEntity.new(app, key, config, "", this)
+        this.entityData.SetLayer("auto", this.AutoDetectValues()) ; Re-detect values now that children are loaded, @todo make this run only once
     }
 
     /**
@@ -155,7 +156,7 @@ class LauncherEntity extends EntityBase {
             
             if (FileExist(checkPath)) {
                 detectedValues["IconSrc"] := checkPath
-            } else if (this.ManagedLauncher.ManagedGame.GetValue("Exe") != "") {
+            } else if (this.children.Has("ManagedLauncher") and this.ManagedLauncher.ManagedGame.GetConfigValue("Exe") != "") {
                 detectedValues["IconSrc"] := this.ManagedLauncher.ManagedGame.LocateExe()
             }
         }

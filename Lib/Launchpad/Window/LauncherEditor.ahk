@@ -116,7 +116,7 @@ class LauncherEditor extends EntityEditorBase {
 
         if (diff != "" and diff.HasChanges()) {
             if (diff.ValueIsModified("LauncherType")) {
-                this.guiObj["LauncherType"].Value := this.GetItemIndex(this.launcherTypes, entity.GetValue("Type"))
+                this.guiObj["LauncherType"].Value := this.GetItemIndex(this.launcherTypes, entity.GetConfigValue("Type"))
             }
         }
     }
@@ -127,7 +127,7 @@ class LauncherEditor extends EntityEditorBase {
 
         if (diff != "" and diff.HasChanges()) {
             if (diff.ValueIsModified("GameType")) {
-                this.guiObj["GameType"].Value := this.GetItemIndex(this.gameTypes, entity.GetValue("Type"))
+                this.guiObj["GameType"].Value := this.GetItemIndex(this.gameTypes, entity.GetConfigValue("Type"))
             }
         }
     }
