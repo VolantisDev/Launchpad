@@ -36,6 +36,7 @@
 
             if (shouldSave == "Yes") {
                 this.launcherManager.SaveModifiedLaunchers()
+                this.app.Launchers.LoadLaunchers(this.app.Config.LauncherFile)
             }
         }
 
