@@ -25,7 +25,7 @@
     }
 
     ThemeName {
-        get => this.GetIniValue("ThemeName") || "Lightpad"
+        get => this.GetIniValue("ThemeName") || "Steampad"
         set => this.SetIniValue("ThemeName", value)
     }
 

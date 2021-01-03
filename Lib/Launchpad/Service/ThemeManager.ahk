@@ -1,6 +1,6 @@
 class ThemeManager extends AppComponentServiceBase {
     themesDir := ""
-    defaultTheme := "Lightpad"
+    defaultTheme := "Steampad"
     eventManager := ""
     idGenerator := ""
 

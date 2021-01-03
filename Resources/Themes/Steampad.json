@@ -1,0 +1,51 @@
+{
+    "theme": {
+        "name": "Steampad",
+        "parentTheme": "Darkpad",
+        "vars": {},
+        "colors": {
+            "dark": "1F2329",
+            "light": "FEFEFE",
+            "green": "7EA64B",
+            "blue": "3D668F",
+            "darkblue": "1E4266",
+            "lightblue": "59AECE",
+            "gray": "646E70",
+            "lightgray": "C8D0BF",
+            "default": "{{dark}}",
+            "background": "{{dark}}",
+            "text": "{{light}}",
+            "textLight": "{{lightgray}}",
+            "accent": "{{blue}}",
+            "accentLight": "{{lightblue}}",
+            "accentDark": "{{darkblue}}",
+            "border": "{{buttonBackground}}",
+            "borderHover": "{{buttonBackgroundHover}}",
+            "buttonBackground": "{{blue}}",
+            "buttonBackgroundHover": "{{lightblue}}",
+            "buttonBackgroundClick": "{{lightblue}}",
+            "buttonText": "{{lightgray}}",
+            "buttonTextHover": "{{light}}",
+            "buttonTextClick": "{{buttonTextHover}}",
+            "linkText": "{{green}}"
+        },
+        "themeAssets": {
+            "logo": ""
+        },
+        "buttons": {
+            "borderWidth": 0,
+            "height": {
+                "s": 20,
+                "m": 30,
+                "l": 40,
+                "xl": 80
+            },
+            "fixedWidth": {
+                "s": 80,
+                "m": 100,
+                "l": 120,
+                "xl": 140
+            }
+        }
+    }
+}

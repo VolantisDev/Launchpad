@@ -183,7 +183,7 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
 
     AddLocationText(locationText, ctlName, position := "xs y+m") {
         ;this.guiObj.SetFont("Bold")
-        ctl := this.guiObj.AddText("v" . ctlName . " " . position . " w" . this.windowSettings["contentWidth"] . " +0x200 c" . this.themeObj.GetColor("accentDark"), locationText)
+        ctl := this.guiObj.AddText("v" . ctlName . " " . position . " w" . this.windowSettings["contentWidth"] . " +0x200 c" . this.themeObj.GetColor("linkText"), locationText)
         ;this.guiObj.SetFont()
         return ctl
     }

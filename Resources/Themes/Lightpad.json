@@ -19,7 +19,8 @@
             "buttonBackgroundClick": "{{buttonBackgroundHover}}",
             "buttonText": "{{text}}",
             "buttonTextHover": "ffffff",
-            "buttonTextClick": "{{buttonTextHover}}"
+            "buttonTextClick": "{{buttonTextHover}}",
+            "linkText": "{{accentLight}}"
         },
         "themeAssets": {
             "icon": "Resources\\Graphics\\Launchpad.ico",
