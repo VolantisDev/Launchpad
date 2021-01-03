@@ -1,10 +1,8 @@
+RequestExecutionLevel user
+
 !define APP_NAME "Launchpad"
 !define COMP_NAME "Volantis Dev"
-!define COPYRIGHT "Ben McClure � 2020"
-!define DESCRIPTION "Game Launching Multitool"
-!define INSTALLER_NAME "Build\${APP_NAME}Installer.exe"
 !define MAIN_APP_EXE "${APP_NAME}.exe"
-!define INSTALL_TYPE "SetShellVarContext current"
 !define REG_ROOT "HKCU"
 !define REG_APP_PATH "Software\Microsoft\Windows\CurrentVersion\App Paths\${MAIN_APP_EXE}"
 !define UNINSTALL_PATH "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}"
@@ -14,21 +12,21 @@ Unicode True
 
 var SM_Folder
 
-VIProductVersion  "${VERSION}"
+VIProductVersion "${VERSION}"
 VIAddVersionKey "ProductName"  "${APP_NAME}"
 VIAddVersionKey "CompanyName"  "${COMP_NAME}"
-VIAddVersionKey "LegalCopyright"  "${COPYRIGHT}"
-VIAddVersionKey "FileDescription"  "${DESCRIPTION}"
+VIAddVersionKey "LegalCopyright"  "Ben McClure � 2020"
+VIAddVersionKey "FileDescription"  "Game Launching Multitool"
 VIAddVersionKey "FileVersion"  "${VERSION}"
 
 SetCompressor ZLIB
 Name "${APP_NAME}"
 Caption "${APP_NAME}"
-OutFile "${INSTALLER_NAME}"
+OutFile "Build\${APP_NAME}Installer.exe"
 BrandingText "${APP_NAME}"
 XPStyle on
 InstallDirRegKey "${REG_ROOT}" "${REG_APP_PATH}" ""
-InstallDir "$PROGRAMFILES\${APP_NAME}"
+InstallDir "$LOCALAPPDATA\${APP_NAME}"
 
 !include "MUI2.nsh"
 
@@ -58,7 +56,7 @@ InstallDir "$PROGRAMFILES\${APP_NAME}"
 !insertmacro MUI_LANGUAGE "English"
 
 Section -MainProgram
-${INSTALL_TYPE}
+SetShellVarContext current
 SetOverwrite ifnewer
 SetOutPath "$INSTDIR"
 File /r "Build\*"
@@ -99,7 +97,7 @@ WriteRegStr ${REG_ROOT} "${UNINSTALL_PATH}"  "URLInfoAbout" "${WEB_SITE}"
 SectionEnd
 
 Section Uninstall
-${INSTALL_TYPE}
+SetShellVarContext current
 Delete "$INSTDIR\${APP_NAME}.exe"
 Delete "$INSTDIR\Uninstall ${APP_NAME}.exe"
 RMDir /r "$INSTDIR\Resources"
