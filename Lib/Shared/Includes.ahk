@@ -50,6 +50,8 @@
 #Include E:\Tools\Launchpad\Lib\Shared\Launcher\SimpleLauncher.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\LayeredData\LayeredDataBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\LayeredData\LayeredEntityData.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Logger\FileLogger.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Logger\LoggerBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Notifier\NotifierBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Notifier\ToastNotifier.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\OpError\BasicOpError.ahk
@@ -60,6 +62,7 @@
 #Include E:\Tools\Launchpad\Lib\Shared\Service\ComponentServiceBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Service\DataSourceManager.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Service\EventManager.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Service\LoggerService.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Service\ServiceBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Theme\JsonTheme.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Theme\ThemeBase.ahk

@@ -61,7 +61,7 @@
 
     RebuildExistingLaunchers {
         get => this.GetBooleanValue("RebuildExistingLaunchers", true)
-        set => this.SetIniValue("RebuildExistingLaunchers", value)
+        set => this.SetBooleanValue("RebuildExistingLaunchers", value)
     }
 
     CreateIndividualDirs {
@@ -92,6 +92,11 @@
     FlushCacheOnExit {
         get => this.GetBooleanValue("FlushCacheOnExit", false)
         set => this.SetBooleanValue("FlushCacheOnExit", value)
+    }
+
+    LoggingLevel {
+        get => this.GetIniValue("LoggingLevel") || "None"
+        set => this.SetIniValue("LoggingLevel", value)
     }
 
     __New(app, defaultTempDir, defaultAppDataDir) {

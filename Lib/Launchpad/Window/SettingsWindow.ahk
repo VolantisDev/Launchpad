@@ -1,5 +1,6 @@
 ﻿class SettingsWindow extends LaunchpadGuiBase {
     availableThemes := Map()
+    logLevels := ["None", "Error", "Warning", "Info", "Debug"]
 
     __New(app, windowKey := "", owner := "", parent := "") {
         this.availableThemes := app.Themes.GetAvailableThemes(true)
@@ -60,6 +61,11 @@
 
         this.AddHeading("Cache Settings")
         this.AddConfigCheckBox("Flush cache on exit", "FlushCacheOnExit")
+
+        this.AddHeading("Logging Level")
+        chosen := this.GetItemIndex(this.logLevels, this.app.Config.LoggingLevel)
+        ctl := this.guiObj.AddDDL("vLoggingLevel xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"], this.logLevels)
+        ctl.OnEvent("Change", "OnLoggingLevelChange")
 
         tabs.UseTab()
 
@@ -193,5 +199,10 @@
         this.guiObj.Submit(false)
         this.app.Config.ThemeName := this.availableThemes[ctl.Value]
         this.app.Themes.LoadMainTheme()
+    }
+
+    OnLoggingLevelChange(ctl, info) {
+        this.guiObj.Submit(false)
+        this.app.Config.LoggingLevel := ctl.Text
     }
 }

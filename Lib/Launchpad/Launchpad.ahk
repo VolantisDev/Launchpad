@@ -82,6 +82,11 @@
         set => this.blizzardProductDbObj := value
     }
 
+    Logger {
+        get => this.loggerServiceObj
+        set => this.loggerServiceObj := value
+    }
+
     __New(appName, appDir) {
         InvalidParameterException.CheckTypes("Launchpad", "appName", appName, "", "appDir", appDir, "")
         this.appName := appName
@@ -90,13 +95,16 @@
         DirCreate(this.tmpDir)
         DirCreate(this.appDataDir)
 
-        idGen := UuidGenerator.new()
+        
         config := AppConfig.new(this, this.tmpDir, this.appDataDir)
+        idGen := UuidGenerator.new()
         appStateObj := LaunchpadAppState.new(this.appDataDir . "\State.json")
         eventManagerObj := EventManager.new()
 
         this.idGen := idGen
         this.appConfigObj := config
+
+        this.loggerServiceObj := LoggerService.new(FileLogger.new(A_ScriptDir . "\log.txt", config.LoggingLevel, 5))
         this.appStateObj := appStateObj
         this.blizzardProductDbObj := BlizzardProductDb.new(this)
         this.eventManagerObj := eventManagerObj
