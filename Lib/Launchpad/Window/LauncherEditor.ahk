@@ -30,6 +30,7 @@ class LauncherEditor extends EntityEditorBase {
 
         tabs.UseTab("General", true)
         this.AddComboBox("Key", "Key", this.entityObj.Key, this.knownGames, "Select an existing game from the API, or enter a custom game key to create your own. Use caution when changing this value, as it will change which data is requested from the API.")
+        this.AddTextBlock("DisplayName", "Display Name", true, "You can change the display name of the game if it differs from the key. The launcher filename will still be created using the key.")
         this.AddEntityTypeSelect("Launcher", "LauncherType", this.entityObj.ManagedLauncher.EntityType, this.launcherTypes, "LauncherConfiguration", "This tells Launchpad how to interact with any launcher your game might require. If your game's launcher isn't listed, or your game doesn't have a launcher, start with `"Default`".")
         this.AddEntityTypeSelect("Game", "GameType", this.entityObj.ManagedLauncher.ManagedGame.EntityType, this.gameTypes, "GameConfiguration", "This tells Launchpad how to launch your game. Most games can use 'default', but launchers can support different game types.")
 
@@ -45,7 +46,10 @@ class LauncherEditor extends EntityEditorBase {
         this.AddTextBlock("ProgressText", "Progress Window Text", true, "The text displayed at the top of the progress window if shown")
 
         tabs.UseTab("Advanced", true)
-        this.AddTextBlock("DisplayName", "Display Name", true, "You can change the display name of the game if it differs from the key. The launcher filename will still be created using the key.")
+        this.AddTextBlock("RunBefore", "Run Before Game", true, "Run one or more processes before launching the game. Each line should contain a command to run or a full path to a .exe or shortcut file to launch.`n`nEach process will be run as a scheduled task so that it is not owned by the launcher.", false, 3, ";")
+        this.AddTextBlock("CloseBefore", "Close Before Game", true, "Close one or more processes before launching the game. Each line should contain the name of the process to close (usually just the .exe filename).", false, 3, ";")
+        this.AddTextBlock("RunAfter", "Run After Game", true, "Run one or more processes after closing the game. Each line should contain a command to run or a full path to a .exe or shortcut file to launch.`n`nEach process will be run as a scheduled task so that it is not owned by the launcher.", false, 3, ";")
+        this.AddTextBlock("CloseAfter", "Close After Game", true, "Close one or more processes after closing the game. Each line should contain the name of the process to close (usually just the .exe filename).", false, 3, ";")
 
         tabs.UseTab()
     }
@@ -64,6 +68,22 @@ class LauncherEditor extends EntityEditorBase {
 
     OnDefaultDisplayName(ctlObj, info) {
         return this.SetDefaultValue("DisplayName", !!(ctlObj.Value))
+    }
+
+    OnDefaultRunBefore(ctlObj, info) {
+        return this.SetDefaultValue("RunBefore", !!(ctlObj.Value))
+    }
+
+    OnDefaultRunAfter(ctlObj, info) {
+        return this.SetDefaultValue("RunAfter", !!(ctlObj.Value))
+    }
+
+    OnDefaultCloseBefore(ctlObj, info) {
+        return this.SetDefaultValue("CloseBefore", !!(ctlObj.Value))
+    }
+
+    OnDefaultCloseAfter(ctlObj, info) {
+        return this.SetDefaultValue("CloseAfter", !!(ctlObj.Value))
     }
 
     OnDefaultGameType(ctlObj, info) {
@@ -135,6 +155,29 @@ class LauncherEditor extends EntityEditorBase {
     OnDisplayNameChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.DisplayName := ctlObj.Value
+    }
+
+    OnRunBeforeChange(ctlObj, info) {
+        this.SetProcessList("RunBefore", ctlObj)
+    }
+
+    OnRunAfterChange(ctlObj, info) {
+        this.SetProcessList("RunAfter", ctlObj)
+    }
+
+    OnCloseBeforeChange(ctlObj, info) {
+        this.SetProcessList("CloseBefore", ctlObj)
+    }
+
+    OnCloseAfterChange(ctlObj, info) {
+        this.SetProcessList("CloseAfter", ctlObj)
+    }
+
+    SetProcessList(property, ctlObj) {
+        this.guiObj.Submit(false)
+        value := StrReplace(ctlObj.Value, "`r`n", ";")
+        value := StrReplace(value, "`n", ";")
+        this.entityObj.%property% := value
     }
 
     OnChangeIconSrc(btn, info) {

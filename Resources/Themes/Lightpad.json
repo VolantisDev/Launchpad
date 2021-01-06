@@ -20,7 +20,8 @@
             "buttonText": "{{text}}",
             "buttonTextHover": "ffffff",
             "buttonTextClick": "{{buttonTextHover}}",
-            "linkText": "{{accentLight}}"
+            "linkText": "{{accentLight}}",
+            "inputText": "{{text}}"
         },
         "themeAssets": {
             "icon": "Resources\\Graphics\\Launchpad.ico",

@@ -27,7 +27,8 @@
             "buttonText": "{{lightgray}}",
             "buttonTextHover": "{{light}}",
             "buttonTextClick": "{{buttonTextHover}}",
-            "linkText": "{{green}}"
+            "linkText": "{{green}}",
+            "inputText": "{{dark}}"
         },
         "themeAssets": {
             "logo": ""

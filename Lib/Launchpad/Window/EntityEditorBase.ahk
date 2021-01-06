@@ -68,7 +68,7 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         super.Controls()
     }
 
-    AddTextBlock(field, settingName, showDefaultCheckbox := false, helpText := "", addPrefix := false) {
+    AddTextBlock(field, settingName, showDefaultCheckbox := false, helpText := "", addPrefix := false, rows := 1, replaceWithNewline := "") {
         this.AddHeading(settingName)
         checkW := 0
         disabledText := ""
@@ -87,7 +87,13 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         
         fieldW := this.windowSettings["contentWidth"] - checkW
         pos := showDefaultCheckbox ? "x+m yp" : "xs y+m"
-        ctl := this.guiObj.AddEdit("v" . field . " " . pos . " w" . fieldW . disabledText, this.entityObj.GetConfigValue(field, addPrefix))
+        val := this.entityObj.GetConfigValue(field, addPrefix)
+
+        if (replaceWithNewline) {
+            val := StrReplace(val, replaceWithNewline, "`n")
+        }
+
+        ctl := this.guiObj.AddEdit("v" . field . " " . pos . " w" . fieldW . disabledText . " r" . rows . " c" . this.themeObj.GetColor("editText"), val)
         ctl.OnEvent("Change", "On" . field . "Change")
 
         if (helpText) {

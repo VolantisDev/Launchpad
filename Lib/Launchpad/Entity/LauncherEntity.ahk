@@ -63,6 +63,26 @@ class LauncherEntity extends EntityBase {
         set => this.SetConfigValue("ProgressText", value, false)
     }
 
+    RunBefore {
+        get => this.GetConfigValue("RunBefore", false)
+        set => this.SetConfigValue("RunBefore", value, false)
+    }
+
+    CloseBefore {
+        get => this.GetConfigValue("CloseBefore", false)
+        set => this.SetConfigValue("CloseBefore", value, false)
+    }
+
+    RunAfter {
+        get => this.GetConfigValue("RunAfter", false)
+        set => this.SetConfigValue("RunAfter", value, false)
+    }
+
+    CloseAfter {
+        get => this.GetConfigValue("CloseAfter", false)
+        set => this.SetConfigValue("CloseAfter", value, false)
+    }
+
     __New(app, key, config, requiredConfigKeys := "", parentEntity := "") {
         super.__New(app, key, config, requiredConfigKeys, parentEntity)
         this.children["ManagedLauncher"] := ManagedLauncherEntity.new(app, key, config, "", this)
@@ -173,6 +193,10 @@ class LauncherEntity extends EntityBase {
         defaults["ShowProgress"] := true
         defaults["ProgressTitle"] := "Monitoring {g}"
         defaults["ProgressText"] := "Launchpad is monitoring {g}. Enjoy your game!"
+        defaults["RunBefore"] := ""
+        defaults["RunAfter"] := ""
+        defaults["CloseBefore"] := ""
+        defaults["CloseAfter"] := ""
         return defaults
     }
 

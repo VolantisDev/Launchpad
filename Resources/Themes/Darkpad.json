@@ -9,7 +9,8 @@
             "textLight": "EEEEEE",
             "accent": "9466FC",
             "accentLight": "EEE6FF",
-            "accentDark": "8A57F0"
+            "accentDark": "8A57F0",
+            "inputText": "{{background}}"
         },
         "themeAssets": {
             "logo": ""

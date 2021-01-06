@@ -18,7 +18,7 @@ class LaunchpadFormGuiBase extends FormGuiBase {
 
     AddComboBox(heading, field, currentValue, allItems, helpText := "") {
         this.AddHeading(heading)
-        ctl := this.guiObj.AddComboBox("v" . field . " xs y+m w" . this.windowSettings["contentWidth"], allItems)
+        ctl := this.guiObj.AddComboBox("v" . field . " xs y+m w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"), allItems)
         ctl.Text := currentValue
         ctl.OnEvent("Change", "On" . field . "Change")
 
@@ -62,7 +62,7 @@ class LaunchpadFormGuiBase extends FormGuiBase {
         chosen := this.GetItemIndex(allItems, currentValue)
         pos := showDefaultCheckbox ? "x+m yp" : "xs y+m"
         pos := pos . disabledText
-        ctl := this.guiObj.AddDDL("v" . field . " " . pos . " Choose" . chosen . " w" . fieldW, allItems)
+        ctl := this.guiObj.AddDDL("v" . field . " " . pos . " Choose" . chosen . " w" . fieldW . " c" . this.themeObj.GetColor("editText"), allItems)
         ctl.OnEvent("Change", "On" . field . "Change")
 
         if (buttonName) {
