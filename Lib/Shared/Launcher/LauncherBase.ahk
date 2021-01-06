@@ -49,6 +49,22 @@ class LauncherBase {
             launchSteps++
         }
 
+        if (this.config["CloseBefore"]) {
+            launchSteps++
+        }
+
+        if (this.config["CloseAfter"]) {
+            launchSteps++
+        }
+
+        if (this.config["RunBefore"]) {
+            launchSteps++
+        }
+
+        if (this.config["RunAfter"]) {
+            launchSteps++
+        }
+
         return launchSteps + this.game.CountRunSteps()
     }
 
@@ -58,6 +74,21 @@ class LauncherBase {
             this.progress.SetDetailText("Initializing launcher...")
         }
         
+        if (this.config["CloseBefore"]) {
+            if (this.progress != "") {
+                this.progress.IncrementValue(1, "Closing processes before run...")
+            }
+
+            this.CloseProcesses(this.config["CloseBefore"])
+        }
+
+        if (this.config["RunBefore"]) {
+            if (this.progress != "") {
+                this.progress.IncrementValue(1, "Launching processes before run...")
+            }
+
+            this.RunProcesses(this.config["RunBefore"])
+        }
 
         if (this.config["LauncherCloseBeforeRun"]) {
             if (this.progress != "") {
@@ -77,11 +108,63 @@ class LauncherBase {
             this.CloseLauncher("AfterRun")
         }
 
+        if (this.config["CloseAfter"]) {
+            if (this.progress != "") {
+                this.progress.IncrementValue(1, "Closing processes after run...")
+            }
+
+            this.CloseProcesses(this.config["CloseAfter"])
+        }
+
+        if (this.config["RunAfter"]) {
+            if (this.progress != "") {
+                this.progress.IncrementValue(1, "Launching processes after run...")
+            }
+
+            this.RunProcesses(this.config["RunAfter"])
+        }
+
         if (this.progress != "") {
             this.progress.Finish()
         }
 
         return result
+    }
+
+    CloseProcesses(processes) {
+        processes := StrSplit(processes, ";")
+
+        for index, processExe in processes {
+            if (this.progress != "") {
+                this.progress.SetDetailText("Closing " . processExe . "...")
+            }
+
+            if (WinExist("ahk_exe " . processExe, "", " - Launchpad")) {
+                WinClose()
+                Sleep(1000)
+            }
+
+            pid := ProcessExist(processExe)
+            if (pid) {
+                ProcessClose(pid)
+            }
+        }
+    }
+
+    RunProcesses(processes) {
+        processes := StrSplit(processes, ";")
+
+        for index, command in processes {
+            if (this.progress != "") {
+                this.progress.SetDetailText("Running " . command . "...")
+            }
+
+            taskName := "Launchpad\" . this.key . "\Before\" . index
+            currentTime := FormatTime(,"yyyyMMddHHmmss")
+            runTime := FormatTime(DateAdd(currentTime, 2, "Seconds"), "HH:mm")
+            cmd := "SCHTASKS /CREATE /SC ONCE /TN `"" . taskName . "`" /TR `"'" . command . "'`" /ST " . runTime
+            Run(cmd,, "Hide")
+        }
     }
 
     LaunchGameAction() {
