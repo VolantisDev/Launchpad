@@ -87,7 +87,7 @@ class LauncherBase {
                 this.progress.IncrementValue(1, "Launching processes before run...")
             }
 
-            this.RunProcesses(this.config["RunBefore"])
+            this.RunProcesses(this.config["RunBefore"], "Before")
         }
 
         if (this.config["LauncherCloseBeforeRun"]) {
@@ -121,7 +121,7 @@ class LauncherBase {
                 this.progress.IncrementValue(1, "Launching processes after run...")
             }
 
-            this.RunProcesses(this.config["RunAfter"])
+            this.RunProcesses(this.config["RunAfter"], "After")
         }
 
         if (this.progress != "") {
@@ -151,7 +151,7 @@ class LauncherBase {
         }
     }
 
-    RunProcesses(processes) {
+    RunProcesses(processes, dir) {
         processes := StrSplit(processes, ";")
 
         for index, command in processes {
@@ -159,11 +159,13 @@ class LauncherBase {
                 this.progress.SetDetailText("Running " . command . "...")
             }
 
-            taskName := "Launchpad\" . this.key . "\Before\" . index
+            taskName := "Launchpad\" . this.key . "\" . dir . "\" . index
             currentTime := FormatTime(,"yyyyMMddHHmmss")
-            runTime := FormatTime(DateAdd(currentTime, 2, "Seconds"), "HH:mm")
-            cmd := "SCHTASKS /CREATE /SC ONCE /TN `"" . taskName . "`" /TR `"'" . command . "'`" /ST " . runTime
-            Run(cmd,, "Hide")
+            runTime := FormatTime(DateAdd(currentTime, 0, "Seconds"), "HH:mm")
+            cmd := "SCHTASKS /CREATE /SC ONCE /TN `"" . taskName . "`" /TR `"'" . command . "'`" /ST " . runTime . " /f"
+            RunWait(cmd,, "Hide")
+            RunWait("SCHTASKS /RUN /TN `"" . taskName . "`"",, "Hide")
+            Run("SCHTASKS /DELETE /TN `"" . taskName . "`" /f",, "Hide")
         }
     }
 
