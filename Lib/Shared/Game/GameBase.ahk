@@ -171,12 +171,16 @@ class GameBase {
     }
 
     RunGameScheduled() {
-        taskName := "Launchpad\" . this.key
-        runCmd := this.config["GameRunCmd"]
+        this.RunScheduledTask("Launchpad\" . this.key, this.config["GameRunCmd"])
+    }
+
+    RunScheduledTask(taskname, runCmd) {
         currentTime := FormatTime(,"yyyyMMddHHmmss")
-        runTime := FormatTime(DateAdd(currentTime, 2, "Seconds"), "HH:mm")
-        cmd := "SCHTASKS /CREATE /SC ONCE /TN `"" . taskName . "`" /TR `"'" . runCmd . "'`" /ST " . runTime
-        Run(cmd,, "Hide")
+        runTime := FormatTime(DateAdd(currentTime, 0, "Seconds"), "HH:mm")
+        cmd := "SCHTASKS /CREATE /SC ONCE /TN `"" . taskName . "`" /TR `"'" . runCmd . "'`" /ST " . runTime . " /f"
+        RunWait(cmd,, "Hide")
+        RunWait("SCHTASKS /RUN /TN `"" . taskName . "`"",, "Hide")
+        Run("SCHTASKS /DELETE /TN `"" . taskName . "`" /f",, "Hide")
     }
 
     RunGameRun() {

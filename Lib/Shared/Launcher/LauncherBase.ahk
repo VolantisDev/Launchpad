@@ -160,13 +160,16 @@ class LauncherBase {
             }
 
             taskName := "Launchpad\" . this.key . "\" . dir . "\" . index
-            currentTime := FormatTime(,"yyyyMMddHHmmss")
-            runTime := FormatTime(DateAdd(currentTime, 0, "Seconds"), "HH:mm")
-            cmd := "SCHTASKS /CREATE /SC ONCE /TN `"" . taskName . "`" /TR `"'" . command . "'`" /ST " . runTime . " /f"
-            RunWait(cmd,, "Hide")
-            RunWait("SCHTASKS /RUN /TN `"" . taskName . "`"",, "Hide")
-            Run("SCHTASKS /DELETE /TN `"" . taskName . "`" /f",, "Hide")
+            this.RunScheduledTask(taskName, command)
         }
+    }
+
+    RunScheduledTask(taskname, runCmd) {
+        currentTime := FormatTime(,"yyyyMMddHHmmss")
+        runTime := FormatTime(DateAdd(currentTime, 0, "Seconds"), "HH:mm")
+        RunWait("SCHTASKS /CREATE /SC ONCE /TN `"" . taskName . "`" /TR `"'" . runCmd . "'`" /ST " . runTime . " /f",, "Hide")
+        RunWait("SCHTASKS /RUN /TN `"" . taskName . "`"",, "Hide")
+        Run("SCHTASKS /DELETE /TN `"" . taskName . "`" /f",, "Hide")
     }
 
     LaunchGameAction() {
