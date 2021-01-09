@@ -1,6 +1,6 @@
 ﻿class ManageWindow extends LaunchpadGuiBase {
     sidebarWidth := 85
-    listViewColumns := Array("Game", "Launcher Type", "Game Type")
+    listViewColumns := Array("Game", "Launcher Type", "Game Type", "Status")
     launcherFile := ""
     launcherManager := ""
     launchersModified := false
@@ -65,7 +65,13 @@
         this.guiObj["ListView"].SetImageList(IL)
 
         for key, launcher in this.launcherManager.Launchers {
-            this.guiObj["ListView"].Add("Icon" . iconNum, launcher.Key, launcher.ManagedLauncher.EntityType, launcher.ManagedLauncher.ManagedGame.EntityType)
+            launcherStatus := "Missing"
+
+            if (launcher.isBuilt) {
+                launcherStatus := launcher.IsOutdated ? "Outdated" : "Built"
+            }
+
+            this.guiObj["ListView"].Add("Icon" . iconNum, launcher.Key, launcher.ManagedLauncher.EntityType, launcher.ManagedLauncher.ManagedGame.EntityType, launcherStatus)
             iconNum++
         }
 

@@ -83,6 +83,14 @@ class LauncherEntity extends EntityBase {
         set => this.SetConfigValue("CloseAfter", value, false)
     }
 
+    IsBuilt {
+        get => this.LauncherExists(false)
+    }
+
+    IsOutdated {
+        get => !this.LauncherExists(false) or this.LauncherIsOutdated() 
+    }
+
     __New(app, key, config, requiredConfigKeys := "", parentEntity := "") {
         super.__New(app, key, config, requiredConfigKeys, parentEntity)
         this.children["ManagedLauncher"] := ManagedLauncherEntity.new(app, key, config, "", this)
@@ -95,6 +103,10 @@ class LauncherEntity extends EntityBase {
 
     LauncherExists(checkSourceFile := false) {
         return (FileExist(this.GetLauncherFile(this.Key, checkSourceFile)) != "")
+    }
+
+    LauncherIsOutdated() {
+        return false ; @todo implement a check against the launcher version in the schema file
     }
 
     GetLauncherFile(key, checkSourceFile := false) {

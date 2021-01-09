@@ -7,6 +7,7 @@
 
 A_IconHidden := A_IsCompiled
 
+appVersion := "{{VERSION}}"
 #Include Lib\Shared\Includes.ahk
 #Include Lib\Launchpad\Includes.ahk
 
