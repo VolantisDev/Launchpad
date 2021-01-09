@@ -13,12 +13,12 @@
 
         InvalidParameterException.CheckTypes("ManageWindow", "launcherFile", launcherFile, "")
         this.launcherFile := launcherFile
-        this.launcherManager := LauncherManager.new(app, launcherFile)
+        this.launcherManager := app.Launchers
         super.__New(app, "Manage", windowKey, owner, parent)
     }
 
     GetTitle(title) {
-        return super.GetTitle(this.launcherFile . " - " . title)
+        return super.GetTitle(title)
     }
 
     Controls() {
@@ -30,10 +30,9 @@
         this.AddButton("vRunButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Run")
         this.AddButton("vDeleteButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Delete")
         
-        this.AddButton("vToolsButton xp y" . (this.windowSettings["listViewHeight"] - (this.margin * 3) - 40)  . " w" . this.sidebarWidth . " h30", "Tools")
+        this.AddButton("vToolsButton xp y" . (this.windowSettings["listViewHeight"] - (this.margin * 4) - 70)  . " w" . this.sidebarWidth . " h30", "Tools")
+        this.AddButton("vSettingsButton xp y+m w" . this.sidebarWidth . " h30", "Settings")
         this.AddButton("vBuildAllButton xp y+m w" . this.sidebarWidth . " h40", "Build All", "", true)
-        
-
     }
 
     Destroy() {
@@ -42,11 +41,12 @@
 
             if (shouldSave == "Yes") {
                 this.launcherManager.SaveModifiedLaunchers()
-                this.app.Launchers.LoadLaunchers(this.app.Config.LauncherFile)
             }
         }
 
+        currentApp := this.app
         super.Destroy()
+        currentApp.ExitApp()
     }
 
     AddLaunchersList() {
@@ -176,6 +176,10 @@
         this.app.Builders.BuildLaunchers(this.app.Launchers.Launchers, this.app.Config.RebuildExistingLaunchers)
     }
 
+    OnSettingsButton(btn, info) {
+        this.app.Windows.OpenSettingsWindow("ManageWindow")
+    }
+
     OnToolsButton(btn, info) {
         this.app.Windows.OpenToolsWindow("ManageWindow")
     }
@@ -277,7 +281,8 @@
 
         this.AutoXYWH("wh", ["ListView"])
         this.AutoXYWH("x", ["AddButton", "EditButton", "BuildButton", "RunButton", "DeleteButton"])
-        this.AutoXYWH("xy", ["BuildAllButton", "ToolsButton"])
+        this.AutoXYWH("xy", ["BuildAllButton"])
+        this.AutoXYWH("xy*", ["SettingsButton", "ToolsButton"])
 
         if (this.hToolbar) {
             this.guiObj["Toolbar"].Move(,,width)

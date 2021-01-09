@@ -35,6 +35,8 @@
             "primaryActionText": "{{light}}",
             "primaryActionTextHover": "{{buttonTextHover}}",
             "primaryActionTextClick": "{{buttonTextClick}}",
+            "primaryActionBorder": "{{greenDim}}",
+            "primaryActionBorderHover": "{{green}}",
             "linkText": "{{greenDim}}",
             "inputText": "{{dark}}"
         },

@@ -18,7 +18,7 @@ try {
     app := Launchpad.new(appName, A_ScriptDir)
     app.Installers.InstallRequirements()
     app.Launchers.LoadLaunchers(app.Config.LauncherFile)
-    app.Windows.OpenMainWindow()
+    app.Windows.OpenManageWindow()
 } catch e {
     extra := (e.HasProp("Extra") and e.Extra != "") ? "`n`nAdditional info:`n" . e.Extra : ""
     occurredIn := e.What ? " in " . e.What : ""

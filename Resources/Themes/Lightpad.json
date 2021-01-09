@@ -26,6 +26,8 @@
             "primaryActionText": "{{buttonText}}",
             "primaryActionTextHover": "{{buttonTextHover}}",
             "primaryActionTextClick": "{{buttonTextClick}}",
+            "primaryActionBorder": "{{border}}",
+            "primaryActionBorderHover": "{{borderHover}}",
             "linkText": "{{accentLight}}",
             "inputText": "{{text}}"
         },

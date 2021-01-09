@@ -332,7 +332,8 @@ class ThemeBase {
         try {
             backgroundColor := primary ? this.GetColor("primaryAction") : this.GetColor("buttonBackground")
             textColor := primary ? this.GetColor("primaryActionText") : this.GetColor("buttonText")
-            shape := ButtonShape.new(text, backgroundColor, textColor, this.GetColor("border"), this.buttons["borderWidth"])
+            borderColor := primary ? this.GetColor("primaryActionBorder") : this.GetColor("border")
+            shape := ButtonShape.new(text, backgroundColor, textColor, borderColor, this.buttons["borderWidth"])
             shape.DrawOn(picObj)
 
             if (handlerName or picObj.Name) {
@@ -355,7 +356,8 @@ class ThemeBase {
         try {
             backgroundColor := btn.IsPrimary ? this.GetColor("primaryAction") : this.GetColor("buttonBackground")
             textColor := btn.IsPrimary ? this.GetColor("primaryActionText") : this.GetColor("buttonText")
-            shape := ButtonShape.new(this.themedButtons[this.hoveredButton]["text"], backgroundColor, textColor, this.GetColor("border"), this.buttons["borderWidth"])
+            borderColor := btn.IsPrimary ? this.GetColor("primaryActionBorder") : this.GetColor("border")
+            shape := ButtonShape.new(this.themedButtons[this.hoveredButton]["text"], backgroundColor, textColor, borderColor, this.buttons["borderWidth"])
             btn := shape.DrawOn(btn)
         } catch ex {
             ; Ignore errors
@@ -376,7 +378,8 @@ class ThemeBase {
 
         backgroundColor := btn.IsPrimary ? this.GetColor("primaryActionHover") : this.GetColor("buttonBackgroundHover")
         textColor := btn.IsPrimary ? this.GetColor("primaryActionTextHover") : this.GetColor("buttonTextHover")
-        shape := ButtonShape.new(this.themedButtons[btn.Hwnd]["text"], backgroundColor, textColor, this.GetColor("borderHover"), this.buttons["borderWidth"])
+        borderColor := btn.IsPrimary ? this.GetColor("primaryActionBorderHover") : this.GetColor("borderHover")
+        shape := ButtonShape.new(this.themedButtons[btn.Hwnd]["text"], backgroundColor, textColor, borderColor, this.buttons["borderWidth"])
         btn := shape.DrawOn(btn)
         this.hoveredButton := btn.Hwnd
         return btn
