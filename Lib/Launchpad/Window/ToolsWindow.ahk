@@ -32,6 +32,10 @@
     OnReloadLaunchers(btn, info) {
         this.Close()
         this.app.Launchers.LoadLaunchers(this.app.Config.LauncherFile)
+
+        if (this.app.Windows.WindowIsOpen("ManageWindow")) {
+            this.app.Windows.GetItem("ManageWindow").PopulateListView()
+        }
     }
 
     OnCleanLaunchers(btn, info) {
