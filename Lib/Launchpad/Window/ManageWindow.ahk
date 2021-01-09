@@ -26,8 +26,14 @@
         this.AddLaunchersList()
         this.AddButton("vAddButton ys w" . this.sidebarWidth . " h30", "Add")
         this.AddButton("vEditButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Edit")
-        this.AddButton("vRemoveButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Remove")
-        this.AddButton("vExitButton xp y" . this.windowSettings["listViewHeight"] - 30 + this.margin . " w" . this.sidebarWidth . " h30", "E&xit")
+        this.AddButton("vBuildButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Build")
+        this.AddButton("vRunButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Run")
+        this.AddButton("vDeleteButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Delete")
+        
+        this.AddButton("vToolsButton xp y" . (this.windowSettings["listViewHeight"] - (this.margin * 3) - 40)  . " w" . this.sidebarWidth . " h30", "Tools")
+        this.AddButton("vBuildAllButton xp y+m w" . this.sidebarWidth . " h40", "Build All", "", true)
+        
+
     }
 
     Destroy() {
@@ -45,7 +51,7 @@
 
     AddLaunchersList() {
         styling := "C" . this.themeObj.GetColor("text")
-        lvStyles := "+LV" . LVS_EX_LABELTIP . " +LV" . LVS_EX_AUTOSIZECOLUMNS . " +LV" . LVS_EX_DOUBLEBUFFER . " +LV" . LVS_EX_FLATSB
+        lvStyles := "+LV" . LVS_EX_LABELTIP . " +LV" . LVS_EX_AUTOSIZECOLUMNS . " +LV" . LVS_EX_DOUBLEBUFFER . " +LV" . LVS_EX_FLATSB . " -E0x200"
         lvStyles .= " +LV" . LVS_EX_TRANSPARENTBKGND . " +LV" . LVS_EX_TRANSPARENTSHADOWTEXT
         listViewWidth := this.windowSettings["contentWidth"] - this.sidebarWidth - this.margin
         lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " " . styling . " Count" . this.launcherManager.CountLaunchers() . " Section +Report -Multi " . lvStyles, this.listViewColumns)
@@ -68,7 +74,7 @@
             launcherStatus := "Missing"
 
             if (launcher.isBuilt) {
-                launcherStatus := launcher.IsOutdated ? "Outdated" : "Built"
+                launcherStatus := launcher.IsOutdated ? "Outdated" : "Present"
             }
 
             this.guiObj["ListView"].Add("Icon" . iconNum, launcher.Key, launcher.ManagedLauncher.EntityType, launcher.ManagedLauncher.ManagedGame.EntityType, launcherStatus)
@@ -132,8 +138,24 @@
     OnItemSelect(LV, rowNum, selected) {
         this.numSelected += (selected) ? 1 : -1
         buttonState := this.numSelected > 0 ? "-Hidden" : "+Hidden"
+        runButtonState := this.ShouldShowRunButton() ? "-Hidden" : "+Hidden"
         this.guiObj["EditButton"].Opt(buttonState)
-        this.guiObj["RemoveButton"].Opt(buttonState)
+        this.guiObj["BuildButton"].Opt(buttonState)
+        this.guiObj["RunButton"].Opt(runButtonState)
+        this.guiObj["DeleteButton"].Opt(buttonState)
+    }
+
+    ShouldShowRunButton() {
+        showButton := false
+        selected := this.guiObj["ListView"].GetNext()
+
+        if (selected > 0) {
+            key := this.guiObj["ListView"].GetText(selected, 1)
+            launcherObj := this.launcherManager.Launchers[key]
+            showButton := launcherObj.IsBuilt
+        }
+
+        return showButton
     }
 
     OnAddButton(btn, info) {
@@ -150,23 +172,54 @@
         
     }
 
-    OnRemoveButton(btn, info) {
+    OnBuildAllButton(btn, info) {
+        this.app.Builders.BuildLaunchers(this.app.Launchers.Launchers, this.app.Config.RebuildExistingLaunchers)
+    }
+
+    OnToolsButton(btn, info) {
+        this.app.Windows.OpenToolsWindow("ManageWindow")
+    }
+
+    OnBuildButton(btn, info) {
         selected := this.guiObj["ListView"].GetNext()
 
         if (selected > 0) {
             key := this.guiObj["ListView"].GetText(selected, 1)
-            shouldRemove := MsgBox("This will delete the configuration for launcher " key . ". Are you sure?", "Delete " . key . "?", "YesNo")
+            launcherObj := this.launcherManager.Launchers[key]
+            this.app.Builders.BuildLaunchers(Map(key, launcherObj), true)
+        }
+    }
 
-            if (shouldRemove == "Yes") {
+    OnRunButton(btn, info) {
+        selected := this.guiObj["ListView"].GetNext()
+
+        if (selected > 0) {
+            key := this.guiObj["ListView"].GetText(selected, 1)
+            launcherObj := this.launcherManager.Launchers[key]
+            
+            if (launcherObj.IsBuilt) {
+                file := launcherObj.GetLauncherFile(key, false)
+
+                if (file) {
+                    Run(file,, "Hide")
+                }
+            }
+        }
+    }
+
+    OnDeleteButton(btn, info) {
+        selected := this.guiObj["ListView"].GetNext()
+
+        if (selected > 0) {
+            key := this.guiObj["ListView"].GetText(selected, 1)
+            shouldDelete := MsgBox("This will delete the configuration for launcher " key . ". Are you sure?", "Delete " . key . "?", "YesNo")
+
+            if (shouldDelete == "Yes") {
                 this.launcherManager.RemoveLauncher(key)
                 this.launchersModified := true
                 this.guiObj["ListView"].Delete(selected)
             }
         }
-    }
-
-    OnExitButton(btn, info) {
-        this.Destroy()
     }
 
     AddToolbar() {
@@ -223,8 +276,8 @@
         }
 
         this.AutoXYWH("wh", ["ListView"])
-        this.AutoXYWH("x", ["AddButton", "EditButton", "RemoveButton"])
-        this.AutoXYWH("xy", ["ExitButton"])
+        this.AutoXYWH("x", ["AddButton", "EditButton", "BuildButton", "RunButton", "DeleteButton"])
+        this.AutoXYWH("xy", ["BuildAllButton", "ToolsButton"])
 
         if (this.hToolbar) {
             this.guiObj["Toolbar"].Move(,,width)

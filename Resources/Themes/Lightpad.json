@@ -20,6 +20,12 @@
             "buttonText": "{{text}}",
             "buttonTextHover": "ffffff",
             "buttonTextClick": "{{buttonTextHover}}",
+            "primaryAction": "{{buttonBackground}}",
+            "primaryActionHover": "{{buttonBackgroundHover}}",
+            "primaryActionClick": "{{buttonBackgroundClick}}",
+            "primaryActionText": "{{buttonText}}",
+            "primaryActionTextHover": "{{buttonTextHover}}",
+            "primaryActionTextClick": "{{buttonTextClick}}",
             "linkText": "{{accentLight}}",
             "inputText": "{{text}}"
         },

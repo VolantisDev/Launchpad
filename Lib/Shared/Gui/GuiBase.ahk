@@ -255,8 +255,8 @@ class GuiBase {
     AddButtons() {
     }
 
-    AddButton(options, text, handlerName := "") {
-        return this.themeObj.AddButton(this.guiObj, options, text, handlerName)
+    AddButton(options, text, handlerName := "", primary := false) {
+        return this.themeObj.AddButton(this.guiObj, options, text, handlerName, primary)
     }
 
     End() {
