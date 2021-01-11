@@ -87,6 +87,10 @@
         set => this.loggerServiceObj := value
     }
 
+    Version {
+        get => this.LaunchpadVersion()
+    }
+
     __New(appName, appDir) {
         InvalidParameterException.CheckTypes("Launchpad", "appName", appName, "", "appDir", appDir, "")
         this.appName := appName
@@ -119,6 +123,11 @@
         this.installerManagerObj := InstallerManager.new(this)
 
         this.InitializeApp()
+    }
+
+    LaunchpadVersion() {
+        global appVersion
+        return appVersion
     }
 
     InitializeApp() {

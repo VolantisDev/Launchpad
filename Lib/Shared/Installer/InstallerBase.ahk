@@ -4,6 +4,7 @@ class InstallerBase {
     appName := "Launchpad"
     cache := ""
     onlyInstallWhenCompiled := false
+    version := ""
     appState := ""
     stateKey := ""
     installerComponents := []
@@ -12,8 +13,9 @@ class InstallerBase {
     tmpDir := ""
     parentComponent := ""
 
-    __New(appState, stateKey, cache, components := "", tmpDir := "") {
+    __New(version, appState, stateKey, cache, components := "", tmpDir := "") {
         this.cache := cache
+        this.version := version
         this.appState := appState
         this.stateKey := stateKey
         SplitPath(A_ScriptFullPath, scriptFile, scriptDir)
@@ -62,7 +64,7 @@ class InstallerBase {
             return true
         }
 
-        this.appState.SetVersion(this.stateKey)
+        this.appState.SetVersion(this.stateKey, this.version)
         success := true
 
         if (progress != "") {
@@ -115,10 +117,9 @@ class InstallerBase {
     IsOutdated() {
         isOutdated := true
 
-        if (this.IsInstalled() and this.parentComponent != "") {
-            parentLastInstalled := this.appState.GetVersion(this.parentComponent)
-            lastInstalled := this.appState.GetVersion(this.stateKey)
-            isOutdated := (this.VersionIsOutdated(parentLastInstalled, lastInstalled))
+        if (this.IsInstalled()) {
+            installedVersion := this.appState.GetVersion(this.stateKey)
+            isOutdated := (this.VersionIsOutdated(this.version, installedVersion))
         }
 
         if (!isOutdated) {
@@ -133,17 +134,25 @@ class InstallerBase {
     }
 
     VersionIsOutdated(latestVersion, installedVersion) {
+        if (latestVersion == "{{VERSION}}" || installedVersion == "{{VERSION}}") {
+            return latestVersion != installedVersion
+        }
+
         splitLatestVersion := StrSplit(latestVersion, ".")
         splitInstalledVersion := StrSplit(installedVersion, ".")
 
         for (index, numPart in splitInstalledVersion) {
             latestVersionPart := splitLatestVersion.Has(index) ? splitLatestVersion[index] : 0
 
-            if ((latestVersionPart + 0) > (numPart + 0)) {
+            if (!IsInteger(numPart) or !IsInteger(latestVersionPart)) {
+                if (numPart != latestVersionPart) {
+                    return true
+                }
+            } else if ((latestVersionPart + 0) > (numPart + 0)) {
                 return true
             } else if ((latestVersionPart + 0) < (numPart + 0)) {
                 return false
-            } 
+            }
         }
 
         return false

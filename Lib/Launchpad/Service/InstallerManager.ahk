@@ -5,9 +5,9 @@ class InstallerManager extends AppComponentServiceBase {
 
         tmpDir := this.app.tmpDir . "\Installers"
         cache := this.app.Cache.GetItem("file")
-        this.SetItem("LaunchpadUpdate", LaunchpadUpdate.new(this.app.AppState, cache, tmpDir))
-        this.SetItem("Themes", ThemeInstaller.new(this.app.AppState, cache, extraThemes, tmpDir))
-        this.SetItem("Dependencies", DependencyInstaller.new(this.app.AppState, cache, extraDependencyComponents, tmpDir))
+        this.SetItem("LaunchpadUpdate", LaunchpadUpdate.new(this.app.Version, this.app.AppState, cache, tmpDir))
+        this.SetItem("Themes", ThemeInstaller.new(this.app.Version, this.app.AppState, cache, extraThemes, tmpDir))
+        this.SetItem("Dependencies", DependencyInstaller.new(this.app.Version, this.app.AppState, cache, extraDependencyComponents, tmpDir))
     }
 
     InstallRequirements(owner := "Mainwindow") {

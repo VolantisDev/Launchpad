@@ -3,9 +3,9 @@ class FileInstallerComponentBase extends InstallerComponentBase {
     recurse := true
     zipped := false
 
-    __New(destPath, appState, stateKey, cache, parentStateKey := "", overwrite := false, tmpDir := "", onlyCompiled := false) {
+    __New(version, destPath, appState, stateKey, cache, parentStateKey := "", overwrite := false, tmpDir := "", onlyCompiled := false) {
         this.destPath := destPath
-        super.__New(appState, stateKey, cache, parentStateKey, overwrite, tmpDir, onlyCompiled)
+        super.__New(version, appState, stateKey, cache, parentStateKey, overwrite, tmpDir, onlyCompiled)
 
         if (this.zipped) {
             this.tmpFile .= ".zip"

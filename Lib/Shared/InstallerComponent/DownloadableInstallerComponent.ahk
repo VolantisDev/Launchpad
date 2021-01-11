@@ -1,10 +1,10 @@
 class DownloadableInstallerComponent extends FileInstallerComponentBase {
     downloadUrl := ""
 
-    __New(downloadUrl, zipped, destPath, appState, stateKey, cache, parentStateKey := "", overwrite := false, tmpDir := "", onlyCompiled := false) {
+    __New(version, downloadUrl, zipped, destPath, appState, stateKey, cache, parentStateKey := "", overwrite := false, tmpDir := "", onlyCompiled := false) {
         this.zipped := zipped
         this.downloadUrl := downloadUrl
-        super.__New(destPath, appState, stateKey, cache, parentStateKey, overwrite, tmpDir, onlyCompiled)
+        super.__New(version, destPath, appState, stateKey, cache, parentStateKey, overwrite, tmpDir, onlyCompiled)
     }
 
     InstallFilesAction() {

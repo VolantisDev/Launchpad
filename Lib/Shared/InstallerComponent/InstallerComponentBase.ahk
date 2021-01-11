@@ -11,7 +11,8 @@ class InstallerComponentBase {
     version := ""
     onlyCompiled := false
 
-    __New(appState, stateKey, cache, parentStateKey := "", overwrite := false, tmpDir := "", onlyCompiled := false) {
+    __New(version, appState, stateKey, cache, parentStateKey := "", overwrite := false, tmpDir := "", onlyCompiled := false) {
+        this.version := version
         this.cache := cache
         
         if (!tmpDir) {
@@ -98,10 +99,9 @@ class InstallerComponentBase {
 
         isOutdated := true
 
-        if (this.Exists() and this.parentStateKey != "") {
+        if (this.Exists()) {
             componentVersion := this.appState.GetVersion(this.stateKey)
-            parentVersion := this.GetParentVersion()
-            isOutdated := this.VersionIsOutdated(parentVersion, componentVersion)
+            isOutdated := this.VersionIsOutdated(this.version, componentVersion)
         }
 
         this.appState.SetLastUpdateCheck(this.stateKey)
@@ -114,17 +114,25 @@ class InstallerComponentBase {
     }
 
     VersionIsOutdated(latestVersion, installedVersion) {
+        if (latestVersion == "{{VERSION}}" || installedVersion == "{{VERSION}}") {
+            return latestVersion == "{{VERSION}}" and installedVersion == "{{VERSION}}"
+        }
+
         splitLatestVersion := StrSplit(latestVersion, ".")
         splitInstalledVersion := StrSplit(installedVersion, ".")
 
         for (index, numPart in splitInstalledVersion) {
             latestVersionPart := splitLatestVersion.Has(index) ? splitLatestVersion[index] : 0
 
-            if ((latestVersionPart + 0) > (numPart + 0)) {
+            if (!IsInteger(numPart) or !IsInteger(latestVersionPart)) {
+                if (numPart != latestVersionPart) {
+                    return true
+                }
+            } else if ((latestVersionPart + 0) > (numPart + 0)) {
                 return true
             } else if ((latestVersionPart + 0) < (numPart + 0)) {
                 return false
-            } 
+            }
         }
 
         return false

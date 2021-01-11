@@ -1,12 +1,20 @@
 class GitHubReleaseInstallerComponent extends DownloadableInstallerComponent {
     repositoryUrl := ""
     parentStateKey := "LatestRelease"
-    version := "latest"
     response := ""
+    isTagRelease := false
 
-    __New(repositoryName, releaseFile, zipped, destPath, appState, stateKey, cache, parentStateKey := "", overwrite := false, tmpDir := "", onlyCompiled := false) {
-        this.repositoryUrl := "https://api.github.com/repos/" . repositoryName . "/releases/" . this.version
-        super.__New(releaseFile, zipped, destPath, appState, stateKey, cache, parentStateKey, overwrite, tmpDir, onlyCompiled)
+    __New(version, repositoryName, releaseFile, zipped, destPath, appState, stateKey, cache, parentStateKey := "", overwrite := false, tmpDir := "", onlyCompiled := false, isTagRelease := false) {
+        this.isTagRelease := isTagRelease
+        repoUrl := "https://api.github.com/repos/" . repositoryName . "/releases/"
+
+        if (isTagRelease) {
+            repoUrl := repoUrl . "tags/"
+        }
+
+        repoUrl := repoUrl . version
+        this.repositoryUrl := repoUrl
+        super.__New(version, releaseFile, zipped, destPath, appState, stateKey, cache, parentStateKey, overwrite, tmpDir, onlyCompiled)
     }
 
     GetGitHubResponse() {
@@ -41,7 +49,7 @@ class GitHubReleaseInstallerComponent extends DownloadableInstallerComponent {
     }
 
     GetVersionFromTagName(tagName) {
-        if (SubStr(tagName, 1, 1) == "v") {
+        if (!this.isTagRelease and SubStr(tagName, 1, 1) == "v") {
             tagName := SubStr(tagName, 2)
         }
 
