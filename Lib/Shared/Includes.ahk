@@ -9,6 +9,7 @@
 #Include E:\Tools\Launchpad\Lib\Shared\AppState\LaunchpadAppState.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\ArchiveFile\ArchiveFileBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\ArchiveFile\ZipArchive.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\ArchiveFile\ZipArchive7z.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Cache\CacheBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Cache\FileCache.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Cache\ObjectCache.ahk

@@ -57,7 +57,6 @@ class FileInstallerComponentBase extends InstallerComponentBase {
     }
 
     ExtractZip(deleteZip := true) {
-        static psh := ComObjCreate("Shell.Application")
         destinationPath := this.GetDestPath()
 
         if (!DirExist(destinationPath)) {
@@ -67,8 +66,8 @@ class FileInstallerComponentBase extends InstallerComponentBase {
         zipFile := this.tmpDir . "\" . this.tmpFile
 
         if (FileExist(zipFile)) {
-            archiveItems := psh.Namespace(zipFile).items
-            psh.Namespace(destinationPath).CopyHere(archiveItems, 4|16)
+            archive := ZipArchive7z.new(zipFile)
+            archive.Extract(destinationPath)
 
             if (deleteZip) {
                 FileDelete(zipFile)

@@ -29,7 +29,8 @@ class DependencyInstaller extends InstallerBase {
         iconsExtPath := "Vendor\IconsExt"
         components.Push(DownloadableInstallerComponent.new(iconsExtUrl, true, iconsExtPath, appState, "IconsExt", cache, "Dependencies", false, tmpDir, false))
 
-        components.Push(GitHubReleaseInstallerComponent.new("protocolbuffers/protobuf", "protoc-{{version}}-win64.zip", true, "Vendor\Protoc", appState, "Protoc", cache, "Dependencies", true, tmpDir, false))
+        protocAssetName := FileExist("C:\Program Files (x86)") ? "protoc-{{version}}-win64.zip" : "protoc-{{version}}-win32.zip"
+        components.Push(GitHubReleaseInstallerComponent.new("protocolbuffers/protobuf", protocAssetName, true, "Vendor\Protoc", appState, "Protoc", cache, "Dependencies", true, tmpDir, false))
 
         if (extraComponents != "") {
             for (index, component in extraComponents) {

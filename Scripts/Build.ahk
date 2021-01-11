@@ -112,8 +112,8 @@ Zip(zipDir, zipFile, includeDir := false) {
         FileDelete(zipFile)
     }
     
+    ; @todo Replace with ZipArchive7z class usage?
     CreateZipFile(zipFile)
-
     psh := ComObjCreate("Shell.Application")
     pshZip := psh.Namespace(zipFile)
 
