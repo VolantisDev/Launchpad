@@ -174,6 +174,7 @@
 
     OnBuildAllButton(btn, info) {
         this.app.Builders.BuildLaunchers(this.app.Launchers.Launchers, this.app.Config.RebuildExistingLaunchers)
+        this.PopulateListView()
     }
 
     OnSettingsButton(btn, info) {
