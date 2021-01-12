@@ -191,6 +191,7 @@
             key := this.guiObj["ListView"].GetText(selected, 1)
             launcherObj := this.launcherManager.Launchers[key]
             this.app.Builders.BuildLaunchers(Map(key, launcherObj), true)
+            this.PopulateListView()
         }
     }
 
