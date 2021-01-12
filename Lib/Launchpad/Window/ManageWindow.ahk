@@ -14,11 +14,11 @@
         InvalidParameterException.CheckTypes("ManageWindow", "launcherFile", launcherFile, "")
         this.launcherFile := launcherFile
         this.launcherManager := app.Launchers
-        super.__New(app, "Manage", windowKey, owner, parent)
+        super.__New(app, "Launchpad", windowKey, owner, parent)
     }
 
     GetTitle(title) {
-        return super.GetTitle(title)
+        return this.title
     }
 
     Controls() {
