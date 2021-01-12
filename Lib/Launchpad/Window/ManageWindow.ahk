@@ -86,6 +86,7 @@
 
     CreateIconList() {
         IL := IL_Create(this.launcherManager.CountLaunchers(), 1, false)
+        defaultIcon := A_ScriptDir . "\Resources\Graphics\Game.ico"
         
         iconNum := 1
         for key, launcher in this.launcherManager.Launchers {
@@ -94,6 +95,10 @@
             assetIcon := launcher.AssetsDir . "\" . key . ".ico"
             if ((!iconSrc || !FileExist(iconSrc)) && FileExist(assetIcon)) {
                 iconSrc := assetIcon
+            }
+
+            if (!iconSrc) {
+                iconSrc := defaultIcon
             }
 
             IL_Add(IL, iconSrc)
