@@ -190,6 +190,8 @@ class LauncherEntity extends EntityBase {
                 detectedValues["IconSrc"] := checkPath
             } else if (this.children.Has("ManagedLauncher") and this.ManagedLauncher.ManagedGame.GetConfigValue("Exe") != "") {
                 detectedValues["IconSrc"] := this.ManagedLauncher.ManagedGame.LocateExe()
+            } else {
+                detectedValues["IconSrc"] := A_ScriptDir . "\Resources\Graphics\Game.ico"
             }
         }
 
