@@ -1,24 +1,11 @@
-; Class: Protobuf
-; Description: Protobuf parser for Autohotkey
-; Author: Ben McClure <ben.mcclure@gmail.com>
-; Version: 1.0.0
-;
-; Requirements:
-;   Either:
-;     - An already-decompiled protobuff structure
-;   Or:
-;     - protoc.exe from https://github.com/protocolbuffers/protobuf/releases and
-;     - A .proto schema file
-;
-; Note: There is no dumping a map back to a protobuf structure yet, sorry!
-; 
-class Protobuf {
+class ProtobufData extends StructuredDataBase {
 	static protoc := A_ScriptDir . "\Vendor\Protoc\bin\protoc.exe"
 
-    static FromString(ByRef src) {
+    FromString(ByRef src, args*) {
 		static q := Chr(34)
 		static letters := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 		static numbers := "1234567890"
+
 		returnData := Map()
 		mainKey := ""
 		key := ""
@@ -60,7 +47,7 @@ class Protobuf {
 			if (ch == "{") { ; start new map
 				val := Map()
 				
-				is_array ? obj.Push(val) : Protobuf.AddOrMergeValue(obj, key, val)
+				is_array ? obj.Push(val) : this.AddOrMergeValue(obj, key, val)
 				stack.InsertAt(1,val)
 				
 				is_key := true
@@ -130,7 +117,7 @@ class Protobuf {
 			}
 
 			if (next == "") {
-				Protobuf.AddOrMergeValue(returnData, mainKey, tree[1])
+				this.AddOrMergeValue(returnData, mainKey, tree[1])
 				tree.RemoveAt(1)
 				mainKey := ""
 				is_key := true
@@ -141,7 +128,7 @@ class Protobuf {
 		return returnData
 	}
 
-	static AddOrMergeValue(mapObj, key, val) {
+	AddOrMergeValue(mapObj, key, val) {
 		if (mapObj.Has(key)) {
 			if (Type(mapObj[key]) != "Array") {
 				mapObj[key] := [mapObj[key]]
@@ -153,19 +140,23 @@ class Protobuf {
 		}
 	}
 
-	static FromFile(filePath, messageType, protoFile, protoPath := "", protoc := "") {
+	FromFile(filePath, messageType, protoFile, protoPath := "", protoc := "") {
 		if (protoPath == "") {
 			SplitPath(protoFile, protoFile, protoPath)
 		}
 
 		if (protoc == "") {
-			protoc := Protobuf.protoc
+			protoc := ProtobufData.protoc
 		}
 
 		command := protoc . " --proto_path=`"" . protoPath . "`" --decode=" . messageType . " `"" . protoFile . "`" < `"" . filePath . "`""
 		shell := ComObjCreate("WScript.Shell")
         exec := Shell.Exec(A_ComSpec . " /C " . command)
 		output := exec.StdOut.ReadAll()
-		return Protobuf.FromString(output)
+		return this.FromString(output)
 	}
+
+	ToString(args*) {
+        throw MethodNotImplementedException.new("StructuredDataBase", "ToString")
+    }
 }

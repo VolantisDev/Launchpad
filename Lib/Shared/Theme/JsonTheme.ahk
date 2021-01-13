@@ -12,7 +12,9 @@ class JsonTheme extends ThemeBase {
         themeMap := Map()
 
         if (themeFile != "") {
-            jsonMap := Json.FromFile(themeFile)
+            data := JsonData.new()
+            jsonMap := data.FromFile(themeFile)
+            
             if (jsonMap.Has("theme")) {
                 themeMap := jsonMap["theme"]
             }

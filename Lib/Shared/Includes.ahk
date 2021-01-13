@@ -46,7 +46,6 @@
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\FileInstallerComponentBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\GitHubReleaseInstallerComponent.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\InstallerComponentBase.ahk
-#Include E:\Tools\Launchpad\Lib\Shared\Json\Json.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Launcher\LauncherBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Launcher\SimpleLauncher.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\LayeredData\LayeredDataBase.ahk
@@ -59,14 +58,18 @@
 #Include E:\Tools\Launchpad\Lib\Shared\OpError\OpErrorBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\OpStatus\BasicOpStatus.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\OpStatus\OpStatusBase.ahk
-#Include E:\Tools\Launchpad\Lib\Shared\Protobuf\Protobuf.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Service\ComponentServiceBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Service\DataSourceManager.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Service\EventManager.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Service\LoggerService.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Service\ServiceBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\StructuredData\JsonData.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\StructuredData\ProtobufData.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\StructuredData\StructuredDataBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\StructuredData\VdfData.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Theme\JsonTheme.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Theme\ThemeBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Toolbar\ToolbarBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Vendor\Gdip_All.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Xml\Xml.ahk
 ; End of auto-generated includes.

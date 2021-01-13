@@ -15,7 +15,8 @@ class ProtoConfig extends FileConfig {
         }
 
         if (FileExist(this.configPath)) {
-            this.config := Protobuf.FromFile(this.configPath, this.primaryConfigKey, this.protoFile)
+            data := ProtobufData.new()
+            this.config := data.FromFile(this.configPath, this.primaryConfigKey, this.protoFile)
         }
         
         return super.LoadConfig()

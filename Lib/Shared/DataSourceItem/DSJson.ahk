@@ -3,6 +3,13 @@ class DSJson extends DSFile {
     
     Read() {
         content := super.Read()
-        return (content != "") ? Json.FromString(content) : Map()
+        obj := Map()
+
+        if (content) {
+            data := JsonData.new()
+            obj := data.FromString(content)
+        }
+
+        return obj
     }
 }

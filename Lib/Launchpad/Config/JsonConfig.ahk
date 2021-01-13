@@ -14,8 +14,13 @@ class JsonConfig extends FileConfig {
             return this
         }
 
-        jsonString := FileRead(configPath)
-        this.config := (jsonString != "") ? Json.FromString(jsonString) : Map()
+        if (FileExist(configPath)) {
+            data := JsonData.new()
+            this.config := data.FromFile(configPath)
+        } else {
+            this.config := Map()
+        }
+
         return super.LoadConfig()
     }
 
@@ -35,7 +40,8 @@ class JsonConfig extends FileConfig {
             FileDelete(configPath)
         }
 
-        Json.ToFile(this.config, configPath, "", 4)
+        data := JsonData.new(this.config)
+        data.ToFile(configPath, "", 4)
         return super.SaveConfig()
     }
 

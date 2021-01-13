@@ -37,8 +37,8 @@ class GitHubReleaseInstallerComponent extends DownloadableInstallerComponent {
 
                 this.cache.WriteItem(cacheKey, responseBody)
             }
-            
-            this.response := Json.FromString(this.cache.ReadItem(cacheKey))
+            data := JsonData.new()
+            this.response := data.FromString(this.cache.ReadItem(cacheKey))
         }
 
         if (this.version == "latest") {
