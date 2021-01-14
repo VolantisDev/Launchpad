@@ -15,12 +15,12 @@
     }
 
     LauncherFile {
-        get => this.DetectLauncherFile(this.GetIniValue("LauncherFile"))
+        get => this.GetIniValue("LauncherFile") || this.AppDataDir . "\Launchers.json"
         set => this.SetIniValue("LauncherFile", value)
     }
 
     AssetsDir {
-        get => this.DetectAssetsDir(this.GetIniValue("AssetsDir"))
+        get => this.GetIniValue("AssetsDir") || this.AppDataDir . "\Launcher Assets"
         set => this.SetIniValue("AssetsDir", value)
     }
 
@@ -173,18 +173,6 @@
         Run(this.LauncherFile)
     }
 
-    DetectLauncherFile(launcherFile := "") {
-        if (launcherFile == "") {
-            launcherFile := this.GetRawValue("LauncherFile")
-        }
-
-        if (!launcherFile) {
-            launcherFile := this.ChangeLauncherFile(launcherFile)
-        }
-
-        return launcherFile
-    }
-
     ChangeLauncherFile(existingFile := "") {
         if (existingFile == "") {
             existingFile := this.GetRawValue("LauncherFile")
@@ -212,18 +200,6 @@
 
     OpenAssetsDir() {
         Run(this.AssetsDir)
-    }
-
-    DetectAssetsDir(assetsDir := "") {
-        if (assetsDir == "") {
-            assetsDir := this.GetRawValue("AssetsDir")
-        }
-
-        if (!assetsDir) {
-            assetsDir := this.ChangeAssetsDir(assetsDir)
-        }
-
-        return assetsDir
     }
 
     ChangeAssetsDir(existingDir := "") {
