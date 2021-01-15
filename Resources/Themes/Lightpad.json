@@ -159,6 +159,24 @@
                     "MinSize": "480x380"
                 }
             },
+            "PlatformsWindow": {
+                "settings": "default",
+                "contentWidth": 420,
+                "listViewHeight": 300,
+                "options": {
+                    "Resize": true,
+                    "MinSize": "250x250"
+                }
+            },
+            "DetectedGamesWindow": {
+                "settings": "default",
+                "contentWidth": 640,
+                "listViewHeight": 480,
+                "options": {
+                    "Resize": true,
+                    "MinSize": "400x400"
+                }
+            },
             "SettingsWindow": {
                 "settings": "form",
                 "contentWidth": 400,

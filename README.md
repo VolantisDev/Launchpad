@@ -123,7 +123,6 @@ I would greatly appreciate if you would submit a Pull Request to contribute back
 
 ## Attribution
 
-- Icons made by [iconixar](https://www.flaticon.com/free-icon/rec_1783406) [Flaticon](https://www.flaticon.com/)
-- Icons made by [Good Ware](https://www.flaticon.com/authors/good-ware) from [Flaticon](https://www.flaticon.com/)
+- Icons made by [iconixar](https://www.flaticon.com/authors/iconixar) [Flaticon](https://www.flaticon.com/)
 - Launchpad uses parts of the 7zip program for extracting archives. 7-Zip is licensed under the GNU LGPL, and its full source code can be downloaded from www.7-zip.org
 - Some launch methods were learned by studying the excellent [BnetLauncher](https://github.com/dafzor/bnetlauncher)

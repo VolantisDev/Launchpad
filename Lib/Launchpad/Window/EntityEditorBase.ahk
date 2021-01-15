@@ -139,6 +139,14 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         return ctl
     }
 
+    SetDefaultLocationValue(ctlObj, fieldName, includePrefix := false) {
+        isDefault := !!(ctlObj.Value)
+        this.guiObj["Change" . fieldName].Opt("Hidden" . isDefault)
+        this.guiObj["Open" . fieldName].Opt("Hidden" . isDefault)
+        this.guiObj["Clear" . fieldName].Opt("Hidden" . isDefault)
+        return this.SetDefaultValue(fieldName, isDefault, includePrefix, "Not set")
+    }
+
     AddLocationBlock(heading, settingName, extraButton := "", showOpen := true, showDefaultCheckbox := false, addPrefix := false, helpText := "") {
         this.AddHeading(heading)
         location := this.entityObj.HasConfigValue(settingName, addPrefix, false) ? this.entityObj.GetConfigValue(settingName, addPrefix) : "Not set"

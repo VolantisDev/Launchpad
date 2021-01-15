@@ -56,6 +56,9 @@
 
         tabs.UseTab("Advanced", true)
 
+        this.AddHeading("Platforms File")
+        this.AddConfigLocationBlock("PlatformsFile", "Reload")
+
         this.AddHeading("Cache Dir")
         this.AddConfigLocationBlock("CacheDir", "&Flush")
 
@@ -146,13 +149,26 @@
         this.app.Launchers.ReloadLauncherFile()
     }
 
+    OnReloadPlatformsFile(btn, info) {
+        this.app.Platforms.ReloadPlatformsFile()
+    }
+
     OnOpenLauncherFile(btn, info) {
         this.app.Config.OpenLauncherFile()
+    }
+
+    OnOpenPlatformsFile(btn, info) {
+        this.app.Config.OpenPlatformsFile()
     }
 
     OnChangeLauncherFile(btn, info) {
         this.app.Config.ChangeLauncherFile()
         this.SetText("LauncherFile", this.app.Config.LauncherFile, "Bold")
+    }
+
+    OnChangePlatformsFile(btn, info) {
+        this.app.Config.ChangePlatformsFile()
+        this.SetText("PlatformsFile", this.app.Config.PlatformsFile, "Bold")
     }
 
     OnOpenDestinationDir(btn, info) {

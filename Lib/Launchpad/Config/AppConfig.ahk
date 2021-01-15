@@ -19,6 +19,11 @@
         set => this.SetIniValue("LauncherFile", value)
     }
 
+    PlatformsFile {
+        get => this.GetIniValue("PlatformsFile") || this.AppDataDir . "\Platforms.json"
+        set => this.SetIniValue("PlatformsFile", value)
+    }
+
     AssetsDir {
         get => this.GetIniValue("AssetsDir") || this.AppDataDir . "\Launcher Assets"
         set => this.SetIniValue("AssetsDir", value)
@@ -193,6 +198,35 @@
 
         if (!FileExist(path)) {
             FileAppend("{`"Games`": {}}", path)
+        }
+
+        return path
+    }
+
+    OpenPlatformsFile() {
+        Run(this.PlatformsFile)
+    }
+
+    ChangePlatformsFile(existingFile := "") {
+        if (existingFile == "") {
+            existingFile := this.GetRawValue("PlatformsFile")
+        }
+
+        platformsFile := this.SelectPlatformsFile(existingFile)
+
+        if (platformsFile != "") {
+            this.PlatformsFile := platformsFile
+        }
+
+        return platformsFile
+    }
+
+    SelectPlatformsFile(existingFile) {
+        MsgBox("Launchpad uses a Platforms file to track a list of game platforms you have installed, and can use this for things such as detecting your installed games. This file is in JSON format, and can be edited by hand or through the Platform Manager in Launchpad.`n`nIf you have an existing Platforms file, sleect it on the following screen. If you want to create a new one, browse to th efolder you would like and type in a new .json filename to use", "Launchpad Platforms File", "OK")
+        path := FileSelect(8, existingFile, "Select or create the Platforms File you would like Launchpad to use.", "JSON Documents (*.json)")
+
+        if (!FileExist(path)) {
+            FileAppend("{`"Platforms`": {}}", path)
         }
 
         return path

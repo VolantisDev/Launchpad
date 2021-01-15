@@ -156,7 +156,7 @@ class ProtobufData extends StructuredDataBase {
 		return this.FromString(output)
 	}
 
-	ToString(args*) {
+	ToString(obj := "", args*) {
         throw MethodNotImplementedException.new("StructuredDataBase", "ToString")
     }
 }

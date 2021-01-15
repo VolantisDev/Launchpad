@@ -6,9 +6,9 @@ class VdfData extends StructuredDataBase {
 		returnData := Map()
 		key := ""
 		is_key := true
-		tree := []
+		tree := Map()
 		stack := [tree]
-		next := letters . numbers
+		next := q
 		pos := 0
 		
 		while ((ch := SubStr(src, ++pos, 1)) != "") {
@@ -32,7 +32,7 @@ class VdfData extends StructuredDataBase {
 					, ch := SubStr(src, pos, (SubStr(src, pos)~="[\]\},\s]|$")-1) ][1]
 				, ln, col, pos)
 
-				throw OperationFailedException.new(msg, -1, ch)
+				throw Exception(msg, -1, ch)
 			}
 			
 			obj := stack[1]
@@ -50,7 +50,8 @@ class VdfData extends StructuredDataBase {
 				is_key := true
 			} else if (is_key) {
 				key := SubStr(src, pos, i := RegExMatch(src, "[\s]|$",, pos)-pos)
-				next := q
+				key := SubStr(key, 2, -1)
+				next := q . "{"
 				is_key := false
 				pos += i-1
 			} else {
@@ -100,11 +101,11 @@ class VdfData extends StructuredDataBase {
 			}
 		}
 
-		this.obj := tree[1]
+		this.obj := tree
 		return this.obj
 	}
 
-	ToString(args*) {
+	ToString(obj := "", args*) {
         throw MethodNotImplementedException.new("StructuredDataBase", "ToString")
     }
 }

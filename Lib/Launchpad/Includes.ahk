@@ -12,10 +12,12 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\BuildLaunchersOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\BulkOperationBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\CleanLaunchersOp.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\DetectGamesOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\InstallOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\LauncherBuilderOpBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\LauncherGameOpBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\LoadLaunchersOp.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\LoadPlatformsOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\UpdateOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\ValidateLaunchersOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Config\AppConfig.ahk
@@ -25,13 +27,23 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Config\IniConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Config\JsonConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Config\LauncherConfig.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Config\PlatformsConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Config\ProtoConfig.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\DataSource\ApiDataSource.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\DetectedGame\DetectedGame.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\EntityBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\LauncherEntity.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\ManagedEntityBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\ManagedGameEntity.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\ManagedLauncherEntity.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Entity\PlatformEntity.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\GamePlatform\BethesdaPlatform.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\GamePlatform\BlizzardPlatform.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\GamePlatform\EpicPlatform.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\GamePlatform\GamePlatformBase.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\GamePlatform\OriginPlatform.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\GamePlatform\RegistryLookupGamePlatformBase.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\GamePlatform\SteamPlatform.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Installer\DependencyInstaller.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Installer\LaunchpadUpdate.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Installer\ThemeInstaller.ahk
@@ -42,8 +54,11 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\InstallerManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\LauncherManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\NotificationService.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Service\PlatformManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\ThemeManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\WindowManager.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Window\DetectedGameEditor.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Window\DetectedGamesWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\EntityEditorBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\LauncherEditor.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\LauncherWizard.ahk
@@ -54,6 +69,8 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\ManagedGameEditor.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\ManagedLauncherEditor.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\ManageWindow.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Window\PlatformEditor.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Window\PlatformsWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\SettingsWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\ToolsWindow.ahk
 ; End of auto-generated includes.

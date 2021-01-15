@@ -30,7 +30,8 @@
         this.AddButton("vRunButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Run")
         this.AddButton("vDeleteButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Delete")
         
-        this.AddButton("vToolsButton xp y" . (this.windowSettings["listViewHeight"] - (this.margin * 4) - 70)  . " w" . this.sidebarWidth . " h30", "Tools")
+        this.AddButton("vToolsButton xp y" . (this.windowSettings["listViewHeight"] - (this.margin * 5) - 100)  . " w" . this.sidebarWidth . " h30", "Tools")
+        this.AddButton("vPlatformsButton xp y+m w" . this.sidebarWidth . " h30", "Platforms")
         this.AddButton("vSettingsButton xp y+m w" . this.sidebarWidth . " h30", "Settings")
         this.AddButton("vBuildAllButton xp y+m w" . this.sidebarWidth . " h40", "Build All", "", true)
     }
@@ -81,7 +82,9 @@
             iconNum++
         }
 
-        this.guiObj["ListView"].ModifyCol()
+        for index, col in this.listViewColumns {
+            this.guiObj["ListView"].ModifyCol(index, "AutoHdr")
+        }
     }
 
     CreateIconList() {
@@ -184,6 +187,10 @@
 
     OnSettingsButton(btn, info) {
         this.app.Windows.OpenSettingsWindow("ManageWindow")
+    }
+
+    OnPlatformsButton(btn, info) {
+        this.app.Windows.OpenPlatformsWindow()
     }
 
     OnToolsButton(btn, info) {
@@ -289,7 +296,7 @@
         this.AutoXYWH("wh", ["ListView"])
         this.AutoXYWH("x", ["AddButton", "EditButton", "BuildButton", "RunButton", "DeleteButton"])
         this.AutoXYWH("xy", ["BuildAllButton"])
-        this.AutoXYWH("xy*", ["SettingsButton", "ToolsButton"])
+        this.AutoXYWH("xy*", ["SettingsButton", "ToolsButton", "PlatformsButton"])
 
         if (this.hToolbar) {
             this.guiObj["Toolbar"].Move(,,width)

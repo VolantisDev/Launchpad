@@ -14,7 +14,7 @@ class StructuredDataBase {
         throw MethodNotImplementedException.new("StructuredDataBase", "FromString")
     }
 
-    ToString(args*) {
+    ToString(obj := "", args*) {
         throw MethodNotImplementedException.new("StructuredDataBase", "ToString")
     }
 
@@ -43,6 +43,6 @@ class StructuredDataBase {
             FileDelete(filePath)
         }
 
-        FileAppend(this.ToString(args*), filePath)
+        FileAppend(this.ToString(this.obj, args*), filePath)
     }
 }

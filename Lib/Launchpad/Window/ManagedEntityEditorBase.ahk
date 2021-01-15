@@ -166,14 +166,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         return this.SetDefaultValue("LauncherSpecificId", !!(ctlObj.Value), true)
     }
 
-    SetDefaultLocationValue(ctlObj, fieldName, includePrefix := false) {
-        isDefault := !!(ctlObj.Value)
-        this.guiObj["Change" . fieldName].Opt("Hidden" . isDefault)
-        this.guiObj["Open" . fieldName].Opt("Hidden" . isDefault)
-        this.guiObj["Clear" . fieldName].Opt("Hidden" . isDefault)
-        return this.SetDefaultValue(fieldName, isDefault, includePrefix, "Not set")
-    }
-
     OnTypeChange(ctlObj, info) {
         this.entityObj.EntityType := ctlObj.Value
         this.entityObj.UpdateDataSourceDefaults()

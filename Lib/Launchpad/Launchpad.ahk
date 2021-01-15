@@ -7,6 +7,7 @@
     appStateObj := ""
     windowManagerObj := ""
     launcherManagerObj := ""
+    platformManagerObj := ""
     cacheManagerObj := ""
     notificationServiceObj := ""
     dataSourceManagerObj := ""
@@ -30,6 +31,11 @@
     Launchers {
         get => this.launcherManagerObj
         set => this.launcherManagerObj := value
+    }
+
+    Platforms {
+        get => this.platformManagerObj
+        set => this.platformManagerObj := value
     }
 
     Cache {
@@ -98,7 +104,6 @@
 
         DirCreate(this.tmpDir)
         DirCreate(this.appDataDir)
-
         
         config := AppConfig.new(this, this.tmpDir, this.appDataDir)
         idGen := UuidGenerator.new()
@@ -120,6 +125,7 @@
         this.dataSourceManagerObj := DataSourceManager.new()
         this.builderManagerObj := BuilderManager.new(this)
         this.launcherManagerObj := LauncherManager.new(this)
+        this.platformManagerObj := PlatformManager.new(this)
         this.installerManagerObj := InstallerManager.new(this)
 
         this.InitializeApp()

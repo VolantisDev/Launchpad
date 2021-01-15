@@ -1,0 +1,46 @@
+class BethesdaPlatform extends RegistryLookupGamePlatformBase {
+    launcherType := "Bethesda"
+    gameType := "Default"
+    installDirRegView := 32
+    installDirRegKey := "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{3448917E-E4FE-4E30-9502-9FD52EABB6F5}_is1"
+    versionRegView := 32
+    versionRegKey := "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{3448917E-E4FE-4E30-9502-9FD52EABB6F5}_is1"
+    uninstallCmdRegView := 32
+    uninstallCmdRegKey := "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{3448917E-E4FE-4E30-9502-9FD52EABB6F5}_is1"
+
+    Install() {
+        Run("https://bethesda.net/en/game/bethesda-launcher")
+    }
+
+    GetLibraryDirs() {
+        libraryDirs := super.GetLibraryDirs()
+        installDir := this.GetInstallDir()
+
+        if (installDir) {
+            libraryDirs.Push(installDir . "\games")
+        }
+
+        ; @todo Check if this is the best way
+
+        return libraryDirs
+    }
+
+    DetectInstalledGames() {
+        ; @todo Replace with functionality that reads from a config source
+        return super.DetectInstalledGames()
+    }
+
+    GetExePath() {
+        exePath := super.GetExePath()
+
+        if (!exePath) {
+            installDir := this.GetInstallDir()
+
+            if (installDir) {
+                exePath := installDir . "\BethesdaNetLauncher.exe"
+            }
+        }
+
+        return exePath
+    }
+}

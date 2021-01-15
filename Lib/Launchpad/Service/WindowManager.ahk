@@ -22,6 +22,10 @@ class WindowManager extends AppComponentServiceBase {
         return this.ShowForm(LauncherWizard.new(this.app, "", owner, parent))
     }
 
+    PlatformEditor(entityObj, mode := "config", owner := "", parent := "") {
+        return this.ShowForm(PlatformEditor.new(this.app, entityObj, mode, "", owner, parent))
+    }
+
     LauncherEditor(entityObj, mode := "config", owner := "", parent := "") {
         return this.ShowForm(LauncherEditor.new(this.app, entityObj, mode, "", owner, parent))
     }
@@ -32,6 +36,14 @@ class WindowManager extends AppComponentServiceBase {
 
     ManagedGameEditor(entityObj, mode := "config", owner := "", parent := "") {
         return this.ShowForm(ManagedGameEditor.new(this.app, entityObj, mode, "", owner, parent))
+    }
+
+    DetectedGamesWindow(detectedGames, owner := "", parent := "") {
+        return this.ShowForm(DetectedGamesWindow.new(this.app, detectedGames, "DetectedGamesWindow", owner, parent))
+    }
+
+    DetectedGameEditor(detectedGameObj, owner := "", parent := "") {
+        return this.ShowForm(DetectedGameEditor.new(this.app, detectedGameObj, "Detected Game", "", owner, parent))
     }
 
     OpenMainWindow() {
@@ -48,6 +60,14 @@ class WindowManager extends AppComponentServiceBase {
         }
 
         return this.ShowWindow("ManageWindow")
+    }
+
+    OpenPlatformsWindow() {
+        if (!this.WindowExists("PlatformsWindow")) {
+            this.SetItem("PlatformsWindow", PlatformsWindow.new(this.app, "", "PlatformsWindow"))
+        }
+
+        return this.ShowWindow("PlatformsWindow")
     }
 
     OpenSettingsWindow(owner := "MainWindow") {
