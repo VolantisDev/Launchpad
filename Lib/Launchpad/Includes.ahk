@@ -9,6 +9,7 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\BuildFile\GameExeFile.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BuildFile\IconFile.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BuildFile\ShortcutFile.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\AddDetectedGamesOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\BuildLaunchersOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\BulkOperationBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\CleanLaunchersOp.ahk

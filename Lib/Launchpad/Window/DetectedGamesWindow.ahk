@@ -142,10 +142,7 @@
 
     OnAddSelectedButton(btn, info) {
         rowNum := 0
-
-        if (!this.state.State.Has("DetectedGames")) {
-            this.state.State["DetectedGames"] := Map()
-        }
+        games := Map()
 
         Loop {
             rowNum := this.guiObj["ListView"].GetNext(rowNum, "C")
@@ -155,24 +152,16 @@
             }
 
             key := this.guiObj["ListView"].GetText(rowNum)
-            MsgBox "Adding " . key
-            detectedGameObj := this.detectedGames[key]
-
-            if (this.launcherManager.Launchers.Has(detectedGameObj.key)) {
-                detectedGameObj.UpdateLauncher(this.launcherManager.Launchers[detectedGameObj.key])
-            } else {
-                detectedGameObj.CreateLauncher(this.launcherManager)
-            }
-
-            if (!this.state.State["DetectedGames"].Has(detectedGameObj.platform.displayName)) {
-                this.state.State["DetectedGames"][detectedGameObj.platform.displayName] := Map()
-            }
-
-            this.state.State["DetectedGames"][detectedGameObj.platform.displayName][detectedGameObj.detectedKey] := detectedGameObj.key
+            games[key] := this.detectedGames[key]
         }
 
-        this.state.SaveState()
-        ; @todo reload main Manage window, perhaps somewhere other than here.
+        op := AddDetectedGamesOp.new(this.app, games, this.launcherManager, this.state, "DetectedGamesWindow")
+        op.Run()
+
+        win := this.launcherManager.app.Windows.GetItem("ManageWindow")
+        win.launchersModified := true
+        win.PopulateListView()
+        this.Destroy()
     }
 
     EditDetectedGame(row) {
