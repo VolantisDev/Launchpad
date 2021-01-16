@@ -3,6 +3,10 @@
 Manage your game platforms and create beautifully-simple .exe files to launch games from any platform 
 within Steam or other applications.
 
+![main_window](https://user-images.githubusercontent.com/277977/104805850-06c72e00-57a1-11eb-9aa9-205283d36688.png)
+
+(See below for more screenshots)
+
 ## Introduction
 
 Gone are the days when your entire game library exists in the form of game discs--digital downloads are 
@@ -51,6 +55,38 @@ process ownership from another launcher
 - Run and/or close a custom list of programs (such as performance hogging apps or music apps) before and/or after running 
 a game
 - And more!
+
+## Screenshots
+
+More information such as usage details is below, but since pictures speak a thousand words, here's some screenshots
+of various parts of Launchpad:
+
+Main Window:
+![main_window](https://user-images.githubusercontent.com/277977/104805850-06c72e00-57a1-11eb-9aa9-205283d36688.png)
+
+Launcher Editor:
+![launcher_editor](https://user-images.githubusercontent.com/277977/104805901-66253e00-57a1-11eb-9cb3-7ded6ab56f23.png)
+
+Managed Launcher Editor:
+![managed_launcher_editor](https://user-images.githubusercontent.com/277977/104805908-79d0a480-57a1-11eb-9dbc-4c0e2ec2401c.png)
+
+Managed Game Editor:
+![managed_game_editor](https://user-images.githubusercontent.com/277977/104805909-7e955880-57a1-11eb-8d58-b8a1ab277a2a.png)
+
+Platforms:
+![platforms_window](https://user-images.githubusercontent.com/277977/104805888-4ee65080-57a1-11eb-8531-3d271bafbc9e.png)
+
+Platform Editor:
+![platform_editor](https://user-images.githubusercontent.com/277977/104805919-9d93ea80-57a1-11eb-9243-dfc4a6399f36.png)
+
+Detected Games:
+![detected_games](https://user-images.githubusercontent.com/277977/104805917-979e0980-57a1-11eb-8dfa-ff569cfe833a.png)
+
+Detected Game Editor:
+![detected_game](https://user-images.githubusercontent.com/277977/104805930-a8e71600-57a1-11eb-8006-7e8dfa464c95.png)
+
+Settings:
+![settings](https://user-images.githubusercontent.com/277977/104805935-ae446080-57a1-11eb-9e27-b85cae96a933.png)
 
 ## How To Use
 
