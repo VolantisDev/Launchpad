@@ -3,7 +3,7 @@
 Manage your game platforms and create beautifully-simple .exe files to launch games from any platform 
 within Steam or other applications.
 
-![main_window](https://user-images.githubusercontent.com/277977/104805850-06c72e00-57a1-11eb-9aa9-205283d36688.png)
+![main_window](https://user-images.githubusercontent.com/277977/104806114-147db300-57a3-11eb-90cd-d69bf8ffe39b.png)
 
 (See below for more screenshots)
 
@@ -65,8 +65,8 @@ a game
 More information such as usage details is below, but since pictures speak a thousand words, here's some screenshots
 of various parts of Launchpad:
 
-Main Window:
-![main_window](https://user-images.githubusercontent.com/277977/104805850-06c72e00-57a1-11eb-9aa9-205283d36688.png)
+Launcher Manager (Main Window)
+![main_window](https://user-images.githubusercontent.com/277977/104806114-147db300-57a3-11eb-90cd-d69bf8ffe39b.png)
 
 Launcher Editor:
 ![launcher_editor](https://user-images.githubusercontent.com/277977/104805901-66253e00-57a1-11eb-9cb3-7ded6ab56f23.png)
@@ -78,7 +78,7 @@ Managed Game Editor:
 ![managed_game_editor](https://user-images.githubusercontent.com/277977/104805909-7e955880-57a1-11eb-8d58-b8a1ab277a2a.png)
 
 Platforms:
-![platforms_window](https://user-images.githubusercontent.com/277977/104805888-4ee65080-57a1-11eb-8531-3d271bafbc9e.png)
+![platforms_window](https://user-images.githubusercontent.com/277977/104806125-23646580-57a3-11eb-9cee-f8d9e0bcd0bf.png)
 
 Platform Editor:
 ![platform_editor](https://user-images.githubusercontent.com/277977/104805919-9d93ea80-57a1-11eb-9243-dfc4a6399f36.png)
