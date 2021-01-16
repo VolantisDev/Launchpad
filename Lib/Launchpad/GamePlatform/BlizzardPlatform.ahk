@@ -1,4 +1,5 @@
 class BlizzardPlatform extends RegistryLookupGamePlatformBase {
+    displayName := "Blizzard"
     launcherType := "Blizzard"
     gameType := "Blizzard"
     installDirRegView := 32
@@ -28,7 +29,8 @@ class BlizzardPlatform extends RegistryLookupGamePlatformBase {
 
             if (launcherSpecificId != "agent" and launcherSpecificId != "bna" and productData.Has("settings") and productData["settings"].Has("installPath")) {
                 installPath := productData["settings"]["installPath"]
-                SplitPath(installPath,,key)
+                installPath := StrReplace(installPath, "/", "\")
+                SplitPath(installPath,key)
                 possibleExes := []
 
                 Loop Files installPath . "\*.exe" {

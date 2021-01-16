@@ -154,7 +154,8 @@ class JsonData extends StructuredDataBase {
 			is_array := (memType == "Array")
 			
             ; @todo Rewrite for readability
-			if (memType ? (memType != "Object" And memType != "Map" And memType != "Array") : (ObjGetCapacity(obj) == "")) {
+			
+			if (memType ? (memType != "Object" && memType != "Map" && memType != "Array") : (ObjGetCapacity(obj) == "")) {
                 throw OperationFailedException.new("Object type not supported.", -1, Format("<Object at 0x{:p}>", ObjPtr(obj)))
             }
 			

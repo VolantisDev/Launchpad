@@ -38,6 +38,7 @@ class PlatformManager extends AppComponentServiceBase {
 
     SaveModifiedPlatforms() {
         this.platformsConfigObj.SaveConfig()
+        this.LoadPlatforms()
     }
 
     RemovePlatform(key) {
@@ -63,8 +64,6 @@ class PlatformManager extends AppComponentServiceBase {
         for key, platform in this.Platforms {
             if (platform.IsEnabled and platform.IsInstalled) {
                 platforms[key] := platform
-            } else {
-                MsgBox key . " Is not enabled"
             }
         }
 

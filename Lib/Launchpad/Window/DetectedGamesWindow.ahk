@@ -1,6 +1,6 @@
 ﻿class DetectedGamesWindow extends LaunchpadGuiBase {
     sidebarWidth := 85
-    listViewColumns := Array("Name", "Action", "Is Known", "Install Dir", "Exe", "Launcher ID")
+    listViewColumns := Array("Name", "Action", "Is Known", "Platform", "Install Dir", "Exe", "Launcher ID")
     launcherManager := ""
     launchersModified := false
     numSelected := 0
@@ -24,7 +24,7 @@
         this.AddButton("vCheckAllButton ys w" . this.sidebarWidth . " h30", "Check All")
         this.AddButton("vUncheckAllButton xp y+m w" . this.sidebarWidth . " h30", "Uncheck All")
         this.AddButton("vEditButton xp y+" . (this.margin * 2) . " w" . this.sidebarWidth . " h30 Hidden", "Edit")
-        this.AddButton("vAddSelectedButton xp y" . (this.windowSettings["listViewHeight"] - (this.margin * 2)) . " w" . this.sidebarWidth . " h40", "Add Selected", "", true)
+        this.AddButton("vAddSelectedButton xp y" . (this.windowSettings["listViewHeight"] - (this.margin * 3)) . " w" . this.sidebarWidth . " h40", "Add Selected", "", true)
     }
 
     AddDetectedGamesList() {
@@ -47,7 +47,7 @@
             }
 
             isKnown := this.GameIsKnown(detectedGameObj) ? "Yes" : "No"
-            this.guiObj["ListView"].Add(, detectedGameObj.key, "Ignore", isKnown, detectedGameObj.installDir, detectedGameObj.exeName, detectedGameObj.launcherSpecificId)
+            this.guiObj["ListView"].Add(, detectedGameObj.key, "Ignore", isKnown, detectedGameObj.platform.displayName, detectedGameObj.installDir, detectedGameObj.exeName, detectedGameObj.launcherSpecificId)
         }
 
         for index, col in this.listViewColumns {
@@ -79,9 +79,12 @@
         return gameStatus
     }
 
-    OnItemCheck(LV, rowNum, isChecked)
-    {
-        key := LV.GetText(rowNum)
+    OnItemCheck(LV, rowNum, isChecked) {
+        this.UpdateRowAction(rowNum, isChecked)
+    }
+
+    UpdateRowAction(rowNum, isChecked) {
+        key := this.guiObj["ListView"].GetText(rowNum)
 
         action := "Ignore"
 
@@ -89,7 +92,7 @@
             action := this.launcherManager.Launchers.Has(key) ? "Modify Existing" : "Add New"
         }
 
-        LV.Modify(rowNum,,, action)
+        this.guiObj["ListView"].Modify(rowNum,,, action)
     }
 
     OnItemSelect(LV, rowNum, selected) {
@@ -115,10 +118,18 @@
 
     OnCheckAllButton(btn, info) {
         this.guiObj["ListView"].Modify(0, "+Check")
+
+        for index, detectedGameObj in this.detectedGames {
+            this.UpdateRowAction(index, true)
+        }
     }
 
     OnUncheckAllButton(btn, info) {
         this.guiObj["ListView"].Modify(0, "-Check")
+
+        for index, detectedGameObj in this.detectedGames {
+            this.UpdateRowAction(index, false)
+        }
     }
 
     OnAddSelectedButton(btn, info) {
@@ -178,5 +189,9 @@
         this.AutoXYWH("wh", ["ListView"])
         this.AutoXYWH("x", ["EditButton", "CheckAllButton", "UncheckAllButton"])
         this.AutoXYWH("xy", ["AddSelectedButton"])
+
+        for index, col in this.listViewColumns {
+            this.guiObj["ListView"].ModifyCol(index, "AutoHdr")
+        }
     }
 }

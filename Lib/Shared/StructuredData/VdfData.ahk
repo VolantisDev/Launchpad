@@ -87,6 +87,13 @@ class VdfData extends StructuredDataBase {
 						if ((SubStr(val, i+1, 1) != "u") ? (pos -= StrLen(SubStr(val, i)), next := "\") : 0) {
 							continue 2
 						}
+
+						; \uXXXX - JSON unicode escape sequence
+						xxxx := Abs("0x" . SubStr(val, i + 2, 4))
+
+						if (xxxx < 0x100) {
+                            val := SubStr(val, 1, i-1) . Chr(xxxx) . SubStr(val, i+6)
+                        }
 					}
 				}
 

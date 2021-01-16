@@ -1,4 +1,5 @@
 class OriginPlatform extends RegistryLookupGamePlatformBase {
+    displayName := "Origin"
     launcherType := "Origin"
     gameType := "Default"
     installDirRegView := 32
@@ -22,7 +23,7 @@ class OriginPlatform extends RegistryLookupGamePlatformBase {
             node := xmlFile.selectSingleNode("/Settings/Setting[@key='DownloadInPlaceDir']")
             dir := node.getAttribute("value")
 
-            if (dir) {
+            if (dir and !this.LibraryDirExists(dir)) {
                 libraryDirs.Push(dir)
             }
         }

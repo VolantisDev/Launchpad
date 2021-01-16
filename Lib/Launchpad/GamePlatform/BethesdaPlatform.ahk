@@ -1,4 +1,5 @@
 class BethesdaPlatform extends RegistryLookupGamePlatformBase {
+    displayName := "Bethesda"
     launcherType := "Bethesda"
     gameType := "Default"
     installDirRegView := 32
@@ -16,7 +17,7 @@ class BethesdaPlatform extends RegistryLookupGamePlatformBase {
         libraryDirs := super.GetLibraryDirs()
         installDir := this.GetInstallDir()
 
-        if (installDir) {
+        if (installDir and !this.LibraryDirExists(installDir . "\games")) {
             libraryDirs.Push(installDir . "\games")
         }
 

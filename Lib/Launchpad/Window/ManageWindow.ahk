@@ -301,5 +301,9 @@
         if (this.hToolbar) {
             this.guiObj["Toolbar"].Move(,,width)
         }
+
+        for index, col in this.listViewColumns {
+            this.guiObj["ListView"].ModifyCol(index, "AutoHdr")
+        }
     }
 }

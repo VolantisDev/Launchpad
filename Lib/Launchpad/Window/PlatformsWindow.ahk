@@ -221,5 +221,9 @@
 
         this.AutoXYWH("wh", ["ListView"])
         this.AutoXYWH("x", ["ReloadButton", "EnableButton", "DisableButton", "EditButton", "RunButton", "InstallButton", "UpdateButton"])
+        
+        for index, col in this.listViewColumns {
+            this.guiObj["ListView"].ModifyCol()
+        }
     }
 }

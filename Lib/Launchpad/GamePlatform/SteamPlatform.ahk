@@ -1,4 +1,5 @@
 class SteamPlatform extends RegistryLookupGamePlatformBase {
+    displayName := "Steam"
     launcherType := "Default" ; @todo Create steam type?
     gameType := "Default" ; @todo Create steam type?
     installDirRegKey := "HKCU\SOFTWARE\Valve\Steam"
@@ -18,11 +19,16 @@ class SteamPlatform extends RegistryLookupGamePlatformBase {
         libraryDirs := super.GetLibraryDirs()
 
         installDir := this.GetInstallDir()
+        installDir := StrReplace(installDir, "/", "\")
 
         if (installDir) {
-            libraryDirs.Push(installDir . "\steamapps")
+            steamapps := installDir . "\steamapps"
 
-            vdfFile := installDir . "\steamapps\libraryfolders.vdf"
+            if (!this.LibraryDirExists(steamapps)) {
+                libraryDirs.Push(steamapps)
+            }
+
+            vdfFile := steamapps . "\libraryfolders.vdf"
 
             if (FileExist(vdfFile)) {
                 data := VdfData.new()
@@ -31,7 +37,11 @@ class SteamPlatform extends RegistryLookupGamePlatformBase {
                 if (IsObject(obj) and obj.Has("LibraryFolders")) {
                     for key, val in obj["LibraryFolders"] {
                         if (IsInteger(key)) {
-                            libraryDirs.Push(val)
+                            dir := StrReplace(val, "/", "\") . "\steamapps"
+                            
+                            if (!this.LibraryDirExists(dir)) {
+                                libraryDirs.Push(dir)
+                            }
                         }
                     }
                 }
@@ -44,7 +54,9 @@ class SteamPlatform extends RegistryLookupGamePlatformBase {
     DetectInstalledGames() {
         games := []
 
-        for index, dir in this.GetLibraryDirs() {
+        libraryDirs := this.GetLibraryDirs()
+
+        for index, dir in libraryDirs {
             Loop Files dir . "\appmanifest_*.acf" {
                 data := VdfData.new()
                 obj := data.FromFile(A_LoopFileFullPath)
@@ -54,6 +66,7 @@ class SteamPlatform extends RegistryLookupGamePlatformBase {
                     launcherSpecificId := gameState["appid"]
                     key := gameState["name"]
                     installDir := dir . "\common\" . gameState["installdir"]
+                    installDir := StrReplace(installDir, "/", "\")
                     possibleExes := []
                     mainExe := ""
 

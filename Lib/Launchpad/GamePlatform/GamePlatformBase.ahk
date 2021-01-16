@@ -26,6 +26,21 @@ class GamePlatformBase {
         }
     }
 
+    LibraryDirExists(dir) {
+        exists := false
+
+        if (this.libraryDirs) {
+            for index, key in this.libraryDirs {
+                if (key == dir) {
+                    exists := true
+                    break
+                }
+            }
+        }
+        
+        return exists
+    }
+
     GetLibraryDirs() {
         return this.libraryDirs
     }

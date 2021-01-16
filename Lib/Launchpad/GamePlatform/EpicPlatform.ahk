@@ -1,4 +1,5 @@
 class EpicPlatform extends RegistryLookupGamePlatformBase {
+    displayName := "Epic"
     launcherType := "Epic"
     gameType := "Default"
     installDirRegView := 32
