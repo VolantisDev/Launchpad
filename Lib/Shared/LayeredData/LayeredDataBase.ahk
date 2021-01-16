@@ -89,7 +89,7 @@ class LayeredDataBase {
         value := ""
 
         if (layer != "") {
-            if (this.layers.Has(layer) and this.layers[layer].Has(key)) {
+            if (this.layers.Has(layer) && this.layers[layer].Has(key)) {
                 value := this.layers[layer][key]
             }
         } else {
@@ -111,7 +111,7 @@ class LayeredDataBase {
         hasValue := false
 
         if (layer != "") {
-            hasValue := (this.layers.Has(layer) and this.layers[layer].Has(key))
+            hasValue := (this.layers.Has(layer) && this.layers[layer].Has(key))
         } else {
             for index, layerName in this.layerPriority {
                 if (this.layers[layerName].Has(key)) {
@@ -160,7 +160,7 @@ class LayeredDataBase {
             layer := this.GetTopLayer()
         }
 
-        if (this.layers.Has(layer) and this.layers[layer].Has(key)) {
+        if (this.layers.Has(layer) && this.layers[layer].Has(key)) {
             this.layers[layer].Delete(key)
         }
     }

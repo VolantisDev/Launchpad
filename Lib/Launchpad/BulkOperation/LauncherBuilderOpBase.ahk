@@ -10,7 +10,7 @@ class LauncherBuilderOpBase extends LauncherGameOpBase {
             builder := app.Config.BuilderKey
         }
 
-        if (Type(builder) == "String" and builder != "") {
+        if (Type(builder) == "String" && builder != "") {
             builder := app.Builders.GetItem(builder)
         }
 

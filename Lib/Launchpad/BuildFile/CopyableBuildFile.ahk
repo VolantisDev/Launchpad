@@ -41,9 +41,9 @@ class CopyableBuildFile extends BuildFileBase {
     Locate() {
         path := ""
 
-        if (this.FilePath != "" and FileExist(this.FilePath)) {
+        if (this.FilePath != "" && FileExist(this.FilePath)) {
             path := this.FilePath
-        } else if (this.SourcePath != "" and FileExist(this.SourcePath)) {
+        } else if (this.SourcePath != "" && FileExist(this.SourcePath)) {
             path := this.SourcePath
         } else {
             path := this.AskForPath()

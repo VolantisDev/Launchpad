@@ -34,7 +34,7 @@ class InvalidParameterException extends AppException {
                 validType := (paramType == checkType)
 
                 if (!validType) {
-                    if (paramType != "String" and paramType != "Integer" and paramType != "Float") {
+                    if (paramType != "String" && paramType != "Integer" && paramType != "Float") {
                         validType := paramVal.HasBase(%reqType%.Prototype)
                     }
                 }

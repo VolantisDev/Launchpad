@@ -66,7 +66,7 @@ class ThemeBase {
     InitializeTheme() {
         iconSrc := this.GetThemeAsset("icon")
 
-        if (iconSrc != "" and FileExist(iconSrc)) {
+        if (iconSrc != "" && FileExist(iconSrc)) {
             TraySetIcon(iconSrc)
         }
     }
@@ -86,7 +86,7 @@ class ThemeBase {
             buttonSize["h"] := this.buttons["height"][id]
         }
 
-        if (fixedWidth and this.buttons["fixedWidth"].Has(id)) {
+        if (fixedWidth && this.buttons["fixedWidth"].Has(id)) {
             buttonSize["w"] := this.buttons["fixedWidth"][id]
         }
 
@@ -100,7 +100,7 @@ class ThemeBase {
     GetWindowSettings(windowKey) {
         windowConfig := (this.windows.Has(windowKey)) ? this.windows[windowKey] : Map("settings", "default")
 
-        if (windowConfig.Has("settings") and windowConfig["settings"] != "") {
+        if (windowConfig.Has("settings") && windowConfig["settings"] != "") {
             windowConfig := this.MergeProperty(windowConfig, this.LoadWindowSettings(windowKey))
         }
 
@@ -116,7 +116,7 @@ class ThemeBase {
             windowSettings := this.windowSettings["default"]
         }
 
-        if (windowSettings.Has("base") and windowSettings["base"] != "") {
+        if (windowSettings.Has("base") && windowSettings["base"] != "") {
             parentSettings := this.GetWindowSettings(windowSettings["base"])
             windowSettings := this.MergeProperty(windowSettings, parentSettings, false)
         }
@@ -128,7 +128,7 @@ class ThemeBase {
         windowOptions := ""
         windowSettings := this.GetWindowSettings(windowKey)
 
-        if (windowSettings.Has("options") and windowSettings["options"] != "") {
+        if (windowSettings.Has("options") && windowSettings["options"] != "") {
             for key, val in windowSettings["options"] {
                 if (val != "") {
                     if this.windowStyles.Has(key) {
@@ -145,7 +145,7 @@ class ThemeBase {
                         windowOptions .= "-" . key
                     }
 
-                    if (Type(val) == "String" and val != "") {
+                    if (Type(val) == "String" && val != "") {
                         windowOptions .= val
                     }
                 }
@@ -236,7 +236,7 @@ class ThemeBase {
     LoadValuesIntoTheme(themeMap) {
         InvalidParameterException.CheckTypes("ThemeBase", "themeMap", themeMap, "Map")
 
-        if (themeMap.Has("parentTheme") and themeMap["parentTheme"] != "") {
+        if (themeMap.Has("parentTheme") && themeMap["parentTheme"] != "") {
             parentMap := this.GetThemeMap(themeMap["parentTheme"])
 
             if (Type(parentMap) == "Map") {
@@ -259,9 +259,9 @@ class ThemeBase {
     }
 
     MergeProperty(existingValue, newValue, overwriteMapKeys := false) {
-        if (Type(existingValue) == "Map" and Type(newValue) == "Map") {
+        if (Type(existingValue) == "Map" && Type(newValue) == "Map") {
             newValue := this.MergeMap(existingValue, newValue, overwriteMapKeys)
-        } else if (Type(existingValue) == "Array" and Type(newValue) == "Array") {
+        } else if (Type(existingValue) == "Array" && Type(newValue) == "Array") {
             newValue := this.MergeArray(existingValue, newValue, overwriteMapKeys)
         }
 

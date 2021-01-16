@@ -6,7 +6,7 @@ class ShortcutFile extends CopyableBuildFile {
         if (destPath == "") {
             ext := ".lnk"
 
-            if (launcherEntityObj.ManagedLauncher.ManagedGame.ShortcutSrc != "" and SubStr(launcherEntityObj.ManagedLauncher.ManagedGame.ShortcutSrc, -4) == ".url") {
+            if (launcherEntityObj.ManagedLauncher.ManagedGame.ShortcutSrc != "" && SubStr(launcherEntityObj.ManagedLauncher.ManagedGame.ShortcutSrc, -4) == ".url") {
                 ext := ".url"
             }
             

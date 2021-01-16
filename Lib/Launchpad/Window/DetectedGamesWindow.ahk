@@ -32,7 +32,7 @@
         lvStyles := "+LV" . LVS_EX_LABELTIP . " +LV" . LVS_EX_AUTOSIZECOLUMNS . " +LV" . LVS_EX_DOUBLEBUFFER . " +LV" . LVS_EX_FLATSB . " -E0x200"
         lvStyles .= " +LV" . LVS_EX_TRANSPARENTBKGND . " +LV" . LVS_EX_TRANSPARENTSHADOWTEXT
         listViewWidth := this.windowSettings["contentWidth"] - this.sidebarWidth - this.margin
-        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " " . styling . " Count" . this.detectedGames.Length . " Checked Section +Report " . lvStyles, this.listViewColumns)
+        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " " . styling . " Count" . this.detectedGames.Count . " Checked Section +Report " . lvStyles, this.listViewColumns)
         lv.OnEvent("ItemCheck", "OnItemCheck")
         lv.OnEvent("ItemSelect", "OnItemSelect")
         this.PopulateListView()
@@ -41,7 +41,7 @@
     PopulateListView() {
         this.guiObj["ListView"].Delete()
 
-        for index, detectedGameObj in this.detectedGames {
+        for key, detectedGameObj in this.detectedGames {
             if (!this.GameHasChanges(detectedGameObj)) {
                 continue
             }
@@ -50,15 +50,23 @@
             this.guiObj["ListView"].Add(, detectedGameObj.key, "Ignore", isKnown, detectedGameObj.platform.displayName, detectedGameObj.installDir, detectedGameObj.exeName, detectedGameObj.launcherSpecificId)
         }
 
-        for index, col in this.listViewColumns {
-            this.guiObj["ListView"].ModifyCol(index, "AutoHdr")
-        }
+        this.guiObj["ListView"].ModifyCol(1, "Sort")
+        this.guiObj["ListView"].ModifyCol(1, "AutoHdr")
+        this.guiObj["ListView"].ModifyCol(2, "AutoHdr")
+        this.guiObj["ListView"].ModifyCol(3, "AutoHdr")
+        this.guiObj["ListView"].ModifyCol(4, "AutoHdr")
+
+        ;for index, col in this.listViewColumns {
+        ;    this.guiObj["ListView"].ModifyCol(index, "AutoHdr")
+        ;}
+
+        ;this.guiObj["ListView"].ModifyCol()
     }
 
     GameHasChanges(detectedGameObj) {
         hasChanges := true
 
-        if (this.GameExists(detectedGameObj) and this.launcherManager.Launchers.Has(detectedGameObj.key)) {
+        if (this.GameExists(detectedGameObj) && this.launcherManager.Launchers.Has(detectedGameObj.key)) {
             hasChanges := detectedGameObj.HasChanges(this.launcherManager.Launchers[detectedGameObj.key])
         }
 
@@ -72,7 +80,7 @@
     GameExists(detectedGameObj) {
         gameStatus := false
 
-        if (this.state.State.Has("DetectedGames") and this.state.State["DetectedGames"].Has(detectedGameObj.platform.displayName) and this.state.State["DetectedGames"][detectedGameObj.platform.displayName].Has(detectedGameObj.detectedKey)) {
+        if (this.state.State.Has("DetectedGames") && this.state.State["DetectedGames"].Has(detectedGameObj.platform.displayName) && this.state.State["DetectedGames"][detectedGameObj.platform.displayName].Has(detectedGameObj.detectedKey)) {
             gameStatus := this.launcherManager.Launchers.Has(this.state.State["DetectedGames"][detectedGameObj.platform.displayName][detectedGameObj.detectedKey])
         }
 
@@ -119,16 +127,16 @@
     OnCheckAllButton(btn, info) {
         this.guiObj["ListView"].Modify(0, "+Check")
 
-        for index, detectedGameObj in this.detectedGames {
-            this.UpdateRowAction(index, true)
+        Loop this.detectedGames.Count {
+            this.UpdateRowAction(A_Index, true)
         }
     }
 
     OnUncheckAllButton(btn, info) {
         this.guiObj["ListView"].Modify(0, "-Check")
 
-        for index, detectedGameObj in this.detectedGames {
-            this.UpdateRowAction(index, false)
+        Loop this.detectedGames.Count {
+            this.UpdateRowAction(A_Index, true)
         }
     }
 
@@ -140,13 +148,15 @@
         }
 
         Loop {
-            rowNum := this.guiObj["ListView"].GetNext(rowNum)
+            rowNum := this.guiObj["ListView"].GetNext(rowNum, "C")
 
-            if not rowNum {
+            if !rowNum {
                 break
             }
 
-            detectedGameObj := this.detectedGames[rowNum]
+            key := this.guiObj["ListView"].GetText(rowNum)
+            MsgBox "Adding " . key
+            detectedGameObj := this.detectedGames[key]
 
             if (this.launcherManager.Launchers.Has(detectedGameObj.key)) {
                 detectedGameObj.UpdateLauncher(this.launcherManager.Launchers[detectedGameObj.key])
@@ -159,25 +169,21 @@
             }
 
             this.state.State["DetectedGames"][detectedGameObj.platform.displayName][detectedGameObj.detectedKey] := detectedGameObj.key
-                
-            Text := this.guiObj["ListView"].GetText(rowNum)
-            MsgBox('The next selected row is #' rowNum ', whose first field is "' Text '".')
         }
 
         this.state.SaveState()
-        this.launcherManager.SaveModifiedLaunchers()
-        this.launcherManager.LoadLaunchers()
         ; @todo reload main Manage window, perhaps somewhere other than here.
     }
 
     EditDetectedGame(row) {
-        detectedGameObj := this.detectedGames[row]
+        key := this.guiObj["ListView"].GetText(row)
+        detectedGameObj := this.detectedGames[key]
 
-        modified := false ; @todo open Detected Game Editor and then set modified variable
+        result := this.app.Windows.DetectedGameEditor(detectedGameObj, "DetectedGamesWindow")
 
-        if (modified) {
+        if (result == "Save") {
             isKnown := this.GameIsKnown(detectedGameObj) ? "Yes" : "No"
-            this.guiObj["ListView"].Modify(row,, detectedGameObj.key,, isKnown, detectedGameObj.installDir, detectedGameObj.exeName, detectedGameObj.launcherSpecificId)
+            this.guiObj["ListView"].Modify(row,, detectedGameObj.key,, isKnown, detectedGameObj.platform.displayName, detectedGameObj.installDir, detectedGameObj.exeName, detectedGameObj.launcherSpecificId)
         }
     }
 
@@ -189,9 +195,5 @@
         this.AutoXYWH("wh", ["ListView"])
         this.AutoXYWH("x", ["EditButton", "CheckAllButton", "UncheckAllButton"])
         this.AutoXYWH("xy", ["AddSelectedButton"])
-
-        for index, col in this.listViewColumns {
-            this.guiObj["ListView"].ModifyCol(index, "AutoHdr")
-        }
     }
 }

@@ -15,7 +15,7 @@ class FileLogger extends LoggerBase {
     }
 
     Truncate(truncateSize) {
-        if (truncateSize and this.path != "" and FileExist(this.path)) {
+        if (truncateSize && this.path != "" && FileExist(this.path)) {
             size := FileGetSize(this.path, "M")
             
             if (size >= truncateSize) {

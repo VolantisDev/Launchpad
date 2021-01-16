@@ -74,7 +74,7 @@ class GuiBase {
 
         guiCtl := GuiCtrlFromHwnd(hwnd)
 
-        if (guiCtl and guiCtl.HasProp("ToolTip")) {
+        if (guiCtl && guiCtl.HasProp("ToolTip")) {
             this.activeTooltip := hwnd
             tooltipText := guiCtl.ToolTip
             SetTimer () => this.ShowTooltip(tooltipText, hwnd), -1000
@@ -281,7 +281,7 @@ class GuiBase {
         this.guiObj.Show(windowSize)
 
         ; @todo is this really needed?
-        if (!this.positionAtMouseCursor and this.showInNotificationArea) {
+        if (!this.positionAtMouseCursor && this.showInNotificationArea) {
             this.guiObj.GetPos(,,guiW, guiH)
             windowX := monitorR - this.margin - guiW
             windowY := monitorB - this.margin - guiH
@@ -344,14 +344,14 @@ class GuiBase {
     }
 
     Close(submit := false) {
-        if (submit and !this.isClosed) {
+        if (submit && !this.isClosed) {
             this.guiObj.Submit(true)
             this.isClosed := true
         } else if (!this.isClosed) {
             this.guiObj.Hide()
         }
 
-        if (!this.isClosed and WinExist("ahk_id " . this.guiObj.Hwnd)) {
+        if (!this.isClosed && WinExist("ahk_id " . this.guiObj.Hwnd)) {
             WinClose("ahk_id " . this.guiObj.Hwnd)
         } else {
             this.Destroy()

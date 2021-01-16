@@ -13,19 +13,19 @@ class RegistryLookupGamePlatformBase extends GamePlatformBase {
     uninstallCmdRegValue := "UninstallString"
 
     __New(app, installDir := "", exePath := "", installedVersion := "", uninstallCmd := "", libraryDirs := "") {
-        if (!installDir and this.installDirRegKey and this.installDirRegValue) {
+        if (!installDir && this.installDirRegKey && this.installDirRegValue) {
             installDir := this.LookupRegValue(this.installDirRegView, this.installDirRegKey, this.installDirRegValue)
         }
 
-        if (!exePath and this.exePathRegKey and this.exePathRegValue) {
+        if (!exePath && this.exePathRegKey && this.exePathRegValue) {
             exePath := this.LookupRegValue(this.exePathRegView, this.exePathRegKey, this.exePathRegValue)
         }
 
-        if (!installedVersion and this.versionRegKey and this.versionRegValue) {
+        if (!installedVersion && this.versionRegKey && this.versionRegValue) {
             installedVersion := this.LookupRegValue(this.versionRegView, this.versionRegKey, this.versionRegValue)
         }
 
-        if (!uninstallCmd and this.uninstallCmdRegKey and this.uninstallCmdRegValue) {
+        if (!uninstallCmd && this.uninstallCmdRegKey && this.uninstallCmdRegValue) {
             uninstallCmd := this.LookupRegValue(this.uninstallCmdRegView, this.uninstallCmdRegKey, this.uninstallCmdRegValue)
         }
 

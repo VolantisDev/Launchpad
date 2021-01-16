@@ -134,7 +134,7 @@ class LauncherEditor extends EntityEditorBase {
         entity := this.entityObj.ManagedLauncher
         diff := entity.Edit(this.mode, this.guiObj)
 
-        if (diff != "" and diff.HasChanges()) {
+        if (diff != "" && diff.HasChanges()) {
             if (diff.ValueIsModified("LauncherType")) {
                 this.guiObj["LauncherType"].Value := this.GetItemIndex(this.launcherTypes, entity.GetConfigValue("Type"))
             }
@@ -145,7 +145,7 @@ class LauncherEditor extends EntityEditorBase {
         entity := this.entityObj.ManagedLauncher.ManagedGame
         diff := entity.Edit(this.mode, this.guiObj)
 
-        if (diff != "" and diff.HasChanges()) {
+        if (diff != "" && diff.HasChanges()) {
             if (diff.ValueIsModified("GameType")) {
                 this.guiObj["GameType"].Value := this.GetItemIndex(this.gameTypes, entity.GetConfigValue("Type"))
             }

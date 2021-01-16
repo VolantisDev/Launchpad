@@ -170,8 +170,8 @@
             },
             "DetectedGamesWindow": {
                 "settings": "default",
-                "contentWidth": 640,
-                "listViewHeight": 480,
+                "contentWidth": 900,
+                "listViewHeight": 600,
                 "options": {
                     "Resize": true,
                     "MinSize": "400x400"

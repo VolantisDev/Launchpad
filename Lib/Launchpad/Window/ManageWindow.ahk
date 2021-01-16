@@ -120,7 +120,7 @@
         launcherObj := this.launcherManager.Launchers[key]
         diff := launcherObj.Edit("config", this.guiObj)
 
-        if (diff != "" and diff.HasChanges()) {
+        if (diff != "" && diff.HasChanges()) {
             this.launchersModified := true
 
             if (launcherObj.Key != key) {

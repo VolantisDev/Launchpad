@@ -34,11 +34,11 @@ class SteamPlatform extends RegistryLookupGamePlatformBase {
                 data := VdfData.new()
                 obj := data.FromFile(vdfFile)
 
-                if (IsObject(obj) and obj.Has("LibraryFolders")) {
+                if (IsObject(obj) && obj.Has("LibraryFolders")) {
                     for key, val in obj["LibraryFolders"] {
                         if (IsInteger(key)) {
                             dir := StrReplace(val, "/", "\") . "\steamapps"
-                            
+
                             if (!this.LibraryDirExists(dir)) {
                                 libraryDirs.Push(dir)
                             }
@@ -61,7 +61,7 @@ class SteamPlatform extends RegistryLookupGamePlatformBase {
                 data := VdfData.new()
                 obj := data.FromFile(A_LoopFileFullPath)
 
-                if (IsObject(obj) and obj.Has("AppState")) {
+                if (IsObject(obj) && obj.Has("AppState")) {
                     gameState := obj["AppState"]
                     launcherSpecificId := gameState["appid"]
                     key := gameState["name"]
@@ -72,7 +72,9 @@ class SteamPlatform extends RegistryLookupGamePlatformBase {
 
                     if (DirExist(installDir)) {
                         Loop Files installDir . "\*.exe", "R" {
-                            possibleExes.Push(A_LoopFileFullPath)
+                            if (this.ExeIsValid(A_LoopFileName, A_LoopFileFullPath)) {
+                                possibleExes.Push(A_LoopFileFullPath)
+                            }
                         }
                     }
 

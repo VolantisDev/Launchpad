@@ -14,7 +14,7 @@
 
         productInstalls := []
 
-        if (this.config.Has("productInstall") and Type(this.config["productInstall"]) == "Array") {
+        if (this.config.Has("productInstall") && Type(this.config["productInstall"]) == "Array") {
             productInstalls := this.config["productInstall"]
         }
 
@@ -26,7 +26,7 @@
         installPath := ""
 
         for index, productData in productInstalls {
-            if (productData["productCode"] == productCode and productData.Has("settings") and productData["settings"].Has("installPath")) {
+            if (productData["productCode"] == productCode && productData.Has("settings") && productData["settings"].Has("installPath")) {
                 installPath := productData["settings"]["installPath"]
                 break
             }

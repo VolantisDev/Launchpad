@@ -58,17 +58,17 @@ class InstallerComponentBase {
     */
 
     Exists() {
-        if (this.onlyCompiled and !A_IsCompiled) {
+        if (this.onlyCompiled && !A_IsCompiled) {
             return true
         }
 
         exists := this.ExistsAction()
 
-        return (exists and this.appState.GetVersion(this.stateKey) != "" and this.appState.IsComponentInstalled(this.stateKey))
+        return (exists && this.appState.GetVersion(this.stateKey) != "" && this.appState.IsComponentInstalled(this.stateKey))
     }
 
     Install() {
-        if (this.onlyCompiled and !A_IsCompiled) {
+        if (this.onlyCompiled && !A_IsCompiled) {
             return true
         }
 
@@ -80,7 +80,7 @@ class InstallerComponentBase {
     }
 
     Uninstall() {
-        if (this.onlyCompiled and !A_IsCompiled) {
+        if (this.onlyCompiled && !A_IsCompiled) {
             return true
         }
 
@@ -93,7 +93,7 @@ class InstallerComponentBase {
     }
 
     IsOutdated() {
-        if (this.onlyCompiled and !A_IsCompiled) {
+        if (this.onlyCompiled && !A_IsCompiled) {
             return false
         }
 
@@ -115,7 +115,7 @@ class InstallerComponentBase {
 
     VersionIsOutdated(latestVersion, installedVersion) {
         if (latestVersion == "{{VERSION}}" || installedVersion == "{{VERSION}}") {
-            return latestVersion == "{{VERSION}}" and installedVersion == "{{VERSION}}"
+            return latestVersion == "{{VERSION}}" && installedVersion == "{{VERSION}}"
         }
 
         splitLatestVersion := StrSplit(latestVersion, ".")

@@ -16,7 +16,7 @@ class WinHttpReq extends HttpReqBase {
 
         headers := this.ProcessHeaders(WinHttpReq.winHttp)
 
-        if (data != "" and !InStr(headers, "Content-Type:")) {
+        if (data != "" && !InStr(headers, "Content-Type:")) {
             WinHttpReq.winHttp.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded")
         }
 

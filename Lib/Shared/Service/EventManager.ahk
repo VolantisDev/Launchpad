@@ -19,7 +19,7 @@ class EventManager extends ServiceBase {
     }
 
     Unregister(eventName, key) {
-        if (this._handlers.Has(eventName) and this._handlers[eventName].Has(key)) {
+        if (this._handlers.Has(eventName) && this._handlers[eventName].Has(key)) {
             this._handlers[eventName].Delete(key)
 
             if (this._handlers[eventName].Count == 0) {
@@ -41,7 +41,7 @@ class EventManager extends ServiceBase {
     }
 
     DispatchEvent(wParam, lParam, msg, hwnd) {
-        if (this._handlers.Has(msg) and this._handlers[msg].Count > 0) {
+        if (this._handlers.Has(msg) && this._handlers[msg].Count > 0) {
             for key, eventHandler in this._handlers[msg] {
                 %eventHandler%(wParam, lParam, msg, hwnd)
             }

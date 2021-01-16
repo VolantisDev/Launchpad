@@ -21,7 +21,7 @@
 
     SaveConfig() {
         for key, config in this.Games {
-            if (Type(config) == "Map" and config.Has("LauncherType") and config.Count == 1) {
+            if (Type(config) == "Map" && config.Has("LauncherType") && config.Count == 1) {
                 this.Games[key] := config["LauncherType"]
             }
         }

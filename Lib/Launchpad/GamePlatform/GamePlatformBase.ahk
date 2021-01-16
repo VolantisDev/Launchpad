@@ -75,7 +75,7 @@ class GamePlatformBase {
 
     IsInstalled() {
         exePath := this.GetExePath()
-        return exePath and FileExist(exePath)
+        return (exePath && FileExist(exePath))
     }
 
     NeedsUpdate() {
@@ -143,6 +143,36 @@ class GamePlatformBase {
         }
     }
 
+    ExeIsValid(exeName, fullPath) {
+        filterExes := []
+        filterExes.Push("UnityCrashHandler64.exe")
+        filterExes.Push("UnityCrashHandler.exe")
+        filterExes.Push("OriginThinSetup.exe")
+        filterExes.Push("vc_redist.x64.exe")
+        filterExes.Push("vc_redist.x86.exe")
+        filterExes.Push("vcredist_x86.exe")
+        filterExes.Push("vcredist_x64.exe")
+        filterExes.Push("overlayinjector.exe")
+        filterExes.Push("Cleanup.exe")
+        filterExes.Push("Touchup.exe")
+        filterExes.Push("ActivationUI.exe")
+        filterExes.Push("DXSETUP.exe")
+        filterExes.Push("BlizzardBrowser.exe")
+
+        valid := !InStr(fullPath, "\__Installer\")
+
+        if (valid) {
+            for index, exe in filterExes {
+                if A_LoopFileName == exe {
+                    valid := false
+                    break
+                }
+            }
+        }
+
+        return valid
+    }
+
     DetectInstalledGames() {
         games := []
 
@@ -153,14 +183,18 @@ class GamePlatformBase {
                 possibleExes := []
                 exeName := ""
 
-                Loop Files A_LoopFileFullPath . "\*.exe", "R" {
-                    possibleExes.Push(A_LoopFileName)
-                    break
+                Loop Files installDir . "\*.exe", "R" {
+                    if (this.ExeIsValid(A_LoopFileName, A_LoopFileFullPath)) {
+                        possibleExes.Push(A_LoopFileFullPath)
+                    }
+                }
+
+                if (possibleExes.Length == 1) {
+                    exeName := possibleExes[1]
                 }
 
                 launcherSpecificId := key
-
-                games.Push(DetectedGame.new(key, this, this.launcherType, this.gameType, installDir, exeName, launcherSpecificId))
+                games.Push(DetectedGame.new(key, this, this.launcherType, this.gameType, installDir, exeName, launcherSpecificId, possibleExes))
             }
         }
 

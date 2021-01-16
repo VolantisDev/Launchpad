@@ -101,7 +101,7 @@
         platformObj := this.platformManager.Platforms[key]
         diff := platformObj.Edit("config", this.guiObj)
 
-        if (diff != "" and diff.HasChanges()) {
+        if (diff != "" && diff.HasChanges()) {
             this.platformsModified := true
             this.PopulateListView()
         }

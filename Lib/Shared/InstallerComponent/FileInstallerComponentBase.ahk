@@ -29,7 +29,7 @@ class FileInstallerComponentBase extends InstallerComponentBase {
 
         result := this.InstallFilesAction()
 
-        if (result and this.zipped and this.TmpFileExists()) {
+        if (result && this.zipped && this.TmpFileExists()) {
             unzipResult := this.ExtractZip(true)
 
             if (!unzipResult) {
@@ -43,7 +43,7 @@ class FileInstallerComponentBase extends InstallerComponentBase {
     CreateParentDir() {
         SplitPath(this.destPath,,destDir,,,destDrive)
 
-        if (destDrive != "" and destDir != "" and !DirExist(destDir)) {
+        if (destDrive != "" && destDir != "" && !DirExist(destDir)) {
             DirCreate(destDir)
         }
     }
@@ -53,7 +53,7 @@ class FileInstallerComponentBase extends InstallerComponentBase {
     }
 
     TmpFileExists() {
-        return (this.tmpFile != "" and FileExist(this.GetTmpFile()))
+        return (this.tmpFile != "" && FileExist(this.GetTmpFile()))
     }
 
     ExtractZip(deleteZip := true) {

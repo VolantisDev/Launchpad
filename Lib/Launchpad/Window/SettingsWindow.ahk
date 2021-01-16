@@ -13,7 +13,7 @@
         groupW := this.windowSettings["contentWidth"] - (this.margin * 2)
 
         buttonSize := this.themeObj.GetButtonSize("s", true)
-        buttonW := (buttonSize.Has("w") and buttonSize["w"] != "auto") ? buttonSize["w"] : 80
+        buttonW := (buttonSize.Has("w") && buttonSize["w"] != "auto") ? buttonSize["w"] : 80
         openX := groupW - (buttonW * 2)
         tabs := this.guiObj.Add("Tab3", "x" . this.margin . " y" . this.margin . " +0x100", ["Launchers", "Assets", "Sources", "Appearance", "Advanced"])
 
@@ -84,8 +84,8 @@
         this.AddLocationText(location, settingName, inGroupBox)
 
         buttonSize := this.themeObj.GetButtonSize("s", true)
-        buttonW := (buttonSize.Has("w") and buttonSize["w"] != "auto") ? buttonSize["w"] : 80
-        buttonH := (buttonSize.Has("h") and buttonSize["h"] != "auto") ? buttonSize["h"] : 20
+        buttonW := (buttonSize.Has("w") && buttonSize["w"] != "auto") ? buttonSize["w"] : 80
+        buttonH := (buttonSize.Has("h") && buttonSize["h"] != "auto") ? buttonSize["h"] : 20
 
         position := inGroupBox ? "xs+" . this.margin . " y+m" : "xs y+m"
         btn := this.AddButton(position . " w" . buttonW . " h" . buttonH . " vChange" . settingName, "Change")
@@ -125,11 +125,11 @@
         buttonSize := this.themeObj.GetButtonSize("s", true)
 
         if (width == "") {
-            width := (buttonSize.Has("w") and buttonSize["w"] != "auto") ? buttonSize["w"] : 80
+            width := (buttonSize.Has("w") && buttonSize["w"] != "auto") ? buttonSize["w"] : 80
         }
 
         if (height == "") {
-            height := (buttonSize.Has("h") and buttonSize["h"] != "auto") ? buttonSize["h"] : 20
+            height := (buttonSize.Has("h") && buttonSize["h"] != "auto") ? buttonSize["h"] : 20
         }
 
         btn := this.AddButton("v" . ctlName . " " . position . " w" . width . " h" . height, buttonLabel)

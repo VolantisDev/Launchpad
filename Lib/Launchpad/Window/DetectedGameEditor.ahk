@@ -84,11 +84,11 @@
         buttonSize := this.themeObj.GetButtonSize("s", true)
         buttonDims := ""
         
-        if (buttonSize.Has("h") and buttonSize["h"] != "auto") {
+        if (buttonSize.Has("h") && buttonSize["h"] != "auto") {
             buttonDims .= " h" . buttonSize["h"]
         }
 
-        if (buttonSize.Has("w") and buttonSize["w"] != "auto") {
+        if (buttonSize.Has("w") && buttonSize["w"] != "auto") {
             buttonDims .= " w" . buttonSize["w"]
         }
 

@@ -4,7 +4,7 @@ class DataSourceManager extends ComponentServiceBase {
     __New(primaryKey := "", primaryDataSource := "") {
         InvalidParameterException.CheckTypes("DataSourceManager", "primaryKey", primaryKey, "", "primaryDataSource", primaryDataSource, "")
 
-        if (primaryKey != "" and primaryDataSource != "") {
+        if (primaryKey != "" && primaryDataSource != "") {
             this.primaryDataSourceKey := primaryKey
             this.dataSources[primaryKey] := primaryDataSource
         }

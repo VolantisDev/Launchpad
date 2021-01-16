@@ -25,7 +25,7 @@
 
     SaveConfig() {
         for key, config in this.Platforms {
-            if (Type(config) == "Map" and config.Has("PlatformClass") and config.Count == 1) {
+            if (Type(config) == "Map" && config.Has("PlatformClass") && config.Count == 1) {
                 this.Platforms[key] := config["PlatformClass"]
             }
         }

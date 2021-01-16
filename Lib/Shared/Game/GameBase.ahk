@@ -33,7 +33,7 @@ class GameBase {
         if (this.exeProcess == "") {
             exe := ""
 
-            if (this.config.Has("GameExe") and this.config["GameExe"] != "") {
+            if (this.config.Has("GameExe") && this.config["GameExe"] != "") {
                 SplitPath(this.config["GameExe"], exe)
             }
 
@@ -148,7 +148,7 @@ class GameBase {
             this.pid := this.RunGameRun()
         }
 
-        if (runMethod != "RunWait" and this.config["GameReplaceProcess"]) {
+        if (runMethod != "RunWait" && this.config["GameReplaceProcess"]) {
             this.pid := this.ReplaceGameProcess()
         }
 
@@ -221,7 +221,7 @@ class GameBase {
         }
 
         if (this.config["GameHasLoadingWindow"]) {
-            if (winId == 0 and loadingWinId == 0) {
+            if (winId == 0 && loadingWinId == 0) {
                 loadingWinId := this.WaitForLoadingWindow()
             }
 

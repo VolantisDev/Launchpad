@@ -112,7 +112,7 @@ class LauncherEntity extends EntityBase {
     GetLauncherFile(key, checkSourceFile := false) {
         gameDir := checkSourceFile ? this.app.Config.AssetsDir : this.app.Config.DestinationDir
 
-        if (checkSourceFile or this.app.Config.CreateIndividualDirs) {
+        if (checkSourceFile || this.app.Config.CreateIndividualDirs) {
             gameDir .= "\" . key
         }
 
@@ -127,7 +127,7 @@ class LauncherEntity extends EntityBase {
     Validate() {
         validateResult := super.Validate()
 
-        if (this.IconSrc == "" and !this.IconFileExists()) {
+        if (this.IconSrc == "" && !this.IconFileExists()) {
             validateResult["success"] := false
             validateREsult["invalidFields"].push("IconSrc")
         }
@@ -150,7 +150,7 @@ class LauncherEntity extends EntityBase {
         launcherType := this.DetectLauncherType(defaults, dataSourceData)
 
         checkType := (launcherType == "") ? "Default" : launcherType
-        if (dataSourceData.Has("Launchers") and dataSourceData["Launchers"].Has(checkType) and Type(dataSourceData["Launchers"][checkType]) == "Map") {
+        if (dataSourceData.Has("Launchers") && dataSourceData["Launchers"].Has(checkType) && Type(dataSourceData["Launchers"][checkType]) == "Map") {
             this.additionalManagedLauncherDefaults := this.MergeFromObject(this.additionalManagedLauncherDefaults, dataSourceData["Launchers"][checkType], false)
             defaults := this.MergeFromObject(defaults, dataSourceData["Launchers"][checkType], true)
         }
@@ -173,7 +173,7 @@ class LauncherEntity extends EntityBase {
             launcherType := "Default"
         }
 
-        if (dataSourceData != "" and dataSourceData.Has("Launchers")) {
+        if (dataSourceData != "" && dataSourceData.Has("Launchers")) {
             launcherType := this.DereferenceKey(launcherType, dataSourceData["Launchers"])
         }
 
@@ -188,7 +188,7 @@ class LauncherEntity extends EntityBase {
             
             if (FileExist(checkPath)) {
                 detectedValues["IconSrc"] := checkPath
-            } else if (this.children.Has("ManagedLauncher") and this.ManagedLauncher.ManagedGame.GetConfigValue("Exe") != "") {
+            } else if (this.children.Has("ManagedLauncher") && this.ManagedLauncher.ManagedGame.GetConfigValue("Exe") != "") {
                 detectedValues["IconSrc"] := this.ManagedLauncher.ManagedGame.LocateExe()
             } else {
                 detectedValues["IconSrc"] := A_ScriptDir . "\Resources\Graphics\Game.ico"

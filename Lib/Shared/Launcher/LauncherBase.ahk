@@ -187,7 +187,7 @@ class LauncherBase {
 
         closed := this.CloseLauncherAction()
 
-        if (closed and this.config["LauncherClosePostDelay"] > 0) {
+        if (closed && this.config["LauncherClosePostDelay"] > 0) {
             Sleep(this.config["LauncherClosePostDelay"] * 1000)
         }
 
@@ -278,7 +278,7 @@ class LauncherBase {
 
         isRunning := this.LauncherIsRunning()
 
-        if (isRunning and force) {
+        if (isRunning && force) {
             isRunning := this.KillLauncher()
         }
         
@@ -286,7 +286,7 @@ class LauncherBase {
     }
 
     AutoCloseAction() {
-        if (this.pid > 0 and WinExist("ahk_pid " . this.pid)) {
+        if (this.pid > 0 && WinExist("ahk_pid " . this.pid)) {
             WinClose("ahk_pid " . this.pid, "", this.config["LauncherPoliteCloseWait"])
         }
     }
@@ -315,7 +315,7 @@ class LauncherBase {
     }
 
     KillLauncherAction() {
-        if (this.pid > 0 and ProcessExist(this.pid)) {
+        if (this.pid > 0 && ProcessExist(this.pid)) {
             ProcessClose(this.pid)
         }
     }

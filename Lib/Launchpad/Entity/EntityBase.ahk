@@ -162,7 +162,7 @@ class EntityBase {
         defaults := Map()
         dsData := dataSource.ReadJson(this.GetDataSourceItemKey(), this.GetDataSourceItemPath())
 
-        if (dsData != "" and dsData.Has("Defaults")) {
+        if (dsData != "" && dsData.Has("Defaults")) {
             defaults := this.MergeFromObject(defaults, dsData["Defaults"], false)
             defaults := this.MergeAdditionalDataSourceDefaults(defaults, dsData)
         }
@@ -325,19 +325,19 @@ class EntityBase {
 
             for index, diff in diffs {
                 for key, item in diff.GetAdded() {
-                    if (!added.Has(key) and !modified.Has(key) and !deleted.Has(key)) {
+                    if (!added.Has(key) && !modified.Has(key) && !deleted.Has(key)) {
                         added[key] := item
                     }
                 }
 
                 for key, item in diff.GetModified() {
-                    if (!added.Has(key) and !modified.Has(key) and !deleted.Has(key)) {
+                    if (!added.Has(key) && !modified.Has(key) && !deleted.Has(key)) {
                         modified[key] := item
                     }
                 }
 
                 for key, item in diff.GetDeleted() {
-                    if (!added.Has(key) and !modified.Has(key) and !deleted.Has(key)) {
+                    if (!added.Has(key) && !modified.Has(key) && !deleted.Has(key)) {
                         deleted[key] := item
                     }
                 }
@@ -358,7 +358,7 @@ class EntityBase {
     SaveModifiedData() {
         diff := this.entityData.DiffChanges("config")
 
-        if (diff != "" and diff.HasChanges()) {
+        if (diff != "" && diff.HasChanges()) {
             for key, val in diff.GetAdded() {
                 this.configObj[key] := val
             }

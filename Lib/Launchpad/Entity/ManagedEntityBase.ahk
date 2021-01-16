@@ -273,12 +273,12 @@ class ManagedEntityBase extends EntityBase {
     Validate() {
         validateResult := super.Validate()
 
-        if (((this.UsesShortcut and this.RunCmd == "") and this.ShortcutSrc == "") and !this.ShortcutFileExists()) {
+        if (((this.UsesShortcut && this.RunCmd == "") && this.ShortcutSrc == "") && !this.ShortcutFileExists()) {
             validateResult["success"] := false
             validateResult["invalidFields"].push("ShortcutSrc")
         }
 
-        if (this.ShortcutSrc == "" and this.RunCmd == "") {
+        if (this.ShortcutSrc == "" && this.RunCmd == "") {
             validateResult["success"] := false
             validateResult["invalidFields"].push("RunCmd")
         }
@@ -336,7 +336,7 @@ class ManagedEntityBase extends EntityBase {
                 if (this.InstallDir != "") {
                     searchDirs.Push(this.InstallDir)
                 } else if (this.LocateMethod == "SearchDirs") {
-                    if (Type(this.SearchDirs) == "Array" and this.SearchDirs.Length > 0) {
+                    if (Type(this.SearchDirs) == "Array" && this.SearchDirs.Length > 0) {
                         for index, dir in this.SearchDirs {
                             searchDirs.Push(dir)
                         }

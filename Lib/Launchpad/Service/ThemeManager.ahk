@@ -73,7 +73,7 @@ class ThemeManager extends AppComponentServiceBase {
     }
 
     ThemeIsLoaded(key) {
-        return (this._components.Has(key) and this._components[key] != false)
+        return (this._components.Has(key) && this._components[key] != false)
     }
 
     LoadTheme(key) {

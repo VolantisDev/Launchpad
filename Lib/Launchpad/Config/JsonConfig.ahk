@@ -40,6 +40,8 @@ class JsonConfig extends FileConfig {
             FileDelete(configPath)
         }
 
+        
+
         data := JsonData.new(this.config)
         data.ToFile(configPath, "", 4)
         return super.SaveConfig()

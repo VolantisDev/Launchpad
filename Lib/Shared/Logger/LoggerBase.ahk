@@ -29,6 +29,6 @@ class LoggerBase {
             }
         }
 
-        return (reqLevel > 1 and minLevel > 1 and reqLevel >= minLevel)
+        return (reqLevel > 1 && minLevel > 1 && reqLevel >= minLevel)
     }
 }

@@ -11,7 +11,7 @@ class FileConfig extends ConfigBase {
         this.ConfigPath := configPath != "" ? configPath : app.appDir . "\" . app.appName . extension
         super.__New(app)
 
-        if (autoLoad and this.ConfigPath != "") {
+        if (autoLoad && this.ConfigPath != "") {
             this.LoadConfig()
         }
     }

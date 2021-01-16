@@ -43,20 +43,20 @@ class ManagedGameEntity extends ManagedEntityBase {
 
         shortcutSrc := this.ShortcutSrc
 
-        if (extraConfig != "" and extraConfig.Has("GameShortcutSrc")) {
+        if (extraConfig != "" && extraConfig.Has("GameShortcutSrc")) {
             shortcutSrc := extraConfig["GameShortcutSrc"]
         }
 
         usesShortcut := this.UsesShortcut
 
-        if (extraConfig != "" and extraConfig.Has("GameUsesShortcut")) {
+        if (extraConfig != "" && extraConfig.Has("GameUsesShortcut")) {
             usesShortcut := extraConfig["GameUsesShortcut"]
         }
 
-        if (!shortcutSrc and usesShortcut) {
+        if (!shortcutSrc && usesShortcut) {
             runType := this.RunType
 
-            if (extraConfig != "" and extraConfig.Has("GameRunType")) {
+            if (extraConfig != "" && extraConfig.Has("GameRunType")) {
                 runType := extraConfig["GameRunType"]
             }
 

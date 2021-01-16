@@ -63,7 +63,7 @@ class BulkOperationBase {
         this.Notify()
         this.running := false
         this.completed := true
-        return (this.successCount > 0 and this.failedCount == 0)
+        return (this.successCount > 0 && this.failedCount == 0)
     }
 
     VerifyRequirements() {
@@ -97,7 +97,7 @@ class BulkOperationBase {
     }
 
     CloseProgressWindow() {
-        if (this.useProgress and IsObject(this.progress)) {
+        if (this.useProgress && IsObject(this.progress)) {
             this.progress.Finish()
         }
     }
@@ -137,7 +137,7 @@ class BulkOperationBase {
             this.failedCount++
         }
 
-        if (this.useProgress and statusText) {
+        if (this.useProgress && statusText) {
             this.progress.SetDetailText(statusText)
         }
     }

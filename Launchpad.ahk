@@ -21,7 +21,7 @@ try {
     app.Launchers.LoadLaunchers(app.Config.LauncherFile)
     app.Windows.OpenManageWindow()
 } catch e {
-    extra := (e.HasProp("Extra") and e.Extra != "") ? "`n`nAdditional info:`n" . e.Extra : ""
+    extra := (e.HasProp("Extra") && e.Extra != "") ? "`n`nAdditional info:`n" . e.Extra : ""
     occurredIn := e.What ? " in " . e.What : ""
     MsgBox "An unhandled exception has occurred" . occurredIn . ".`n`n" . e.Message . extra . "`n`nDebugging Information:`nFile: " . e.File . "`nLine: " . e.Line . "`n`nLaunchpad will now exit."
     ExitApp
@@ -39,7 +39,7 @@ try {
 {
     global app
 
-    if (IsSet(app) and app.Windows.WindowIsOpen("ToolsWindow")) {
+    if (IsSet(app) && app.Windows.WindowIsOpen("ToolsWindow")) {
         MouseGetPos(,,mouseWindow)
         toolsObj := app.Windows.GetGuiObj("ToolsWindow")
 

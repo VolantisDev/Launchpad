@@ -48,7 +48,7 @@ class InstallerBase {
     }
 
     InstallOrUpdate(progress := "") {
-        if (this.onlyInstallWhenCompiled and !A_IsCompiled) {
+        if (this.onlyInstallWhenCompiled && !A_IsCompiled) {
             return true
         }
 
@@ -60,7 +60,7 @@ class InstallerBase {
     }
 
     Install(progress := "") {
-        if (this.onlyInstallWhenCompiled and !A_IsCompiled) {
+        if (this.onlyInstallWhenCompiled && !A_IsCompiled) {
             return true
         }
 
@@ -91,7 +91,7 @@ class InstallerBase {
     }
 
     IsInstalled() {
-        if (this.onlyInstallWhenCompiled and !A_IsCompiled) {
+        if (this.onlyInstallWhenCompiled && !A_IsCompiled) {
             return true
         }
 
@@ -105,7 +105,7 @@ class InstallerBase {
     }
 
     Update(progress := "") {
-        if (this.onlyInstallWhenCompiled and !A_IsCompiled) {
+        if (this.onlyInstallWhenCompiled && !A_IsCompiled) {
             return true
         }
 
@@ -159,7 +159,7 @@ class InstallerBase {
     }
 
     Uninstall(progress := "") {
-        if (this.onlyInstallWhenCompiled and !A_IsCompiled) {
+        if (this.onlyInstallWhenCompiled && !A_IsCompiled) {
             return true
         }
 

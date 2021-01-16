@@ -35,7 +35,7 @@ class FileCache extends CacheBase {
     RemoveItem(path) {
         path := this.GetCachePath(path)
 
-        if (path != "" and FileExist(path)) {
+        if (path != "" && FileExist(path)) {
             FileDelete(path)
         }
     }
@@ -77,7 +77,7 @@ class FileCache extends CacheBase {
     CopyItem(path, destination) {
         sourcePath := this.GetCachePath(path)
         
-        if (path != "" and sourcePath != "" and destination != "" and sourcePath != destination) {
+        if (path != "" && sourcePath != "" && destination != "" && sourcePath != destination) {
             FileCopy(sourcePath, destination, true)
         }
 

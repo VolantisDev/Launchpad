@@ -24,7 +24,7 @@
         width := (this.windowSettings["contentWidth"] - this.margin) / 2
 
         buttonSize := this.themeObj.GetButtonSize("l")
-        buttonH := (buttonSize.Has("h") and buttonSize["h"] != "auto") ? buttonSize["h"] : 40
+        buttonH := (buttonSize.Has("h") && buttonSize["h"] != "auto") ? buttonSize["h"] : 40
 
         btn := this.AddButton("v" . ctlName . " " . this.nextPos . " w" . width . " h" . buttonH, buttonLabel)
         this.nextPos := this.nextPos == "xm" ? "x+m yp" : "xm"
@@ -36,11 +36,11 @@
         op := DetectGamesOp.new(this.app, platforms)
         op.Run()
 
-        allDetectedGames := []
+        allDetectedGames := Map()
 
         for key, detectedGames in op.GetResults() {
             for index, detectedGameObj in detectedGames {
-                allDetectedGames.Push(detectedGameObj)
+                allDetectedGames[detectedGameObj.key] := detectedGameObj
             }
         }
 

@@ -49,7 +49,7 @@ class GitHubReleaseInstallerComponent extends DownloadableInstallerComponent {
     }
 
     GetVersionFromTagName(tagName) {
-        if (!this.isTagRelease and SubStr(tagName, 1, 1) == "v") {
+        if (!this.isTagRelease && SubStr(tagName, 1, 1) == "v") {
             tagName := SubStr(tagName, 2)
         }
 
@@ -61,7 +61,7 @@ class GitHubReleaseInstallerComponent extends DownloadableInstallerComponent {
         filename := StrReplace(this.downloadUrl, "{{version}}", this.version)
         downloadUrl := ""
 
-        if (Type(response) == "Map" and response.Has("assets")) {
+        if (Type(response) == "Map" && response.Has("assets")) {
             for (index, component in response["assets"]) {
                 if (filename == "" or component["name"] == filename) {
                     downloadUrl := component["browser_download_url"]
