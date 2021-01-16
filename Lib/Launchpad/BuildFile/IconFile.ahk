@@ -40,9 +40,10 @@ class IconFile extends CopyableBuildFile {
         iconsDir := this.tempDir . "\icons"
         iconFilePath := ""
         iconsExtPath := this.appDir . "\Vendor\IconsExt\iconsext.exe"
+        cmd := "`"" . iconsExtPath . "`" /save `"" . path . "`" `"" . iconsDir . "`" -icons"
         
         DirCreate(iconsDir)
-        pid := RunWait(iconsExtPath . " /save " . path . " " . iconsDir . " -icons",, "Hide")
+        pid := RunWait(cmd)
 
         iconsCount := 0
         glob := iconsDir . "\*.ico"

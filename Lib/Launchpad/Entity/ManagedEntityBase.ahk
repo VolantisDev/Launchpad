@@ -215,6 +215,8 @@ class ManagedEntityBase extends EntityBase {
 
         detectedValues[this.configPrefix . "ProcessId"] := processId
 
+        detectedValues[this.configPrefix . "WorkingDir"] := this.InstallDir
+
         return detectedValues
     }
 
