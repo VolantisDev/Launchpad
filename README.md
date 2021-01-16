@@ -20,6 +20,10 @@ trying to make game platforms work well together.
 
 Launchpad can handle almost any advanced launch scenario you can throw at it!
 
+Launchpad can be used as a game launcher itself (you can run all your launchers directly from the UI!),
+but what's cool is that each game launcher exists as a self-contained .exe file with the right name and icon,
+and you can add it right to Steam or any other platform that allows external games.
+
 ## Why Use Launchpad
 
 Let's take Steam as an example, because that was the original use case for Launchpad's creation.
