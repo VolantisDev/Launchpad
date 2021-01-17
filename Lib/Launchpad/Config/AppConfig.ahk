@@ -10,7 +10,7 @@
     }
 
     DestinationDir {
-        get => this.DetectDestinationDir(this.GetIniValue("DestinationDir"))
+        get => this.GetIniValue("DestinationDir") || this.AppDataDir . "\Launchers"
         set => this.SetIniValue("DestinationDir", value)
     }
 
@@ -138,21 +138,9 @@
         Run(this.DestinationDir)
     }
 
-    DetectDestinationDir(destinationDir := "") {
-        if (destinationDir == "") {
-            destinationDir := this.GetRawValue("DestinationDir")
-        }
-
-        if (destinationDir == "") {
-            destinationDir := this.ChangeDestinationDir(destinationDir)
-        }
-
-        return destinationDir
-    }
-
     ChangeDestinationDir(existingDir := "") {
         if (existingDir == "") {
-            existingDir := this.GetRawValue("DestinationDir")
+            existingDir := this.DestinationDir
         }
 
         destinationDir := this.SelectDestinationDir(existingDir)
@@ -180,7 +168,7 @@
 
     ChangeLauncherFile(existingFile := "") {
         if (existingFile == "") {
-            existingFile := this.GetRawValue("LauncherFile")
+            existingFile := this.LauncherFile
         }
 
         launcherFile := this.SelectLauncherFile(existingFile)
@@ -209,7 +197,7 @@
 
     ChangePlatformsFile(existingFile := "") {
         if (existingFile == "") {
-            existingFile := this.GetRawValue("PlatformsFile")
+            existingFile := this.PlatformsFile
         }
 
         platformsFile := this.SelectPlatformsFile(existingFile)
@@ -238,10 +226,10 @@
 
     ChangeAssetsDir(existingDir := "") {
         if (existingDir == "") {
-            existingDir := this.app.Config.GetRawValue("AssetsDir")
+            existingDir := this.AssetsDir
         }
 
-        MsgBox("Launchpad both creates and uses other files when building and/or running your launchers. These files are known as Assets, and they are stored in a separate directory for each launcher you create.`n`nOn the following dialog, select the parent directory that Launchpad should create launcher assets within.", "Launchpad Assets Dir", "OK")
+        MsgBox("Launchpad sometimes creates and uses other files when building and/or running your launchers. These files are known as Assets, and they are stored in a separate directory for each launcher you create.`n`nOn the following dialog, select the parent directory that Launchpad should create launcher assets within.", "Launchpad Assets Dir", "OK")
         assetsDir := this.SelectAssetsDir(existingDir)
 
         if (assetsDir != "") {
