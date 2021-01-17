@@ -32,19 +32,7 @@
 
     OnDetectGames(btn, info) {
         this.Close()
-        platforms := this.app.Platforms.GetActivePlatforms()
-        op := DetectGamesOp.new(this.app, platforms)
-        op.Run()
-
-        allDetectedGames := Map()
-
-        for key, detectedGames in op.GetResults() {
-            for index, detectedGameObj in detectedGames {
-                allDetectedGames[detectedGameObj.key] := detectedGameObj
-            }
-        }
-
-        this.app.Windows.DetectedGamesWindow(allDetectedGames)
+        this.app.Platforms.DetectGames()
     }
 
     OnReloadLaunchers(btn, info) {

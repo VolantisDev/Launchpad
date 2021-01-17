@@ -72,4 +72,20 @@ class PlatformManager extends AppComponentServiceBase {
 
         return platforms
     }
+    
+    DetectGames() {
+        platforms := this.GetActivePlatforms()
+        op := DetectGamesOp.new(this.app, platforms)
+        op.Run()
+
+        allDetectedGames := Map()
+
+        for key, detectedGames in op.GetResults() {
+            for index, detectedGameObj in detectedGames {
+                allDetectedGames[detectedGameObj.key] := detectedGameObj
+            }
+        }
+
+        this.app.Windows.DetectedGamesWindow(allDetectedGames)
+    }
 }
