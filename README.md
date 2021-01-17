@@ -65,7 +65,11 @@ a game
 More information such as usage details is below, but since pictures speak a thousand words, here's some screenshots
 of various parts of Launchpad:
 
-Launcher Manager (Main Window)
+Initial Setup Window:
+![setup_window](https://user-images.githubusercontent.com/277977/104859465-91b83d80-58f3-11eb-8cc6-d1e0f7700303.png)
+
+
+Launcher Manager (Main Window):
 ![main_window](https://user-images.githubusercontent.com/277977/104806114-147db300-57a3-11eb-90cd-d69bf8ffe39b.png)
 
 Launcher Editor:

@@ -152,8 +152,22 @@
 
         this.Installers.InstallRequirements()
         this.Platforms.LoadComponents(this.Config.PlatformsFile)
+        result := ""
+
+        if (!FileExist(A_ScriptDir . "\Launchpad.ini")) {
+            result := this.Windows.SetupWindow()
+
+            if (result == "Exit") {
+                this.ExitApp()
+            }
+        }
+
         this.Launchers.LoadComponents(this.Config.LauncherFile)
         this.Windows.OpenManageWindow()
+
+        if (result == "Detect") {
+            this.Platforms.DetectGames()
+        }
     }
 
     ExitApp() {

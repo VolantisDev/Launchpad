@@ -48,6 +48,10 @@ class WindowManager extends AppComponentServiceBase {
         return this.ShowForm(DetectedGameEditor.new(this.app, detectedGameObj, "Detected Game", "", owner, parent))
     }
 
+    SetupWindow(owner := "", parent := "") {
+        return this.ShowForm(SetupWindow.new(this.app, "SetupWindow", owner, parent))
+    }
+
     OpenMainWindow() {
         if (!this.WindowExists("MainWindow")) {
             this.SetItem("MainWindow", MainWindow.new(this.app, "Launchpad", "MainWindow"))

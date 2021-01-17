@@ -2,16 +2,20 @@
     availableThemes := Map()
 
     __New(app, windowKey := "", owner := "", parent := "") {
-        this.availableThemes := app.Themes.GetAvailableThemes(true)
-        super.__New(app, "Setup", this.GetDescription(), windowKey, owner, parent)
+        super.__New(app, "Setup", this.GetTextDefinition(), windowKey, owner, parent, "*&Start|&Exit")
     }
 
-    GetDescription() {
+    Create() {
+        super.Create()
+        this.availableThemes := this.app.Themes.GetAvailableThemes(true)
+    }
+
+    GetTextDefinition() {
         return "
         (
         Welcome to Launchpad, your game launching multitool!
 
-        This setup screen will help get you up and running quickly. You can always change these settings later, and you can revisit this screen at any time from the Tools menu if you wish to start fresh.
+        This setup screen will help get you up and running quickly. You can always change your settings later.
         )"
     }
 
@@ -22,78 +26,30 @@
     Controls() {
         super.Controls()
 
-        this.AddHeading("Launcher Directory")
-        this.AddDescription("Launchpad will create a separate .exe file for every game you configure. This lets you add each game directly to the platform of your choice.`n`nYou can store your launchers in any folder you wish, and if you ever forget you can view or open the directory right from Launchpad.")
-        this.AddConfigLocationBlock("DestinationDir")
-
-        this.AddHeading("Platforms")
-        this.AddDescription("Launchpad can detect your installed games from various game platforms to make it simple to create launchers for them.`n`nThe platforms that were detected are shown below. Check the ones you wish to enable (you can always enable and disable them later).`n`nIf you have a primary platform you wish to bring all your other games into (e.g. Steam), it's recommended to leave that platform disabled here.")
-        this.AddPlatformCheckboxes()
-        
-        groupW := this.windowSettings["contentWidth"] - (this.margin * 2)
-
-        buttonSize := this.themeObj.GetButtonSize("s", true)
-        buttonW := (buttonSize.Has("w") && buttonSize["w"] != "auto") ? buttonSize["w"] : 80
-        openX := groupW - (buttonW * 2)
-        tabs := this.guiObj.Add("Tab3", "x" . this.margin . " y" . this.margin . " +0x100", ["Launchers", "Assets", "Sources", "Appearance", "Advanced"])
-
-        tabs.UseTab("Launchers", true)
-
-        this.AddHeading("Launcher File")
-        this.AddConfigLocationBlock("LauncherFile", "Reload")
-
-        this.AddHeading("Launcher Directory")
-        
-
-        this.AddHeading("Launcher Settings")
-        this.AddConfigCheckBox("Create individual launcher directories", "CreateIndividualDirs")
-        this.AddConfigCheckBox("Rebuild existing launchers", "RebuildExistingLaunchers")
-        this.AddConfigCheckBox("Clean launchers on build", "CleanLaunchersOnBuild")
-        this.AddConfigCheckBox("Clean launchers on exit", "CleanLaunchersOnExit")
-
-        tabs.UseTab("Assets", true)
-
-        this.AddHeading("Assets Directory")
-        this.AddConfigLocationBlock("AssetsDir")
-
-        this.AddHeading("Asset Settings")
-        this.AddConfigCheckBox("Copy assets to launcher directory", "CopyAssets")
-
-        tabs.UseTab("Sources", true)
-
-        this.AddHeading("API Endpoint")
-        this.AddConfigLocationBlock("ApiEndpoint")
-
-        tabs.UseTab("Appearance", true)
-
         this.AddHeading("Theme")
+        this.AddDescription("Launchpad has a growing number of themes available to fit in with the platform or aesthetic of your choice. Choose your main theme below. You can also choose a unique theme for each launcher later.")
         chosen := this.GetItemIndex(this.availableThemes, this.app.Config.ThemeName)
         ctl := this.guiObj.AddDDL("vThemeName xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"), this.availableThemes)
         ctl.OnEvent("Change", "OnThemeNameChange")
         ctl.ToolTip := "Select a theme for Launchpad to use."
 
-        ; @todo finish this
+        this.AddHeading("Launcher Directory")
+        this.AddDescription("Launchpad will create a separate .exe file for every game you configure.`n`nYou can store your launchers in any folder you wish, and you can change this setting at any time.")
+        this.AddConfigLocationBlock("DestinationDir")
 
-        tabs.UseTab("Advanced", true)
+        this.AddHeading("Platforms")
+        this.AddDescription("Launchpad has detected the following game platforms on your computer. Check the ones you wish to enable Launchpad to detect your games from.`n`nThis can be changed from the Platforms window later.")
+        this.AddPlatformCheckboxes()
 
-        this.AddHeading("Platforms File")
-        this.AddConfigLocationBlock("PlatformsFile", "Reload")
-
-        this.AddHeading("Cache Dir")
-        this.AddConfigLocationBlock("CacheDir", "&Flush")
-
-        this.AddHeading("Cache Settings")
-        this.AddConfigCheckBox("Flush cache on exit", "FlushCacheOnExit")
-
-        tabs.UseTab()
+        this.AddHeading("Detect Games")
+        this.AddDescription("Launchpad can detect your installed games from your selected platforms automatically. You can do this at any time from the 'Detect Games' option in the Tools menu.")
+        this.AddCheckBox("Detect my games now", "DetectGames", true, false)
 
         closeW := 100
         closeX := this.margin + (this.windowSettings["contentWidth"] / 2) - (closeW / 2)
-
-        this.AddSettingsButton("&Done", "CloseButton", closeW, 30, "x" . closeX)
     }
 
-    AddConfigLocationBlock(settingName, extraButton := "", inGroupBox := true) {
+    AddConfigLocationBlock(settingName, extraButton := "", inGroupBox := false) {
         location := this.app.Config.%settingName% ? this.app.Config.%settingName% : "Not selected"
 
         this.AddLocationText(location, settingName, inGroupBox)
@@ -125,17 +81,6 @@
         this.SetFont()
     }
 
-    AddConfigCheckBox(checkboxText, settingName, inGroupBox := true) {
-        isChecked := this.app.Config.%settingName%
-        this.AddCheckBox(checkboxText, settingName, isChecked, inGroupBox, "OnSettingsCheckBox")
-    }
-
-    OnSettingsCheckBox(chk, info) {
-        this.guiObj.Submit(false)
-        ctlName := chk.Name
-        this.app.Config.%ctlName% := chk.Value
-    }
-
     AddPlatformCheckboxes() {
         if (!this.app.Platforms._componentsLoaded) {
             this.app.Platforms.LoadComponents()
@@ -160,20 +105,6 @@
         }
     }
 
-    AddSettingsButton(buttonLabel, ctlName, width := "", height := "", position := "xs y+m") {
-        buttonSize := this.themeObj.GetButtonSize("s", true)
-
-        if (width == "") {
-            width := (buttonSize.Has("w") && buttonSize["w"] != "auto") ? buttonSize["w"] : 80
-        }
-
-        if (height == "") {
-            height := (buttonSize.Has("h") && buttonSize["h"] != "auto") ? buttonSize["h"] : 20
-        }
-
-        btn := this.AddButton("v" . ctlName . " " . position . " w" . width . " h" . height, buttonLabel)
-    }
-
     SetText(ctlName, ctlText, fontStyle := "") {
         this.guiObj.SetFont(fontStyle)
         this.guiObj[ctlName].Text := ctlText
@@ -182,32 +113,6 @@
 
     OnCloseButton(btn, info) {
         this.Close()
-    }
-
-    OnReloadLauncherFile(btn, info) {
-        this.app.Launchers.ReloadLauncherFile()
-    }
-
-    OnReloadPlatformsFile(btn, info) {
-        this.app.Platforms.ReloadPlatformsFile()
-    }
-
-    OnOpenLauncherFile(btn, info) {
-        this.app.Config.OpenLauncherFile()
-    }
-
-    OnOpenPlatformsFile(btn, info) {
-        this.app.Config.OpenPlatformsFile()
-    }
-
-    OnChangeLauncherFile(btn, info) {
-        this.app.Config.ChangeLauncherFile()
-        this.SetText("LauncherFile", this.app.Config.LauncherFile, "Bold")
-    }
-
-    OnChangePlatformsFile(btn, info) {
-        this.app.Config.ChangePlatformsFile()
-        this.SetText("PlatformsFile", this.app.Config.PlatformsFile, "Bold")
     }
 
     OnOpenDestinationDir(btn, info) {
@@ -219,45 +124,25 @@
         this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
     }
 
-    OnOpenAssetsDir(btn, info) {
-        this.app.Config.OpenAssetsDir()
-    }
-
-    OnChangeAssetsDir(btn, info) {
-        this.app.Config.ChangeAssetsDir()
-        this.SetText("AssetsDir", this.app.Config.AssetsDir, "Bold")
-    }
-
-    OnOpenApiEndpoint(btn, info) {
-        this.app.DataSources.GetItem("api").Open()
-    }
-
-    OnChangeApiEndpoint(btn, info) {
-        this.app.DataSources.GetItem("api").ChangeApiEndpoint(, "SettingsWindow")
-        this.SetText("ApiEndpoint", this.app.Config.ApiEndpoint, "Bold")
-    }
-
-    OnFlushCache(btn, info) {
-        this.app.Cache.FlushCaches()
-    }
-
-    OnOpenCacheDir(btn, info) {
-        this.app.Cache.OpenCacheDir()
-    }
-
-    OnChangeCacheDir(btn, info) {
-        this.app.Cache.ChangeCacheDir()
-        this.SetText("TxtCacheDir", this.app.Config.CacheDir, "Bold")
-    }
-
     OnThemeNameChange(ctl, info) {
         this.guiObj.Submit(false)
         this.app.Config.ThemeName := this.availableThemes[ctl.Value]
         this.app.Themes.LoadMainTheme()
     }
 
-    OnLoggingLevelChange(ctl, info) {
-        this.guiObj.Submit(false)
-        this.app.Config.LoggingLevel := ctl.Text
+    ProcessResult(result) {
+        if (result == "Start") {
+            this.app.Platforms.SaveModifiedPlatforms()
+
+            if (!FileExist(A_ScriptDir . "\Launchpad.ini")) {
+                FileAppend("", A_ScriptDir . "\Launchpad.ini")
+            }
+
+            if (this.guiObj["DetectGames"].Value) {
+                result := "Detect"
+            }
+        }
+
+        return result
     }
 }

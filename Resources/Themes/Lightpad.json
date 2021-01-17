@@ -192,6 +192,10 @@
                     "Caption": false,
                     "Border": true
                 }
+            },
+            "SetupWindow": {
+                "settings": "form",
+                "contentWidth": 740
             }
         }
     }
