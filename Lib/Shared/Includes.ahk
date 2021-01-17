@@ -23,6 +23,9 @@
 #Include E:\Tools\Launchpad\Lib\Shared\DataSourceItem\DSJson.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\DataSourceItem\DSListing.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Diff\DiffResult.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Event\AlterComponentsEvent.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Event\EventBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Event\RegisterComponentsEvent.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Events\Events.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\ExeProcess\ExeProcess.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Game\BlizzardGame.ahk

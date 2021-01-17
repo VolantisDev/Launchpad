@@ -1,18 +1,23 @@
 class CacheManager extends AppComponentServiceBase {
+    _registerEvent := LaunchpadEvents.CACHES_REGISTER
+    _alterEvent := LaunchpadEvents.CACHES_ALTER
     cacheDir := ""
 
-    __New(app, cacheDir) {
+    __New(app, cacheDir, components := "") {
         InvalidParameterException.CheckTypes("CacheManager", "cacheDir", cacheDir, "")
         InvalidParameterException.CheckEmpty("CacheManager", "cacheDir", cacheDir)
         this.cacheDir := cacheDir
-        super.__New(app)
-        this.SetupCaches()
+        super.__New(app, components)
     }
 
-    SetupCaches() {
-        this.SetItem("app", ObjectCache.new())
-        this.SetItem("file", FileCache.new(this.cacheDir))
-        this.SetItem("api", FileCache.new(this.cacheDir . "\API"))
+    LoadComponents() {
+        if (!this._componentsLoaded) {
+            this.SetItem("app", ObjectCache.new())
+            this.SetItem("file", FileCache.new(this.cacheDir))
+            this.SetItem("api", FileCache.new(this.cacheDir . "\API"))
+        }
+
+        super.LoadComponents()
     }
 
     SetCacheDir(cacheDir) {

@@ -16,10 +16,6 @@ SplitPath(A_ScriptName,,,, appName)
 
 try {
     app := Launchpad.new(appName, A_ScriptDir)
-    app.Installers.InstallRequirements()
-    app.Platforms.LoadPlatforms(app.Config.PlatformsFile)
-    app.Launchers.LoadLaunchers(app.Config.LauncherFile)
-    app.Windows.OpenManageWindow()
 } catch e {
     extra := (e.HasProp("Extra") && e.Extra != "") ? "`n`nAdditional info:`n" . e.Extra : ""
     occurredIn := e.What ? " in " . e.What : ""

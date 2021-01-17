@@ -62,8 +62,8 @@
     }
 
     PopulateListView() {
-        if (!this.launcherManager.launchersLoaded) {
-            this.launcherManager.LoadLaunchers(this.launcherFile)
+        if (!this.launcherManager._componentsLoaded) {
+            this.launcherManager.LoadComponents(this.launcherFile)
         }
 
         this.guiObj["ListView"].Delete()

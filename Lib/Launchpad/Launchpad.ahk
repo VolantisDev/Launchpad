@@ -17,10 +17,16 @@
     eventManagerObj := ""
     idGenObj := ""
     blizzardProductDbObj := ""
+    moduleManagerObj := ""
     
     Config {
         get => this.appConfigObj
         set => this.appConfigObj := value
+    }
+
+    Modules {
+        get => this.moduleManagerObj
+        set => this.moduleManagerObj := value
     }
 
     Windows {
@@ -106,23 +112,26 @@
         DirCreate(this.appDataDir)
         
         config := AppConfig.new(this, this.tmpDir, this.appDataDir)
-        idGen := UuidGenerator.new()
-        appStateObj := LaunchpadAppState.new(this.appDataDir . "\State.json")
-        eventManagerObj := EventManager.new()
-
-        this.idGen := idGen
         this.appConfigObj := config
 
-        this.loggerServiceObj := LoggerService.new(FileLogger.new(A_ScriptDir . "\log.txt", config.LoggingLevel, 5))
+        idGen := UuidGenerator.new()
+        this.idGen := idGen
+        
+        appStateObj := LaunchpadAppState.new(this.appDataDir . "\State.json")
         this.appStateObj := appStateObj
-        this.blizzardProductDbObj := BlizzardProductDb.new(this)
+        
+        eventManagerObj := EventManager.new()
         this.eventManagerObj := eventManagerObj
+    
+        this.moduleManagerObj := ModuleManager.new(this)
+        this.loggerServiceObj := LoggerService.new(FileLogger.new(A_ScriptDir . "\log.txt", config.LoggingLevel, 5))
+        this.blizzardProductDbObj := BlizzardProductDb.new(this)
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
         this.notificationServiceObj := NotificationService.new(this, ToastNotifier.new(this))
         this.themeManagerObj := ThemeManager.new(this, appDir . "\Resources\Themes", eventManagerObj, idGen)
         this.windowManagerObj := WindowManager.new(this)
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
-        this.dataSourceManagerObj := DataSourceManager.new()
+        this.dataSourceManagerObj := DataSourceManager.new(eventManagerObj)
         this.builderManagerObj := BuilderManager.new(this)
         this.launcherManagerObj := LauncherManager.new(this)
         this.platformManagerObj := PlatformManager.new(this)
@@ -140,6 +149,11 @@
         this.Builders.SetItem("ahk", AhkLauncherBuilder.new(this), true)
         this.DataSources.SetItem("api", ApiDataSource.new(this, this.Cache.GetItem("api"), this.Config.ApiEndpoint), true)
         this.Installers.SetupInstallers()
+
+        this.Installers.InstallRequirements()
+        this.Platforms.LoadComponents(this.Config.PlatformsFile)
+        this.Launchers.LoadComponents(this.Config.LauncherFile)
+        this.Windows.OpenManageWindow()
     }
 
     ExitApp() {

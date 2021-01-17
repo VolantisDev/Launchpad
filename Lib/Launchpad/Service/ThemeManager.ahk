@@ -1,4 +1,6 @@
 class ThemeManager extends AppComponentServiceBase {
+    _registerEvent := LaunchpadEvents.LAUNCHERS_REGISTER
+    _alterEvent := LaunchpadEvents.LAUNCHERS_ALTER
     themesDir := ""
     defaultTheme := "Steampad"
     eventManager := ""
@@ -11,7 +13,6 @@ class ThemeManager extends AppComponentServiceBase {
         this.eventManager := eventManager
         this.idGenerator := idGenerator
         super.__New(app)
-        this.LocateThemes()
     }
 
     LoadMainTheme() {
@@ -22,7 +23,8 @@ class ThemeManager extends AppComponentServiceBase {
         return (this.app.Config.ThemeName != "") ? this.app.Config.ThemeName : this.defaultTheme
     }
 
-    LocateThemes() {
+    LoadComponents() {
+        this._componentsLoaded := false
         themes := Map()
 
         Loop Files this.themesDir . "\*", "D" {
@@ -39,11 +41,12 @@ class ThemeManager extends AppComponentServiceBase {
         }
 
         this._components := themes
+        super.LoadComponents()
     }
 
     SetThemesDir(themesDir) {
         this.themesDir := themesDir
-        this.LocateThemes()
+        this.LoadComponents()
     }
 
     GetItem(key := "") {
@@ -60,7 +63,7 @@ class ThemeManager extends AppComponentServiceBase {
 
     GetAvailableThemes(locate := false) {
         if (locate) {
-            this.LocateThemes()
+            this.LoadComponents()
         }
 
         themes := []

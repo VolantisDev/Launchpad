@@ -1,4 +1,8 @@
 class InstallerManager extends AppComponentServiceBase {
+    _registerEvent := LaunchpadEvents.INSTALLERS_REGISTER
+    _alterEvent := LaunchpadEvents.INSTALLERS_ALTER
+    _eventId := "INSTALLERS"
+
     SetupInstallers() {
         extraThemes := Map()
         extraDependencyComponents := []

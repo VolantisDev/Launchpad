@@ -53,8 +53,8 @@
     }
 
     PopulateListView() {
-        if (!this.platformManager.platformsLoaded) {
-            this.platformManager.LoadPlatforms(this.platformsFile)
+        if (!this.platformManager._componentsLoaded) {
+            this.platformManager.LoadComponents(this.platformsFile)
         }
 
         this.guiObj["ListView"].Delete()
@@ -180,7 +180,7 @@
     }
 
     OnReloadButton(btn, info) {
-        this.platformManager.LoadPlatforms()
+        this.platformManager.LoadComponents()
         this.PopulateListView()
     }
 

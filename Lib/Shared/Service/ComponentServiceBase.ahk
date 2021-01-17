@@ -1,5 +1,44 @@
 class ComponentServiceBase extends ServiceBase {
     _components := Map()
+    _componentsLoaded := false
+    _eventManager := ""
+    _registerEvent := ""
+    _alterEvent := ""
+
+    __New(eventManagerObj, components := "", autoLoad := true) {
+        this.eventManagerObj := eventManagerObj
+
+        if (components != "") {
+            this._components := components
+        }
+
+        super.__New()
+
+        if (autoLoad) {
+            this.LoadComponents()
+        }
+    }
+
+    LoadComponents() {
+        if (!this._componentsLoaded) {
+            components := this._components
+
+            if (this._registerEvent) {
+                event := RegisterComponentsEvent.new(this._registerEvent, components)
+                this.eventManagerObj.DispatchEvent(this._registerEvent, event)
+                components := event.Items
+            }
+
+            if (this._alterEvent) {
+                event := AlterComponentsEvent.new(this._alterEvent, components)
+                this.eventManagerObj.DispatchEvent(this._alterEvent, event)
+                components := event.Items
+            }
+
+            this.components := components
+            this.componentsLoaded := true
+        }
+    }
     
     GetItem(key) {
         component := ""

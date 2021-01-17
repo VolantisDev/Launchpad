@@ -1,0 +1,5 @@
+class ModuleBase {
+    GetSubscribers() {
+
+    }
+}

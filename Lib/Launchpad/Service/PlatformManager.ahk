@@ -1,6 +1,7 @@
 class PlatformManager extends AppComponentServiceBase {
+    _registerEvent := LaunchpadEvents.LAUNCHERS_REGISTER
+    _alterEvent := LaunchpadEvents.LAUNCHERS_ALTER
     platformsConfigObj := ""
-    platformsLoaded := false
 
     Platforms[] {
         get => this._components
@@ -9,10 +10,12 @@ class PlatformManager extends AppComponentServiceBase {
 
     __New(app, platformsFile := "") {
         this.platformsConfigObj := PlatformsConfig.new(app, platformsFile, false)
-        super.__New(app)
+        super.__New(app, "", false)
     }
 
-    LoadPlatforms(platformsFile := "") {
+    LoadComponents(platformsFile := "") {
+        this._componentsLoaded := false
+
         if (platformsFile != "") {
             this.platformsConfigObj.ConfigPath := platformsFile
         }
@@ -24,7 +27,8 @@ class PlatformManager extends AppComponentServiceBase {
         operation := LoadPlatformsOp.new(this.app, this.platformsConfigObj)
         success := operation.Run()
         this._components := operation.GetResults()
-        this.platformsLoaded := true
+        super.LoadComponents()
+
         return success
     }
 
@@ -56,8 +60,8 @@ class PlatformManager extends AppComponentServiceBase {
     GetActivePlatforms() {
         platforms := Map()
 
-        if (!this.platformsLoaded) {
-            this.LoadPlatforms()
+        if (!this._componentsLoaded) {
+            this.LoadComponents()
         }
 
         for key, platform in this.Platforms {

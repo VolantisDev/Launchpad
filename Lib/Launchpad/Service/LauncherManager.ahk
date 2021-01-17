@@ -1,6 +1,7 @@
 class LauncherManager extends AppComponentServiceBase {
+    _registerEvent := LaunchpadEvents.LAUNCHERS_REGISTER
+    _alterEvent := LaunchpadEvents.LAUNCHERS_ALTER
     launcherConfigObj := ""
-    launchersLoaded := false
 
     Launchers[] {
         get => this._components
@@ -9,10 +10,12 @@ class LauncherManager extends AppComponentServiceBase {
 
     __New(app, launcherFile := "") {
         this.launcherConfigObj := LauncherConfig.new(app, launcherFile, false)
-        super.__New(app)
+        super.__New(app, "", false)
     }
 
-    LoadLaunchers(launcherFile := "") {
+    LoadComponents(launcherFile := "") {
+        this._componentsLoaded := false
+
         if (launcherFile != "") {
             this.launcherConfigObj.ConfigPath := launcherFile
         }
@@ -24,7 +27,8 @@ class LauncherManager extends AppComponentServiceBase {
         operation := LoadLaunchersOp.new(this.app, this.launcherConfigObj)
         success := operation.Run()
         this._components := operation.GetResults()
-        this.launchersLoaded := true
+        super.LoadCopmonents() ; Allow launchers to be added to or altered
+
         return success
     }
 

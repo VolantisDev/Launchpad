@@ -1,15 +1,16 @@
 class DataSourceManager extends ComponentServiceBase {
+    _registerEvent := Events.DATASOURCES_REGISTER
+    _alterEvent := Events.DATASOURCES_ALTER
     primaryDataSourceKey := ""
 
-    __New(primaryKey := "", primaryDataSource := "") {
-        InvalidParameterException.CheckTypes("DataSourceManager", "primaryKey", primaryKey, "", "primaryDataSource", primaryDataSource, "")
+    __New(eventMgr, components := "", primaryKey := "") {
+        InvalidParameterException.CheckTypes("DataSourceManager", "primaryKey", primaryKey, "")
 
-        if (primaryKey != "" && primaryDataSource != "") {
+        if (primaryKey) {
             this.primaryDataSourceKey := primaryKey
-            this.dataSources[primaryKey] := primaryDataSource
         }
 
-        super.__New()
+        super.__New(eventMgr, components)
     }
 
     GetItem(key := "") {

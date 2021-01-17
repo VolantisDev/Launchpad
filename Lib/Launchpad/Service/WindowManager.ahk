@@ -1,4 +1,6 @@
 class WindowManager extends AppComponentServiceBase {
+    _registerEvent := LaunchpadEvents.WINDOWS_REGISTER
+    _alterEvent := LaunchpadEvents.WINDOWS_ALTER
     children := Map()
     owned := Map()
 

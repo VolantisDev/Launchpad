@@ -18,6 +18,7 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\LauncherBuilderOpBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\LauncherGameOpBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\LoadLaunchersOp.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\LoadModulesOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\LoadPlatformsOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\UpdateOp.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\BulkOperation\ValidateLaunchersOp.ahk
@@ -38,6 +39,7 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\ManagedGameEntity.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\ManagedLauncherEntity.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Entity\PlatformEntity.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Events\LaunchpadEvents.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\GamePlatform\BethesdaPlatform.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\GamePlatform\BlizzardPlatform.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\GamePlatform\EpicPlatform.ahk
@@ -48,12 +50,14 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Installer\DependencyInstaller.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Installer\LaunchpadUpdate.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Installer\ThemeInstaller.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Module\ModuleBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\AppComponentServiceBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\AppServiceBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\BuilderManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\CacheManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\InstallerManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\LauncherManager.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Service\ModuleManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\NotificationService.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\PlatformManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\ThemeManager.ahk

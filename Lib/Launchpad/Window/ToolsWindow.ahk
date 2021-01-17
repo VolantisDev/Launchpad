@@ -49,7 +49,7 @@
 
     OnReloadLaunchers(btn, info) {
         this.Close()
-        this.app.Launchers.LoadLaunchers(this.app.Config.LauncherFile)
+        this.app.Launchers.LoadComponents(this.app.Config.LauncherFile)
 
         if (this.app.Windows.WindowIsOpen("ManageWindow")) {
             this.app.Windows.GetItem("ManageWindow").PopulateListView()

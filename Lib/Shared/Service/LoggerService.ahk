@@ -1,4 +1,4 @@
-class LoggerService {
+class LoggerService extends ServiceBase {
     logger := ""
 
     __New(logger) {

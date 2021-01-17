@@ -3,7 +3,7 @@ class EventManager extends ServiceBase {
     _bindMethod := ""
 
     __New() {
-        this._bindMethod := ObjBindMethod(this, "DispatchEvent")
+        this._bindMethod := ObjBindMethod(this, "HandleEvent")
     }
 
     Register(eventName, key, eventHandler) {
@@ -40,10 +40,18 @@ class EventManager extends ServiceBase {
         return this
     }
 
-    DispatchEvent(wParam, lParam, msg, hwnd) {
-        if (this._handlers.Has(msg) && this._handlers[msg].Count > 0) {
-            for key, eventHandler in this._handlers[msg] {
-                %eventHandler%(wParam, lParam, msg, hwnd)
+    DispatchEvent(eventName, eventObj, extra := "", hwnd := "") {
+        if (hwnd == "") {
+            hwnd := A_ScriptHwnd
+        }
+
+        return this.HandleEvent(eventObj, extra, eventName, hwnd)
+    }
+
+    HandleEvent(param1, param2, eventName, hwnd := "") {
+        if (this._handlers.Has(eventName) && this._handlers[eventName].Count > 0) {
+            for key, eventHandler in this._handlers[eventName] {
+                %eventHandler%(param1, param2, eventName, hwnd)
             }
         }
     }
