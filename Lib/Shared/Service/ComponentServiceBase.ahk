@@ -36,7 +36,7 @@ class ComponentServiceBase extends ServiceBase {
             }
 
             this.components := components
-            this.componentsLoaded := true
+            this._componentsLoaded := true
         }
     }
     
