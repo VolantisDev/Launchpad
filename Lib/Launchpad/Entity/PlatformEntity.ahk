@@ -70,6 +70,16 @@ class PlatformEntity extends EntityBase {
         this.platform := %platformClass%.new(this.app, this.InstallDir, this.ExePath, this.InstalledVersion, this.UninstallCmd)
     }
 
+    GetDisplayName() {
+        name := ""
+
+        if (this.platform and this.platform.displayName) {
+            name := this.platform.displayName
+        }
+
+        return name
+    }
+
     SetConfigValue(key, value) {
         super.SetConfigValue(key, value)
         this.CreatePlatform()
