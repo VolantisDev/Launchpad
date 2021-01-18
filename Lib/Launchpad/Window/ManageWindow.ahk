@@ -1,18 +1,10 @@
 ﻿class ManageWindow extends LaunchpadGuiBase {
     sidebarWidth := 85
     listViewColumns := Array("Game", "Launcher Type", "Game Type", "Status")
-    launcherFile := ""
     launcherManager := ""
-    launchersModified := false
     numSelected := 0
 
-    __New(app, launcherFile := "", windowKey := "", owner := "", parent := "") {
-        if (launcherFile == "") {
-            launcherFile := app.Config.LauncherFile
-        }
-
-        InvalidParameterException.CheckTypes("ManageWindow", "launcherFile", launcherFile, "")
-        this.launcherFile := launcherFile
+    __New(app, windowKey := "", owner := "", parent := "") {
         this.launcherManager := app.Launchers
         super.__New(app, "Launchpad", windowKey, owner, parent)
     }
@@ -37,14 +29,6 @@
     }
 
     Destroy() {
-        if (this.launchersModified) {
-            shouldSave := MsgBox("Your launchers have been modified. Would you like to commit your changes back to " . this.launcherFile . "?", "Save modifications?", "YesNo")
-
-            if (shouldSave == "Yes") {
-                this.launcherManager.SaveModifiedLaunchers()
-            }
-        }
-
         currentApp := this.app
         super.Destroy()
         currentApp.ExitApp()
@@ -62,10 +46,6 @@
     }
 
     PopulateListView() {
-        if (!this.launcherManager._componentsLoaded) {
-            this.launcherManager.LoadComponents(this.launcherFile)
-        }
-
         this.guiObj["ListView"].Delete()
         iconNum := 1
         IL := this.CreateIconList()
@@ -121,14 +101,13 @@
         diff := launcherObj.Edit("config", this.guiObj)
 
         if (diff != "" && diff.HasChanges()) {
-            this.launchersModified := true
-
             if (launcherObj.Key != key) {
                 this.launcherManager.RemoveLauncher(key)
                 this.launcherManager.AddLauncher(key, launcherObj)
                 launcherObj.UpdateDataSourceDefaults()
             }
 
+            this.launcherManager.SaveModifiedLaunchers()
             this.PopulateListView()
         }
     }
@@ -138,8 +117,8 @@
 
         if (entity != "") {
             this.launcherManager.AddLauncher(entity.Key, entity)
+            this.launcherManager.SaveModifiedLaunchers()
             this.PopulateListView()
-            this.launchersModified := true
         }
     }
 
@@ -234,7 +213,7 @@
 
             if (shouldDelete == "Yes") {
                 this.launcherManager.RemoveLauncher(key)
-                this.launchersModified := true
+                this.launcherManager.SaveModifiedLaunchers()
                 this.guiObj["ListView"].Delete(selected)
             }
         }

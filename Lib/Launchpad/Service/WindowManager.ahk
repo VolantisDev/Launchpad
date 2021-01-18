@@ -62,7 +62,7 @@ class WindowManager extends AppComponentServiceBase {
 
     OpenManageWindow() {
         if (!this.WindowExists("ManageWindow")) {
-            this.SetItem("ManageWindow", ManageWindow.new(this.app, "", "ManageWindow"))
+            this.SetItem("ManageWindow", ManageWindow.new(this.app, "ManageWindow"))
         }
 
         return this.ShowWindow("ManageWindow")

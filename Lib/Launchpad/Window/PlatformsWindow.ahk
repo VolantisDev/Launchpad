@@ -3,7 +3,6 @@
     listViewColumns := Array("Platform", "Enabled", "Installed", "Version")
     platformsFile := ""
     platformManager := ""
-    platformsModified := false
     numSelected := 0
 
     __New(app, platformsFile := "", windowKey := "", owner := "", parent := "") {
@@ -29,18 +28,6 @@
         this.AddButton("vRunButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Run")
     }
 
-    Destroy() {
-        if (this.platformsModified) {
-            shouldSave := MsgBox("Your platforms have been modified. Would you like to commit your changes?", "Save modifications?", "YesNo")
-
-            if (shouldSave == "Yes") {
-                this.platformManager.SaveModifiedPlatforms()
-            }
-        }
-
-        super.Destroy()
-    }
-
     AddPlatformsList() {
         styling := "C" . this.themeObj.GetColor("text")
         lvStyles := "+LV" . LVS_EX_LABELTIP . " +LV" . LVS_EX_AUTOSIZECOLUMNS . " +LV" . LVS_EX_DOUBLEBUFFER . " +LV" . LVS_EX_FLATSB . " -E0x200"
@@ -53,10 +40,6 @@
     }
 
     PopulateListView() {
-        if (!this.platformManager._componentsLoaded) {
-            this.platformManager.LoadComponents(this.platformsFile)
-        }
-
         this.guiObj["ListView"].Delete()
         iconNum := 1
         this.guiObj["ListView"].SetImageList(this.CreateIconList())
@@ -102,7 +85,7 @@
         diff := platformObj.Edit("config", this.guiObj)
 
         if (diff != "" && diff.HasChanges()) {
-            this.platformsModified := true
+            this.platformManager.SaveModifiedPlatforms()
             this.PopulateListView()
         }
     }
@@ -150,8 +133,8 @@
         if (platform) {
             platform.IsEnabled := true
             platform.SaveModifiedData()
+            this.platformManager.SaveModifiedPlatforms()
             this.PopulateListView()
-            this.platformsModified := true
 
             if (selected) {
                 this.guiObj["ListView"].Modify(selected, "Select")
@@ -168,8 +151,8 @@
         if (platform) {
             platform.IsEnabled := false
             platform.SaveModifiedData()
+            this.platformManager.SaveModifiedPlatforms()
             this.PopulateListView()
-            this.platformsModified := true
 
             if (selected) {
                 this.guiObj["ListView"].Modify(selected, "Select")

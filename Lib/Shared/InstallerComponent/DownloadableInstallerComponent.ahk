@@ -17,6 +17,11 @@ class DownloadableInstallerComponent extends FileInstallerComponentBase {
         }
 
         Download(this.GetDownloadUrl(), destPath)
+        
+        if (this.zipped) {
+            this.zipFile := destPath
+        }
+
         return true
     }
 

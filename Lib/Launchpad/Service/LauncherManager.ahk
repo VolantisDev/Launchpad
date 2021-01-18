@@ -53,7 +53,7 @@ class LauncherManager extends AppComponentServiceBase {
 
     AddLauncher(key, launcher) {
         this.Launchers[key] := launcher
-        this.launcherConfigObj.Games[key] := launcher.UnmergedConfig 
+        this.launcherConfigObj.Games[key] := launcher.UnmergedConfig
         ; @todo should this use configObj instead of UnmergedConfig (which is a clone)?
     }
 }

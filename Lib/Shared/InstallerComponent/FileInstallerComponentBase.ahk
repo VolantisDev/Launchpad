@@ -2,6 +2,8 @@ class FileInstallerComponentBase extends InstallerComponentBase {
     destPath := ""
     recurse := true
     zipped := false
+    zipFile := ""
+    deleteZip := true
 
     __New(version, destPath, appState, stateKey, cache, parentStateKey := "", overwrite := false, tmpDir := "", onlyCompiled := false) {
         this.destPath := destPath
@@ -29,8 +31,8 @@ class FileInstallerComponentBase extends InstallerComponentBase {
 
         result := this.InstallFilesAction()
 
-        if (result && this.zipped && this.TmpFileExists()) {
-            unzipResult := this.ExtractZip(true)
+        if (result && this.zipped && this.ZipFileExists()) {
+            unzipResult := this.ExtractZip(this.deleteZip)
 
             if (!unzipResult) {
                 result := false
@@ -56,6 +58,10 @@ class FileInstallerComponentBase extends InstallerComponentBase {
         return (this.tmpFile != "" && FileExist(this.GetTmpFile()))
     }
 
+    ZipFileExists() {
+        return (this.zipFile != "" && FileExist(this.zipFile))
+    }
+
     ExtractZip(deleteZip := true) {
         destinationPath := this.GetDestPath()
 
@@ -63,7 +69,7 @@ class FileInstallerComponentBase extends InstallerComponentBase {
             DirCreate(destinationPath)
         }
 
-        zipFile := this.tmpDir . "\" . this.tmpFile
+        zipFile := this.zipFile
 
         if (FileExist(zipFile)) {
             archive := ZipArchive7z.new(zipFile)

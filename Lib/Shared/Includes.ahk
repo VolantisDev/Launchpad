@@ -45,6 +45,7 @@
 #Include E:\Tools\Launchpad\Lib\Shared\IdGenerator\IdGeneratorBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\IdGenerator\UuidGenerator.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Installer\InstallerBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\CopyableInstallerComponent.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\DownloadableInstallerComponent.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\FileInstallerComponentBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\InstallerComponent\GitHubReleaseInstallerComponent.ahk

@@ -152,6 +152,8 @@
 
         this.Installers.InstallRequirements()
         this.Platforms.LoadComponents(this.Config.PlatformsFile)
+        this.Launchers.LoadComponents(this.Config.LauncherFile)
+
         result := ""
 
         if (!FileExist(A_ScriptDir . "\Launchpad.ini")) {
@@ -162,7 +164,6 @@
             }
         }
 
-        this.Launchers.LoadComponents(this.Config.LauncherFile)
         this.Windows.OpenManageWindow()
 
         if (result == "Detect") {

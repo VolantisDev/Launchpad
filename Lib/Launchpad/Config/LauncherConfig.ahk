@@ -3,12 +3,16 @@
     gameDefaults := Map()
 
     Games[] {
-        get => (this.config.Has("Games") && this.config["Games"] != "") ? this.config["Games"] : Map()
+        get => this.config["Games"]
         set => this.config["Games"] := value
     }
 
     LoadConfig() {
         result := super.LoadConfig()
+
+        if (!this.config.Has("Games")) {
+            this.config["Games"] := Map()
+        }
 
         for key, config in this.Games {
             if (Type(config) == "String") {

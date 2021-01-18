@@ -2,7 +2,6 @@
     sidebarWidth := 85
     listViewColumns := Array("Name", "Action", "Is Known", "Platform", "Install Dir", "Exe", "Launcher ID")
     launcherManager := ""
-    launchersModified := false
     numSelected := 0
     detectedGames := ""
     state := ""
@@ -159,7 +158,6 @@
         op.Run()
 
         win := this.launcherManager.app.Windows.GetItem("ManageWindow")
-        win.launchersModified := true
         win.PopulateListView()
         this.Destroy()
     }
