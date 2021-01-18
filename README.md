@@ -7,6 +7,8 @@ within Steam or other applications.
 
 (See below for more screenshots)
 
+Check out my new [introduction series on YouTube](https://www.youtube.com/watch?v=KsbVijnHt68&list=PLdWnfeiq_bKdDLcvORj8qoYnot5teCnMv&index=1).
+
 ## Introduction
 
 Gone are the days when your entire game library exists in the form of game discs--digital downloads are 
@@ -66,34 +68,44 @@ More information such as usage details is below, but since pictures speak a thou
 of various parts of Launchpad:
 
 Initial Setup Window:
+
 ![setup_window](https://user-images.githubusercontent.com/277977/104859465-91b83d80-58f3-11eb-8cc6-d1e0f7700303.png)
 
 
 Launcher Manager (Main Window):
+
 ![main_window](https://user-images.githubusercontent.com/277977/104806114-147db300-57a3-11eb-90cd-d69bf8ffe39b.png)
 
 Launcher Editor:
+
 ![launcher_editor](https://user-images.githubusercontent.com/277977/104805901-66253e00-57a1-11eb-9cb3-7ded6ab56f23.png)
 
 Managed Launcher Editor:
+
 ![managed_launcher_editor](https://user-images.githubusercontent.com/277977/104805908-79d0a480-57a1-11eb-9dbc-4c0e2ec2401c.png)
 
 Managed Game Editor:
+
 ![managed_game_editor](https://user-images.githubusercontent.com/277977/104805909-7e955880-57a1-11eb-8d58-b8a1ab277a2a.png)
 
 Platforms:
+
 ![platforms_window](https://user-images.githubusercontent.com/277977/104806125-23646580-57a3-11eb-9cee-f8d9e0bcd0bf.png)
 
 Platform Editor:
+
 ![platform_editor](https://user-images.githubusercontent.com/277977/104805919-9d93ea80-57a1-11eb-9243-dfc4a6399f36.png)
 
 Detected Games:
+
 ![detected_games](https://user-images.githubusercontent.com/277977/104805917-979e0980-57a1-11eb-8dfa-ff569cfe833a.png)
 
 Detected Game Editor:
+
 ![detected_game](https://user-images.githubusercontent.com/277977/104805930-a8e71600-57a1-11eb-8006-7e8dfa464c95.png)
 
 Settings:
+
 ![settings](https://user-images.githubusercontent.com/277977/104805935-ae446080-57a1-11eb-9e27-b85cae96a933.png)
 
 ## How To Use
