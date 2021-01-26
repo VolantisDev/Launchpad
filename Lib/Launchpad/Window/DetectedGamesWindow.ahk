@@ -114,7 +114,6 @@
         if (rowNum > 0) {
             this.EditDetectedGame(rowNum)
         }
-        
     }
 
     OnDoubleClick(LV, rowNum) {
@@ -135,7 +134,7 @@
         this.guiObj["ListView"].Modify(0, "-Check")
 
         Loop this.detectedGames.Count {
-            this.UpdateRowAction(A_Index, true)
+            this.UpdateRowAction(A_Index, false)
         }
     }
 
@@ -169,6 +168,11 @@
         result := this.app.Windows.DetectedGameEditor(detectedGameObj, "DetectedGamesWindow")
 
         if (result == "Save") {
+            if (key != detectedGameObj.key) {
+                this.detectedGames.Delete(key)
+                this.detectedGames[detectedGameObj.key] := detectedGameObj
+            }
+
             isKnown := this.GameIsKnown(detectedGameObj) ? "Yes" : "No"
             this.guiObj["ListView"].Modify(row,, detectedGameObj.key,, isKnown, detectedGameObj.platform.displayName, detectedGameObj.installDir, detectedGameObj.exeName, detectedGameObj.launcherSpecificId)
         }
