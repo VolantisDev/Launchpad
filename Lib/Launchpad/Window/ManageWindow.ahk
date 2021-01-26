@@ -99,15 +99,16 @@
     EditLauncher(key) {
         launcherObj := this.launcherManager.Launchers[key]
         diff := launcherObj.Edit("config", this.guiObj)
+        keyChanged := (launcherObj.Key != key)
 
-        if (diff != "" && diff.HasChanges()) {
-            if (launcherObj.Key != key) {
+        if (keyChanged || diff != "" && diff.HasChanges()) {
+            if (keyChanged) {
                 this.launcherManager.RemoveLauncher(key)
-                this.launcherManager.AddLauncher(key, launcherObj)
-                launcherObj.UpdateDataSourceDefaults()
+                this.launcherManager.AddLauncher(launcherObj.Key, launcherObj)
             }
 
             this.launcherManager.SaveModifiedLaunchers()
+            launcherObj.UpdateDataSourceDefaults()
             this.PopulateListView()
         }
     }
