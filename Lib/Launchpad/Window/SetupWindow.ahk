@@ -77,7 +77,8 @@
         position .= " y+m"
 
         this.SetFont("", "Bold")
-        this.guiObj.AddText("v" . ctlName . " " . position . " w" . this.windowSettings["contentWidth"] . " +0x200 c" . this.themeObj.GetColor("linkText"), locationText)
+        ctl := this.guiObj.AddText("v" . ctlName . " " . position . " w" . this.windowSettings["contentWidth"] . " +0x200 +0x100 c" . this.themeObj.GetColor("linkText"), locationText)
+        ctl.ToolTip := locationText
         this.SetFont()
     }
 

@@ -10,12 +10,11 @@
     Controls() {
         super.Controls()
         
-        groupW := this.windowSettings["contentWidth"] - (this.margin * 2)
-
         buttonSize := this.themeObj.GetButtonSize("s", true)
         buttonW := (buttonSize.Has("w") && buttonSize["w"] != "auto") ? buttonSize["w"] : 80
-        openX := groupW - (buttonW * 2)
-        tabs := this.guiObj.Add("Tab3", "x" . this.margin . " y" . this.margin . " +0x100", ["Launchers", "Assets", "Sources", "Appearance", "Advanced"])
+        openX := this.windowSettings["contentWidth"] - (this.margin * 2) - (buttonW * 2)
+        tabsW := this.windowSettings["contentWidth"]
+        tabs := this.guiObj.Add("Tab3", "x" . this.margin . " y" . this.margin . " w" . tabsW . " +0x100", ["Launchers", "Assets", "Sources", "Appearance", "Advanced"])
 
         tabs.UseTab("Launchers", true)
 
@@ -78,16 +77,16 @@
         this.AddSettingsButton("&Done", "CloseButton", closeW, 30, "x" . closeX)
     }
 
-    AddConfigLocationBlock(settingName, extraButton := "", inGroupBox := true) {
+    AddConfigLocationBlock(settingName, extraButton := "") {
         location := this.app.Config.%settingName% ? this.app.Config.%settingName% : "Not selected"
 
-        this.AddLocationText(location, settingName, inGroupBox)
+        this.AddLocationText(location, settingName)
 
         buttonSize := this.themeObj.GetButtonSize("s", true)
         buttonW := (buttonSize.Has("w") && buttonSize["w"] != "auto") ? buttonSize["w"] : 80
         buttonH := (buttonSize.Has("h") && buttonSize["h"] != "auto") ? buttonSize["h"] : 20
 
-        position := inGroupBox ? "xs+" . this.margin . " y+m" : "xs y+m"
+        position := "xs y+m"
         btn := this.AddButton(position . " w" . buttonW . " h" . buttonH . " vChange" . settingName, "Change")
         btn := this.AddButton("x+m yp w" . buttonW . " h" . buttonH . " vOpen" . settingName, "Open")
 
@@ -96,23 +95,17 @@
         }
     }
 
-    AddLocationText(locationText, ctlName, inGroupBox := true) {
-        position := "xs"
-
-        if (inGroupBox) {
-            position .= "+" . this.margin
-        }
-
-        position .= " y+m"
-
+    AddLocationText(locationText, ctlName) {
+        position := "xs y+m"
         this.SetFont("", "Bold")
-        this.guiObj.AddText("v" . ctlName . " " . position . " w" . this.windowSettings["contentWidth"] . " +0x200 c" . this.themeObj.GetColor("linkText"), locationText)
+        ctl := this.guiObj.AddText("v" . ctlName . " " . position . " w" . this.windowSettings["contentWidth"] . " +0x200 +0x100 c" . this.themeObj.GetColor("linkText"), locationText)
+        ctl.ToolTip := locationText
         this.SetFont()
     }
 
-    AddConfigCheckBox(checkboxText, settingName, inGroupBox := true) {
+    AddConfigCheckBox(checkboxText, settingName) {
         isChecked := this.app.Config.%settingName%
-        this.AddCheckBox(checkboxText, settingName, isChecked, inGroupBox, "OnSettingsCheckBox")
+        this.AddCheckBox(checkboxText, settingName, isChecked, false, "OnSettingsCheckBox")
     }
 
     OnSettingsCheckBox(chk, info) {
