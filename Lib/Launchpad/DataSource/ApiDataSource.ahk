@@ -15,9 +15,18 @@ class ApiDataSource extends DataSourceBase {
     }
 
     ItemExistsInApi(path) {
-        request := WinHttpReq.new(this.GetRemoteLocation(path))
-        result := request.Send("HEAD")
-        response := (result == -1 && request.GetStatusCode() == 200)
+        exists := (this.cache.ItemExists(path) && !this.cache.ItemNeedsUpdate(path))
+
+        if (!exists) {
+            request := WinHttpReq.new(this.GetRemoteLocation(path))
+            result := request.Send("HEAD")
+            response := (result == -1 && request.GetStatusCode() == 200)
+
+            if (!response) {
+                this.cache.SetNotFound(path)
+            }
+        }
+
         return response
     }
 

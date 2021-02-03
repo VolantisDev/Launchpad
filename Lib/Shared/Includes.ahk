@@ -5,6 +5,7 @@
 #Include E:\Tools\Launchpad\Lib\Shared\AppException\MethodNotImplementedException.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\AppException\OperationFailedException.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\AppState\AppStateBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\AppState\CacheState.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\AppState\JsonAppState.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\AppState\LaunchpadAppState.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\ArchiveFile\ArchiveFileBase.ahk

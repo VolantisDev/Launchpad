@@ -7,14 +7,14 @@ class CacheManager extends AppComponentServiceBase {
         InvalidParameterException.CheckTypes("CacheManager", "cacheDir", cacheDir, "")
         InvalidParameterException.CheckEmpty("CacheManager", "cacheDir", cacheDir)
         this.cacheDir := cacheDir
+        
         super.__New(app, components)
     }
 
     LoadComponents() {
         if (!this._componentsLoaded) {
-            this.SetItem("app", ObjectCache.new())
-            this.SetItem("file", FileCache.new(this.cacheDir))
-            this.SetItem("api", FileCache.new(this.cacheDir . "\API"))
+            this.SetItem("file", FileCache.new(CacheState.new(this.cacheDir . "\File.json"), this.cacheDir . "\File"))
+            this.SetItem("api", FileCache.new(CacheState.new(this.cacheDir . "\API.json"), this.cacheDir . "\API"))
         }
 
         super.LoadComponents()

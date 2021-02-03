@@ -50,7 +50,10 @@ class DataSourceBase {
 
         if (listingInstance.Exists()) {
             listing := listingInstance.Read()
-            listingItems := listing["items"]
+            
+            if (listing.Has("items")) {
+                listingItems := listing["items"]
+            }
         }
 
         return listingItems

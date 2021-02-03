@@ -117,8 +117,7 @@
         idGen := UuidGenerator.new()
         this.idGen := idGen
         
-        appStateObj := LaunchpadAppState.new(this.appDataDir . "\State.json")
-        this.appStateObj := appStateObj
+        this.appStateObj := LaunchpadAppState.new(this.appDataDir . "\State.json")
         
         eventManagerObj := EventManager.new()
         this.eventManagerObj := eventManagerObj

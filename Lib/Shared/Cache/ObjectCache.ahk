@@ -1,36 +1,29 @@
 class ObjectCache extends CacheBase {
     cacheObj := Map()
 
-    __New(cacheObj := "") {
+    __New(stateObj, cacheObj := "") {
         if (cacheObj != "") {
             InvalidParameterException.CheckTypes("ObjectCache", "cacheObj", cacheObj, "Map")
             this.cacheObj := cacheObj
         }
         
-        super.__New()
+        super.__New(stateObj)
     }
 
-    ItemExists(key) {
-        return this.cacheObj.Has(key)
-    }
-
-    GetItemTimestamp(key) {
-        return this.ItemExists(key) ? this.cacheObj[key].timestamp : ""
-    }
-
-    WriteItem(key, content) {
+    WriteItemAction(key, content) {
         this.cacheObj[key] := {content: content, timestamp: FormatTime(,"yyyyMMddHHmmss")}
+        return true
     }
 
-    ReadItem(key) {
+    ReadItemAction(key) {
         return this.ItemExists(key) ? this.cacheObj[key].content : ""
     }
 
-    RemoveItem(key) {
+    RemoveItemAction(key) {
         this.cacheObj.Delete(key)
     }
 
-    FlushCache() {
+    FlushCacheAction() {
         this.cacheObj := Map()
     }
 }

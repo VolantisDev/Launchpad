@@ -1,7 +1,7 @@
 class FileCache extends CacheBase {
     cachePath := ""
 
-    __New(cachePath) {
+    __New(stateObj, cachePath) {
         InvalidParameterException.CheckTypes("FileCache", "cachePath", cachePath, "")
         InvalidParameterException.CheckEmpty("FileCache", "cachePath", cachePath)
         this.cachePath := cachePath
@@ -10,18 +10,18 @@ class FileCache extends CacheBase {
             DirCreate(cachePath)
         }
 
-        super.__New()
+        super.__New(stateObj)
     }
 
     ItemExists(path) {
-        return FileExist(this.GetCachePath(path))
+        return super.ItemExists(path) && FileExist(this.GetCachePath(path))
     }
 
-    ReadItem(path) {
+    ReadItemAction(path) {
         return (this.ItemExists(path)) ? FileRead(this.GetCachePath(path)) : ""
     }
 
-    WriteItem(path, content) {
+    WriteItemAction(path, content) {
         this.CreateCacheDir(path)
         path := this.GetCachePath(path)
 
@@ -30,9 +30,10 @@ class FileCache extends CacheBase {
         }
         
         FileAppend(content, path)
+        return true
     }
 
-    RemoveItem(path) {
+    RemoveItemAction(path) {
         path := this.GetCachePath(path)
 
         if (path != "" && FileExist(path)) {
@@ -40,11 +41,7 @@ class FileCache extends CacheBase {
         }
     }
 
-    GetItemTimestamp(path) {
-        return (this.ItemExists(path)) ? FileGetTime(this.GetCachePath(path), "M") : ""
-    }
-
-    FlushCache() {
+    FlushCacheAction() {
         if (DirExist(this.cachePath)) {
             DirDelete(this.cachePath, true)
         }
@@ -71,6 +68,7 @@ class FileCache extends CacheBase {
         filePath := this.GetCachePath(path)
 
         Download(url, filePath)
+        this.stateObj.SetItem(path)
         return filePath
     }
 

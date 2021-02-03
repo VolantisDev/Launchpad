@@ -1,36 +1,49 @@
 class CacheBase {
+    stateObj := ""
 
-    /**
-    * ABSTRACT METHODS
-    */
+    __New(stateObj) {
+        this.stateObj := stateObj
+    }
 
     ItemExists(reference) {
-        throw(MethodNotImplementedException.new("CacheBase", "ItemExists"))
+        return this.stateObj.Exists(reference)
     }
 
     GetItemTimestamp(reference) {
-        throw(MethodNotImplementedException.new("CacheBase", "GetItemTimestamp"))
+        return this.stateObj.GetTimestamp(reference)
     }
 
     WriteItem(reference, content) {
-        throw(MethodNotImplementedException.new("CacheBase", "WriteItem"))
+        if (this.WriteItemAction(reference, content)) {
+            this.stateObj.SetItem(reference)
+        }
     }
 
     ReadItem(reference) {
-        throw(MethodNotImplementedException.new("CacheBase", "ReadItem"))
+        content := ""
+
+        if (this.stateObj.Exists(reference)) {
+            content := this.ReadItemAction(reference)
+        }
+
+        return content
+    }
+
+    SetNotFound(reference) {
+        this.stateObj.SetNotFoundItem(reference)
     }
 
     RemoveItem(reference) {
-        throw(MethodNotImplementedException.new("CacheBase", "RemoveItem"))
+        if (this.stateObj.Exists(reference)) {
+            this.RemoveItemAction(reference)
+            this.stateObj.RemoveItem(reference)
+        }
     }
 
     FlushCache() {
-        throw(MethodNotImplementedException.new("CacheBase", "FlushCache"))
+        this.FlushCacheAction()
+        this.stateObj.ClearItems()
     }
-
-    /**
-    * IMPLEMENTED METHODS
-    */
 
     ImportItemFromUrl(reference, url) {
         tempFile := this.app.Config.TempDir . "\cacheDownload"
@@ -48,15 +61,7 @@ class CacheBase {
     }
 
     GetCacheAge(reference) {
-        timestamp := this.GetItemTimestamp(reference)
-        cacheAge := 999999999 ; Random really high number
-
-        if (timestamp != "") {
-            now := FormatTime(,"yyyyMMddHHmmss")
-            cacheAge := DateDiff(now, timestamp, "Seconds")
-        }
-
-        return cacheAge        
+        return this.stateObj.GetCacheAge(reference)
     }
 
     CopyItem(reference, destination) {
@@ -68,13 +73,27 @@ class CacheBase {
         return destination
     }
 
-    ItemNeedsUpdate(reference, maxCacheAge := 86400) {
-        needsUpdate := true
+    ItemNeedsUpdate(reference) {
+        return this.stateObj.IsExpired(reference)
+    }
 
-        if (this.ItemExists(reference)) {
-            needsUpdate := this.GetCacheAge(reference) >= maxCacheAge
-        }
+    /**
+    * ABSTRACT METHODS
+    */
 
-        return needsUpdate
+    WriteItemAction(reference, content) {
+        throw(MethodNotImplementedException.new("CacheBase", "WriteItemAction"))
+    }
+
+    ReadItemAction(reference) {
+        throw(MethodNotImplementedException.new("CacheBase", "ReadItemAction"))
+    }
+
+    RemoveItemAction(reference) {
+        throw(MethodNotImplementedException.new("CacheBase", "RemoveItemAction"))
+    }
+
+    FlushCacheAction() {
+        throw(MethodNotImplementedException.new("CacheBase", "FlushCacheAction"))
     }
 }
