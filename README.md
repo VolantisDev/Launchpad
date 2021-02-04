@@ -3,9 +3,13 @@
 Manage your game platforms and create beautifully-simple .exe files to launch games from any platform 
 within Steam or other applications.
 
-Using a simple GUI and without writing any code, you can generate an .exe file to launch anything!
+Set up your launchers through a simple GUI:
 
 ![main_window](https://user-images.githubusercontent.com/277977/104806114-147db300-57a3-11eb-90cd-d69bf8ffe39b.png)
+
+And get separate .exe files that you can add to any platform to launch your games:
+
+![generated_launchers](https://user-images.githubusercontent.com/277977/106828218-c0eede80-6657-11eb-963f-5228b67f3957.png)
 
 (See below for more screenshots)
 
@@ -73,7 +77,6 @@ Initial Setup Window:
 
 ![setup_window](https://user-images.githubusercontent.com/277977/104859465-91b83d80-58f3-11eb-8cc6-d1e0f7700303.png)
 
-
 Launcher Manager (Main Window):
 
 ![main_window](https://user-images.githubusercontent.com/277977/104806114-147db300-57a3-11eb-90cd-d69bf8ffe39b.png)
@@ -109,6 +112,10 @@ Detected Game Editor:
 Settings:
 
 ![settings](https://user-images.githubusercontent.com/277977/104805935-ae446080-57a1-11eb-9e27-b85cae96a933.png)
+
+Generated Launcher Files:
+
+![generated_launchers](https://user-images.githubusercontent.com/277977/106828218-c0eede80-6657-11eb-963f-5228b67f3957.png)
 
 ## How To Use
 
