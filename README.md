@@ -3,6 +3,8 @@
 Manage your game platforms and create beautifully-simple .exe files to launch games from any platform 
 within Steam or other applications.
 
+Using a simple GUI and without writing any code, you can generate an .exe file to launch anything!
+
 ![main_window](https://user-images.githubusercontent.com/277977/104806114-147db300-57a3-11eb-90cd-d69bf8ffe39b.png)
 
 (See below for more screenshots)
@@ -113,20 +115,11 @@ Settings:
 If you're a new user, head over to the Releases page and simply download and run the latest Launchpad-x.x.x.exe
 installer file. Then, run the Launchpad icon on your desktop to get started!
 
-When Launchpad first runs, it will set up some default configuration options and ask you what folder you want your 
-launcher .exe files to be saved to.
+The setup screen that runs on first launch will walk you through some initial options and get you started 
+detecting your games and creating your first launchers.
 
-Once you get to the main interface, to add your existing games quickly, click the Platforms button and Enable
-all of the platforms you want to add games FROM.
-
-Then, go back to the main window, click Tools, and click Detect Games. The games that are found will be displayed
-in a list. Check all the games that you wish to create .exe launchers for. You can edit each game to change its 
-key, match it up with an API game, select its main .exe file, change its install directory, etc.
-
-When you're ready, click Add Selected, and this will add them to your main Launchers list where you can edit the
-details of how your games will be launched and build your launchers.
-
-Once built, the .exe files are ready to be added to Steam or anywhere else you wish to use them!
+Once youv'e got some launchers created, simply Build All, and you will have a .exe file for each game launcher
+that you can add to Steam or any other platform.
 
 ## Updating Launchpad
 
