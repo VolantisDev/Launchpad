@@ -1,60 +1,25 @@
-class PlatformManager extends AppComponentServiceBase {
-    _registerEvent := LaunchpadEvents.LAUNCHERS_REGISTER
-    _alterEvent := LaunchpadEvents.LAUNCHERS_ALTER
-    platformsConfigObj := ""
+class PlatformManager extends EntityManagerBase {
+    _registerEvent := LaunchpadEvents.PLATFORMS_REGISTER
+    _alterEvent := LaunchpadEvents.PLATFORMS_ALTER
 
-    Platforms[] {
-        get => this._components
-        set => this._components := value
+    GetLoadOperation() {
+        return LoadPlatformsOp.new(this.app, this.configObj)
     }
 
-    __New(app, platformsFile := "") {
-        this.platformsConfigObj := PlatformsConfig.new(app, platformsFile, false)
-        super.__New(app, "", false)
+    CreateConfigObj(app, configFile) {
+        return PlatformsConfig.new(app, configFile, false)
     }
 
-    LoadComponents(platformsFile := "") {
-        this._componentsLoaded := false
-
-        if (platformsFile != "") {
-            this.platformsConfigObj.ConfigPath := platformsFile
-        }
-
-        if (this.platformsConfigObj.ConfigPath == "") {
-            this.platformsConfigObj.ConfigPath := this.app.Config.PlatformsFile
-        }
-
-        operation := LoadPlatformsOp.new(this.app, this.platformsConfigObj)
-        success := operation.Run()
-        this._components := operation.GetResults()
-        super.LoadComponents()
-
-        return success
+    GetDefaultConfigPath() {
+        return this.app.Config.PlatformsFile
     }
 
-    GetPlatformsConfig() {
-        return this.platformsConfigObj
+    RemoveEntityFromConfig(key) {
+        this.configObj.Platforms.Delete(key)
     }
 
-    CountPlatforms() {
-        return this.Platforms.Count
-    }
-
-    SaveModifiedPlatforms() {
-        this.platformsConfigObj.SaveConfig()
-    }
-
-    RemovePlatform(key) {
-        if (this.Platforms.Has(key)) {
-            this.Platforms.Delete(key)
-            this.platformsConfigObj.Platforms.Delete(key)
-        }
-    }
-
-    AddPlatform(key, platform) {
-        this.Platforms[key] := platform
-        this.platformsConfigObj.Games[key] := platform.UnmergedConfig 
-        ; @todo should this use configObj instead of UnmergedConfig (which is a clone)?
+    AddEntityToConfig(key, entityObj) {
+        this.configObj.Platforms[key] := entityObj.UnmergedConfig
     }
 
     GetActivePlatforms() {
@@ -64,7 +29,7 @@ class PlatformManager extends AppComponentServiceBase {
             this.LoadComponents()
         }
 
-        for key, platform in this.Platforms {
+        for key, platform in this.Entities {
             if (platform.IsEnabled && platform.IsInstalled) {
                 platforms[key] := platform
             }

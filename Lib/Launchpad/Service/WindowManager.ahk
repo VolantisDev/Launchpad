@@ -40,6 +40,14 @@ class WindowManager extends AppComponentServiceBase {
         return this.ShowForm(ManagedGameEditor.new(this.app, entityObj, mode, "", owner, parent))
     }
 
+    EntityDeleteWindow(entityObj, entityManager, owner := "", parent := "") {
+        return this.ShowForm(EntityDeleteWindow.new(this.app, entityObj, entityManager, "", owner, parent))
+    }
+
+    LauncherDeleteWindow(entityObj, owner := "", parent := "") {
+        return this.ShowForm(LauncherDeleteWindow.new(this.app, entityObj, this.app.Launchers, "", owner, parent))
+    }
+
     DetectedGamesWindow(detectedGames, owner := "", parent := "") {
         return this.ShowForm(DetectedGamesWindow.new(this.app, detectedGames, "DetectedGamesWindow", owner, parent))
     }

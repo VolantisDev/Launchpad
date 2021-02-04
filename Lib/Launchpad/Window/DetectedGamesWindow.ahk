@@ -65,22 +65,22 @@
     GameHasChanges(detectedGameObj) {
         hasChanges := true
 
-        if (this.GameExists(detectedGameObj) && this.launcherManager.Launchers.Has(detectedGameObj.key)) {
-            hasChanges := detectedGameObj.HasChanges(this.launcherManager.Launchers[detectedGameObj.key])
+        if (this.GameExists(detectedGameObj) && this.launcherManager.Entities.Has(detectedGameObj.key)) {
+            hasChanges := detectedGameObj.HasChanges(this.launcherManager.Entities[detectedGameObj.key])
         }
 
         return hasChanges
     }
 
     GameIsKnown(detectedGameObj) {
-        return (this.launcherManager.Launchers.Has(detectedGameObj.key) || this.knownGames.Has(detectedGameObj.key))
+        return (this.launcherManager.Entities.Has(detectedGameObj.key) || this.knownGames.Has(detectedGameObj.key))
     }
 
     GameExists(detectedGameObj) {
         gameStatus := false
 
         if (this.state.State.Has("DetectedGames") && this.state.State["DetectedGames"].Has(detectedGameObj.platform.displayName) && this.state.State["DetectedGames"][detectedGameObj.platform.displayName].Has(detectedGameObj.detectedKey)) {
-            gameStatus := this.launcherManager.Launchers.Has(this.state.State["DetectedGames"][detectedGameObj.platform.displayName][detectedGameObj.detectedKey])
+            gameStatus := this.launcherManager.Entities.Has(this.state.State["DetectedGames"][detectedGameObj.platform.displayName][detectedGameObj.detectedKey])
         }
 
         return gameStatus
@@ -96,7 +96,7 @@
         action := "Ignore"
 
         if (isChecked) {
-            action := this.launcherManager.Launchers.Has(key) ? "Modify Existing" : "Add New"
+            action := this.launcherManager.Entities.Has(key) ? "Modify Existing" : "Add New"
         }
 
         this.guiObj["ListView"].Modify(rowNum,,, action)

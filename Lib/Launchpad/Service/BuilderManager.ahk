@@ -13,7 +13,7 @@ class BuilderManager extends AppComponentServiceBase {
 
     BuildLaunchers(launcherGames := "", updateExisting := false, owner := "", builder := "") {
         if (launcherGames == "") {
-            launcherGames := this.app.Launchers.Launchers
+            launcherGames := this.app.Launchers.Entities
         }
 
         builder := this._GetBuilderObject(builder)
@@ -23,7 +23,7 @@ class BuilderManager extends AppComponentServiceBase {
 
     CleanLaunchers(launcherGames := "", owner := "", builder := "") {
         if (launcherGames == "") {
-            launcherGames := this.app.Launchers.Launchers
+            launcherGames := this.app.Launchers.Entities
         }
 
         builder := this._GetBuilderObject(builder)

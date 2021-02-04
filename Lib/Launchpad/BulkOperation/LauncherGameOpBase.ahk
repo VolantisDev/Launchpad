@@ -14,7 +14,7 @@ class LauncherGameOpBase extends BulkOperationBase {
 
     __New(app, launcherEntities := "", owner := "") {
         if (launcherEntities == "") {
-            launcherEntities := app.Launchers.Launchers
+            launcherEntities := app.Launchers.Entities
         }
 
         InvalidParameterException.CheckTypes("LauncherGameOpBase", "launcherEntities", launcherEntities, "Map")

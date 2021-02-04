@@ -99,7 +99,7 @@ class DetectedGame {
         }
 
         entity := LauncherEntity.new(launcherManager.app, this.key, config)
-        launcherManager.AddLauncher(this.key, entity)
+        launcherManager.AddEntity(this.key, entity)
     }
 
     AutoDetectValues() {

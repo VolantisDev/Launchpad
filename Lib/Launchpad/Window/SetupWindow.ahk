@@ -87,7 +87,7 @@
             this.app.Platforms.LoadComponents()
         }
 
-        for key, platform in this.app.Platforms.Platforms {
+        for key, platform in this.app.Platforms.Entities {
             if (platform.IsInstalled) {
                  this.AddCheckBox(platform.GetDisplayName(), "PlatformToggle" . key, platform.IsEnabled, false, "OnPlatformToggle")
             }
@@ -99,8 +99,8 @@
         len := StrLen("PlatformToggle")
         name := SubStr(chk.Name, len + 1)
 
-        if (this.app.Platforms.Platforms.Has(name)) {
-            platform := this.app.Platforms.Platforms[name]
+        if (this.app.Platforms.Entities.Has(name)) {
+            platform := this.app.Platforms.Entities[name]
             platform.IsEnabled := !!(chk.Value)
             platform.SaveModifiedData()
         }
@@ -133,7 +133,7 @@
 
     ProcessResult(result) {
         if (result == "Start") {
-            this.app.Platforms.SaveModifiedPlatforms()
+            this.app.Platforms.SaveModifiedEntities()
 
             if (!FileExist(A_ScriptDir . "\Launchpad.ini")) {
                 FileAppend("", A_ScriptDir . "\Launchpad.ini")

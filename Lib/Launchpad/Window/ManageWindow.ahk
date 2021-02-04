@@ -39,7 +39,7 @@
         lvStyles := "+LV" . LVS_EX_LABELTIP . " +LV" . LVS_EX_AUTOSIZECOLUMNS . " +LV" . LVS_EX_DOUBLEBUFFER . " +LV" . LVS_EX_FLATSB . " -E0x200"
         lvStyles .= " +LV" . LVS_EX_TRANSPARENTBKGND . " +LV" . LVS_EX_TRANSPARENTSHADOWTEXT
         listViewWidth := this.windowSettings["contentWidth"] - this.sidebarWidth - this.margin
-        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " " . styling . " Count" . this.launcherManager.CountLaunchers() . " Section +Report -Multi " . lvStyles, this.listViewColumns)
+        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " " . styling . " Count" . this.launcherManager.CountEntities() . " Section +Report -Multi " . lvStyles, this.listViewColumns)
         lv.OnEvent("DoubleClick", "OnDoubleClick")
         lv.OnEvent("ItemSelect", "OnItemSelect")
         this.PopulateListView()
@@ -51,7 +51,7 @@
         IL := this.CreateIconList()
         this.guiObj["ListView"].SetImageList(IL)
 
-        for key, launcher in this.launcherManager.Launchers {
+        for key, launcher in this.launcherManager.Entities {
             launcherStatus := "Missing"
 
             if (launcher.isBuilt) {
@@ -68,11 +68,11 @@
     }
 
     CreateIconList() {
-        IL := IL_Create(this.launcherManager.CountLaunchers(), 1, false)
+        IL := IL_Create(this.launcherManager.CountEntities(), 1, false)
         defaultIcon := A_ScriptDir . "\Resources\Graphics\Game.ico"
         
         iconNum := 1
-        for key, launcher in this.launcherManager.Launchers {
+        for key, launcher in this.launcherManager.Entities {
             iconSrc := launcher.iconSrc
             
             assetIcon := launcher.AssetsDir . "\" . key . ".ico"
@@ -97,17 +97,17 @@
     }
 
     EditLauncher(key) {
-        launcherObj := this.launcherManager.Launchers[key]
+        launcherObj := this.launcherManager.Entities[key]
         diff := launcherObj.Edit("config", this.guiObj)
         keyChanged := (launcherObj.Key != key)
 
         if (keyChanged || diff != "" && diff.HasChanges()) {
             if (keyChanged) {
-                this.launcherManager.RemoveLauncher(key)
-                this.launcherManager.AddLauncher(launcherObj.Key, launcherObj)
+                this.launcherManager.RemoveEntity(key)
+                this.launcherManager.AddEntity(launcherObj.Key, launcherObj)
             }
 
-            this.launcherManager.SaveModifiedLaunchers()
+            this.launcherManager.SaveModifiedEntities()
             launcherObj.UpdateDataSourceDefaults()
             this.PopulateListView()
         }
@@ -117,8 +117,8 @@
         entity := this.app.Windows.LauncherWizard(this.guiObj)
 
         if (entity != "") {
-            this.launcherManager.AddLauncher(entity.Key, entity)
-            this.launcherManager.SaveModifiedLaunchers()
+            this.launcherManager.AddEntity(entity.Key, entity)
+            this.launcherManager.SaveModifiedEntities()
             this.PopulateListView()
         }
     }
@@ -139,7 +139,7 @@
 
         if (selected > 0) {
             key := this.guiObj["ListView"].GetText(selected, 1)
-            launcherObj := this.launcherManager.Launchers[key]
+            launcherObj := this.launcherManager.Entities[key]
             showButton := launcherObj.IsBuilt
         }
 
@@ -161,7 +161,7 @@
     }
 
     OnBuildAllButton(btn, info) {
-        this.app.Builders.BuildLaunchers(this.app.Launchers.Launchers, this.app.Config.RebuildExistingLaunchers)
+        this.app.Builders.BuildLaunchers(this.app.Launchers.Entities, this.app.Config.RebuildExistingLaunchers)
         this.PopulateListView()
     }
 
@@ -182,7 +182,7 @@
 
         if (selected > 0) {
             key := this.guiObj["ListView"].GetText(selected, 1)
-            launcherObj := this.launcherManager.Launchers[key]
+            launcherObj := this.launcherManager.Entities[key]
             this.app.Builders.BuildLaunchers(Map(key, launcherObj), true)
             this.PopulateListView()
         }
@@ -193,7 +193,7 @@
 
         if (selected > 0) {
             key := this.guiObj["ListView"].GetText(selected, 1)
-            launcherObj := this.launcherManager.Launchers[key]
+            launcherObj := this.launcherManager.Entities[key]
             
             if (launcherObj.IsBuilt) {
                 file := launcherObj.GetLauncherFile(key, false)
@@ -210,11 +210,10 @@
 
         if (selected > 0) {
             key := this.guiObj["ListView"].GetText(selected, 1)
-            shouldDelete := MsgBox("This will delete the configuration for launcher " key . ". Are you sure?", "Delete " . key . "?", "YesNo")
+            launcherObj := this.launcherManager.Entities[key]
+            result := this.app.Windows.LauncherDeleteWindow(launcherObj, "ManageWindow")
 
-            if (shouldDelete == "Yes") {
-                this.launcherManager.RemoveLauncher(key)
-                this.launcherManager.SaveModifiedLaunchers()
+            if (result == "Delete") {
                 this.guiObj["ListView"].Delete(selected)
             }
         }

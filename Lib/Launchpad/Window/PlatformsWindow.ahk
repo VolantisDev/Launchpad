@@ -33,7 +33,7 @@
         lvStyles := "+LV" . LVS_EX_LABELTIP . " +LV" . LVS_EX_AUTOSIZECOLUMNS . " +LV" . LVS_EX_DOUBLEBUFFER . " +LV" . LVS_EX_FLATSB . " -E0x200"
         lvStyles .= " +LV" . LVS_EX_TRANSPARENTBKGND . " +LV" . LVS_EX_TRANSPARENTSHADOWTEXT
         listViewWidth := this.windowSettings["contentWidth"] - this.sidebarWidth - this.margin
-        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " " . styling . " Count" . this.platformManager.CountPlatforms() . " Section +Report -Multi " . lvStyles, this.listViewColumns)
+        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " " . styling . " Count" . this.platformManager.CountEntities() . " Section +Report -Multi " . lvStyles, this.listViewColumns)
         lv.OnEvent("DoubleClick", "OnDoubleClick")
         lv.OnEvent("ItemSelect", "OnItemSelect")
         this.PopulateListView()
@@ -57,7 +57,7 @@
     }
 
     CreateIconList() {
-        IL := IL_Create(this.platformManager.CountPlatforms(), 1, false)
+        IL := IL_Create(this.platformManager.CountEntities(), 1, false)
         defaultIcon := A_ScriptDir . "\Resources\Graphics\Platform.ico"
         
         iconNum := 1
@@ -85,7 +85,7 @@
         diff := platformObj.Edit("config", this.guiObj)
 
         if (diff != "" && diff.HasChanges()) {
-            this.platformManager.SaveModifiedPlatforms()
+            this.platformManager.SaveModifiedEntities()
             this.PopulateListView()
         }
     }
@@ -133,7 +133,7 @@
         if (platform) {
             platform.IsEnabled := true
             platform.SaveModifiedData()
-            this.platformManager.SaveModifiedPlatforms()
+            this.platformManager.SaveModifiedEntities()
             this.PopulateListView()
 
             if (selected) {
@@ -151,7 +151,7 @@
         if (platform) {
             platform.IsEnabled := false
             platform.SaveModifiedData()
-            this.platformManager.SaveModifiedPlatforms()
+            this.platformManager.SaveModifiedEntities()
             this.PopulateListView()
 
             if (selected) {

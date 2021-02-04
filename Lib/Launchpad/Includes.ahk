@@ -55,6 +55,7 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\AppServiceBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\BuilderManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\CacheManager.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Service\EntityManagerBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\InstallerManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\LauncherManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\ModuleManager.ahk
@@ -64,7 +65,9 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Service\WindowManager.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\DetectedGameEditor.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\DetectedGamesWindow.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Window\EntityDeleteWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\EntityEditorBase.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Window\LauncherDeleteWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\LauncherEditor.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\LauncherWizard.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\LaunchpadFormGuiBase.ahk

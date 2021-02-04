@@ -27,8 +27,8 @@ class AddDetectedGamesOp extends BulkOperationBase {
         for key, detectedGameObj in this.detectedGames {
             this.StartItem(detectedGameObj.key, "Adding " . detectedGameObj.key . "...")
 
-            if (this.launcherManager.Launchers.Has(detectedGameObj.key)) {
-                detectedGameObj.UpdateLauncher(this.launcherManager.Launchers[detectedGameObj.key])
+            if (this.launcherManager.Entities.Has(detectedGameObj.key)) {
+                detectedGameObj.UpdateLauncher(this.launcherManager.Entities[detectedGameObj.key])
             } else {
                 detectedGameObj.CreateLauncher(this.launcherManager)
             }
@@ -42,7 +42,7 @@ class AddDetectedGamesOp extends BulkOperationBase {
             this.FinishItem(detectedGameObj.key, true, "Finished adding " . detectedGameObj.key . ".")
         }
 
-        this.launcherManager.SaveModifiedLaunchers()
+        this.launcherManager.SaveModifiedEntities()
         this.state.SaveState()
         this.launcherManager.LoadComponents()
     }
