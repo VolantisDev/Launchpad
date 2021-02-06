@@ -27,22 +27,22 @@
         super.Controls()
 
         this.AddHeading("Theme")
-        this.AddDescription("Launchpad has a growing number of themes available to fit in with the platform or aesthetic of your choice. Choose your main theme below. You can also choose a unique theme for each launcher later.")
+        this.AddDescription("Launchpad has a growing number of themes available to fit in with the platform or aesthetic of your choice. Choose the primary theme for Launchpad to use below.")
         chosen := this.GetItemIndex(this.availableThemes, this.app.Config.ThemeName)
         ctl := this.guiObj.AddDDL("vThemeName xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"), this.availableThemes)
         ctl.OnEvent("Change", "OnThemeNameChange")
         ctl.ToolTip := "Select a theme for Launchpad to use."
 
         this.AddHeading("Launcher Directory")
-        this.AddDescription("Launchpad will create a separate .exe file for every game you configure.`n`nYou can store your launchers in any folder you wish, and you can change this setting at any time.")
+        this.AddDescription("Launchpad will create a separate .exe file for every game you configure. You can store these launchers in any folder you wish.")
         this.AddConfigLocationBlock("DestinationDir")
 
         this.AddHeading("Platforms")
-        this.AddDescription("Launchpad has detected the following game platforms on your computer. Check the ones you wish to enable Launchpad to detect your games from.`n`nThis can be changed from the Platforms window later.")
+        this.AddDescription("Launchpad has detected the following game platforms on your computer. Check the ones you wish Launchpad to detect your installed games from.")
         this.AddPlatformCheckboxes()
 
         this.AddHeading("Detect Games")
-        this.AddDescription("Launchpad can detect your installed games from your selected platforms automatically. You can do this at any time from the 'Detect Games' option in the Tools menu.")
+        this.AddDescription("Launchpad can detect your installed games automatically right away, or you can do it later from the Tools menu.")
         this.AddCheckBox("Detect my games now", "DetectGames", true, false)
 
         closeW := 100
