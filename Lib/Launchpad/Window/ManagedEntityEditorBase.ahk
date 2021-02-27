@@ -167,7 +167,8 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     }
 
     OnTypeChange(ctlObj, info) {
-        this.entityObj.EntityType := ctlObj.Value
+        this.guiObj.Submit(false)
+        this.entityObj.EntityType := ctlObj.Text
         this.entityObj.UpdateDataSourceDefaults()
     }
 
