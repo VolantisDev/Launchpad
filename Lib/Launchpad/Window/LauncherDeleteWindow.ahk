@@ -24,7 +24,7 @@
             if (this.deleteLauncher and this.entityObj.IsBuilt) {
                 file := this.entityObj.GetLauncherFile(this.entityObj.Key, false)
 
-                if (file) {
+                if (file and FileExist(file)) {
                     FileDelete(file)
                 }
             }
@@ -32,7 +32,7 @@
             if (this.deleteAssets) {
                 assetsDir := this.entityObj.AssetsDir
 
-                if (assetsDir) {
+                if (assetsDir and DirExist(assetsDir)) {
                     DirDelete(assetsDir, true)
                 }
             }
