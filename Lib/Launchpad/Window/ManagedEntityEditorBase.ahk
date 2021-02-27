@@ -68,8 +68,8 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         
         tabs.UseTab("Running", true)
         this.AddSelect(prefix . " Run Type", "RunType", this.entityObj.RunType, this.runTypes, true, "", "", "", true)
-        ctl := this.AddTextBlock("RunCmd", prefix . " Run Command", true)
-        ctl := this.AddLocationBlock(prefix . " Shortcut", "ShortcutSrc", "Clear", true, true, true)
+        this.AddTextBlock("RunCmd", prefix . " Run Command", true, "", true)
+        this.AddLocationBlock(prefix . " Shortcut", "ShortcutSrc", "Clear", true, true, true)
         this.AddSelect(prefix . " Run Method", "RunMethod", this.entityObj.RunMethod, this.runMethods, true, "", "", "RunWait: The simplest method when it works, runs a process and waits for it to complete in one command`nRun: The most compatible method, runs a process and then separately waits for it to start`nScheduled: Helpful to avoid Launchpad owning the process, this creates a scheduled task that will run the process immediately and then delete itself", true)
 
         tabs.UseTab("Process", true)
