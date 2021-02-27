@@ -44,7 +44,7 @@
         iconNum := 1
         this.guiObj["ListView"].SetImageList(this.CreateIconList())
 
-        for key, platform in this.platformManager.Platforms {
+        for key, platform in this.platformManager.Entities {
             enabledText := platform.IsEnabled ? "Yes" : "No"
             installedText := platform.IsInstalled ? "Yes" : "No"
             this.guiObj["ListView"].Add("Icon" . iconNum, platform.Key, enabledText, installedText, platform.InstalledVersion)
@@ -61,7 +61,7 @@
         defaultIcon := A_ScriptDir . "\Resources\Graphics\Platform.ico"
         
         iconNum := 1
-        for key, platform in this.platformManager.Platforms {
+        for key, platform in this.platformManager.Entities {
             iconSrc := platform.IconSrc
 
             if (!iconSrc or !FileExist(iconSrc)) {
@@ -81,7 +81,7 @@
     }
 
     EditPlatform(key) {
-        platformObj := this.platformManager.Platforms[key]
+        platformObj := this.platformManager.Entities[key]
         diff := platformObj.Edit("config", this.guiObj)
 
         if (diff != "" && diff.HasChanges()) {
@@ -120,7 +120,7 @@
 
         if (selected > 0) {
             key := this.guiObj["ListView"].GetText(selected, 1)
-            platform := this.platformManager.Platforms[key]
+            platform := this.platformManager.Entities[key]
         }
 
         return platform
