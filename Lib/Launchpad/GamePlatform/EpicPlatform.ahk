@@ -1,7 +1,7 @@
 class EpicPlatform extends RegistryLookupGamePlatformBase {
     displayName := "Epic"
     launcherType := "Epic"
-    gameType := "Default"
+    gameType := "Epic"
     installDirRegView := 32
     installDirRegKey := "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{0E63B233-DC24-442C-BD38-0B91D90FEC5B}"
     versionRegView := 32
