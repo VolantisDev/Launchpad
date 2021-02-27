@@ -278,4 +278,59 @@ class LayeredDataBase {
 
         return DiffResult.new(added, modified, removed)
     }
+
+    DebugData(layer := "") {
+        layers := (layer == "") ? this.layers : Map(layer, this.layers[layer])
+
+        output := ""
+
+        for layer, layerData in layers {
+            if (output) {
+                output .= "`n"
+            }
+
+            output .= layer . "{`n"
+
+            for key, value in layerData {
+                output .= "`t" . key . ": " . this.DebugValue(value) . "`n"
+            }
+
+            output .= "}`n"
+        }
+
+        if (output) {
+            MsgBox(output)
+        }
+    }
+
+    DebugValue(val, indent := "`t") {
+        output := val
+
+        if (Type(val) == "Array") {
+            output := indent . "Array {`n"
+
+            for index, value in val {
+                output .= indent . "`t" . index . ": " . this.DebugValue(value, indent . "`t") . "`n"
+            }
+
+            output .= indent . "}`n"
+        } else if (Type(val) == "Map") {
+            output := indent . "Map {`n"
+
+            for key, value in val {
+                output .= indent . "`t" . key . ": " . this.DebugValue(value, indent . "`t") . "`n"
+            }
+
+            output .= indent . "}`n"
+        } else if (IsObject(val)) {
+            output := "Object"
+            ; @todo Output properties
+        }
+
+        return output
+    }
+
+    DebugObject(obj) {
+
+    }
 }
