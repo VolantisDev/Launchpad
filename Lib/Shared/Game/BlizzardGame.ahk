@@ -19,9 +19,30 @@
         }
 
         if (WinExist(winTitle)) {
-            Sleep(500)
-            WinActivate("ahk_id " . WinGetID(winTitle))
-            Send("{Enter}")
+            Sleep(1500)
+            winTitle := "ahk_id " . WinGetID(winTitle)
+            WinActivate(winTitle)
+
+            ; Send("{Enter}") ; This worked with the old Blizzard client
+
+            mouseCoordMode := A_CoordModeMouse
+
+            ; Save original mouse position
+            CoordMode("Mouse", "Screen")
+            MouseGetPos(mouseX, mouseY)
+
+            ; Click the Play button
+            CoordMode("Mouse", "Window")
+            WinGetPos(,,, winH, winTitle)
+            buttonX := 100
+            buttonY := winH - 100
+            Click(buttonX . " " . buttonY)
+
+            ; Return mouse pointer to original position
+            CoordMode("Mouse", "Screen")
+            MouseMove(mouseX, mouseY)
+
+            CoordMode("Mouse", mouseCoordMode)
         }
     }
 
