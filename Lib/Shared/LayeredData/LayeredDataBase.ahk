@@ -216,19 +216,16 @@ class LayeredDataBase {
     }
 
     CloneLayers(layers := "") {
-        singleValue := false
-
         if (layers == "") {
             layers := this.layers
         } else if (Type(layers) == "String") {
-            singleValue := layers
             layers := Map(layers, this.layers[layers])
         }
 
         cloned := Map()
 
         for key, layer in layers {
-            cloned[key] := layer.Clone()
+            cloned[key] := this.CloneData(layer)
         }
 
         return cloned

@@ -107,6 +107,22 @@ class EntityBase {
         this.InitializeRequiredConfigKeys(requiredConfigKeys)
     }
 
+    StoreOriginal(recursive := true) {
+        this.entityData.StoreOriginal()
+
+        for index, child in this.children {
+            child.StoreOriginal(recursive)
+        }
+    }
+
+    RestoreFromOriginal(recursive := true) {
+        this.entityData.RestoreFromOriginal()
+
+        for index, child in this.children {
+            child.RestoreFromOriginal(recursive)
+        }
+    }
+
     UpdateDataSourceDefaults() {
         this.entityData.SetLayer("ds", this.AggregateDataSourceDefaults())
         this.entityData.SetLayer("auto", this.AutoDetectValues())
@@ -302,53 +318,66 @@ class EntityBase {
         return validateResult
     }
 
-    Edit(mode := "config", owner := "MainWindow") {
-        this.entityData.StoreOriginal()
-        result := this.LaunchEditWindow(mode, owner)
+    DiffChanges(recursive := true) {
+        diff := this.entityData.DiffChanges("config")
+
+        if (!recursive) {
+            return diff
+        }
 
         added := Map()
         modified := Map()
         deleted := Map()
 
+        diffs := [diff]
+
+        for index, child in this.children {
+            diffs.Push(child.DiffChanges(recursive))
+        }
+
+        for index, diff in diffs {
+            for key, item in diff.GetAdded() {
+                if (!added.Has(key) && !modified.Has(key) && !deleted.Has(key)) {
+                    added[key] := item
+                }
+            }
+
+            for key, item in diff.GetModified() {
+                if (!added.Has(key) && !modified.Has(key) && !deleted.Has(key)) {
+                    modified[key] := item
+                }
+            }
+
+            for key, item in diff.GetDeleted() {
+                if (!added.Has(key) && !modified.Has(key) && !deleted.Has(key)) {
+                    deleted[key] := item
+                }
+            }
+        }
+
+        return DiffResult.new(added, modified, deleted)
+    }
+
+    Edit(mode := "config", owner := "MainWindow") {
+        this.StoreOriginal()
+        result := this.LaunchEditWindow(mode, owner)
+        fullDiff := ""
+
         if (result == "Cancel" || result == "Skip") {
-            this.entityData.RestoreFromOriginal()
-
-            for index, child in this.children {
-                child.entityData.RestoreFromOriginal()
-            }
+            this.RestoreFromOriginal()
         } else {
-            diffs := [this.entityData.DiffChanges("config")]
-
-            for index, child in this.children {
-                diffs.Push(child.entityData.DiffChanges("config"))
-            }
-
-            for index, diff in diffs {
-                for key, item in diff.GetAdded() {
-                    if (!added.Has(key) && !modified.Has(key) && !deleted.Has(key)) {
-                        added[key] := item
-                    }
-                }
-
-                for key, item in diff.GetModified() {
-                    if (!added.Has(key) && !modified.Has(key) && !deleted.Has(key)) {
-                        modified[key] := item
-                    }
-                }
-
-                for key, item in diff.GetDeleted() {
-                    if (!added.Has(key) && !modified.Has(key) && !deleted.Has(key)) {
-                        deleted[key] := item
-                    }
-                }
-            }
+            fullDiff := this.DiffChanges(true)
 
             if (mode == "config") {
                 this.SaveModifiedData()
             }
         }
 
-        return DiffResult.new(added, modified, deleted)
+        if (fullDiff == "") {
+            fullDiff := DiffResult.new(Map(), Map(), Map())
+        }
+
+        return fullDiff
     }
 
     LaunchEditWindow(mode, owner) {
@@ -356,7 +385,7 @@ class EntityBase {
     }
 
     SaveModifiedData() {
-        diff := this.entityData.DiffChanges("config")
+        diff := this.DiffChanges(false)
 
         if (diff != "" && diff.HasChanges()) {
             for key, val in diff.GetAdded() {
