@@ -34,7 +34,7 @@ class LauncherBase {
             progressTitle := StrReplace(this.config["ProgressTitle"], "{g}", this.config["DisplayName"])
             progressText := StrReplace(this.config["ProgressText"], "{g}", this.config["DisplayName"])
             themeObj := JsonTheme.new(this.config["ThemeName"], this.config["ResourcesDir"], this.eventManager, this.idGenerator, true)
-            this.progress := MiniProgressIndicator.new(progressTitle, themeObj, progressText, "", "", "", this.CountLaunchSteps())
+            this.progress := LauncherProgressIndicator.new(progressTitle, themeObj, A_ScriptFullPath, "", "", "", this.CountLaunchSteps())
         }
     }
 

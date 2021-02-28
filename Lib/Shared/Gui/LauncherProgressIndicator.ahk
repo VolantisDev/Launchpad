@@ -1,19 +1,27 @@
-class MiniProgressIndicator extends ProgressIndicatorBase {
+class LauncherProgressIndicator extends MiniProgressIndicator {
     gif := ""
+    gameTitle := ""
+    gameIcon := ""
 
-    __New(title, themeObj, text, windowKey := "", owner := "", parent := "", rangeStop := "", currentPosition := 0, showInNotificationArea := true) {
-        ; @todo display text somewhere?
-
+    __New(title, themeObj, gameIcon, windowKey := "", owner := "", parent := "", rangeStop := "", currentPosition := 0, showInNotificationArea := true) {
+        this.gameTitle := title
+        this.gameIcon := gameIcon
+        
         if (windowKey == "") {
-            windowKey := "MiniProgressIndicator"
+            windowKey := "LauncherProgressIndicator"
         }
 
-        super.__New(title, themeObj, text, windowKey, owner, parent, "", rangeStop, currentPosition, true, showInNotificationArea)
+        super.__New(title, themeObj, "", windowKey, owner, parent, rangeStop, currentPosition, showInNotificationArea)
     }
 
     Controls() {
+        this.SetFont("normal", "bold")
+        this.guiObj.AddPicture("w16 h-1 +BackgroundTrans", this.gameIcon)
+        this.guiObj.AddText("x+" . this.margin . " yp w" . (this.windowSettings["contentWidth"] - 16 - this.margin), this.gameTitle)
+        this.SetFont()
+
         if (this.text != "") {
-            this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . "", this.text)
+            this.guiObj.AddText("x" . this.margin . " w" . this.windowSettings["contentWidth"] . "", this.text)
         }
 
         this.AddGuiProgressIndicator()

@@ -150,6 +150,14 @@
                     "SysMenu": false
                 }
             },
+            "LauncherProgressIndicator": {
+                "settings": "default",
+                "contentWidth": 300,
+                "options": {
+                    "ToolWindow": true,
+                    "Caption": false
+                }
+            },
             "LauncherEditor": {
                 "settings": "editor"
             },

@@ -37,6 +37,7 @@
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\FormGuiBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\GuiBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\IconSelector.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Gui\LauncherProgressIndicator.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\LV_Constants.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\MiniProgressIndicator.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\ProgressIndicator.ahk
