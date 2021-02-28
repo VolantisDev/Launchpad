@@ -41,7 +41,8 @@
             "inputText": "{{dark}}"
         },
         "themeAssets": {
-            "logo": ""
+            "logo": "",
+            "spinner": "Graphics\\Spinner-Steam.gif"
         },
         "buttons": {
             "borderWidth": 0,

@@ -20,6 +20,10 @@ class WindowManager extends AppComponentServiceBase {
         return this.ShowDialog(ProgressIndicator.new(title, this.GetTheme(), text, "", owner, parent, allowCancel, progressRange, initialPosition, detailText))
     }
 
+    MiniProgressIndicator(title, text, owner := "", parent := "", progressRange := 100, initialPosition := 0, detailText := true) {
+        return this.ShowDialog(MiniProgressIndicator.new(title, this.GetTheme(), text, "", owner, parent, progressRange, initialPosition, detailText))
+    }
+
     LauncherWizard(owner := "", parent := "") {
         return this.ShowForm(LauncherWizard.new(this.app, "", owner, parent))
     }

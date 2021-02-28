@@ -1,4 +1,5 @@
 ; Automatically-generated file, do not edit manually.
+#Include E:\Tools\Launchpad\Lib\Shared\AnimatedGif\AnimatedGif.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\AppException\AppException.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\AppException\FileSystemException.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\AppException\InvalidParameterException.ahk
@@ -37,7 +38,9 @@
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\GuiBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\IconSelector.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\LV_Constants.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Gui\MiniProgressIndicator.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\ProgressIndicator.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\Gui\ProgressIndicatorBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\SingleInputBox.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\GuiShape\ButtonShape.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\GuiShape\GuiShapeBase.ahk

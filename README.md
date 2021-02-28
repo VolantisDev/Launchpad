@@ -172,6 +172,7 @@ Any and all contributions are greatly appreciated! Here are some ideas for ways 
 ## Attribution
 
 - Icons made by [iconixar](https://www.flaticon.com/authors/iconixar) from [Flaticon](https://www.flaticon.com/).
+- Spinner graphics by loading.io
 - Launchpad uses parts of the 7zip program for extracting archives. 7-Zip is licensed under the GNU LGPL, and its full source code can 
 be downloaded from [7-zip.org](www.7-zip.org).
 - Some launch techniques for Battle.net were learned by studying the excellent [BnetLauncher](https://github.com/dafzor/bnetlauncher). Launchpad no longer

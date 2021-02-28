@@ -32,8 +32,9 @@
             "inputText": "{{text}}"
         },
         "themeAssets": {
-            "icon": "Resources\\Graphics\\Launchpad.ico",
-            "logo": "Resources\\Graphics\\Logo.png"
+            "icon": "Graphics\\Launchpad.ico",
+            "logo": "Graphics\\Logo.png",
+            "spinner": "Graphics\\Spinner.gif"
         },
         "buttons": {
             "borderWidth": 3,
@@ -102,7 +103,7 @@
                     "MinSize": "",
                     "OwnDialogs": "",
                     "Resize": "",
-                    "SystemMenu": "",
+                    "SysMenu": "",
                     "Theme": "",
                     "ToolWindow": ""
                 }
@@ -117,7 +118,7 @@
                     "Caption": true,
                     "OwnDialogs": false,
                     "Resize": false,
-                    "SystemMenu": true,
+                    "SysMenu": true,
                     "Popup": true
                 }
             },
@@ -139,6 +140,14 @@
                 "contentWidth": 515,
                 "options": {
                     "Owner": false
+                }
+            },
+            "MiniProgressIndicator": {
+                "settings": "default",
+                "contentWidth": 300,
+                "options": {
+                    "ToolWindow": true,
+                    "SysMenu": false
                 }
             },
             "LauncherEditor": {
