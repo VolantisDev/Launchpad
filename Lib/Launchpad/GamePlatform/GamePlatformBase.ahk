@@ -248,15 +248,59 @@ class GamePlatformBase {
                     }
                 }
 
-                if (possibleExes.Length == 1) {
-                    exeName := possibleExes[1]
-                }
-
+                exeName := this.DetermineMainExe(key, possibleExes)
                 launcherSpecificId := key
                 games.Push(DetectedGame.new(key, this, this.launcherType, this.gameType, installDir, exeName, launcherSpecificId, possibleExes))
             }
         }
 
         return games
+    }
+
+    DetermineMainExe(key, possibleExes) {
+        dataSource := this.app.DataSources.GetItem()
+        dsData := this.GetDataSourceDefaults(dataSource, key)
+
+        mainExe := ""
+
+        if (possibleExes.Length == 1) {
+            mainExe := possibleExes[1]
+        } else if (possibleExes.Length > 1 && dsData.Has("GameExe")) {
+            for index, possibleExe in possibleExes {
+                SplitPath(possibleExe, fileName)
+
+                if (dsData["GameExe"] == fileName) {
+                    mainExe := possibleExe
+                    break
+                }
+            }
+        }
+
+        return mainExe
+    }
+
+    GetDataSourceDefaults(dataSource, key) {
+        defaults := Map()
+        dsData := dataSource.ReadJson(key, "Games")
+
+        if (dsData != "" && dsData.Has("Defaults")) {
+            defaults := this.MergeFromObject(defaults, dsData["Defaults"], false)
+        }
+
+        return defaults
+    }
+
+    MergeFromObject(mainObject, defaults, overwriteKeys := false) {
+        for key, value in defaults {
+            if (overwriteKeys or !mainObject.Has(key)) {
+                if (value == "true" or value == "false") {
+                    mainObject[key] := (value == "true")
+                } else {
+                    mainObject[key] := value
+                }
+            }
+        }
+
+        return mainObject
     }
 }

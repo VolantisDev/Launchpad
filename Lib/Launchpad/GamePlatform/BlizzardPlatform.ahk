@@ -30,7 +30,7 @@ class BlizzardPlatform extends RegistryLookupGamePlatformBase {
             if (launcherSpecificId != "agent" && launcherSpecificId != "bna" && productData.Has("settings") && productData["settings"].Has("installPath")) {
                 installPath := productData["settings"]["installPath"]
                 installPath := StrReplace(installPath, "/", "\")
-                SplitPath(installPath,key)
+                SplitPath(installPath, key)
                 possibleExes := []
                 mainExe := ""
 
@@ -40,10 +40,7 @@ class BlizzardPlatform extends RegistryLookupGamePlatformBase {
                     }
                 }
 
-                if (possibleExes.Length == 1) {
-                    mainExe := possibleExes[1]
-                }
-
+                mainExe := this.DetermineMainExe(key, possibleExes)
                 games.Push(DetectedGame.new(key, this, this.launcherType, this.gameType, installPath, mainExe, launcherSpecificId, possibleExes))
             }
         }

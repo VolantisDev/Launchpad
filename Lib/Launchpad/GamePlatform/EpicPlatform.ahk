@@ -56,10 +56,7 @@ class EpicPlatform extends RegistryLookupGamePlatformBase {
                         }
                     }
 
-                    if (possibleExes.Length == 1) {
-                        mainExe := possibleExes[1]
-                    }
-
+                    mainExe := this.DetermineMainExe(key, possibleExes)
                     games.Push(DetectedGame.new(key, this, this.launcherType, this.gameType, installDir, mainExe, launcherSpecificId, possibleExes))
                 }
             }
