@@ -33,8 +33,8 @@ class LauncherBase {
         if (this.progress == "") {
             progressTitle := StrReplace(this.config["ProgressTitle"], "{g}", this.config["DisplayName"])
             progressText := StrReplace(this.config["ProgressText"], "{g}", this.config["DisplayName"])
-            themeObj := JsonTheme.new(this.config["ThemeName"], this.config["ThemesDir"], this.eventManager, this.idGenerator, true)
-            this.progress := ProgressIndicator.new(progressTitle, themeObj, progressText, "", "", "", false, this.CountLaunchSteps())
+            themeObj := JsonTheme.new(this.config["ThemeName"], this.config["ResourcesDir"], this.eventManager, this.idGenerator, true)
+            this.progress := MiniProgressIndicator.new(progressTitle, themeObj, progressText, "", "", "", this.CountLaunchSteps())
         }
     }
 

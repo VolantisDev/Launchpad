@@ -48,6 +48,11 @@ class LauncherEntity extends EntityBase {
         set => this.SetConfigValue("ThemesDir", value, false)
     }
 
+    ResourcesDir {
+        get => this.GetConfigValue("ResourcesDir", false)
+        set => this.SetConfigValue("ResourcesDir", value, false)
+    }
+
     ShowProgress {
         get => this.GetConfigValue("ShowProgress", false)
         set => this.SetConfigValue("ShowProgress", value, false)
@@ -203,10 +208,11 @@ class LauncherEntity extends EntityBase {
         defaults := super.InitializeDefaults()
         defaults["DestinationDir"] := this.GetDefaultDestinationDir()
         defaults["ThemeName"] := this.app.Config.ThemeName
+        defaults["ResourcesDir"] := this.app.Config.AppDir . "\Resources"
         defaults["ThemesDir"] := this.app.Config.AppDir . "\Resources\Themes"
         defaults["ShowProgress"] := true
-        defaults["ProgressTitle"] := "Monitoring {g}"
-        defaults["ProgressText"] := "Launchpad is monitoring {g}. Enjoy your game!"
+        defaults["ProgressTitle"] := "{g}"
+        defaults["ProgressText"] := "Monitoring {g}..."
         defaults["RunBefore"] := ""
         defaults["RunAfter"] := ""
         defaults["CloseBefore"] := ""

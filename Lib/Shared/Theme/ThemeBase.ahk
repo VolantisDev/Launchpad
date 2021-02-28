@@ -6,11 +6,12 @@ class ThemeBase {
     static Gdip := ""
     name := ""
     themesDir := ""
+    resourcesDir := ""
     parentTheme := ""
     defaultTheme := "Lightpad"
     vars := Map()
     colors := Map("background", "FFFFFF", "text", "000000", "textLight", "959595", "accent", "9466FC", "accentLight", "EEE6FF", "accentDark", "8A57F0", "transColor", "")
-    themeAssets := Map("logo", "Resources\Graphics\Logo.png", "icon", "Resources\Graphics\Launchpad.ico")
+    themeAssets := Map("logo", "Resources\Graphics\Logo.png", "icon", "Resources\Graphics\Launchpad.ico", "spinner", "Resources\Graphics\Spinner.gif")
     buttons := Map("height", Map("s", 20, "m", 30, "l", 40, "xl", 80), "fixedWidth", Map("s", 80, "m", 100, "l", 120, "xl", 140))
     labels := Map("height", "auto", "fixedWidth", 75, "font", "normal")
     fonts := Map("normal", "s10 w200", "small", "s11", "large", "s13")
@@ -21,13 +22,15 @@ class ThemeBase {
     buttonMap := Map()
     hoveredButton := ""
 
-    __New(name, themesDir, eventManagerObj, idGenerator, autoLoad := false) {
+    __New(name, resourcesDir, eventManagerObj, idGenerator, autoLoad := false) {
         if (ThemeBase.Gdip == "") {
             ThemeBase.Gdip := Gdip_Startup()
         }
 
         this.name := name
-        this.themesDir := themesDir
+        this.resourcesDir := resourcesDir
+        this.themesDir := resourcesDir . "\Themes"
+
         this.eventManagerObj := eventManagerObj
         this.idGenerator := idGenerator
         this.mouseMoveCallback := ObjBindMethod(this, "OnMouseMove")
@@ -76,7 +79,13 @@ class ThemeBase {
     }
 
     GetThemeAsset(id) {
-        return (this.themeAssets.Has(id)) ? this.themeAssets[id] : ""
+        asset := (this.themeAssets.Has(id)) ? this.themeAssets[id] : ""
+
+        if (asset and this.resourcesDir and !InStr(asset, ":")) {
+            asset := this.resourcesDir . "\" . asset
+        }
+
+        return asset
     }
 
     GetButtonSize(id, fixedWidth := false) {

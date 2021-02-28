@@ -127,7 +127,7 @@
         this.blizzardProductDbObj := BlizzardProductDb.new(this)
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
         this.notificationServiceObj := NotificationService.new(this, ToastNotifier.new(this))
-        this.themeManagerObj := ThemeManager.new(this, appDir . "\Resources\Themes", eventManagerObj, idGen)
+        this.themeManagerObj := ThemeManager.new(this, appDir . "\Resources\Themes", appDir . "\Resources", eventManagerObj, idGen)
         this.windowManagerObj := WindowManager.new(this)
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
         this.dataSourceManagerObj := DataSourceManager.new(eventManagerObj)
