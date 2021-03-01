@@ -30,9 +30,13 @@ class ButtonShape extends GuiShapeBase {
         Gdip_DrawRectangle(this.graphics, borderPen, 0 + Floor(this.borderThickness / 2), 0 + Floor(this.borderThickness / 2), w - this.borderThickness, h - this.borderThickness)
         Gdip_DeletePen(borderPen)
 
-        Gdip_TextToGraphics(this.graphics, this.GetButtonText(), "Center vCenter cff" . this.textColor, this.font, w, h)
+        this.RenderContent(w, h)
         this.hBitmap := Gdip_CreateHBITMAPFromBitmap(this.bitmap)
         return this.hBitmap
+    }
+
+    RenderContent(w, h) {
+        Gdip_TextToGraphics(this.graphics, this.GetButtonText(), "Center vCenter cff" . this.textColor, this.font, w, h)
     }
 
     Cleanup() {
@@ -58,8 +62,12 @@ class ButtonShape extends GuiShapeBase {
     DrawOn(guiControl) {
         guiControl.GetPos(,, w, h)
         SetImage(guiControl.Hwnd, this.Draw(w, h))
-        this.Cleanup()
         return guiControl
+    }
+
+    __Delete() {
+        this.Cleanup()
+        super.__Delete()
     }
 
     GetButtonText() {

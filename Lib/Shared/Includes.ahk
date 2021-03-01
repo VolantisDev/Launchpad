@@ -45,6 +45,7 @@
 #Include E:\Tools\Launchpad\Lib\Shared\Gui\SingleInputBox.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\GuiShape\ButtonShape.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\GuiShape\GuiShapeBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\GuiShape\SymbolButtonShape.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\HttpReq\HttpReqBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\HttpReq\WinHttpReq.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\IdGenerator\IdGeneratorBase.ahk

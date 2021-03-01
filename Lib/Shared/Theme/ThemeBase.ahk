@@ -334,16 +334,24 @@ class ThemeBase {
         throw MethodNotImplementedException.new("ThemeBase", "GetThemeMap")
     }
 
-    AddButton(guiObj, options, text, handlerName := "", primary := false) {
+    AddButton(guiObj, options, content, handlerName := "", style := "normal") {
         picObj := guiObj.AddPicture(options . " 0xE")
-        picObj.IsPrimary := primary
+        picObj.IsPrimary := (style == "primary")
+
+        states := Map()
+        buttonStyle := this.GetButtonStyle(style)
 
         try {
-            backgroundColor := primary ? this.GetColor("primaryAction") : this.GetColor("buttonBackground")
-            textColor := primary ? this.GetColor("primaryActionText") : this.GetColor("buttonText")
-            borderColor := primary ? this.GetColor("primaryActionBorder") : this.GetColor("border")
-            shape := ButtonShape.new(text, backgroundColor, textColor, borderColor, this.buttons["borderWidth"])
-            shape.DrawOn(picObj)
+            enabledShape := buttonStyle["enabled"].Has("shape") ? buttonStyle["enabled"]["shape"] : "ButtonShape"
+            states["enabled"] := %enabledShape%.new(content, buttonStyle["enabled"]["backgroundColor"], buttonStyle["enabled"]["textColor"], buttonStyle["enabled"]["borderColor"], buttonStyle["enabled"]["borderWidth"])
+            
+            disabledShape := buttonStyle["disabled"].Has("shape") ? buttonStyle["disabled"]["shape"] : "ButtonShape"
+            states["disabled"] := %disabledShape%.new(content, buttonStyle["disabled"]["backgroundColor"], buttonStyle["disabled"]["textColor"], buttonStyle["disabled"]["borderColor"], buttonStyle["disabled"]["borderWidth"])
+            
+            hoveredShape := buttonStyle["hovered"].Has("shape") ? buttonStyle["hovered"]["shape"] : "ButtonShape"
+            states["hovered"] := %hoveredShape%.new(content, buttonStyle["hovered"]["backgroundColor"], buttonStyle["hovered"]["textColor"], buttonStyle["hovered"]["borderColor"], buttonStyle["hovered"]["borderWidth"])
+
+            states["enabled"].DrawOn(picObj)
 
             if (handlerName or picObj.Name) {
                 if (handlerName == "") {
@@ -353,23 +361,45 @@ class ThemeBase {
                 picObj.OnEvent("Click", handlerName)
             }
 
-            this.themedButtons[picObj.Hwnd] := Map("picture", picObj, "text", text)
+            this.themedButtons[picObj.Hwnd] := Map("picture", picObj, "content", content, "states", states)
         } catch ex {
             ; Ignore errors
+            ;MsgBox("Failed to draw button.")
+            MsgBox(ex.What . ": " . ex.Message)
         }
 
         return picObj
     }
 
+    DereferenceColor(color) {
+        return this.DereferenceValue(color, this.colors)
+    }
+
+    GetButtonStyle(style) {
+        result := (style != "normal") ? this.GetButtonStyle("normal") : Map()
+
+        if (this.buttons.Has("styles") and this.buttons["styles"].Has(style)) {
+            result := this.MergeProperty(result, this.buttons["styles"][style], true)
+        }
+
+        colorKeys := ["backgroundColor", "textColor", "borderColor"]
+
+        for index, colorKey in colorKeys {
+            for idx, state in ["enabled", "disabled", "hovered"] {
+                if (result[state].Has(colorKey)) {
+                    result[state][colorKey] := this.DereferenceColor(result[state][colorKey])
+                }
+            }
+        }
+
+        return result
+    }
+
     SetNormalButtonState(btn) {
         try {
-            backgroundColor := btn.IsPrimary ? this.GetColor("primaryAction") : this.GetColor("buttonBackground")
-            textColor := btn.IsPrimary ? this.GetColor("primaryActionText") : this.GetColor("buttonText")
-            borderColor := btn.IsPrimary ? this.GetColor("primaryActionBorder") : this.GetColor("border")
-            shape := ButtonShape.new(this.themedButtons[this.hoveredButton]["text"], backgroundColor, textColor, borderColor, this.buttons["borderWidth"])
-            btn := shape.DrawOn(btn)
+            btn := this.themedButtons[this.hoveredButton]["states"]["enabled"].DrawOn(btn)
         } catch ex {
-            ; Ignore errors
+            ; @todo Log errors
         }
         
         return btn
@@ -385,11 +415,12 @@ class ThemeBase {
             this.hoveredButton := ""
         }
 
-        backgroundColor := btn.IsPrimary ? this.GetColor("primaryActionHover") : this.GetColor("buttonBackgroundHover")
-        textColor := btn.IsPrimary ? this.GetColor("primaryActionTextHover") : this.GetColor("buttonTextHover")
-        borderColor := btn.IsPrimary ? this.GetColor("primaryActionBorderHover") : this.GetColor("borderHover")
-        shape := ButtonShape.new(this.themedButtons[btn.Hwnd]["text"], backgroundColor, textColor, borderColor, this.buttons["borderWidth"])
-        btn := shape.DrawOn(btn)
+        try {
+            btn := this.themedButtons[btn.Hwnd]["states"]["hovered"].DrawOn(btn)
+        } catch ex {
+            ; @todo Log errors
+        }
+
         this.hoveredButton := btn.Hwnd
         return btn
     }

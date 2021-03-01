@@ -21,22 +21,8 @@
             "accent": "{{blue}}",
             "accentLight": "{{lightblue}}",
             "accentDark": "{{darkblue}}",
-            "border": "{{buttonBackground}}",
-            "borderHover": "{{buttonBackgroundHover}}",
-            "buttonBackground": "{{blue}}",
-            "buttonBackgroundHover": "{{lightblue}}",
-            "buttonBackgroundClick": "{{lightblue}}",
-            "buttonText": "{{text}}",
-            "buttonTextHover": "{{light}}",
-            "buttonTextClick": "{{buttonTextHover}}",
-            "primaryAction": "{{green}}",
-            "primaryActionHover": "{{greenBright}}",
-            "primaryActionClick": "{{greenBright}}",
-            "primaryActionText": "{{light}}",
-            "primaryActionTextHover": "{{buttonTextHover}}",
-            "primaryActionTextClick": "{{buttonTextClick}}",
-            "primaryActionBorder": "{{greenDim}}",
-            "primaryActionBorderHover": "{{green}}",
+            "border": "{{blue}}",
+            "borderHover": "{{lightblue}}",
             "linkText": "{{greenDim}}",
             "inputText": "{{dark}}"
         },
@@ -45,18 +31,76 @@
             "spinner": "Graphics\\Spinner-Steam.gif"
         },
         "buttons": {
-            "borderWidth": 0,
-            "height": {
-                "s": 20,
-                "m": 30,
-                "l": 40,
-                "xl": 80
-            },
-            "fixedWidth": {
-                "s": 80,
-                "m": 100,
-                "l": 120,
-                "xl": 140
+            "styles": {
+                "normal": {
+                    "enabled": {
+                        "backgroundColor": "{{blue}}",
+                        "textColor": "{{text}}",
+                        "borderColor": "{{border}}",
+                        "borderWidth": 0,
+                        "shape": "ButtonShape"
+                    },
+                    "disabled": {
+                        "backgroundColor": "{{blue}}",
+                        "textColor": "{{text}}",
+                        "borderColor": "{{border}}",
+                        "borderWidth": 0,
+                        "shape": "ButtonShape"
+                    },
+                    "hovered": {
+                        "backgroundColor": "{{lightblue}}",
+                        "textColor": "{{light}}",
+                        "borderColor": "{{border}}",
+                        "borderWidth": 0,
+                        "shape": "ButtonShape"
+                    }
+                },
+                "primary": {
+                    "enabled": {
+                        "backgroundColor": "{{green}}",
+                        "textColor": "{{light}}",
+                        "borderColor": "{{greenDim}}",
+                        "borderWidth": 0,
+                        "shape": "ButtonShape"
+                    },
+                    "disabled": {
+                        "backgroundColor": "{{green}}",
+                        "textColor": "{{light}}",
+                        "borderColor": "{{greenDim}}",
+                        "borderWidth": 0,
+                        "shape": "ButtonShape"
+                    },
+                    "hovered": {
+                        "backgroundColor": "{{greenBright}}",
+                        "textColor": "{{light}}",
+                        "borderColor": "{{green}}",
+                        "borderWidth": 0,
+                        "shape": "ButtonShape"
+                    }
+                },
+                "titlebar": {
+                    "enabled": {
+                        "backgroundColor": "{{background}}",
+                        "textColor": "{{text}}",
+                        "borderColor": "{{border}}",
+                        "borderWidth": 0,
+                        "shape": "SymbolButtonShape"
+                    },
+                    "disabled": {
+                        "backgroundColor": "{{background}}",
+                        "textColor": "{{text}}",
+                        "borderColor": "{{border}}",
+                        "borderWidth": 0,
+                        "shape": "SymbolButtonShape"
+                    },
+                    "hovered": {
+                        "backgroundColor": "{{accentDark}}",
+                        "textColor": "{{light}}",
+                        "borderColor": "{{border}}",
+                        "borderWidth": 0,
+                        "shape": "SymbolButtonShape"
+                    }
+                }
             }
         }
     }

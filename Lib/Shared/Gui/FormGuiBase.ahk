@@ -61,7 +61,7 @@ class FormGuiBase extends GuiBase {
     }
 
     OnFormGuiButton(btn, info) {
-        btnText := this.themeObj.themedButtons.Has(btn.Hwnd) ? this.themeObj.themedButtons[btn.Hwnd]["text"] : "OK"
+        btnText := this.themeObj.themedButtons.Has(btn.Hwnd) ? this.themeObj.themedButtons[btn.Hwnd]["content"] : "OK"
         this.result := StrReplace(btnText, "&")
     }
 
