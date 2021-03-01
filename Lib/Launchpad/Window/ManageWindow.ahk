@@ -268,6 +268,8 @@
     }
 
     OnSize(guiObj, minMax, width, height) {
+        super.OnSize(guiObj, minMax, width, height)
+        
         if (minMax == -1) {
             return
         }

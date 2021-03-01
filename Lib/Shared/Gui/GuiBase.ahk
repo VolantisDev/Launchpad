@@ -229,7 +229,25 @@ class GuiBase {
     }
 
     OnSize(guiObj, minMax, width, height) {
+        if (minMax == -1) {
+            return
+        }
 
+        if (this.hasTitlebar) {
+            this.AutoXYWH("w", ["WindowTitle"])
+
+            if (this.hasCloseButton) {
+                this.AutoXYWH("x", ["WindowCloseButton"])
+            }
+
+            if (this.hasMaxButton) {
+                this.AutoXYWH("x", ["WindowMaxButton"])
+            }
+
+            if (this.hasMinButton) {
+                this.AutoXYWH("x", ["WindowMinButton"])
+            }
+        }
     }
 
     AddToolbar() {
