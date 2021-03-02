@@ -69,6 +69,10 @@ class GuiBase {
             this.showMaximize := true
         }
 
+        if (this.owner || options.Has("Popup") && options["Popup"]) {
+            this.showMinimize := false
+        }
+
         this.margin := this.windowSettings["spacing"]["margin"]
         this.windowKey := windowKey
         this.eventManagerObj := themeObj.eventManagerObj
