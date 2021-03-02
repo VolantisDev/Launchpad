@@ -22,6 +22,11 @@
             "logo": "Graphics\\Logo.png",
             "spinner": "Graphics\\Spinner.gif"
         },
+        "symbols": {
+            "close": "CloseSymbol",
+            "minimize": "MinimizeSymbol",
+            "maximize": "MaximizeSymbol"
+        },
         "buttons": {
             "height": {
                 "s": 20,

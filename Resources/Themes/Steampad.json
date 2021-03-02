@@ -81,22 +81,22 @@
                 "titlebar": {
                     "enabled": {
                         "backgroundColor": "{{background}}",
-                        "textColor": "{{text}}",
+                        "textColor": "{{textLight}}",
                         "borderColor": "{{border}}",
                         "borderWidth": 0,
                         "shape": "SymbolButtonShape"
                     },
                     "disabled": {
                         "backgroundColor": "{{background}}",
-                        "textColor": "{{text}}",
-                        "borderColor": "{{border}}",
+                        "textColor": "{{textLight}}",
+                        "borderColor": "{{background}}",
                         "borderWidth": 0,
                         "shape": "SymbolButtonShape"
                     },
                     "hovered": {
-                        "backgroundColor": "{{accentDark}}",
-                        "textColor": "{{light}}",
-                        "borderColor": "{{border}}",
+                        "backgroundColor": "{{background}}",
+                        "textColor": "{{text}}",
+                        "borderColor": "{{background}}",
                         "borderWidth": 0,
                         "shape": "SymbolButtonShape"
                     }

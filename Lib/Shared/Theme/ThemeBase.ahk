@@ -12,6 +12,7 @@ class ThemeBase {
     vars := Map()
     colors := Map("background", "FFFFFF", "text", "000000", "textLight", "959595", "accent", "9466FC", "accentLight", "EEE6FF", "accentDark", "8A57F0", "transColor", "")
     themeAssets := Map("logo", "Resources\Graphics\Logo.png", "icon", "Resources\Graphics\Launchpad.ico", "spinner", "Resources\Graphics\Spinner.gif")
+    symbols := Map()
     buttons := Map("height", Map("s", 20, "m", 30, "l", 40, "xl", 80), "fixedWidth", Map("s", 80, "m", 100, "l", 120, "xl", 140))
     labels := Map("height", "auto", "fixedWidth", 75, "font", "normal")
     fonts := Map("normal", "s10 w200", "small", "s11", "large", "s13")
@@ -88,6 +89,18 @@ class ThemeBase {
         return asset
     }
 
+    GetSymbol(id, strokeColor, strokeWidth := 1) {
+        symbolClass := (this.symbols.Has(id)) ? this.symbols[id] : ""
+
+        symbol := ""
+
+        if (symbolClass) {
+            symbol := %symbolClass%.new(strokeColor, strokeWidth)
+        }
+
+        return symbol
+    }
+
     GetButtonSize(id, fixedWidth := false) {
         buttonSize := Map("h", "auto", "w", "auto")
 
@@ -133,30 +146,36 @@ class ThemeBase {
         return this.DereferenceEnumerable(windowSettings)
     }
 
-    GetWindowOptionsString(windowKey) {
+    GetWindowOptionsString(windowKey, extraOptions := "") {
         windowOptions := ""
         windowSettings := this.GetWindowSettings(windowKey)
 
-        if (windowSettings.Has("options") && windowSettings["options"] != "") {
-            for key, val in windowSettings["options"] {
-                if (val != "") {
-                    if this.windowStyles.Has(key) {
-                        key := this.DereferenceValue(this.windowStyles[key], this.windowStyles)
-                    }
+        opts := (windowSettings.Has("options") && windowSettings["options"] != "") ? windowSettings["options"] : Map()
 
-                    if (windowOptions != "") {
-                        windowOptions .= " "
-                    }
+        if (extraOptions) {
+            for key, val in extraOptions {
+                opts[key] := val
+            }
+        }
 
-                    if (val) {
-                        windowOptions .= "+" . key
-                    } else if (val == false) {
-                        windowOptions .= "-" . key
-                    }
+        for key, val in windowSettings["options"] {
+            if (val != "") {
+                if this.windowStyles.Has(key) {
+                    key := this.DereferenceValue(this.windowStyles[key], this.windowStyles)
+                }
 
-                    if (Type(val) == "String" && val != "") {
-                        windowOptions .= val
-                    }
+                if (windowOptions != "") {
+                    windowOptions .= " "
+                }
+
+                if (val) {
+                    windowOptions .= "+" . key
+                } else if (val == false) {
+                    windowOptions .= "-" . key
+                }
+
+                if (Type(val) == "String" && val != "") {
+                    windowOptions .= val
                 }
             }
         }
@@ -343,13 +362,13 @@ class ThemeBase {
 
         try {
             enabledShape := buttonStyle["enabled"].Has("shape") ? buttonStyle["enabled"]["shape"] : "ButtonShape"
-            states["enabled"] := %enabledShape%.new(content, buttonStyle["enabled"]["backgroundColor"], buttonStyle["enabled"]["textColor"], buttonStyle["enabled"]["borderColor"], buttonStyle["enabled"]["borderWidth"])
+            states["enabled"] := %enabledShape%.new(this, content, buttonStyle["enabled"]["backgroundColor"], buttonStyle["enabled"]["textColor"], buttonStyle["enabled"]["borderColor"], buttonStyle["enabled"]["borderWidth"])
             
             disabledShape := buttonStyle["disabled"].Has("shape") ? buttonStyle["disabled"]["shape"] : "ButtonShape"
-            states["disabled"] := %disabledShape%.new(content, buttonStyle["disabled"]["backgroundColor"], buttonStyle["disabled"]["textColor"], buttonStyle["disabled"]["borderColor"], buttonStyle["disabled"]["borderWidth"])
+            states["disabled"] := %disabledShape%.new(this, content, buttonStyle["disabled"]["backgroundColor"], buttonStyle["disabled"]["textColor"], buttonStyle["disabled"]["borderColor"], buttonStyle["disabled"]["borderWidth"])
             
             hoveredShape := buttonStyle["hovered"].Has("shape") ? buttonStyle["hovered"]["shape"] : "ButtonShape"
-            states["hovered"] := %hoveredShape%.new(content, buttonStyle["hovered"]["backgroundColor"], buttonStyle["hovered"]["textColor"], buttonStyle["hovered"]["borderColor"], buttonStyle["hovered"]["borderWidth"])
+            states["hovered"] := %hoveredShape%.new(this, content, buttonStyle["hovered"]["backgroundColor"], buttonStyle["hovered"]["textColor"], buttonStyle["hovered"]["borderColor"], buttonStyle["hovered"]["borderWidth"])
 
             states["enabled"].DrawOn(picObj)
 
@@ -382,10 +401,12 @@ class ThemeBase {
             result := this.MergeProperty(result, this.buttons["styles"][style], true)
         }
 
-        colorKeys := ["backgroundColor", "textColor", "borderColor"]
+        for idx, state in ["enabled", "disabled", "hovered"] {
+            result[state] := result[state].Clone()
 
-        for index, colorKey in colorKeys {
-            for idx, state in ["enabled", "disabled", "hovered"] {
+            colorKeys := ["backgroundColor", "textColor", "borderColor"]
+
+            for index, colorKey in colorKeys {
                 if (result[state].Has(colorKey)) {
                     result[state][colorKey] := this.DereferenceColor(result[state][colorKey])
                 }

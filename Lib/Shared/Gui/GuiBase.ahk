@@ -2,6 +2,7 @@ class GuiBase {
     guiObj := ""
     guiId := ""
     title := ""
+    iconSrc := ""
     themeObj := ""
     owner := ""
     parent := ""
@@ -15,12 +16,19 @@ class GuiBase {
     buttons := []
     isClosed := false
     activeTooltip := false
+    showTitlebar := true
+    showIcon := true
+    showTitle := true
+    showClose := true
+    showMinimize := true
+    showMaximize := false
+    titlebarHeight := 31
 
     positionAtMouseCursor := false
     openWindowWithinScreenBounds := true
     showInNotificationArea := false
 
-    __New(title, themeObj, windowKey, owner := "", parent := "") {
+    __New(title, themeObj, windowKey, owner := "", parent := "", iconSrc := "") {
         InvalidParameterException.CheckTypes("GuiBase", "title", title, "", "themeObj", themeObj, "ThemeBase", "windowKey", windowKey, "")
         InvalidParameterException.CheckEmpty("GuiBase", "title", title)
 
@@ -42,10 +50,25 @@ class GuiBase {
             this.parent := parent
         }
 
+        extraOptions := Map()
+
+        if (this.showTitlebar) {
+            extraOptions["Caption"] := false
+            extraOptions["Border"] := true
+        }
+        
         this.title := title
+        this.iconSrc := iconSrc
         this.themeObj := themeObj
         this.windowSettings := themeObj.GetWindowSettings(windowKey)
-        this.windowOptions := themeObj.GetWindowOptionsString(windowKey)
+        this.windowOptions := themeObj.GetWindowOptionsString(windowKey, extraOptions)
+
+        options := this.windowSettings["options"]
+
+        if (options.Has("Resize") && options["Resize"]) {
+            this.showMaximize := true
+        }
+
         this.margin := this.windowSettings["spacing"]["margin"]
         this.windowKey := windowKey
         this.eventManagerObj := themeObj.eventManagerObj
@@ -53,11 +76,20 @@ class GuiBase {
         this.guiId := this.idGenerator.Generate()
         this.mouseMoveCallback := ObjBindMethod(this, "OnMouseMove")
         this.eventManagerObj.Register(Events.MOUSE_MOVE, "Gui" . this.guiId, this.mouseMoveCallback)
+        this.calcSizeCallback := ObjBindMethod(this, "OnCalcSize")
+        this.eventManagerObj.Register(Events.WM_NCCALCSIZE, "Gui" . this.guiId, this.calcSizeCallback)
+        this.activateCallback := ObjBindMethod(this, "OnActivate")
+        this.eventManagerObj.Register(Events.WM_NCACTIVATE, "Gui" . this.guiId, this.activateCallback)
+        this.hitTestCallback := ObjBindMethod(this, "OnHitTest")
+        this.eventManagerObj.Register(Events.WM_NCHITTEST, "Gui" . this.guiId, this.hitTestCallback)
         this.Create()
     }
 
     __Delete() {
         this.eventManagerObj.Unregister(Events.MOUSE_MOVE, "Gui" . this.guiId, this.mouseMoveCallback)
+        this.eventManagerObj.Unregister(Events.WM_NCCALCSIZE, "Gui" . this.guiId, this.calcSizeCallback)
+        this.eventManagerObj.Unregister(Events.WM_NCACTIVATE, "Gui" . this.guiId, this.activateCallback)
+        this.eventManagerObj.Unregister(Events.WM_NCHITTEST, "Gui" . this.guiId, this.hitTestCallback)
         
         if (this.activeTooltip) {
             ToolTip()
@@ -81,6 +113,62 @@ class GuiBase {
         } else {
             ToolTip()
             this.activeTooltip := false
+        }
+    }
+
+    OnCalcSize(wParam, lParam, msg, hwnd) {
+        if hwnd == A_ScriptHwnd || hwnd == this.GetHwnd() {
+            if (wParam) {
+                ; @todo Get this working
+                return 0 ; Size the client area to fill the entire window
+            }
+        }
+    }
+
+    OnActivate(wParam, lParam, msg, hwnd) {
+        if hwnd == A_ScriptHwnd || hwnd == this.GetHwnd() {
+            return 1 ; Prevents a border from being drawn when the window is activated
+        }
+            
+    }
+
+    OnHitTest(wParam, lParam, msg, hwnd) {
+        ; @todo Replace titlebar callbacks with https://autohotkey.com/board/topic/23969-resizable-window-border/#entry155480
+
+        static border_size := 6
+
+        if hwnd != A_ScriptHwnd && hwnd != this.GetHwnd()
+            return
+        
+        WinGetPos(gX, gY, gW, gH, "ahk_id " . this.guiObj.Hwnd)
+
+        x := lParam<<48>>48
+        y := lParam<<32>>48
+        hitLeft := x < gX + border_size
+        hitRight := x >= gX + gW - border_size
+        hitTop := y < gY + border_size
+        hitBottom := y >= gY + gH - border_size
+
+        if (hitTop) {
+            if (hitLeft) {
+                return 0xD
+            } else if (hitRight) {
+                return 0xE
+            } else {
+                return 0xC
+            }
+        } else if (hitBottom) {
+            if (hitLeft) {
+                return 0x10
+            } else if (hitRight) {
+                return 0x11
+            } else {
+                return 0xF
+            }
+        } else if (hitLeft) {
+            return 0xA
+        } else if (hitRight) {
+            return 0xB
         }
     }
 
@@ -161,6 +249,72 @@ class GuiBase {
         return chk
     }
 
+    AddTitlebar() {
+        ; titlebar = margin + icon + 5 + text + 5 + button + 5 + button + 5 + button + margin
+        titlebarW := this.windowSettings["contentWidth"] + (this.margin * 2)
+        startingPos := "x" . this.margin . " y10"
+        textPos := "x" . this.margin . " y10"
+        handlePos := "x0 y0"
+        iconSrc := this.iconSrc ? this.iconSrc : A_IconFile
+
+        if (this.showIcon && iconSrc) {
+            this.guiObj.AddPicture(startingPos . " h16 w16 +BackgroundTrans vWindowIcon", iconSrc)
+            textPos := "x31 y10"
+            handlePos := "x26 y0"
+        }
+
+        buttonsW := 0
+
+        if (this.showMinimize) {
+            buttonsW += 16 + this.margin
+        }
+
+        if (this.showMaximize) {
+            buttonsW += 16 + this.margin
+        }
+
+        if (this.showClose) {
+            buttonsW += 16 + this.margin
+        }
+
+        if (buttonsW) {
+            buttonsW += this.margin * 2
+        }
+
+        textW := titlebarW - buttonsW
+
+        if (iconSrc) {
+            textW -= 21
+        }
+
+        titlebarObj := this.guiObj.AddText(handlePos . " w" . textW . " h31 vWindowTitlebar", "")
+        titlebarObj.OnEvent("Click", "OnWindowTitleClick")
+        titlebarObj.OnEvent("DoubleClick", "OnWindowMaxButton")
+
+        titleText := this.showTitle ? this.title : ""
+        this.guiObj.AddText(textPos . " w" . textW . " vWindowTitleText", titleText)
+        
+
+        if (this.showMinimize) {
+            this.AddTitlebarButton("WindowMinButton", "minimize", "OnWindowMinButton")
+        }
+
+        if (this.showMaximize) {
+            this.AddTitlebarButton("WindowMaxButton", "maximize", "OnWindowMaxButton")
+        }
+
+        if (this.showClose) {
+            this.AddTitlebarButton("WindowCloseButton", "close", "OnWindowCloseButton")
+        }
+
+        this.guiObj.AddText("x" . this.margin . " y31 w0 h0", "")
+    }
+
+    AddTitlebarButton(name, symbol, handlerName) {
+        options := "x+" . this.margin . " y10 w16 h16 v" . name
+        return this.themeObj.AddButton(this.guiObj, options, symbol, handlerName, "titlebar")
+    }
+
     SetFont(fontPreset := "normal", extraStyles := "", colorName := "text") {
         this.guiObj.SetFont()
         this.guiObj.SetFont("c" . this.themeObj.GetColor(colorName) . " " . this.themeObj.GetFont(fontPreset) . " " . extraStyles)
@@ -174,7 +328,7 @@ class GuiBase {
     GetHwnd() {
         hwnd := 0
 
-        if (!this.isClosed) {
+        if (this.guiObj && !this.isClosed) {
             return this.guiObj.Hwnd
         }
     }
@@ -192,6 +346,11 @@ class GuiBase {
         }
 
         this.Start()
+        
+        if (this.showTitlebar) {
+            this.AddTitlebar()
+        }
+
         this.Controls()
         this.AddButtons()
 
@@ -233,19 +392,19 @@ class GuiBase {
             return
         }
 
-        if (this.hasTitlebar) {
-            this.AutoXYWH("w", ["WindowTitle"])
+        if (this.showTitlebar) {
+            this.AutoXYWH("w", ["WindowTitleText", "WindowTitlebar"])
 
-            if (this.hasCloseButton) {
-                this.AutoXYWH("x", ["WindowCloseButton"])
+            if (this.showClose) {
+                this.AutoXYWH("x*", ["WindowCloseButton"])
             }
 
-            if (this.hasMaxButton) {
-                this.AutoXYWH("x", ["WindowMaxButton"])
+            if (this.showMaximize) {
+                this.AutoXYWH("x*", ["WindowMaxButton"])
             }
 
-            if (this.hasMinButton) {
-                this.AutoXYWH("x", ["WindowMinButton"])
+            if (this.showMinimize) {
+                this.AutoXYWH("x*", ["WindowMinButton"])
             }
         }
     }
@@ -386,10 +545,9 @@ class GuiBase {
         this.Cleanup()
 
         if (!this.isClosed) {
+            this.isClosed := true
             this.guiObj.Destroy()
         }
-
-        this.isClosed := true
     }
 
     Cleanup() {
@@ -491,5 +649,33 @@ class GuiBase {
         if (!this.isClosed) {
             this.guiObj.Submit(hide)
         }
+    }
+
+    OnWindowMaxButton(btn, info) {
+        winId := "ahk_id " . this.guiObj.Hwnd
+        minMaxResult := WinGetMinMax(winId)
+        if (minMaxResult == 1) {
+            WinRestore(winId)
+        } else {
+            WinMaximize(winId)
+        }
+    }
+
+    OnWindowMinButton(btn, info) {
+        winId := "ahk_id " . this.guiObj.Hwnd
+        minMaxResult := WinGetMinMax(winId)
+        if (minMaxResult == -1) {
+            WinRestore(winId)
+        } else {
+            WinMinimize(winId)
+        }
+    }
+
+    OnWindowCloseButton(btn, info) {
+        WinClose("ahk_id " . this.guiObj.Hwnd)
+    }
+
+    OnWindowTitleClick(btn, info) {
+        PostMessage(0xA1, 2,,, "A")
     }
 }

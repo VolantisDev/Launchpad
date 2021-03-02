@@ -22,7 +22,7 @@
         this.AddButton("vRunButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Run")
         this.AddButton("vDeleteButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Delete")
         
-        this.AddButton("vToolsButton xp y" . (this.windowSettings["listViewHeight"] - (this.margin * 5) - 100)  . " w" . this.sidebarWidth . " h30", "Tools")
+        this.AddButton("vToolsButton xp y" . (this.titlebarHeight + this.windowSettings["listViewHeight"] - (this.margin * 5) - 100)  . " w" . this.sidebarWidth . " h30", "Tools")
         this.AddButton("vPlatformsButton xp y+m w" . this.sidebarWidth . " h30", "Platforms")
         this.AddButton("vSettingsButton xp y+m w" . this.sidebarWidth . " h30", "Settings")
         this.AddButton("vBuildAllButton xp y+m w" . this.sidebarWidth . " h40", "Build All", "", true)

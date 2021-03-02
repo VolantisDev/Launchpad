@@ -46,6 +46,10 @@
 #Include E:\Tools\Launchpad\Lib\Shared\GuiShape\ButtonShape.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\GuiShape\GuiShapeBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\GuiShape\SymbolButtonShape.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\GuiSymbol\CloseSymbol.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\GuiSymbol\GuiSymbolBase.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\GuiSymbol\MaximizeSymbol.ahk
+#Include E:\Tools\Launchpad\Lib\Shared\GuiSymbol\MinimizeSymbol.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\HttpReq\HttpReqBase.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\HttpReq\WinHttpReq.ahk
 #Include E:\Tools\Launchpad\Lib\Shared\IdGenerator\IdGeneratorBase.ahk

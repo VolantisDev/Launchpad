@@ -1,6 +1,7 @@
 ﻿class ToolsWindow extends LaunchpadGuiBase {
     positionAtMouseCursor := true
     nextPos := "xm"
+    showTitlebar := false
 
     __New(app, windowKey := "", owner := "", parent := "") {
         super.__New(app, "Tools", windowKey, owner, parent)

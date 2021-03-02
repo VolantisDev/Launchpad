@@ -1,11 +1,17 @@
 class SymbolButtonShape extends ButtonShape {
+    lineThickness := 1
+    margin := 4
+
     RenderContent(w, h) {
-        Gdip_TextToGraphics(this.graphics, this.GetButtonText(), "Center vCenter cff" . this.textColor, this.font, w, h)
-    }
+        symbol := this.themeObj.GetSymbol(this.btnText, this.textColor, this.lineThickness)
 
-    GetButtonText() {
-        btnText := this.btnText
+        if (symbol) {
+            x := 0 + this.margin
+            y := 0 + this.margin
+            symbolW := w - (this.margin * 2)
+            symbolH := h - (this.margin * 2)
 
-        return StrReplace(btnText, "&", "")
+            symbol.Draw(this.graphics, x, y, symbolW, symbolH)
+        }
     }
 }

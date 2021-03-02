@@ -1,4 +1,5 @@
 class ButtonShape extends GuiShapeBase {
+    themeObj := ""
     btnText := ""
     bgColor := ""
     textColor := ""
@@ -9,7 +10,8 @@ class ButtonShape extends GuiShapeBase {
     bitmap := ""
     hbitmap := ""
 
-    __New(btnText, bgColor, textColor, borderColor, borderThickness := 2) {
+    __New(themeObj, btnText, bgColor, textColor, borderColor, borderThickness := 1) {
+        this.themeObj := themeObj
         this.btnText := btnText
         this.bgColor := bgColor
         this.textColor := textColor
@@ -23,13 +25,15 @@ class ButtonShape extends GuiShapeBase {
         Gdip_SetSmoothingMode(this.graphics, 4)
 
         bgBrush := Gdip_BrushCreateSolid("0xff" . this.bgColor)
-        Gdip_FillRectangle(this.graphics, bgBrush, 0, 0, w, h)
+        Gdip_FillRectangle(this.graphics, bgBrush, -1, -1, w+2, h+2)
         Gdip_DeleteBrush(bgBrush)
 
-        borderPen := Gdip_CreatePen("0xff" . this.borderColor, this.borderThickness)
-        Gdip_DrawRectangle(this.graphics, borderPen, 0 + Floor(this.borderThickness / 2), 0 + Floor(this.borderThickness / 2), w - this.borderThickness, h - this.borderThickness)
-        Gdip_DeletePen(borderPen)
-
+        if (this.borderThickness > 0) {
+            borderPen := Gdip_CreatePen("0xff" . this.borderColor, this.borderThickness)
+            Gdip_DrawRectangle(this.graphics, borderPen, 0 + Floor(this.borderThickness / 2), 0 + Floor(this.borderThickness / 2), w - this.borderThickness, h - this.borderThickness)
+            Gdip_DeletePen(borderPen)
+        }
+        
         this.RenderContent(w, h)
         this.hBitmap := Gdip_CreateHBITMAPFromBitmap(this.bitmap)
         return this.hBitmap
