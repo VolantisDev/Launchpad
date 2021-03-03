@@ -1,6 +1,6 @@
 ﻿class ManageWindow extends LaunchpadGuiBase {
     sidebarWidth := 85
-    listViewColumns := Array("Game", "Launcher Type", "Game Type", "Status")
+    listViewColumns := Array("GAME", "LAUNCHER TYPE", "GAME TYPE", "STATUS")
     launcherManager := ""
     numSelected := 0
 
@@ -35,11 +35,7 @@
     }
 
     AddLaunchersList() {
-        styling := "C" . this.themeObj.GetColor("text")
-        lvStyles := "+LV" . LVS_EX_LABELTIP . " +LV" . LVS_EX_AUTOSIZECOLUMNS . " +LV" . LVS_EX_DOUBLEBUFFER . " +LV" . LVS_EX_FLATSB . " -E0x200"
-        lvStyles .= " +LV" . LVS_EX_TRANSPARENTBKGND . " +LV" . LVS_EX_TRANSPARENTSHADOWTEXT
-        listViewWidth := this.windowSettings["contentWidth"] - this.sidebarWidth - this.margin
-        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " " . styling . " Count" . this.launcherManager.CountEntities() . " Section +Report -Multi " . lvStyles, this.listViewColumns)
+        lv := this.AddListView("ListView", "Count" . this.launcherManager.CountEntities() . " Section +Report -Multi")
         lv.OnEvent("DoubleClick", "OnDoubleClick")
         lv.OnEvent("ItemSelect", "OnItemSelect")
         this.PopulateListView()

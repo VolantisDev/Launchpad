@@ -18,6 +18,7 @@
             "lightblue": "59AECE",
             "brightmidblue": "549DC7",
             "disabledlightblue": "355D79",
+            "lighttextblue": "63AAD0",
             "dimblue": "283B47",
             "disabledblue": "1D2E3F",
             "gray": "646E70",
@@ -32,7 +33,8 @@
             "border": "{{blue}}",
             "borderHover": "{{lightblue}}",
             "linkText": "{{greenDim}}",
-            "inputText": "{{dark}}"
+            "inputText": "{{dark}}",
+            "lvHeaderText": "{{lighttextblue}}"
         },
         "themeAssets": {
             "logo": "",

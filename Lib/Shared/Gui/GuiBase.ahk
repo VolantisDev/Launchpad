@@ -23,6 +23,9 @@ class GuiBase {
     showMinimize := true
     showMaximize := false
     titlebarHeight := 31
+    lv := ""
+    lvHeaderHwnd := 0
+    listViewColumns := []
 
     positionAtMouseCursor := false
     openWindowWithinScreenBounds := true
@@ -86,6 +89,7 @@ class GuiBase {
         this.eventManagerObj.Register(Events.WM_NCACTIVATE, "Gui" . this.guiId, this.activateCallback)
         this.hitTestCallback := ObjBindMethod(this, "OnHitTest")
         this.eventManagerObj.Register(Events.WM_NCHITTEST, "Gui" . this.guiId, this.hitTestCallback)
+        this.headerCustomDrawCallback := ObjBindMethod(this, "OnHeaderCustomDraw")
         this.Create()
     }
 
@@ -216,6 +220,145 @@ class GuiBase {
         this.SetFont("normal", "Bold")
         this.guiObj.AddText(position . " w" . this.windowSettings["contentWidth"] . " Section +0x200", groupLabel)
         this.SetFont()
+    }
+
+    _RGB2BGR(color)
+	{
+        b := color & 255
+        g := (color >> 8) & 255
+        r := (color >> 16) & 255
+
+        return format("0x{1:02x}{2:02x}{3:02x}", b, g, r)
+	}
+
+    AddListView(name, options) {
+        styling := "C" . this.themeObj.GetColor("text") . " Background" . this.themeObj.GetColor("background")
+        lvStyles := "+LV" . LVS_EX_LABELTIP . " +LV" . LVS_EX_DOUBLEBUFFER . " +LV" . LVS_EX_FLATSB . " -E0x200"
+        ;lvStyles .= " +LV" . LVS_EX_AUTOSIZECOLUMNS
+        listViewWidth := this.windowSettings["contentWidth"] - this.sidebarWidth - this.margin
+
+        lv := this.guiObj.AddListView("v" . name . " w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " " . styling . " " . lvStyles . " " . options, this.listViewColumns)
+        this.lv := lv
+        LVM_GETHEADER := 0x101F
+        this.lvHeaderHwnd := SendMessage(LVM_GETHEADER, 0, 0,, "ahk_id " . lv.Hwnd) + 0
+
+        this.SubclassControl(lv.Hwnd, this.headerCustomDrawCallback)
+
+        lv.ModifyCol(this.listViewColumns.Length, "AutoHdr")
+
+        return lv
+    }
+
+    OnHeaderCustomDraw(h, m, w, l, idSubclass, refData) {
+        static WM_NOTIFY := 0x004E
+        static WM_DESTROY := 0x0002
+        static NM_CUSTOMDRAW := -12
+        static CDRF_DODEFAULT := 0x00000000
+        static CDRF_SKIPDEFAULT := 0x00000004
+        static CDRF_NOTIFYITEMDRAW := 0x00000020
+        static CDRF_NOTIFYSUBITEMDRAW := 0x00000020
+        static CDDS_PREPAINT := 0x00000001
+        static CDDS_ITEMPREPAINT := 0x00010001
+        static CDDS_SUBITEM := 0x00020000
+        static OHWND := 0
+        static OMsg := (2 * A_PtrSize)
+        static ODrawStage := OMsg + 4 + (A_PtrSize - 4)
+        static OHDC := ODrawStage + 4 + (A_PtrSize - 4)
+        static ORect := OHDC + 4 + (A_PtrSize - 4)
+        static OItemSpec := OHDC + 16 + A_PtrSize
+        static OItemState := OItemSpec + 4 + (A_PtrSize - 4)
+        static DT_LEFT := 0
+        static DT_END_ELLIPSIS := 0x00008000
+        static DT_VCENTER := 0x00000004
+        static CDIS_SELECTED := 0x0001
+        static CDIS_GRAYED := 0x0002
+        static CDIS_DISABLED := 0x0004
+        static CDIS_CHECKED := 0x0008
+        static CDIS_FOCUS := 0x0010
+        static CDIS_DEFAULT := 0x0020
+        static CDIS_HOT := 0x0040
+        static CDIS_MARKED := 0x0080
+        static CDIS_INDETERMINATE := 0x0100
+
+        Critical 1000
+
+        if (m == WM_NOTIFY) {
+            hwnd := NumGet(l + 0, OHWND, "UPtr")
+
+            if (hwnd == this.lvHeaderHwnd) {
+                message := NumGet(l + 0, OMsg, "Int")
+            
+                if (message == NM_CUSTOMDRAW) {
+                    itemState := NumGet(l + 0, OItemState, "UInt")
+
+                    textColorName := (itemState & CDIS_HOT) ? "light" : "lvHeaderText"
+
+                    textColor := this._RGB2BGR("0x" . this.themeObj.GetColor(textColorName))
+                    bgColor := this._RGB2BGR("0x" . this.themeObj.GetColor("background"))
+
+                    drawStage := NumGet(l + 0, ODrawStage, "UInt")
+                    
+                    if (drawStage == CDDS_ITEMPREPAINT) {
+                        hdc := NumGet(l + 0, OHDC, "Ptr")
+
+                        rectL := NumGet(l + 0, ORect, "Int") + (this.margin/2)
+                        rectT := NumGet(l + 0, ORect + 4, "Int")
+                        rectR := NumGet(l + 0, ORect + 8, "Int") - (this.margin/2)
+                        rectB := NumGet(l + 0, ORect + 12, "Int")
+                        rect := BufferAlloc(16)
+                        NumPut("Int", rectL, "Int", rectT, "Int", rectR, "Int", rectB, rect)
+
+                        DllCall("Gdi32.dll\SetBkMode", "Ptr", hdc, "UInt", 0)
+                        brush := DllCall("CreateSolidBrush", "UInt", bgColor, "Ptr")
+                        DllCall("FillRect", "Ptr", hdc, "Ptr", rect, "Ptr", brush)
+                        
+                        item := NumGet(l + 0, OItemSpec, "Ptr")+1
+                        text := this.lv.GetText(0, item)
+                        DllCall("Gdi32.dll\SetTextColor", "Ptr", hdc, "UInt", textColor)
+                        DllCall("DrawText", "Ptr", hdc, "Str", text, "Int", StrLen(text), "Ptr", rect, "UInt", DT_LEFT | DT_END_ELLIPSIS )
+
+                        return CDRF_SKIPDEFAULT
+                    } else if (drawStage == CDDS_PREPAINT) {
+                        return CDRF_NOTIFYITEMDRAW
+                    }
+
+                    return CDRF_DODEFAULT
+                }
+            }
+        } else if (m == WM_DESTROY) {
+            this.SubclassControl(h, "")
+        }
+
+        ; All messages not completely handled by the function must be passed to the DefSubclassProc:
+        return DllCall("DefSubclassProc", "Ptr", h, "UInt", m, "Ptr", w, "Ptr", l, "Ptr")
+    }
+
+    SubclassControl(hctl, callback, data := 0) {
+        static controlCB := Map()
+
+        If controlCB.Has(hctl) {
+            DllCall("RemoveWindowSubclass", "Ptr", hctl, "Ptr", controlCB[hctl], "Ptr", hctl)
+            DllCall("GlobalFree", "Ptr", controlCB[hctl], "Ptr")
+            controlCB.Delete(hctl)
+
+            If (callback = "") {
+                return true
+            }
+        }
+
+        if (!DllCall("IsWindow", "Ptr", hctl, "UInt")) {
+            return false
+        }
+
+        if (!(CB := CallbackCreate(callback, , 6))) {
+            return false
+        }
+            
+        If !DllCall("SetWindowSubclass", "Ptr", hctl, "Ptr", CB, "Ptr", hctl, "Ptr", data) {
+            return (DllCall("GlobalFree", "Ptr", CB, "Ptr") & 0)
+        }
+            
+        return (controlCB[hctl] := CB)
     }
 
     AddCheckBox(checkboxText, ctlName, checked, inGroupBox := true, callback := "", check3 := false, position := "") {
@@ -461,6 +604,10 @@ class GuiBase {
         }
 
         this.guiObj.Show(windowSize)
+
+        if (this.lvHeaderHwnd) {
+            WinRedraw("ahk_id " . this.lvHeaderHwnd)
+        }
 
         ; @todo is this really needed?
         if (!this.positionAtMouseCursor && this.showInNotificationArea) {

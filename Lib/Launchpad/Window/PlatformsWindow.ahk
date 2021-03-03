@@ -1,6 +1,6 @@
 ﻿class PlatformsWindow extends LaunchpadGuiBase {
     sidebarWidth := 85
-    listViewColumns := Array("Platform", "Enabled", "Installed", "Version")
+    listViewColumns := Array("PLATFORM", "ENABLED", "INSTALLED", "VERSION")
     platformsFile := ""
     platformManager := ""
     numSelected := 0
@@ -29,11 +29,7 @@
     }
 
     AddPlatformsList() {
-        styling := "C" . this.themeObj.GetColor("text")
-        lvStyles := "+LV" . LVS_EX_LABELTIP . " +LV" . LVS_EX_AUTOSIZECOLUMNS . " +LV" . LVS_EX_DOUBLEBUFFER . " +LV" . LVS_EX_FLATSB . " -E0x200"
-        lvStyles .= " +LV" . LVS_EX_TRANSPARENTBKGND . " +LV" . LVS_EX_TRANSPARENTSHADOWTEXT
-        listViewWidth := this.windowSettings["contentWidth"] - this.sidebarWidth - this.margin
-        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " " . styling . " Count" . this.platformManager.CountEntities() . " Section +Report -Multi " . lvStyles, this.listViewColumns)
+        lv := this.AddListView("ListView", "Count" . this.platformManager.CountEntities() . " Section +Report -Multi")
         lv.OnEvent("DoubleClick", "OnDoubleClick")
         lv.OnEvent("ItemSelect", "OnItemSelect")
         this.PopulateListView()
@@ -208,7 +204,7 @@
         this.AutoXYWH("x", ["ReloadButton", "EnableButton", "DisableButton", "EditButton", "RunButton", "InstallButton", "UpdateButton"])
         
         for index, col in this.listViewColumns {
-            this.guiObj["ListView"].ModifyCol()
+            this.guiObj["ListView"].ModifyCol(index, "AutoHdr")
         }
     }
 }

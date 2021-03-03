@@ -15,7 +15,8 @@
             "transColor": "",
             "border": "{{accentDark}}",
             "linkText": "{{accentLight}}",
-            "inputText": "{{text}}"
+            "inputText": "{{text}}",
+            "lvHeaderText": "{{text}}"
         },
         "themeAssets": {
             "icon": "Graphics\\Launchpad.ico",
