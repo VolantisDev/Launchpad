@@ -23,14 +23,6 @@ try {
     ExitApp
 }
 
-
-; OnError("HandleError")
-
-; HandleError(thrown, mode) {
-;     MsgBox("An unhandled error has occurred. Exiting Launchpad.")
-;     ExitApp
-; }
-
 ~LButton::
 {
     global app
