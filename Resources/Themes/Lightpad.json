@@ -231,8 +231,8 @@
             },
             "ManageWindow": {
                 "settings": "default",
-                "contentWidth": 640,
-                "listViewHeight": 400,
+                "contentWidth": 800,
+                "listViewHeight": 500,
                 "options": {
                     "Resize": true,
                     "MinSize": "480x380"
@@ -240,8 +240,8 @@
             },
             "PlatformsWindow": {
                 "settings": "default",
-                "contentWidth": 420,
-                "listViewHeight": 300,
+                "contentWidth": 640,
+                "listViewHeight": 400,
                 "options": {
                     "Resize": true,
                     "MinSize": "250x250"
