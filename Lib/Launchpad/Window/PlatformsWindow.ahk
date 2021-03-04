@@ -1,9 +1,7 @@
-﻿class PlatformsWindow extends LaunchpadGuiBase {
-    sidebarWidth := 85
+class PlatformsWindow extends ManageWindowBase {
     listViewColumns := Array("PLATFORM", "ENABLED", "INSTALLED", "VERSION")
     platformsFile := ""
     platformManager := ""
-    numSelected := 0
 
     __New(app, platformsFile := "", windowKey := "", owner := "", parent := "") {
         if (platformsFile == "") {
@@ -13,38 +11,37 @@
         InvalidParameterException.CheckTypes("PlatformsWindow", "platformsFile", platformsFile, "")
         this.platformsFile := platformsFile
         this.platformManager := app.Platforms
+        this.lvCount := this.platformManager.CountEntities()
         super.__New(app, "Platforms", windowKey, owner, parent)
     }
 
-    Controls() {
-        super.Controls()
-        this.AddPlatformsList()
+    AddSidebarControls() {
         this.AddButton("vReloadButton ys w" . this.sidebarWidth . " h30", "Reload")
-        this.AddButton("vEnableButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Enable")
-        this.AddButton("vDisableButton xp yp w" . this.sidebarWidth . " h30 Hidden", "Disable")
-        this.AddButton("vEditButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Edit")
-        this.AddButton("vInstallButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Install")
-        this.AddButton("vUpdateButton xp yp w" . this.sidebarWidth . " h30 Hidden", "Update")
-        this.AddButton("vRunButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Run")
+        this.AddButton("vEnableButton xp y+m w" . this.sidebarWidth . " h30", "Enable")
+        this.AddButton("vDisableButton xp y+m w" . this.sidebarWidth . " h30", "Disable")
+        this.AddButton("vEditButton xp y+m w" . this.sidebarWidth . " h30", "Edit")
+        this.AddButton("vInstallButton xp y+m w" . this.sidebarWidth . " h30", "Install")
+        this.AddButton("vUpdateButton xp yp w" . this.sidebarWidth . " h30", "Update")
+        this.AddButton("vRunButton xp y+m w" . this.sidebarWidth . " h30", "Run")
     }
 
-    AddPlatformsList() {
-        lv := this.AddListView("ListView", "Count" . this.platformManager.CountEntities() . " Section +Report -Multi")
+    SetupManageEvents(lv) {
         lv.OnEvent("DoubleClick", "OnDoubleClick")
-        lv.OnEvent("ItemSelect", "OnItemSelect")
-        this.PopulateListView()
     }
 
-    PopulateListView() {
+    PopulateListView(focusedItem := 1) {
         this.guiObj["ListView"].Delete()
-        iconNum := 1
         this.guiObj["ListView"].SetImageList(this.CreateIconList())
+        iconNum := 1
+        index := 1
 
         for key, platform in this.platformManager.Entities {
             enabledText := platform.IsEnabled ? "Yes" : "No"
             installedText := platform.IsInstalled ? "Yes" : "No"
-            this.guiObj["ListView"].Add("Icon" . iconNum, platform.Key, enabledText, installedText, platform.InstalledVersion)
+            focusOption := index == focusedItem ? " Focus" : ""
+            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, platform.Key, enabledText, installedText, platform.InstalledVersion)
             iconNum++
+            index++
         }
 
         for index, col in this.listViewColumns {
@@ -88,26 +85,6 @@
 
     OnItemSelect(LV, rowNum, selected) {
         this.numSelected += (selected) ? 1 : -1
-        this.ResetButtonState()
-    }
-
-    ResetButtonState() {
-        platform := this.GetSelectedPlatform()
-        isInstalled := (platform && platform.IsInstalled)
-        isEnabled := (platform && platform.IsEnabled)
-        buttonState := platform ? "-Hidden" : "+Hidden"
-        runButtonState := isInstalled ? "-Hidden" : "+Hidden"
-        enableButtonState := (platform && !isEnabled) ? "-Hidden" : "+Hidden"
-        disableButtonState := isEnabled ? "-Hidden" : "+Hidden"
-        installButtonState := (platform && !isInstalled) ? "-Hidden" : "+Hidden"
-        updateButtonState := isInstalled ? "-Hidden" : "+Hidden"
-        
-        this.guiObj["EditButton"].Opt(buttonState)
-        this.guiObj["EnableButton"].Opt(enableButtonState)
-        this.guiObj["DisableButton"].Opt(disableButtonState)
-        this.guiObj["InstallButton"].Opt(installButtonState)
-        this.guiObj["UpdateButton"].Opt(updateButtonState)
-        this.guiObj["RunButton"].Opt(runButtonState)
     }
 
     GetSelectedPlatform() {
@@ -124,7 +101,7 @@
 
     OnEnableButton(btn, info) {
         platform := this.GetSelectedPlatform()
-        selected := this.guiObj["ListView"].GetNext()
+        selected := this.guiObj["ListView"].GetNext(, "Focused")
 
         if (platform) {
             platform.IsEnabled := true
@@ -135,8 +112,6 @@
             if (selected) {
                 this.guiObj["ListView"].Modify(selected, "Select")
             }
-
-            this.ResetButtonState()
         }
     }
 
@@ -153,8 +128,6 @@
             if (selected) {
                 this.guiObj["ListView"].Modify(selected, "Select")
             }
-
-            this.ResetButtonState()
         }
     }
 
@@ -164,7 +137,7 @@
     }
 
     OnEditButton(btn, info) {
-        selected := this.guiObj["ListView"].GetNext()
+        selected := this.guiObj["ListView"].GetNext(, "Focused")
 
         if (selected > 0) {
             key := this.guiObj["ListView"].GetText(selected, 1)
@@ -200,7 +173,6 @@
             return
         }
 
-        this.AutoXYWH("wh", ["ListView"])
         this.AutoXYWH("x", ["ReloadButton", "EnableButton", "DisableButton", "EditButton", "RunButton", "InstallButton", "UpdateButton"])
         
         for index, col in this.listViewColumns {

@@ -77,6 +77,7 @@
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\ManagedGameEditor.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\ManagedLauncherEditor.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\ManageWindow.ahk
+#Include E:\Tools\Launchpad\Lib\Launchpad\Window\ManageWindowBase.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\PlatformEditor.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\PlatformsWindow.ahk
 #Include E:\Tools\Launchpad\Lib\Launchpad\Window\SettingsWindow.ahk

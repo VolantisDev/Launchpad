@@ -1,11 +1,10 @@
-﻿class ManageWindow extends LaunchpadGuiBase {
-    sidebarWidth := 85
+﻿class ManageWindow extends ManageWindowBase {
     listViewColumns := Array("GAME", "LAUNCHER TYPE", "GAME TYPE", "STATUS")
     launcherManager := ""
-    numSelected := 0
 
     __New(app, windowKey := "", owner := "", parent := "") {
         this.launcherManager := app.Launchers
+        this.lvCount := this.launcherManager.CountEntities()
         super.__New(app, "Launchpad", windowKey, owner, parent)
     }
 
@@ -13,14 +12,12 @@
         return this.title
     }
 
-    Controls() {
-        super.Controls()
-        this.AddLaunchersList()
+    AddSidebarControls() {
         this.AddButton("vAddButton ys w" . this.sidebarWidth . " h30", "Add")
-        this.AddButton("vEditButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Edit")
-        this.AddButton("vBuildButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Build")
-        this.AddButton("vRunButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Run")
-        this.AddButton("vDeleteButton xp y+m w" . this.sidebarWidth . " h30 Hidden", "Delete")
+        this.AddButton("vEditButton xp y+m w" . this.sidebarWidth . " h30", "Edit")
+        this.AddButton("vBuildButton xp y+m w" . this.sidebarWidth . " h30", "Build")
+        this.AddButton("vRunButton xp y+m w" . this.sidebarWidth . " h30", "Run")
+        this.AddButton("vDeleteButton xp y+m w" . this.sidebarWidth . " h30", "Delete")
         
         this.AddButton("vToolsButton xp y" . (this.titlebarHeight + this.windowSettings["listViewHeight"] - (this.margin * 5) - 100)  . " w" . this.sidebarWidth . " h30", "Tools")
         this.AddButton("vPlatformsButton xp y+m w" . this.sidebarWidth . " h30", "Platforms")
@@ -28,24 +25,15 @@
         this.AddButton("vBuildAllButton xp y+m w" . this.sidebarWidth . " h40", "Build All", "", true)
     }
 
-    Destroy() {
-        currentApp := this.app
-        super.Destroy()
-        currentApp.ExitApp()
-    }
-
-    AddLaunchersList() {
-        lv := this.AddListView("ListView", "Count" . this.launcherManager.CountEntities() . " Section +Report -Multi")
+    SetupManageEvents(lv) {
         lv.OnEvent("DoubleClick", "OnDoubleClick")
-        lv.OnEvent("ItemSelect", "OnItemSelect")
-        this.PopulateListView()
     }
 
-    PopulateListView() {
+    PopulateListView(focusedItem := 1) {
         this.guiObj["ListView"].Delete()
+        this.guiObj["ListView"].SetImageList(this.CreateIconList())
         iconNum := 1
-        IL := this.CreateIconList()
-        this.guiObj["ListView"].SetImageList(IL)
+        index := 1
 
         for key, launcher in this.launcherManager.Entities {
             launcherStatus := "Missing"
@@ -54,8 +42,11 @@
                 launcherStatus := launcher.IsOutdated ? "Outdated" : "Present"
             }
 
-            this.guiObj["ListView"].Add("Icon" . iconNum, launcher.Key, launcher.ManagedLauncher.EntityType, launcher.ManagedLauncher.ManagedGame.EntityType, launcherStatus)
+            focusOption := index == focusedItem ? " Focus" : ""
+
+            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, launcher.Key, launcher.ManagedLauncher.EntityType, launcher.ManagedLauncher.ManagedGame.EntityType, launcherStatus)
             iconNum++
+            index++
         }
 
         for index, col in this.listViewColumns {
@@ -119,19 +110,9 @@
         }
     }
 
-    OnItemSelect(LV, rowNum, selected) {
-        this.numSelected += (selected) ? 1 : -1
-        buttonState := this.numSelected > 0 ? "-Hidden" : "+Hidden"
-        runButtonState := this.ShouldShowRunButton() ? "-Hidden" : "+Hidden"
-        this.guiObj["EditButton"].Opt(buttonState)
-        this.guiObj["BuildButton"].Opt(buttonState)
-        this.guiObj["RunButton"].Opt(runButtonState)
-        this.guiObj["DeleteButton"].Opt(buttonState)
-    }
-
     ShouldShowRunButton() {
         showButton := false
-        selected := this.guiObj["ListView"].GetNext()
+        selected := this.guiObj["ListView"].GetNext(, "Focused")
 
         if (selected > 0) {
             key := this.guiObj["ListView"].GetText(selected, 1)
@@ -147,7 +128,7 @@
     }
 
     OnEditButton(btn, info) {
-        selected := this.guiObj["ListView"].GetNext()
+        selected := this.guiObj["ListView"].GetNext(, "Focused")
 
         if (selected > 0) {
             key := this.guiObj["ListView"].GetText(selected, 1)
@@ -174,7 +155,7 @@
     }
 
     OnBuildButton(btn, info) {
-        selected := this.guiObj["ListView"].GetNext()
+        selected := this.guiObj["ListView"].GetNext(, "Focused")
 
         if (selected > 0) {
             key := this.guiObj["ListView"].GetText(selected, 1)
@@ -185,7 +166,7 @@
     }
 
     OnRunButton(btn, info) {
-        selected := this.guiObj["ListView"].GetNext()
+        selected := this.guiObj["ListView"].GetNext(, "Focused")
 
         if (selected > 0) {
             key := this.guiObj["ListView"].GetText(selected, 1)
@@ -202,7 +183,7 @@
     }
 
     OnDeleteButton(btn, info) {
-        selected := this.guiObj["ListView"].GetNext()
+        selected := this.guiObj["ListView"].GetNext(, "Focused")
 
         if (selected > 0) {
             key := this.guiObj["ListView"].GetText(selected, 1)
@@ -215,54 +196,6 @@
         }
     }
 
-    AddToolbar() {
-        ImageList := IL_Create(9)
-        IL_Add(ImageList, "shell32.dll", 1)
-        IL_Add(ImageList, "shell32.dll", 4)
-        IL_Add(ImageList, "shell32.dll", 296)
-        IL_Add(ImageList, "shell32.dll", 133)
-        IL_Add(ImageList, "shell32.dll", 298)
-        IL_Add(ImageList, "shell32.dll", 297)
-        IL_Add(ImageList, "shell32.dll", 320)
-
-        buttonList := "
-        (LTrim
-            New
-            Open
-            Save
-            Save As
-            Reload From Disk
-            -
-            Activate in Launchpad,, DISABLED
-            -
-            Flush Cache
-        )"
-
-        return this.CreateToolbar("OnToolbar", ImageList, buttonList)
-    }
-
-    OnToolbar(hWnd, Event, Text, Pos, Id) {
-        If (Event != "Click") {
-            Return
-        }
-
-        If (Text == "New") {
-
-        } Else If (Text == "Open") {
-
-        } Else If (Text == "Save") {
-
-        } Else If (Text == "Save As") {
-
-        } Else If (Text == "Reload From Disk") {
-
-        } Else If (Text == "Activate in Launchpad") {
-
-        } Else If (Text == "Flush Cache") {
-
-        }
-    }
-
     OnSize(guiObj, minMax, width, height) {
         super.OnSize(guiObj, minMax, width, height)
         
@@ -270,17 +203,14 @@
             return
         }
 
-        this.AutoXYWH("wh", ["ListView"])
         this.AutoXYWH("x", ["AddButton", "EditButton", "BuildButton", "RunButton", "DeleteButton"])
         this.AutoXYWH("xy", ["BuildAllButton"])
         this.AutoXYWH("xy*", ["SettingsButton", "ToolsButton", "PlatformsButton"])
+    }
 
-        if (this.hToolbar) {
-            this.guiObj["Toolbar"].Move(,,width)
-        }
-
-        for index, col in this.listViewColumns {
-            this.guiObj["ListView"].ModifyCol(index, "AutoHdr")
-        }
+    Destroy() {
+        currentApp := this.app
+        super.Destroy()
+        currentApp.ExitApp()
     }
 }
