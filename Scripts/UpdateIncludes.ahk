@@ -3,6 +3,8 @@
 appDir := RegExReplace(A_ScriptDir, "\\[^\\]+$")
 
 GenerateIncludeFile(libDir) {
+    global appDir
+
     file := libDir . "\Includes.ahk"
 
     if (FileExist(file)) {
@@ -14,7 +16,7 @@ GenerateIncludeFile(libDir) {
     Loop Files libDir . "\*.ahk", "R"
     {
         if (A_LoopFileFullPath != file) {
-            FileAppend("#Include " . A_LoopFileFullPath . "`n", file)
+            FileAppend("#Include " . StrReplace(A_LoopFileFullPath, libDir . "\", "") . "`n", file)
         }
     }
 
