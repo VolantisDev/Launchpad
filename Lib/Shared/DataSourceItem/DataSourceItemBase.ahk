@@ -6,9 +6,14 @@ class DataSourceItemBase {
     key := ""
 
     __New(key, path := "", dataSource := "") {
-        InvalidParameterException.CheckTypes("DataSourceItemBase", "key", key, "", "path", path, "")
-        InvalidParameterException.CheckEmpty("DataSourceItemBase", "key", key)
-        InvalidParameterException.CheckTypes("DataSourceItemBase", "dataSource", dataSource, "DataSourceBase")
+        try {
+            InvalidParameterException.CheckTypes("DataSourceItemBase", "key", key, "", "path", path, "")
+            InvalidParameterException.CheckEmpty("DataSourceItemBase", "key", key)
+            InvalidParameterException.CheckTypes("DataSourceItemBase", "dataSource", dataSource, "DataSourceBase")
+        } catch ex {
+            MsgBox key
+        }
+        
         this.endpoint := dataSource
         this.key := key
         this.path := path
@@ -24,7 +29,11 @@ class DataSourceItemBase {
         path .= this.path
 
         if (includeFilename) {
-            path .= "/" . this.key . this.itemSuffix
+            if (path) {
+                path .= "/"
+            }
+            
+            path .= this.key . this.itemSuffix
         }
 
         return path

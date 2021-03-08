@@ -1,5 +1,5 @@
 class DSJson extends DSFile {
-    itemSuffix := ".json"
+    itemSuffix := ""
     
     Read() {
         content := super.Read()

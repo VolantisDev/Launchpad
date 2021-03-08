@@ -1,5 +1,5 @@
 class LauncherEntity extends EntityBase {
-    dataSourcePath := "Games"
+    dataSourcePath := "games"
     additionalManagedLauncherDefaults := Map()
 
     /**
@@ -14,6 +14,12 @@ class LauncherEntity extends EntityBase {
     /**
     * CONFIGURATION PROPERTIES
     */
+
+    ; The game's platform
+    Platform {
+        get => this.GetConfigValue("Platform", false)
+        set => this.SetConfigValue("Platform", value, false)
+    }
 
     ; The directory where the entity build artifact(s) will be saved.
     DestinationDir {
@@ -142,6 +148,34 @@ class LauncherEntity extends EntityBase {
         return ValidateResult
     }
 
+    GetDataSourceItemKey() {
+        if (!this.DataSourceItemKey) {
+            dataSources := this.GetAllDataSources()
+
+            for index, dataSource in dataSources {
+                platform := this.Platform ? this.Platform : "None"
+                apiPath := "lookup/" this.Key
+
+                if (this.platform) {
+                    apiPath .= "/" . this.Platform
+                }
+                
+                dsData := dataSource.ReadJson(apiPath)
+
+                if (dsData != "" && dsData.Has("id")) {
+                    this.DataSourceItemKey := dsData["id"]
+                    break
+                }
+            }
+        }
+
+        if (this.DataSourceItemKey) {
+            return this.DataSourceItemKey
+        } else {
+            return ""
+        }
+    }
+
     IconFileExists() {
         iconSrc := this.IconSrc != "" ? this.IconSrc : this.GetAssetPath(this.Key . ".ico")
         return FileExist(iconSrc)
@@ -206,6 +240,7 @@ class LauncherEntity extends EntityBase {
     InitializeDefaults() {
 
         defaults := super.InitializeDefaults()
+        defaults.Delete("DataSourceItemKey")
         defaults["DestinationDir"] := this.GetDefaultDestinationDir()
         defaults["ThemeName"] := this.app.Config.ThemeName
         defaults["ResourcesDir"] := this.app.Config.AppDir . "\Resources"

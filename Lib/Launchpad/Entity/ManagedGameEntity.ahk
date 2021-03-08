@@ -2,7 +2,7 @@ class ManagedGameEntity extends ManagedEntityBase {
     configPrefix := "Game"
     defaultType := "Default"
     defaultClass := "SimpleGame"
-    dataSourcePath := "Types/Games"
+    dataSourcePath := "game-types"
 
     ; Whether or not the game has a loading window to watch for.
     HasLoadingWindow {

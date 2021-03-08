@@ -157,16 +157,11 @@ doesn't include them in your initial download.
 
 Launchpad downloads and manages these dependencies internally, and you don't ever have to even think about them.
 
-## Contribute to the Game Launcher DB!
-- Public API endpoint: https://benmcclure.com/launcher-db/
-- GitHub page: https://github.com/bmcclure/launcher-db
-
 ## Contributing
 
 Any and all contributions are greatly appreciated! Here are some ideas for ways that you could help:
 - Help write documentation
 - Test Launchpad and find out where it could be improved. Report bugs and make feature requests: https://github.com/VolantisDev/Launchpad/issues
-- Submit requests and/or PRs for adding games to the online launcher library: https://github.com/bmcclure/launcher-db
 - Submit PRs for fixing bugs or adding functionality to Launchpad itself: https://github.com/VolantisDev/Launchpad/pulls
 
 ## Attribution

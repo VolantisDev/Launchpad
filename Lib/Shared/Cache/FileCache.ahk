@@ -60,7 +60,7 @@ class FileCache extends CacheBase {
     }
 
     ConvertPathToDestinationFormat(path) {
-        return StrReplace(path, "/", "\")
+        return StrReplace(path, "/", "--")
     }
 
     ImportItemFromUrl(path, url) {

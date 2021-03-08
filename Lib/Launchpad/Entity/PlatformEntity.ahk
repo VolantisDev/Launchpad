@@ -1,7 +1,7 @@
 class PlatformEntity extends EntityBase {
     platform := ""
     configPrefix := ""
-    dataSourcePath := "Platforms"
+    dataSourcePath := "platforms"
 
     PlatformClass {
         get => this.GetConfigValue("PlatformClass")

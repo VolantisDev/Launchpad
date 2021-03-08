@@ -2,7 +2,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
     configPrefix := "Launcher"
     defaultType := "Default"
     defaultClass := "SimpleLauncher"
-    dataSourcePath := "Types/Launchers"
+    dataSourcePath := "launcher-types"
 
     ManagedGame {
         get => this.children["ManagedGame"]

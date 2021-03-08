@@ -45,7 +45,7 @@ class EntityBase {
     }
 
     ; The data source keys to load defaults from, in order.
-    ; The default datasource is "api" which connects to the default api endpoint (Which can be any HTTP location compatible with Launchpad's "LauncherDB" JSON format)
+    ; The default datasource is "api" which connects to the default api endpoint (Which can be any HTTP location compatible with Launchpad's API format)
     DataSourceKeys {
         get => this.GetConfigValue("DataSourceKeys", false)
         set => this.SetConfigValue("DataSourceKeys", value, false)
@@ -176,11 +176,15 @@ class EntityBase {
 
     GetDataSourceDefaults(dataSource) {
         defaults := Map()
-        dsData := dataSource.ReadJson(this.GetDataSourceItemKey(), this.GetDataSourceItemPath())
+        itemKey := this.GetDataSourceItemKey()
 
-        if (dsData != "" && dsData.Has("Defaults")) {
-            defaults := this.MergeFromObject(defaults, dsData["Defaults"], false)
-            defaults := this.MergeAdditionalDataSourceDefaults(defaults, dsData)
+        if (itemKey) {
+             dsData := dataSource.ReadJson(this.GetDataSourceItemKey(), this.GetDataSourceItemPath())
+
+            if (dsData != "" && dsData.Has("defaults")) {
+                defaults := this.MergeFromObject(defaults, dsData["defaults"], false)
+                defaults := this.MergeAdditionalDataSourceDefaults(defaults, dsData)
+            }
         }
 
         return defaults

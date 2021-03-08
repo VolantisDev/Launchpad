@@ -305,7 +305,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
 
     OnChangeShortcutSrc(btn, info) {
         existingVal := this.entityObj.GetConfigValue("ShortcutSrc")
-        file := FileSelect(1,, this.prefix . ": Select a shortcut file or .exe that will launch the application", "Shortcuts (*.lnk; *.url; *.exe)")
+        file := FileSelect(1,, this.entityObj.configPrefix . ": Select a shortcut file or .exe that will launch the application", "Shortcuts (*.lnk; *.url; *.exe)")
 
         if (file) {
             this.entityObj.SetConfigValue("ShortcutSrc", file, true)

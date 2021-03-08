@@ -25,9 +25,10 @@
     Create() {
         super.Create()
         this.dataSource := this.app.DataSources.GetItem("api")
-        this.knownGames := this.dataSource.ReadListing("Games")
-        this.launcherTypes := this.dataSource.ReadListing("Types/Launchers")
-        this.gameTypes := this.dataSource.ReadListing("Types/Games")
+        this.knownPlatforms := this.dataSource.ReadListing("platforms")
+        this.knownGames := this.dataSource.ReadListing("game-keys")
+        this.launcherTypes := this.dataSource.ReadListing("launcher-types")
+        this.gameTypes := this.dataSource.ReadListing("game-types")
     }
 
     GetTextDefinition() {

@@ -45,7 +45,7 @@
     }
 
     ApiEndpoint {
-        get => this.GetIniValue("ApiEndpoint") || "https://benmcclure.com/launcher-db"
+        get => this.GetIniValue("ApiEndpoint") || "https://launchpad.games/api/v1"
         set => this.SetIniValue("ApiEndpoint", value)
     }
 

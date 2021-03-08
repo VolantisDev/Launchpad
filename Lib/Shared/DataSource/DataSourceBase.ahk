@@ -46,17 +46,13 @@ class DataSourceBase {
     ReadListing(path) {
         listingInstance := DSListing.new(path, this)
 
-        listingItems := Map()
+        listing := Map()
 
         if (listingInstance.Exists()) {
             listing := listingInstance.Read()
-            
-            if (listing.Has("items")) {
-                listingItems := listing["items"]
-            }
         }
 
-        return listingItems
+        return listing
     }
 
     ReadJson(key, path := "") {

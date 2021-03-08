@@ -42,8 +42,9 @@ class LauncherWizard extends LaunchpadFormGuiBase {
 
     Create() {
         super.Create()
-        this.knownGames := this.dataSource.ReadListing("Games")
-        this.launcherTypes := this.dataSource.ReadListing("Types/Launchers")
+        this.knownGames := this.dataSource.ReadListing("game-keys")
+        this.knownPlatforms := this.dataSource.ReadListing("platforms")
+        this.launcherTypes := this.dataSource.ReadListing("launcher-types")
     }
 
     OnKeyChange(ctlObj, info) {

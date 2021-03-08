@@ -12,7 +12,7 @@
         this.state := app.AppState
         this.launcherManager := app.Launchers
         dataSource := app.DataSources.GetItem()
-        this.knownGames := dataSource.ReadListing("Games")
+        this.knownGames := dataSource.ReadListing("game-keys")
 
         super.__New(app, "Detected Games", windowKey, owner, parent)
     }

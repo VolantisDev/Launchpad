@@ -56,9 +56,10 @@ class LauncherEditor extends EntityEditorBase {
 
     Create() {
         super.Create()
-        this.knownGames := this.dataSource.ReadListing("Games")
-        this.launcherTypes := this.dataSource.ReadListing("Types/Launchers")
-        this.gameTypes := this.dataSource.ReadListing("Types/Games")
+        this.knownGames := this.dataSource.ReadListing("game-keys")
+        this.knownPlatforms := this.dataSource.ReadListing("platforms")
+        this.launcherTypes := this.dataSource.ReadListing("launcher-types")
+        this.gameTypes := this.dataSource.ReadListing("game-types")
         this.knownThemes := this.app.Themes.GetAvailableThemes(true)
     }
 

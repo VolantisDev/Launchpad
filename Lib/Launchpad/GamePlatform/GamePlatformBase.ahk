@@ -283,8 +283,8 @@ class GamePlatformBase {
         defaults := Map()
         dsData := dataSource.ReadJson(key, "Games")
 
-        if (dsData != "" && dsData.Has("Defaults")) {
-            defaults := this.MergeFromObject(defaults, dsData["Defaults"], false)
+        if (dsData != "" && dsData.Has("defaults")) {
+            defaults := this.MergeFromObject(defaults, dsData["defaults"], false)
         }
 
         return defaults
