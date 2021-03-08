@@ -1,4 +1,5 @@
 class GamePlatformBase {
+    key := ""
     app := ""
     installDir := ""
     exePath := ""
@@ -232,12 +233,32 @@ class GamePlatformBase {
         return valid
     }
 
+    FilterGameDirectories() {
+        return []
+    }
+
+    GetLauncherSpecificId(key) {
+        return key
+    }
+
+    GetLauncherKey(key) {
+        return key
+    }
+
     DetectInstalledGames() {
         games := []
 
+        filterGameDirectories := this.FilterGameDirectories()
+
         for index, dir in this.GetLibraryDirs() {
             Loop Files dir . "\*", "D" {
-                key := A_LoopFileName
+                for index, filterDir in filterGameDirectories {
+                    if filterDir == A_LoopFileName {
+                        continue 2
+                    }
+                }
+
+                key := this.GetLauncherKey(A_LoopFileName)
                 installDir := A_LoopFileFullPath
                 possibleExes := []
                 exeName := ""
@@ -249,7 +270,7 @@ class GamePlatformBase {
                 }
 
                 exeName := this.DetermineMainExe(key, possibleExes)
-                launcherSpecificId := key
+                launcherSpecificId := this.GetLauncherSpecificId(key)
                 games.Push(DetectedGame.new(key, this, this.launcherType, this.gameType, installDir, exeName, launcherSpecificId, possibleExes))
             }
         }
@@ -283,8 +304,8 @@ class GamePlatformBase {
         defaults := Map()
         dsData := dataSource.ReadJson(key, "Games")
 
-        if (dsData != "" && dsData.Has("defaults")) {
-            defaults := this.MergeFromObject(defaults, dsData["defaults"], false)
+        if (dsData != "" && dsData.Has("data") && dsData["data"].Has("defaults")) {
+            defaults := this.MergeFromObject(defaults, dsData["data"]["defaults"], false)
         }
 
         return defaults

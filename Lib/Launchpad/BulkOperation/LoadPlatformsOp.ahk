@@ -23,6 +23,7 @@ class LoadPlatformsOp extends BulkOperationBase {
         platforms["Blizzard"] := "BlizzardPlatform"
         platforms["Epic"] := "EpicPlatform"
         platforms["Origin"] := "OriginPlatform"
+        platforms["Riot"] := "RiotPlatform"
         platforms["Steam"] := "SteamPlatform"
 
         if (this.useProgress) {

@@ -40,6 +40,7 @@
 #Include Entity\ManagedLauncherEntity.ahk
 #Include Entity\PlatformEntity.ahk
 #Include Events\LaunchpadEvents.ahk
+#Include GamePlatform\BasicPlatform.ahk
 #Include GamePlatform\BethesdaPlatform.ahk
 #Include GamePlatform\BlizzardPlatform.ahk
 #Include GamePlatform\EpicPlatform.ahk

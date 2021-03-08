@@ -11,6 +11,7 @@ class LauncherEditor extends EntityEditorBase {
     knownThemes := ""
     launcherTypes := ""
     gameTypes := ""
+    platforms := ""
 
     __New(app, entityObj, mode := "config", windowKey := "", owner := "", parent := "") {
         if (windowKey == "") {
@@ -31,6 +32,9 @@ class LauncherEditor extends EntityEditorBase {
         tabs.UseTab("General", true)
         this.AddComboBox("Key", "Key", this.entityObj.Key, this.knownGames, "Select an existing game from the API, or enter a custom game key to create your own. Use caution when changing this value, as it will change which data is requested from the API.")
         this.AddTextBlock("DisplayName", "Display Name", true, "You can change the display name of the game if it differs from the key. The launcher filename will still be created using the key.")
+        
+        this.AddSelect("Platform", "Platform", this.entityObj.Platform, this.platforms, false, "", "", "Select the platform that this game is run through.", false)
+
         this.AddEntityTypeSelect("Launcher", "LauncherType", this.entityObj.ManagedLauncher.EntityType, this.launcherTypes, "LauncherConfiguration", "This tells Launchpad how to interact with any launcher your game might require. If your game's launcher isn't listed, or your game doesn't have a launcher, start with `"Default`".")
         this.AddEntityTypeSelect("Game", "GameType", this.entityObj.ManagedLauncher.ManagedGame.EntityType, this.gameTypes, "GameConfiguration", "This tells Launchpad how to launch your game. Most games can use 'default', but launchers can support different game types.")
 
@@ -57,7 +61,7 @@ class LauncherEditor extends EntityEditorBase {
     Create() {
         super.Create()
         this.knownGames := this.dataSource.ReadListing("game-keys")
-        this.knownPlatforms := this.dataSource.ReadListing("platforms")
+        this.platforms := this.dataSource.ReadListing("platforms")
         this.launcherTypes := this.dataSource.ReadListing("launcher-types")
         this.gameTypes := this.dataSource.ReadListing("game-types")
         this.knownThemes := this.app.Themes.GetAvailableThemes(true)
@@ -116,6 +120,12 @@ class LauncherEditor extends EntityEditorBase {
     OnDataSourceItemKeyChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.DataSourceItemKey := ctlObj.Text
+    }
+
+    OnPlatformChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.Platform := ctlObj.Text
+        ; @todo Offer to set defaults
     }
 
     OnLauncherTypeChange(ctlObj, info) {

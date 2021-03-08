@@ -181,9 +181,9 @@ class EntityBase {
         if (itemKey) {
              dsData := dataSource.ReadJson(this.GetDataSourceItemKey(), this.GetDataSourceItemPath())
 
-            if (dsData != "" && dsData.Has("defaults")) {
-                defaults := this.MergeFromObject(defaults, dsData["defaults"], false)
-                defaults := this.MergeAdditionalDataSourceDefaults(defaults, dsData)
+            if (dsData != "" && dsData.Has("data") && dsData["data"].Has("defaults")) {
+                defaults := this.MergeFromObject(defaults, dsData["data"]["defaults"], false)
+                defaults := this.MergeAdditionalDataSourceDefaults(defaults, dsData["data"])
             }
         }
 

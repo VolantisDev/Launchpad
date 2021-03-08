@@ -113,6 +113,6 @@ class VdfData extends StructuredDataBase {
 	}
 
 	ToString(obj := "", args*) {
-        throw MethodNotImplementedException.new("StructuredDataBase", "ToString")
+        throw MethodNotImplementedException.new("VdfData", "ToString")
     }
 }

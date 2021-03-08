@@ -1,4 +1,5 @@
 class SteamPlatform extends RegistryLookupGamePlatformBase {
+    key := "Steam"
     displayName := "Steam"
     launcherType := "Default" ; @todo Create steam type?
     gameType := "Default" ; @todo Create steam type?

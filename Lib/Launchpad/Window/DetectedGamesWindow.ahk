@@ -42,7 +42,7 @@
 
         for key, detectedGameObj in this.detectedGames {
             if (!this.GameHasChanges(detectedGameObj)) {
-                continue
+                ;continue
             }
 
             isKnown := this.GameIsKnown(detectedGameObj) ? "Yes" : "No"

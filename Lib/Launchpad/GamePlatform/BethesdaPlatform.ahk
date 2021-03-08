@@ -1,4 +1,5 @@
 class BethesdaPlatform extends RegistryLookupGamePlatformBase {
+    key := "Bethesda"
     displayName := "Bethesda"
     launcherType := "Bethesda"
     gameType := "Default"

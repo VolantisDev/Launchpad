@@ -32,6 +32,7 @@
 #Include ExeProcess\ExeProcess.ahk
 #Include Game\BlizzardGame.ahk
 #Include Game\GameBase.ahk
+#Include Game\RiotGame.ahk
 #Include Game\SimpleGame.ahk
 #Include Gui\DialogBox.ahk
 #Include Gui\FormGuiBase.ahk

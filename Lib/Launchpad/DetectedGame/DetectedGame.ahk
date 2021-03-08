@@ -49,27 +49,32 @@ class DetectedGame {
     UpdateLauncher(launcher) {
         modified := false
 
-        if (this.displayName) {
+        if (launcher.Platform != this.platform.key) {
+            launcher.Platform := this.platform.key
+            modified := true
+        }
+
+        if (this.displayName && launcher.DisplayName != this.displayName) {
             launcher.DisplayName := this.displayName
             modified := true
         }
                 
-        if (this.launcherType) {
+        if (this.launcherType && launcher.LauncherType != this.launcherType) {
             launcher.LauncherType := this.launcherType
             modified := true
         }
 
-        if (this.gameType) {
+        if (this.gameType && launcher.GameType != this.gameType) {
             launcher.GameType := this.gameType
             modified := true
         }
 
-        if (this.installDir) {
+        if (this.installDir && launcher.ManagedLauncher.ManagedGame.InstallDir != this.installDir) {
             launcher.ManagedLauncher.ManagedGame.InstallDir := this.installDir
             modified := true
         }
 
-        if (this.exeName) {
+        if (this.exeName && launcher.ManagedLauncher.ManagedGame.Exe != this.exeName) {
             launcher.ManagedLauncher.ManagedGame.Exe := this.exeName
             modified := true
         }
@@ -80,7 +85,7 @@ class DetectedGame {
     }
 
     CreateLauncher(launcherManager) {
-        config := Map("LauncherType", this.launcherType, "GameType", this.gameType)
+        config := Map("Platform", this.platform.key, "LauncherType", this.launcherType, "GameType", this.gameType)
 
         if (this.displayName) {
             config["DisplayName"] := this.displayName

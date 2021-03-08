@@ -1,4 +1,5 @@
 class EpicPlatform extends RegistryLookupGamePlatformBase {
+    key := "Epic"
     displayName := "Epic"
     launcherType := "Epic"
     gameType := "Epic"
