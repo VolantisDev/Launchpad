@@ -1,4 +1,3 @@
-; @todo WIP, need to finish
 class IconSelector extends DialogBox {
     iconSrc := ""
     iconItem := ""
@@ -11,7 +10,7 @@ class IconSelector extends DialogBox {
         
         this.ParseIconSrc()
 
-        super.__New(title, themeObj, this.GetTextDefinition(), windowKey, owner, parent, "*&OK|&Cancel")
+        super.__New(title, themeObj, this.GetTextDefinition(), windowKey, owner, parent, "*&Select|&Cancel")
     }
 
     GetTextDefinition() {
@@ -46,15 +45,34 @@ class IconSelector extends DialogBox {
     Controls() {
         super.Controls()
         this.AddLocationBlock("Location")
+        this.AddIconList()
 
 
         ; Show listview in icon format
     }
 
     ProcessResult(result) {
-        value := "" ; Get the selected icon path
-        result := (result == "OK") ? value : ""
+        result := (result == "Select") ? this.iconSrc : ""
+
+        if (result && IsInteger(this.iconItem)) {
+            result .= ":" . this.iconItem
+        }
+
         return super.ProcessResult(result)
+    }
+
+    GetIconSrc() {
+        return this.iconSrc
+    }
+
+    GetIconNum() {
+        iconNum := ""
+
+        if (IsInteger(this.iconItem)) {
+            iconNum := this.iconItem
+        }
+
+        return iconNum
     }
 
     AddLocationBlock(fieldName) {
@@ -73,6 +91,22 @@ class IconSelector extends DialogBox {
         ctl := this.guiObj.AddText("v" . fieldName . " " . position . " w" . this.windowSettings["contentWidth"] . " +0x200 +0x100 c" . this.themeObj.GetColor("linkText"), locationText)
         ctl.ToolTip := locationText
         this.SetFont()
+    }
+
+    AddIconList() {
+        styling := "C" . this.themeObj.GetColor("text")
+        lvStyles := "+LV" . LVS_EX_LABELTIP . " +LV" . LVS_EX_DOUBLEBUFFER . " +LV" . LVS_EX_FLATSB . " -E0x200"
+        lvStyles .= " +LV" . LVS_EX_TRANSPARENTBKGND . " +LV" . LVS_EX_TRANSPARENTSHADOWTEXT
+        listViewWidth := this.windowSettings["contentWidth"]
+        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " +Icon " . styling . " Count" . this.platformManager.CountEntities() . " Section +Report -Multi " . lvStyles, this.listViewColumns)
+        lv.OnEvent("DoubleClick", "OnDoubleClick")
+        lv.OnEvent("ItemSelect", "OnItemSelect")
+        this.PopulateListView()
+    }
+
+    PopulateListView() {
+        this.guiObj["ListView"].Delete()
+        
     }
 
     OnSelectFileLocation(ctl, info) {
