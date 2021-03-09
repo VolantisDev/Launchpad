@@ -44,7 +44,7 @@
 
             focusOption := index == focusedItem ? " Focus" : ""
 
-            apiStatus := launcher.DataSourceItemKey ? "Merged" : "Not Found"
+            apiStatus := launcher.DataSourceItemKey ? "Linked" : "Not linked"
 
             this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, launcher.Key, launcher.Platform, launcherStatus, apiStatus)
             iconNum++

@@ -9,6 +9,7 @@ class EntityBase {
     originalObj := ""
     children := Map()
     parentEntity := ""
+    existsInDataSource := false
 
     /**
     * BASE SETTINGS
@@ -182,6 +183,7 @@ class EntityBase {
              dsData := dataSource.ReadJson(this.GetDataSourceItemKey(), this.GetDataSourceItemPath())
 
             if (dsData != "" && dsData.Has("data") && dsData["data"].Has("defaults")) {
+                this.existsInDataSource := true
                 defaults := this.MergeFromObject(defaults, dsData["data"]["defaults"], false)
                 defaults := this.MergeAdditionalDataSourceDefaults(defaults, dsData["data"])
             }
