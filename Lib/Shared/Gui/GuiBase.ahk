@@ -26,6 +26,12 @@ class GuiBase {
     lv := ""
     lvHeaderHwnd := 0
     listViewColumns := []
+    eventManagerObj := ""
+    mouseMoveCallback := ""
+    calcSizeCallback := ""
+    activateCallback := ""
+    hitTestCallback := ""
+    headerCustomDrawCallback := ""
 
     positionAtMouseCursor := false
     openWindowWithinScreenBounds := true
