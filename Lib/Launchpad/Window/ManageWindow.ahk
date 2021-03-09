@@ -1,5 +1,5 @@
 ﻿class ManageWindow extends ManageWindowBase {
-    listViewColumns := Array("GAME", "LAUNCHER TYPE", "GAME TYPE", "STATUS")
+    listViewColumns := Array("GAME", "PLATFORM", "STATUS", "API STATUS")
     launcherManager := ""
 
     __New(app, windowKey := "", owner := "", parent := "") {
@@ -44,7 +44,9 @@
 
             focusOption := index == focusedItem ? " Focus" : ""
 
-            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, launcher.Key, launcher.ManagedLauncher.EntityType, launcher.ManagedLauncher.ManagedGame.EntityType, launcherStatus)
+            apiStatus := launcher.DataSourceItemKey ? "Merged" : "Not Found"
+
+            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, launcher.Key, launcher.Platform, launcherStatus, apiStatus)
             iconNum++
             index++
         }
