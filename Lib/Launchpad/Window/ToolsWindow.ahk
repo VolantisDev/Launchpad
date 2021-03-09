@@ -5,6 +5,27 @@
 
     __New(app, windowKey := "", owner := "", parent := "") {
         super.__New(app, "Tools", windowKey, owner, parent)
+        this.onLButtonCallback := ObjBindMethod(this, "OnLButton")
+    }
+
+    OnLButton(hotKey) {
+        if (this.app && this.app.Windows && this.app.Windows.WindowIsOpen(this.windowKey)) {
+            MouseGetPos(,, mouseWindow)
+            
+            if (this.guiObj && this.guiObj.Hwnd != mouseWindow) {
+                this.Close()
+            }
+        }
+    }
+
+    Show() {
+        Hotkey("~LButton", this.onLButtonCallback, "On")
+        super.Show()
+    }
+
+    Destroy() {
+        Hotkey("~LButton", this.onLButtonCallback, "Off")
+        super.Destroy()
     }
 
     Controls() {

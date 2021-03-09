@@ -15,18 +15,3 @@ TraySetIcon("Resources\Graphics\Launchpad.ico")
 SplitPath(A_ScriptName,,,, appName)
 
 app := Launchpad.new(appName, A_ScriptDir)
-
-~LButton::
-{
-    global app
-
-    if (IsSet(app) && app.Windows.WindowIsOpen("ToolsWindow")) {
-        MouseGetPos(,,mouseWindow)
-        toolsObj := app.Windows.GetGuiObj("ToolsWindow")
-
-        if (toolsObj.Hwnd != mouseWindow) {
-            app.Windows.CloseToolsWindow()
-        }
-    }
-    
-}
