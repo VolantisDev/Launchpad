@@ -271,7 +271,13 @@ class GamePlatformBase {
 
                 exeName := this.DetermineMainExe(key, possibleExes)
                 launcherSpecificId := this.GetLauncherSpecificId(key)
-                games.Push(DetectedGame.new(key, this, this.launcherType, this.gameType, installDir, exeName, launcherSpecificId, possibleExes))
+                detectedGameObj := DetectedGame.new(key, this, this.launcherType, this.gameType, installDir, exeName, launcherSpecificId, possibleExes)
+                
+                if (this.installDir) {
+                    detectedGameObj.launcherInstallDir := this.InstallDir
+                }
+                
+                games.Push(detectedGameObj)
             }
         }
 

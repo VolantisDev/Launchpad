@@ -6,6 +6,7 @@ class DetectedGame {
     launcherType := ""
     gameType := ""
     installDir := ""
+    launcherInstallDir := ""
     exeName := ""
     launcherSpecificId := ""
     possibleExeNames := []
@@ -59,14 +60,18 @@ class DetectedGame {
             modified := true
         }
                 
-        if (this.launcherType && launcher.LauncherType != this.launcherType) {
-            launcher.LauncherType := this.launcherType
+        if (this.launcherType && launcher.ManagedLauncher.EntityType != this.launcherType) {
+            launcher.ManagedLauncher.EntityType := this.launcherType
             modified := true
         }
 
-        if (this.gameType && launcher.GameType != this.gameType) {
-            launcher.GameType := this.gameType
+        if (this.gameType && launcher.ManagedLauncher.ManagedGame.EntityType != this.gameType) {
+            launcher.ManagedLauncher.ManagedGame.EntityType := this.gameType
             modified := true
+        }
+
+        if (this.launcherInstallDir && launcher.ManagedLauncher.InstallDir != this.launcherInstallDir) {
+            launcher.ManagedLauncher.InstallDir := this.launcherInstallDir
         }
 
         if (this.installDir && launcher.ManagedLauncher.ManagedGame.InstallDir != this.installDir) {
@@ -89,6 +94,10 @@ class DetectedGame {
 
         if (this.displayName) {
             config["DisplayName"] := this.displayName
+        }
+
+        if (this.launcherInstallDir) {
+            config["LauncherInstallDir"] := this.launcherInstallDir
         }
 
         if (this.installDir) {

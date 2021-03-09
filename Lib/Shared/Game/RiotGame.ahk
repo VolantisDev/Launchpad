@@ -7,8 +7,6 @@
             launcherPath .= " --launch-product=" . gameKey . " --launch-patchline=live"
         }
 
-        MsgBox(launcherPath)
-
         return launcherPath
     }
 }
