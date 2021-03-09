@@ -45,7 +45,7 @@ class InvalidParameterException extends AppException {
             }
 
             if (!validType) {
-                throw InvalidParameterException.new(className, paramName, paramVal, reqType)
+                throw InvalidParameterException.new(-4, paramName, paramVal, reqType)
             }
         }
     }
@@ -59,7 +59,7 @@ class InvalidParameterException extends AppException {
             nextParam := nextParam + 2
                 
             if (paramVal == "") {
-                throw InvalidParameterException.new(className, paramName, paramVal, "")
+                throw InvalidParameterException.new(-2, paramName, paramVal, "")
             }
         }
     }
@@ -74,14 +74,14 @@ class InvalidParameterException extends AppException {
             rangeStop := params[nextParam + 3]
             nextParam := nextParam + 4
 
-            InvalidParameterException.CheckTypes(className, paramName, paramVal, "Integer|Float", "rangeStart", rangeStart, "Integer|Float", "rangeStop", rangeStop, "Integer|Float")
+            InvalidParameterException.CheckTypes(-2, paramName, paramVal, "Integer|Float", "rangeStart", rangeStart, "Integer|Float", "rangeStop", rangeStop, "Integer|Float")
                 
             if (paramVal > rangeStop) {
-                throw InvalidParameterException.new(className, paramName, paramVal, "", "Provided current position is not within the upper bound of the range (" . rangeStop . ").")
+                throw InvalidParameterException.new(-2, paramName, paramVal, "", "Provided current position is not within the upper bound of the range (" . rangeStop . ").")
             }
 
             if (paramVal < rangeStart) {
-                throw InvalidParameterException.new(className, paramName, paramVal, "", "Provided current position is not within the lower bound of the range (" . rangeStart . ").")
+                throw InvalidParameterException.new(-2, paramName, paramVal, "", "Provided current position is not within the lower bound of the range (" . rangeStart . ").")
             }
         }
     }
