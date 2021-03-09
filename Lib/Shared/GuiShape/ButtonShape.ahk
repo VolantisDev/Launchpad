@@ -3,6 +3,7 @@ class ButtonShape extends GuiShapeBase {
     btnText := ""
     bgColor := ""
     textColor := ""
+    dimColor := ""
     borderColor := ""
     borderThickness := ""
     font := "Arial"
@@ -10,13 +11,14 @@ class ButtonShape extends GuiShapeBase {
     bitmap := ""
     hbitmap := ""
 
-    __New(themeObj, btnText, bgColor, textColor, borderColor, borderThickness := 1) {
+    __New(themeObj, btnText, bgColor, textColor, dimColor, borderColor, borderThickness := 1) {
         this.themeObj := themeObj
         this.btnText := btnText
         this.bgColor := bgColor
         this.textColor := textColor
         this.borderColor := borderColor
         this.borderThickness := borderThickness
+        this.dimColor := dimColor
     }
 
     Draw(w, h) {

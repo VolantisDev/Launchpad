@@ -5,6 +5,7 @@
         "vars": {},
         "colors": {
             "light": "ffffff",
+            "dim": "646E70",
             "default": "000000",
             "background": "ffffff",
             "text": "{{default}}",
@@ -26,6 +27,7 @@
         "symbols": {
             "close": "CloseSymbol",
             "minimize": "MinimizeSymbol",
+            "unmaximize": "UnmaximizeSymbol",
             "maximize": "MaximizeSymbol"
         },
         "buttons": {
@@ -46,6 +48,7 @@
                     "enabled": {
                         "backgroundColor": "{{background}}",
                         "textColor": "{{text}}",
+                        "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
                         "borderWidth": 3,
                         "shape": "ButtonShape"
@@ -53,6 +56,7 @@
                     "disabled": {
                         "backgroundColor": "{{background}}",
                         "textColor": "{{text}}",
+                        "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
                         "borderWidth": 3,
                         "shape": "ButtonShape"
@@ -60,6 +64,7 @@
                     "hovered": {
                         "backgroundColor": "{{accentDark}}",
                         "textColor": "{{light}}",
+                        "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
                         "borderWidth": 3,
                         "shape": "ButtonShape"
@@ -69,6 +74,7 @@
                     "enabled": {
                         "backgroundColor": "{{background}}",
                         "textColor": "{{text}}",
+                        "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
                         "borderWidth": 3,
                         "shape": "ButtonShape"
@@ -76,6 +82,7 @@
                     "disabled": {
                         "backgroundColor": "{{background}}",
                         "textColor": "{{text}}",
+                        "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
                         "borderWidth": 3,
                         "shape": "ButtonShape"
@@ -83,6 +90,7 @@
                     "hovered": {
                         "backgroundColor": "{{accentDark}}",
                         "textColor": "{{light}}",
+                        "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
                         "borderWidth": 3,
                         "shape": "ButtonShape"
@@ -92,6 +100,7 @@
                     "enabled": {
                         "backgroundColor": "{{background}}",
                         "textColor": "{{text}}",
+                        "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
                         "borderWidth": 0,
                         "shape": "SymbolButtonShape"
@@ -99,6 +108,7 @@
                     "disabled": {
                         "backgroundColor": "{{background}}",
                         "textColor": "{{text}}",
+                        "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
                         "borderWidth": 0,
                         "shape": "SymbolButtonShape"
@@ -106,6 +116,7 @@
                     "hovered": {
                         "backgroundColor": "{{accentDark}}",
                         "textColor": "{{light}}",
+                        "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
                         "borderWidth": 0,
                         "shape": "SymbolButtonShape"

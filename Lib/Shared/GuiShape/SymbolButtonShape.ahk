@@ -3,7 +3,7 @@ class SymbolButtonShape extends ButtonShape {
     margin := 4
 
     RenderContent(w, h) {
-        symbol := this.themeObj.GetSymbol(this.btnText, this.textColor, this.lineThickness)
+        symbol := this.themeObj.GetSymbol(this.btnText, this.textColor, this.dimColor, this.bgColor, this.lineThickness)
 
         if (symbol) {
             x := 0 + this.margin

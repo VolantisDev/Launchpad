@@ -457,7 +457,10 @@ class GuiBase {
         }
 
         if (this.showMaximize) {
-            this.AddTitlebarButton("WindowMaxButton", "maximize", "OnWindowMaxButton")
+            maxBtn := this.AddTitlebarButton("WindowMaxButton", "maximize", "OnWindowMaxButton")
+            unMaxBtn := this.AddTitlebarButton("WindowUnmaxButton", "unmaximize", "OnWindowMaxButton", true)
+            unMaxBtn.Visible := false
+            
         }
 
         if (this.showClose) {
@@ -467,8 +470,9 @@ class GuiBase {
         this.guiObj.AddText("x" . this.margin . " y31 w0 h0", "")
     }
 
-    AddTitlebarButton(name, symbol, handlerName) {
-        options := "x+" . this.margin . " y10 w16 h16 v" . name
+    AddTitlebarButton(name, symbol, handlerName, overlayPrevious := false) {
+        position := overlayPrevious ? "xp yp" : "x+" . this.margin . " y10"
+        options := position . " w16 h16 v" . name
         return this.themeObj.AddButton(this.guiObj, options, symbol, handlerName, "titlebar")
     }
 
@@ -545,6 +549,14 @@ class GuiBase {
     }
 
     OnSize(guiObj, minMax, width, height) {
+        if (minMax == 1 and this.showMaximize) {
+            this.guiObj["WindowUnmaxButton"].Visible := true
+            this.guiObj["WindowMaxButton"].Visible := false
+        } else if (minMax != 1 && this.showMaximize) {
+            this.guiObj["WindowUnmaxButton"].Visible := false
+            this.guiObj["WindowMaxButton"].Visible := true
+        }
+
         if (minMax == -1) {
             return
         }
@@ -557,7 +569,7 @@ class GuiBase {
             }
 
             if (this.showMaximize) {
-                this.AutoXYWH("x*", ["WindowMaxButton"])
+                this.AutoXYWH("x*", ["WindowMaxButton", "WindowUnmaxButton"])
             }
 
             if (this.showMinimize) {

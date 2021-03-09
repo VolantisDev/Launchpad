@@ -89,13 +89,13 @@ class ThemeBase {
         return asset
     }
 
-    GetSymbol(id, strokeColor, strokeWidth := 1) {
+    GetSymbol(id, strokeColor, dimColor, bgColor, strokeWidth := 1) {
         symbolClass := (this.symbols.Has(id)) ? this.symbols[id] : ""
 
         symbol := ""
 
         if (symbolClass) {
-            symbol := %symbolClass%.new(strokeColor, strokeWidth)
+            symbol := %symbolClass%.new(strokeColor, strokeWidth, dimColor, bgColor)
         }
 
         return symbol
@@ -362,13 +362,13 @@ class ThemeBase {
 
         try {
             enabledShape := buttonStyle["enabled"].Has("shape") ? buttonStyle["enabled"]["shape"] : "ButtonShape"
-            states["enabled"] := %enabledShape%.new(this, content, buttonStyle["enabled"]["backgroundColor"], buttonStyle["enabled"]["textColor"], buttonStyle["enabled"]["borderColor"], buttonStyle["enabled"]["borderWidth"])
+            states["enabled"] := %enabledShape%.new(this, content, buttonStyle["enabled"]["backgroundColor"], buttonStyle["enabled"]["textColor"], buttonStyle["enabled"]["dimColor"], buttonStyle["enabled"]["borderColor"], buttonStyle["enabled"]["borderWidth"])
             
             disabledShape := buttonStyle["disabled"].Has("shape") ? buttonStyle["disabled"]["shape"] : "ButtonShape"
-            states["disabled"] := %disabledShape%.new(this, content, buttonStyle["disabled"]["backgroundColor"], buttonStyle["disabled"]["textColor"], buttonStyle["disabled"]["borderColor"], buttonStyle["disabled"]["borderWidth"])
+            states["disabled"] := %disabledShape%.new(this, content, buttonStyle["disabled"]["backgroundColor"], buttonStyle["disabled"]["textColor"], buttonStyle["enabled"]["dimColor"], buttonStyle["disabled"]["borderColor"], buttonStyle["disabled"]["borderWidth"])
             
             hoveredShape := buttonStyle["hovered"].Has("shape") ? buttonStyle["hovered"]["shape"] : "ButtonShape"
-            states["hovered"] := %hoveredShape%.new(this, content, buttonStyle["hovered"]["backgroundColor"], buttonStyle["hovered"]["textColor"], buttonStyle["hovered"]["borderColor"], buttonStyle["hovered"]["borderWidth"])
+            states["hovered"] := %hoveredShape%.new(this, content, buttonStyle["hovered"]["backgroundColor"], buttonStyle["hovered"]["textColor"], buttonStyle["enabled"]["dimColor"], buttonStyle["hovered"]["borderColor"], buttonStyle["hovered"]["borderWidth"])
 
             states["enabled"].DrawOn(picObj)
 
@@ -404,7 +404,7 @@ class ThemeBase {
         for idx, state in ["enabled", "disabled", "hovered"] {
             result[state] := result[state].Clone()
 
-            colorKeys := ["backgroundColor", "textColor", "borderColor"]
+            colorKeys := ["backgroundColor", "textColor", "borderColor", "dimColor"]
 
             for index, colorKey in colorKeys {
                 if (result[state].Has(colorKey)) {

@@ -51,6 +51,7 @@
 #Include GuiSymbol\GuiSymbolBase.ahk
 #Include GuiSymbol\MaximizeSymbol.ahk
 #Include GuiSymbol\MinimizeSymbol.ahk
+#Include GuiSymbol\UnmaximizeSymbol.ahk
 #Include HttpReq\HttpReqBase.ahk
 #Include HttpReq\WinHttpReq.ahk
 #Include IdGenerator\IdGeneratorBase.ahk
