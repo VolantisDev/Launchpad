@@ -187,7 +187,7 @@
     }
 
     OnChangeApiEndpoint(btn, info) {
-        this.app.DataSources.GetItem("api").ChangeApiEndpoint(, "SettingsWindow")
+        this.app.DataSources.GetItem("api").ChangeApiEndpoint("", "")
         this.SetText("ApiEndpoint", this.app.Config.ApiEndpoint, "Bold")
     }
 
