@@ -1,9 +1,11 @@
 ﻿class ManageWindow extends ManageWindowBase {
     listViewColumns := Array("GAME", "PLATFORM", "STATUS", "API STATUS")
     launcherManager := ""
+    platformManager := ""
 
     __New(app, windowKey := "", owner := "", parent := "") {
         this.launcherManager := app.Launchers
+        this.platformManager := app.Platforms
         this.lvCount := this.launcherManager.CountEntities()
         super.__New(app, "Launchpad", windowKey, owner, parent)
     }
@@ -46,7 +48,17 @@
 
             apiStatus := launcher.DataSourceItemKey ? "Linked" : "Not linked"
 
-            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, launcher.Key, launcher.Platform, launcherStatus, apiStatus)
+            platformName := launcher.Platform
+
+            if (platformName) {
+                platformObj := this.platformManager.GetItem(platformName)
+
+                if (platformObj) {
+                    platformName := platformObj.platform.displayName
+                }
+            }
+
+            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, launcher.Key, platformName, launcherStatus, apiStatus)
             iconNum++
             index++
         }

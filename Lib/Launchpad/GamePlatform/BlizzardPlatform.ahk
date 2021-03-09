@@ -1,6 +1,6 @@
 class BlizzardPlatform extends RegistryLookupGamePlatformBase {
     key := "Blizzard"
-    displayName := "Blizzard"
+    displayName := "Battle.net"
     launcherType := "Blizzard"
     gameType := "Blizzard"
     installDirRegView := 32

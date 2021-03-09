@@ -1,6 +1,6 @@
 class OriginPlatform extends RegistryLookupGamePlatformBase {
     key := "Origin"
-    displayName := "Origin"
+    displayName := "EA Origin"
     launcherType := "Origin"
     gameType := "Default"
     installDirRegView := 32
