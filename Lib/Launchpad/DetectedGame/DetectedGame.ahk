@@ -50,13 +50,13 @@ class DetectedGame {
     UpdateLauncher(launcher) {
         modified := false
 
-        if (launcher.Platform != this.platform.key) {
-            launcher.Platform := this.platform.key
+        if (this.displayName && this.key != this.displayName && launcher.DisplayName != this.displayName) {
+            launcher.DisplayName := this.displayName
             modified := true
         }
 
-        if (this.displayName && launcher.DisplayName != this.displayName) {
-            launcher.DisplayName := this.displayName
+        if (launcher.Platform != this.platform.key) {
+            launcher.Platform := this.platform.key
             modified := true
         }
                 
