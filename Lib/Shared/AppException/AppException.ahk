@@ -22,6 +22,11 @@ class AppException {
     }
 
     __New(message, what := "", extra := "") {
+        if (!what) {
+            what := -2
+        } else if (IsNumber(what)) {
+            what -= 1
+        }
         this.innerException := Exception(message, what, extra)
     }
 

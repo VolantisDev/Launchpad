@@ -121,22 +121,57 @@
         
         eventManagerObj := EventManager.new()
         this.eventManagerObj := eventManagerObj
+
+        this.errorCallback := ObjBindMethod(this, "OnException")
+        OnError(this.errorCallback)
     
         this.moduleManagerObj := ModuleManager.new(this)
         this.loggerServiceObj := LoggerService.new(FileLogger.new(A_ScriptDir . "\log.txt", config.LoggingLevel, 5))
-        this.blizzardProductDbObj := BlizzardProductDb.new(this)
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
-        this.notificationServiceObj := NotificationService.new(this, ToastNotifier.new(this))
         this.themeManagerObj := ThemeManager.new(this, appDir . "\Resources\Themes", appDir . "\Resources", eventManagerObj, idGen)
+        this.notificationServiceObj := NotificationService.new(this, ToastNotifier.new(this))
         this.windowManagerObj := WindowManager.new(this)
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
         this.dataSourceManagerObj := DataSourceManager.new(eventManagerObj)
         this.builderManagerObj := BuilderManager.new(this)
+        this.blizzardProductDbObj := BlizzardProductDb.new(this)
         this.launcherManagerObj := LauncherManager.new(this)
         this.platformManagerObj := PlatformManager.new(this)
         this.installerManagerObj := InstallerManager.new(this)
-
+       
         this.InitializeApp()
+    }
+
+    OnException(e, mode) {
+        ; @todo allow submission of the error
+        extra := (e.HasProp("Extra") && e.Extra != "") ? "`n`nAdditional info:`n" . e.Extra : ""
+        occurredIn := e.What ? " in " . e.What : ""
+
+        errorText := "Launchpad has experienced an unhandled exception" . occurredIn
+        errorText .= ".`n`n" . e.Message . extra
+        errorText .= "`n`nDebugging Information:`nFile: " . e.File . "`nLine: " . e.Line
+        errorText .= "`n`nPlease report this error at https://github.com/VolantisDev/Launchpad/issues so that it can be fixed in an upcoming release."
+        
+        if (mode == "Exit") {
+            errorText .= "`n`nThis is an unrecoverable error and the current thread must exit.`nContinuing the application might have unexpected results."
+        } else if (mode == "ExitApp") {
+            errorText .= "`n`nThis is a fatal error and Launchpad must exit."
+        }
+
+        return this.ShowError("Unhandled Exception", errorText, mode != "ExitApp")
+    }
+
+    ShowError(title, errorText, allowContinue := true) {
+        themeObj := this.Themes ? this.Themes.GetItem() : JsonTheme.new("Steampad")
+        btns := allowContinue ? "*&Continue|&Exit Launchpad" : "*&Exit Launchpad"
+        dialog := DialogBox.new(title, themeObj, errorText, "AppException", "", "", btns)
+        result := dialog.Show()
+
+        if (result == "Exit Launchpad") {
+            ExitApp
+        }
+
+        return allowContinue ? -1 : 1
     }
 
     LaunchpadVersion() {
@@ -145,6 +180,7 @@
     }
 
     InitializeApp() {
+        
         this.Builders.SetItem("ahk", AhkLauncherBuilder.new(this), true)
         this.DataSources.SetItem("api", ApiDataSource.new(this, this.Cache.GetItem("api"), this.Config.ApiEndpoint), true)
         this.Installers.SetupInstallers()
