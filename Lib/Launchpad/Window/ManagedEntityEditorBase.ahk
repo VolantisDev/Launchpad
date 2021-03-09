@@ -27,15 +27,11 @@ class ManagedEntityEditorBase extends EntityEditorBase {
             this.entityTypeName := entityObj.configPrefix
         }
 
-        if (this.Is64BitOs()) {
+        if (A_Is64bitOS) {
             this.regViews.Push("64")
         }
 
         super.__New(app, entityObj, title, mode, windowKey, owner, parent)
-    }
-
-    Is64BitOs() {
-        return FileExist("C:\Program Files (x86)") ; @todo Make this better
     }
 
     GetTabNames() {
