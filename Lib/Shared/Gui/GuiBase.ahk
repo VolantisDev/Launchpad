@@ -32,6 +32,9 @@ class GuiBase {
     activateCallback := ""
     hitTestCallback := ""
     headerCustomDrawCallback := ""
+    tabsCustomDrawCallback := ""
+    tabsHwnd := ""
+    tabNames := []
 
     positionAtMouseCursor := false
     openWindowWithinScreenBounds := true
@@ -96,6 +99,9 @@ class GuiBase {
         this.hitTestCallback := ObjBindMethod(this, "OnHitTest")
         this.eventManagerObj.Register(Events.WM_NCHITTEST, "Gui" . this.guiId, this.hitTestCallback)
         this.headerCustomDrawCallback := ObjBindMethod(this, "OnListViewDraw")
+        this.tabsCustomDrawCallback := ObjBindMethod(this, "OnTabsDraw")
+        this.tabsSubclassCallback := ObjBindMethod(this, "OnTabsSubclass")
+        this.tabsAdjustRectCallback := ObjBindMethod(this, "OnTabsAdjustRect")
         this.Create()
     }
 
@@ -253,6 +259,103 @@ class GuiBase {
         lv.ModifyCol(this.listViewColumns.Length, "AutoHdr")
 
         return lv
+    }
+
+    AddTabs(name, tabNames, options) {
+        static TCS_OWNERDRAWFIXED := 0x2000
+        styling := " +0x100 +" . TCS_OWNERDRAWFIXED
+        tabs := this.guiObj.Add("Tab3", "v" . name . " w" . this.windowSettings["contentWidth"] . styling . " " . options, tabNames)
+        this.tabsHwnd := tabs.Hwnd
+        this.tabNames := tabNames
+        this.SubclassControl(tabs.Hwnd, this.tabsSubclassCallback)
+        return tabs
+    }
+
+    OnTabsAdjustRec(wParam, lParam, msg, hwnd) {
+        MsgBox("YES! Fuck yes!")
+    }
+
+    OnTabsSubclass(h, m, w, l, idSubclass, refData) {
+        static TCM_ADJUSTRECT := 0x1328
+        static WM_DESTROY := 0x02
+        static WM_PAINT := 0xF
+
+        Critical
+
+        static OMsg := A_PtrSize
+
+        if (this.tabsHwnd == h && m == WM_PAINT) {
+            ; @todo Paint the tab headers and the bare minimum elsewhere
+        } else if (m == WM_DESTROY) {
+            this.SubclassControl(h, "")
+        }
+
+        ; All messages not completely handled by the function must be passed to the DefSubclassProc:
+        return DllCall("DefSubclassProc", "Ptr", h, "UInt", m, "Ptr", w, "Ptr", l, "Ptr")
+    }
+
+    OnTabsDraw(wParam, lParam, msg, hwnd) {
+        static ODS_SELECTED := 0x0001
+        static ODS_FOCUS := 0x0010
+
+        static DT_LEFT := 0
+        static DT_END_ELLIPSIS := 0x00008000
+        static DT_VCENTER := 0x00000004
+
+        static ODA_DRAWENTIRE := 1
+        static ODA_FOCUS := 4
+        static ODA_SELECT := 2
+
+        static ODT_TAB := 101
+
+        static OCtlType := 0
+        static OCtlId := A_PtrSize
+        static OItemId := A_PtrSize*2
+        static OItemAction := A_PtrSize*3
+        static OHDC := A_PtrSize*4
+        static ORect := A_PtrSize*5
+
+        ctlType := NumGet(lParam + 0, OCtlType, "UInt")
+
+        if (ctlType == ODT_TAB && hwnd == this.guiObj.Hwnd) {
+            tabIndex := NumGet(lParam + 0, OCtlId, "UInt")
+            isSelected := NumGet(lParam + 0, OItemId, "UInt")
+
+            tabIndex := NumGet(lParam + 0, OCtlId, "UInt")
+            tabName := this.tabNames[tabIndex + 1]
+
+            textColor := this._RGB2BGR("0x" . this.themeObj.GetColor(isSelected ? "textLight" : "text"))
+            bgColor := this._RGB2BGR("0x" . this.themeObj.GetColor("background"))
+            hdc := NumGet(lParam + 0, OHDC, "Ptr")
+
+            bgRect := BufferAlloc(16, 0)
+
+            DllCall("CopyRect", "Ptr", bgRect, "Ptr", lParam + ORect)
+
+            rectL := NumGet(bgRect.Ptr, 0, "Int")
+            rectT := NumGet(bgRect.Ptr, 4, "Int")
+            rectR := NumGet(bgRect.Ptr, 8, "Int")
+            rectB := NumGet(bgRect.Ptr, 12, "Int")
+            MsgBox(rectL "x" rectT "x" rectR "x" rectB)
+
+            DllCall("InflateRect", "Ptr", bgRect, "Int", 3, "Int", 3)
+
+            rectL := NumGet(bgRect.Ptr, 0, "Int")
+            rectT := NumGet(bgRect.Ptr, 4, "Int")
+            rectR := NumGet(bgRect.Ptr, 8, "Int")
+            rectB := NumGet(bgRect.Ptr, 12, "Int")
+            MsgBox(rectL "x" rectT "x" rectR "x" rectB)
+
+            brush := DllCall("CreateSolidBrush", "UInt", textColor, "Ptr")
+            DllCall("FillRect", "Ptr", hdc, "Ptr", bgRect, "Ptr", brush)
+
+            DllCall("InflateRect", "Ptr", lParam + ORect, "Int", -3, "Int", 0)
+            DllCall("Gdi32.dll\SetBkMode", "Ptr", hdc, "UInt", 0)
+            DllCall("Gdi32.dll\SetTextColor", "Ptr", hdc, "UInt", textColor)
+            DllCall("DrawText", "Ptr", hdc, "Str", tabName, "Int", StrLen(tabName), "Ptr", lParam + ORect, "UInt", DT_LEFT | DT_END_ELLIPSIS | DT_VCENTER )
+            
+            return true
+        }
     }
 
     OnListViewDraw(h, m, w, l, idSubclass, refData) {
@@ -710,6 +813,10 @@ class GuiBase {
     }
 
     Destroy() {
+        if (this.tabsHwnd) {
+            OnMessage(0x002B, this.tabsCustomDrawCallback, 0)
+        }
+
         if (this.owner != "") {
             ; @todo only re-enable if there are no other open children. Let WindowManager handle this...
             this.owner.Opt("-Disabled")
