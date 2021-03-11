@@ -6,6 +6,7 @@
     detectedGames := ""
     state := ""
     knownGames := ""
+    frameShadow := false
 
     __New(app, detectedGames, windowKey := "", owner := "", parent := "") {
         this.detectedGames := detectedGames

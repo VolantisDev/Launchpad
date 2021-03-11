@@ -35,6 +35,7 @@ class GuiBase {
     tabsCustomDrawCallback := ""
     tabsHwnd := ""
     tabNames := []
+    frameShadow := true
 
     positionAtMouseCursor := false
     openWindowWithinScreenBounds := true
@@ -628,6 +629,10 @@ class GuiBase {
         this.guiObj.MarginX := this.margin
         this.guiObj.MarginY := this.margin
 
+        if (this.frameShadow) {
+            this.FrameShadow()
+        }
+
         this.SetFont()
 
         this.guiObj.OnEvent("Close", "OnClose")
@@ -710,6 +715,7 @@ class GuiBase {
     }
 
     End() {
+        static CS_DROPSHADOW := 0x00020000
         windowSize := ""
 
         width := this.windowSettings["contentWidth"] + (this.margin * 2)
@@ -957,5 +963,20 @@ class GuiBase {
 
     OnWindowTitleClick(btn, info) {
         PostMessage(0xA1, 2,,, "A")
+    }
+
+    FrameShadow() {
+        isEnabled := 0
+        DllCall("dwmapi\DwmIsCompositionEnabled", "IntP", isEnabled)
+
+        if (isEnabled) {
+            margins := BufferAlloc(16)
+            NumPut("UInt", 1, margins, 0)
+            NumPut("UInt", 1, margins, 4)
+            NumPut("UInt", 1, margins, 8)
+            NumPut("UInt", 1, margins, 12)
+            DllCall("dwmapi\DwmSetWindowAttribute", "Ptr", this.guiObj.Hwnd, "UInt", 2, "Int*", 2, "UInt", 4)
+            DllCall("dwmapi\DwmExtendFrameIntoClientArea", "Ptr", this.guiObj.Hwnd, "Ptr", margins)
+        }
     }
 }
