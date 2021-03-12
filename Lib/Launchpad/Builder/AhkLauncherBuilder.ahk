@@ -8,9 +8,22 @@ class AhkLauncherBuilder extends BuilderBase {
         if (ahkResult) {
             gameExeObj := GameExeFile.new(entityObj)
             result := gameExeObj.Build()
+
+            if (result && this.app.Config.CreateDesktopShortcuts) {
+                this.CreateShortcut(entityObj)
+            }
         }
 
         return result
+    }
+
+    CreateShortcut(entityObj) {
+        if (entityObj.LauncherExists(false)) {
+            launcherExe := entityObj.GetLauncherFile(entityObj.Key, false)
+            shortcutPath := A_Desktop . "\" . entityObj.Key . ".lnk"
+
+            FileCreateShortcut(launcherExe, shortcutPath)
+        }
     }
 
     Clean(entityObj) {

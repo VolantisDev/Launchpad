@@ -74,6 +74,11 @@
         set => this.SetBooleanValue("CreateIndividualDirs", value)
     }
 
+    CreateDesktopShortcuts {
+        get => this.GetBooleanValue("CreateDesktopShortcuts", false)
+        set => this.SetBooleanValue("CreateDesktopShortcuts", value)
+    }
+
     CopyAssets {
         get => this.GetBooleanValue("CopyAssets", false)
         set => this.SetBooleanValue("CopyAssets", value)

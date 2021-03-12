@@ -50,7 +50,7 @@ class ErrorDialog extends DialogBox {
             body["extra"] := this.errorObj.Extra
             body["stack"] := this.errorObj.HasProp("Stack") ? this.errorObj.Stack : ""
             body["email"] := this.guiObj["Email"].Text
-            body["version"] := appVersion
+            body["version"] := appVersion ? appVersion : ""
             body["details"] := this.guiObj["ErrorDetails"].Text
 
             request := WinHttpReq.new(endpoint)
