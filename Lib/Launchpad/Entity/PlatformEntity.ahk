@@ -113,6 +113,10 @@ class PlatformEntity extends EntityBase {
         this.platform.Update()
     }
 
+    Uninstall() {
+        this.platform.Uninstall()
+    }
+
     Run() {
         if (this.platform.IsInstalled()) {
             this.platform.Run()

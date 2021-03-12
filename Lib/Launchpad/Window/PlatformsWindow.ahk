@@ -21,8 +21,10 @@ class PlatformsWindow extends ManageWindowBase {
         this.AddButton("vDisableButton xp y+m w" . this.sidebarWidth . " h30", "Disable")
         this.AddButton("vEditButton xp y+m w" . this.sidebarWidth . " h30", "Edit")
         this.AddButton("vInstallButton xp y+m w" . this.sidebarWidth . " h30", "Install")
-        this.AddButton("vUpdateButton xp yp w" . this.sidebarWidth . " h30", "Update")
+        this.AddButton("vUpdateButton xp yp w" . this.sidebarWidth . " h30", "Update") ; @todo get this working again
         this.AddButton("vRunButton xp y+m w" . this.sidebarWidth . " h30", "Run")
+        this.AddButton("vUninstallButton xp y+m w" . this.sidebarWidth . " h30", "Uninstall")
+        
     }
 
     SetupManageEvents(lv) {
@@ -154,6 +156,14 @@ class PlatformsWindow extends ManageWindowBase {
         }
     }
 
+    OnUninstallButton(btn, info) {
+        platform := this.GetSelectedPlatform()
+
+        if (platform && platform.IsInstalled) {
+            platform.Uninstall()
+        }
+    }
+
     OnUpdateButton(btn, info) {
         platform := this.GetSelectedPlatform()
 
@@ -174,7 +184,7 @@ class PlatformsWindow extends ManageWindowBase {
             return
         }
 
-        this.AutoXYWH("x", ["ReloadButton", "EnableButton", "DisableButton", "EditButton", "RunButton", "InstallButton", "UpdateButton"])
+        this.AutoXYWH("x", ["ReloadButton", "EnableButton", "DisableButton", "EditButton", "RunButton", "InstallButton", "UpdateButton", "UninstallButton"])
         
         for index, col in this.listViewColumns {
             this.guiObj["ListView"].ModifyCol(index, "AutoHdr")
