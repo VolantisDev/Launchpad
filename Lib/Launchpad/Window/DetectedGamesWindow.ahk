@@ -1,12 +1,10 @@
-﻿class DetectedGamesWindow extends LaunchpadGuiBase {
-    sidebarWidth := 85
-    listViewColumns := Array("Name", "Action", "Is Known", "Platform", "Install Dir", "Exe", "Launcher ID")
+﻿class DetectedGamesWindow extends ManageWindowBase {
+    listViewColumns := Array("NAME", "ACTION", "PLATFORM", "STATUS", "API", "PLATFORM ID", "EXE")
     launcherManager := ""
-    numSelected := 0
     detectedGames := ""
     state := ""
     knownGames := ""
-    frameShadow := false
+    checkboxes := true
 
     __New(app, detectedGames, windowKey := "", owner := "", parent := "") {
         this.detectedGames := detectedGames
@@ -18,27 +16,20 @@
         super.__New(app, "Detected Games", windowKey, owner, parent)
     }
 
-    Controls() {
-        super.Controls()
-        this.AddDetectedGamesList()
+    AddSidebarControls() {
         this.AddButton("vCheckAllButton ys w" . this.sidebarWidth . " h30", "Check All")
         this.AddButton("vUncheckAllButton xp y+m w" . this.sidebarWidth . " h30", "Uncheck All")
-        this.AddButton("vEditButton xp y+" . (this.margin * 2) . " w" . this.sidebarWidth . " h30 Hidden", "Edit")
+        this.AddButton("vEditButton xp y+" . (this.margin * 2) . " w" . this.sidebarWidth . " h30", "Edit")
         this.AddButton("vAddSelectedButton xp y" . (this.titlebarHeight + this.windowSettings["listViewHeight"] - (this.margin * 3)) . " w" . this.sidebarWidth . " h40", "Add Selected", "", true)
     }
 
-    AddDetectedGamesList() {
-        styling := "C" . this.themeObj.GetColor("text")
-        lvStyles := "+LV" . LVS_EX_LABELTIP . " +LV" . LVS_EX_AUTOSIZECOLUMNS . " +LV" . LVS_EX_DOUBLEBUFFER . " +LV" . LVS_EX_FLATSB . " -E0x200"
-        lvStyles .= " +LV" . LVS_EX_TRANSPARENTBKGND . " +LV" . LVS_EX_TRANSPARENTSHADOWTEXT
-        listViewWidth := this.windowSettings["contentWidth"] - this.sidebarWidth - this.margin
-        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " " . styling . " Count" . this.detectedGames.Count . " Checked Section +Report " . lvStyles, this.listViewColumns)
+    SetupManageEvents(lv) {
+        lv.OnEvent("DoubleClick", "OnDoubleClick")
         lv.OnEvent("ItemCheck", "OnItemCheck")
         lv.OnEvent("ItemSelect", "OnItemSelect")
-        this.PopulateListView()
     }
 
-    PopulateListView() {
+    PopulateListView(focusedItem := 1) {
         this.guiObj["ListView"].Delete()
 
         for key, detectedGameObj in this.detectedGames {
@@ -46,21 +37,18 @@
                 ;continue
             }
 
-            isKnown := this.GameIsKnown(detectedGameObj) ? "Yes" : "No"
-            this.guiObj["ListView"].Add(, detectedGameObj.key, "Ignore", isKnown, detectedGameObj.platform.displayName, detectedGameObj.installDir, detectedGameObj.exeName, detectedGameObj.launcherSpecificId)
+            statusText := this.launcherManager.Entities.Has(detectedGameObj.key) ? "Exists" : "New"
+            apiStatus := this.GameIsKnown(detectedGameObj) ? "Known" : "Unknown"
+            this.guiObj["ListView"].Add(, detectedGameObj.key, "Ignore", detectedGameObj.platform.displayName, statusText, apiStatus, detectedGameObj.launcherSpecificId, detectedGameObj.exeName)
         }
 
         this.guiObj["ListView"].ModifyCol(1, "Sort")
+
         this.guiObj["ListView"].ModifyCol(1, "AutoHdr")
         this.guiObj["ListView"].ModifyCol(2, "AutoHdr")
         this.guiObj["ListView"].ModifyCol(3, "AutoHdr")
         this.guiObj["ListView"].ModifyCol(4, "AutoHdr")
-
-        ;for index, col in this.listViewColumns {
-        ;    this.guiObj["ListView"].ModifyCol(index, "AutoHdr")
-        ;}
-
-        ;this.guiObj["ListView"].ModifyCol()
+        this.guiObj["ListView"].ModifyCol(5, "AutoHdr")
     }
 
     GameHasChanges(detectedGameObj) {
@@ -74,7 +62,15 @@
     }
 
     GameIsKnown(detectedGameObj) {
-        return (this.launcherManager.Entities.Has(detectedGameObj.key) || this.knownGames.Has(detectedGameObj.key))
+        known := false
+
+        for (index, key in this.knownGames) {
+            if (key == detectedGameObj.key) {
+                known := true
+                break
+            }
+        }
+        return known
     }
 
     GameExists(detectedGameObj) {
@@ -97,7 +93,7 @@
         action := "Ignore"
 
         if (isChecked) {
-            action := this.launcherManager.Entities.Has(key) ? "Modify Existing" : "Add New"
+            action := this.launcherManager.Entities.Has(key) ? "Modify" : "Create"
         }
 
         this.guiObj["ListView"].Modify(rowNum,,, action)
@@ -174,8 +170,9 @@
                 this.detectedGames[detectedGameObj.key] := detectedGameObj
             }
 
-            isKnown := this.GameIsKnown(detectedGameObj) ? "Yes" : "No"
-            this.guiObj["ListView"].Modify(row,, detectedGameObj.key,, isKnown, detectedGameObj.platform.displayName, detectedGameObj.installDir, detectedGameObj.exeName, detectedGameObj.launcherSpecificId)
+            statusText := this.launcherManager.Entities.Has(detectedGameObj.key) ? "Exists" : "New"
+            apiStatus := this.GameIsKnown(detectedGameObj) ? "Known" : "Unknown"
+            this.guiObj["ListView"].Modify(row,, detectedGameObj.key,, detectedGameObj.platform.displayName, statusText, apiStatus, detectedGameObj.launcherSpecificId, detectedGameObj.exeName)
         }
     }
 
@@ -186,7 +183,6 @@
             return
         }
 
-        this.AutoXYWH("wh", ["ListView"])
         this.AutoXYWH("x", ["EditButton", "CheckAllButton", "UncheckAllButton"])
         this.AutoXYWH("xy", ["AddSelectedButton"])
     }

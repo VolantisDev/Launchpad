@@ -4,6 +4,7 @@
     numSelected := 0
     lvCount := 0
     frameShadow := false
+    checkboxes := false
 
     __New(app, title, windowKey := "", owner := "", parent := "") {
         super.__New(app, title, windowKey, owner, parent)
@@ -21,7 +22,8 @@
 
     AddManageList() {
         countOption := this.lvCount ? "Count" . this.lvCount : ""
-        lv := this.AddListView("ListView", countOption . " Section +Report -Multi")
+        checkOption := this.checkboxes ? " Checked" : ""
+        lv := this.AddListView("ListView", countOption . " Section +Report -Multi" . checkOption)
         this.SetupManageEvents(lv)
         this.PopulateListView()
         return lv
