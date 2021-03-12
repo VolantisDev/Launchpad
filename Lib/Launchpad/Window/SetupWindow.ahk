@@ -89,7 +89,7 @@
 
         for key, platform in this.app.Platforms.Entities {
             if (platform.IsInstalled) {
-                 this.AddCheckBox(platform.GetDisplayName(), "PlatformToggle" . key, platform.IsEnabled, false, "OnPlatformToggle")
+                 this.AddCheckBox(platform.GetDisplayName(), "PlatformToggle" . key, platform.DetectGames, false, "OnPlatformToggle")
             }
         }
     }
@@ -101,7 +101,7 @@
 
         if (this.app.Platforms.Entities.Has(name)) {
             platform := this.app.Platforms.Entities[name]
-            platform.IsEnabled := !!(chk.Value)
+            platform.DetectGames := !!(chk.Value)
             platform.SaveModifiedData()
         }
     }

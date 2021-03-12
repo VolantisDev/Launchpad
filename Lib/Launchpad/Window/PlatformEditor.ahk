@@ -16,7 +16,8 @@
         tabs := this.guiObj.Add("Tab3", " x" . this.margin . " w" . this.windowSettings["contentWidth"] . " +0x100", ["General", "Sources"])
 
         tabs.UseTab("General", true)
-        this.AddCheckBoxBlock("IsEnabled", "Enable Platform", true, "Whether or not Launchpad should use this platform when detecting games or performing other operations.")
+        this.AddCheckBoxBlock("IsEnabled", "Enable Platform", true, "Whether or not Launchpad should utilize this platform at all.")
+        this.AddCheckBoxBlock("DetectGames", "Enable Game Detection", true, "Whether or not Launchpad should detect games installed from this platform")
         this.AddCheckBoxBlock("IsInstalled", "Platform Is Installed", true, "Whether or not the platform is currently installed. Usually Launchpad can detect this automatically.")
 
         tabs.UseTab("Sources", true)
@@ -29,6 +30,10 @@
 
     OnDefaultIsEnabled(ctl, info) {
         return this.SetDefaultValue("IsEnabled", !!(ctl.Value))
+    }
+
+    OnDefaultDetectGames(ctl, info) {
+        return this.SetDefaultValue("DetectGames", !!(ctl.Value))
     }
 
     OnDefaultIsInstalled(ctl, info) {
@@ -50,6 +55,11 @@
     OnIsEnabledChange(ctl, info) {
         this.guiObj.Submit(false)
         this.entityObj.IsEnabled := ctl.Value
+    }
+
+    OnDetectGamesChange(ctl, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.DetectGames := ctl.Value
     }
 
     OnIsInstalledChange(ctl, info) {

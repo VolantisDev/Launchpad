@@ -1,5 +1,5 @@
 class PlatformsWindow extends ManageWindowBase {
-    listViewColumns := Array("PLATFORM", "ENABLED", "INSTALLED", "VERSION")
+    listViewColumns := Array("PLATFORM", "ENABLED", "DETECT GAMES", "INSTALLED", "VERSION")
     platformsFile := ""
     platformManager := ""
 
@@ -37,9 +37,10 @@ class PlatformsWindow extends ManageWindowBase {
 
         for key, platform in this.platformManager.Entities {
             enabledText := platform.IsEnabled ? "Yes" : "No"
+            detectGamesText := platform.DetectGames ? "Yes" : "No"
             installedText := platform.IsInstalled ? "Yes" : "No"
             focusOption := index == focusedItem ? " Focus" : ""
-            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, platform.Key, enabledText, installedText, platform.InstalledVersion)
+            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, platform.Key, enabledText, detectGamesText, installedText, platform.InstalledVersion)
             iconNum++
             index++
         }

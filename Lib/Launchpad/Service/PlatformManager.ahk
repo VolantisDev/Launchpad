@@ -37,9 +37,25 @@ class PlatformManager extends EntityManagerBase {
 
         return platforms
     }
+
+    GetGameDetectionPlatforms() {
+        platforms := Map()
+
+        if (!this._componentsLoaded) {
+            this.LoadComponents()
+        }
+
+        for key, platform in this.Entities {
+            if (platform.IsEnabled && platform.IsInstalled && platform.DetectGames) {
+                platforms[key] := platform
+            }
+        }
+
+        return platforms
+    }
     
     DetectGames() {
-        platforms := this.GetActivePlatforms()
+        platforms := this.GetGameDetectionPlatforms()
         op := DetectGamesOp.new(this.app, platforms)
         op.Run()
 

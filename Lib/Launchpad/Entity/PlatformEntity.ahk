@@ -18,6 +18,11 @@ class PlatformEntity extends EntityBase {
         set => this.SetConfigValue("IsInstalled", !!(value))
     }
 
+    DetectGames {
+        get => this.GetConfigValue("DetectGames")
+        set => this.SetConfigValue("DetectGames", !!(value))
+    }
+
     InstalledVersion {
         get => this.GetConfigValue("InstalledVersion")
         set => this.SetConfigValue("InstalledVersion", value)
@@ -132,7 +137,8 @@ class PlatformEntity extends EntityBase {
     InitializeDefaults() {
         defaults := super.InitializeDefaults()
         defaults["PlatformClass"] := ""
-        defaults["IsEnabled"] := false
+        defaults["IsEnabled"] := true
+        defaults["DetectGames"] := false
         defaults["IsInstalled"] := false
         defaults["InstalledVersion"] := ""
         defaults["InstallDir"] := ""
