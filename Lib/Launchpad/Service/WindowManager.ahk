@@ -12,6 +12,10 @@ class WindowManager extends AppComponentServiceBase {
         return this.ShowDialog(DialogBox.new(title, this.GetTheme(), text, "", owner, parent, buttons))
     }
 
+    AboutWindow(title := "", text := "", owner := "", parent := "", buttons := "*&OK") {
+        return this.ShowDialog(AboutWindow.new(title, this.GetTheme(), text, "", owner, parent, buttons))
+    }
+
     FeedbackWindow(title := "", text := "", owner := "", parent := "", buttons := "*&Submit|&Cancel") {
         notifierObj := this.app.Notifications.GetNotifier()
         apiEndpointUrl := this.app.Config.ApiEndpoint

@@ -65,6 +65,7 @@
 #Include Service\PlatformManager.ahk
 #Include Service\ThemeManager.ahk
 #Include Service\WindowManager.ahk
+#Include Window\AboutWindow.ahk
 #Include Window\DetectedGameEditor.ahk
 #Include Window\DetectedGamesWindow.ahk
 #Include Window\EntityDeleteWindow.ahk

@@ -37,9 +37,10 @@
         ;this.AddToolButton("&Validate Launchers", "ValidateLaunchers")
         this.AddToolButton("&Flush Cache", "FlushCache")
         ;this.AddToolButton("&Update Launchpad", "CheckForUpdates")
-        this.AddToolButton("Update &Dependencies", "UpdateDependencies")
+        ;this.AddToolButton("Update &Dependencies", "UpdateDependencies")
         this.AddToolButton("&Open Website", "OpenWebsite")
         this.AddToolButton("Provide &Feedback", "ProvideFeedback")
+        this.AddToolButton("&About Launchpad", "AboutLaunchpad")
     }
 
     AddToolButton(buttonLabel, ctlName) {
@@ -110,5 +111,10 @@
     OnProvideFeedback(btn, info) {
         this.Close()
         this.app.ProvideFeedback()
+    }
+
+    OnAboutLaunchpad(btn, info) {
+        this.Close()
+        this.app.Windows.AboutWindow()
     }
 }
