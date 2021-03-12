@@ -164,8 +164,7 @@
     ShowError(title, errorText, e, allowContinue := true) {
         themeObj := this.Themes ? this.Themes.GetItem() : JsonTheme.new("Steampad")
         btns := allowContinue ? "*&Continue|&Exit Launchpad" : "*&Exit Launchpad"
-        dialog := ErrorDialog.new(e, this.Notifications.GetNotifier(), this.Config.ApiEndpoint, "Unhandled Exception", themeObj, errorText, "ErrorDialog", "", "", btns)
-        result := dialog.Show()
+        result := this.Windows.ErrorDialog(e, "Unhandled Exception", errorText, "", "", btns)
 
         if (result == "Exit Launchpad") {
             ExitApp
@@ -227,6 +226,6 @@
     }
 
     ProvideFeedback() {
-        Run("https://github.com/VolantisDev/Launchpad/issues")
+        this.Windows.FeedbackWindow()
     }
 }

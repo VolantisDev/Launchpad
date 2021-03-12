@@ -98,14 +98,17 @@
     }
 
     OnCheckForUpdates(btn, info) {
+        this.Close()
         this.app.CheckForUpdates()
     }
 
     OnOpenWebsite(btn, info) {
+        this.Close()
         this.app.OpenWebsite()
     }
 
     OnProvideFeedback(btn, info) {
+        this.Close()
         this.app.ProvideFeedback()
     }
 }

@@ -12,6 +12,28 @@ class WindowManager extends AppComponentServiceBase {
         return this.ShowDialog(DialogBox.new(title, this.GetTheme(), text, "", owner, parent, buttons))
     }
 
+    FeedbackWindow(title := "", text := "", owner := "", parent := "", buttons := "*&Submit|&Cancel") {
+        notifierObj := this.app.Notifications.GetNotifier()
+        apiEndpointUrl := this.app.Config.ApiEndpoint
+
+        if (!title) {
+            title := "Submit Feedback"
+        }
+
+        return this.ShowDialog(FeedbackWindow.new(notifierObj, apiEndpointUrl, title, this.GetTheme(), text, "", owner, parent, buttons))
+    }
+
+    ErrorDialog(errorObj, title := "", text := "", owner := "", parent := "", buttons := "*&Continue|&Exit Launchpad") {
+        notifierObj := this.app.Notifications.GetNotifier()
+        apiEndpointUrl := this.app.Config.ApiEndpoint
+
+        if (!title) {
+            title := "Unhandled Exception"
+        }
+
+        return this.ShowDialog(ErrorDialog.new(errorObj, notifierObj, apiEndpointUrl, title, this.GetTheme(), text, "", owner, parent, buttons))
+    }
+
     SingleInputBox(title, text, defaultValue := "", owner := "", parent := "", isPassword := false) {
         return this.ShowDialog(SingleInputBox.new(title, this.GetTheme(), text, defaultValue, "", owner, parent, isPassword))
     }
