@@ -35,6 +35,7 @@
 #Include Game\RiotGame.ahk
 #Include Game\SimpleGame.ahk
 #Include Gui\DialogBox.ahk
+#Include Gui\ErrorDialog.ahk
 #Include Gui\FormGuiBase.ahk
 #Include Gui\GuiBase.ahk
 #Include Gui\IconSelector.ahk

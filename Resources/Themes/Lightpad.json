@@ -234,6 +234,10 @@
             "LauncherEditor": {
                 "settings": "editor"
             },
+            "ErrorDialog": {
+                "settings": "dialog",
+                "contentWidth": 500
+            },
             "ManagedGameEditor": {
                 "settings": "editor"
             },

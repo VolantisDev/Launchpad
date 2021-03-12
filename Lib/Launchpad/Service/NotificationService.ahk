@@ -30,4 +30,8 @@ class NotificationService extends AppServiceBase {
     Error(message, title := "") {
         return this.Notify(message, title, "error")
     }
+
+    GetNotifier() {
+        return this.notifierObj
+    }
 }

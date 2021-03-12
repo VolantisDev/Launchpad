@@ -144,27 +144,27 @@
 
     OnException(e, mode) {
         ; @todo allow submission of the error
-        extra := (e.HasProp("Extra") && e.Extra != "") ? "`n`nAdditional info:`n" . e.Extra : ""
+        extra := (e.HasProp("Extra") && e.Extra != "") ? "`n`nExtra information:`n" . e.Extra : ""
         occurredIn := e.What ? " in " . e.What : ""
 
-        errorText := "Launchpad has experienced an unhandled exception" . occurredIn
-        errorText .= ".`n`n" . e.Message . extra
-        errorText .= "`n`nDebugging Information:`nFile: " . e.File . "`nLine: " . e.Line
-        errorText .= "`n`nPlease report this error at https://github.com/VolantisDev/Launchpad/issues so that it can be fixed in an upcoming release."
+        errorText := "Launchpad has experienced an unhandled exception which it may not be able to fully recover from. You can find the details below, and submit the error to the developers to be fixed."
+        errorText .= "`n`n" . e.Message . extra
+
+        errorText .= "`n`nOccurred in: " . e.What
         
-        if (mode == "Exit") {
-            errorText .= "`n`nThis is an unrecoverable error and the current thread must exit.`nContinuing the application might have unexpected results."
-        } else if (mode == "ExitApp") {
-            errorText .= "`n`nThis is a fatal error and Launchpad must exit."
+        if (e.File) {
+            errorText .= "`nFile: " . e.File . " (Line " . e.Line . ")"
         }
 
-        return this.ShowError("Unhandled Exception", errorText, mode != "ExitApp")
+        errorText .= "`n"
+
+        return this.ShowError("Unhandled Exception", errorText, e, mode != "ExitApp")
     }
 
-    ShowError(title, errorText, allowContinue := true) {
+    ShowError(title, errorText, e, allowContinue := true) {
         themeObj := this.Themes ? this.Themes.GetItem() : JsonTheme.new("Steampad")
         btns := allowContinue ? "*&Continue|&Exit Launchpad" : "*&Exit Launchpad"
-        dialog := DialogBox.new(title, themeObj, errorText, "AppException", "", "", btns)
+        dialog := ErrorDialog.new(e, this.Notifications.GetNotifier(), this.Config.ApiEndpoint, "Unhandled Exception", themeObj, errorText, "ErrorDialog", "", "", btns)
         result := dialog.Show()
 
         if (result == "Exit Launchpad") {

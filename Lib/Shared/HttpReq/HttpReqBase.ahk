@@ -8,7 +8,7 @@ class HttpReqBase {
     response := ""
     statusCode := 0
     responseData := ""
-    requestHeaders := ""
+    requestHeaders := Map()
     responseHeaders := ""
     responseBody := ""
     autoRedirect := true

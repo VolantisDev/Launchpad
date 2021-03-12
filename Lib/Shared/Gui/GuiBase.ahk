@@ -574,6 +574,11 @@ class GuiBase {
         this.guiObj.AddText("x" . this.margin . " y31 w0 h0", "")
     }
 
+    AddEdit(name, defaultValue := "", options := "") {
+        opts := "x" . this.margin . " w" . this.windowSettings["contentWidth"] . " -VScroll v" . name . " c" . this.themeObj.GetColor("editText") . " " . options
+        return this.guiObj.AddEdit(opts, defaultValue)
+    }
+
     AddTitlebarButton(name, symbol, handlerName, overlayPrevious := false) {
         position := overlayPrevious ? "xp yp" : "x+" . this.margin . " y10"
         options := position . " w16 h16 v" . name

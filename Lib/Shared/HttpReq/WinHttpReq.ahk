@@ -14,11 +14,17 @@ class WinHttpReq extends HttpReqBase {
 
         WinHttpReq.winHttp.Open(method, this.url, true)
 
-        headers := this.ProcessHeaders(WinHttpReq.winHttp)
-
-        if (data != "" && !InStr(headers, "Content-Type:")) {
-            WinHttpReq.winHttp.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded")
+        if (data != "" && !this.requestHeaders.Has("Content-Type")) {
+            contentType := Type(data) == "String" ? "application/x-www-form-urlencoded" : "application/json"
+            WinHttpReq.winHttp.SetRequestHeader("Content-Type", contentType)
         }
+
+        if (data != "" and IsObject(data)) {
+            json := JsonData.new()
+            data := json.ToString(data)
+        }
+
+        this.ProcessHeaders(WinHttpReq.winHttp)
 
         if (this.proxy != "") {
             WinHttpReq.winHttp.SetProxy(2, SubStr(A_LoopField, this.pos + 6))
@@ -46,22 +52,8 @@ class WinHttpReq extends HttpReqBase {
         headers := ""
 
         if (this.requestHeaders) {
-            headers := Trim(this.requestHeaders, " `t`r`n")
-
-            Loop Parse headers, "`n", "`r"
-            {
-                this.pos := InStr(A_LoopField, ":")
-
-                If (!this.pos) {
-                    Continue
-                }
-
-                Header_Name  := SubStr(A_LoopField, 1, this.pos - 1)
-                Header_Value := SubStr(A_LoopField, this.pos + 1)
-
-                If (Trim(Header_Value) != "") {
-                    oHTTP.SetRequestHeader(Header_Name, Header_Value)
-                }  
+            for (key, val in this.requestHeaders) {
+                oHTTP.SetRequestHeader(key, val)
             }
         }
 
