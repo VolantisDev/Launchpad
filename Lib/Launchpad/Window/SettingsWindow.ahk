@@ -42,6 +42,11 @@
         this.AddHeading("API Endpoint")
         this.AddConfigLocationBlock("ApiEndpoint")
 
+        this.AddHeading("API Key")
+        ctl := this.guiObj.AddEdit("vApiKey xs y+m w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"), this.app.Config.ApiKey)
+        ctl.OnEvent("Change", "OnApiKeyChange")
+        btn := this.AddButton("xs y+m vGetApiKey", "Get Api Key")
+
         tabs.UseTab("Appearance", true)
 
         this.AddHeading("Theme")
@@ -153,6 +158,11 @@
         this.app.Config.OpenPlatformsFile()
     }
 
+    OnGetApiKey(btn, info) {
+        ; @todo Show a login form which will submit a request for the API key and store it
+        ; @todo Offer a signup form from on the login form
+    }
+
     OnChangeLauncherFile(btn, info) {
         this.app.Config.ChangeLauncherFile()
         this.SetText("LauncherFile", this.app.Config.LauncherFile, "Bold")
@@ -170,6 +180,11 @@
     OnChangeDestinationDir(btn, info) {
         this.app.Config.ChangeDestinationDir()
         this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
+    }
+
+    OnApiKeyChange(ctl, info) {
+        this.guiObj.Submit(false)
+        this.app.Config.ApiKey := ctl.Text
     }
 
     OnOpenAssetsDir(btn, info) {
