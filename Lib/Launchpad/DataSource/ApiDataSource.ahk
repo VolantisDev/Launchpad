@@ -18,9 +18,9 @@ class ApiDataSource extends DataSourceBase {
         exists := (this.cache.ItemExists(path) && !this.cache.ItemNeedsUpdate(path))
 
         if (!exists) {
-            request := WinHttpReq.new(this.GetRemoteLocation(path))
-            result := request.Send("HEAD")
-            response := (result == -1 && request.GetStatusCode() == 200)
+            request := this.SendHttpReq(path, "HEAD")
+            
+            response := (request.GetReturnCode() == -1 && request.GetStatusCode() == 200)
 
             if (!response) {
                 this.cache.SetNotFound(path)
@@ -30,12 +30,46 @@ class ApiDataSource extends DataSourceBase {
         return response
     }
 
+    GetHttpReq(path) {
+        request := WinHttpReq.new(this.GetRemoteLocation(path))
+
+        if (this.app.Config.ApiToken) {
+            request.requestHeaders["Bearer"] := this.app.Config.ApiToken
+        }
+
+        return request
+    }
+
+    SendHttpReq(path, method := "GET", data := "") {
+        request := this.GetHttpReq(path)
+        returnCode := request.Send(method, data)
+        return request
+    }
+
     GetRemoteLocation(path) {
         return this.endpointUrl . "/" . path
     }
 
     RetrieveItem(path) {
-        return this.ItemExistsInApi(path) ? this.cache.ImportItemFromUrl(path, this.GetRemoteLocation(path)) : ""
+        exists := (this.cache.ItemExists(path) && !this.cache.ItemNeedsUpdate(path))
+
+        if (!exists) {
+            request := this.SendHttpReq(path)
+
+            if (request.GetReturnCode() != -1) {
+                return ""
+            }
+
+            responseBody := Trim(request.GetResponseData())
+
+            if (responseBody == "") {
+                return ""
+            }
+
+            this.cache.WriteItem(path, responseBody)
+        }
+
+        return this.cache.ItemExists(path) ? this.cache.ReadItem(path) : ""
     }
 
     Open() {

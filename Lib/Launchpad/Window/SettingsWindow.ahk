@@ -42,10 +42,10 @@
         this.AddHeading("API Endpoint")
         this.AddConfigLocationBlock("ApiEndpoint")
 
-        this.AddHeading("API Key")
-        ctl := this.guiObj.AddEdit("vApiKey xs y+m w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"), this.app.Config.ApiKey)
-        ctl.OnEvent("Change", "OnApiKeyChange")
-        btn := this.AddButton("xs y+m vGetApiKey", "Get Api Key")
+        this.AddHeading("API Token")
+        ctl := this.guiObj.AddEdit("vApiToken xs y+m r1 w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"), this.app.Config.ApiToken)
+        ctl.OnEvent("Change", "OnApiTokenChange")
+        btn := this.AddButton("xs y+m vGetApiToken w150 h30", "Get Token")
 
         tabs.UseTab("Appearance", true)
 
@@ -158,9 +158,8 @@
         this.app.Config.OpenPlatformsFile()
     }
 
-    OnGetApiKey(btn, info) {
-        ; @todo Show a login form which will submit a request for the API key and store it
-        ; @todo Offer a signup form from on the login form
+    OnGetApiToken(btn, info) {
+        Run("https://launchpad.games/profile")
     }
 
     OnChangeLauncherFile(btn, info) {
@@ -182,9 +181,9 @@
         this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
     }
 
-    OnApiKeyChange(ctl, info) {
+    OnApiTokenChange(ctl, info) {
         this.guiObj.Submit(false)
-        this.app.Config.ApiKey := ctl.Text
+        this.app.Config.ApiToken := ctl.Text
     }
 
     OnOpenAssetsDir(btn, info) {

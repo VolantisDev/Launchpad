@@ -49,9 +49,9 @@
         set => this.SetIniValue("ApiEndpoint", value)
     }
 
-    ApiKey {
-        get => this.GetIniValue("ApiKey") || ""
-        set => this.SetIniValue("ApiKey", value)
+    ApiToken {
+        get => this.GetIniValue("ApiToken") || ""
+        set => this.SetIniValue("ApiToken", value)
     }
 
     TempDir {

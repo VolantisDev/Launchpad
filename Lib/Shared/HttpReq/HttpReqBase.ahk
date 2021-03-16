@@ -35,6 +35,10 @@ class HttpReqBase {
         return this.statusCode
     }
 
+    GetReturnCode() {
+        return this.returnCode
+    }
+
     GetResponseBody() {
         return this.responseBody
     }
