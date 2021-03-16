@@ -42,7 +42,7 @@ class PlatformsWindow extends ManageWindowBase {
             detectGamesText := platform.DetectGames ? "Yes" : "No"
             installedText := platform.IsInstalled ? "Yes" : "No"
             focusOption := index == focusedItem ? " Focus" : ""
-            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, platform.Key, enabledText, detectGamesText, installedText, platform.InstalledVersion)
+            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, platform.GetDisplayName(), enabledText, detectGamesText, installedText, platform.InstalledVersion)
             iconNum++
             index++
         }
