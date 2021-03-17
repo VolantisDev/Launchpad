@@ -697,6 +697,10 @@ class GuiBase {
         if (this.showTitlebar) {
             this.AutoXYWH("w", ["WindowTitleText", "WindowTitlebar"])
 
+            if (this.showStatusIndicator) {
+                this.AutoXYWH("x*", ["StatusIndicator"])
+            }
+
             if (this.showClose) {
                 this.AutoXYWH("x*", ["WindowCloseButton"])
             }
