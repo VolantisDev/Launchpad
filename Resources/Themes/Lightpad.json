@@ -121,6 +121,32 @@
                         "borderWidth": 0,
                         "shape": "SymbolButtonShape"
                     }
+                },
+                "status": {
+                    "enabled": {
+                        "backgroundColor": "{{accentDark}}",
+                        "textColor": "{{textLight}}",
+                        "dimColor": "{{dim}}",
+                        "borderColor": "{{border}}",
+                        "borderWidth": 0,
+                        "shape": "StatusIndicatorButtonShape"
+                    },
+                    "disabled": {
+                        "backgroundColor": "{{gray}}",
+                        "textColor": "{{dim}}",
+                        "dimColor": "{{dim}}",
+                        "borderColor": "{{border}}",
+                        "borderWidth": 0,
+                        "shape": "StatusIndicatorButtonShape"
+                    },
+                    "hovered": {
+                        "backgroundColor": "{{accentDark}}",
+                        "textColor": "{{text}}",
+                        "dimColor": "{{dim}}",
+                        "borderColor": "{{border}}",
+                        "borderWidth": 0,
+                        "shape": "StatusIndicatorButtonShape"
+                    }
                 }
             }
         },

@@ -72,6 +72,25 @@ class ApiDataSource extends DataSourceBase {
         return this.cache.ItemExists(path) ? this.cache.ReadItem(path) : ""
     }
 
+    GetStatus() {
+        path := "status"
+        statusExpire := 21600
+        if (this.cache.ItemExists(path) && this.cache.GetCacheAge(path) >= statusExpire) {
+            this.cache.RemoveItem(path)
+        }
+
+        status := this.ReadItem(path)
+
+        if (status) {
+            json := JsonData.new()
+            status := json.FromString(status)
+        } else {
+            status := Map("authenticated", true, "email", "")
+        }
+
+        return status
+    }
+
     Open() {
         Run(this.endpointUrl)
     }

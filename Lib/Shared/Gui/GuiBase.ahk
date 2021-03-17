@@ -36,6 +36,8 @@ class GuiBase {
     tabsHwnd := ""
     tabNames := []
     frameShadow := true
+    showStatusIndicator := false
+    statusIndicatorW := 150
 
     positionAtMouseCursor := false
     openWindowWithinScreenBounds := true
@@ -526,6 +528,10 @@ class GuiBase {
 
         buttonsW := 0
 
+        if (this.showStatusIndicator) {
+            buttonsW += this.statusIndicatorW + (this.margin * 2)
+        }
+
         if (this.showMinimize) {
             buttonsW += 16 + this.margin
         }
@@ -555,9 +561,12 @@ class GuiBase {
         titleText := this.showTitle ? this.title : ""
         this.guiObj.AddText(textPos . " w" . textW . " vWindowTitleText", titleText)
         
+        if (this.showStatusIndicator) {
+            this.AddStatusIndicator()
+        }
 
         if (this.showMinimize) {
-            this.AddTitlebarButton("WindowMinButton", "minimize", "OnWindowMinButton")
+            this.AddTitlebarButton("WindowMinButton", "minimize", "OnWindowMinButton", false, this.showStatusIndicator)
         }
 
         if (this.showMaximize) {
@@ -579,10 +588,21 @@ class GuiBase {
         return this.guiObj.AddEdit(opts, defaultValue)
     }
 
-    AddTitlebarButton(name, symbol, handlerName, overlayPrevious := false) {
-        position := overlayPrevious ? "xp yp" : "x+" . this.margin . " y10"
+    AddTitlebarButton(name, symbol, handlerName, overlayPrevious := false, afterStatus := false) {
+        leftMargin := afterStatus ? this.margin * 2 : this.margin
+        position := overlayPrevious ? "xp yp" : "x+" . leftMargin . " y10"
         options := position . " w16 h16 v" . name
         return this.themeObj.AddButton(this.guiObj, options, symbol, handlerName, "titlebar")
+    }
+
+    AddStatusIndicator() {
+        options := "x+" . this.margin . " y5 w" . this.statusIndicatorW . " h26 vStatusIndicator"
+        statusText := this.GetStatusText()
+        return this.themeObj.AddButton(this.guiObj, options, statusText, "OnStatusIndicatorClick", "status")
+    }
+
+    GetStatusText() {
+
     }
 
     SetFont(fontPreset := "normal", extraStyles := "", colorName := "text") {

@@ -48,6 +48,7 @@
 #Include Gui\SingleInputBox.ahk
 #Include GuiShape\ButtonShape.ahk
 #Include GuiShape\GuiShapeBase.ahk
+#Include GuiShape\StatusIndicatorButtonShape.ahk
 #Include GuiShape\SymbolButtonShape.ahk
 #Include GuiSymbol\CloseSymbol.ahk
 #Include GuiSymbol\GuiSymbolBase.ahk

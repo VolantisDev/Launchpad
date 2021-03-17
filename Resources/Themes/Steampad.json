@@ -119,6 +119,32 @@
                         "borderWidth": 0,
                         "shape": "SymbolButtonShape"
                     }
+                },
+                "status": {
+                    "enabled": {
+                        "backgroundColor": "{{dimblue}}",
+                        "textColor": "{{textLight}}",
+                        "dimColor": "{{dim}}",
+                        "borderColor": "{{border}}",
+                        "borderWidth": 0,
+                        "shape": "StatusIndicatorButtonShape"
+                    },
+                    "disabled": {
+                        "backgroundColor": "{{gray}}",
+                        "textColor": "{{dim}}",
+                        "dimColor": "{{dim}}",
+                        "borderColor": "{{border}}",
+                        "borderWidth": 0,
+                        "shape": "StatusIndicatorButtonShape"
+                    },
+                    "hovered": {
+                        "backgroundColor": "{{dimblue}}",
+                        "textColor": "{{text}}",
+                        "dimColor": "{{dim}}",
+                        "borderColor": "{{border}}",
+                        "borderWidth": 0,
+                        "shape": "StatusIndicatorButtonShape"
+                    }
                 }
             }
         }

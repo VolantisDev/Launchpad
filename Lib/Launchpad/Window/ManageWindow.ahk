@@ -2,6 +2,7 @@
     listViewColumns := Array("GAME", "PLATFORM", "STATUS", "API STATUS")
     launcherManager := ""
     platformManager := ""
+    showStatusIndicator := true
 
     __New(app, windowKey := "", owner := "", parent := "") {
         this.launcherManager := app.Launchers
@@ -25,6 +26,29 @@
         this.AddButton("vPlatformsButton xp y+m w" . this.sidebarWidth . " h30", "Platforms")
         this.AddButton("vSettingsButton xp y+m w" . this.sidebarWidth . " h30", "Settings")
         this.AddButton("vBuildAllButton xp y+m w" . this.sidebarWidth . " h40", "Build All", "", true)
+    }
+
+    GetStatusText() {
+        apiStatus := this.GetApiStatus()
+
+        if (!apiStatus) {
+            statusText := "Disconnected"
+        } else if (apiStatus["authenticated"]) {
+            statusText := apiStatus["email"]
+        } else {
+            statusText := "Not logged in"
+        }
+
+        return statusText
+    }
+
+    GetApiStatus() {
+        dataSource := this.app.DataSources.GetItem("api")
+        return dataSource.GetStatus()
+    }
+
+    OnStatusIndicatorClick(btn, info) {
+        ; @todo Open a mini API configuration screen
     }
 
     SetupManageEvents(lv) {
