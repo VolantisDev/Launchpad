@@ -30,13 +30,10 @@
 
     GetStatusText() {
         apiStatus := this.GetApiStatus()
+        statusText := "Disconnected"
 
-        if (!apiStatus) {
-            statusText := "Disconnected"
-        } else if (apiStatus["authenticated"]) {
-            statusText := apiStatus["email"]
-        } else {
-            statusText := "Not logged in"
+        if (apiStatus && apiStatus.Has("authenticated")) {
+            statusText := apiStatus["authenticated"] ? apiStatus["email"] : "Not logged in"
         }
 
         return statusText
