@@ -8,6 +8,7 @@
         this.launcherManager := app.Launchers
         this.platformManager := app.Platforms
         this.lvCount := this.launcherManager.CountEntities()
+        this.showStatusIndicator := app.Config.ApiAuthentication
         super.__New(app, "Launchpad", windowKey, owner, parent)
     }
 
@@ -29,23 +30,15 @@
     }
 
     GetStatusText() {
-        apiStatus := this.GetApiStatus()
-        statusText := "Disconnected"
-
-        if (apiStatus && apiStatus.Has("authenticated")) {
-            statusText := apiStatus["authenticated"] ? apiStatus["email"] : "Not logged in"
-        }
-
-        return statusText
-    }
-
-    GetApiStatus() {
-        dataSource := this.app.DataSources.GetItem("api")
-        return dataSource.GetStatus()
+        return this.app.Auth.GetStatusText()
     }
 
     OnStatusIndicatorClick(btn, info) {
-        ; @todo Open a mini API configuration screen
+        if (this.app.Auth.IsAuthenticated()) {
+            this.app.Windows.AccountInfoWindow()
+        } else {
+            this.app.Auth.Login()
+        }
     }
 
     SetupManageEvents(lv) {

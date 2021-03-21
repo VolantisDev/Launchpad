@@ -41,11 +41,8 @@
 
         this.AddHeading("API Endpoint")
         this.AddConfigLocationBlock("ApiEndpoint")
-
-        this.AddHeading("API Token")
-        ctl := this.guiObj.AddEdit("vApiToken xs y+m r1 w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"), this.app.Config.ApiToken)
-        ctl.OnEvent("Change", "OnApiTokenChange")
-        btn := this.AddButton("xs y+m vGetApiToken w150 h30", "Get Token")
+        this.AddConfigCheckBox("Enable API authentication for enhanced functionality", "ApiAuthentication")
+        this.AddConfigCheckBox("Automatically initiate API login when needed", "ApiAutoLogin")
 
         tabs.UseTab("Appearance", true)
 
@@ -156,10 +153,6 @@
 
     OnOpenPlatformsFile(btn, info) {
         this.app.Config.OpenPlatformsFile()
-    }
-
-    OnGetApiToken(btn, info) {
-        Run("https://launchpad.games/profile")
     }
 
     OnChangeLauncherFile(btn, info) {

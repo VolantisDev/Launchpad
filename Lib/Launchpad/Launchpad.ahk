@@ -18,6 +18,7 @@
     idGenObj := ""
     blizzardProductDbObj := ""
     moduleManagerObj := ""
+    authServiceObj := ""
     
     Config {
         get => this.appConfigObj
@@ -103,6 +104,11 @@
         get => this.LaunchpadVersion()
     }
 
+    Auth {
+        get => this.authServiceObj
+        set => this.authServiceObj := value
+    }
+
     __New(appName, appDir) {
         InvalidParameterException.CheckTypes("Launchpad", "appName", appName, "", "appDir", appDir, "")
         this.appName := appName
@@ -138,6 +144,7 @@
         this.launcherManagerObj := LauncherManager.new(this)
         this.platformManagerObj := PlatformManager.new(this)
         this.installerManagerObj := InstallerManager.new(this)
+        this.authServiceObj := AuthService.new(this, "", this.appStateObj)
        
         this.InitializeApp()
     }
@@ -179,12 +186,16 @@
     }
 
     InitializeApp() {
-        
         this.Builders.SetItem("ahk", AhkLauncherBuilder.new(this), true)
         this.DataSources.SetItem("api", ApiDataSource.new(this, this.Cache.GetItem("api"), this.Config.ApiEndpoint), true)
         this.Installers.SetupInstallers()
-
         this.Installers.InstallRequirements()
+        this.Auth.SetAuthProvider(LaunchpadApiAuthProvider.new(this, this.appStateObj))
+
+        if (this.Config.ApiAutoLogin) {
+            this.Auth.Login()
+        }
+        
         this.Platforms.LoadComponents(this.Config.PlatformsFile)
         this.Launchers.LoadComponents(this.Config.LauncherFile)
 
@@ -202,6 +213,12 @@
 
         if (result == "Detect") {
             this.Platforms.DetectGames()
+        }
+    }
+
+    UpdateStatusIndicators() {
+        if (this.Windows.WindowIsOpen("ManageWindow")) {
+            this.Windows._components["ManageWindow"].UpdateStatusIndicator()
         }
     }
 

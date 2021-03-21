@@ -49,9 +49,14 @@
         set => this.SetIniValue("ApiEndpoint", value)
     }
 
-    ApiToken {
-        get => this.GetIniValue("ApiToken") || ""
-        set => this.SetIniValue("ApiToken", value)
+    ApiAuthentication {
+        get => this.GetBooleanValue("ApiAuthentication", true)
+        set => this.SetBooleanValue("ApiAuthentication", value)
+    }
+
+    ApiAutoLogin {
+        get => this.GetBooleanValue("ApiAutoLogin", false)
+        set => this.SetBooleanValue("ApiAutoLogin", value)
     }
 
     TempDir {

@@ -19,12 +19,22 @@ class LaunchpadAppState extends JsonAppState {
         set => this.SetLastUpdateChecks(value)
     }
 
+    Authentication {
+        get => this.State.Has("Authentication") ? this.State["Authentication"] : this.State["Authentication"] := Map()
+        set => this.SetAuthentication(value)
+    }
+
     /**
     * IMPLEMENTED METHODS
     */
 
     SetVersions(versions) {
         this.State["Versions"] := versions
+        this.SaveState()
+    }
+
+    SetAuthentication(authentication) {
+        this.State["Authentication"] := authentication
         this.SaveState()
     }
 

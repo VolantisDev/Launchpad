@@ -355,6 +355,19 @@ class ThemeBase {
 
     AddButton(guiObj, options, content, handlerName := "", style := "normal") {
         picObj := guiObj.AddPicture(options . " 0xE")
+
+        if (handlerName or picObj.Name) {
+            if (handlerName == "") {
+                handlerName := "On" . picObj.Name
+            }
+
+            picObj.OnEvent("Click", handlerName)
+        }
+
+        return this.DrawButton(picObj, content, style)
+    }
+
+    DrawButton(picObj, content, style := "normal") {
         picObj.IsPrimary := (style == "primary")
 
         states := Map()
@@ -372,19 +385,11 @@ class ThemeBase {
 
             states["enabled"].DrawOn(picObj)
 
-            if (handlerName or picObj.Name) {
-                if (handlerName == "") {
-                    handlerName := "On" . picObj.Name
-                }
-
-                picObj.OnEvent("Click", handlerName)
-            }
+            
 
             this.themedButtons[picObj.Hwnd] := Map("picture", picObj, "content", content, "states", states)
         } catch ex {
-            ; Ignore errors
-            ;MsgBox("Failed to draw button.")
-            MsgBox(ex.What . ": " . ex.Message)
+            throw ex
         }
 
         return picObj

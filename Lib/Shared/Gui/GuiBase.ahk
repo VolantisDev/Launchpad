@@ -275,7 +275,7 @@ class GuiBase {
     }
 
     OnTabsAdjustRec(wParam, lParam, msg, hwnd) {
-        MsgBox("YES! Fuck yes!")
+        
     }
 
     OnTabsSubclass(h, m, w, l, idSubclass, refData) {
@@ -339,7 +339,6 @@ class GuiBase {
             rectT := NumGet(bgRect.Ptr, 4, "Int")
             rectR := NumGet(bgRect.Ptr, 8, "Int")
             rectB := NumGet(bgRect.Ptr, 12, "Int")
-            MsgBox(rectL "x" rectT "x" rectR "x" rectB)
 
             DllCall("InflateRect", "Ptr", bgRect, "Int", 3, "Int", 3)
 
@@ -347,7 +346,6 @@ class GuiBase {
             rectT := NumGet(bgRect.Ptr, 4, "Int")
             rectR := NumGet(bgRect.Ptr, 8, "Int")
             rectB := NumGet(bgRect.Ptr, 12, "Int")
-            MsgBox(rectL "x" rectT "x" rectR "x" rectB)
 
             brush := DllCall("CreateSolidBrush", "UInt", textColor, "Ptr")
             DllCall("FillRect", "Ptr", hdc, "Ptr", bgRect, "Ptr", brush)
@@ -561,9 +559,7 @@ class GuiBase {
         titleText := this.showTitle ? this.title : ""
         this.guiObj.AddText(textPos . " w" . textW . " vWindowTitleText", titleText)
         
-        if (this.showStatusIndicator) {
-            this.AddStatusIndicator()
-        }
+        this.AddStatusIndicator()
 
         if (this.showMinimize) {
             this.AddTitlebarButton("WindowMinButton", "minimize", "OnWindowMinButton", false, this.showStatusIndicator)
@@ -596,13 +592,20 @@ class GuiBase {
     }
 
     AddStatusIndicator() {
-        options := "x+" . this.margin . " y5 w" . this.statusIndicatorW . " h26 vStatusIndicator"
-        statusText := this.GetStatusText()
-        return this.themeObj.AddButton(this.guiObj, options, statusText, "OnStatusIndicatorClick", "status")
+        if (this.showStatusIndicator) {
+            options := "x+" . this.margin . " y5 w" . this.statusIndicatorW . " h26 vStatusIndicator"
+            this.themeObj.AddButton(this.guiObj, options, this.GetStatusText(), "OnStatusIndicatorClick", "status")
+        }
     }
 
     GetStatusText() {
+        return ""
+    }
 
+    UpdateStatusIndicator() {
+        if (this.showStatusIndicator) {
+            this.themeObj.DrawButton(this.guiObj["StatusIndicator"], this.GetStatusText(), "status")
+        }
     }
 
     SetFont(fontPreset := "normal", extraStyles := "", colorName := "text") {

@@ -30,18 +30,22 @@ class ApiDataSource extends DataSourceBase {
         return response
     }
 
-    GetHttpReq(path) {
+    GetHttpReq(path, private := false) {
         request := WinHttpReq.new(this.GetRemoteLocation(path))
 
-        if (this.app.Config.ApiToken) {
-            request.requestHeaders["Bearer"] := this.app.Config.ApiToken
+        if (private) {
+            request.requestHeaders["Cache-Control"] := "no-cache"
+
+            if (this.app.Config.ApiAuthentication) {
+                this.app.Auth.AlterApiRequest(request)
+            }
         }
 
         return request
     }
 
-    SendHttpReq(path, method := "GET", data := "") {
-        request := this.GetHttpReq(path)
+    SendHttpReq(path, method := "GET", data := "", private := false) {
+        request := this.GetHttpReq(path, private)
         returnCode := request.Send(method, data)
         return request
     }
@@ -50,11 +54,15 @@ class ApiDataSource extends DataSourceBase {
         return this.endpointUrl . "/" . path
     }
 
-    RetrieveItem(path) {
-        exists := (this.cache.ItemExists(path) && !this.cache.ItemNeedsUpdate(path))
+    RetrieveItem(path, private := false, maxCacheAge := "") {
+        if (maxCacheAge == "") {
+            maxCacheAge := this.maxCacheAge
+        }
+
+        exists := (!private && this.cache.ItemExists(path) && !this.cache.ItemNeedsUpdate(path, maxCacheAge))
 
         if (!exists) {
-            request := this.SendHttpReq(path)
+            request := this.SendHttpReq(path, "GET", "", private)
 
             if (request.GetReturnCode() != -1) {
                 return ""
@@ -74,18 +82,17 @@ class ApiDataSource extends DataSourceBase {
 
     GetStatus() {
         path := "status"
-        statusExpire := 21600
-        if (this.cache.ItemExists(path) && this.cache.GetCacheAge(path) >= statusExpire) {
-            this.cache.RemoveItem(path)
-        }
+        statusExpire := 5 ;60
 
-        status := this.ReadItem(path)
+        status := Map("authenticated", false, "email", "")
 
-        if (status) {
-            json := JsonData.new()
-            status := json.FromString(status)
-        } else {
-            status := Map("authenticated", true, "email", "")
+        if (this.app.Config.ApiAuthentication && this.app.Auth.IsAuthenticated()) {
+            status := this.ReadItem(path, true)
+
+            if (status) {
+                json := JsonData.new()
+                status := json.FromString(status)
+            }
         }
 
         return status

@@ -73,8 +73,8 @@ class CacheBase {
         return destination
     }
 
-    ItemNeedsUpdate(reference) {
-        return this.stateObj.IsExpired(reference)
+    ItemNeedsUpdate(reference, maxCacheAge := "") {
+        return this.stateObj.IsExpired(reference, maxCacheAge)
     }
 
     /**

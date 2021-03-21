@@ -37,11 +37,15 @@ class CacheState extends JsonAppState {
         return timestamp
     }
 
-    IsExpired(item) {
+    IsExpired(item, maxCacheAge := "") {
+        if (maxCacheAge == "") {
+            maxCacheAge := this.cacheExpire
+        }
+
         expired := true
 
         if (this.Exists(item)) {
-            expired := this.GetCacheAge(item) >= this.cacheExpire
+            expired := this.GetCacheAge(item) >= maxCacheAge
         }
 
         return expired

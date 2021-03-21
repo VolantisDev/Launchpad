@@ -1,14 +1,15 @@
 ; Automatically-generated file, do not edit manually.
 #Include Launchpad.ahk
+#Include AuthProvider\LaunchpadApiAuthProvider.ahk
 #Include Builder\AhkLauncherBuilder.ahk
 #Include Builder\BuilderBase.ahk
-#Include BuildFile\BuildFileBase.ahk
-#Include BuildFile\ComposableBuildFile.ahk
-#Include BuildFile\CopyableBuildFile.ahk
-#Include BuildFile\GameAhkFile.ahk
-#Include BuildFile\GameExeFile.ahk
-#Include BuildFile\IconFile.ahk
-#Include BuildFile\ShortcutFile.ahk
+#Include Builder\BuildFile\BuildFileBase.ahk
+#Include Builder\BuildFile\ComposableBuildFile.ahk
+#Include Builder\BuildFile\CopyableBuildFile.ahk
+#Include Builder\BuildFile\GameAhkFile.ahk
+#Include Builder\BuildFile\GameExeFile.ahk
+#Include Builder\BuildFile\IconFile.ahk
+#Include Builder\BuildFile\ShortcutFile.ahk
 #Include BulkOperation\AddDetectedGamesOp.ahk
 #Include BulkOperation\BuildLaunchersOp.ahk
 #Include BulkOperation\BulkOperationBase.ahk
@@ -55,6 +56,7 @@
 #Include Module\ModuleBase.ahk
 #Include Service\AppComponentServiceBase.ahk
 #Include Service\AppServiceBase.ahk
+#Include Service\AuthService.ahk
 #Include Service\BuilderManager.ahk
 #Include Service\CacheManager.ahk
 #Include Service\EntityManagerBase.ahk
@@ -66,6 +68,7 @@
 #Include Service\ThemeManager.ahk
 #Include Service\WindowManager.ahk
 #Include Window\AboutWindow.ahk
+#Include Window\AccountInfoWindow.ahk
 #Include Window\DetectedGameEditor.ahk
 #Include Window\DetectedGamesWindow.ahk
 #Include Window\EntityDeleteWindow.ahk
@@ -75,6 +78,7 @@
 #Include Window\LauncherWizard.ahk
 #Include Window\LaunchpadFormGuiBase.ahk
 #Include Window\LaunchpadGuiBase.ahk
+#Include Window\LoginWindow.ahk
 #Include Window\MainWindow.ahk
 #Include Window\ManagedEntityEditorBase.ahk
 #Include Window\ManagedGameEditor.ahk

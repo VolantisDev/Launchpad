@@ -15,19 +15,27 @@ class DataSourceBase {
         return this.useCache ? this.cache.ItemExists(path) : false
     }
 
-    ReadItem(path) {
-        if (this.ItemNeedsRetrieval(path)) {
-            this.RetrieveItem(path)
+    ReadItem(path, private := false, maxCacheAge := "") {
+        if (maxCacheAge == "") {
+            maxCacheAge := this.maxCacheAge
         }
 
-        return this.useCache ? this.cache.ReadItem(path) : ""
+        item := ""
+
+        if (this.ItemNeedsRetrieval(path)) {
+            item := this.RetrieveItem(path, private, maxCacheAge)
+        } else if (this.useCache) {
+            item := this.cache.ReadItem(path)
+        }
+
+        return item
     }
 
     ItemNeedsRetrieval(path) {
         return (!this.useCache || this.cache.ItemNeedsUpdate(path))
     }
 
-    RetrieveItem(path) {
+    RetrieveItem(path, private := false, maxCacheAge := "") {
         return ""
     }
 

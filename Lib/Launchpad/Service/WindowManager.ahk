@@ -12,6 +12,14 @@ class WindowManager extends AppComponentServiceBase {
         return this.ShowDialog(DialogBox.new(title, this.GetTheme(), text, "", owner, parent, buttons))
     }
 
+    LoginWindow(owner := "", parent := "") {
+        return this.ShowDialog(LoginWindow.new(this.app, "", owner, parent))
+    }
+
+    AccountInfoWindow(owner := "", parent := "") {
+        return this.ShowDialog(AccountInfoWindow.new(this.app, "", owner, parent))
+    }
+
     AboutWindow(title := "", text := "", owner := "", parent := "", buttons := "*&OK") {
         return this.ShowDialog(AboutWindow.new(title, this.GetTheme(), text, "", owner, parent, buttons))
     }

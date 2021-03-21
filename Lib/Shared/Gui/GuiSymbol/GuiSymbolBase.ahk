@@ -40,7 +40,7 @@ class GuiSymbolBase {
         try {
             this.DrawSymbol(graphics, x, y, w, h)
         } catch ex {
-            MsgBox(ex.Where . ": " . ex.Message)
+            throw ex
         }
     }
 

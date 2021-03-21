@@ -6,13 +6,9 @@ class DataSourceItemBase {
     key := ""
 
     __New(key, path := "", dataSource := "") {
-        try {
-            InvalidParameterException.CheckTypes("DataSourceItemBase", "key", key, "", "path", path, "")
-            InvalidParameterException.CheckEmpty("DataSourceItemBase", "key", key)
-            InvalidParameterException.CheckTypes("DataSourceItemBase", "dataSource", dataSource, "DataSourceBase")
-        } catch ex {
-            MsgBox key
-        }
+        InvalidParameterException.CheckTypes("DataSourceItemBase", "key", key, "", "path", path, "")
+        InvalidParameterException.CheckEmpty("DataSourceItemBase", "key", key)
+        InvalidParameterException.CheckTypes("DataSourceItemBase", "dataSource", dataSource, "DataSourceBase")
         
         this.endpoint := dataSource
         this.key := key
