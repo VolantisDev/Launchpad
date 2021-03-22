@@ -250,7 +250,13 @@ class GuiBase {
         styling := "C" . this.themeObj.GetColor("text") . " Background" . this.themeObj.GetColor("background")
         lvStyles := "+LV" . LVS_EX_LABELTIP . " +LV" . LVS_EX_DOUBLEBUFFER . " +LV" . LVS_EX_FLATSB . " -E0x200"
         ;lvStyles .= " +LV" . LVS_EX_AUTOSIZECOLUMNS
-        listViewWidth := this.windowSettings["contentWidth"] - this.sidebarWidth - this.margin
+
+        sidebarWidth := this.sidebarWidth
+        if (sidebarWidth) {
+            sidebarWidth += this.margin
+        }
+        
+        listViewWidth := this.windowSettings["contentWidth"] - sidebarWidth
 
         lv := this.guiObj.AddListView("v" . name . " w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " " . styling . " " . lvStyles . " " . options, this.listViewColumns)
         this.lv := lv

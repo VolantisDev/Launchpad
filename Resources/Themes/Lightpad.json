@@ -376,7 +376,7 @@
             },
             "ManageWindow": {
                 "settings": "default",
-                "contentWidth": 700,
+                "contentWidth": 650,
                 "listViewHeight": 400,
                 "options": {
                     "Resize": true,

@@ -3,7 +3,7 @@ class AddSymbol extends GuiSymbolBase {
         offset := this.strokeWidth > 1 ? (this.strokeWidth / 4) : 0
         offset := 0.25 ; @todo Why does this look better?
 
-        symbolMargin := 2
+        symbolMargin := 4
 
         x += symbolMargin
         y += symbolMargin
