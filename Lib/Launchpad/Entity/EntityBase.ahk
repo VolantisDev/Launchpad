@@ -137,7 +137,7 @@ class EntityBase {
     InitializeDefaults() {
         defaults := Map()
         defaults["DataSourceKeys"] := ["api"]
-        defaults["DataSourceItemKey"] := this.keyVal
+        defaults["DataSourceItemKey"] := ""
         defaults["DisplayName"] := this.keyVal
         defaults["AssetsDir"] := this.app.Config.AssetsDir . "\" . this.keyVal
         defaults["DependenciesDir"] := this.app.appDir . "\Vendor"
