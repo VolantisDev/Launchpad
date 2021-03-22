@@ -264,7 +264,7 @@ class ManagedEntityBase extends EntityBase {
         defaults[this.configPrefix . "RunType"] := "Command"
         defaults[this.configPrefix . "ReplaceProcess"] := false
         defaults[this.configPrefix . "ShortcutSrc"] := ""
-        defaults[this.configPrefix . "RunMethod"] := "RunWait"
+        defaults[this.configPrefix . "RunMethod"] := "Run"
         defaults[this.configPrefix . "ProcessType"] := "Exe"
         defaults[this.configPrefix . "ProcessId"] := ""
         defaults[this.configPrefix . "ProcessTimeout"] := 30

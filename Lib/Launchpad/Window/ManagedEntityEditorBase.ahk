@@ -9,7 +9,7 @@
 class ManagedEntityEditorBase extends EntityEditorBase {
     runTypes := ["Command", "Shortcut"]
     processTypes := ["Exe", "Title", "Class"]
-    runMethods := ["RunWait", "Run", "Scheduled"]
+    runMethods := ["Run", "Scheduled", "RunWait"]
     locateMethods := ["Search", "Registry", "BlizzardProductDb"]
     regViews := ["32"]
     entityTypeName := ""
