@@ -13,10 +13,15 @@
     Controls() {
         super.Controls()
         this.AddManageList()
+        this.AddBottomControls()
         this.AddSidebarControls()
     }
 
     AddSidebarControls() {
+
+    }
+
+    AddBottomControls() {
 
     }
 

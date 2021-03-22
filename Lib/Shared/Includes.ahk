@@ -58,10 +58,15 @@
 #Include Gui\GuiShape\GuiShapeBase.ahk
 #Include Gui\GuiShape\StatusIndicatorButtonShape.ahk
 #Include Gui\GuiShape\SymbolButtonShape.ahk
+#Include Gui\GuiSymbol\AddSymbol.ahk
+#Include Gui\GuiSymbol\BuildSymbol.ahk
 #Include Gui\GuiSymbol\CloseSymbol.ahk
+#Include Gui\GuiSymbol\DeleteSymbol.ahk
+#Include Gui\GuiSymbol\EditSymbol.ahk
 #Include Gui\GuiSymbol\GuiSymbolBase.ahk
 #Include Gui\GuiSymbol\MaximizeSymbol.ahk
 #Include Gui\GuiSymbol\MinimizeSymbol.ahk
+#Include Gui\GuiSymbol\RunSymbol.ahk
 #Include Gui\GuiSymbol\UnmaximizeSymbol.ahk
 #Include Gui\Toolbar\ToolbarBase.ahk
 #Include HttpReq\HttpReqBase.ahk

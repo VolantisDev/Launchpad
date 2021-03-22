@@ -32,6 +32,7 @@
         super.Controls()
         this.guiObj.BackColor := this.themeObj.GetColor("accentDark")
         this.AddToolButton("&Detect Games", "DetectGames")
+        this.AddToolButton("&Manage Platforms", "ManagePlatforms")
         this.AddToolButton("&Reload Launchers", "ReloadLaunchers")
         this.AddToolButton("&Clean Launchers", "CleanLaunchers")
         ;this.AddToolButton("&Validate Launchers", "ValidateLaunchers")
@@ -51,6 +52,11 @@
 
         btn := this.AddButton("v" . ctlName . " " . this.nextPos . " w" . width . " h" . buttonH, buttonLabel)
         this.nextPos := this.nextPos == "xm" ? "x+m yp" : "xm"
+    }
+
+    OnManagePlatforms(btn, info) {
+        this.Close()
+        this.app.Windows.OpenPlatformsWindow()
     }
 
     OnDetectGames(btn, info) {

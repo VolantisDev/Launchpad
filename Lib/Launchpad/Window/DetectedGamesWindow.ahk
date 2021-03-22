@@ -20,7 +20,7 @@
         this.AddButton("vCheckAllButton ys w" . this.sidebarWidth . " h30", "Check All")
         this.AddButton("vUncheckAllButton xp y+m w" . this.sidebarWidth . " h30", "Uncheck All")
         this.AddButton("vEditButton xp y+" . (this.margin * 2) . " w" . this.sidebarWidth . " h30", "Edit")
-        this.AddButton("vAddSelectedButton xp y" . (this.titlebarHeight + this.windowSettings["listViewHeight"] - (this.margin * 3)) . " w" . this.sidebarWidth . " h40", "Add Selected", "", true)
+        this.AddButton("vAddSelectedButton xp y" . (this.titlebarHeight + this.windowSettings["listViewHeight"] - (this.margin * 3)) . " w" . this.sidebarWidth . " h40", "Add Selected", "", "primary")
     }
 
     SetupManageEvents(lv) {

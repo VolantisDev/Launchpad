@@ -1,4 +1,5 @@
 ﻿class ManageWindow extends ManageWindowBase {
+    sidebarWidth := 0
     listViewColumns := Array("GAME", "PLATFORM", "STATUS", "API STATUS")
     launcherManager := ""
     platformManager := ""
@@ -16,17 +17,37 @@
         return this.title
     }
 
-    AddSidebarControls() {
-        this.AddButton("vAddButton ys w" . this.sidebarWidth . " h30", "Add")
-        this.AddButton("vEditButton xp y+m w" . this.sidebarWidth . " h30", "Edit")
-        this.AddButton("vBuildButton xp y+m w" . this.sidebarWidth . " h30", "Build")
-        this.AddButton("vRunButton xp y+m w" . this.sidebarWidth . " h30", "Run")
-        this.AddButton("vDeleteButton xp y+m w" . this.sidebarWidth . " h30", "Delete")
-        
-        this.AddButton("vToolsButton xp y" . (this.titlebarHeight + this.windowSettings["listViewHeight"] - (this.margin * 5) - 100)  . " w" . this.sidebarWidth . " h30", "Tools")
-        this.AddButton("vPlatformsButton xp y+m w" . this.sidebarWidth . " h30", "Platforms")
-        this.AddButton("vSettingsButton xp y+m w" . this.sidebarWidth . " h30", "Settings")
-        this.AddButton("vBuildAllButton xp y+m w" . this.sidebarWidth . " h40", "Build All", "", true)
+    AddBottomControls() {
+        buttonRowOffset := 12
+        position := "x" . this.margin . " y+" . (this.margin + buttonRowOffset)
+        this.AddManageButton("AddButton", position, "add", true)
+        position := "x+" . (this.margin) . " yp w60 h25"
+        this.AddButton("vEditButton " . position, "Edit", "", "manageText")
+        position := "x+" . this.margin . " yp w60 h25"
+        this.AddButton("vBuildButton " . position, "Build", "", "manageText")
+        this.AddButton("vRunButton " . position, "Run", "", "manageText")
+        this.AddButton("vDeleteButton " . position, "Delete", "", "manageText")
+
+        abMargin := this.margin/2
+        toolsW := 50
+        settingsW := 60
+        smallH := 20
+        bigH := 25
+        actionButtonsW := toolsW + settingsW + abMargin
+
+        actionButtonsX := (this.margin + this.windowSettings["contentWidth"] - actionButtonsW)
+        position := "x" actionButtonsX . " yp-" . buttonRowOffset . " w" . toolsW . " h" . smallH . " Section"
+        this.AddButton("vToolsButton " . position, "Tools")
+        position := "x+" . abMargin . " yp w" . settingsW . " h" . smallH
+        this.AddButton("vSettingsButton " . position, "Settings")
+        position := "x" . actionButtonsX . " y+" . abMargin . " w" . actionButtonsW . " h" . bigH
+        this.AddButton("vBuildAllButton " . position, "Build All", "", "primary")
+    }
+
+    AddManageButton(name, position, symbol, primary := false) {
+        options := "v" . name . " " . position
+        options .= " w25 h25"
+        return this.themeObj.AddButton(this.guiObj, options, symbol, "On" . name, primary ? "managePrimary" : "manage")
     }
 
     GetStatusText() {
@@ -174,10 +195,6 @@
         this.app.Windows.OpenSettingsWindow("ManageWindow")
     }
 
-    OnPlatformsButton(btn, info) {
-        this.app.Windows.OpenPlatformsWindow()
-    }
-
     OnToolsButton(btn, info) {
         this.app.Windows.OpenToolsWindow("ManageWindow")
     }
@@ -231,9 +248,9 @@
             return
         }
 
-        this.AutoXYWH("x", ["AddButton", "EditButton", "BuildButton", "RunButton", "DeleteButton"])
+        this.AutoXYWH("y", ["AddButton", "EditButton", "BuildButton", "RunButton", "DeleteButton"])
         this.AutoXYWH("xy", ["BuildAllButton"])
-        this.AutoXYWH("xy*", ["SettingsButton", "ToolsButton", "PlatformsButton"])
+        this.AutoXYWH("xy*", ["SettingsButton", "ToolsButton"])
     }
 
     Destroy() {

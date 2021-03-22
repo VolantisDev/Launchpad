@@ -375,13 +375,13 @@ class ThemeBase {
 
         try {
             enabledShape := buttonStyle["enabled"].Has("shape") ? buttonStyle["enabled"]["shape"] : "ButtonShape"
-            states["enabled"] := %enabledShape%.new(this, content, buttonStyle["enabled"]["backgroundColor"], buttonStyle["enabled"]["textColor"], buttonStyle["enabled"]["dimColor"], buttonStyle["enabled"]["borderColor"], buttonStyle["enabled"]["borderWidth"])
+            states["enabled"] := %enabledShape%.new(this, content, buttonStyle["enabled"]["backgroundColor"], buttonStyle["enabled"]["textColor"], buttonStyle["enabled"]["dimColor"], buttonStyle["enabled"]["borderColor"], buttonStyle["enabled"]["borderWidth"], buttonStyle["enabled"]["strokeWidth"])
             
             disabledShape := buttonStyle["disabled"].Has("shape") ? buttonStyle["disabled"]["shape"] : "ButtonShape"
-            states["disabled"] := %disabledShape%.new(this, content, buttonStyle["disabled"]["backgroundColor"], buttonStyle["disabled"]["textColor"], buttonStyle["enabled"]["dimColor"], buttonStyle["disabled"]["borderColor"], buttonStyle["disabled"]["borderWidth"])
+            states["disabled"] := %disabledShape%.new(this, content, buttonStyle["disabled"]["backgroundColor"], buttonStyle["disabled"]["textColor"], buttonStyle["enabled"]["dimColor"], buttonStyle["disabled"]["borderColor"], buttonStyle["disabled"]["borderWidth"], buttonStyle["disabled"]["strokeWidth"])
             
             hoveredShape := buttonStyle["hovered"].Has("shape") ? buttonStyle["hovered"]["shape"] : "ButtonShape"
-            states["hovered"] := %hoveredShape%.new(this, content, buttonStyle["hovered"]["backgroundColor"], buttonStyle["hovered"]["textColor"], buttonStyle["enabled"]["dimColor"], buttonStyle["hovered"]["borderColor"], buttonStyle["hovered"]["borderWidth"])
+            states["hovered"] := %hoveredShape%.new(this, content, buttonStyle["hovered"]["backgroundColor"], buttonStyle["hovered"]["textColor"], buttonStyle["enabled"]["dimColor"], buttonStyle["hovered"]["borderColor"], buttonStyle["hovered"]["borderWidth"], buttonStyle["hovered"]["strokeWidth"])
 
             states["enabled"].DrawOn(picObj)
 

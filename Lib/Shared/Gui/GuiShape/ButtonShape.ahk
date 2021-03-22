@@ -10,14 +10,16 @@ class ButtonShape extends GuiShapeBase {
     graphics := ""
     bitmap := ""
     hbitmap := ""
+    strokeWidth := ""
 
-    __New(themeObj, btnText, bgColor, textColor, dimColor, borderColor, borderThickness := 1) {
+    __New(themeObj, btnText, bgColor, textColor, dimColor, borderColor, borderThickness := 1, strokeWidth := 1) {
         this.themeObj := themeObj
         this.btnText := btnText
         this.bgColor := bgColor
         this.textColor := textColor
         this.borderColor := borderColor
         this.borderThickness := borderThickness
+        this.strokeWidth := strokeWidth
         this.dimColor := dimColor
     }
 
