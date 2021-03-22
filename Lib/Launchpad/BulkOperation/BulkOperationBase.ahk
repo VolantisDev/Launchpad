@@ -56,6 +56,7 @@ class BulkOperationBase {
             return false
         }
 
+        this.app.Logger.Debug(Type(this) . ": Starting bulk operation...")
         this.running := true
         this.ShowProgressWindow()
         this.RunAction()
@@ -63,7 +64,12 @@ class BulkOperationBase {
         this.Notify()
         this.running := false
         this.completed := true
+        this.LogResults()
         return (this.successCount > 0 && this.failedCount == 0)
+    }
+
+    LogResults() {
+        this.app.Logger.Info(Type(this) . " Results: " . this.GetResultMessage())
     }
 
     VerifyRequirements() {
@@ -104,14 +110,18 @@ class BulkOperationBase {
 
     Notify() {
         if (this.notify) {
-            message := StrReplace(this.successMessage, "{n}", this.successCount)
-
-            if (this.failedCount > 0) {
-                message .= "`n" . StrReplace(this.failedMessage, "{n}", this.failedCount)
-            }
-
-            this.app.Notifications.Info(message)
+            this.app.Notifications.Info(this.GetResultMessage())
         }
+    }
+
+    GetResultMessage() {
+        message := StrReplace(this.successMessage, "{n}", this.successCount)
+
+        if (this.failedCount > 0) {
+            message .= "`n" . StrReplace(this.failedMessage, "{n}", this.failedCount)
+        }
+
+        return message
     }
 
     RunAction() {
