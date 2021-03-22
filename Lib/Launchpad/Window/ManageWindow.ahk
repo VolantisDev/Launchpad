@@ -18,10 +18,10 @@
     }
 
     AddBottomControls() {
-        buttonRowOffset := 12
-        position := "x" . this.margin . " y+" . (this.margin + buttonRowOffset)
+        buttonRowOffset := 10
+        position := "x" . this.margin . " y+" . (this.margin + buttonRowOffset-2)
         this.AddManageButton("AddButton", position, "add", true)
-        position := "x+" . (this.margin) . " yp w60 h25"
+        position := "x+" . (this.margin) . " yp+5 w60 h25"
         this.AddButton("vEditButton " . position, "Edit", "", "manageText")
         position := "x+" . this.margin . " yp w60 h25"
         this.AddButton("vBuildButton " . position, "Build", "", "manageText")
@@ -46,7 +46,7 @@
 
     AddManageButton(name, position, symbol, primary := false) {
         options := "v" . name . " " . position
-        options .= " w25 h25"
+        options .= " w35 h35"
         return this.themeObj.AddButton(this.guiObj, options, symbol, "On" . name, primary ? "managePrimary" : "manage")
     }
 
