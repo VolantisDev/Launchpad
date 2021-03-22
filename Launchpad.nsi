@@ -49,6 +49,7 @@ InstallDir "$LOCALAPPDATA\${APP_NAME}"
 !insertmacro MUI_PAGE_STARTMENU Application $SM_Folder
 !endif
 !insertmacro MUI_PAGE_INSTFILES
+!define MUI_FINISHPAGE_RUN "$INSTDIR\${MAIN_APP_EXE}"
 !insertmacro MUI_PAGE_FINISH
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
