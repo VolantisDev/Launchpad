@@ -1,5 +1,6 @@
 class LoggerBase {
     loggingLevel := ""
+    levels := ["none", "debug", "info", "warning", "error"]
 
     __New(loggingLevel := "") {
         if (loggingLevel == "") {
@@ -9,23 +10,21 @@ class LoggerBase {
         this.loggingLevel := loggingLevel
     }
 
-    Log(message, level := "info") {
+    Log(message, level := "Info") {
         shouldContinue := false
+        level := StrLower(level)
 
         minLevel := 1
         reqLevel := 1
 
         for index, loggingLevel in this.levels {
-            if (this.loggingLevel == loggingLevel) {
+            loggingLevel := StrLower(loggingLevel)
+            if (StrLower(this.loggingLevel) == loggingLevel) {
                 minLevel := index
-                break
             }
-        }
 
-        for index, loggingLevel in this.levels {
             if (loggingLevel == level) {
                 reqLevel := index
-                break
             }
         }
 

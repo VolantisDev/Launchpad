@@ -5,23 +5,23 @@ class LoggerService extends ServiceBase {
         this.logger := logger
     }
 
-    Log(message, level := "info") {
-        this.logger.write(message, level)
+    Log(message, level := "Info") {
+        this.logger.Log(message, level)
     }
 
     Debug(message) {
-        this.Log(message, "debug")
+        this.Log(message, "Debug")
     }
 
     Info(message) {
-        this.Log(message, "info")
+        this.Log(message, "Info")
     }
 
     Warning(message) {
-        this.Log(message, "warning")
+        this.Log(message, "Warning")
     }
 
     Error(message) {
-        this.log(message, "error")
+        this.log(message, "Error")
     }
 }

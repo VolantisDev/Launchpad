@@ -11,24 +11,24 @@ class NotificationService extends AppServiceBase {
         this.notifierObj := notifierObj
     }
 
-    Notify(message, title := "", level := "info") {
+    Notify(message, title := "", level := "Info") {
         return this.notifierObj.Notify(message, title, level)
     }
 
     Debug(message, title := "") {
-        return this.Notify(message, title, "debug")
+        return this.Notify(message, title, "Debug")
     }
 
     Info(message, title := "") {
-        return this.Notify(message, title, "info")
+        return this.Notify(message, title, "Info")
     }
 
     Warning(message, title := "") {
-        return this.Notify(message, title, "warning")
+        return this.Notify(message, title, "Warning")
     }
 
     Error(message, title := "") {
-        return this.Notify(message, title, "error")
+        return this.Notify(message, title, "Error")
     }
 
     GetNotifier() {

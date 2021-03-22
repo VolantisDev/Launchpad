@@ -132,7 +132,7 @@
         OnError(this.errorCallback)
     
         this.moduleManagerObj := ModuleManager.new(this)
-        this.loggerServiceObj := LoggerService.new(FileLogger.new(A_ScriptDir . "\log.txt", config.LoggingLevel, 5))
+        this.loggerServiceObj := LoggerService.new(FileLogger.new(A_ScriptDir . "\log.txt", config.LoggingLevel, true))
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
         this.themeManagerObj := ThemeManager.new(this, appDir . "\Resources\Themes", appDir . "\Resources", eventManagerObj, idGen)
         this.notificationServiceObj := NotificationService.new(this, ToastNotifier.new(this))

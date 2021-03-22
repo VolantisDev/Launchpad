@@ -1,15 +1,14 @@
 class FileLogger extends LoggerBase {
     path := ""
-    loggingLevel := ""
-    levels := ["None", "Debug", "Info", "Warning", "Error"]
+    autoTruncate := false
 
     __New(path, loggingLevel := "", autoTruncate := false) {
         this.path := path
-
+        this.autoTruncate := autoTruncate
         super.__New(loggingLevel)
+        
 
         if (autoTruncate) {
-            this.autoTruncate := autoTruncate
             this.Truncate(autoTruncate)
         }
     }
