@@ -8,7 +8,7 @@
 
 class LauncherWizard extends LaunchpadFormGuiBase {
     knownGames := ""
-    launcherTypes := ""
+    knownPlatforms := ""
     dataSource := ""
 
     __New(app, windowKey := "", owner := "", parent := "") {
@@ -36,7 +36,7 @@ class LauncherWizard extends LaunchpadFormGuiBase {
     Controls() {
         super.Controls()
         this.AddComboBox("Key", "Key", "", this.knownGames, "Select an existing game from the API, or enter a custom game key to create your own. If choosing an existing game, most advanced values can be loaded from the API.")
-        this.AddEntityTypeSelect("Launcher", "LauncherType", "Default", this.launcherTypes, "", "This tells Launchpad how to interact with any launcher your game might require. If your game's launcher isn't listed, or your game doesn't have a launcher, start with `"Default`".")
+        this.AddSelect("Platform", "Platform", "", this.knownPlatforms, false, "", "", "Select the platform that this game is run through.", false)
         ; @todo Add a few other common fields here, like Icon
     }
 
@@ -44,14 +44,13 @@ class LauncherWizard extends LaunchpadFormGuiBase {
         super.Create()
         this.knownGames := this.dataSource.ReadListing("game-keys")
         this.knownPlatforms := this.dataSource.ReadListing("platforms")
-        this.launcherTypes := this.dataSource.ReadListing("launcher-types")
     }
 
     OnKeyChange(ctlObj, info) {
         
     }
 
-    OnLauncherTypeChange(ctlObj, info) {
+    OnPlatformChange(ctlObj, info) {
         
     }
 
@@ -59,9 +58,16 @@ class LauncherWizard extends LaunchpadFormGuiBase {
         entity := ""
 
         if (result == "Save") {
-            config := Map("LauncherType", this.guiObj["LauncherType"].Text)
+            platformKey := Trim(this.guiObj["Platform"].Text)
+            config := Map("Platform", platformKey)
+            platform := this.app.Platforms.GetItem(platformKey)
+            if (platform) {
+                config["LauncherType"] := platform.platform.launcherType
+                config["GameType"] := platform.platform.gameType
+            }
             key := this.guiObj["Key"].Text
             entity := LauncherEntity.new(this.app, key, config)
+            ;MsgBox(entity.entityData.DebugData())
         }
 
         return entity
