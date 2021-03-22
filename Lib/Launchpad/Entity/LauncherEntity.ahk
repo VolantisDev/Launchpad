@@ -162,7 +162,7 @@ class LauncherEntity extends EntityBase {
                 
                 dsData := dataSource.ReadJson(apiPath)
 
-                if (dsData != "" && dsData.Has("id")) {
+                if (dsData != "" && dsData.Has("id") && dsData["id"]) {
                     this.DataSourceItemKey := dsData["id"]
                     break
                 }
