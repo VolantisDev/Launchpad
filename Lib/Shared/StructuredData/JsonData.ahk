@@ -143,7 +143,7 @@ class JsonData extends StructuredDataBase {
     }
 
     ToString(obj := "", indent:="", lvl:=1, args*) {
-		if (obj == "") {
+		if (obj == "" && lvl == 1) {
 			obj := this.obj
 		}
 
