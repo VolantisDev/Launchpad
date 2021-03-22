@@ -116,11 +116,16 @@
                 iconSrc := assetIcon
             }
 
-            if (!iconSrc) {
+            if (!iconSrc || !FileExist(iconSrc)) {
                 iconSrc := defaultIcon
             }
 
-            IL_Add(IL, iconSrc)
+            newIndex := IL_Add(IL, iconSrc)
+
+            if (!newIndex) {
+                IL_Add(IL, defaultIcon)
+            }
+            
             iconNum++
         }
 
