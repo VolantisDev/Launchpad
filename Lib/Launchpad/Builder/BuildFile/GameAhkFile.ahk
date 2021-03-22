@@ -84,6 +84,7 @@ class GameAhkFile extends ComposableBuildFile {
         } else if (IsObject(value)) {
             value := this.ConvertObjectToCode(value)
         } else if (Type(value) == "String" && value != "true" && value != "false") {
+            value := StrReplace(value, "`"", "```"")
             value := "`"" . value . "`""
         }
         
