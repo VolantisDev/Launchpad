@@ -137,6 +137,10 @@
 
     OnCloseButton(btn, info) {
         this.Close()
+
+        if (this.app.Windows.WindowExists("ManageWindow")) {
+            this.app.Windows._components["ManageWindow"].PopulateListView()
+        }
     }
 
     OnReloadLauncherFile(btn, info) {
