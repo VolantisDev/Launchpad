@@ -12,7 +12,7 @@
         
         buttonSize := this.themeObj.GetButtonSize("s", true)
         buttonW := (buttonSize.Has("w") && buttonSize["w"] != "auto") ? buttonSize["w"] : 80
-        tabs := this.AddTabs("SettingsTabs", ["Launchers", "Assets", "Sources", "Appearance", "Advanced"], "x" . this.margin . " y+" . this.margin)
+        tabs := this.AddTabs("SettingsTabs", ["Launchers", "Assets", "Sources", "Platforms", "Appearance", "Advanced"], "x" . this.margin . " y+" . this.margin)
 
         tabs.UseTab("Launchers", true)
 
@@ -54,10 +54,13 @@
 
         ; @todo finish this
 
-        tabs.UseTab("Advanced", true)
-
+        tabs.UseTab("Platforms", true)
         this.AddHeading("Platforms File")
         this.AddConfigLocationBlock("PlatformsFile", "Reload")
+
+        tabs.UseTab("Advanced", true)
+        this.AddHeading("Updates")
+        this.AddConfigCheckBox("Check for updates on start", "CheckUpdatesOnStart")
 
         this.AddHeading("Cache Dir")
         this.AddConfigLocationBlock("CacheDir", "&Flush")

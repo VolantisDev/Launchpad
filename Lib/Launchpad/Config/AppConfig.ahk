@@ -119,6 +119,11 @@
         set => this.SetIniValue("LoggingLevel", value)
     }
 
+    CheckUpdatesOnStart {
+        get => this.GetBooleanValue("CheckUpdatesOnStart", true)
+        set => this.SetBooleanValue("CheckUpdatesOnStart", value)
+    }
+
     __New(app, defaultTempDir, defaultAppDataDir) {
         InvalidParameterException.CheckTypes("ValidateLaunchersOp", "defaultTempDir", defaultTempDir, "", "defaultAppDataDir", defaultAppDataDir, "")
         InvalidParameterException.CheckEmpty("ValidateLaunchersOp", "defaultTempDir", defaultTempDir, "defaultAppDataDir", defaultAppDataDir)

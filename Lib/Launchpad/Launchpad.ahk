@@ -148,6 +148,41 @@
        
         this.InitializeApp()
     }
+    
+    CheckForUpdates() {
+        global appVersion
+
+        if (appVersion != "{{VERSION}}") {
+            dataSource := this.DataSources.GetItem("api")
+            releaseInfoStr := dataSource.ReadItem("release-info")
+
+            if (releaseInfoStr) {
+                data := JsonData.new()
+                releaseInfo := data.FromString(releaseInfoStr)
+
+                if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this.VersionIsOutdated(releaseInfo["data"]["version"], appVersion)) {
+                    this.Windows.UpdateAvailable(releaseInfo)
+                }
+            }
+        }
+    }
+
+    VersionIsOutdated(latestVersion, installedVersion) {
+        splitLatestVersion := StrSplit(latestVersion, ".")
+        splitInstalledVersion := StrSplit(installedVersion, ".")
+
+        for (index, numPart in splitInstalledVersion) {
+            latestVersionPart := splitLatestVersion.Has(index) ? splitLatestVersion[index] : 0
+
+            if ((latestVersionPart + 0) > (numPart + 0)) {
+                return true
+            } else if ((latestVersionPart + 0) < (numPart + 0)) {
+                return false
+            } 
+        }
+
+        return false
+    }
 
     OnException(e, mode) {
         ; @todo allow submission of the error
@@ -195,6 +230,10 @@
         if (this.Config.ApiAutoLogin) {
             this.Auth.Login()
         }
+
+        if (this.Config.CheckUpdatesOnStart) {
+            this.CheckForUpdates()
+        }
         
         this.Platforms.LoadComponents(this.Config.PlatformsFile)
         this.Launchers.LoadComponents(this.Config.LauncherFile)
@@ -232,10 +271,6 @@
         }
 
         ExitApp
-    }
-
-    CheckForUpdates() {
-        Run("https://github.com/VolantisDev/Launchpad/releases/latest")
     }
 
     OpenWebsite() {

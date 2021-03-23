@@ -90,4 +90,5 @@
 #Include Window\SettingsWindow.ahk
 #Include Window\SetupWindow.ahk
 #Include Window\ToolsWindow.ahk
+#Include Window\UpdateAvailableWindow.ahk
 ; End of auto-generated includes.
