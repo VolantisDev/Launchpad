@@ -2,6 +2,7 @@ class PlatformsWindow extends ManageWindowBase {
     listViewColumns := Array("PLATFORM", "ENABLED", "DETECT GAMES", "INSTALLED", "VERSION")
     platformsFile := ""
     platformManager := ""
+    platformRows := []
 
     __New(app, platformsFile := "", windowKey := "", owner := "", parent := "") {
         if (platformsFile == "") {
@@ -36,6 +37,7 @@ class PlatformsWindow extends ManageWindowBase {
         this.guiObj["ListView"].SetImageList(this.CreateIconList())
         iconNum := 1
         index := 1
+        this.platformRows := []
 
         for key, platform in this.platformManager.Entities {
             enabledText := platform.IsEnabled ? "Yes" : "No"
@@ -43,6 +45,7 @@ class PlatformsWindow extends ManageWindowBase {
             installedText := platform.IsInstalled ? "Yes" : "No"
             focusOption := index == focusedItem ? " Focus" : ""
             this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, platform.GetDisplayName(), enabledText, detectGamesText, installedText, platform.InstalledVersion)
+            this.platformRows.Push(key)
             iconNum++
             index++
         }
@@ -72,7 +75,7 @@ class PlatformsWindow extends ManageWindowBase {
     }
 
     OnDoubleClick(LV, rowNum) {
-        key := LV.GetText(rowNum)
+        key := this.platformRows[rowNum]
         this.EditPlatform(key)
     }
 
@@ -95,7 +98,7 @@ class PlatformsWindow extends ManageWindowBase {
         platform := ""
 
         if (selected > 0) {
-            key := this.guiObj["ListView"].GetText(selected, 1)
+            key := this.platformRows[selected]
             platform := this.platformManager.Entities[key]
         }
 
