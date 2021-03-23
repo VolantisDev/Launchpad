@@ -57,6 +57,7 @@
 #Include Service\AppComponentServiceBase.ahk
 #Include Service\AppServiceBase.ahk
 #Include Service\AuthService.ahk
+#Include Service\BackupManager.ahk
 #Include Service\BuilderManager.ahk
 #Include Service\CacheManager.ahk
 #Include Service\EntityManagerBase.ahk

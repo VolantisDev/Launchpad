@@ -1,4 +1,4 @@
-class SettingsWindow extends LaunchpadGuiBase {
+﻿class SettingsWindow extends LaunchpadGuiBase {
     availableThemes := Map()
     logLevels := ["None", "Error", "Warning", "Info", "Debug"]
 
@@ -12,7 +12,7 @@ class SettingsWindow extends LaunchpadGuiBase {
         
         buttonSize := this.themeObj.GetButtonSize("s", true)
         buttonW := (buttonSize.Has("w") && buttonSize["w"] != "auto") ? buttonSize["w"] : 80
-        tabs := this.AddTabs("SettingsTabs", ["Launchers", "Assets", "Sources", "Platforms", "Appearance", "Advanced"], "x" . this.margin . " y+" . this.margin)
+        tabs := this.AddTabs("SettingsTabs", ["Launchers", "Platforms", "Backups", "Appearance", "Cache", "Advanced"], "x" . this.margin . " y+" . this.margin)
 
         tabs.UseTab("Launchers", true)
 
@@ -22,26 +22,33 @@ class SettingsWindow extends LaunchpadGuiBase {
         this.AddHeading("Launcher Directory")
         this.AddConfigLocationBlock("DestinationDir")
 
-        this.AddHeading("Launcher Settings")
-        this.AddConfigCheckBox("Create individual launcher directories", "CreateIndividualDirs")
-        this.AddConfigCheckBox("Create desktop shortcuts", "CreateDesktopShortcuts")
-        this.AddConfigCheckBox("Rebuild existing launchers", "RebuildExistingLaunchers")
-        this.AddConfigCheckBox("Clean launchers on build", "CleanLaunchersOnBuild")
-        this.AddConfigCheckBox("Clean launchers on exit", "CleanLaunchersOnExit")
-
-        tabs.UseTab("Assets", true)
-
         this.AddHeading("Assets Directory")
         this.AddConfigLocationBlock("AssetsDir")
 
-        this.AddHeading("Asset Settings")
+        this.AddHeading("Launcher Settings")
+        this.AddConfigCheckBox("Create individual launcher directories", "CreateIndividualDirs")
+        this.AddConfigCheckBox("Create desktop shortcuts for launchers", "CreateDesktopShortcuts")
+        this.AddConfigCheckBox("Rebuild existing launchers when building all launchers", "RebuildExistingLaunchers")
+        this.AddConfigCheckBox("Clean launchers automatically when building", "CleanLaunchersOnBuild")
+        this.AddConfigCheckBox("Clean launchers automatically when exiting Launchpad", "CleanLaunchersOnExit")
 
-        tabs.UseTab("Sources", true)
+        tabs.UseTab("Platforms", true)
 
-        this.AddHeading("API Endpoint")
-        this.AddConfigLocationBlock("ApiEndpoint")
-        this.AddConfigCheckBox("Enable API authentication for enhanced functionality", "ApiAuthentication")
-        this.AddConfigCheckBox("Automatically initiate API login when needed", "ApiAutoLogin")
+        this.AddHeading("Platforms File")
+        this.AddConfigLocationBlock("PlatformsFile", "Reload")
+
+        tabs.UseTab("Backups")
+
+        this.AddHeading("Backup Dir")
+        this.AddConfigLocationBlock("BackupDir", "&Manage")
+
+        this.AddHeading("Backups to Keep")
+        ctl := this.AddEdit("BackupsToKeep", this.app.Config.BackupsToKeep, "y+" . this.margin, 100)
+        ctl.OnEvent("Change", "OnBackupsToKeepChange")
+        this.guiObj.AddText("w" . this.windowSettings["contentWidth"] " y+" . this.margin, "Note: This can be overridden for individual backups in the Backup Manager.")
+
+        this.AddHeading("Backup Options")
+        this.AddConfigCheckbox("Automatically back up config files", "AutoBackupConfigFiles")
 
         tabs.UseTab("Appearance", true)
 
@@ -51,15 +58,7 @@ class SettingsWindow extends LaunchpadGuiBase {
         ctl.OnEvent("Change", "OnThemeNameChange")
         ctl.ToolTip := "Select a theme for Launchpad to use."
 
-        ; @todo finish this
-
-        tabs.UseTab("Platforms", true)
-        this.AddHeading("Platforms File")
-        this.AddConfigLocationBlock("PlatformsFile", "Reload")
-
-        tabs.UseTab("Advanced", true)
-        this.AddHeading("Updates")
-        this.AddConfigCheckBox("Check for updates on start", "CheckUpdatesOnStart")
+        tabs.UseTab("Cache", true)
 
         this.AddHeading("Cache Dir")
         this.AddConfigLocationBlock("CacheDir", "&Flush")
@@ -67,10 +66,22 @@ class SettingsWindow extends LaunchpadGuiBase {
         this.AddHeading("Cache Settings")
         this.AddConfigCheckBox("Flush cache on exit", "FlushCacheOnExit")
 
+        tabs.UseTab("Advanced", true)
+
+        this.AddHeading("Updates")
+        this.AddConfigCheckBox("Check for updates on start", "CheckUpdatesOnStart")
+
         this.AddHeading("Logging Level")
         chosen := this.GetItemIndex(this.logLevels, this.app.Config.LoggingLevel)
         ctl := this.guiObj.AddDDL("vLoggingLevel xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"), this.logLevels)
         ctl.OnEvent("Change", "OnLoggingLevelChange")
+
+        this.AddHeading("API Endpoint")
+        this.AddConfigLocationBlock("ApiEndpoint")
+
+        this.AddHeading("API Settings")
+        this.AddConfigCheckBox("Enable API login for enhanced functionality", "ApiAuthentication")
+        this.AddConfigCheckBox("Automatically initiate API login when needed", "ApiAutoLogin")
 
         tabs.UseTab()
 
@@ -216,6 +227,19 @@ class SettingsWindow extends LaunchpadGuiBase {
         this.SetText("TxtCacheDir", this.app.Config.CacheDir, "Bold")
     }
 
+    OnOpenBackupDir(btn, info) {
+        this.app.Backups.OpenBackupDir()
+    }
+
+    OnChangeBackupDir(btn, info) {
+        this.app.Backups.ChangeBackupDir()
+        this.SetText("TxtBackupDir", this.app.Config.BackupDir, "Bold")
+    }
+
+    OnManageBackupDir(btn, info) {
+        ; @todo Open Backup Manager window
+    }
+
     OnThemeNameChange(ctl, info) {
         this.guiObj.Submit(false)
         this.app.Config.ThemeName := this.availableThemes[ctl.Value]
@@ -225,5 +249,10 @@ class SettingsWindow extends LaunchpadGuiBase {
     OnLoggingLevelChange(ctl, info) {
         this.guiObj.Submit(false)
         this.app.Config.LoggingLevel := ctl.Text
+    }
+
+    OnBackupsToKeepChange(ctl, info) {
+        this.guiObj.Submit(false)
+        this.app.Config.BackupsToKeep := ctl.Text
     }
 }

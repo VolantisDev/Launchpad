@@ -403,7 +403,7 @@
             },
             "SettingsWindow": {
                 "settings": "form",
-                "contentWidth": 500,
+                "contentWidth": 550,
                 "options": {
                     "Popup": true
                 }

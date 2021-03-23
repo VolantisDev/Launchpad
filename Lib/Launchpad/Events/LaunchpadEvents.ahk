@@ -22,4 +22,7 @@ class LaunchpadEvents {
 
     static WINDOWS_REGISTER := 0x2060
     static WINDOWS_ALTER := 0x2065
+
+    static BACKUPS_REGISTER := 0x2070
+    static BACKUPS_ALTER := 0x2075
 }

@@ -234,7 +234,7 @@ class GuiBase {
 
     AddHeading(groupLabel, position := "") {
         if (position == "") {
-            position := "x" . this.margin . " y+" . (this.margin * 2.5)
+            position := "x" . this.margin . " y+" . (this.margin * 2)
         }
 
         this.SetFont("normal", "Bold")
@@ -590,8 +590,12 @@ class GuiBase {
         this.guiObj.AddText("x" . this.margin . " y31 w0 h0", "")
     }
 
-    AddEdit(name, defaultValue := "", options := "") {
-        opts := "x" . this.margin . " w" . this.windowSettings["contentWidth"] . " -VScroll v" . name . " c" . this.themeObj.GetColor("editText") . " " . options
+    AddEdit(name, defaultValue := "", options := "", width := "") {
+        if (width == "") {
+            width := this.windowSettings["contentWidth"]
+        }
+
+        opts := "x" . this.margin . " w" . width . " -VScroll v" . name . " c" . this.themeObj.GetColor("editText") . " " . options
         return this.guiObj.AddEdit(opts, defaultValue)
     }
 

@@ -1,4 +1,4 @@
-class AppConfig extends IniConfig {
+﻿class AppConfig extends IniConfig {
     appNameValue := ""
     defaultTempDir := ""
     defaultAppDataDir := ""
@@ -74,6 +74,21 @@ class AppConfig extends IniConfig {
         set => this.SetIniValue("CacheDir", value)
     }
 
+    BackupDir {
+        get => this.GetIniValue("BackupDir") || this.AppDataDir . "\Backups"
+        set => this.SetIniValue("BackupDir", value)
+    }
+
+    BackupsToKeep {
+        get => this.GetIniValue("BackupsToKeep") || 5
+        set => this.SetIniValue("BackupsToKeep", value)
+    }
+
+    AutoBackupConfigFiles {
+        get => this.GetBooleanValue("AutoBackupConfigFiles", true)
+        set => this.SetBooleanValue("AutoBackupConfigFiles", value)
+    }
+
     RebuildExistingLaunchers {
         get => this.GetBooleanValue("RebuildExistingLaunchers", true)
         set => this.SetBooleanValue("RebuildExistingLaunchers", value)
@@ -90,7 +105,7 @@ class AppConfig extends IniConfig {
     }
 
     CleanLaunchersOnBuild {
-        get => this.GetBooleanValue("CleanLaunchersOnBuild", true)
+        get => this.GetBooleanValue("CleanLaunchersOnBuild", false)
         set => this.SetBooleanValue("CleanLaunchersOnBuild", value)
     }
 
@@ -100,7 +115,7 @@ class AppConfig extends IniConfig {
     }
 
     CleanLaunchersOnExit {
-        get => this.GetBooleanValue("CleanLaunchersOnExit", false)
+        get => this.GetBooleanValue("CleanLaunchersOnExit", true)
         set => this.SetBooleanValue("CleanLaunchersOnExit", value)
     }
 

@@ -19,6 +19,7 @@
     blizzardProductDbObj := ""
     moduleManagerObj := ""
     authServiceObj := ""
+    backupManagerObj := ""
     
     Config {
         get => this.appConfigObj
@@ -109,6 +110,11 @@
         set => this.authServiceObj := value
     }
 
+    Backups {
+        get => this.backupManagerObj
+        set => this.backupManagerObj := value
+    }
+
     __New(appName, appDir) {
         InvalidParameterException.CheckTypes("Launchpad", "appName", appName, "", "appDir", appDir, "")
         this.appName := appName
@@ -134,6 +140,7 @@
         this.moduleManagerObj := ModuleManager.new(this)
         this.loggerServiceObj := LoggerService.new(FileLogger.new(A_ScriptDir . "\log.txt", config.LoggingLevel, true))
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
+        this.backupManagerObj := BackupManager.new(this, config.BackupDir)
         this.themeManagerObj := ThemeManager.new(this, appDir . "\Resources\Themes", appDir . "\Resources", eventManagerObj, idGen)
         this.notificationServiceObj := NotificationService.new(this, ToastNotifier.new(this))
         this.windowManagerObj := WindowManager.new(this)
@@ -237,6 +244,7 @@
         
         this.Platforms.LoadComponents(this.Config.PlatformsFile)
         this.Launchers.LoadComponents(this.Config.LauncherFile)
+        this.Backups.LoadComponents()
 
         result := ""
 
