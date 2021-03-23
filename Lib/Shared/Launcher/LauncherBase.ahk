@@ -6,6 +6,7 @@ class LauncherBase {
     config := ""
     pid := 0
     progress := ""
+    logger := ""
 
     __New(key, game, config := "") {
         this.eventManager := EventManager.new()
@@ -22,6 +23,10 @@ class LauncherBase {
 
         if (this.config["ShowProgress"]) {
             this.CreateProgressGui()
+        }
+
+        if (this.config["LogPath"]) {
+            this.logger := FileLogger.new(this.config["LogPath"], this.config["LoggingLevel"], true)
         }
     }
 
@@ -68,11 +73,19 @@ class LauncherBase {
         return launchSteps + this.game.CountRunSteps()
     }
 
+    Log(message, level := "Debug") {
+        if (this.logger && this.config["LoggingLevel"] != "None") {
+            this.logger.Log(this.key . ": " . message, level)
+        }
+    }
+
     LaunchGame() {
         if (this.progress != "") {
             this.progress.Show()
             this.progress.SetDetailText("Initializing launcher...")
         }
+
+        this.Log("Starting launcher operations.", "Info")
         
         if (this.config["CloseBefore"]) {
             if (this.progress != "") {
@@ -124,6 +137,8 @@ class LauncherBase {
             this.RunProcesses(this.config["RunAfter"], "After")
         }
 
+        this.Log("Finished all launcher operations.", "Info")
+
         if (this.progress != "") {
             this.progress.Finish()
         }
@@ -140,12 +155,14 @@ class LauncherBase {
             }
 
             if (WinExist("ahk_exe " . processExe, "", " - Launchpad")) {
+                this.Log("Closing process " . processExe)
                 WinClose()
                 Sleep(1000)
             }
 
             pid := ProcessExist(processExe)
             if (pid) {
+                this.Log("Closing process " . pid)
                 ProcessClose(pid)
             }
         }
@@ -160,6 +177,7 @@ class LauncherBase {
             }
 
             taskName := "Launchpad\" . this.key . "\" . dir . "\" . index
+            this.Log("Running process " . command)
             this.RunScheduledTask(taskName, command)
         }
     }
@@ -173,6 +191,7 @@ class LauncherBase {
     }
 
     LaunchGameAction() {
+        this.Log("Calling managed game's RunGame action")
         return this.game.RunGame(this.progress)
     }
 
@@ -184,6 +203,8 @@ class LauncherBase {
         if (this.config["LauncherClosePreDelay"] > 0) {
             Sleep(this.config["LauncherClosePreDelay"] * 1000)
         }
+
+        this.Log("Attempting to close existing launcher...")
 
         closed := this.CloseLauncherAction()
 
@@ -316,6 +337,7 @@ class LauncherBase {
 
     KillLauncherAction() {
         if (this.pid > 0 && ProcessExist(this.pid)) {
+            this.Log("Forecefully killing launcher...")
             ProcessClose(this.pid)
         }
     }

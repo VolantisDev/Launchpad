@@ -8,6 +8,7 @@ class GameBase {
     winId := 0
     loadingWinId := 0
     isFinished := false
+    logger := ""
 
     __New(key, config := "", launcherConfig := "") {
         if (config == "") {
@@ -23,6 +24,16 @@ class GameBase {
         this.config := config
         this.launcherConfig := launcherConfig
         this.exeProcess := this.GetExeProcess()
+
+        if (this.launcherConfig["LogPath"]) {
+            this.logger := FileLogger.new(this.launcherConfig["LogPath"], this.launcherConfig["LoggingLevel"], true)
+        }
+    }
+
+    Log(message, level := "Debug") {
+        if (this.logger && this.launcherConfig["LoggingLevel"] != "None") {
+            this.logger.Log(this.key . ": " . message, level)
+        }
     }
 
     /**
@@ -52,11 +63,15 @@ class GameBase {
             progress.IncrementValue(1, statusText)
         }
 
+        this.Log("Running game...", "Info")
+
         if (pid == 0 && !this.LoadingWindowIsOpen()) {
             pid := this.RunGameAction(progress) ; Can change progress text but should not increment
         }
 
         result := this.WaitForGame(progress) ; this should always add 3 steps
+
+        this.Log("Finished running game.", "Info")
 
         if (progress != "") {
             progress.IncrementValue(1, "Game finished.")
@@ -71,6 +86,8 @@ class GameBase {
             if (progress != "") {
                 progress.SetDetailText("Cleaning up scheduled task.")
             }
+
+            this.Log("Cleaning up scheduled task(s)...")
 
             this.CleanupScheduledTask()
         }
@@ -160,6 +177,7 @@ class GameBase {
     }
 
     ReplaceGameProcess() {
+        this.Log("Replacing existing game process...")
         newPid := this.exeProcess.ReplaceProcess(this.launchTime)
 
         if (!newPid) {
@@ -175,6 +193,7 @@ class GameBase {
     }
 
     RunScheduledTask(taskname, runCmd) {
+        this.Log("Running scheduled task " . runCmd)
         currentTime := FormatTime(,"yyyyMMddHHmmss")
         runTime := FormatTime(DateAdd(currentTime, 0, "Seconds"), "HH:mm")
         RunWait("SCHTASKS /CREATE /SC ONCE /TN `"" . taskName . "`" /TR `"'" . runCmd . "'`" /ST " . runTime . " /f",, "Hide")
@@ -186,6 +205,7 @@ class GameBase {
         ; Assume Run or RunWait
         runCmd := this.config["GameRunMethod"]
         pid := ""
+        this.Log("Running task with " . runCmd)
         %runCmd%(this.GetRunCmd(), this.config["GameWorkingDir"], "Hide", pid)
         return pid
     }
