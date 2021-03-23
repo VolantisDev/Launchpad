@@ -12,6 +12,7 @@ class LauncherEditor extends EntityEditorBase {
     launcherTypes := ""
     gameTypes := ""
     platforms := ""
+    logLevels := ["None", "Error", "Warning", "Info", "Debug"]
 
     __New(app, entityObj, mode := "config", windowKey := "", owner := "", parent := "") {
         if (windowKey == "") {
@@ -27,7 +28,7 @@ class LauncherEditor extends EntityEditorBase {
 
     Controls() {
         super.Controls()
-        tabs := this.guiObj.Add("Tab3", " x" . this.margin . " w" . this.windowSettings["contentWidth"] . " +0x100", ["General", "Sources", "UI", "Advanced"])
+        tabs := this.guiObj.Add("Tab3", " x" . this.margin . " w" . this.windowSettings["contentWidth"] . " +0x100", ["General", "Sources", "UI", "Processes", "Advanced"])
 
         tabs.UseTab("General", true)
         this.AddComboBox("Key", "Key", this.entityObj.Key, this.knownGames, "Select an existing game from the API, or enter a custom game key to create your own. Use caution when changing this value, as it will change which data is requested from the API.")
@@ -39,7 +40,7 @@ class LauncherEditor extends EntityEditorBase {
         this.AddEntityTypeSelect("Game", "GameType", this.entityObj.ManagedLauncher.ManagedGame.EntityType, this.gameTypes, "GameConfiguration", "This tells Launchpad how to launch your game. Most games can use 'default', but launchers can support different game types.")
 
         tabs.UseTab("Sources", true)
-        this.AddLocationBlock("Icon Source", "IconSrc", "Clear")
+        this.AddLocationBlock("Icon Source", "IconSrc", "Clear", true, true)
         ; @todo Add data source keys checkboxes
         this.AddTextBlock("DataSourceItemKey", "DataSource Item Key", true, "The key to use when looking this item up in its datasource(s). By default, this is the same as the main key.")
 
@@ -49,11 +50,20 @@ class LauncherEditor extends EntityEditorBase {
         this.AddTextBlock("ProgressTitle", "Progress Window Title", true, "The title that the progress window will use if shown")
         this.AddTextBlock("ProgressText", "Progress Window Text", true, "The text displayed at the top of the progress window if shown")
 
-        tabs.UseTab("Advanced", true)
+        tabs.UseTab("Processes", true)
         this.AddTextBlock("RunBefore", "Run Before Game", true, "Run one or more processes before launching the game. Each line should contain a command to run or a full path to a .exe or shortcut file to launch.`n`nEach process will be run as a scheduled task so that it is not owned by the launcher.", false, 3, ";")
         this.AddTextBlock("CloseBefore", "Close Before Game", true, "Close one or more processes before launching the game. Each line should contain the name of the process to close (usually just the .exe filename).", false, 3, ";")
         this.AddTextBlock("RunAfter", "Run After Game", true, "Run one or more processes after closing the game. Each line should contain a command to run or a full path to a .exe or shortcut file to launch.`n`nEach process will be run as a scheduled task so that it is not owned by the launcher.", false, 3, ";")
         this.AddTextBlock("CloseAfter", "Close After Game", true, "Close one or more processes after closing the game. Each line should contain the name of the process to close (usually just the .exe filename).", false, 3, ";")
+
+        tabs.UseTab("Advanced", true)
+
+        this.AddHeading("Logging Level")
+        chosen := this.GetItemIndex(this.logLevels, this.entityObj.LoggingLevel)
+        ctl := this.guiObj.AddDDL("vLoggingLevel xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"), this.logLevels)
+        ctl.OnEvent("Change", "OnLoggingLevelChange")
+
+        this.AddLocationBlock("Log Path", "LogPath", "Clear", true, true)
 
         tabs.UseTab()
     }
@@ -95,6 +105,18 @@ class LauncherEditor extends EntityEditorBase {
         return this.SetDefaultValue("GameType", !!(ctlObj.Value))
     }
 
+    OnDefaultIconSrc(ctlObj, info) {
+        return this.SetDefaultLocationValue(ctlObj, "IconSrc", false)
+    }
+
+    OnDefaultLogPath(ctlObj, info) {
+        return this.SetDefaultLocationValue(ctlObj, "LogPath", false)
+    }
+
+    OnDefaultLoggingLevel(ctlObj, info) {
+        return this.SetDefaultValue("LoggingLevel", !!(ctlObj.Value))
+    }
+
     OnDefaultDataSourceItemKey(ctlObj, info) {
         return this.SetDefaultValue("DataSourceItemKey", !!(ctlObj.Value))
     }
@@ -115,6 +137,11 @@ class LauncherEditor extends EntityEditorBase {
         this.guiObj.Submit(false)
         this.entityObj.Key := ctlObj.Text
         ; @todo If new game type doesn't offer the selected launcher type, change to the default launcher type
+    }
+
+    OnLoggingLevelChange(ctl, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.LoggingLevel := ctl.Text
     }
 
     OnDataSourceItemKeyChange(ctlObj, info) {
@@ -202,7 +229,7 @@ class LauncherEditor extends EntityEditorBase {
     }
 
     OnOpenIconSrc(btn, info) {
-        if (this.entityObj.IconSrc) {
+        if (this.entityObj.IconSrc && FileExist(this.entityObj.IconSrc)) {
             Run this.entityObj.IconSrc
         }
     }
@@ -211,6 +238,29 @@ class LauncherEditor extends EntityEditorBase {
         if (this.entityObj.UnmergedConfig.Has("IconSrc")) {
             this.entityObj.UnmergedConfig.Delete("IconSrc")
             this.guiObj["IconSrc"].Text := this.entityObj.IconSrc
+        }
+    }
+
+    OnChangeLogPath(btn, info) {
+        existingVal := this.entityObj.GetConfigValue("LogPath", false)
+        file := FileSelect(8,, this.entityObj.Key . ": Select or create log file.", "Files (*.*)")
+
+        if (file) {
+            this.entityObj.SetConfigValue("LogPath", false)
+            this.guiObj["LogPath"].Text := file
+        }
+    }
+
+    OnOpenLogPath(btn, info) {
+        if (this.entityObj.LogPath && FileExist(this.entityObj.LogPath)) {
+            Run this.entityObj.LogPath
+        }
+    }
+
+    OnClearLogPath(btn, info) {
+        if (this.entityObj.UnmergedConfig.Has("LogPath")) {
+            this.entityObj.UnmergedConfig.Delete("LogPath")
+            this.guiObj["LogPath"].Text := this.entityObj.LogPath
         }
     }
 

@@ -94,6 +94,16 @@ class LauncherEntity extends EntityBase {
         set => this.SetConfigValue("CloseAfter", value, false)
     }
 
+    LogPath {
+        get => this.GetConfigValue("LogPath", false)
+        set => this.SetConfigValue("LogPath", value, false)
+    }
+
+    LoggingLevel {
+        get => this.GetConfigValue("LoggingLevel", false)
+        set => this.SetConfigValue("LoggingLevel", value, false)
+    }
+
     IsBuilt {
         get => this.LauncherExists(false)
     }
@@ -252,6 +262,8 @@ class LauncherEntity extends EntityBase {
         defaults["RunAfter"] := ""
         defaults["CloseBefore"] := ""
         defaults["CloseAfter"] := ""
+        defaults["LoggingLevel"] := "Warning"
+        defaults["LogPath"] := this.app.tmpDir . "\Logs\" . this.Key . ".txt"
         return defaults
     }
 
