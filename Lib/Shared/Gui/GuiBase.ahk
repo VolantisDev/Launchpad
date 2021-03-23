@@ -42,6 +42,7 @@ class GuiBase {
     positionAtMouseCursor := false
     openWindowWithinScreenBounds := true
     showInNotificationArea := false
+    ownedWindows := Map()
 
     __New(title, themeObj, windowKey, owner := "", parent := "", iconSrc := "") {
         InvalidParameterException.CheckTypes("GuiBase", "title", title, "", "themeObj", themeObj, "ThemeBase", "windowKey", windowKey, "")
@@ -70,6 +71,10 @@ class GuiBase {
         if (this.showTitlebar) {
             extraOptions["Caption"] := false
             extraOptions["Border"] := true
+        }
+
+        if (this.owner != "") {
+            extraOptions["Owner" . this.owner.Hwnd] := true
         }
         
         this.title := title
@@ -736,7 +741,6 @@ class GuiBase {
     Start() {
         if (this.owner != "") {
             this.owner.Opt("Disabled")
-            this.guiObj.Opt("+Owner" . this.owner.Hwnd)
 	    }
     }
 
@@ -856,6 +860,8 @@ class GuiBase {
     }
 
     Destroy() {
+        WS_EX_TOPMOST := 0x00000008
+
         if (this.tabsHwnd) {
             OnMessage(0x002B, this.tabsCustomDrawCallback, 0)
         }
@@ -863,6 +869,8 @@ class GuiBase {
         if (this.owner != "") {
             ; @todo only re-enable if there are no other open children. Let WindowManager handle this...
             this.owner.Opt("-Disabled")
+            WinActivate("ahk_id " . this.owner.Hwnd)
+
         }
 
         this.Cleanup()
