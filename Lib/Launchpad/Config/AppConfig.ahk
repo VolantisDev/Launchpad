@@ -1,4 +1,4 @@
-﻿class AppConfig extends IniConfig {
+class AppConfig extends IniConfig {
     appNameValue := ""
     defaultTempDir := ""
     defaultAppDataDir := ""
@@ -87,11 +87,6 @@
     CreateDesktopShortcuts {
         get => this.GetBooleanValue("CreateDesktopShortcuts", false)
         set => this.SetBooleanValue("CreateDesktopShortcuts", value)
-    }
-
-    CopyAssets {
-        get => this.GetBooleanValue("CopyAssets", false)
-        set => this.SetBooleanValue("CopyAssets", value)
     }
 
     CleanLaunchersOnBuild {

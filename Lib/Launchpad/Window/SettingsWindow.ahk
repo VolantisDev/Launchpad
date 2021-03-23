@@ -1,4 +1,4 @@
-﻿class SettingsWindow extends LaunchpadGuiBase {
+class SettingsWindow extends LaunchpadGuiBase {
     availableThemes := Map()
     logLevels := ["None", "Error", "Warning", "Info", "Debug"]
 
@@ -35,7 +35,6 @@
         this.AddConfigLocationBlock("AssetsDir")
 
         this.AddHeading("Asset Settings")
-        this.AddConfigCheckBox("Copy assets to launcher directory", "CopyAssets")
 
         tabs.UseTab("Sources", true)
 
