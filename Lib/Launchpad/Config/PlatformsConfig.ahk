@@ -1,6 +1,7 @@
 ﻿class PlatformsConfig extends JsonConfig {
     primaryConfigKey := "Platforms"
     gameDefaults := Map()
+    configKey := "PlatformsConfig"
 
     Platforms[] {
         get => this.config["Platforms"]

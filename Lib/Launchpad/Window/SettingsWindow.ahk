@@ -42,6 +42,9 @@
         this.AddHeading("Backup Dir")
         this.AddConfigLocationBlock("BackupDir", "&Manage")
 
+        this.AddHeading("Backups File")
+        this.AddConfigLocationBlock("BackupsFile")
+
         this.AddHeading("Backups to Keep")
         ctl := this.AddEdit("BackupsToKeep", this.app.Config.BackupsToKeep, "y+" . this.margin, 100)
         ctl.OnEvent("Change", "OnBackupsToKeepChange")

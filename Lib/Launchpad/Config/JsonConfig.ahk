@@ -6,72 +6,14 @@ class JsonConfig extends FileConfig {
         super.__New(app, configPath, ".json", autoLoad)
     }
 
-    LoadConfig() {
-        configPath := this.configPath
-
-        if (configPath == "") {
-            this.app.Notifications.Error("Config file path not provided.")
-            return this
-        }
-
-        if (FileExist(configPath)) {
-            data := JsonData.new()
-            this.config := data.FromFile(configPath)
-        } else {
-            this.config := Map()
-        }
-
-        return super.LoadConfig()
+    LoadConfigFile(configPath) {
+        data := JsonData.new()
+        this.config := data.FromFile(configPath)
     }
 
-    SaveConfig() {
-        configPath := this.ConfigPath
-
-        if (configPath == "") {
-            this.AskForPath()
-        }
-
-        if (configPath == "") {
-            this.app.Notifications.Error("Config file path not provided.")
-            return this
-        }
-
-        if (FileExist(configPath)) {
-            this.CreateBackupFile(configPath)
-            FileDelete(configPath)
-        }
-
+    SaveConfigFile(configPath) {
         data := JsonData.new(this.config)
         data.ToFile(configPath, "", 4)
-
-        if (!FileExist(configPath)) {
-            this.RestoreBackupFile(configPath)
-        }
-
-        return super.SaveConfig()
-    }
-
-    CreateBackupFile(configPath) {
-        maxSuffix := 5
-        suffix := 5
-
-        while suffix > 0 {
-            if (FileExist(configPath . "." . suffix) && suffix < maxSuffix) {
-                FileCopy(configPath . "." . suffix, configPath . "." . (suffix + 1), true)
-            }
-
-            suffix--
-        }
-
-        FileCopy(configPath, configPath . ".1", true)
-    }
-
-    RestoreBackupFile(configPath) {
-        suffix := 1
-
-        if (FileExist(configPath . "." . suffix)) {
-            FileCopy(configPath . "." . suffix, configPath, true)
-        }
     }
 
     CountItems() {

@@ -20,6 +20,7 @@ class BackupManager extends EntityManagerBase {
 
     AddEntityToConfig(key, entityObj) {
         this.configObj.Backups[key] := entityObj.UnmergedConfig
+        this.configObj.SaveConfig()
     }
 
     SetBackupDir(backupDir) {
@@ -38,5 +39,11 @@ class BackupManager extends EntityManagerBase {
 
     OpenBackupDir() {
         Run(this.app.Config.BackupDir)
+    }
+
+    CreateBackupEntity(key, config) {
+        backup := BackupEntity.new(this.app, key, config)
+        this.AddEntity(key, backup)
+        return backup
     }
 }

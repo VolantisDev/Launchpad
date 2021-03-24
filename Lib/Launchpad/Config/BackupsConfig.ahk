@@ -1,7 +1,8 @@
 ﻿class BackupsConfig extends JsonConfig {
     primaryConfigKey := "Backups"
+    configKey := "BackupsConfig"
 
-    Backups[] {
+    Backups {
         get => this.config["Backups"]
         set => this.config["Backups"] := value
     }

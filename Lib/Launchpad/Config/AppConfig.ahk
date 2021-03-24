@@ -3,6 +3,7 @@
     defaultTempDir := ""
     defaultAppDataDir := ""
     defaultCacheDir := ""
+    configKey := "AppConfig"
 
     AppName {
         get => this.appNameValue

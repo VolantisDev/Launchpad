@@ -1,5 +1,6 @@
 ﻿class BlizzardProductDb extends ProtoConfig {
     primaryConfigKey := "Database"
+    configKey := "BlizzardProductDb"
 
     __New(app, autoLoad := true) {
         path := A_AppDataCommon . "\Battle.net\Agent\product.db"

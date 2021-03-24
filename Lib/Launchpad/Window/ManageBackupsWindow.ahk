@@ -1,5 +1,5 @@
 class ManageBackupsWindow extends ManageWindowBase {
-    listViewColumns := Array("KEY", "ENABLED", "SOURCE", "COUNT", "TOTAL SIZE", "BASE FILE")
+    listViewColumns := Array("KEY", "ENABLED", "COUNT", "TOTAL SIZE")
     backupsFile := ""
     backupManager := ""
     backupRows := []
@@ -43,7 +43,7 @@ class ManageBackupsWindow extends ManageWindowBase {
         for key, backup in this.backupManager.Entities {
             enabledText := backup.IsEnabled ? "Yes" : "No"
             focusOption := index == focusedItem ? " Focus" : ""
-            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, backup.Key, enabledText, backup.Source, backup.GetBackupCount(), backup.GetTotalSize())
+            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, backup.Key, enabledText, backup.GetBackupCount(), backup.GetTotalSize())
             this.backupRows.Push(key)
             iconNum++
             index++

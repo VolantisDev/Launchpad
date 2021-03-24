@@ -2,24 +2,16 @@ class ProtoConfig extends FileConfig {
     config := Map()
     primaryConfigKey := "Database"
     protoFile := ""
+    configKey := "ProtoConfig"
 
     __New(app, configPath, protoFile, autoLoad := true) {
         this.protoFile := protoFile
         super.__New(app, configPath, "", autoLoad)
     }
 
-    LoadConfig() {
-        if (this.configPath == "") {
-            this.app.Notifications.Error("Config file path not provided.")
-            return this
-        }
-
-        if (FileExist(this.configPath)) {
-            data := ProtobufData.new()
-            this.config := data.FromFile(this.configPath, this.primaryConfigKey, this.protoFile)
-        }
-        
-        return super.LoadConfig()
+    LoadConfigFile(configPath) {
+        data := ProtobufData.new()
+        this.config := data.FromFile(this.configPath, this.primaryConfigKey, this.protoFile)
     }
 
     SaveConfig() {

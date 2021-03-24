@@ -32,6 +32,10 @@ class BackupBase {
     }
 
     Backup() {
+        if (this.backupDir && !DirExist(this.backupDir)) {
+            DirCreate(this.backupDir)
+        }
+
         this.Rotate()
         this.CreateBackup(1)
     }
@@ -43,6 +47,8 @@ class BackupBase {
             if (this.BackupExists(backupNumber) && backupNumber < this.backupLimit) {
                 this.Move(backupNumber, backupNumber+1)
             }
+
+            backupNumber--
         }
     }
 
@@ -76,7 +82,7 @@ class BackupBase {
 
     MoveBackup(fromNumber, toNumber, overwrite := true) {
         fromPath := this.GetPath(fromNumber)
-
+        
         if (FileExist(fromPath)) {
             FileMove(fromPath, this.GetPath(toNumber), overwrite)
         }
@@ -85,11 +91,6 @@ class BackupBase {
     Delete(backupNumber) {
         if (this.BackupExists(backupNumber)) {
             FileDelete(this.GetPath(backupNumber))
-        }
-
-        while (this.BackupExists(backupNumber+1)) {
-            this.MoveBackup(backupNumber+1, backupNumber)
-            backupNumber++
         }
     }
 
@@ -124,7 +125,7 @@ class BackupBase {
         size := 0
 
         if (this.BackupExists(backupNumber)) {
-            FileGetSize(this.GetPath(backupNumber), units)
+            size := FileGetSize(this.GetPath(backupNumber), units)
         }
 
          return size

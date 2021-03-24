@@ -3,6 +3,7 @@ class ConfigBase {
     appDirValue := ""
     app := ""
     loaded := false
+    configKey := "Config"
 
     AppName[] {
         get => this.appNameValue

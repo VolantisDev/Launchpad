@@ -140,7 +140,7 @@
         this.moduleManagerObj := ModuleManager.new(this)
         this.loggerServiceObj := LoggerService.new(FileLogger.new(A_ScriptDir . "\log.txt", config.LoggingLevel, true))
         this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
-        this.backupManagerObj := BackupManager.new(this, config.BackupDir)
+        this.backupManagerObj := BackupManager.new(this, config.BackupsFile)
         this.themeManagerObj := ThemeManager.new(this, appDir . "\Resources\Themes", appDir . "\Resources", eventManagerObj, idGen)
         this.notificationServiceObj := NotificationService.new(this, ToastNotifier.new(this))
         this.windowManagerObj := WindowManager.new(this)

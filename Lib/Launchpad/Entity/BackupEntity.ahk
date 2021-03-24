@@ -116,13 +116,13 @@ class BackupEntity extends EntityBase {
 
     CreateBackup() {
         if (this.backup) {
-            this.backup.CreateBackup()
+            this.backup.Backup()
         }
     }
 
     RestoreBackup(backupNumber := 1) {
         if (this.backup) {
-            this.backup.RestoreBackup(backupNumber)
+            this.backup.Restore(backupNumber)
         }
     }
 }

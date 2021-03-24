@@ -1,6 +1,7 @@
 ﻿class LauncherConfig extends JsonConfig {
     primaryConfigKey := "Games"
     gameDefaults := Map()
+    configKey := "LaunchersConfig"
 
     Games[] {
         get => this.config["Games"]
