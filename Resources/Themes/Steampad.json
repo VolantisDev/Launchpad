@@ -100,6 +100,35 @@
                         "strokeWidth": 1
                     }
                 },
+                "menu": {
+                    "enabled": {
+                        "backgroundColor": "{{dimblue}}",
+                        "textColor": "{{brightblue}}",
+                        "dimColor": "{{dim}}",
+                        "borderColor": "{{dimblue}}",
+                        "borderWidth": 0,
+                        "shape": "ButtonShape",
+                        "strokeWidth": 1
+                    },
+                    "disabled": {
+                        "backgroundColor": "{{disabledblue}}",
+                        "textColor": "{{disabledlightblue}}",
+                        "dimColor": "{{dim}}",
+                        "borderColor": "{{disabledblue}}",
+                        "borderWidth": 0,
+                        "shape": "ButtonShape",
+                        "strokeWidth": 1
+                    },
+                    "hovered": {
+                        "backgroundColor": "{{brightmidblue}}",
+                        "textColor": "{{light}}",
+                        "dimColor": "{{dim}}",
+                        "borderColor": "{{brightmidblue}}",
+                        "borderWidth": 0,
+                        "shape": "ButtonShape",
+                        "strokeWidth": 1
+                    }
+                },
                 "titlebar": {
                     "enabled": {
                         "backgroundColor": "{{background}}",

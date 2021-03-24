@@ -123,7 +123,7 @@ class ThemeBase {
         windowConfig := (this.windows.Has(windowKey)) ? this.windows[windowKey] : Map("settings", "default")
 
         if (windowConfig.Has("settings") && windowConfig["settings"] != "") {
-            windowConfig := this.MergeProperty(windowConfig, this.LoadWindowSettings(windowKey))
+            windowConfig := this.MergeProperty(windowConfig, this.LoadWindowSettings(windowConfig["settings"]))
         }
 
         return windowConfig

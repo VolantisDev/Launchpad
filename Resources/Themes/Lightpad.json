@@ -107,6 +107,35 @@
                         "strokeWidth": 1
                     }
                 },
+                "menu": {
+                    "enabled": {
+                        "backgroundColor": "{{background}}",
+                        "textColor": "{{text}}",
+                        "dimColor": "{{dim}}",
+                        "borderColor": "{{border}}",
+                        "borderWidth": 3,
+                        "shape": "ButtonShape",
+                        "strokeWidth": 1
+                    },
+                    "disabled": {
+                        "backgroundColor": "{{background}}",
+                        "textColor": "{{text}}",
+                        "dimColor": "{{dim}}",
+                        "borderColor": "{{border}}",
+                        "borderWidth": 3,
+                        "shape": "ButtonShape",
+                        "strokeWidth": 1
+                    },
+                    "hovered": {
+                        "backgroundColor": "{{accentDark}}",
+                        "textColor": "{{light}}",
+                        "dimColor": "{{dim}}",
+                        "borderColor": "{{border}}",
+                        "borderWidth": 3,
+                        "shape": "ButtonShape",
+                        "strokeWidth": 1
+                    }
+                },
                 "titlebar": {
                     "enabled": {
                         "backgroundColor": "{{background}}",
@@ -335,6 +364,20 @@
                 "base": "form",
                 "contentWidth": 500,
                 "options": {}
+            },
+            "menu": {
+                "base": "default",
+                "contentWidth": 400,
+                "spacing": {
+                    "margin": 0,
+                    "windowMargin": "{{margin}}",
+                    "buttonSpacing": "{{margin}}"
+                },
+                "options": {
+                    "AlwaysOnTop": true,
+                    "Caption": false,
+                    "Border": true
+                }
             }
         },
         "windows": {
@@ -418,13 +461,10 @@
                 }
             },
             "ToolsWindow": {
-                "settings": "default",
-                "contentWidth": 400,
-                "options": {
-                    "AlwaysOnTop": true,
-                    "Caption": false,
-                    "Border": true
-                }
+                "settings": "menu"
+            },
+            "AddLauncherMenu": {
+                "settings": "menu"
             },
             "SetupWindow": {
                 "settings": "form",

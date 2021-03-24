@@ -90,6 +90,7 @@
 #Include Window\ManagedLauncherEditor.ahk
 #Include Window\ManageWindow.ahk
 #Include Window\ManageWindowBase.ahk
+#Include Window\MenuGui.ahk
 #Include Window\PlatformEditor.ahk
 #Include Window\PlatformsWindow.ahk
 #Include Window\SettingsWindow.ahk

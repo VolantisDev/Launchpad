@@ -1,58 +1,19 @@
-﻿class ToolsWindow extends LaunchpadGuiBase {
-    positionAtMouseCursor := true
-    nextPos := "xm"
-    showTitlebar := false
-
-    __New(app, windowKey := "", owner := "", parent := "") {
-        super.__New(app, "Tools", windowKey, owner, parent)
-        this.onLButtonCallback := ObjBindMethod(this, "OnLButton")
-    }
-
-    OnLButton(hotKey) {
-        if (this.app && this.app.Windows && this.app.Windows.WindowIsOpen(this.windowKey)) {
-            MouseGetPos(,, mouseWindow)
-            
-            if (this.guiObj && this.guiObj.Hwnd != mouseWindow) {
-                this.Close()
-            }
-        }
-    }
-
-    Show() {
-        Hotkey("~LButton", this.onLButtonCallback, "On")
-        super.Show()
-    }
-
-    Destroy() {
-        Hotkey("~LButton", this.onLButtonCallback, "Off")
-        super.Destroy()
-    }
+﻿class ToolsWindow extends MenuGui {
+    buttonsPerRow := 2
+    menuTitle := "Tools"
 
     Controls() {
         super.Controls()
-        this.guiObj.BackColor := this.themeObj.GetColor("accentDark")
-        this.AddToolButton("&Detect Games", "DetectGames")
-        this.AddToolButton("&Manage Platforms", "ManagePlatforms")
-        this.AddToolButton("Manage &Backups", "ManageBackups")
-        this.AddToolButton("&Reload Launchers", "ReloadLaunchers")
-        this.AddToolButton("&Clean Launchers", "CleanLaunchers")
-        ;this.AddToolButton("&Validate Launchers", "ValidateLaunchers")
-        this.AddToolButton("&Flush Cache", "FlushCache")
-        ;this.AddToolButton("&Update Launchpad", "CheckForUpdates")
-        ;this.AddToolButton("Update &Dependencies", "UpdateDependencies")
-        this.AddToolButton("&Open Website", "OpenWebsite")
-        this.AddToolButton("Provide &Feedback", "ProvideFeedback")
-        this.AddToolButton("&About Launchpad", "AboutLaunchpad")
-    }
-
-    AddToolButton(buttonLabel, ctlName) {
-        width := (this.windowSettings["contentWidth"] - this.margin) / 2
-
-        buttonSize := this.themeObj.GetButtonSize("l")
-        buttonH := (buttonSize.Has("h") && buttonSize["h"] != "auto") ? buttonSize["h"] : 40
-
-        btn := this.AddButton("v" . ctlName . " " . this.nextPos . " w" . width . " h" . buttonH, buttonLabel)
-        this.nextPos := this.nextPos == "xm" ? "x+m yp" : "xm"
+        this.AddMenuButton("&Detect Games", "DetectGames")
+        this.AddMenuButton("&Manage Platforms", "ManagePlatforms")
+        this.AddMenuButton("Manage &Backups", "ManageBackups")
+        this.AddMenuButton("&Reload Launchers", "ReloadLaunchers")
+        this.AddMenuButton("&Clean Launchers", "CleanLaunchers")
+        this.AddMenuButton("&Flush Cache", "FlushCache")
+        this.AddMenuButton("&Update Launchpad", "CheckForUpdates")
+        this.AddMenuButton("&Open Website", "OpenWebsite")
+        this.AddMenuButton("Provide &Feedback", "ProvideFeedback")
+        this.AddMenuButton("&About Launchpad", "AboutLaunchpad")
     }
 
     OnManagePlatforms(btn, info) {
@@ -84,20 +45,9 @@
         this.app.Builders.CleanLaunchers()
     }
 
-    OnValidateLaunchers(btn, info) {
-        this.Close()
-        op := ValidateLaunchersOp.new(this.app)
-        op.Run()
-    }
-
     OnFlushCache(btn, info) {
         this.Close()
         this.app.Cache.FlushCaches()
-    }
-
-    OnUpdateDependencies(btn, info) {
-        this.Close()
-        this.app.Installers.UpdateDependencies()
     }
 
     OnClose(guiObj) {
