@@ -8,6 +8,10 @@ class IniConfig extends FileConfig {
     }
 
     SetIniValue(key, value, section := "General") {
+        if (this.app.Config.AutoBackupConfigFiles) {
+            this.BackupConfigFile()
+        }
+
         IniWrite(value, this.ConfigPath, section, key)
         return value
     }
