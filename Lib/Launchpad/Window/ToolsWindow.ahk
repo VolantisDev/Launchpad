@@ -33,6 +33,7 @@
         this.guiObj.BackColor := this.themeObj.GetColor("accentDark")
         this.AddToolButton("&Detect Games", "DetectGames")
         this.AddToolButton("&Manage Platforms", "ManagePlatforms")
+        this.AddToolButton("Manage &Backups", "ManageBackups")
         this.AddToolButton("&Reload Launchers", "ReloadLaunchers")
         this.AddToolButton("&Clean Launchers", "CleanLaunchers")
         ;this.AddToolButton("&Validate Launchers", "ValidateLaunchers")
@@ -57,6 +58,11 @@
     OnManagePlatforms(btn, info) {
         this.Close()
         this.app.Windows.OpenPlatformsWindow()
+    }
+
+    OnManageBackups(btn, info) {
+        this.Close()
+        this.app.Windows.OpenManageBackupsWindow()
     }
 
     OnDetectGames(btn, info) {

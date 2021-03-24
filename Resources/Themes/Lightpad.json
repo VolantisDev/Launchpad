@@ -383,6 +383,15 @@
                     "MinSize": "480x380"
                 }
             },
+            "ManageBackupsWindow": {
+                "settings": "default",
+                "contentWidth": 640,
+                "listViewHeight": 300,
+                "options": {
+                    "Resize": true,
+                    "MinSize": "480x380"
+                }
+            },
             "PlatformsWindow": {
                 "settings": "default",
                 "contentWidth": 640,

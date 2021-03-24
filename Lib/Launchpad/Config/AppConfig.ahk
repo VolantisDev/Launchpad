@@ -79,6 +79,11 @@
         set => this.SetIniValue("BackupDir", value)
     }
 
+    BackupsFile {
+        get => this.GetIniValue("BackupsFile") || this.AppDataDir . "\Backups.json"
+        set => this.SetIniValue("BackupsFile", value)
+    }
+
     BackupsToKeep {
         get => this.GetIniValue("BackupsToKeep") || 5
         set => this.SetIniValue("BackupsToKeep", value)

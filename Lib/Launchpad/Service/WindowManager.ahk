@@ -1,8 +1,7 @@
 class WindowManager extends AppComponentServiceBase {
     _registerEvent := LaunchpadEvents.WINDOWS_REGISTER
     _alterEvent := LaunchpadEvents.WINDOWS_ALTER
-    children := Map()
-    owned := Map()
+    windowStacks := Map()
 
     GetTheme() {
         return this.app.Themes.GetItem()
@@ -116,6 +115,14 @@ class WindowManager extends AppComponentServiceBase {
         }
 
         return this.ShowWindow("ManageWindow")
+    }
+
+    OpenManageBackupsWindow() {
+        if (!this.WindowExists("ManageBackupsWindow")) {
+            this.SetItem("ManageBackupsWindow", ManageBackupsWindow.new(this.app, "", "ManageBackupsWindow"))
+        }
+
+        return this.ShowWindow("ManageBackupsWindow")
     }
 
     OpenPlatformsWindow() {

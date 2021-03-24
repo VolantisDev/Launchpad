@@ -16,6 +16,8 @@
 #Include Authentication\AuthInfo\JwtAuthInfo.ahk
 #Include Authentication\AuthProvider\AuthProviderBase.ahk
 #Include Authentication\AuthProvider\JwtAuthProvider.ahk
+#Include Backup\BackupBase.ahk
+#Include Backup\FileBackup.ahk
 #Include BulkOperation\OpError\BasicOpError.ahk
 #Include BulkOperation\OpError\OpErrorBase.ahk
 #Include BulkOperation\OpStatus\BasicOpStatus.ahk

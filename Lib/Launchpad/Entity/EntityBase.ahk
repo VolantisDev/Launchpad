@@ -1,6 +1,6 @@
 class EntityBase {
     app := ""
-    configPrefix := "Launcher"
+    configPrefix := ""
     keyVal := ""
     dataSourcePath := ""
     configObj := ""

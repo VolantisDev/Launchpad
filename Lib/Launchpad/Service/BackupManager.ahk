@@ -1,27 +1,29 @@
-class BackupManager extends AppComponentServiceBase {
+class BackupManager extends EntityManagerBase {
     _registerEvent := LaunchpadEvents.BACKUPS_REGISTER
     _alterEvent := LaunchpadEvents.BACKUPS_ALTER
-    backupDir := ""
 
-    __New(app, backupDir, components := "") {
-        InvalidParameterException.CheckTypes("BackupManager", "backupDir", backupDir, "")
-        InvalidParameterException.CheckEmpty("BackupManager", "backupDir", backupDir)
-        this.backupDir := backupDir
-        
-        super.__New(app, components)
+    GetLoadOperation() {
+        return LoadBackupsOp.new(this.app, this.configObj)
     }
 
-    LoadComponents() {
-        if (!this._componentsLoaded) {
-            ; @todo Load backups
-        }
+    CreateConfigObj(app, configFile) {
+        return BackupsConfig.new(app, configFile, false)
+    }
 
-        super.LoadComponents()
+    GetDefaultConfigPath() {
+        return this.app.Config.BackupsFile
+    }
+
+    RemoveEntityFromConfig(key) {
+        this.configObj.Backups.Delete(key)
+    }
+
+    AddEntityToConfig(key, entityObj) {
+        this.configObj.Backups[key] := entityObj.UnmergedConfig
     }
 
     SetBackupDir(backupDir) {
         this.app.Config.BackupDir := backupDir
-        this.backupDir := this.app.Config.BackupDir
     }
 
     ChangeBackupDir() {
@@ -35,6 +37,6 @@ class BackupManager extends AppComponentServiceBase {
     }
 
     OpenBackupDir() {
-        Run(this.backupDir)
+        Run(this.app.Config.BackupDir)
     }
 }

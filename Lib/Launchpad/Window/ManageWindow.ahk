@@ -44,12 +44,6 @@
         this.AddButton("vBuildAllButton " . position, "Build All", "", "primary")
     }
 
-    AddManageButton(name, position, symbol, primary := false) {
-        options := "v" . name . " " . position
-        options .= " w35 h35"
-        return this.themeObj.AddButton(this.guiObj, options, symbol, "On" . name, primary ? "managePrimary" : "manage")
-    }
-
     GetStatusText() {
         return this.app.Auth.GetStatusText()
     }
