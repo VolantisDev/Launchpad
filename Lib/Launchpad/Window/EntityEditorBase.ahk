@@ -220,17 +220,21 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         this.dataSource := this.app.DataSources.GetItem("api")
     }
 
-    SetDefaultValue(fieldKey, useDefault := true, addPrefix := false, emptyDisplay := "") {
+    SetDefaultValue(fieldKey, useDefault := true, addPrefix := false, emptyDisplay := "", entityObj := "") {
+        if (entityObj == "") {
+            entityObj := this.entityObj
+        }
+
         prefixedName := fieldKey
         if (addPrefix) {
-            prefixedName := this.entityObj.configPrefix . prefixedName
+            prefixedName := entityObj.configPrefix . prefixedName
         }
 
         if (useDefault) {
-            this.entityObj.RevertToDefault(prefixedName)
-            this.guiObj[fieldKey].Value := this.entityObj.Config[prefixedName] != "" ? this.entityObj.Config[prefixedName] : emptyDisplay
+            entityObj.RevertToDefault(prefixedName)
+            this.guiObj[fieldKey].Value := entityObj.Config[prefixedName] != "" ? entityObj.Config[prefixedName] : emptyDisplay
         } else {
-            this.entityObj.UnmergedConfig[prefixedName] := this.entityObj.Config.Has(prefixedName) ? this.entityObj.Config[prefixedName] : ""
+            entityObj.UnmergedConfig[prefixedName] := entityObj.Config.Has(prefixedName) ? entityObj.Config[prefixedName] : ""
         }
 
         this.guiObj[fieldKey].Enabled := !useDefault
