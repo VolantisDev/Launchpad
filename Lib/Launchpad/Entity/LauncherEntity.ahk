@@ -134,7 +134,7 @@ class LauncherEntity extends EntityBase {
     GetLauncherFile(key, checkSourceFile := false) {
         gameDir := checkSourceFile ? this.app.Config.AssetsDir : this.app.Config.DestinationDir
 
-        if (checkSourceFile || this.app.Config.CreateIndividualDirs) {
+        if (checkSourceFile) {
             gameDir .= "\" . key
         }
 
@@ -269,12 +269,6 @@ class LauncherEntity extends EntityBase {
     }
 
     GetDefaultDestinationDir() {
-        defaultDir := this.app.Config.DestinationDir
-
-        if (this.app.Config.CreateIndividualDirs) {
-            defaultDir .= "\" . this.keyVal
-        }
-
-        return defaultDir
+        return this.app.Config.DestinationDir
     }
 }

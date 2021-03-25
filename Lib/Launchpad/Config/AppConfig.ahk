@@ -100,11 +100,6 @@
         set => this.SetBooleanValue("RebuildExistingLaunchers", value)
     }
 
-    CreateIndividualDirs {
-        get => this.GetBooleanValue("CreateIndividualDirs", false)
-        set => this.SetBooleanValue("CreateIndividualDirs", value)
-    }
-
     CreateDesktopShortcuts {
         get => this.GetBooleanValue("CreateDesktopShortcuts", false)
         set => this.SetBooleanValue("CreateDesktopShortcuts", value)
@@ -138,6 +133,11 @@
     CheckUpdatesOnStart {
         get => this.GetBooleanValue("CheckUpdatesOnStart", true)
         set => this.SetBooleanValue("CheckUpdatesOnStart", value)
+    }
+
+    UseAdvancedLauncherEditor {
+        get => this.GetBooleanValue("UseAdvancedEditor", false)
+        set => this.SetBooleanValue("UseAdvancedEditor", value)
     }
 
     __New(app, defaultTempDir, defaultAppDataDir) {
