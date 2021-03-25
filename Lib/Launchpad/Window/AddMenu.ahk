@@ -4,8 +4,8 @@
 
     Controls() {
         super.Controls()
+        this.AddMenuButton("&Add a Game", "AddGame")
         this.AddMenuButton("&Detect Games", "DetectGames")
-        this.AddMenuButton("&Add a game", "AddGame")
     }
 
     OnDetectGames(btn, info) {
