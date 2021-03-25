@@ -364,7 +364,7 @@ class EntityBase {
         return DiffResult.new(added, modified, deleted)
     }
 
-    Edit(mode := "config", owner := "MainWindow") {
+    Edit(mode := "config", owner := "ManageWindow") {
         this.StoreOriginal()
         result := this.LaunchEditWindow(mode, owner)
         fullDiff := ""

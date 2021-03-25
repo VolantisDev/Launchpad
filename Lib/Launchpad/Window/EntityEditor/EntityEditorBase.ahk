@@ -22,7 +22,7 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         }
 
         if (owner == "") {
-            owner := "MainWindow"
+            owner := "ManageWindow"
         }
 
         super.__New(app, title, this.GetTextDefinition(), windowKey, owner, parent, this.GetButtonsDefinition())

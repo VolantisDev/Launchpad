@@ -9,7 +9,7 @@
         }
 
         if (owner == "") {
-            owner := "MainWindow"
+            owner := "ManageWindow"
         }
 
         super.__New(app, "Update Available", this.GetTextDefinition(), windowKey, owner, parent, this.GetButtonsDefinition())

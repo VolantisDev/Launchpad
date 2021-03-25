@@ -105,14 +105,6 @@ class WindowManager extends AppComponentServiceBase {
         return this.ShowForm(SetupWindow.new(this.app, "SetupWindow", owner, parent))
     }
 
-    OpenMainWindow() {
-        if (!this.WindowExists("MainWindow")) {
-            this.SetItem("MainWindow", MainWindow.new(this.app, "Launchpad", "MainWindow"))
-        }
-
-        return this.ShowWindow("MainWindow")
-    }
-
     OpenManageWindow() {
         if (!this.WindowExists("ManageWindow")) {
             this.SetItem("ManageWindow", ManageWindow.new(this.app, "ManageWindow"))
@@ -137,7 +129,7 @@ class WindowManager extends AppComponentServiceBase {
         return this.ShowWindow("PlatformsWindow")
     }
 
-    OpenSettingsWindow(owner := "MainWindow") {
+    OpenSettingsWindow(owner := "ManageWindow") {
         if (!this.WindowExists("SettingsWindow")) {
             this.SetItem("SettingsWindow", SettingsWindow.new(this.app, "SettingsWindow", owner))
         }
@@ -145,7 +137,7 @@ class WindowManager extends AppComponentServiceBase {
         return this.ShowWindow("SettingsWindow")
     }
 
-    OpenToolsWindow(owner := "MainWindow") {
+    OpenToolsWindow(owner := "ManageWindow") {
         if (!this.WindowExists("ToolsWindow")) {
             this.SetItem("ToolsWindow", ToolsWindow.new(this.app, "ToolsWindow", owner))
         }
@@ -153,7 +145,7 @@ class WindowManager extends AppComponentServiceBase {
         return this.ShowWindow("ToolsWindow")
     }
 
-    OpenAddMenu(owner := "MainWindow") {
+    OpenAddMenu(owner := "ManageWindow") {
         if (!this.WindowExists("AddMenu")) {
             this.SetItem("AddMenu", AddMenu.new(this.app, "AddMenu", owner))
         }

@@ -282,7 +282,7 @@
     }
 
     OpenWebsite() {
-        Run("https://github.com/VolantisDev/Launchpad")
+        Run("https://launchpad.games")
     }
 
     ProvideFeedback() {

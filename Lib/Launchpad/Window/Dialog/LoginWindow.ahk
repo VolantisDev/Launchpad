@@ -10,7 +10,7 @@
         }
 
         if (owner == "") {
-            owner := "MainWindow"
+            owner := "ManageWindow"
         }
 
         super.__New(app, "Login", this.GetTextDefinition(), windowKey, owner, parent, this.GetButtonsDefinition())

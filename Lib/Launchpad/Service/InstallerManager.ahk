@@ -14,7 +14,7 @@ class InstallerManager extends AppComponentServiceBase {
         this.SetItem("Dependencies", DependencyInstaller.new(this.app.Version, this.app.AppState, cache, extraDependencyComponents, tmpDir))
     }
 
-    InstallRequirements(owner := "Mainwindow") {
+    InstallRequirements(owner := "ManageWindow") {
         installerKeys := ["Themes", "Dependencies"]
         op := InstallOp.new(this.app, installerKeys, owner)
         return op.Run()
@@ -26,7 +26,7 @@ class InstallerManager extends AppComponentServiceBase {
         return op.Run()
     }
 
-    UpdateDependencies(owner := "MainWindow") {
+    UpdateDependencies(owner := "ManageWindow") {
         installerKeys := ["Dependencies"]
         op := UpdateOp.new(this.app, installerKeys, owner)
         return op.Run()

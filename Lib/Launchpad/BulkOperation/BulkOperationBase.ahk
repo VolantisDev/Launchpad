@@ -2,7 +2,7 @@ class BulkOperationBase {
     app := ""
     results := Map()
     status := Map()
-    owner := "MainWindow"
+    owner := "ManageWindow"
     parent := ""
     running := false
     completed := false
@@ -24,7 +24,7 @@ class BulkOperationBase {
         InvalidParameterException.CheckTypes("BulkOperationBase", "app", app, "Launchpad")
         
         if (owner == "") {
-            owner := "MainWindow"
+            owner := "ManageWindow"
         }
 
         if (Type(owner) == "String") {

@@ -413,13 +413,6 @@
             }
         },
         "windows": {
-            "MainWindow": {
-                "settings": "default",
-                "contentWidth": 515,
-                "options": {
-                    "Owner": false
-                }
-            },
             "MiniProgressIndicator": {
                 "settings": "default",
                 "contentWidth": 300,

@@ -20,7 +20,7 @@ class LauncherEditorBase extends EntityEditorBase {
         }
 
         if (owner == "") {
-            owner := "MainWindow"
+            owner := "ManageWindow"
         }
 
         super.__New(app, entityObj, title, mode, windowKey, owner, parent)
