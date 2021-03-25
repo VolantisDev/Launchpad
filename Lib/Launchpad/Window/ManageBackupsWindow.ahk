@@ -127,7 +127,9 @@ class ManageBackupsWindow extends ManageWindowBase {
         
         if (backup) {
             selected := this.guiObj["ListView"].GetNext(, "Focused")
-            backupNumber := this.app.Windows.BackupSelector(backup)
+            ; @Todo implement Backup Selector window
+            ;backupNumber := this.app.Windows.BackupSelector(backup)
+            backupNumber := 1
             backup.RestoreBackup(backupNumber)
             this.PopulateListView()
 
@@ -151,8 +153,14 @@ class ManageBackupsWindow extends ManageWindowBase {
         }
     }
 
+    OnDeleteButton(btn, info) {
+        ; @todo implement backup deletion
+    }
+
     AddBackup() {
-        entity := this.app.Windows.BackupWizard(this.guiObj)
+        ; @todo Add Backup Wizard
+        ;entity := this.app.Windows.BackupWizard(this.guiObj)
+        entity := ""
 
         if (entity != "") {
             this.backupManager.AddEntity(entity.Key, entity)
