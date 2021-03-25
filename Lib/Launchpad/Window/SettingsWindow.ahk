@@ -9,7 +9,6 @@
 
     Controls() {
         super.Controls()
-        
         buttonSize := this.themeObj.GetButtonSize("s", true)
         buttonW := (buttonSize.Has("w") && buttonSize["w"] != "auto") ? buttonSize["w"] : 80
         tabs := this.AddTabs("SettingsTabs", ["Launchers", "Platforms", "Backups", "Appearance", "Cache", "Advanced"], "x" . this.margin . " y+" . this.margin)
@@ -26,9 +25,9 @@
         this.AddConfigLocationBlock("AssetsDir")
 
         this.AddHeading("Launcher Settings")
-        this.AddConfigCheckBox("Use advanced launcher editor by default", "UseAdvancedLauncherEditor")
         this.AddConfigCheckBox("Create desktop shortcuts for launchers", "CreateDesktopShortcuts")
         this.AddConfigCheckBox("Rebuild existing launchers when building all launchers", "RebuildExistingLaunchers")
+        this.AddConfigCheckBox("Use advanced launcher editor by default", "UseAdvancedLauncherEditor")
         this.AddConfigCheckBox("Clean launchers automatically when building", "CleanLaunchersOnBuild")
         this.AddConfigCheckBox("Clean launchers automatically when exiting Launchpad", "CleanLaunchersOnExit")
 
