@@ -5,6 +5,9 @@
 ;@Ahk2Exe-SetDescription "Game Launching Multitool"
 #Warn
 
+DllCall("AllocConsole")
+WinHide("ahk_id " . DllCall("GetConsoleWindow", "ptr"))
+
 A_IconHidden := A_IsCompiled
 
 appVersion := "{{VERSION}}"
