@@ -56,38 +56,42 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         return super.GetTitle(this.entityObj.Key . " - " . title)
     }
 
-    DefaultCheckbox(fieldKey, entity := "", addPrefix := false) {
+    DefaultCheckbox(fieldKey, entity := "", addPrefix := false, includePrefixInCtlName := false) {
         if (entity == "") {
             entity := this.entityObj
         }
 
-        return super.DefaultCheckbox(fieldKey, entity, addPrefix)
+        return super.DefaultCheckbox(fieldKey, entity, addPrefix, includePrefixInCtlName)
     }
 
     Controls() {
         super.Controls()
     }
 
-    AddTextBlock(field, settingName, showDefaultCheckbox := false, helpText := "", addPrefix := false, rows := 1, replaceWithNewline := "") {
+    AddTextBlock(field, settingName, showDefaultCheckbox := false, helpText := "", addPrefix := false, rows := 1, replaceWithNewline := "", entityObj := "") {
+        if (entityObj == "") {
+            entityObj := this.entityObj
+        }
+        
         this.AddHeading(settingName)
         checkW := 0
         disabledText := ""
 
         prefixedName := field
         if (addPrefix) {
-            prefixedName := this.entityObj.configPrefix . field
+            prefixedName := entityObj.configPrefix . field
         }
 
         if (showDefaultCheckbox) {
-            ctl := this.DefaultCheckbox(field, "", addPrefix)
+            ctl := this.DefaultCheckbox(field, entityObj, addPrefix)
             ctl.GetPos(,,checkW)
             checkW := checkW + this.margin
-            disabledText := this.entityObj.UnmergedConfig.Has(prefixedName) ? "" : " Disabled"
+            disabledText := entityObj.UnmergedConfig.Has(prefixedName) ? "" : " Disabled"
         }
         
         fieldW := this.windowSettings["contentWidth"] - checkW
         pos := showDefaultCheckbox ? "x+m yp" : "xs y+m"
-        val := this.entityObj.GetConfigValue(field, addPrefix)
+        val := entityObj.GetConfigValue(field, addPrefix)
 
         if (replaceWithNewline) {
             val := StrReplace(val, replaceWithNewline, "`n")
@@ -109,23 +113,27 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         return ctl
     }
 
-    AddCheckBoxBlock(field, settingName, showDefaultCheckbox := false, helpText := "", addPrefix := false) {
+    AddCheckBoxBlock(field, settingName, showDefaultCheckbox := false, helpText := "", addPrefix := false, entityObj := "") {
+        if (entityObj == "") {
+            entityObj := this.entityObj
+        }
+
         checkW := 0
         disabledText := ""
 
         prefixedName := field
         if (addPrefix) {
-            prefixedName := this.entityObj.configPrefix . field
+            prefixedName := entityObj.configPrefix . field
         }
 
         if (showDefaultCheckbox) {
-            ctl := this.DefaultCheckbox(field, "", addPrefix)
+            ctl := this.DefaultCheckbox(field, entityObj, addPrefix)
             ctl.GetPos(,,checkW)
             checkW := checkW + this.margin
-            disabledText := this.entityObj.UnmergedConfig.Has(prefixedName) ? "" : " Disabled"
+            disabledText := entityObj.UnmergedConfig.Has(prefixedName) ? "" : " Disabled"
         }
 
-        checked := !!(this.entityObj.GetConfigValue(field, addPrefix))
+        checked := !!(entityObj.GetConfigValue(field, addPrefix))
 
         fieldW := this.windowSettings["contentWidth"] - checkW
         pos := showDefaultCheckbox ? "x+m yp" : "xs y+m"
@@ -147,22 +155,26 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
         return this.SetDefaultValue(fieldName, isDefault, includePrefix, "Not set")
     }
 
-    AddLocationBlock(heading, settingName, extraButton := "", showOpen := true, showDefaultCheckbox := false, addPrefix := false, helpText := "") {
+    AddLocationBlock(heading, settingName, extraButton := "", showOpen := true, showDefaultCheckbox := false, addPrefix := false, helpText := "", entityObj := "") {
+        if (entityObj == "") {
+            entityObj := this.entityObj
+        }
+        
         this.AddHeading(heading)
-        location := this.entityObj.HasConfigValue(settingName, addPrefix, false) ? this.entityObj.GetConfigValue(settingName, addPrefix) : "Not set"
+        location := entityObj.HasConfigValue(settingName, addPrefix, false) ? entityObj.GetConfigValue(settingName, addPrefix) : "Not set"
         checkW := 0
         disabledText := ""
 
         prefixedName := settingName
         if (addPrefix) {
-            prefixedName := this.entityObj.configPrefix . prefixedName
+            prefixedName := entityObj.configPrefix . prefixedName
         }
 
         if (showDefaultCheckbox) {
-            ctl := this.DefaultCheckbox(settingName, "", addPrefix)
+            ctl := this.DefaultCheckbox(settingName, entityObj, addPrefix)
             ctl.GetPos(,,checkW)
             checkW := checkW + this.margin
-            disabledText := this.entityObj.UnmergedConfig.Has(prefixedName) ? "" : " Hidden"
+            disabledText := entityObj.UnmergedConfig.Has(prefixedName) ? "" : " Hidden"
         }
 
         fieldW := this.windowSettings["contentWidth"] - checkW

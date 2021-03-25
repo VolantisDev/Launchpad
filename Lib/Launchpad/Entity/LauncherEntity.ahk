@@ -193,7 +193,13 @@ class LauncherEntity extends EntityBase {
     }
 
     LaunchEditWindow(mode, owner := "", parent := "") {
-        return this.app.Windows.LauncherEditor(this, mode, owner, parent)
+        result := this.app.Config.UseAdvancedLauncherEditor ? "Advanced" : "Simple"
+
+        while (result == "Simple" || result == "Advanced") {
+            result := result == "Advanced" ? this.app.Windows.LauncherEditor(this, mode, owner, parent) : this.app.Windows.LauncherEditorSimple(this, mode, owner, parent)
+        }
+        
+        return result
     }
 
     MergeAdditionalDataSourceDefaults(defaults, dataSourceData) {

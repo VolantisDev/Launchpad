@@ -27,8 +27,8 @@ class LaunchpadFormGuiBase extends FormGuiBase {
         }
     }
 
-    AddEntityTypeSelect(heading, field, currentValue, allItems, buttonName := "", helpText := "") {
-        return this.AddSelect(heading, field, currentValue,  allItems, false, buttonName, "Manage", helpText, false)
+    AddEntityTypeSelect(heading, field, currentValue, allItems, buttonName := "", helpText := "", showManage := true) {
+        return this.AddSelect(heading, field, currentValue,  allItems, false, buttonName, showManage ? "Manage" : "", helpText, false)
     }
 
     AddSelect(heading, field, currentValue, allItems, showDefaultCheckbox := false, buttonName := "", buttonText := "", helpText := "", addPrefix := false) {
@@ -74,16 +74,18 @@ class LaunchpadFormGuiBase extends FormGuiBase {
         }
     }
 
-    DefaultCheckbox(fieldKey, entity, addPrefix := false) {
+    DefaultCheckbox(fieldKey, entity, addPrefix := false, includePrefixInCtlName := false) {
         prefixedName := fieldKey
         if (addPrefix) {
             prefixedName := entity.configPrefix . prefixedName
         }
 
+        ctlKey := includePrefixInCtlName ? prefixedName : fieldKey
+
         checkedText := !entity.UnmergedConfig.Has(prefixedName) ? " Checked" : ""
-        ctl := this.guiObj.AddCheckBox("vDefault" . fieldKey . " xs h25 y+m" . checkedText, "Default")
+        ctl := this.guiObj.AddCheckBox("vDefault" . ctlKey . " xs h25 y+m" . checkedText, "Default")
         ctl.ToolTip := "When checked, the default value determined by various other factors in Launchpad will be used (and shown to the right if available). When unchecked, the value you set here will be used instead."
-        ctl.OnEvent("Click", "OnDefault" . fieldKey)
+        ctl.OnEvent("Click", "OnDefault" . ctlKey)
         return ctl
     }
 }

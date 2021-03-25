@@ -80,6 +80,8 @@
 #Include Window\EntityEditorBase.ahk
 #Include Window\LauncherDeleteWindow.ahk
 #Include Window\LauncherEditor.ahk
+#Include Window\LauncherEditorBase.ahk
+#Include Window\LauncherEditorSimple.ahk
 #Include Window\LauncherWizard.ahk
 #Include Window\LaunchpadFormGuiBase.ahk
 #Include Window\LaunchpadGuiBase.ahk

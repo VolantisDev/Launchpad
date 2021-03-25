@@ -73,6 +73,10 @@ class WindowManager extends AppComponentServiceBase {
         return this.ShowForm(LauncherEditor.new(this.app, entityObj, mode, "", owner, parent))
     }
 
+    LauncherEditorSimple(entityObj, mode := "config", owner := "", parent := "") {
+        return this.ShowForm(LauncherEditorSimple.new(this.app, entityObj, mode, "", owner, parent))
+    }
+
     ManagedLauncherEditor(entityObj, mode := "config", owner := "", parent := "") {
         return this.ShowForm(ManagedLauncherEditor.new(this.app, entityObj, mode, "", owner, parent))
     }
