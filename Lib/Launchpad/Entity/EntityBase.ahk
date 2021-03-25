@@ -108,11 +108,11 @@ class EntityBase {
         this.InitializeRequiredConfigKeys(requiredConfigKeys)
     }
 
-    StoreOriginal(recursive := true) {
-        this.entityData.StoreOriginal()
+    StoreOriginal(recursive := true, update := false) {
+        this.entityData.StoreOriginal(update)
 
         for index, child in this.children {
-            child.StoreOriginal(recursive)
+            child.StoreOriginal(recursive, update)
         }
     }
 
@@ -376,6 +376,7 @@ class EntityBase {
 
             if (mode == "config") {
                 this.SaveModifiedData()
+                this.StoreOriginal(true, true)
             }
         }
 
