@@ -149,6 +149,18 @@ class WindowManager extends AppComponentServiceBase {
         return this.ShowWindow("ToolsWindow")
     }
 
+    OpenAddMenu(owner := "MainWindow") {
+        if (!this.WindowExists("AddMenu")) {
+            this.SetItem("AddMenu", AddMenu.new(this.app, "AddMenu", owner))
+        }
+
+        return this.ShowWindow("AddMenu")
+    }
+
+    CloseAddMenu() {
+        this.CloseWindow("AddMenu")
+    }
+
     CloseToolsWindow() {
         this.CloseWindow("ToolsWindow")
     }

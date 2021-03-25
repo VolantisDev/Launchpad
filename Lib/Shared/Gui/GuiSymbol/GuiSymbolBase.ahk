@@ -1,23 +1,33 @@
 class GuiSymbolBase {
-    strokeColor := ""
+    textColor := ""
     dimColor := ""
     strokeWidth := ""
     bgColor := ""
     pen := ""
     dimPen := ""
     margin := 2
+
+    config := ""
+    defaults := Map("textColor", "000000", "dimColor", "EEEEEE", "strokeWidth", 1, "bgColor", "000000", "margin", 2)
     
-    __New(strokeColor, strokeWidth, dimColor, bgColor) {
-        this.strokeColor := strokeColor
-        this.strokeWidth := strokeWidth
-        this.dimColor := dimColor
-        this.bgColor := bgColor
-        this.pen := this.CreatePen(this.strokeColor)
-        this.dimPen := this.CreatePen(this.dimColor)
+    __New(config) {
+        this.config := this.MergeDefaults(config)
+        this.pen := this.CreatePen(this.config["textColor"])
+        this.dimPen := this.CreatePen(this.config["dimColor"])
+    }
+
+    MergeDefaults(config) {
+        for key, value in this.defaults {
+            if (!config.Has(key)) {
+                config[key] := value
+            }
+        }
+
+        return config
     }
 
     CreatePen(colorVal) {
-        return Gdip_CreatePen("0xff" . colorVal, this.strokeWidth)
+        return Gdip_CreatePen("0xff" . colorVal, this.config["strokeWidth"])
     }
     
     CreateBrush(colorVal) {

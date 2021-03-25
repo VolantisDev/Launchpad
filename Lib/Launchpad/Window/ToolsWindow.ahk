@@ -1,10 +1,9 @@
 ﻿class ToolsWindow extends MenuGui {
-    buttonsPerRow := 2
+    buttonsPerRow := 1
     menuTitle := "Tools"
 
     Controls() {
         super.Controls()
-        this.AddMenuButton("&Detect Games", "DetectGames")
         this.AddMenuButton("&Manage Platforms", "ManagePlatforms")
         this.AddMenuButton("Manage &Backups", "ManageBackups")
         this.AddMenuButton("&Reload Launchers", "ReloadLaunchers")
@@ -26,11 +25,6 @@
         this.app.Windows.OpenManageBackupsWindow()
     }
 
-    OnDetectGames(btn, info) {
-        this.Close()
-        this.app.Platforms.DetectGames()
-    }
-
     OnReloadLaunchers(btn, info) {
         this.Close()
         this.app.Launchers.LoadComponents(this.app.Config.LauncherFile)
@@ -48,16 +42,6 @@
     OnFlushCache(btn, info) {
         this.Close()
         this.app.Cache.FlushCaches()
-    }
-
-    OnClose(guiObj) {
-        this.Close()
-        super.OnClose(guiObj)
-    }
-
-    OnEscape(guiObj) {
-        this.Close()
-        super.OnEscape(guiObj)
     }
 
     OnCheckForUpdates(btn, info) {

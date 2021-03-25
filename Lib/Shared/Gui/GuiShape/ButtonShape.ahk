@@ -1,26 +1,27 @@
 class ButtonShape extends GuiShapeBase {
     themeObj := ""
     btnText := ""
-    bgColor := ""
-    textColor := ""
-    dimColor := ""
-    borderColor := ""
-    borderThickness := ""
-    font := "Arial"
     graphics := ""
     bitmap := ""
     hbitmap := ""
-    strokeWidth := ""
 
-    __New(themeObj, btnText, bgColor, textColor, dimColor, borderColor, borderThickness := 1, strokeWidth := 1) {
+    config := ""
+    defaults := Map("bgColor", "000000", "textColor", "FFFFFF", "dimColor", "EEEEEE", "borderColor", "EEEEEE", "borderThickness", 1, "font", "Arial", "strokeWidth", 1, "textAlign", "Center", "margin", 1)
+
+    __New(themeObj, btnText, config) {
         this.themeObj := themeObj
         this.btnText := btnText
-        this.bgColor := bgColor
-        this.textColor := textColor
-        this.borderColor := borderColor
-        this.borderThickness := borderThickness
-        this.strokeWidth := strokeWidth
-        this.dimColor := dimColor
+        this.config := this.MergeDefaults(config)
+    }
+
+    MergeDefaults(config) {
+        for key, value in this.defaults {
+            if (!config.Has(key)) {
+                config[key] := value
+            }
+        }
+
+        return config
     }
 
     Draw(w, h) {
@@ -28,13 +29,13 @@ class ButtonShape extends GuiShapeBase {
         this.graphics := Gdip_GraphicsFromImage(this.bitmap)
         Gdip_SetSmoothingMode(this.graphics, 4)
 
-        bgBrush := Gdip_BrushCreateSolid("0xff" . this.bgColor)
+        bgBrush := Gdip_BrushCreateSolid("0xff" . this.config["bgColor"])
         Gdip_FillRectangle(this.graphics, bgBrush, -1, -1, w+2, h+2)
         Gdip_DeleteBrush(bgBrush)
 
-        if (this.borderThickness > 0) {
-            borderPen := Gdip_CreatePen("0xff" . this.borderColor, this.borderThickness)
-            Gdip_DrawRectangle(this.graphics, borderPen, 0 + Floor(this.borderThickness / 2), 0 + Floor(this.borderThickness / 2), w - this.borderThickness, h - this.borderThickness)
+        if (this.config["borderThickness"] > 0) {
+            borderPen := Gdip_CreatePen("0xff" . this.config["borderColor"], this.config["borderThickness"])
+            Gdip_DrawRectangle(this.graphics, borderPen, 0 + Floor(this.config["borderThickness"] / 2), 0 + Floor(this.config["borderThickness"] / 2), w - this.config["borderThickness"], h - this.config["borderThickness"])
             Gdip_DeletePen(borderPen)
         }
         
@@ -44,7 +45,9 @@ class ButtonShape extends GuiShapeBase {
     }
 
     RenderContent(w, h) {
-        Gdip_TextToGraphics(this.graphics, this.GetButtonText(), "Center vCenter cff" . this.textColor, this.font, w, h)
+        x := "X" . this.config["margin"]
+        textW := w - (this.config["margin"]*2)
+        Gdip_TextToGraphics(this.graphics, this.GetButtonText(), this.config["textAlign"] . " " . x . " W" . textW . " vCenter cff" . this.config["textColor"], this.config["font"], w, h)
     }
 
     Cleanup() {
@@ -80,7 +83,6 @@ class ButtonShape extends GuiShapeBase {
 
     GetButtonText() {
         btnText := this.btnText
-
         return StrReplace(btnText, "&", "")
     }
 }

@@ -1,6 +1,6 @@
 class AddSymbol extends GuiSymbolBase {
     DrawSymbol(graphics, x, y, w, h) {
-        offset := this.strokeWidth > 1 ? (this.strokeWidth / 4) : 0
+        offset := this.config["strokeWidth"] > 1 ? (this.config["strokeWidth"] / 4) : 0
         offset := 0.25 ; @todo Why does this look better?
 
         symbolMargin := h/5

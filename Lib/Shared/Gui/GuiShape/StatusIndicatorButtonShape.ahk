@@ -4,13 +4,13 @@ class StatusIndicatorButtonShape extends ButtonShape {
         this.graphics := Gdip_GraphicsFromImage(this.bitmap)
         Gdip_SetSmoothingMode(this.graphics, 4)
 
-        bgBrush := Gdip_BrushCreateSolid("0xff" . this.bgColor)
+        bgBrush := Gdip_BrushCreateSolid("0xff" . this.config["bgColor"])
         Gdip_FillRectangle(this.graphics, bgBrush, -1, -1, w+2, h+2)
         Gdip_DeleteBrush(bgBrush)
 
-        if (this.borderThickness > 0) {
-            borderPen := Gdip_CreatePen("0xff" . this.borderColor, this.borderThickness)
-            Gdip_DrawRectangle(this.graphics, borderPen, 0 + Floor(this.borderThickness / 2), 0 + Floor(this.borderThickness / 2), w - this.borderThickness, h - this.borderThickness)
+        if (this.config["borderThickness"] > 0) {
+            borderPen := Gdip_CreatePen("0xff" . this.config["borderColor"], this.config["borderThickness"])
+            Gdip_DrawRectangle(this.graphics, borderPen, 0 + Floor(this.config["borderThickness"] / 2), 0 + Floor(this.config["borderThickness"] / 2), w - this.config["borderThickness"], h - this.config["borderThickness"])
             Gdip_DeletePen(borderPen)
         }
         
@@ -20,7 +20,7 @@ class StatusIndicatorButtonShape extends ButtonShape {
     }
 
     RenderContent(w, h) {
-        Gdip_TextToGraphics(this.graphics, this.GetButtonText(), "Center vCenter cff" . this.textColor, this.font, w, h)
+        Gdip_TextToGraphics(this.graphics, this.GetButtonText(), this.config["textAlign"] . " vCenter cff" . this.config["textColor"], this.config["font"], w, h)
     }
 
     Cleanup() {

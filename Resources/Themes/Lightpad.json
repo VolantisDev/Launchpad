@@ -40,245 +40,277 @@
                 "s": 20,
                 "m": 30,
                 "l": 40,
-                "xl": 80
+                "xl": 80,
+                "menu": 25
             },
             "fixedWidth": {
                 "s": 80,
                 "m": 100,
                 "l": 120,
-                "xl": 140
+                "xl": 140,
+                "menu": 150
             },
             "styles": {
                 "normal": {
                     "enabled": {
-                        "backgroundColor": "{{background}}",
+                        "bgColor": "{{background}}",
                         "textColor": "{{text}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 3,
+                        "borderThickness": 3,
                         "shape": "ButtonShape",
-                        "strokeWidth": 1
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
                     },
                     "disabled": {
-                        "backgroundColor": "{{background}}",
+                        "bgColor": "{{background}}",
                         "textColor": "{{text}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 3,
+                        "borderThickness": 3,
                         "shape": "ButtonShape",
-                        "strokeWidth": 1
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
                     },
                     "hovered": {
-                        "backgroundColor": "{{accentDark}}",
+                        "bgColor": "{{accentDark}}",
                         "textColor": "{{light}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 3,
+                        "borderThickness": 3,
                         "shape": "ButtonShape",
-                        "strokeWidth": 1
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
                     }
                 },
                 "primary": {
                     "enabled": {
-                        "backgroundColor": "{{background}}",
+                        "bgColor": "{{background}}",
                         "textColor": "{{text}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 3,
+                        "borderThickness": 3,
                         "shape": "ButtonShape",
-                        "strokeWidth": 1
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
                     },
                     "disabled": {
-                        "backgroundColor": "{{background}}",
+                        "bgColor": "{{background}}",
                         "textColor": "{{text}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 3,
+                        "borderThickness": 3,
                         "shape": "ButtonShape",
-                        "strokeWidth": 1
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
                     },
                     "hovered": {
-                        "backgroundColor": "{{accentDark}}",
+                        "bgColor": "{{accentDark}}",
                         "textColor": "{{light}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 3,
+                        "borderThickness": 3,
                         "shape": "ButtonShape",
-                        "strokeWidth": 1
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
                     }
                 },
                 "menu": {
                     "enabled": {
-                        "backgroundColor": "{{background}}",
+                        "bgColor": "{{background}}",
                         "textColor": "{{text}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 3,
+                        "borderThickness": 3,
                         "shape": "ButtonShape",
-                        "strokeWidth": 1
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
                     },
                     "disabled": {
-                        "backgroundColor": "{{background}}",
+                        "bgColor": "{{background}}",
                         "textColor": "{{text}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 3,
+                        "borderThickness": 3,
                         "shape": "ButtonShape",
-                        "strokeWidth": 1
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
                     },
                     "hovered": {
-                        "backgroundColor": "{{accentDark}}",
+                        "bgColor": "{{accentDark}}",
                         "textColor": "{{light}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 3,
+                        "borderThickness": 3,
                         "shape": "ButtonShape",
-                        "strokeWidth": 1
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
                     }
                 },
                 "titlebar": {
                     "enabled": {
-                        "backgroundColor": "{{background}}",
+                        "bgColor": "{{background}}",
                         "textColor": "{{text}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 0,
+                        "borderThickness": 0,
                         "shape": "SymbolButtonShape",
-                        "strokeWidth": 1
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
                     },
                     "disabled": {
-                        "backgroundColor": "{{background}}",
+                        "bgColor": "{{background}}",
                         "textColor": "{{text}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 0,
+                        "borderThickness": 0,
                         "shape": "SymbolButtonShape",
-                        "strokeWidth": 1
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
                     },
                     "hovered": {
-                        "backgroundColor": "{{accentDark}}",
+                        "bgColor": "{{accentDark}}",
                         "textColor": "{{light}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 0,
+                        "borderThickness": 0,
                         "shape": "SymbolButtonShape",
-                        "strokeWidth": 1
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
                     }
                 },
                 "manageText": {
                     "enabled": {
-                        "backgroundColor": "{{background}}",
+                        "bgColor": "{{background}}",
                         "textColor": "{{text}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 3,
+                        "borderThickness": 3,
                         "shape": "ButtonShape",
-                        "strokeWidth": 1
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
                     },
                     "disabled": {
-                        "backgroundColor": "{{background}}",
+                        "bgColor": "{{background}}",
                         "textColor": "{{text}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 3,
+                        "borderThickness": 3,
                         "shape": "ButtonShape",
-                        "strokeWidth": 1
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
                     },
                     "hovered": {
-                        "backgroundColor": "{{accentDark}}",
+                        "bgColor": "{{accentDark}}",
                         "textColor": "{{light}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 3,
+                        "borderThickness": 3,
                         "shape": "ButtonShape",
-                        "strokeWidth": 1
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
                     }
                 },
                 "manage": {
                     "enabled": {
-                        "backgroundColor": "{{background}}",
+                        "bgColor": "{{background}}",
                         "textColor": "{{text}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 0,
+                        "borderThickness": 0,
                         "shape": "SymbolButtonShape",
-                        "strokeWidth": 2
+                        "strokeWidth": 2,
+                        "textAlign": "Center",
+                        "margin": 4
                     },
                     "disabled": {
-                        "backgroundColor": "{{background}}",
+                        "bgColor": "{{background}}",
                         "textColor": "{{text}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 0,
+                        "borderThickness": 0,
                         "shape": "SymbolButtonShape",
-                        "strokeWidth": 2
+                        "strokeWidth": 2,
+                        "textAlign": "Center",
+                        "margin": 4
                     },
                     "hovered": {
-                        "backgroundColor": "{{accentDark}}",
+                        "bgColor": "{{accentDark}}",
                         "textColor": "{{light}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 0,
+                        "borderThickness": 0,
                         "shape": "SymbolButtonShape",
-                        "strokeWidth": 2
+                        "strokeWidth": 2,
+                        "textAlign": "Center",
+                        "margin": 4
                     }
                 },
                 "managePrimary": {
                     "enabled": {
-                        "backgroundColor": "{{background}}",
+                        "bgColor": "{{background}}",
                         "textColor": "{{text}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 1,
+                        "borderThickness": 1,
                         "shape": "SymbolButtonShape",
-                        "strokeWidth": 2
+                        "strokeWidth": 2,
+                        "textAlign": "Center",
+                        "margin": 4
                     },
                     "disabled": {
-                        "backgroundColor": "{{background}}",
+                        "bgColor": "{{background}}",
                         "textColor": "{{text}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 1,
+                        "borderThickness": 1,
                         "shape": "SymbolButtonShape",
-                        "strokeWidth": 2
+                        "strokeWidth": 2,
+                        "textAlign": "Center",
+                        "margin": 4
                     },
                     "hovered": {
-                        "backgroundColor": "{{accentDark}}",
+                        "bgColor": "{{accentDark}}",
                         "textColor": "{{light}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 1,
+                        "borderThickness": 1,
                         "shape": "SymbolButtonShape",
-                        "strokeWidth": 2
+                        "strokeWidth": 2,
+                        "textAlign": "Center",
+                        "margin": 4
                     }
                 },
                 "status": {
                     "enabled": {
-                        "backgroundColor": "{{accentDark}}",
+                        "bgColor": "{{accentDark}}",
                         "textColor": "{{textLight}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 0,
+                        "borderThickness": 0,
                         "shape": "StatusIndicatorButtonShape",
-                        "strokeWidth": 1
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
                     },
                     "disabled": {
-                        "backgroundColor": "{{gray}}",
+                        "bgColor": "{{gray}}",
                         "textColor": "{{dim}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 0,
+                        "borderThickness": 0,
                         "shape": "StatusIndicatorButtonShape",
-                        "strokeWidth": 1
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
                     },
                     "hovered": {
-                        "backgroundColor": "{{accentDark}}",
+                        "bgColor": "{{accentDark}}",
                         "textColor": "{{text}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderWidth": 0,
+                        "borderThickness": 0,
                         "shape": "StatusIndicatorButtonShape",
-                        "strokeWidth": 1
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
                     }
                 }
             }
@@ -367,7 +399,7 @@
             },
             "menu": {
                 "base": "default",
-                "contentWidth": 400,
+                "contentWidth": 200,
                 "spacing": {
                     "margin": 0,
                     "windowMargin": "{{margin}}",
@@ -461,6 +493,9 @@
                 }
             },
             "ToolsWindow": {
+                "settings": "menu"
+            },
+            "AddMenu": {
                 "settings": "menu"
             },
             "AddLauncherMenu": {

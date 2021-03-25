@@ -73,6 +73,7 @@
 #Include Service\WindowManager.ahk
 #Include Window\AboutWindow.ahk
 #Include Window\AccountInfoWindow.ahk
+#Include Window\AddMenu.ahk
 #Include Window\DetectedGameEditor.ahk
 #Include Window\DetectedGamesWindow.ahk
 #Include Window\EntityDeleteWindow.ahk

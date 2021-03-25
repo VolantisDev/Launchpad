@@ -37,13 +37,27 @@
     }
 
     AddMenuButton(buttonLabel, ctlName) {
-        marginSpace := (this.margin * this.buttonsPerRow) - this.margin
+        buttonSpacing := this.windowSettings["spacing"]["buttonSpacing"]
+        marginSpace := (buttonSpacing * this.buttonsPerRow) - buttonSpacing
         width := (this.windowSettings["contentWidth"] - marginSpace) / this.buttonsPerRow
 
-        buttonSize := this.themeObj.GetButtonSize("s")
+        buttonSize := this.themeObj.GetButtonSize("menu")
         buttonH := (buttonSize.Has("h") && buttonSize["h"] != "auto") ? buttonSize["h"] : this.buttonHeight
 
-        btn := this.AddButton("v" . ctlName . " " . this.nextPos . " w" . width . " h" . buttonH, buttonLabel, "menu")
-        this.nextPos := this.nextPos == "x" . this.margin ? "x+" . this.margin . " yp" : "x" . this.margin
+        btn := this.AddButton("v" . ctlName . " " . this.nextPos . " w" . width . " h" . buttonH, buttonLabel, "", "menu")
+
+        if (this.buttonsPerRow > 1) {
+            this.nextPos := this.nextPos == "x" . this.margin ? "x+" . buttonSpacing . " yp" : "x" . this.margin
+        }
+    }
+
+    OnClose(guiObj) {
+        this.Close()
+        super.OnClose(guiObj)
+    }
+
+    OnEscape(guiObj) {
+        this.Close()
+        super.OnEscape(guiObj)
     }
 }

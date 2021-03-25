@@ -4,9 +4,9 @@ class MaximizeSymbol extends GuiSymbolBase {
         Gdip_DrawRectangle(graphics, this.pen, x, y, w, h)
 
         ; Titlebar
-        tbY := y + this.strokeWidth
-        tbX1 := x + this.strokeWidth
-        tbX2 := tbX1 + w - this.strokeWidth
+        tbY := y + this.config["strokeWidth"]
+        tbX1 := x + this.config["strokeWidth"]
+        tbX2 := tbX1 + w - this.config["strokeWidth"]
         Gdip_DrawLine(graphics, this.pen, tbX1, tbY, tbX2, tbY)
     }
 }

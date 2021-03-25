@@ -172,7 +172,7 @@
     }
 
     OnAddButton(btn, info) {
-        this.AddLauncher()
+        this.app.Windows.OpenAddMenu()
     }
 
     OnEditButton(btn, info) {
