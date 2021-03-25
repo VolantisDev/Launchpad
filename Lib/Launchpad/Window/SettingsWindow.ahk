@@ -67,7 +67,7 @@
         this.AddConfigLocationBlock("CacheDir", "&Flush")
 
         this.AddHeading("Cache Settings")
-        this.AddConfigCheckBox("Flush cache on exit", "FlushCacheOnExit")
+        this.AddConfigCheckBox("Flush cache on exit (Recommended only for debugging)", "FlushCacheOnExit")
 
         tabs.UseTab("Advanced", true)
 
