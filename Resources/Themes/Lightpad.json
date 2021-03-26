@@ -448,13 +448,13 @@
                 "listViewHeight": 400,
                 "options": {
                     "Resize": true,
-                    "MinSize": "480x380"
+                    "MinSize": "500x380"
                 }
             },
             "ManageBackupsWindow": {
                 "settings": "default",
                 "contentWidth": 640,
-                "listViewHeight": 300,
+                "listViewHeight": 250,
                 "options": {
                     "Resize": true,
                     "MinSize": "480x380"
@@ -463,10 +463,10 @@
             "PlatformsWindow": {
                 "settings": "default",
                 "contentWidth": 640,
-                "listViewHeight": 400,
+                "listViewHeight": 200,
                 "options": {
                     "Resize": true,
-                    "MinSize": "250x250"
+                    "MinSize": "570x250"
                 }
             },
             "DetectedGamesWindow": {

@@ -3,6 +3,7 @@ class PlatformsWindow extends ManageWindowBase {
     platformsFile := ""
     platformManager := ""
     platformRows := []
+    sidebarWidth := 0
 
     __New(app, platformsFile := "", windowKey := "", owner := "", parent := "") {
         if (platformsFile == "") {
@@ -16,16 +17,17 @@ class PlatformsWindow extends ManageWindowBase {
         super.__New(app, "Platforms", windowKey, owner, parent)
     }
 
-    AddSidebarControls() {
-        this.AddButton("vReloadButton ys w" . this.sidebarWidth . " h30", "Reload")
-        this.AddButton("vEnableButton xp y+m w" . this.sidebarWidth . " h30", "Enable")
-        this.AddButton("vDisableButton xp y+m w" . this.sidebarWidth . " h30", "Disable")
-        this.AddButton("vEditButton xp y+m w" . this.sidebarWidth . " h30", "Edit")
-        this.AddButton("vInstallButton xp y+m w" . this.sidebarWidth . " h30", "Install")
-        this.AddButton("vUpdateButton xp yp w" . this.sidebarWidth . " h30", "Update") ; @todo get this working again
-        this.AddButton("vRunButton xp y+m w" . this.sidebarWidth . " h30", "Run")
-        this.AddButton("vUninstallButton xp y+m w" . this.sidebarWidth . " h30", "Uninstall")
-        
+    AddBottomControls() {
+        position := "x" . this.margin . " y+" . this.margin . " w60 h25"
+        this.AddButton("vReloadButton ys " . position, "Reload", "", "manageText")
+        position := "x+" . this.margin . " yp w60 h25"
+        this.AddButton("vEnableButton " . position, "Enable", "", "manageText")
+        this.AddButton("vDisableButton " . position, "Disable", "", "manageText")
+        this.AddButton("vEditButton " . position, "Edit", "", "manageText")
+        this.AddButton("vInstallButton " . position, "Install", "", "manageText")
+        this.AddButton("vUpdateButton " . position, "Update", "", "manageText") ; @todo get this working again
+        this.AddButton("vRunButton " . position, "Run", "", "manageText")
+        this.AddButton("vUninstallButton " . position, "Uninstall", "", "manageText")
     }
 
     SetupManageEvents(lv) {
@@ -187,7 +189,7 @@ class PlatformsWindow extends ManageWindowBase {
             return
         }
 
-        this.AutoXYWH("x", ["ReloadButton", "EnableButton", "DisableButton", "EditButton", "RunButton", "InstallButton", "UpdateButton", "UninstallButton"])
+        this.AutoXYWH("y", ["ReloadButton", "EnableButton", "DisableButton", "EditButton", "RunButton", "InstallButton", "UpdateButton", "UninstallButton"])
         
         for index, col in this.listViewColumns {
             this.guiObj["ListView"].ModifyCol(index, "AutoHdr")
