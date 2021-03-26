@@ -8,23 +8,23 @@ class WindowManager extends AppComponentServiceBase {
     }
 
     DialogBox(title, text, owner := "", parent := "", buttons := "*&Yes|&No") {
-        return this.ShowDialog(DialogBox.new(title, this.GetTheme(), text, "", owner, parent, buttons))
+        return this.ShowDialog(DialogBox.new(title, this.GetTheme(), text, "", this.ResolveWindow(owner), parent, buttons))
     }
 
     UpdateAvailable(releaseInfo, owner := "", parent := "") {
-        return this.ShowDialog(UpdateAvailableWindow.new(releaseInfo, this.app, "", owner, parent))
+        return this.ShowDialog(UpdateAvailableWindow.new(releaseInfo, this.app, "", this.ResolveWindow(owner), parent))
     }
 
     LoginWindow(owner := "", parent := "") {
-        return this.ShowDialog(LoginWindow.new(this.app, "", owner, parent))
+        return this.ShowDialog(LoginWindow.new(this.app, "", this.ResolveWindow(owner), parent))
     }
 
     AccountInfoWindow(owner := "", parent := "") {
-        return this.ShowDialog(AccountInfoWindow.new(this.app, "", owner, parent))
+        return this.ShowDialog(AccountInfoWindow.new(this.app, "", this.ResolveWindow(owner), parent))
     }
 
     AboutWindow(title := "", text := "", owner := "", parent := "", buttons := "*&OK") {
-        return this.ShowDialog(AboutWindow.new(title, this.GetTheme(), text, "", owner, parent, buttons))
+        return this.ShowDialog(AboutWindow.new(title, this.GetTheme(), text, "", this.ResolveWindow(owner), parent, buttons))
     }
 
     FeedbackWindow(title := "", text := "", owner := "", parent := "", buttons := "*&Submit|&Cancel") {
@@ -35,7 +35,7 @@ class WindowManager extends AppComponentServiceBase {
             title := "Submit Feedback"
         }
 
-        return this.ShowDialog(FeedbackWindow.new(notifierObj, apiEndpointUrl, title, this.GetTheme(), text, "", owner, parent, buttons))
+        return this.ShowDialog(FeedbackWindow.new(notifierObj, apiEndpointUrl, title, this.GetTheme(), text, "", this.ResolveWindow(owner), parent, buttons))
     }
 
     ErrorDialog(errorObj, title := "", text := "", owner := "", parent := "", buttons := "*&Continue|&Exit Launchpad") {
@@ -46,63 +46,63 @@ class WindowManager extends AppComponentServiceBase {
             title := "Unhandled Exception"
         }
 
-        return this.ShowDialog(ErrorDialog.new(errorObj, notifierObj, apiEndpointUrl, title, this.GetTheme(), text, "", owner, parent, buttons))
+        return this.ShowDialog(ErrorDialog.new(errorObj, notifierObj, apiEndpointUrl, title, this.GetTheme(), text, "", this.ResolveWindow(owner), parent, buttons))
     }
 
     SingleInputBox(title, text, defaultValue := "", owner := "", parent := "", isPassword := false) {
-        return this.ShowDialog(SingleInputBox.new(title, this.GetTheme(), text, defaultValue, "", owner, parent, isPassword))
+        return this.ShowDialog(SingleInputBox.new(title, this.GetTheme(), text, defaultValue, "", this.ResolveWindow(owner), parent, isPassword))
     }
 
     ProgressIndicator(title, text, owner := "", parent := "", allowCancel := false, progressRange := 100, initialPosition := 0, detailText := true) {
-        return this.ShowDialog(ProgressIndicator.new(title, this.GetTheme(), text, "", owner, parent, allowCancel, progressRange, initialPosition, detailText))
+        return this.ShowDialog(ProgressIndicator.new(title, this.GetTheme(), text, "", this.ResolveWindow(owner), parent, allowCancel, progressRange, initialPosition, detailText))
     }
 
     MiniProgressIndicator(title, text, owner := "", parent := "", progressRange := 100, initialPosition := 0, detailText := true) {
-        return this.ShowDialog(MiniProgressIndicator.new(title, this.GetTheme(), text, "", owner, parent, progressRange, initialPosition, detailText))
+        return this.ShowDialog(MiniProgressIndicator.new(title, this.GetTheme(), text, "", this.ResolveWindow(owner), parent, progressRange, initialPosition, detailText))
     }
 
     LauncherWizard(owner := "", parent := "") {
-        return this.ShowForm(LauncherWizard.new(this.app, "", owner, parent))
+        return this.ShowForm(LauncherWizard.new(this.app, "", this.ResolveWindow(owner), parent))
     }
 
     PlatformEditor(entityObj, mode := "config", owner := "", parent := "") {
-        return this.ShowForm(PlatformEditor.new(this.app, entityObj, mode, "", owner, parent))
+        return this.ShowForm(PlatformEditor.new(this.app, entityObj, mode, "", this.ResolveWindow(owner), parent))
     }
 
     LauncherEditor(entityObj, mode := "config", owner := "", parent := "") {
-        return this.ShowForm(LauncherEditor.new(this.app, entityObj, mode, "", owner, parent))
+        return this.ShowForm(LauncherEditor.new(this.app, entityObj, mode, "", this.ResolveWindow(owner), parent))
     }
 
     LauncherEditorSimple(entityObj, mode := "config", owner := "", parent := "") {
-        return this.ShowForm(LauncherEditorSimple.new(this.app, entityObj, mode, "", owner, parent))
+        return this.ShowForm(LauncherEditorSimple.new(this.app, entityObj, mode, "", this.ResolveWindow(owner), parent))
     }
 
     ManagedLauncherEditor(entityObj, mode := "config", owner := "", parent := "") {
-        return this.ShowForm(ManagedLauncherEditor.new(this.app, entityObj, mode, "", owner, parent))
+        return this.ShowForm(ManagedLauncherEditor.new(this.app, entityObj, mode, "", this.ResolveWindow(owner), parent))
     }
 
     ManagedGameEditor(entityObj, mode := "config", owner := "", parent := "") {
-        return this.ShowForm(ManagedGameEditor.new(this.app, entityObj, mode, "", owner, parent))
+        return this.ShowForm(ManagedGameEditor.new(this.app, entityObj, mode, "", this.ResolveWindow(owner), parent))
     }
 
     EntityDeleteWindow(entityObj, entityManager, owner := "", parent := "") {
-        return this.ShowForm(EntityDeleteWindow.new(this.app, entityObj, entityManager, "", owner, parent))
+        return this.ShowForm(EntityDeleteWindow.new(this.app, entityObj, entityManager, "", this.ResolveWindow(owner), parent))
     }
 
     LauncherDeleteWindow(entityObj, owner := "", parent := "") {
-        return this.ShowForm(LauncherDeleteWindow.new(this.app, entityObj, this.app.Launchers, "", owner, parent))
+        return this.ShowForm(LauncherDeleteWindow.new(this.app, entityObj, this.app.Launchers, "", this.ResolveWindow(owner), parent))
     }
 
     DetectedGamesWindow(detectedGames, owner := "", parent := "") {
-        return this.ShowForm(DetectedGamesWindow.new(this.app, detectedGames, "DetectedGamesWindow", owner, parent))
+        return this.ShowForm(DetectedGamesWindow.new(this.app, detectedGames, "DetectedGamesWindow", this.ResolveWindow(owner), parent))
     }
 
     DetectedGameEditor(detectedGameObj, owner := "", parent := "") {
-        return this.ShowForm(DetectedGameEditor.new(this.app, detectedGameObj, "Detected Game", "", owner, parent))
+        return this.ShowForm(DetectedGameEditor.new(this.app, detectedGameObj, "Detected Game", "", this.ResolveWindow(owner), parent))
     }
 
     SetupWindow(owner := "", parent := "") {
-        return this.ShowForm(SetupWindow.new(this.app, "SetupWindow", owner, parent))
+        return this.ShowForm(SetupWindow.new(this.app, "SetupWindow", this.ResolveWindow(owner), parent))
     }
 
     OpenManageWindow() {
@@ -131,7 +131,7 @@ class WindowManager extends AppComponentServiceBase {
 
     OpenSettingsWindow(owner := "ManageWindow") {
         if (!this.WindowExists("SettingsWindow")) {
-            this.SetItem("SettingsWindow", SettingsWindow.new(this.app, "SettingsWindow", owner))
+            this.SetItem("SettingsWindow", SettingsWindow.new(this.app, "SettingsWindow", this.ResolveWindow(owner)))
         }
 
         return this.ShowWindow("SettingsWindow")
@@ -139,7 +139,7 @@ class WindowManager extends AppComponentServiceBase {
 
     OpenToolsWindow(owner := "ManageWindow") {
         if (!this.WindowExists("ToolsWindow")) {
-            this.SetItem("ToolsWindow", ToolsWindow.new(this.app, "ToolsWindow", owner))
+            this.SetItem("ToolsWindow", ToolsWindow.new(this.app, "ToolsWindow", this.ResolveWindow(owner)))
         }
 
         return this.ShowWindow("ToolsWindow")
@@ -147,10 +147,21 @@ class WindowManager extends AppComponentServiceBase {
 
     OpenAddMenu(owner := "ManageWindow") {
         if (!this.WindowExists("AddMenu")) {
-            this.SetItem("AddMenu", AddMenu.new(this.app, "AddMenu", owner))
+            
+            this.SetItem("AddMenu", AddMenu.new(this.app, "AddMenu", this.ResolveWindow(owner)))
         }
 
         return this.ShowWindow("AddMenu")
+    }
+
+    ResolveWindow(key) {
+        result := ""
+
+        if (this.WindowExists(key)) {
+            result := this.GetGuiObj(key)
+        }
+
+        return result
     }
 
     CloseAddMenu() {
