@@ -25,12 +25,6 @@
     }
 
     SaveConfig() {
-        for key, config in this.Platforms {
-            if (Type(config) == "Map" && config.Has("PlatformClass") && config.Count == 1) {
-                this.Platforms[key] := config["PlatformClass"]
-            }
-        }
-
         return super.SaveConfig()
     }
 }
