@@ -389,7 +389,6 @@
             "form": {
                 "base": "dialog",
                 "options": {
-                    "Tiled": true
                 }
             },
             "editor": {
