@@ -260,8 +260,8 @@ class LauncherEntity extends EntityBase {
         defaults.Delete("DataSourceItemKey")
         defaults["DestinationDir"] := this.GetDefaultDestinationDir()
         defaults["ThemeName"] := this.app.Config.ThemeName
-        defaults["ResourcesDir"] := this.app.Config.AppDir . "\Resources"
-        defaults["ThemesDir"] := this.app.Config.AppDir . "\Resources\Themes"
+        defaults["ResourcesDir"] := this.app.appDir . "\Resources"
+        defaults["ThemesDir"] := this.app.appDir . "\Resources\Themes"
         defaults["ShowProgress"] := true
         defaults["ProgressTitle"] := "{g}"
         defaults["ProgressText"] := "Monitoring {g}..."

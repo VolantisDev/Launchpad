@@ -24,14 +24,10 @@
 #Include BulkOperation\LoadOp\LoadLaunchersOp.ahk
 #Include BulkOperation\LoadOp\LoadModulesOp.ahk
 #Include BulkOperation\LoadOp\LoadPlatformsOp.ahk
-#Include Config\AppConfig.ahk
 #Include Config\BackupsConfig.ahk
 #Include Config\BlizzardProductDb.ahk
-#Include Config\ConfigBase.ahk
-#Include Config\FileConfig.ahk
-#Include Config\IniConfig.ahk
-#Include Config\JsonConfig.ahk
 #Include Config\LauncherConfig.ahk
+#Include Config\LaunchpadConfig.ahk
 #Include Config\PlatformsConfig.ahk
 #Include Config\ProtoConfig.ahk
 #Include DataSource\ApiDataSource.ahk
@@ -71,6 +67,7 @@
 #Include Service\PlatformManager.ahk
 #Include Service\ThemeManager.ahk
 #Include Service\WindowManager.ahk
+#Include State\LaunchpadAppState.ahk
 #Include Window\LaunchpadFormGuiBase.ahk
 #Include Window\LaunchpadGuiBase.ahk
 #Include Window\Dialog\AboutWindow.ahk

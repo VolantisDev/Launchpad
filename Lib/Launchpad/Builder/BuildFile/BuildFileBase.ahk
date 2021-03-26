@@ -15,8 +15,8 @@ class BuildFileBase {
         InvalidParameterException.CheckEmpty("BuildFileBase", "destPath", destPath)
 
         this.app := launcherEntityObj.app
-        this.appDir := this.app.Config.AppDir
-        this.tempDir := this.app.Config.TempDir . "\BuildFiles\" . launcherEntityObj.Key
+        this.appDir := this.app.appDir
+        this.tempDir := this.app.tmpDir . "\BuildFiles\" . launcherEntityObj.Key
         this.launcherEntityObj := launcherEntityObj
         this.destPathValue := destPath
     }

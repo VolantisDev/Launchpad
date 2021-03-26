@@ -13,8 +13,8 @@ class CacheManager extends AppComponentServiceBase {
 
     LoadComponents() {
         if (!this._componentsLoaded) {
-            this.SetItem("file", FileCache.new(CacheState.new(this.cacheDir . "\File.json"), this.cacheDir . "\File"))
-            this.SetItem("api", FileCache.new(CacheState.new(this.cacheDir . "\API.json"), this.cacheDir . "\API"))
+            this.SetItem("file", FileCache.new(CacheState.new(this.app, this.cacheDir . "\File.json"), this.cacheDir . "\File"))
+            this.SetItem("api", FileCache.new(CacheState.new(this.app, this.cacheDir . "\API.json"), this.cacheDir . "\API"))
         }
 
         super.LoadComponents()

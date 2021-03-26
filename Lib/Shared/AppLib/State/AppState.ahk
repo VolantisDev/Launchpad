@@ -1,0 +1,3 @@
+class AppState extends JsonState {
+    
+}

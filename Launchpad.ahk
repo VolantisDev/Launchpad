@@ -15,6 +15,11 @@ appVersion := "{{VERSION}}"
 #Include Lib\Launchpad\Includes.ahk
 
 TraySetIcon("Resources\Graphics\Launchpad.ico")
-SplitPath(A_ScriptName,,,, appName)
 
-app := Launchpad.new(appName, A_ScriptDir)
+appInfo := Map()
+appInfo["appName"] := "Launchpad"
+appInfo["developer"] := "Volantis Development"
+appInfo["version"] := appVersion
+appInfo["configClass"] := "LaunchpadConfig"
+appInfo["stateClass"] := "LaunchpadAppState"
+Launchpad.new(appInfo)

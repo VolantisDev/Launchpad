@@ -13,7 +13,7 @@ class ImportShortcutForm extends LaunchpadFormGuiBase {
 
     __New(app, windowKey := "", owner := "", parent := "") {
         if (windowKey == "") {
-            windowKey := "LauncherWizard"
+            windowKey := "ImportShortcutForm"
         }
 
         this.dataSource := app.DataSources.GetItem()
@@ -22,11 +22,11 @@ class ImportShortcutForm extends LaunchpadFormGuiBase {
             owner := "ManageWindow"
         }
 
-        super.__New(app, "Launcher Wizard", this.GetTextDefinition(), windowKey, owner, parent, this.GetButtonsDefinition())
+        super.__New(app, "Import Shortcut", this.GetTextDefinition(), windowKey, owner, parent, this.GetButtonsDefinition())
     }
 
     GetTextDefinition() {
-        return "To start with, simply choose a game key and a launcher type. You can edit many details later if desired."
+        return "Simply select an existing shortcut, select the platform, and Launchpad will create a launcher for your game. You can modify or add the launcher details after it's added."
     }
 
     GetButtonsDefinition() {
@@ -35,6 +35,7 @@ class ImportShortcutForm extends LaunchpadFormGuiBase {
 
     Controls() {
         super.Controls()
+        
         this.AddComboBox("Key", "Key", "", this.knownGames, "Select an existing game from the API, or enter a custom game key to create your own. If choosing an existing game, most advanced values can be loaded from the API.")
         this.AddSelect("Platform", "Platform", "", this.knownPlatforms, false, "", "", "Select the platform that this game is run through.", false)
         ; @todo Add a few other common fields here, like Icon

@@ -8,7 +8,7 @@
 
     __New(app, detectedGames, windowKey := "", owner := "", parent := "") {
         this.detectedGames := detectedGames
-        this.state := app.AppState
+        this.state := app.State
         this.launcherManager := app.Launchers
         dataSource := app.DataSources.GetItem()
         this.knownGames := dataSource.ReadListing("game-keys")

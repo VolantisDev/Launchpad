@@ -1,165 +1,107 @@
-﻿class Launchpad {
-    appName := ""
-    appDir := ""
-    tmpDir := A_Temp . "\Launchpad"
-    appDataDir := A_AppData . "\Volantis\Launchpad"
-    appConfigObj := ""
-    appStateObj := ""
-    windowManagerObj := ""
-    launcherManagerObj := ""
-    platformManagerObj := ""
-    cacheManagerObj := ""
-    notificationServiceObj := ""
-    dataSourceManagerObj := ""
-    builderManagerObj := ""
-    installerManagerObj := ""
-    themeManagerObj := ""
-    eventManagerObj := ""
-    idGenObj := ""
-    blizzardProductDbObj := ""
-    moduleManagerObj := ""
-    authServiceObj := ""
-    backupManagerObj := ""
-    
-    Config {
-        get => this.appConfigObj
-        set => this.appConfigObj := value
-    }
-
+﻿class Launchpad extends AppBase {
     Modules {
-        get => this.moduleManagerObj
-        set => this.moduleManagerObj := value
+        get => this.Services.Get("ModuleManager")
+        set => this.Services.Set("ModuleManager", value)
     }
 
     Windows {
-        get => this.windowManagerObj
-        set => this.windowManagerObj := value
+        get => this.Services.Get("WindowManager")
+        set => this.Services.Set("WindowManager", value)
     }
 
     Launchers {
-        get => this.launcherManagerObj
-        set => this.launcherManagerObj := value
+        get => this.Services.Get("LauncherManager")
+        set => this.Services.Set("LauncherManager", value)
     }
 
     Platforms {
-        get => this.platformManagerObj
-        set => this.platformManagerObj := value
+        get => this.Services.Get("PlatformManager")
+        set => this.Services.Set("PlatformManager", value)
     }
 
     Cache {
-        get => this.cacheManagerObj
-        set => this.cacheManagerObj := value
+        get => this.Services.Get("CacheManager")
+        set => this.Services.Set("CacheManager", value)
     }
 
     Notifications {
-        get => this.notificationServiceObj
-        set => this.notificationServiceObj := value
+        get => this.Services.Get("NotificationService")
+        set => this.Services.Set("NotificationService", value)
     }
 
     DataSources {
-        get => this.dataSourceManagerObj
-        set => this.dataSourceManagerObj := value
+        get => this.Services.Get("DataSourceManager")
+        set => this.Services.Set("DataSourceManager", value)
     }
 
     Builders {
-        get => this.builderManagerObj
-        set => this.builderManagerObj := value
-    }
-
-    AppState {
-        get => this.appStateObj
-        set => this.appStateObj := value
+        get => this.Services.Get("BuilderManager")
+        set => this.Services.Set("BuilderManager", value)
     }
 
     Installers {
-        get => this.installerManagerObj
-        set => this.installerManagerObj := value
+        get => this.Services.Get("InstallerManager")
+        set => this.Services.Set("InstallerManager", value)
     }
 
     Themes {
-        get => this.themeManagerObj
-        set => this.themeManagerObj := value
+        get => this.Services.Get("ThemeManager")
+        set => this.Services.Set("ThemeManager", value)
     }
 
     Events {
-        get => this.eventManagerObj
-        set => this.eventManagerObj := value
+        get => this.Services.Get("EventManager")
+        set => this.Services.Set("EventManager", value)
     }
 
     IdGen {
-        get => this.idGenObj
-        set => this.idGenObj := value
+        get => this.Services.Get("IdGenerator")
+        set => this.Services.Set("IdGenerator", value)
     }
 
     BlizzardProductDb {
-        get => this.blizzardProductDbObj
-        set => this.blizzardProductDbObj := value
+        get => this.Services.Get("BlizzardProductDb")
+        set => this.Services.Set("BlizzardProductDb", value)
     }
 
     Logger {
-        get => this.loggerServiceObj
-        set => this.loggerServiceObj := value
-    }
-
-    Version {
-        get => this.LaunchpadVersion()
+        get => this.Services.Get("LoggerService")
+        set => this.Services.Set("LoggerService", value)
     }
 
     Auth {
-        get => this.authServiceObj
-        set => this.authServiceObj := value
+        get => this.Services.Get("AuthService")
+        set => this.Services.Set("AuthService", value)
     }
 
     Backups {
-        get => this.backupManagerObj
-        set => this.backupManagerObj := value
+        get => this.Services.Get("BackupManager")
+        set => this.Services.Set("BackupManager", value)
     }
 
-    __New(appName, appDir) {
-        InvalidParameterException.CheckTypes("Launchpad", "appName", appName, "", "appDir", appDir, "")
-        this.appName := appName
-        this.appDir := appDir
-
-        DirCreate(this.tmpDir)
-        DirCreate(this.appDataDir)
+    LoadServices(config) {
+        super.LoadServices(config)
         
-        config := AppConfig.new(this, this.tmpDir, this.appDataDir)
-        this.appConfigObj := config
-
-        idGen := UuidGenerator.new()
-        this.idGen := idGen
-        
-        this.appStateObj := LaunchpadAppState.new(this.appDataDir . "\State.json")
-        
-        eventManagerObj := EventManager.new()
-        this.eventManagerObj := eventManagerObj
-
-        this.errorCallback := ObjBindMethod(this, "OnException")
-        OnError(this.errorCallback)
-    
-        this.moduleManagerObj := ModuleManager.new(this)
-        this.loggerServiceObj := LoggerService.new(FileLogger.new(A_ScriptDir . "\log.txt", config.LoggingLevel, true))
-        this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
-        this.backupManagerObj := BackupManager.new(this, config.BackupsFile)
-        this.themeManagerObj := ThemeManager.new(this, appDir . "\Resources\Themes", appDir . "\Resources", eventManagerObj, idGen)
-        this.notificationServiceObj := NotificationService.new(this, ToastNotifier.new(this))
-        this.windowManagerObj := WindowManager.new(this)
-        this.cacheManagerObj := CacheManager.new(this, config.CacheDir)
-        this.dataSourceManagerObj := DataSourceManager.new(eventManagerObj)
-        this.builderManagerObj := BuilderManager.new(this)
-        this.blizzardProductDbObj := BlizzardProductDb.new(this)
-        this.launcherManagerObj := LauncherManager.new(this)
-        this.platformManagerObj := PlatformManager.new(this)
-        this.installerManagerObj := InstallerManager.new(this)
-        this.authServiceObj := AuthService.new(this, "", this.appStateObj)
-       
-        this.InitializeApp()
+        this.IdGen := UuidGenerator.new()
+        this.Events := EventManager.new()
+        this.Modules := ModuleManager.new(this)
+        this.Logger := LoggerService.new(FileLogger.new(A_ScriptDir . "\log.txt", this.Config.LoggingLevel, true))
+        this.Cache := CacheManager.new(this, this.Config.CacheDir)
+        this.Backups := BackupManager.new(this, this.Config.BackupsFile)
+        this.Themes := ThemeManager.new(this, this.appDir . "\Resources\Themes", this.appDir . "\Resources", this.Events, this.IdGen)
+        this.Notifications := NotificationService.new(this, ToastNotifier.new(this))
+        this.Windows := WindowManager.new(this)
+        this.DataSources := DataSourceManager.new(this.Events)
+        this.Builders := BuilderManager.new(this)
+        this.BlizzardProductDb := BlizzardProductDb.new(this)
+        this.Launchers := LauncherManager.new(this)
+        this.Platforms := PlatformManager.new(this)
+        this.Installers := InstallerManager.new(this)
+        this.Auth := AuthService.new(this, "", this.State)
     }
-    
+
     CheckForUpdates() {
-        global appVersion
-
-        if (appVersion != "{{VERSION}}") {
+        if (this.Version != "{{VERSION}}") {
             dataSource := this.DataSources.GetItem("api")
             releaseInfoStr := dataSource.ReadItem("release-info")
 
@@ -167,79 +109,46 @@
                 data := JsonData.new()
                 releaseInfo := data.FromString(releaseInfoStr)
 
-                if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this.VersionIsOutdated(releaseInfo["data"]["version"], appVersion)) {
+                if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this.VersionIsOutdated(releaseInfo["data"]["version"], this.Version)) {
                     this.Windows.UpdateAvailable(releaseInfo)
                 }
             }
         }
     }
 
-    VersionIsOutdated(latestVersion, installedVersion) {
-        splitLatestVersion := StrSplit(latestVersion, ".")
-        splitInstalledVersion := StrSplit(installedVersion, ".")
-
-        for (index, numPart in splitInstalledVersion) {
-            latestVersionPart := splitLatestVersion.Has(index) ? splitLatestVersion[index] : 0
-
-            if ((latestVersionPart + 0) > (numPart + 0)) {
-                return true
-            } else if ((latestVersionPart + 0) < (numPart + 0)) {
-                return false
-            } 
-        }
-
-        return false
-    }
-
-    OnException(e, mode) {
-        ; @todo allow submission of the error
-        extra := (e.HasProp("Extra") && e.Extra != "") ? "`n`nExtra information:`n" . e.Extra : ""
-        occurredIn := e.What ? " in " . e.What : ""
-
-        errorText := "Launchpad has experienced an unhandled exception which it may not be able to fully recover from. You can find the details below, and submit the error to the developers to be fixed."
-        errorText .= "`n`n" . e.Message . extra
-
-        errorText .= "`n`nOccurred in: " . e.What
-        
-        if (e.File) {
-            errorText .= "`nFile: " . e.File . " (Line " . e.Line . ")"
-        }
-
-        errorText .= "`n"
-
-        return this.ShowError("Unhandled Exception", errorText, e, mode != "ExitApp")
-    }
-
     ShowError(title, errorText, e, allowContinue := true) {
-        themeObj := this.Themes ? this.Themes.GetItem() : JsonTheme.new("Steampad")
-        btns := allowContinue ? "*&Continue|&Exit Launchpad" : "*&Exit Launchpad"
-        result := this.Windows.ErrorDialog(e, "Unhandled Exception", errorText, "", "", btns)
+        try {
+            themeObj := this.Themes ? this.Themes.GetItem() : JsonTheme.new("Steampad", this.appDir . "\Resources", this.Events, this.IdGen, true)
+            btns := allowContinue ? "*&Continue|&Exit Launchpad" : "*&Exit Launchpad"
+            result := this.Windows.ErrorDialog(e, "Unhandled Exception", errorText, "", "", btns)
 
-        if (result == "Exit Launchpad") {
-            ExitApp
+            if (result == "Exit Launchpad") {
+                ExitApp
+            }
+        } catch (ex) {
+            MsgBox("Launchpad had an error, and could not show the usual error dialog because of another error:`n`n" . ex.Message . "`n`nThe original error will follow in another message.")
+            MsgBox(e.File . ": " . e.Line . ": " . e.What . ": " . e.Message)
         }
 
         return allowContinue ? -1 : 1
     }
 
-    LaunchpadVersion() {
-        global appVersion
-        return appVersion
-    }
+    InitializeApp(config) {
+        super.InitializeApp(config)
 
-    InitializeApp() {
         this.Builders.SetItem("ahk", AhkLauncherBuilder.new(this), true)
         this.DataSources.SetItem("api", ApiDataSource.new(this, this.Cache.GetItem("api"), this.Config.ApiEndpoint), true)
         this.Installers.SetupInstallers()
         this.Installers.InstallRequirements()
-        this.Auth.SetAuthProvider(LaunchpadApiAuthProvider.new(this, this.appStateObj))
-
-        if (this.Config.ApiAutoLogin) {
-            this.Auth.Login()
-        }
 
         if (this.Config.CheckUpdatesOnStart) {
             this.CheckForUpdates()
+        }
+
+        this.Auth.SetAuthProvider(LaunchpadApiAuthProvider.new(this, this.State))
+
+        if (this.Config.ApiAutoLogin) {
+            this.Auth.Login()
         }
         
         this.Platforms.LoadComponents(this.Config.PlatformsFile)
@@ -278,7 +187,7 @@
             this.Cache.FlushCaches(false)
         }
 
-        ExitApp
+        super.ExitApp()
     }
 
     OpenWebsite() {

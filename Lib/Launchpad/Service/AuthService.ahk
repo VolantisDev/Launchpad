@@ -5,7 +5,7 @@ class AuthService extends AppServiceBase {
     authInfoObj := ""
 
     __New(app, authProviderObj, stateObj) {
-        InvalidParameterException.CheckTypes("AuthenticationService", "stateObj", stateObj, "AppStateBase")
+        InvalidParameterException.CheckTypes("AuthenticationService", "stateObj", stateObj, "StateBase")
         this.authProviderObj := authProviderObj
         this.stateObj := stateObj
 
@@ -76,7 +76,6 @@ class AuthService extends AppServiceBase {
 
     AuthenticationNeedsRefresh() {
         needsRefresh := false
-        thresholdSeconds := 600
 
         if (this.app.Config.ApiAuthentication && this.authProviderObj && this.IsAuthenticated()) {
             needsRefresh := this.authProviderObj.NeedsRefresh(this.authInfoObj)
