@@ -10,7 +10,7 @@
         this.platformManager := app.Platforms
         this.lvCount := this.launcherManager.CountEntities()
         this.showStatusIndicator := app.Config.ApiAuthentication
-        super.__New(app, "Launchpad", windowKey, owner, parent)
+        super.__New(app, "Launchpad", windowKey, "", "")
     }
 
     GetTitle(title) {
