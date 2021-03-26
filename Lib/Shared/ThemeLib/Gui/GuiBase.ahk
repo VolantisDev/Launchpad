@@ -870,7 +870,7 @@ class GuiBase {
             OnMessage(0x002B, this.tabsCustomDrawCallback, 0)
         }
 
-        if (this.owner != "" && this.owner.Hwnd != this.guiObj.Hwnd) {
+        if (this.owner != "" && WinExist("ahk_id " . this.owner.Hwnd)) {
             ; @todo only re-enable if there are no other open children. Let WindowManager handle this...
             this.owner.Opt("-Disabled")
             WinActivate("ahk_id " . this.owner.Hwnd)
