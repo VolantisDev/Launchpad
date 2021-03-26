@@ -90,7 +90,7 @@ class AppBase {
     }
 
     LoadAppConfig(config) {
-        configFile := A_ScriptDir . "\" . this.appName
+        configFile := A_ScriptDir . "\" . this.appName . ".ini"
 
         if (config.Has("configFile") && config["configFile"]) {
             configFile := config["configFile"]
