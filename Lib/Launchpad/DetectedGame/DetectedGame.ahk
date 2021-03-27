@@ -161,12 +161,24 @@ class DetectedGame {
             mainExe := possibleExes[1]
         }
 
+        nonExcludedExes := []
+
         if (!mainExe) {
             installDirExes := []
             priorityExes := []
+
+            exclusions := [" Launcher", "CrashHandler"]
             
             for index, possibleExe in possibleExes {
                 SplitPath(possibleExe,, dir,, nameNoExt)
+
+                for exclusionIndex, pattern in exclusions {
+                    if (InStr(nameNoExt, pattern)) {
+                        continue 2
+                    }
+                }
+
+                nonExcludedExes.Push(possibleExe)
 
                 for suffixIndex, suffix in this.prioritySuffixes {
                     if (SubStr(nameNoExt, -StrLen(suffix)) == suffix) {
@@ -183,26 +195,50 @@ class DetectedGame {
                 mainExe := priorityExes[1]
             } else if (priorityExes.Length > 1) {
                 containsLikelyMatch := true
+                mainExe := priorityExes[1]
                 ; @todo determine what to do if there is more than one priority exe file
             }
 
             if (installDirExes.Length == 1) {
                 mainExe := installDirExes[1]
             } else if (installDirExes.Length > 1) {
-                containsLikelyMatch := true
+                ;containsLikelyMatch := true
+                ;mainExe := installDirExes[1]
                 ; @todo Decide what to do if there is more than one exe in the main dir
             }
         }
 
-        if (!mainExe && !containsLikelyMatch && possibleExes.Length) {
-            for index, possibleExe in possibleExes {
-                SplitPath(possibleExe,,,, nameNoExt)
-                checkValues := [this.key, StrReplace(this.key, " ", "")]
+        if (!mainExe && !containsLikelyMatch && nonExcludedExes.Length) {
+            if (nonExcludedExes.Length == 1) {
+                mainExe := nonExcludedExes[1]
+            } else {
+                for index, possibleExe in nonExcludedExes {
+                    SplitPath(possibleExe,,,, nameNoExt)
+                    checkValues := [this.key, StrReplace(this.key, " ", "")]
 
-                for index, val in checkValues {
-                    if (val == nameNoExt) {
-                        mainExe := possibleExe
-                        break 2
+                    for index, val in checkValues {
+                        if (StrLower(val) == StrLower(nameNoExt)) {
+                            mainExe := possibleExe
+                            break 2
+                        }
+                    }
+                }
+
+                if (!mainExe) {
+                    shortestExe := ""
+                    shortestLength := ""
+
+                    for index, possibleExe in nonExcludedExes {
+                        len := StrLen(possibleExe)
+
+                        if (shortestLength == "" || len < shortestLength) {
+                            shortestExe := possibleExe
+                            shortestLength := len
+                        }
+                    }
+
+                    if (shortestExe) {
+                        mainExe := shortestExe
                     }
                 }
             }
