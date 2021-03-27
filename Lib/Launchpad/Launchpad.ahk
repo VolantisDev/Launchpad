@@ -9,8 +9,6 @@
         set => this.Services.Set("PlatformManager", value)
     }
 
-    
-
     DataSources {
         get => this.Services.Get("DataSourceManager")
         set => this.Services.Set("DataSourceManager", value)
