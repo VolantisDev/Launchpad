@@ -2,6 +2,7 @@
 !/Vendor/7zip
 !/Vendor/7zip/*
 Launchpad.ini
+Launchpad.build.ini
 /Build
 /Launchpad.zip
 /Launchpad-*.zip
