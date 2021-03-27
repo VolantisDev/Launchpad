@@ -12,20 +12,11 @@ class EntityEditorBase extends LaunchpadFormGuiBase {
     missingFields := Map()
     dataSource := ""
  
-    __New(app, entityObj, title, mode := "config", windowKey := "", owner := "", parent := "") {
+    __New(app, themeObj, windowKey, entityObj, title, mode := "config", owner := "", parent := "") {
         InvalidParameterException.CheckTypes("LauncherEditor", "entityObj", entityObj, "EntityBase", "mode", mode, "")
         this.entityObj := entityObj
         this.mode := mode
-
-        if (windowKey == "") {
-            windowKey := "EntityEditor"
-        }
-
-        if (owner == "") {
-            owner := "ManageWindow"
-        }
-
-        super.__New(app, title, this.GetTextDefinition(), windowKey, owner, parent, this.GetButtonsDefinition())
+        super.__New(app, themeObj, windowKey, title, this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
     }
 
     GetTextDefinition() {

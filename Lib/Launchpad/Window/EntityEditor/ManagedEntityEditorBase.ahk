@@ -14,11 +14,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     regViews := ["32"]
     entityTypeName := ""
 
-    __New(app, entityObj, title, mode := "config", windowKey := "", owner := "", parent := "") {
-        if (windowKey == "") {
-            windowKey := "ManagedEntityEditor"
-        }
-
+    __New(app, themeObj, windowKey, entityObj, title, mode := "config", owner := "", parent := "") {
         if (owner == "") {
             owner := "LauncherEditor"
         }
@@ -31,7 +27,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
             this.regViews.Push("64")
         }
 
-        super.__New(app, entityObj, title, mode, windowKey, owner, parent)
+        super.__New(app, themeObj, windowKey, entityObj, title, mode, owner, parent)
     }
 
     GetTabNames() {

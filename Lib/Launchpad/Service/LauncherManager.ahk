@@ -1,6 +1,6 @@
 class LauncherManager extends EntityManagerBase {
-    _registerEvent := LaunchpadEvents.LAUNCHERS_REGISTER
-    _alterEvent := LaunchpadEvents.LAUNCHERS_ALTER
+    _registerEvent := "" ;LaunchpadEvents.LAUNCHERS_REGISTER
+    _alterEvent := "" ;LaunchpadEvents.LAUNCHERS_ALTER
 
     GetLoadOperation() {
         return LoadLaunchersOp.new(this.app, this.configObj)

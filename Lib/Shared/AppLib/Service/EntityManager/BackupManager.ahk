@@ -1,6 +1,6 @@
 class BackupManager extends EntityManagerBase {
-    _registerEvent := LaunchpadEvents.BACKUPS_REGISTER
-    _alterEvent := LaunchpadEvents.BACKUPS_ALTER
+    _registerEvent := "" ;Events.BACKUPS_REGISTER
+    _alterEvent := "" ;Events.BACKUPS_ALTER
 
     GetLoadOperation() {
         return LoadBackupsOp.new(this.app, this.configObj)

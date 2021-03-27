@@ -5,7 +5,7 @@ class ManageBackupsWindow extends ManageWindowBase {
     backupRows := []
     sidebarWidth := 0
 
-    __New(app, backupsFile := "", windowKey := "", owner := "", parent := "") {
+    __New(app, themeObj, windowKey, backupsFile := "", owner := "", parent := "") {
         if (backupsFile == "") {
             backupsFile := app.Config.BackupsFile
         }
@@ -14,7 +14,7 @@ class ManageBackupsWindow extends ManageWindowBase {
         this.backupsFile := backupsFile
         this.backupManager := app.Backups
         this.lvCount := this.backupManager.CountEntities()
-        super.__New(app, "Manage Backups", windowKey, owner, parent)
+        super.__New(app, themeObj, windowKey, "Manage Backups", owner, parent)
     }
 
     AddBottomControls() {
@@ -127,7 +127,7 @@ class ManageBackupsWindow extends ManageWindowBase {
         if (backup) {
             selected := this.guiObj["ListView"].GetNext(, "Focused")
             ; @Todo implement Backup Selector window
-            ;backupNumber := this.app.Windows.BackupSelector(backup)
+            ;backupNumber := this.app.GuiManager.Dialog("BackupSelector", backup, this.windowKey)
             backupNumber := 1
             backup.RestoreBackup(backupNumber)
             this.PopulateListView()
@@ -158,7 +158,7 @@ class ManageBackupsWindow extends ManageWindowBase {
 
     AddBackup() {
         ; @todo Add Backup Wizard
-        ;entity := this.app.Windows.BackupWizard(this.guiObj)
+        ;entity := this.app.GuiManager.Form("BackupWizard", this.windowKey)
         entity := ""
 
         if (entity != "") {

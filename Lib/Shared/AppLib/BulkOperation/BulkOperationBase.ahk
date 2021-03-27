@@ -21,24 +21,12 @@ class BulkOperationBase {
     failedMessage := "There were {n} item(s) that failed."
 
     __New(app, owner := "") {
-        InvalidParameterException.CheckTypes("BulkOperationBase", "app", app, "Launchpad")
+        InvalidParameterException.CheckTypes("BulkOperationBase", "app", app, "AppBase")
         
         if (owner == "") {
             owner := "ManageWindow"
         }
 
-        if (Type(owner) == "String") {
-            owner := app.Windows.GetGuiObj(owner)
-        }
-
-        if (owner != "") {
-            if (owner.HasBase(GuiBase.Prototype)) {
-                owner := owner.guiObj
-            }
-
-            InvalidParameterException.CheckTypes("BulkOperationBase", "owner", owner, "Gui")
-        }
-        
         this.app := app
         this.owner := owner
     }
@@ -95,7 +83,7 @@ class BulkOperationBase {
     ShowProgressWindow() {
         if (this.useProgress) {
             if (!IsObject(this.progress)) {
-                this.progress := this.app.Windows.ProgressIndicator(this.progressTitle, this.progressText, this.owner, this.parent, this.allowCancel, this.progressRangeEnd, this.progressInitialValue, this.progressInitialDetailText)
+                this.progress := this.app.GuiManager.OpenWindow("BulkOpProgress", "ProgressIndicator", this.progressTitle, this.progressText, this.owner, this.parent, this.allowCancel, this.progressRangeEnd, this.progressInitialValue, this.progressInitialDetailText)
             } else {
                 this.progress.Show()
             }

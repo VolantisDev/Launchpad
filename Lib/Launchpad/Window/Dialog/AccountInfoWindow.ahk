@@ -1,14 +1,6 @@
 ﻿class AccountInfoWindow extends LaunchpadFormGuiBase {
-    __New(app, windowKey := "", owner := "", parent := "") {
-        if (windowKey == "") {
-            windowKey := "AccountInfoWindow"
-        }
-
-        if (owner == "") {
-            owner := "ManageWindow"
-        }
-
-        super.__New(app, "Account Info", this.GetTextDefinition(), windowKey, owner, parent, this.GetButtonsDefinition())
+    __New(app, themeObj, windowKey, owner := "", parent := "") {
+        super.__New(app, themeObj, windowKey, "Account Info", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
     }
 
     GetTextDefinition() {

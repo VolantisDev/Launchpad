@@ -4,16 +4,8 @@
     missingFields := Map()
     dataSource := ""
  
-    __New(app, windowKey := "", owner := "", parent := "") {
-        if (windowKey == "") {
-            windowKey := "LoginWindow"
-        }
-
-        if (owner == "") {
-            owner := "ManageWindow"
-        }
-
-        super.__New(app, "Login", this.GetTextDefinition(), windowKey, owner, parent, this.GetButtonsDefinition())
+    __New(app, themeObj, windowKey, owner := "", parent := "") {
+        super.__New(app, themeObj, windowKey, "Login", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
     }
 
     GetTextDefinition() {

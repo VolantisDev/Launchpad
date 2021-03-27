@@ -1,6 +1,6 @@
 class ThemeManager extends AppComponentServiceBase {
-    _registerEvent := LaunchpadEvents.LAUNCHERS_REGISTER
-    _alterEvent := LaunchpadEvents.LAUNCHERS_ALTER
+    _registerEvent := "" ;LaunchpadEvents.LAUNCHERS_REGISTER
+    _alterEvent := "" ;LaunchpadEvents.LAUNCHERS_ALTER
     themesDir := ""
     resourcesDir := ""
     defaultTheme := "Steampad"

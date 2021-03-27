@@ -2,6 +2,14 @@
     buttonsPerRow := 1
     menuTitle := "Tools"
 
+    __New(app, themeObj, windowKey, owner := "", parent := "") {
+        if (owner == "") {
+            owner := "ManageWindow" 
+        }
+
+        super.__New(app, themeObj, windowKey, owner, parent)
+    }
+
     Controls() {
         super.Controls()
         this.AddMenuButton("&Manage Platforms", "ManagePlatforms")
@@ -17,20 +25,20 @@
 
     OnManagePlatforms(btn, info) {
         this.Close()
-        this.app.Windows.OpenPlatformsWindow()
+        this.app.GuiManager.OpenWindow("PlatformsWindow")
     }
 
     OnManageBackups(btn, info) {
         this.Close()
-        this.app.Windows.OpenManageBackupsWindow()
+        this.app.GuiManager.OpenWindow("ManageBackupsWindow")
     }
 
     OnReloadLaunchers(btn, info) {
         this.Close()
         this.app.Launchers.LoadComponents(this.app.Config.LauncherFile)
 
-        if (this.app.Windows.WindowIsOpen("ManageWindow")) {
-            this.app.Windows.GetItem("ManageWindow").PopulateListView()
+        if (this.app.GuiManager.WindowExists("ManageWindow")) {
+            this.app.GuiManager.GetWindow("ManageWindow").PopulateListView()
         }
     }
 
@@ -61,6 +69,6 @@
 
     OnAboutLaunchpad(btn, info) {
         this.Close()
-        this.app.Windows.AboutWindow()
+        this.app.GuiManager.OpenWindow("AboutWindow", "AboutWindow")
     }
 }

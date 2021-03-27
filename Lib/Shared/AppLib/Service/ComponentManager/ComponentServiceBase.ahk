@@ -2,7 +2,6 @@ class ComponentServiceBase extends ServiceBase {
     eventManagerObj := ""
     _components := Map()
     _componentsLoaded := false
-    _eventManager := ""
     _registerEvent := ""
     _alterEvent := ""
 

@@ -1,18 +1,19 @@
-﻿class MenuGui extends LaunchpadGuiBase {
+﻿class MenuGui extends GuiBase {
     positionAtMouseCursor := true
     nextPos := "x" . this.margin
     showTitlebar := false
     buttonsPerRow := 1
     menuTitle := "Menu"
+    windowSettingsKey := "Menu"
     buttonHeight := 25
 
-    __New(app, windowKey := "", owner := "", parent := "") {
-        super.__New(app, this.menuTitle, windowKey, owner, parent)
+    __New(app, themeObj, windowKey, owner := "", parent := "") {
         this.onLButtonCallback := ObjBindMethod(this, "OnLButton")
+        super.__New(app, themeObj, windowKey, this.menuTitle, owner, parent)
     }
 
     OnLButton(hotKey) {
-        if (this.app && this.app.Windows && this.app.Windows.WindowIsOpen(this.windowKey)) {
+        if (this.app && this.app.GuiManager && this.app.GuiManager.WindowExists(this.windowKey)) {
             MouseGetPos(,, mouseWindow)
             
             if (this.guiObj && this.guiObj.Hwnd != mouseWindow) {

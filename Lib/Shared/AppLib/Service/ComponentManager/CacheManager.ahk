@@ -1,6 +1,6 @@
 class CacheManager extends AppComponentServiceBase {
-    _registerEvent := LaunchpadEvents.CACHES_REGISTER
-    _alterEvent := LaunchpadEvents.CACHES_ALTER
+    _registerEvent := "" ;Events.CACHES_REGISTER
+    _alterEvent := "" ;Events.CACHES_ALTER
     cacheDir := ""
 
     __New(app, cacheDir, components := "") {

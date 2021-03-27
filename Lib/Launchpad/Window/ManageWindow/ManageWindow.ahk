@@ -5,12 +5,12 @@
     platformManager := ""
     showStatusIndicator := true
 
-    __New(app, windowKey := "", owner := "", parent := "") {
+    __New(app, themeObj, windowKey, owner := "", parent := "") {
         this.launcherManager := app.Launchers
         this.platformManager := app.Platforms
         this.lvCount := this.launcherManager.CountEntities()
         this.showStatusIndicator := app.Config.ApiAuthentication
-        super.__New(app, "Launchpad", windowKey, "", "")
+        super.__New(app, themeObj, windowKey, "Launchpad", "", "")
     }
 
     GetTitle(title) {
@@ -50,7 +50,7 @@
 
     OnStatusIndicatorClick(btn, info) {
         if (this.app.Auth.IsAuthenticated()) {
-            this.app.Windows.AccountInfoWindow()
+            this.app.GuiManager.Dialog("AccountInfo", this.windowKey)
         } else {
             this.app.Auth.Login()
         }
@@ -149,7 +149,7 @@
     }
 
     AddLauncher() {
-        entity := this.app.Windows.LauncherWizard(this.guiObj)
+        entity := this.app.GuiManager.Form("LauncherWizard", this.windowKey)
 
         if (entity != "") {
             this.launcherManager.AddEntity(entity.Key, entity)
@@ -172,7 +172,7 @@
     }
 
     OnAddButton(btn, info) {
-        this.app.Windows.OpenAddMenu()
+        this.app.GuiManager.Menu("AddMenu")
     }
 
     OnEditButton(btn, info) {
@@ -191,11 +191,11 @@
     }
 
     OnSettingsButton(btn, info) {
-        this.app.Windows.OpenSettingsWindow("ManageWindow")
+        this.app.GuiManager.Form("SettingsWindow")
     }
 
     OnToolsButton(btn, info) {
-        this.app.Windows.OpenToolsWindow("ManageWindow")
+        this.app.GuiManager.Menu("ToolsWindow")
     }
 
     OnBuildButton(btn, info) {
@@ -232,7 +232,7 @@
         if (selected > 0) {
             key := this.guiObj["ListView"].GetText(selected, 1)
             launcherObj := this.launcherManager.Entities[key]
-            result := this.app.Windows.LauncherDeleteWindow(launcherObj, "ManageWindow")
+            result := this.app.GuiManager.Dialog("LauncherDeleteWindow", launcherObj, this.app.Services.Get("LauncherManager"), this.windowKey)
 
             if (result == "Delete") {
                 this.guiObj["ListView"].Delete(selected)

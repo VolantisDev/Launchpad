@@ -153,6 +153,6 @@ class PlatformEntity extends EntityBase {
     }
 
     LaunchEditWindow(mode, owner := "", parent := "") {
-        return this.app.Windows.PlatformEditor(this, mode, owner, parent)
+        return this.app.GuiManager.Form("PlatformEditor", this, mode, owner, parent)
     }
 }

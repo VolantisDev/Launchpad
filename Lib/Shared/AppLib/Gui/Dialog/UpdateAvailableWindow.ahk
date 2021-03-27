@@ -1,18 +1,9 @@
 ﻿class UpdateAvailableWindow extends LaunchpadFormGuiBase {
     releaseInfo := ""
 
-    __New(releaseInfo, app, windowKey := "", owner := "", parent := "") {
+    __New(app, themeObj, windowKey, releaseInfo, owner := "", parent := "") {
         this.releaseInfo := releaseInfo
-
-        if (windowKey == "") {
-            windowKey := "UpdateAvailableWindow"
-        }
-
-        if (owner == "") {
-            owner := "ManageWindow"
-        }
-
-        super.__New(app, "Update Available", this.GetTextDefinition(), windowKey, owner, parent, this.GetButtonsDefinition())
+        super.__New(app, themeObj, windowKey, "Update Available", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
     }
 
     GetTextDefinition() {

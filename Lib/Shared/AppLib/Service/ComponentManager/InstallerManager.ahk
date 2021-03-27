@@ -1,6 +1,6 @@
 class InstallerManager extends AppComponentServiceBase {
-    _registerEvent := LaunchpadEvents.INSTALLERS_REGISTER
-    _alterEvent := LaunchpadEvents.INSTALLERS_ALTER
+    _registerEvent := "" ;Events.INSTALLERS_REGISTER
+    _alterEvent := "" ;Events.INSTALLERS_ALTER
     _eventId := "INSTALLERS"
 
     SetupInstallers() {
@@ -9,7 +9,7 @@ class InstallerManager extends AppComponentServiceBase {
 
         tmpDir := this.app.tmpDir . "\Installers"
         cache := this.app.Cache.GetItem("file")
-        this.SetItem("LaunchpadUpdate", LaunchpadUpdate.new(this.app.Version, this.app.State, cache, tmpDir))
+        ;this.SetItem("LaunchpadUpdate", LaunchpadUpdate.new(this.app.Version, this.app.State, cache, tmpDir))
         this.SetItem("Themes", ThemeInstaller.new(this.app.Version, this.app.State, cache, extraThemes, tmpDir))
         this.SetItem("Dependencies", DependencyInstaller.new(this.app.Version, this.app.State, cache, extraDependencyComponents, tmpDir))
     }

@@ -1,14 +1,10 @@
 ﻿class PlatformEditor extends EntityEditorBase {
-    __New(app, entityObj, mode := "config", windowKey := "", owner := "", parent := "") {
-        if (windowKey == "") {
-            windowKey := "PlatformEditor"
-        }
-
+    __New(app, themeObj, windowKey, entityObj, mode := "config", owner := "", parent := "") {
         if (owner == "") {
             owner := "PlatformsWindow"
         }
 
-        super.__New(app, entityObj, "Platform Editor", mode, windowKey, owner, parent)
+        super.__New(app, themeObj, windowKey, entityObj, "Platform Editor", mode, owner, parent)
     }
 
     Controls() {

@@ -1,4 +1,5 @@
 class GuiBase {
+    app := ""
     guiObj := ""
     guiId := ""
     title := ""
@@ -7,6 +8,7 @@ class GuiBase {
     owner := ""
     parent := ""
     windowKey := ""
+    windowSettingsKey := ""
     isDialog := false
     windowSettings := Map()
     windowOptions := ""
@@ -44,26 +46,26 @@ class GuiBase {
     showInNotificationArea := false
     ownedWindows := Map()
 
-    __New(title, themeObj, windowKey, owner := "", parent := "", iconSrc := "") {
-        InvalidParameterException.CheckTypes("GuiBase", "title", title, "", "themeObj", themeObj, "ThemeBase", "windowKey", windowKey, "")
+    __New(app, themeObj, windowKey, title, owner := "", parent := "", iconSrc := "") {
+        InvalidParameterException.CheckTypes("GuiBase", "app", app, "AppBase", "title", title, "", "themeObj", themeObj, "ThemeBase", "windowKey", windowKey, "")
         InvalidParameterException.CheckEmpty("GuiBase", "title", title)
 
-        if (owner != "") {
-            if (owner.HasBase(GuiBase.Prototype)) {
-                owner := owner.guiObj
-            }
+        this.app := app
 
-            InvalidParameterException.CheckTypes("GuiBase", "owner", owner, "Gui")
-            this.owner := owner
+        if (owner) {
+            owner := this.app.GuiManager.DereferenceGui(owner)
+            
+            if (owner) {
+                this.owner := owner
+            }
         }
 
-        if (parent != "") {
-            if (parent.HasBase(GuiBase.Prototype)) {
-                parent := parent.guiObj
+        if (parent) {
+            parent := this.app.GuiManager.DereferenceGui(parent)
+            
+            if (parent) {
+                this.parent := parent
             }
-
-            InvalidParameterException.CheckTypes("GuiBase", "parent", parent, "Gui")
-            this.parent := parent
         }
 
         extraOptions := Map()
@@ -76,12 +78,16 @@ class GuiBase {
         if (this.owner != "") {
             extraOptions["Owner" . this.owner.Hwnd] := true
         }
+
+        if (this.windowSettingsKey == "") {
+            this.windowSettingsKey := Type(this)
+        }
         
         this.title := title
         this.iconSrc := iconSrc
         this.themeObj := themeObj
-        this.windowSettings := themeObj.GetWindowSettings(windowKey)
-        this.windowOptions := themeObj.GetWindowOptionsString(windowKey, extraOptions)
+        this.windowSettings := themeObj.GetWindowSettings(this.windowSettingsKey)
+        this.windowOptions := themeObj.GetWindowOptionsString(this.windowSettingsKey, extraOptions)
 
         options := this.windowSettings["options"]
 
@@ -95,29 +101,32 @@ class GuiBase {
 
         this.margin := this.windowSettings["spacing"]["margin"]
         this.windowKey := windowKey
-        this.eventManagerObj := themeObj.eventManagerObj
-        this.idGenerator := themeObj.idGenerator
-        this.guiId := this.idGenerator.Generate()
+        this.guiId := this.app.IdGen.Generate()
+
+        this.RegisterCallbacks()
+        this.Create()
+    }
+
+    RegisterCallbacks() {
         this.mouseMoveCallback := ObjBindMethod(this, "OnMouseMove")
-        this.eventManagerObj.Register(Events.MOUSE_MOVE, "Gui" . this.guiId, this.mouseMoveCallback)
+        this.app.Events.Register(Events.MOUSE_MOVE, "Gui" . this.guiId, this.mouseMoveCallback)
         this.calcSizeCallback := ObjBindMethod(this, "OnCalcSize")
-        this.eventManagerObj.Register(Events.WM_NCCALCSIZE, "Gui" . this.guiId, this.calcSizeCallback)
+        this.app.Events.Register(Events.WM_NCCALCSIZE, "Gui" . this.guiId, this.calcSizeCallback)
         this.activateCallback := ObjBindMethod(this, "OnActivate")
-        this.eventManagerObj.Register(Events.WM_NCACTIVATE, "Gui" . this.guiId, this.activateCallback)
+        this.app.Events.Register(Events.WM_NCACTIVATE, "Gui" . this.guiId, this.activateCallback)
         this.hitTestCallback := ObjBindMethod(this, "OnHitTest")
-        this.eventManagerObj.Register(Events.WM_NCHITTEST, "Gui" . this.guiId, this.hitTestCallback)
+        this.app.Events.Register(Events.WM_NCHITTEST, "Gui" . this.guiId, this.hitTestCallback)
         this.headerCustomDrawCallback := ObjBindMethod(this, "OnListViewDraw")
         this.tabsCustomDrawCallback := ObjBindMethod(this, "OnTabsDraw")
         this.tabsSubclassCallback := ObjBindMethod(this, "OnTabsSubclass")
         this.tabsAdjustRectCallback := ObjBindMethod(this, "OnTabsAdjustRect")
-        this.Create()
     }
 
     __Delete() {
-        this.eventManagerObj.Unregister(Events.MOUSE_MOVE, "Gui" . this.guiId, this.mouseMoveCallback)
-        this.eventManagerObj.Unregister(Events.WM_NCCALCSIZE, "Gui" . this.guiId, this.calcSizeCallback)
-        this.eventManagerObj.Unregister(Events.WM_NCACTIVATE, "Gui" . this.guiId, this.activateCallback)
-        this.eventManagerObj.Unregister(Events.WM_NCHITTEST, "Gui" . this.guiId, this.hitTestCallback)
+        this.app.Events.Unregister(Events.MOUSE_MOVE, "Gui" . this.guiId, this.mouseMoveCallback)
+        this.app.Events.Unregister(Events.WM_NCCALCSIZE, "Gui" . this.guiId, this.calcSizeCallback)
+        this.app.Events.Unregister(Events.WM_NCACTIVATE, "Gui" . this.guiId, this.activateCallback)
+        this.app.Events.Unregister(Events.WM_NCHITTEST, "Gui" . this.guiId, this.hitTestCallback)
         
         if (this.activeTooltip) {
             ToolTip()
@@ -642,7 +651,7 @@ class GuiBase {
     }
 
     GetTitle(title) {
-        return title . " - Launchpad"
+        return title . " - " . this.app.appName
     }
 
     Show() {
@@ -744,7 +753,7 @@ class GuiBase {
 
     Start() {
         if (this.owner != "") {
-            this.owner.Opt("Disabled")
+            this.app.GuiManager.AddToParent(this.windowKey, this.owner)
 	    }
     }
 
@@ -870,11 +879,8 @@ class GuiBase {
             OnMessage(0x002B, this.tabsCustomDrawCallback, 0)
         }
 
-        if (this.owner != "" && WinExist("ahk_id " . this.owner.Hwnd)) {
-            ; @todo only re-enable if there are no other open children. Let WindowManager handle this...
-            this.owner.Opt("-Disabled")
-            WinActivate("ahk_id " . this.owner.Hwnd)
-
+        if (this.owner) {
+            this.app.GuiManager.ReleaseFromParent(this.windowKey)
         }
 
         this.Cleanup()
@@ -886,6 +892,7 @@ class GuiBase {
     }
 
     Cleanup() {
+        this.app.GuiManager.container.Delete(this.windowKey)
         ; Extend to clear any global variables used
     }
 

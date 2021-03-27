@@ -21,6 +21,10 @@ class ContainerBase {
         return result
     }
 
+    Exists(key) {
+        return !!(this.Items.Has(key) && this.Items[key])
+    }
+
     Set(key, value) {
         this.Items[key] := value
     }

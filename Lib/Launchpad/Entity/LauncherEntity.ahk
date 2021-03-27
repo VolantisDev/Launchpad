@@ -196,7 +196,8 @@ class LauncherEntity extends EntityBase {
         result := this.app.Config.UseAdvancedLauncherEditor ? "Advanced" : "Simple"
 
         while (result == "Simple" || result == "Advanced") {
-            result := result == "Advanced" ? this.app.Windows.LauncherEditor(this, mode, owner, parent) : this.app.Windows.LauncherEditorSimple(this, mode, owner, parent)
+            form := result == "Advanced" ? "LauncherEditor" : "LauncherEditorSimple"
+            result := this.app.GuiManager.Form(form, this, mode, owner, parent)
         }
         
         return result

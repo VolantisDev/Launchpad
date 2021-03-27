@@ -1,10 +1,14 @@
-﻿class SettingsWindow extends LaunchpadGuiBase {
+﻿class SettingsWindow extends GuiBase {
     availableThemes := Map()
     logLevels := ["None", "Error", "Warning", "Info", "Debug"]
 
-    __New(app, windowKey := "", owner := "", parent := "") {
+    __New(app, themeObj, windowKey, owner := "", parent := "") {
+        if (owner == "") {
+            owner := "ManageWindow"
+        }
+
         this.availableThemes := app.Themes.GetAvailableThemes(true)
-        super.__New(app, "Settings", windowKey, owner, parent)
+        super.__New(app, themeObj, windowKey, "Settings", owner, parent)
     }
 
     Controls() {
@@ -153,8 +157,8 @@
     OnCloseButton(btn, info) {
         this.Close()
 
-        if (this.app.Windows.WindowExists("ManageWindow")) {
-            this.app.Windows._components["ManageWindow"].PopulateListView()
+        if (this.app.GuiManager.WindowExists("ManageWindow")) {
+            this.app.GuiManager.GetWindow("ManageWindow").PopulateListView()
         }
     }
 

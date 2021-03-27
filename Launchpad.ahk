@@ -1,7 +1,7 @@
 ﻿;@Ahk2Exe-SetName "Launchpad"
 ;@Ahk2Exe-SetVersion "{{VERSION}}"
 ;@Ahk2Exe-SetCompanyName "Volantis Development"
-;@Ahk2Exe-SetCopyright "Copyright 2020 Ben McClure"
+;@Ahk2Exe-SetCopyright "Copyright 2021 Ben McClure"
 ;@Ahk2Exe-SetDescription "Game Launching Multitool"
 #Warn
 
@@ -22,4 +22,5 @@ appInfo["developer"] := "Volantis Development"
 appInfo["version"] := appVersion
 appInfo["configClass"] := "LaunchpadConfig"
 appInfo["stateClass"] := "LaunchpadAppState"
+
 Launchpad.new(appInfo)

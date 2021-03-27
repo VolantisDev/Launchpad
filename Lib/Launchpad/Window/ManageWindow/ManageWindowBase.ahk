@@ -1,14 +1,10 @@
-﻿class ManageWindowBase extends LaunchpadGuiBase {
+﻿class ManageWindowBase extends GuiBase {
     sidebarWidth := 85
     listViewColumns := Array()
     numSelected := 0
     lvCount := 0
     frameShadow := false
     checkboxes := false
-
-    __New(app, title, windowKey := "", owner := "", parent := "") {
-        super.__New(app, title, windowKey, owner, parent)
-    }
 
     Controls() {
         super.Controls()

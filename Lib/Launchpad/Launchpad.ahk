@@ -1,14 +1,4 @@
 ﻿class Launchpad extends AppBase {
-    Modules {
-        get => this.Services.Get("ModuleManager")
-        set => this.Services.Set("ModuleManager", value)
-    }
-
-    Windows {
-        get => this.Services.Get("WindowManager")
-        set => this.Services.Set("WindowManager", value)
-    }
-
     Launchers {
         get => this.Services.Get("LauncherManager")
         set => this.Services.Set("LauncherManager", value)
@@ -24,11 +14,6 @@
         set => this.Services.Set("CacheManager", value)
     }
 
-    Notifications {
-        get => this.Services.Get("NotificationService")
-        set => this.Services.Set("NotificationService", value)
-    }
-
     DataSources {
         get => this.Services.Get("DataSourceManager")
         set => this.Services.Set("DataSourceManager", value)
@@ -37,26 +22,6 @@
     Builders {
         get => this.Services.Get("BuilderManager")
         set => this.Services.Set("BuilderManager", value)
-    }
-
-    Installers {
-        get => this.Services.Get("InstallerManager")
-        set => this.Services.Set("InstallerManager", value)
-    }
-
-    Themes {
-        get => this.Services.Get("ThemeManager")
-        set => this.Services.Set("ThemeManager", value)
-    }
-
-    Events {
-        get => this.Services.Get("EventManager")
-        set => this.Services.Set("EventManager", value)
-    }
-
-    IdGen {
-        get => this.Services.Get("IdGenerator")
-        set => this.Services.Set("IdGenerator", value)
     }
 
     BlizzardProductDb {
@@ -81,22 +46,13 @@
 
     LoadServices(config) {
         super.LoadServices(config)
-        
-        this.IdGen := UuidGenerator.new()
-        this.Events := EventManager.new()
-        this.Modules := ModuleManager.new(this)
-        this.Logger := LoggerService.new(FileLogger.new(A_ScriptDir . "\log.txt", this.Config.LoggingLevel, true))
         this.Cache := CacheManager.new(this, this.Config.CacheDir)
         this.Backups := BackupManager.new(this, this.Config.BackupsFile)
-        this.Themes := ThemeManager.new(this, this.appDir . "\Resources\Themes", this.appDir . "\Resources", this.Events, this.IdGen)
-        this.Notifications := NotificationService.new(this, ToastNotifier.new(this))
-        this.Windows := WindowManager.new(this)
         this.DataSources := DataSourceManager.new(this.Events)
         this.Builders := BuilderManager.new(this)
         this.BlizzardProductDb := BlizzardProductDb.new(this)
         this.Launchers := LauncherManager.new(this)
         this.Platforms := PlatformManager.new(this)
-        this.Installers := InstallerManager.new(this)
         this.Auth := AuthService.new(this, "", this.State)
     }
 
@@ -110,27 +66,10 @@
                 releaseInfo := data.FromString(releaseInfoStr)
 
                 if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this.VersionIsOutdated(releaseInfo["data"]["version"], this.Version)) {
-                    this.Windows.UpdateAvailable(releaseInfo)
+                    this.GuiManager.Dialog("UpdateAvailable", releaseInfo)
                 }
             }
         }
-    }
-
-    ShowError(title, errorText, e, allowContinue := true) {
-        try {
-            themeObj := this.Themes ? this.Themes.GetItem() : JsonTheme.new("Steampad", this.appDir . "\Resources", this.Events, this.IdGen, true)
-            btns := allowContinue ? "*&Continue|&Exit Launchpad" : "*&Exit Launchpad"
-            result := this.Windows.ErrorDialog(e, "Unhandled Exception", errorText, "", "", btns)
-
-            if (result == "Exit Launchpad") {
-                ExitApp
-            }
-        } catch (ex) {
-            MsgBox("Launchpad had an error, and could not show the usual error dialog because of another error:`n`n" . ex.Message . "`n`nThe original error will follow in another message.")
-            MsgBox(e.File . ": " . e.Line . ": " . e.What . ": " . e.Message)
-        }
-
-        return allowContinue ? -1 : 1
     }
 
     InitializeApp(config) {
@@ -158,14 +97,14 @@
         result := ""
 
         if (!FileExist(A_ScriptDir . "\Launchpad.ini")) {
-            result := this.Windows.SetupWindow()
+            result := this.GuiManager.OpenWindow("SetupWindow")
 
             if (result == "Exit") {
                 this.ExitApp()
             }
         }
 
-        this.Windows.OpenManageWindow()
+        this.GuiManager.OpenWindow("ManageWindow")
 
         if (result == "Detect") {
             this.Platforms.DetectGames()
@@ -173,8 +112,8 @@
     }
 
     UpdateStatusIndicators() {
-        if (this.Windows.WindowIsOpen("ManageWindow")) {
-            this.Windows._components["ManageWindow"].UpdateStatusIndicator()
+        if (this.GuiManager.WindowExists("ManageWindow")) {
+            this.GuiManager.GetWindow["ManageWindow"].UpdateStatusIndicator()
         }
     }
 
@@ -195,6 +134,6 @@
     }
 
     ProvideFeedback() {
-        this.Windows.FeedbackWindow()
+        this.GuiManager.Dialog("FeedbackWindow")
     }
 }

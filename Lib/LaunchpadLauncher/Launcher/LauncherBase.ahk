@@ -1,32 +1,24 @@
 class LauncherBase {
-    eventManager := ""
-    idGenerator := ""
+    app := ""
     key := ""
     game := ""
     config := ""
     pid := 0
     progress := ""
-    logger := ""
 
-    __New(key, game, config := "") {
-        this.eventManager := EventManager.new()
-        this.idGenerator := UuidGenerator.new()
-
+    __New(app, key, config := "") {
         if (config == "") {
             config := Map()
         }
 
-        InvalidParameterException.CheckTypes("LauncherBase", "key", key, "", "game", game, "GameBase", "config", config, "Map")
+        InvalidParameterException.CheckTypes("LauncherBase", "app", app, "AppBase", "key", key, "", "config", config, "Map")
+        this.app := app
         this.key := key
-        this.game := game
+        this.game := app.Game
         this.config := config
 
         if (this.config["ShowProgress"]) {
             this.CreateProgressGui()
-        }
-
-        if (this.config["LogPath"]) {
-            this.logger := FileLogger.new(this.config["LogPath"], this.config["LoggingLevel"], true)
         }
     }
 
@@ -38,8 +30,7 @@ class LauncherBase {
         if (this.progress == "") {
             progressTitle := StrReplace(this.config["ProgressTitle"], "{g}", this.config["DisplayName"])
             progressText := StrReplace(this.config["ProgressText"], "{g}", this.config["DisplayName"])
-            themeObj := JsonTheme.new(this.config["ThemeName"], this.config["ResourcesDir"], this.eventManager, this.idGenerator, true)
-            this.progress := LauncherProgressIndicator.new(progressTitle, themeObj, A_ScriptFullPath, "", "", "", this.CountLaunchSteps())
+            this.progress := this.app.GuiManager.OpenWindow("LauncherProgress", "LauncherProgressIndicator", A_ScriptFullPath, "", "", this.CountLaunchSteps())
         }
     }
 
@@ -74,8 +65,8 @@ class LauncherBase {
     }
 
     Log(message, level := "Debug") {
-        if (this.logger && this.config["LoggingLevel"] != "None") {
-            this.logger.Log(this.key . ": " . message, level)
+        if (this.app.Logger && this.config["LoggingLevel"] != "None") {
+            this.app.Logger.Log(this.key . ": " . message, level)
         }
     }
 

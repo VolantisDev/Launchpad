@@ -1,6 +1,6 @@
 class SimpleLauncher extends LauncherBase {
     LaunchGame() {
         super.LaunchGame()
-        ExitApp()
+        this.app.ExitApp()
     }
 }

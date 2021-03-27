@@ -11,18 +11,9 @@ class LauncherWizard extends LaunchpadFormGuiBase {
     knownPlatforms := ""
     dataSource := ""
 
-    __New(app, windowKey := "", owner := "", parent := "") {
-        if (windowKey == "") {
-            windowKey := "LauncherWizard"
-        }
-
+    __New(app, themeObj, windowKey, owner := "", parent := "") {
         this.dataSource := app.DataSources.GetItem()
-
-        if (owner == "") {
-            owner := "ManageWindow"
-        }
-
-        super.__New(app, "Launcher Wizard", this.GetTextDefinition(), windowKey, owner, parent, this.GetButtonsDefinition())
+        super.__New(app, themeObj, windowKey, "Launcher Wizard", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
     }
 
     GetTextDefinition() {

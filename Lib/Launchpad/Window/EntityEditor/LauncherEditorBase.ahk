@@ -14,18 +14,6 @@ class LauncherEditorBase extends EntityEditorBase {
     platforms := ""
     logLevels := ["None", "Error", "Warning", "Info", "Debug"]
 
-    __New(app, entityObj, title, mode := "config", windowKey := "", owner := "", parent := "") {
-        if (windowKey == "") {
-            windowKey := "LauncherEditor"
-        }
-
-        if (owner == "") {
-            owner := "ManageWindow"
-        }
-
-        super.__New(app, entityObj, title, mode, windowKey, owner, parent)
-    }
-
     Controls() {
         super.Controls()
     }

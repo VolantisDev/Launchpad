@@ -1,16 +1,12 @@
 class AlterComponentsEvent extends EventBase {
-    _items := Map()
+    container := ""
 
     Items {
-        get => this._items
-        set => this._items := value
+        get => this.container.Items
     }
 
-    __New(eventName, items := "") {
-        if (items != "") {
-            this._items := items
-        }
-
+    __New(eventName, container) {
+        this.container := container
         super.__New(eventName)
     }
 }

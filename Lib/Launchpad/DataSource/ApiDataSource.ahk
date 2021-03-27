@@ -108,7 +108,7 @@ class ApiDataSource extends DataSourceBase {
         }
 
         text := "Enter the base URL of the API endpoint you would like Launchpad to connect to. Leave blank to revert to the default."
-        apiEndpointUrl := this.app.Windows.SingleInputBox("API Endpoint URL", text, existingEndpoint, owner, parent)
+        apiEndpointUrl := this.app.GuiManager.Dialog("SingleInputBox", "API Endpoint URL", text, existingEndpoint, owner, parent)
 
         if (apiEndpointUrl != existingEndpoint) {
             this.app.Config.ApiEndpoint := apiEndpointUrl

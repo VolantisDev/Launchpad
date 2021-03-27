@@ -7,12 +7,8 @@
 */
 
 class LauncherEditorSimple extends LauncherEditorBase {
-    __New(app, entityObj, mode := "config", windowKey := "", owner := "", parent := "") {
-        if (windowKey == "") {
-            windowKey := "LauncherEditorSimple"
-        }
-
-        super.__New(app, entityObj, "Launcher Editor", mode, windowKey, owner, parent)
+    __New(app, themeObj, windowKey, entityObj, mode := "config", owner := "", parent := "") {
+        super.__New(app, themeObj, windowKey, entityObj, "Launcher Editor", mode, owner, parent)
     }
 
     GetButtonsDefinition() {

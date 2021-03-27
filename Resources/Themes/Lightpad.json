@@ -407,7 +407,8 @@
                 "options": {
                     "AlwaysOnTop": true,
                     "Caption": false,
-                    "Border": true
+                    "Border": true,
+                    "ToolWindow": true
                 }
             }
         },
@@ -484,10 +485,7 @@
                     "Popup": true
                 }
             },
-            "ToolsWindow": {
-                "settings": "menu"
-            },
-            "AddMenu": {
+            "Menu": {
                 "settings": "menu"
             },
             "AddLauncherMenu": {

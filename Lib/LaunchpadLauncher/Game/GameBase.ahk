@@ -1,4 +1,5 @@
 class GameBase {
+    app := ""
     key := ""
     config := ""
     launcherConfig := ""
@@ -8,9 +9,8 @@ class GameBase {
     winId := 0
     loadingWinId := 0
     isFinished := false
-    logger := ""
 
-    __New(key, config := "", launcherConfig := "") {
+    __New(app, key, config := "", launcherConfig := "") {
         if (config == "") {
             config := Map()
         }
@@ -19,20 +19,17 @@ class GameBase {
             launcherConfig := Map()
         }
 
-        InvalidParameterException.CheckTypes("GameBase", "key", key, "", "config", config, "Map")
+        InvalidParameterException.CheckTypes("GameBase", "app", app, "AppBase", "key", key, "", "config", config, "Map")
+        this.app := app
         this.key := key
         this.config := config
         this.launcherConfig := launcherConfig
         this.exeProcess := this.GetExeProcess()
-
-        if (this.launcherConfig["LogPath"]) {
-            this.logger := FileLogger.new(this.launcherConfig["LogPath"], this.launcherConfig["LoggingLevel"], true)
-        }
     }
 
     Log(message, level := "Debug") {
-        if (this.logger && this.launcherConfig["LoggingLevel"] != "None") {
-            this.logger.Log(this.key . ": " . message, level)
+        if (this.app.Logger && this.launcherConfig["LoggingLevel"] != "None") {
+            this.app.Logger.Log(this.key . ": " . message, level)
         }
     }
 

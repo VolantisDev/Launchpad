@@ -4,7 +4,7 @@ class FeedbackWindow extends DialogBox {
     notifierObj := ""
     apiEndpointUrl := ""
 
-    __New(notifierObj, apiEndpointUrl, title, themeObj, text := "", windowKey := "ErrorDialog", owner := "", parent := "", btns := "*&Send|&Cancel") {
+    __New(app, themeObj, windowKey, notifierObj, apiEndpointUrl, title, text := "", owner := "", parent := "", btns := "*&Send|&Cancel") {
         this.notifierObj := notifierObj
         this.apiEndpointUrl := apiEndpointUrl
 
@@ -12,7 +12,7 @@ class FeedbackWindow extends DialogBox {
             text := "You can use this form to provide any sort of feedback you wish. All feedback will be reviewed by hand, and responded to if you would like."
         }
 
-        super.__New(title, themeObj, text, windowKey, owner, parent, btns)
+        super.__New(app, themeObj, windowKey, title, text, owner, parent, btns)
     }
 
     Controls() {

@@ -4,20 +4,11 @@
     missingFields := Map()
     dataSource := ""
  
-    __New(app, entityObj, entityManager, windowKey := "", owner := "", parent := "") {
+    __New(app, themeObj, windowKey, entityObj, entityManager, owner := "", parent := "") {
         InvalidParameterException.CheckTypes("EntityDeleteWindow", "entityObj", entityObj, "EntityBase")
         this.entityObj := entityObj
         this.entityManager := entityManager
-
-        if (windowKey == "") {
-            windowKey := "EntityDelete"
-        }
-
-        if (owner == "") {
-            owner := "ManageWindow"
-        }
-
-        super.__New(app, "Delete " . entityObj.Key, this.GetTextDefinition(), windowKey, owner, parent, this.GetButtonsDefinition())
+        super.__New(app, themeObj, windowKey, "Delete " . entityObj.Key, this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
     }
 
     GetTextDefinition() {

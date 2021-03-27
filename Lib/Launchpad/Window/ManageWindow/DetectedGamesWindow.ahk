@@ -6,14 +6,14 @@
     knownGames := ""
     checkboxes := true
 
-    __New(app, detectedGames, windowKey := "", owner := "", parent := "") {
+    __New(app, themeObj, windowKey, detectedGames, owner := "", parent := "") {
         this.detectedGames := detectedGames
         this.state := app.State
         this.launcherManager := app.Launchers
         dataSource := app.DataSources.GetItem()
         this.knownGames := dataSource.ReadListing("game-keys")
 
-        super.__New(app, "Detected Games", windowKey, owner, parent)
+        super.__New(app, themeObj, windowKey, "Detected Games", owner, parent)
     }
 
     AddSidebarControls() {
@@ -153,7 +153,7 @@
         op := AddDetectedGamesOp.new(this.app, games, this.launcherManager, this.state, "DetectedGamesWindow")
         op.Run()
 
-        win := this.launcherManager.app.Windows.GetItem("ManageWindow")
+        win := this.launcherManager.app.GuiManager.GetWindow("ManageWindow")
         win.PopulateListView()
         this.Destroy()
     }
@@ -162,7 +162,7 @@
         key := this.guiObj["ListView"].GetText(row)
         detectedGameObj := this.detectedGames[key]
 
-        result := this.app.Windows.DetectedGameEditor(detectedGameObj, "DetectedGamesWindow")
+        result := this.app.GuiManager.Form("DetectedGameEditor", detectedGameObj, this.windowKey)
 
         if (result == "Save") {
             if (key != detectedGameObj.key) {

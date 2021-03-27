@@ -19,9 +19,44 @@ class AppBase {
         set => this.configObj := value
     }
 
+    IdGen {
+        get => this.Services.Get("IdGenerator")
+        set => this.Services.Set("IdGenerator", value)
+    }
+
+    Modules {
+        get => this.Services.Get("ModuleManager")
+        set => this.Services.Set("ModuleManager", value)
+    }
+
+    Notifications {
+        get => this.Services.Get("NotificationService")
+        set => this.Services.Set("NotificationService", value)
+    }
+
+    Themes {
+        get => this.Services.Get("ThemeManager")
+        set => this.Services.Set("ThemeManager", value)
+    }
+
+    Events {
+        get => this.Services.Get("EventManager")
+        set => this.Services.Set("EventManager", value)
+    }
+
+    GuiManager {
+        get => this.Services.Get("GuiManager")
+        set => this.Services.Set("GuiManager", value)
+    }
+
     State {
         get => this.stateObj
         set => this.stateObj := value
+    }
+
+    Installers {
+        get => this.Services.Get("InstallerManager")
+        set => this.Services.Set("InstallerManager", value)
     }
 
     Services {
@@ -81,6 +116,8 @@ class AppBase {
 
         ; @todo Create any services required for initialization
         services := Map()
+        services["IdGenerator"] := UuidGenerator.new()
+        services["EventManager"] := EventManager.new()
         this.Services := ServiceContainer.new(services)
         
         this.errorCallback := ObjBindMethod(this, "OnException")
@@ -157,7 +194,25 @@ class AppBase {
     }
 
     ShowError(title, errorText, err, allowContinue := true) {
+        try {
+            result := "Exit Launchpad"
 
+            if (this.GuiManager) {
+                btns := allowContinue ? "*&Continue|&Exit " . this.appName : "*&Exit " . this.appName
+                result := this.GuiManager.Dialog("ErrorDialog", err, "Unhandled Exception", errorText, "", "", btns)
+            } else {
+                ; @todo No GUI manager... what now?
+            }
+
+            if (result == "Exit Launchpad") {
+                ExitApp
+            }
+        } catch (ex) {
+            MsgBox("Launchpad had an error, and could not show the usual error dialog because of another error:`n`n" . ex.File . ": " . ex.Line . ": " . ex.What . ": " . ex.Message . "`n`nThe original error will follow in another message.")
+            MsgBox(err.File . ": " . err.Line . ": " . err.What . ": " . err.Message)
+        }
+
+        return allowContinue ? -1 : 1
     }
 
     InitializeApp(config) {
@@ -165,7 +220,37 @@ class AppBase {
     }
     
     LoadServices(config) {
-        ; @todo How to detect services to load?
+        logPath := this.dataDir . "\" . this.appName . "Log.txt"
+
+        if (config.Has("logPath") && config["logPath"]) {
+            logPath := config["logPath"]
+        }
+
+        loggingLevel := this.Config.HasProp("LoggingLevel") ? this.Config.LoggingLevel : "error"
+
+        if (config.Has("loggingLevel") && config["loggingLevel"]) {
+            loggingLevel := config["loggingLevel"]
+        }
+
+        this.Services.Set("LoggerService", LoggerService.new(FileLogger.new(logPath, loggingLevel, true)))
+        this.Services.Set("ModuleManager", ModuleManager.new(this))
+
+        themesDir := this.appDir . "\Resources\Themes"
+
+        if (config.Has("themesDir") && config["themesDir"]) {
+            themesDir := config["themesDir"]
+        }
+
+        resourcesDir := this.appDir . "\Resources"
+
+        if (config.Has("resourcesDir") && config["resourcesDir"]) {
+            resourcesDir := config["resourcesDir"]
+        }
+
+        this.Services.Set("ThemeManager", ThemeManager.new(this, themesDir, resourcesDir, this.Events, this.IdGen))
+        this.Services.Set("NotificationService", NotificationService.new(this, ToastNotifier.new(this)))
+        this.Services.Set("GuiManager", GuiManager.new(this))
+        this.Services.Set("InstallerManager", InstallerManager.new(this))
     }
 
     ExitApp() {

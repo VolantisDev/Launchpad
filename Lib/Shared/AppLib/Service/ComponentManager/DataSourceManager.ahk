@@ -1,6 +1,6 @@
 class DataSourceManager extends ComponentServiceBase {
-    _registerEvent := Events.DATASOURCES_REGISTER
-    _alterEvent := Events.DATASOURCES_ALTER
+    _registerEvent := "" ;Events.DATASOURCES_REGISTER
+    _alterEvent := "" ;Events.DATASOURCES_ALTER
     primaryDataSourceKey := ""
 
     __New(eventMgr, components := "", primaryKey := "") {

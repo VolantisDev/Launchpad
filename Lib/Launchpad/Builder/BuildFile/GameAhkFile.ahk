@@ -9,15 +9,40 @@ class GameAhkFile extends ComposableBuildFile {
 
     ComposeFile() {
         global appVersion
-        FileAppend("#Warn`n", this.FilePath)
-        FileAppend("#Include " . this.appDir . "\Lib\Shared\Includes.ahk`n", this.FilePath)
-        FileAppend("appVersion := `"" . appVersion . "`"`n", this.FilePath)
-        FileAppend("gameConfig := " . this.ConvertMapToCode(this.launcherEntityObj.ManagedLauncher.ManagedGame.Config) . "`n", this.FilePath)
-        FileAppend("launcherConfig := " . this.ConvertMapToCode(this.launcherEntityObj.ManagedLauncher.Config) . "`n", this.FilePath)
-        FileAppend("gameObj := " . this.launcherEntityObj.ManagedLauncher.ManagedGame.EntityClass . ".new(`"" . this.launcherEntityObj.Key . "`", gameConfig, launcherConfig)`n", this.FilePath)
-        FileAppend("launcherObj := " . this.launcherEntityObj.ManagedLauncher.EntityClass . ".new(`"" . this.launcherEntityObj.Key . "`", gameObj, launcherConfig)`n", this.FilePath)
-        FileAppend("launcherObj.LaunchGame()`n", this.FilePath)
+        launcherName := this.launcherEntityObj.Key . " - Launchpad"
+        ahkVar := AhkVariable.new()
 
+        FileAppend
+        (
+        ";@Ahk2Exe-SetName '" . launcherName . "'
+        ;@Ahk2Exe-SetVersion '" . appVersion . "'
+        ;@Ahk2Exe-SetCompanyName 'Volantis Development'
+        ;@Ahk2Exe-SetCopyright 'Copyright 2021 Ben McClure'
+        ;@Ahk2Exe-SetDescription 'Launchpad Game Launcher'
+        #Warn
+
+        DllCall('AllocConsole')
+        WinHide('ahk_id ' . DllCall('GetConsoleWindow', 'ptr'))
+
+        A_IconHidden := A_IsCompiled
+        appVersion := '" . appVersion . "'
+        #Include " . this.appDir . "\Lib\Shared\Includes.ahk
+        #Include " . this.appDir . "\Lib\LaunchpadLauncher\Includes.ahk
+
+        appInfo := Map()
+        appInfo['appName'] := '" . launcherName . "'
+        appInfo['developer'] := 'Volantis Development'
+        appInfo['version'] := '" . appVersion . "'
+        appInfo['configClass'] := 'LaunchpadLauncherConfig'
+        appInfo['stateClass'] := 'LaunchpadLauncherState'
+        appInfo['launcherKey'] := '" . this.launcherEntityObj.Key . "'
+        appInfo['launchpadLauncherConfig'] := " . ahkVar.ToString(this.launcherEntityObj.Config) .  "
+        appInfo['launcherConfig'] := " . ahkVar.ToString(this.launcherEntityObj.ManagedLauncher.Config) . "
+        appInfo['gameConfig'] := " . ahkVar.ToString(this.launcherEntityObj.ManagedLauncher.ManagedGame.Config) . "
+        
+        LaunchpadLauncher.new(appInfo)"
+        ), this.FilePath
+        
         return this.FilePath
     }
 

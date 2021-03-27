@@ -1,0 +1,3 @@
+class WindowNotFoundException extends AppException {
+    
+}

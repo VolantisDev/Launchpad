@@ -1,8 +1,8 @@
 ﻿class SetupWindow extends LaunchpadFormGuiBase {
     availableThemes := Map()
 
-    __New(app, windowKey := "", owner := "", parent := "") {
-        super.__New(app, "Setup", this.GetTextDefinition(), windowKey, owner, parent, "*&Start|&Exit")
+    __New(app, themeObj, windowKey, owner := "", parent := "") {
+        super.__New(app, themeObj, windowKey, "Setup", this.GetTextDefinition(), owner, parent, "*&Start|&Exit")
     }
 
     Create() {

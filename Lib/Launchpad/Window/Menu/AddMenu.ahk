@@ -2,6 +2,14 @@
     buttonsPerRow := 1
     menuTitle := "Add Game"
 
+    __New(app, themeObj, windowKey, owner := "", parent := "") {
+        if (owner == "") {
+            owner := "ManageWindow" 
+        }
+
+        super.__New(app, themeObj, windowKey, owner, parent)
+    }
+
     Controls() {
         super.Controls()
         this.AddMenuButton("&Add a Game", "AddGame")
@@ -15,6 +23,9 @@
 
     OnAddGame(btn, info) {
         this.Close()
-        this.app.Windows.GetItem("ManageWindow").AddLauncher()
+        
+        if (this.app.GuiManager.WindowExists("ManageWindow")) {
+            this.app.GuiManager.GetWindow("ManageWindow").AddLauncher()
+        }
     }
 }

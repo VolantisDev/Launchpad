@@ -4,11 +4,11 @@ class ErrorDialog extends DialogBox {
     notifierObj := ""
     apiEndpointUrl := ""
 
-    __New(errorObj, notifierObj, apiEndpointUrl, title, themeObj, text := "", windowKey := "ErrorDialog", owner := "", parent := "", btns := "*&Continue|&Exit Launchpad") {
+    __New(app, themeObj, windowKey, errorObj, notifierObj, apiEndpointUrl, title, text := "", owner := "", parent := "", btns := "*&Continue|&Exit Launchpad") {
         this.errorObj := errorObj
         this.notifierObj := notifierObj
         this.apiEndpointUrl := apiEndpointUrl
-        super.__New(title, themeObj, text, windowKey, owner, parent, btns)
+        super.__New(app, themeObj, windowKey, title, text, owner, parent, btns)
     }
 
     Controls() {

@@ -16,6 +16,7 @@ if (result.Value != version) {
 ResetBuildDir()
 DirCreate(buildDir . "\Lib")
 DirCopy(appDir . "\Lib\Shared", buildDir . "\Lib\Shared")
+DirCopy(appDir . "\Lib\LaunchpadLauncher", buildDir . "\Lib\LaunchpadLauncher")
 DirCopy(appDir . "\Resources", buildDir . "\Resources")
 DirCreate(buildDir . "\Vendor")
 DirCopy(appDir . "\Vendor\7zip", buildDir . "\Vendor\7zip")

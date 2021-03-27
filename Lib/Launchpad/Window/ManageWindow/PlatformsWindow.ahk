@@ -5,7 +5,7 @@ class PlatformsWindow extends ManageWindowBase {
     platformRows := []
     sidebarWidth := 0
 
-    __New(app, platformsFile := "", windowKey := "", owner := "", parent := "") {
+    __New(app, themeObj, windowKey, platformsFile := "", owner := "", parent := "") {
         if (platformsFile == "") {
             platformsFile := app.Config.PlatformsFile
         }
@@ -14,7 +14,7 @@ class PlatformsWindow extends ManageWindowBase {
         this.platformsFile := platformsFile
         this.platformManager := app.Platforms
         this.lvCount := this.platformManager.CountEntities()
-        super.__New(app, "Platforms", windowKey, owner, parent)
+        super.__New(app, themeObj, windowKey, "Platforms", owner, parent)
     }
 
     AddBottomControls() {

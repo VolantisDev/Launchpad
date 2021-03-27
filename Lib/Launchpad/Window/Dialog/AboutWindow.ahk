@@ -2,17 +2,13 @@ class AboutWindow extends DialogBox {
     windowOptions := "+AlwaysOnTop"
     isDialog := true
 
-    __New(title, themeObj, text := "", windowKey := "", owner := "", parent := "", btns := "*&Yes|&No") {
-        if (title == "") {
-            title := "About Launchpad"
-        }
-
+    __New(app, themeObj, windowKey, text := "", owner := "", parent := "", btns := "*&Yes|&No") {
         if (text = "") {
             text := "Launchpad lets you launch your games from any platform in a universally-compatible way. It was born out of frustration with trying to manage non-Steam games effectively, but it has grown hugely since those humble origins into a full-fledged game launching multi-tool."
             text .= "`n`nLaunchpad was conceived and created by Ben McClure of Volantis Development. It is a free software project that welcomes contributions from everyone, including you!`n"        
         }
         
-        super.__New(title, themeObj, text, windowKey, owner, parent, btns)
+        super.__New(app, themeObj, windowKey, "About " . this.app.appName, text, owner, parent, btns)
     }
 
     Controls() {

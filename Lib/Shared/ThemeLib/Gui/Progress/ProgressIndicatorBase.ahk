@@ -8,7 +8,7 @@ class ProgressIndicatorBase extends FormGuiBase {
     enableDetailText := true
     cancelCallback := ""
 
-    __New(title, themeObj, text, windowKey := "", owner := "", parent := "", btns := "", rangeStop := "", currentPosition := 0, detailText := true, showInNotificationArea := true) {
+    __New(app, themeObj, windowKey, title, text, owner := "", parent := "", btns := "", rangeStop := "", currentPosition := 0, detailText := true, showInNotificationArea := true) {
         if (rangeStop != "") {
             InvalidParameterException.CheckTypes("ProgressIndicator", "rangeStop", rangeStop, "Integer")
             this.rangeStop := rangeStop
@@ -27,7 +27,7 @@ class ProgressIndicatorBase extends FormGuiBase {
         }
         
         this.showInNotificationArea := !!(showInNotificationArea)
-        super.__New(title, themeObj, text, windowKey, owner, parent, btns)
+        super.__New(app, themeObj, windowKey, title, text, owner, parent, btns)
     }
 
     SetDetailText(detailText) {
