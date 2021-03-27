@@ -208,8 +208,7 @@ class AppBase {
                 ExitApp
             }
         } catch (ex) {
-            MsgBox("Launchpad had an error, and could not show the usual error dialog because of another error:`n`n" . ex.File . ": " . ex.Line . ": " . ex.What . ": " . ex.Message . "`n`nThe original error will follow in another message.")
-            MsgBox(err.File . ": " . err.Line . ": " . err.What . ": " . err.Message)
+            MsgBox("Launchpad had an error, and could not show the usual error dialog because of another error:`n`n" . ex.File . ": " . ex.Line . ": " . ex.What . ": " . ex.Message . "`n`nThe original error is:`n`n" . err.File . ": " . err.Line . ": " . err.What . ": " . err.Message)
         }
 
         return allowContinue ? -1 : 1

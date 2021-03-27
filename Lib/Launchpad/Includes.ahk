@@ -19,7 +19,6 @@
 #Include BulkOperation\LauncherGameOp\ValidateLaunchersOp.ahk
 #Include BulkOperation\LoadOp\LoadLaunchersOp.ahk
 #Include BulkOperation\LoadOp\LoadPlatformsOp.ahk
-#Include Config\BackupsConfig.ahk
 #Include Config\BlizzardProductDb.ahk
 #Include Config\LauncherConfig.ahk
 #Include Config\LaunchpadConfig.ahk
@@ -48,7 +47,6 @@
 #Include Service\LauncherManager.ahk
 #Include Service\PlatformManager.ahk
 #Include State\LaunchpadAppState.ahk
-#Include Window\LaunchpadFormGuiBase.ahk
 #Include Window\Dialog\AboutWindow.ahk
 #Include Window\Dialog\AccountInfoWindow.ahk
 #Include Window\Dialog\LauncherDeleteWindow.ahk

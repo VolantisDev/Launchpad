@@ -6,7 +6,7 @@
       - "build" - Launcher is being built and requires information
 */
 
-class EntityEditorBase extends LaunchpadFormGuiBase {
+class EntityEditorBase extends FormGuiBase {
     entityObj := ""
     mode := "config" ; Options: config, build
     missingFields := Map()

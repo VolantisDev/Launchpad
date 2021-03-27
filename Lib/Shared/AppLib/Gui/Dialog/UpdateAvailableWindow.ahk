@@ -1,4 +1,4 @@
-﻿class UpdateAvailableWindow extends LaunchpadFormGuiBase {
+﻿class UpdateAvailableWindow extends FormGuiBase {
     releaseInfo := ""
 
     __New(app, themeObj, windowKey, releaseInfo, owner := "", parent := "") {

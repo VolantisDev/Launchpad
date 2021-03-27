@@ -1,4 +1,4 @@
-﻿class DetectedGameEditor extends LaunchpadFormGuiBase {
+﻿class DetectedGameEditor extends FormGuiBase {
     detectedGameObj := ""
     newValues := Map()
     missingFields := Map()

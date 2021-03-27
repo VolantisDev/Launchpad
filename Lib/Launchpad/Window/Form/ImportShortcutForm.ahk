@@ -6,7 +6,7 @@
       - "build" - Launcher is being built and requires information
 */
 
-class ImportShortcutForm extends LaunchpadFormGuiBase {
+class ImportShortcutForm extends FormGuiBase {
     knownGames := ""
     knownPlatforms := ""
     dataSource := ""

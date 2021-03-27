@@ -1,4 +1,4 @@
-﻿class EntityDeleteWindow extends LaunchpadFormGuiBase {
+﻿class EntityDeleteWindow extends FormGuiBase {
     entityObj := ""
     entityManager := ""
     missingFields := Map()

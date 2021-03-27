@@ -1,4 +1,4 @@
-﻿class LoginWindow extends LaunchpadFormGuiBase {
+﻿class LoginWindow extends FormGuiBase {
     entityObj := ""
     entityManager := ""
     missingFields := Map()

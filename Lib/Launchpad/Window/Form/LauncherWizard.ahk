@@ -6,7 +6,7 @@
       - "build" - Launcher is being built and requires information
 */
 
-class LauncherWizard extends LaunchpadFormGuiBase {
+class LauncherWizard extends FormGuiBase {
     knownGames := ""
     knownPlatforms := ""
     dataSource := ""

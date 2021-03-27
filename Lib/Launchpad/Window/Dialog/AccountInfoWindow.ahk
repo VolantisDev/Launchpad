@@ -1,4 +1,4 @@
-﻿class AccountInfoWindow extends LaunchpadFormGuiBase {
+﻿class AccountInfoWindow extends FormGuiBase {
     __New(app, themeObj, windowKey, owner := "", parent := "") {
         super.__New(app, themeObj, windowKey, "Account Info", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
     }

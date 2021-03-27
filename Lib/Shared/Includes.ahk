@@ -17,6 +17,7 @@
 #Include AppLib\Cache\FileCache.ahk
 #Include AppLib\Cache\ObjectCache.ahk
 #Include AppLib\Config\AppConfig.ahk
+#Include AppLib\Config\BackupsConfig.ahk
 #Include AppLib\Config\ConfigBase.ahk
 #Include AppLib\Config\FileConfig.ahk
 #Include AppLib\Config\IniConfig.ahk

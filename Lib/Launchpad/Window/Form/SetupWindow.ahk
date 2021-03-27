@@ -1,4 +1,4 @@
-﻿class SetupWindow extends LaunchpadFormGuiBase {
+﻿class SetupWindow extends FormGuiBase {
     availableThemes := Map()
 
     __New(app, themeObj, windowKey, owner := "", parent := "") {

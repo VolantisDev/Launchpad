@@ -45,6 +45,7 @@ class InvalidParameterException extends AppException {
             }
 
             if (!validType) {
+                MsgBox(paramName)
                 throw InvalidParameterException.new(-4, paramName, paramVal, reqType)
             }
         }

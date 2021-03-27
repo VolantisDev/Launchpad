@@ -21,8 +21,8 @@ class GameAhkFile extends ComposableBuildFile {
         ;@Ahk2Exe-SetDescription 'Launchpad Game Launcher'
         #Warn
 
-        DllCall('AllocConsole')
-        WinHide('ahk_id ' . DllCall('GetConsoleWindow', 'ptr'))
+        ;DllCall('AllocConsole')
+        ;WinHide('ahk_id ' . DllCall('GetConsoleWindow', 'ptr'))
 
         A_IconHidden := A_IsCompiled
         appVersion := '" . appVersion . "'
@@ -40,7 +40,8 @@ class GameAhkFile extends ComposableBuildFile {
         appInfo['launcherConfig'] := " . ahkVar.ToString(this.launcherEntityObj.ManagedLauncher.Config) . "
         appInfo['gameConfig'] := " . ahkVar.ToString(this.launcherEntityObj.ManagedLauncher.ManagedGame.Config) . "
         
-        LaunchpadLauncher.new(appInfo)"
+        LaunchpadLauncher.new(appInfo)
+        "
         ), this.FilePath
         
         return this.FilePath

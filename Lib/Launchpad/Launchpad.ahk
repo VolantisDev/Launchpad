@@ -77,6 +77,8 @@
 
         this.Builders.SetItem("ahk", AhkLauncherBuilder.new(this), true)
         this.DataSources.SetItem("api", ApiDataSource.new(this, this.Cache.GetItem("api"), this.Config.ApiEndpoint), true)
+        this.Installers.SetItem("LaunchpadUpdate", LaunchpadUpdate.new(this.Version, this.State, this.Cache.GetItem("file"), this.tmpDir))
+        this.Installers.SetItem("Dependencies", DependencyInstaller.new(this.Version, this.State, this.Cache.GetItem("file"), [], this.tmpDir))
         this.Installers.SetupInstallers()
         this.Installers.InstallRequirements()
 
