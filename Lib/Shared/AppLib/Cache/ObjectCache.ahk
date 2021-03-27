@@ -1,13 +1,13 @@
 class ObjectCache extends CacheBase {
     cacheObj := Map()
 
-    __New(stateObj, cacheObj := "") {
+    __New(app, stateObj, cacheObj := "") {
         if (cacheObj != "") {
             InvalidParameterException.CheckTypes("ObjectCache", "cacheObj", cacheObj, "Map")
             this.cacheObj := cacheObj
         }
         
-        super.__New(stateObj)
+        super.__New(app, stateObj)
     }
 
     WriteItemAction(key, content) {

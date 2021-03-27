@@ -9,10 +9,7 @@
         set => this.Services.Set("PlatformManager", value)
     }
 
-    Cache {
-        get => this.Services.Get("CacheManager")
-        set => this.Services.Set("CacheManager", value)
-    }
+    
 
     DataSources {
         get => this.Services.Get("DataSourceManager")
@@ -41,7 +38,6 @@
 
     LoadServices(config) {
         super.LoadServices(config)
-        this.Cache := CacheManager.new(this, this.Config.CacheDir)
         this.Backups := BackupManager.new(this, this.Config.BackupsFile)
         this.DataSources := DataSourceManager.new(this.Events)
         this.Builders := BuilderManager.new(this)
@@ -49,6 +45,13 @@
         this.Launchers := LauncherManager.new(this)
         this.Platforms := PlatformManager.new(this)
         this.Auth := AuthService.new(this, "", this.State)
+    }
+
+    GetCaches() {
+        caches := super.GetCaches()
+        caches["file"] := FileCache.new(this, CacheState.new(this, this.Config.CacheDir . "\File.json"), this.Config.CacheDir . "\File")
+        caches["api"] := FileCache.new(this, CacheState.new(this, this.Config.CacheDir . "\API.json"), this.Config.CacheDir . "\API")
+        return caches
     }
 
     CheckForUpdates() {
@@ -60,7 +63,7 @@
                 data := JsonData.new()
                 releaseInfo := data.FromString(releaseInfoStr)
 
-                if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this.VersionIsOutdated(releaseInfo["data"]["version"], this.Version)) {
+                if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this.VersionChecker.VersionIsOutdated(releaseInfo["data"]["version"], this.Version)) {
                     this.GuiManager.Dialog("UpdateAvailable", releaseInfo)
                 }
             }

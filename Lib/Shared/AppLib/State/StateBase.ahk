@@ -8,6 +8,15 @@ class StateBase {
         set => this.stateMap := this.SaveState(value)
     }
 
+    Version {
+        get => this.State.Has("Version") ? this.State["Version"] : 0
+        set => this.State["Version"] := value
+    }
+
+    IsStateOutdated() {
+        return this.app.VersionChecker.VersionIsOutdated(this.app.Version, this.Version)
+    }
+
     __New(app, state := "", autoLoad := false) {
         InvalidParameterException.CheckTypes("StateBase", "app", app, "AppBase")
         
@@ -37,6 +46,6 @@ class StateBase {
     }
 
     LoadState() {
-        throw(MethodNotImplementedException.new("StateBase", "LoadState"))
+        return Map("Version", this.app.Version)
     }
 }

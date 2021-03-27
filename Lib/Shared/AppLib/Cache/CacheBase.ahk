@@ -1,8 +1,14 @@
 class CacheBase {
+    app := ""
     stateObj := ""
 
-    __New(stateObj) {
+    __New(app, stateObj) {
+        this.app := app
         this.stateObj := stateObj
+    }
+
+    IsCacheOutdated() {
+        return (!this.stateObj || this.stateObj.IsStateOutdated())
     }
 
     ItemExists(reference) {

@@ -80,24 +80,7 @@ class GamePlatformBase {
     }
 
     NeedsUpdate() {
-        return this.VersionIsOutdated(this.GetLatestVersion(), this.GetInstalledVersion())
-    }
-
-    VersionIsOutdated(latestVersion, installedVersion) {
-        splitLatestVersion := StrSplit(latestVersion, ".")
-        splitInstalledVersion := StrSplit(installedVersion, ".")
-
-        for (index, numPart in splitInstalledVersion) {
-            latestVersionPart := splitLatestVersion.Has(index) ? splitLatestVersion[index] : 0
-
-            if ((latestVersionPart + 0) > (numPart + 0)) {
-                return true
-            } else if ((latestVersionPart + 0) < (numPart + 0)) {
-                return false
-            } 
-        }
-
-        return false
+        return this.app.VersionChecker.VersionIsOutdated(this.GetLatestVersion(), this.GetInstalledVersion())
     }
 
     GetInstalledVersion() {

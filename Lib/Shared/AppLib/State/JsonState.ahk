@@ -31,7 +31,7 @@ class JsonState extends StateBase {
 
     LoadState() {
         if (!this.stateLoaded) {
-            newState := Map()
+            newState := super.LoadState()
 
             if (FileExist(this.filePath)) {
                 jsonString := Trim(FileRead(this.filePath))

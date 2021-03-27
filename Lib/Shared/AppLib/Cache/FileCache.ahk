@@ -1,7 +1,7 @@
 class FileCache extends CacheBase {
     cachePath := ""
 
-    __New(stateObj, cachePath) {
+    __New(app, stateObj, cachePath) {
         InvalidParameterException.CheckTypes("FileCache", "cachePath", cachePath, "")
         InvalidParameterException.CheckEmpty("FileCache", "cachePath", cachePath)
         this.cachePath := cachePath
@@ -10,7 +10,7 @@ class FileCache extends CacheBase {
             DirCreate(cachePath)
         }
 
-        super.__New(stateObj)
+        super.__New(app, stateObj)
     }
 
     ItemExists(path) {

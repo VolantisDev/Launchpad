@@ -44,6 +44,11 @@ class AppBase {
         set => this.Services.Set("EventManager", value)
     }
 
+    Cache {
+        get => this.Services.Get("CacheManager")
+        set => this.Services.Set("CacheManager", value)
+    }
+
     GuiManager {
         get => this.Services.Get("GuiManager")
         set => this.Services.Set("GuiManager", value)
@@ -67,6 +72,11 @@ class AppBase {
     Logger {
         get => this.Services.Get("LoggerService")
         set => this.Services.Set("LoggerService", value)
+    }
+
+    VersionChecker {
+        get => this.Services.Get("VersionChecker")
+        set => this.Services.Set("VersionChecker", value)
     }
 
     __New(config := "") {
@@ -122,6 +132,7 @@ class AppBase {
         ; @todo Create any services required for initialization
         services := Map()
         services["IdGenerator"] := UuidGenerator.new()
+        services["VersionChecker"] := VersionChecker.new()
         services["EventManager"] := EventManager.new()
         this.Services := ServiceContainer.new(services)
         
@@ -129,6 +140,10 @@ class AppBase {
         OnError(this.errorCallback)
 
         this.InitializeApp(config)
+    }
+
+    GetCaches() {
+        return Map()
     }
 
     LoadAppConfig(config) {
@@ -161,23 +176,6 @@ class AppBase {
         }
 
         return %stateClass%.new(this, stateFile)
-    }
-
-    VersionIsOutdated(latestVersion, installedVersion) {
-        splitLatestVersion := StrSplit(latestVersion, ".")
-        splitInstalledVersion := StrSplit(installedVersion, ".")
-
-        for (index, numPart in splitInstalledVersion) {
-            latestVersionPart := splitLatestVersion.Has(index) ? splitLatestVersion[index] : 0
-
-            if ((latestVersionPart + 0) > (numPart + 0)) {
-                return true
-            } else if ((latestVersionPart + 0) < (numPart + 0)) {
-                return false
-            } 
-        }
-
-        return false
     }
 
     OnException(e, mode) {
@@ -263,6 +261,7 @@ class AppBase {
             defaultTheme := config["themeName"]
         }
 
+        this.Services.Set("CacheManager", CacheManager.new(this, this.Config.CacheDir, this.GetCaches()))
         this.Services.Set("ThemeManager", ThemeManager.new(this, themesDir, resourcesDir, defaultTheme))
         this.Services.Set("NotificationService", NotificationService.new(this, ToastNotifier.new(this)))
         this.Services.Set("GuiManager", GuiManager.new(this))

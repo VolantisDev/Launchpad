@@ -88,6 +88,7 @@ class CacheState extends JsonState {
     ClearItems() {
         this.CachedItems.Clear()
         this.NotFoundItems.Clear()
+        this.Version := this.app.Version
         this.SaveState()
     }
 }
