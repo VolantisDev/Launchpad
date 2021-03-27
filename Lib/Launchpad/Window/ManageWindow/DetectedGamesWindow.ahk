@@ -1,10 +1,11 @@
 ﻿class DetectedGamesWindow extends ManageWindowBase {
-    listViewColumns := Array("NAME", "ACTION", "PLATFORM", "STATUS", "API", "PLATFORM ID", "EXE")
+    listViewColumns := Array("NAME", "ACTION", "PLATFORM", "STATUS", "API", "EXE")
     launcherManager := ""
     detectedGames := ""
     state := ""
     knownGames := ""
     checkboxes := true
+    sidebarWidth := 0
 
     __New(app, themeObj, windowKey, detectedGames, owner := "", parent := "") {
         this.detectedGames := detectedGames
@@ -16,11 +17,20 @@
         super.__New(app, themeObj, windowKey, "Detected Games", owner, parent)
     }
 
-    AddSidebarControls() {
-        this.AddButton("vCheckAllButton ys w" . this.sidebarWidth . " h30", "Check All")
-        this.AddButton("vUncheckAllButton xp y+m w" . this.sidebarWidth . " h30", "Uncheck All")
-        this.AddButton("vEditButton xp y+" . (this.margin * 2) . " w" . this.sidebarWidth . " h30", "Edit")
-        this.AddButton("vAddSelectedButton xp y" . (this.titlebarHeight + this.windowSettings["listViewHeight"] - (this.margin * 3)) . " w" . this.sidebarWidth . " h40", "Add Selected", "", "primary")
+    AddBottomControls() {
+        buttonRowOffset := 3
+        position := "x" . this.margin . " y+" . (this.margin + buttonRowOffset) . " w60 h25"
+        this.AddButton("vEditButton " . position, "Edit", "", "manageText")
+        position := "x+" . (this.margin*3) . " yp w80 h25"
+        this.AddButton("vCheckAllButton " . position, "Check All", "", "manageText")
+        position := "x+" . this.margin . " yp w80 h25"
+        this.AddButton("vUncheckAllButton " . position, "Uncheck All", "", "manageText")
+
+        bigH := 30
+        actionButtonsW := 120
+        actionButtonsX := (this.margin + this.windowSettings["contentWidth"] - actionButtonsW)
+        position := "x" . actionButtonsX . " yp-" . buttonRowOffset . " w" . actionButtonsW . " h" . bigH
+        this.AddButton("vAddSelectedButton " . position, "Add Selected", "", "primary")
     }
 
     SetupManageEvents(lv) {
@@ -39,7 +49,7 @@
 
             statusText := this.launcherManager.Entities.Has(detectedGameObj.key) ? "Exists" : "New"
             apiStatus := this.GameIsKnown(detectedGameObj) ? "Known" : "Unknown"
-            this.guiObj["ListView"].Add(, detectedGameObj.key, "Ignore", detectedGameObj.platform.displayName, statusText, apiStatus, detectedGameObj.launcherSpecificId, detectedGameObj.exeName)
+            this.guiObj["ListView"].Add(, detectedGameObj.key, "Ignore", detectedGameObj.platform.displayName, statusText, apiStatus, detectedGameObj.exeName)
         }
 
         this.guiObj["ListView"].ModifyCol(1, "Sort")
@@ -172,7 +182,7 @@
 
             statusText := this.launcherManager.Entities.Has(detectedGameObj.key) ? "Exists" : "New"
             apiStatus := this.GameIsKnown(detectedGameObj) ? "Known" : "Unknown"
-            this.guiObj["ListView"].Modify(row,, detectedGameObj.key,, detectedGameObj.platform.displayName, statusText, apiStatus, detectedGameObj.launcherSpecificId, detectedGameObj.exeName)
+            this.guiObj["ListView"].Modify(row,, detectedGameObj.key,, detectedGameObj.platform.displayName, statusText, apiStatus, detectedGameObj.exeName)
         }
     }
 
@@ -183,7 +193,7 @@
             return
         }
 
-        this.AutoXYWH("x", ["EditButton", "CheckAllButton", "UncheckAllButton"])
+        this.AutoXYWH("y", ["EditButton", "CheckAllButton", "UncheckAllButton"])
         this.AutoXYWH("xy", ["AddSelectedButton"])
     }
 }
