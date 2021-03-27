@@ -1,7 +1,7 @@
 class VersionChecker extends ServiceBase {
     VersionIsOutdated(latestVersion, installedVersion) {
         if (latestVersion == "{{VERSION}}") {
-            return latestVersion != installedVersion
+            return installedVersion != "0.0.0.0" && latestVersion != installedVersion
         }
 
         splitLatestVersion := StrSplit(latestVersion, ".")

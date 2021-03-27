@@ -67,12 +67,6 @@
         index := 1
 
         for key, launcher in this.launcherManager.Entities {
-            launcherStatus := "Missing"
-
-            if (launcher.IsBuilt) {
-                launcherStatus := launcher.IsOutdated ? "Outdated" : "Present"
-            }
-
             focusOption := index == focusedItem ? " Focus" : ""
 
             apiStatus := launcher.DataSourceItemKey ? "Merged" : "Not found"
@@ -87,7 +81,7 @@
                 }
             }
 
-            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, launcher.Key, platformName, launcherStatus, apiStatus)
+            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, launcher.Key, platformName, launcher.GetStatus(), apiStatus)
             iconNum++
             index++
         }

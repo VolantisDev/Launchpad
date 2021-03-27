@@ -128,7 +128,15 @@ class LauncherEntity extends EntityBase {
     }
 
     LauncherIsOutdated() {
-        return false ; @todo implement a check against the launcher version in the schema file
+        outdated := true
+
+        launcherVersion := FileGetVersion(this.GetLauncherFile(this.Key))
+
+        if (launcherVersion && !this.app.VersionChecker.VersionIsOutdated(this.app.Version, launcherVersion)) {
+            outdated := false
+        }
+
+        return outdated
     }
 
     GetLauncherFile(key, checkSourceFile := false) {
@@ -140,6 +148,16 @@ class LauncherEntity extends EntityBase {
 
         ext := checkSourceFile ? ".ahk" : ".exe"
         return gameDir . "\" . key . ext
+    }
+
+    GetStatus() {
+        status := "Missing"
+
+        if (this.LauncherExists()) {
+            status := this.IsOutdated ? "Outdated" : "Ready"
+        }
+
+        return status
     }
 
     /**
