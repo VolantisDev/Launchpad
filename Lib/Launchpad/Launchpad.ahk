@@ -29,11 +29,6 @@
         set => this.Services.Set("BlizzardProductDb", value)
     }
 
-    Logger {
-        get => this.Services.Get("LoggerService")
-        set => this.Services.Set("LoggerService", value)
-    }
-
     Auth {
         get => this.Services.Get("AuthService")
         set => this.Services.Set("AuthService", value)

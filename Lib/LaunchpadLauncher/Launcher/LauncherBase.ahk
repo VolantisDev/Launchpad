@@ -72,7 +72,6 @@ class LauncherBase {
 
     LaunchGame() {
         if (this.progress != "") {
-            this.progress.Show()
             this.progress.SetDetailText("Initializing launcher...")
         }
 

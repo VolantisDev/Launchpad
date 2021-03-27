@@ -223,11 +223,13 @@ class ThemeBase {
     }
 
     ExpandPaths(themeMap := "") {
-        if (themeMap == "" or themeMap.Has("themeAssets")) {
-            themeAssets := themeMap != "" ? themeMap["themeAssets"] : this.themeAssets
+        if (Type(themeMap) == "Map" && themeMap.Count == 0) {
+            themeMap := ""
         }
 
-        themeAssets := themeMap == "" ? this.themeAssets : themeMap["themeAssets"]
+        if (themeMap == "" || themeMap.Has("themeAssets")) {
+            themeAssets := themeMap != "" ? themeMap["themeAssets"] : this.themeAssets
+        }
 
         themeName := themeMap != "" ? themeMap["name"] : this.name
         parentTheme := themeMap != "" ? themeMap["parentTheme"] : this.parentTheme
@@ -264,24 +266,26 @@ class ThemeBase {
     LoadValuesIntoTheme(themeMap) {
         InvalidParameterException.CheckTypes("ThemeBase", "themeMap", themeMap, "Map")
 
-        if (themeMap.Has("parentTheme") && themeMap["parentTheme"] != "") {
-            parentMap := this.GetThemeMap(themeMap["parentTheme"])
+        if (themeMap.Count > 0) {
+            if (themeMap.Has("parentTheme") && themeMap["parentTheme"] != "") {
+                parentMap := this.GetThemeMap(themeMap["parentTheme"])
 
-            if (Type(parentMap) == "Map") {
-                this.LoadValuesIntoTheme(parentMap)
-            }
-        }
-
-        themeMap := this.DereferenceValues(themeMap)
-        themeMap := this.ExpandPaths(themeMap)
-
-        for key, val in themeMap {
-            if (key == "name" or key == "parentTheme" or key == "themesDir") {
-                continue
+                if (Type(parentMap) == "Map") {
+                    this.LoadValuesIntoTheme(parentMap)
+                }
             }
 
-            if (this.HasProp(key)) {
-                this.%key% := this.MergeProperty(this.%key%, val, true)
+            themeMap := this.DereferenceValues(themeMap)
+            themeMap := this.ExpandPaths(themeMap)
+
+            for key, val in themeMap {
+                if (key == "name" or key == "parentTheme" or key == "themesDir") {
+                    continue
+                }
+
+                if (this.HasProp(key)) {
+                    this.%key% := this.MergeProperty(this.%key%, val, true)
+                }
             }
         }
     }
@@ -411,8 +415,12 @@ class ThemeBase {
         }
 
         for idx, state in ["enabled", "disabled", "hovered"] {
-            result[state] := result[state].Clone()
-
+            if (result.Has(state)) {
+                result[state] := result[state].Clone()
+            } else {
+                result[state] := Map()
+            }
+            
             colorKeys := ["bgColor", "textColor", "borderColor", "dimColor"]
 
             for index, colorKey in colorKeys {

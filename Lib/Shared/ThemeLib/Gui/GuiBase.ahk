@@ -123,10 +123,12 @@ class GuiBase {
     }
 
     __Delete() {
-        this.app.Events.Unregister(Events.MOUSE_MOVE, "Gui" . this.guiId, this.mouseMoveCallback)
-        this.app.Events.Unregister(Events.WM_NCCALCSIZE, "Gui" . this.guiId, this.calcSizeCallback)
-        this.app.Events.Unregister(Events.WM_NCACTIVATE, "Gui" . this.guiId, this.activateCallback)
-        this.app.Events.Unregister(Events.WM_NCHITTEST, "Gui" . this.guiId, this.hitTestCallback)
+        if (this.app) {
+            this.app.Events.Unregister(Events.MOUSE_MOVE, "Gui" . this.guiId, this.mouseMoveCallback)
+            this.app.Events.Unregister(Events.WM_NCCALCSIZE, "Gui" . this.guiId, this.calcSizeCallback)
+            this.app.Events.Unregister(Events.WM_NCACTIVATE, "Gui" . this.guiId, this.activateCallback)
+            this.app.Events.Unregister(Events.WM_NCHITTEST, "Gui" . this.guiId, this.hitTestCallback)
+        }
         
         if (this.activeTooltip) {
             ToolTip()

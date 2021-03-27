@@ -18,7 +18,7 @@ class FormGuiBase extends GuiBase {
         super.Controls()
 
         if (this.text != "") {
-            this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . "", this.text)
+            this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " Section", this.text)
         }
     }
 

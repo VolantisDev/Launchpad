@@ -6,8 +6,12 @@ class ErrorDialog extends DialogBox {
 
     __New(app, themeObj, windowKey, errorObj, title, text := "", owner := "", parent := "", btns := "*&Continue|&Exit Launchpad") {
         this.errorObj := errorObj
-        this.notifierObj := app.Notifier
-        this.apiEndpointUrl := app.DataSources.GetItem("api")
+        this.notifierObj := app.Notifications.notifierObj
+
+        if (app.HasProp("DataSources")) {
+            this.apiEndpointUrl := app.DataSources.GetItem("api")
+        }
+        
         super.__New(app, themeObj, windowKey, title, text, owner, parent, btns)
     }
 
@@ -16,10 +20,10 @@ class ErrorDialog extends DialogBox {
 
         this.AddCheckBox("Submit error to Volantis Development", "SubmitError", false, false)
 
-        this.guiObj.AddText("w" . this.windowSettings["contentWidth"], "Please add as much detail as possible about what you were doing when the error occurred:")
+        this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " +0x200 +0x100", "Please add as much detail as possible about what you were doing when the error occurred:")
         this.AddEdit("ErrorDetails", "", "r4")
 
-        this.guiObj.AddText("w" . this.windowSettings["contentWidth"], "Optionally, enter your email address if you would like us to reach out to you for further information:")
+        this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " +0x200 +0x100", "Optionally, enter your email address if you would like us to reach out to you for further information:")
         this.AddEdit("Email", "", "")
     }
 

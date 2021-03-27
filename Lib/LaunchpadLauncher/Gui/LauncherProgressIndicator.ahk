@@ -1,14 +1,14 @@
 class LauncherProgressIndicator extends MiniProgressIndicator {
     gif := ""
 
-    __New(title, themeObj, gameIcon, windowKey := "", owner := "", parent := "", rangeStop := "", currentPosition := 0, showInNotificationArea := true) {
+    __New(app, themeObj, windowKey, title, gameIcon, owner := "", parent := "", rangeStop := "", currentPosition := 0, showInNotificationArea := true) {
         this.gameTitle := title
         
         if (windowKey == "") {
             windowKey := "LauncherProgressIndicator"
         }
 
-        super.__New(title, themeObj, "", windowKey, owner, parent, rangeStop, currentPosition, showInNotificationArea)
+        super.__New(app, themeObj, windowKey, title, "", owner, parent, rangeStop, currentPosition, showInNotificationArea)
 
         this.iconSrc := gameIcon ; @todo refactor so this is passed in to the parent constructor
     }
@@ -37,6 +37,7 @@ class LauncherProgressIndicator extends MiniProgressIndicator {
 
     Destroy() {
         ;this.gif.UnloadGif()
+        this.app.ExitApp()
         super.Destroy()
     }
 }

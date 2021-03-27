@@ -64,6 +64,11 @@ class AppBase {
         set => this.serviceContainerObj := value
     }
 
+    Logger {
+        get => this.Services.Get("LoggerService")
+        set => this.Services.Set("LoggerService", value)
+    }
+
     __New(config := "") {
         global appVersion
 
@@ -195,23 +200,29 @@ class AppBase {
 
     ShowError(title, errorText, err, allowContinue := true) {
         try {
-            result := "Exit Launchpad"
+            result := "Exit"
 
             if (this.GuiManager) {
-                btns := allowContinue ? "*&Continue|&Exit " . this.appName : "*&Exit " . this.appName
+                btns := allowContinue ? "*&Continue|&Exit" : "*&Exit"
                 result := this.GuiManager.Dialog("ErrorDialog", err, "Unhandled Exception", errorText, "", "", btns)
             } else {
-                ; @todo No GUI manager... what now?
+                this.ShowUnthemedError(title, errorText, err, "", allowContinue)
             }
 
-            if (result == "Exit Launchpad") {
+            if (result == "Exit") {
                 ExitApp
             }
         } catch (ex) {
-            MsgBox("Launchpad had an error, and could not show the usual error dialog because of another error:`n`n" . ex.File . ": " . ex.Line . ": " . ex.What . ": " . ex.Message . "`n`nThe original error is:`n`n" . err.File . ": " . err.Line . ": " . err.What . ": " . err.Message)
+            this.ShowUnthemedError(title, errorText, err, ex, allowContinue)
         }
 
         return allowContinue ? -1 : 1
+    }
+
+    ShowUnthemedError(title, errorText, err, displayErr := "", allowContinue := true) {
+        otherErrorInfo := (displayErr && err != displayErr) ? "The application could not show the usual error dialog because of another error:`n`n" . displayErr.File . ": " . displayErr.Line . ": " . displayErr.What . ": " . displayErr.Message . "`n`nThe original error is:`n`n" : ""
+
+        MsgBox("Launchpad has experienced an error.`n`n" . otherErrorInfo . err.File . ": " . err.Line . ": " . err.What . ": " . err.Message)
     }
 
     InitializeApp(config) {

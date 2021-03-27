@@ -24,7 +24,7 @@ class GameAhkFile extends ComposableBuildFile {
         ;DllCall('AllocConsole')
         ;WinHide('ahk_id ' . DllCall('GetConsoleWindow', 'ptr'))
 
-        A_IconHidden := A_IsCompiled
+        ;A_IconHidden := A_IsCompiled
         appVersion := '" . appVersion . "'
         #Include " . this.appDir . "\Lib\Shared\Includes.ahk
         #Include " . this.appDir . "\Lib\LaunchpadLauncher\Includes.ahk

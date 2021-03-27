@@ -23,7 +23,7 @@ class ThemeManager extends AppComponentServiceBase {
     }
 
     GetMainThemeName() {
-        return (this.app.Config.ThemeName != "") ? this.app.Config.ThemeName : this.defaultTheme
+        return (this.app.Config.HasProp("ThemeName") && this.app.Config.ThemeName != "") ? this.app.Config.ThemeName : this.defaultTheme
     }
 
     LoadComponents() {
