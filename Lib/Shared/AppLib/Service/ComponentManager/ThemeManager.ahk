@@ -3,18 +3,19 @@ class ThemeManager extends AppComponentServiceBase {
     _alterEvent := "" ;LaunchpadEvents.LAUNCHERS_ALTER
     themesDir := ""
     resourcesDir := ""
-    defaultTheme := "Steampad"
     eventManager := ""
     idGenerator := ""
+    defaultTheme := ""
 
-    __New(app, themesDir, resourcesDir, eventManager, idGenerator) {
-        InvalidParameterException.CheckTypes("ThemeManager", "themesDir", themesDir, "", "eventManager", eventManager, "EventManager")
-        InvalidParameterException.CheckEmpty("ThemeManager", "themesDir", themesDir, "eventManager", eventManager)
+    __New(app, themesDir, resourcesDir, defaultTheme := "") {
+        InvalidParameterException.CheckTypes("ThemeManager", "themesDir", themesDir, "")
+        InvalidParameterException.CheckEmpty("ThemeManager", "themesDir", themesDir)
 
         this.themesDir := themesDir
         this.resourcesDir := resourcesDir
-        this.eventManager := eventManager
-        this.idGenerator := idGenerator
+        this.eventManager := app.Events
+        this.idGenerator := app.IdGen
+        this.defaultTheme := defaultTheme
         super.__New(app)
     }
 

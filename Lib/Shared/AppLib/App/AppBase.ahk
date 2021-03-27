@@ -257,7 +257,13 @@ class AppBase {
             resourcesDir := config["resourcesDir"]
         }
 
-        this.Services.Set("ThemeManager", ThemeManager.new(this, themesDir, resourcesDir, this.Events, this.IdGen))
+        defaultTheme := ""
+        
+        if (config.Has("themeName") && config["themeName"]) {
+            defaultTheme := config["themeName"]
+        }
+
+        this.Services.Set("ThemeManager", ThemeManager.new(this, themesDir, resourcesDir, defaultTheme))
         this.Services.Set("NotificationService", NotificationService.new(this, ToastNotifier.new(this)))
         this.Services.Set("GuiManager", GuiManager.new(this))
         this.Services.Set("InstallerManager", InstallerManager.new(this))

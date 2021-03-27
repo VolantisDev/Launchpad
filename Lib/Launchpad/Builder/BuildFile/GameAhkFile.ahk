@@ -36,6 +36,9 @@ class GameAhkFile extends ComposableBuildFile {
         appInfo['configClass'] := 'LaunchpadLauncherConfig'
         appInfo['stateClass'] := 'LaunchpadLauncherState'
         appInfo['launcherKey'] := '" . this.launcherEntityObj.Key . "'
+        appInfo['themesDir'] := '" . this.launcherEntityObj.ThemesDir . "'
+        appInfo['resourcesDir'] := '" . this.launcherEntityObj.ResourcesDir . "'
+        appInfo['themeName'] := '" . this.launcherEntityObj.ThemeName . "'
         appInfo['launchpadLauncherConfig'] := " . ahkVar.ToString(this.launcherEntityObj.Config) .  "
         appInfo['launcherConfig'] := " . ahkVar.ToString(this.launcherEntityObj.ManagedLauncher.Config) . "
         appInfo['gameConfig'] := " . ahkVar.ToString(this.launcherEntityObj.ManagedLauncher.ManagedGame.Config) . "

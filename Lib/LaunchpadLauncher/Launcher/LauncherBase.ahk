@@ -30,7 +30,7 @@ class LauncherBase {
         if (this.progress == "") {
             progressTitle := StrReplace(this.config["ProgressTitle"], "{g}", this.config["DisplayName"])
             progressText := StrReplace(this.config["ProgressText"], "{g}", this.config["DisplayName"])
-            this.progress := this.app.GuiManager.OpenWindow("LauncherProgress", "LauncherProgressIndicator", A_ScriptFullPath, "", "", this.CountLaunchSteps())
+            this.progress := this.app.GuiManager.OpenWindow("LauncherProgressIndicator", "", this.key, A_ScriptFullPath, "", "", this.CountLaunchSteps())
         }
     }
 
