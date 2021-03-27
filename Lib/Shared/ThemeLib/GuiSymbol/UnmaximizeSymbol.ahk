@@ -1,16 +1,18 @@
 class UnmaximizeSymbol extends GuiSymbolBase {
+    innerMargin := 2
+
     DrawSymbol(graphics, x, y, w, h) {
-        oX := x + this.config["margin"]
+        oX := x + this.innerMargin
         oY := y
-        oW := w - this.config["margin"]
-        oH := h - this.config["margin"]
+        oW := w - this.innerMargin
+        oH := h - this.innerMargin
         ; Outline
         Gdip_DrawRectangle(graphics, this.dimPen, oX, oY, oW, oH)
 
         wX := x
-        wY := y + this.config["margin"]
-        wW := w - this.config["margin"]
-        wH := h - this.config["margin"]
+        wY := y + this.innerMargin
+        wW := w - this.innerMargin
+        wH := h - this.innerMargin
 
         ; Window background
         brush := this.CreateBrush(this.config["bgColor"])
