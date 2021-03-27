@@ -42,6 +42,7 @@
         
         if (downloadUrl) {
             localFile := this.app.tmpDir . "\Installers\Launchpad-" . this.releaseInfo["data"]["version"] . ".exe"
+            FileDelete(this.app.tmpDir . "\Installers\Launchpad-*")
             Download(downloadUrl, localFile)
             Run(localFile)
             ExitApp()
