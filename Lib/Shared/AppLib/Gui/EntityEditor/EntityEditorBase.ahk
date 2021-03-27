@@ -138,12 +138,14 @@ class EntityEditorBase extends FormGuiBase {
         return ctl
     }
 
-    SetDefaultLocationValue(ctlObj, fieldName, includePrefix := false) {
+    SetDefaultLocationValue(ctlObj, fieldName, includePrefix := false, entityObj := "") {
+        if (!entityObj) {
+            entityObj := this.entityObj
+        }
+
         isDefault := !!(ctlObj.Value)
-        this.guiObj["Change" . fieldName].Opt("Hidden" . isDefault)
-        this.guiObj["Open" . fieldName].Opt("Hidden" . isDefault)
-        this.guiObj["Clear" . fieldName].Opt("Hidden" . isDefault)
-        return this.SetDefaultValue(fieldName, isDefault, includePrefix, "Not set")
+        this.guiObj[fieldName . "Options"].Opt("Hidden" . isDefault)
+        return this.SetDefaultValue(fieldName, isDefault, includePrefix, "Not set", entityObj)
     }
 
     AddLocationBlock(heading, settingName, extraButton := "", showOpen := true, showDefaultCheckbox := false, addPrefix := false, helpText := "", entityObj := "") {
@@ -168,39 +170,49 @@ class EntityEditorBase extends FormGuiBase {
             disabledText := entityObj.UnmergedConfig.Has(prefixedName) ? "" : " Hidden"
         }
 
+        btnWidth := 20
+        btnHeight := 20
         fieldW := this.windowSettings["contentWidth"] - checkW
         locationPos := checkW ? "x+m yp" : "xs y+m"
-        ctl := this.AddLocationText(location, settingName, locationPos)
+        textW := this.windowSettings["contentWidth"] - btnWidth - (this.margin/2)
+
+        if (showDefaultCheckbox) {
+            textW -= checkW + this.margin
+        }
+
+        ctl := this.AddLocationText(location, settingName, locationPos, textW)
 
         if (helpText) {
             ctl.ToolTip := helpText
         }
 
-        buttonSize := this.themeObj.GetButtonSize("s", true)
-        buttonDims := ""
-        
-        if (buttonSize.Has("h") && buttonSize["h"] != "auto") {
-            buttonDims .= " h" . buttonSize["h"]
-        }
-
-        if (buttonSize.Has("w") && buttonSize["w"] != "auto") {
-            buttonDims .= " w" . buttonSize["w"]
-        }
-
-        btn := this.AddButton("xs y+m" . buttonDims . " vChange" . settingName . disabledText, "Change")
+        menuItems := []
+        menuItems.Push(Map("label", "Change", "name", "Change" . settingName))
 
         if (showOpen) {
-            btn := this.AddButton("x+m yp" . buttonDims . " vOpen" . settingName . disabledText, "Open")
+            menuItems.Push(Map("label", "Open", "name", "Open" . settingName))
         }
 
-        if (extraButton != "") {
-            btn := this.AddButton("x+m yp" . buttonDims . " v" . extraButton . settingName . disabledText, extraButton)
+        if (extraButton) {
+            menuItems.Push(Map("label", extraButton, "name", StrReplace(extraButton, " ", "") . settingName))
         }
+
+        btn := this.AddButton("w" . btnWidth . " h" . btnHeight . " x+" (this.margin/2) . " yp v" . settingName . "Options", "arrowDown", "OnLocationOptions", "symbol")
+        btn.MenuItems := menuItems
+        btn.Tooltip := "Change options"
     }
 
-    AddLocationText(locationText, ctlName, position := "xs y+m") {
+    OnLocationOptions(btn, info) {
+        this.app.GuiManager.Menu("MenuGui", btn.MenuItems, this, this.windowKey)
+    }
+
+    AddLocationText(locationText, ctlName, position := "xs y+m", width := "") {
+        if (width == "") {
+            width := this.windowSettings["contentWidth"]
+        }
+
         ;this.guiObj.SetFont("Bold")
-        ctl := this.guiObj.AddText("v" . ctlName . " " . position . " w" . this.windowSettings["contentWidth"] . " +0x200 c" . this.themeObj.GetColor("linkText"), locationText)
+        ctl := this.guiObj.AddText("v" . ctlName . " " . position . " w" . width . " +0x200 c" . this.themeObj.GetColor("linkText"), locationText)
         ctl.ToolTip := locationText
         ;this.guiObj.SetFont()
         return ctl

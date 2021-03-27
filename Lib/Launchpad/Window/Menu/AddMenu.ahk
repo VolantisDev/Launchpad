@@ -7,7 +7,7 @@
             owner := "ManageWindow" 
         }
 
-        super.__New(app, themeObj, windowKey, owner, parent)
+        super.__New(app, themeObj, windowKey, "", "", owner, parent)
     }
 
     Controls() {

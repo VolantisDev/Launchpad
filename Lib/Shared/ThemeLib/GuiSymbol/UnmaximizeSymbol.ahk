@@ -15,9 +15,7 @@ class UnmaximizeSymbol extends GuiSymbolBase {
         wH := h - this.innerMargin
 
         ; Window background
-        brush := this.CreateBrush(this.config["bgColor"])
-        Gdip_FillRectangle(graphics, brush, wX, wY, wW, wH)
-        Gdip_DeleteBrush(brush)
+        Gdip_FillRectangle(graphics, this.bgBrush, wX, wY, wW, wH)
 
         ; Window outline
         

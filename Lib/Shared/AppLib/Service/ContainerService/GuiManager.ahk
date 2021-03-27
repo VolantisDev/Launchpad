@@ -39,7 +39,7 @@ class GuiManager extends ContainerServiceBase {
     }
 
     Menu(className, params*) {
-        return this.OpenWindow(className, className, params)
+        return this.OpenWindow(className, className, params*)
     }
 
     OpenWindow(key, className := "", params*) {

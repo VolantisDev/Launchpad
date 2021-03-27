@@ -25,6 +25,7 @@
             "spinner": "Graphics\\Spinner.gif"
         },
         "symbols": {
+            "arrowDown": "ArrowDownSymbol",
             "close": "CloseSymbol",
             "minimize": "MinimizeSymbol",
             "unmaximize": "UnmaximizeSymbol",
@@ -143,6 +144,38 @@
                         "borderColor": "{{border}}",
                         "borderThickness": 3,
                         "shape": "ButtonShape",
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
+                    }
+                },
+                "symbol": {
+                    "enabled": {
+                        "bgColor": "{{background}}",
+                        "textColor": "{{text}}",
+                        "dimColor": "{{dim}}",
+                        "borderColor": "{{border}}",
+                        "borderThickness": 0,
+                        "shape": "SymbolButtonShape",
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
+                    },
+                    "disabled": {
+                        "bgColor": "{{background}}",
+                        "textColor": "{{text}}",
+                        "dimColor": "{{dim}}",
+                        "borderColor": "{{border}}",
+                        "borderThickness": 0,
+                        "shape": "SymbolButtonShape",
+                        "strokeWidth": 1,
+                        "textAlign": "Center"
+                    },
+                    "hovered": {
+                        "bgColor": "{{accentDark}}",
+                        "textColor": "{{light}}",
+                        "dimColor": "{{dim}}",
+                        "borderColor": "{{border}}",
+                        "borderThickness": 0,
+                        "shape": "SymbolButtonShape",
                         "strokeWidth": 1,
                         "textAlign": "Center"
                     }

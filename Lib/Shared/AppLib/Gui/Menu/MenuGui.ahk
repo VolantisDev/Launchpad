@@ -6,8 +6,16 @@
     menuTitle := "Menu"
     windowSettingsKey := "Menu"
     buttonHeight := 25
+    menuItems := ""
+    menuEventSync := ""
 
-    __New(app, themeObj, windowKey, owner := "", parent := "") {
+    __New(app, themeObj, windowKey, menuItems := "", menuEventSync := "", owner := "", parent := "") {
+        if (menuItems == "") {
+            menuItems := []
+        }
+
+        this.menuEventSync := menuEventSync
+        this.menuItems := menuItems
         this.onLButtonCallback := ObjBindMethod(this, "OnLButton")
         super.__New(app, themeObj, windowKey, this.menuTitle, owner, parent)
     }
@@ -33,8 +41,12 @@
     }
 
     Controls() {
-        this.nextPos := "x" . this.margin
         super.Controls()
+        this.nextPos := "x" . this.margin
+        
+        for index, item in this.menuItems {
+            this.AddMenuButton(item["label"], item["name"])
+        }
     }
 
     AddMenuButton(buttonLabel, ctlName) {
@@ -45,10 +57,21 @@
         buttonSize := this.themeObj.GetButtonSize("menu")
         buttonH := (buttonSize.Has("h") && buttonSize["h"] != "auto") ? buttonSize["h"] : this.buttonHeight
 
-        btn := this.AddButton("v" . ctlName . " " . this.nextPos . " w" . width . " h" . buttonH, buttonLabel, "", "menu")
+        handler := this.menuEventSync ? "MenuItemClick" : ""
+        btn := this.AddButton("v" . ctlName . " " . this.nextPos . " w" . width . " h" . buttonH, buttonLabel, handler, "menu")
+        btn.Menu := this
 
         if (this.buttonsPerRow > 1) {
             this.nextPos := this.nextPos == "x" . this.margin ? "x+" . buttonSpacing . " yp" : "x" . this.margin
+        }
+    }
+
+    MenuItemClick(btn, info) {
+        sync := this.menuEventSync
+        
+        if (sync) {
+            functionName := "On" . btn.Name
+            sync.%functionName%(btn, info)
         }
     }
 

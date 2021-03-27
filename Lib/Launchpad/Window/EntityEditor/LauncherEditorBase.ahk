@@ -180,7 +180,8 @@ class LauncherEditorBase extends EntityEditorBase {
 
     OnOpenIconSrc(btn, info) {
         if (this.entityObj.IconSrc && FileExist(this.entityObj.IconSrc)) {
-            Run this.entityObj.IconSrc
+            ;Run this.entityObj.IconSrc
+            ; @todo How to open an icon by default?
         }
     }
 

@@ -67,37 +67,41 @@
 
     AddLocationBlock(heading, field, location, extraButton := "", showOpen := true, helpText := "") {
         this.AddHeading(heading)
-        ctl := this.AddLocationText(location, field, "xs y+m")
+        btnWidth := 20
+        btnHeight := 20
+        ctl := this.AddLocationText(location, field, "xs y+m", this.windowSettings["contentWidth"] - btnWidth - (this.margin/2))
 
         if (helpText) {
             ctl.ToolTip := helpText
         }
-
-        buttonSize := this.themeObj.GetButtonSize("s", true)
-        buttonDims := ""
-        
-        if (buttonSize.Has("h") && buttonSize["h"] != "auto") {
-            buttonDims .= " h" . buttonSize["h"]
-        }
-
-        if (buttonSize.Has("w") && buttonSize["w"] != "auto") {
-            buttonDims .= " w" . buttonSize["w"]
-        }
-
-        btn := this.AddButton("xs y+m" . buttonDims . " vChange" . field, "Change")
+    
+        menuItems := []
+        menuItems.Push(Map("label", "Change", "name", "Change" . field))
 
         if (showOpen) {
-            btn := this.AddButton("x+m yp" . buttonDims . " vOpen" . field, "Open")
+            menuItems.Push(Map("label", "Open", "name", "Open" . field))
         }
 
-        if (extraButton != "") {
-            btn := this.AddButton("x+m yp" . buttonDims . " v" . extraButton . field, extraButton)
+        if (extraButton) {
+            menuItems.Push(Map("label", extraButton, "name", StrReplace(extraButton, " ", "") . field))
         }
+
+        btn := this.AddButton("w" . btnWidth . " h" . btnHeight . " x+" (this.margin/2) . " yp", "arrowDown", "OnLocationOptions", "symbol")
+        btn.MenuItems := menuItems
+        btn.Tooltip := "Change options"
     }
 
-    AddLocationText(locationText, ctlName, position := "xs y+m") {
+    OnLocationOptions(btn, info) {
+        this.app.GuiManager.Menu("MenuGui", btn.MenuItems, this, this.windowKey)
+    }
+
+    AddLocationText(locationText, ctlName, position := "xs y+m", width := "") {
+        if (!width) {
+            width := this.windowSettings["contentWidth"]
+        }
+
         ;this.guiObj.SetFont("Bold")
-        ctl := this.guiObj.AddText("v" . ctlName . " " . position . " w" . this.windowSettings["contentWidth"] . " +0x200 c" . this.themeObj.GetColor("linkText"), locationText)
+        ctl := this.guiObj.AddText("v" . ctlName . " " . position . " w" . width . " +0x200 c" . this.themeObj.GetColor("linkText"), locationText)
         ;this.guiObj.SetFont()
         return ctl
     }
@@ -128,6 +132,8 @@
     }
 
     OnChangeInstallDir(btn, info) {
+        btn.Menu.Close()
+
         existingVal := this.GetValue("installDir")
 
         if (existingVal) {
@@ -144,6 +150,8 @@
     }
 
     OnOpenInstallDir(btn, info) {
+        btn.Menu.Close()
+        
         installDir := this.detectedGameObj.installDir
 
         if (this.newValues.Has("installDir")) {

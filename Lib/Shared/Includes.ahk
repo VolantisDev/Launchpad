@@ -123,6 +123,7 @@
 #Include ThemeLib\GuiShape\StatusIndicatorButtonShape.ahk
 #Include ThemeLib\GuiShape\SymbolButtonShape.ahk
 #Include ThemeLib\GuiSymbol\AddSymbol.ahk
+#Include ThemeLib\GuiSymbol\ArrowDownSymbol.ahk
 #Include ThemeLib\GuiSymbol\BuildSymbol.ahk
 #Include ThemeLib\GuiSymbol\CloseSymbol.ahk
 #Include ThemeLib\GuiSymbol\DeleteSymbol.ahk

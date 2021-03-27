@@ -51,7 +51,7 @@ class LauncherEditorSimple extends LauncherEditorBase {
     }
     
     OnDefaultExe(ctlObj, info) {
-        return this.SetDefaultValue("Exe", !!(ctlObj.Value), true, "", this.entityObj.ManagedLauncher.ManagedGame)
+        return this.SetDefaultLocationValue(ctlObj, "Exe", true, this.entityObj.ManagedLauncher.ManagedGame)
     }
 
     OnDefaultInstallDir(ctlObj, info) {
@@ -82,7 +82,11 @@ class LauncherEditorSimple extends LauncherEditorBase {
         this.entityObj.ManagedLauncher.ManagedGame.ReplaceProcess := !!(ctlObj.Value)
     }
 
-    OnChangeInstallDir(ctlObj, info) {
+    OnChangeInstallDir(btn, info) {
+        if (btn.HasProp("Menu")) {
+            btn.Menu.Close()
+        }
+
         existingVal := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("InstallDir")
 
         if existingVal {
@@ -97,7 +101,11 @@ class LauncherEditorSimple extends LauncherEditorBase {
         }
     }
 
-    OnOpenInstallDir(ctlObj, info) {
+    OnOpenInstallDir(btn, info) {
+        if (btn.HasProp("Menu")) {
+            btn.Menu.Close()
+        }
+
         val := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("InstallDir")
 
         if (val) {
@@ -105,7 +113,11 @@ class LauncherEditorSimple extends LauncherEditorBase {
         }
     }
 
-    OnClearInstallDir(ctlObj, info) {
+    OnClearInstallDir(btn, info) {
+        if (btn.HasProp("Menu")) {
+            btn.Menu.Close()
+        }
+
         this.entityObj.ManagedLauncher.ManagedGame.SetConfigValue("InstallDir", "")
     }
 }

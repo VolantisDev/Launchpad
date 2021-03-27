@@ -49,25 +49,39 @@
         closeX := this.margin + (this.windowSettings["contentWidth"] / 2) - (closeW / 2)
     }
 
-    AddConfigLocationBlock(settingName, extraButton := "", inGroupBox := false) {
+    AddConfigLocationBlock(settingName, extraButton := "", inGroupBox := false, helpText := "") {
         location := this.app.Config.%settingName% ? this.app.Config.%settingName% : "Not selected"
+        btnWidth := 20
+        btnHeight := 20
 
-        this.AddLocationText(location, settingName, inGroupBox)
+        ctl := this.AddLocationText(location, settingName, inGroupBox, this.windowSettings["contentWidth"] - btnWidth - (this.margin/2))
 
-        buttonSize := this.themeObj.GetButtonSize("s", true)
-        buttonW := (buttonSize.Has("w") && buttonSize["w"] != "auto") ? buttonSize["w"] : 80
-        buttonH := (buttonSize.Has("h") && buttonSize["h"] != "auto") ? buttonSize["h"] : 20
-
-        position := inGroupBox ? "xs+" . this.margin . " y+m" : "xs y+m"
-        btn := this.AddButton(position . " w" . buttonW . " h" . buttonH . " vChange" . settingName, "Change")
-        btn := this.AddButton("x+m yp w" . buttonW . " h" . buttonH . " vOpen" . settingName, "Open")
-
-        if (extraButton != "") {
-            btn := this.AddButton("x+m yp w" . buttonW . " h" . buttonH . " v" . extraButton . settingName, extraButton)
+        if (helpText) {
+            ctl.ToolTip := helpText
         }
+
+        menuItems := []
+        menuItems.Push(Map("label", "Change", "name", "Change" . settingName))
+        menuItems.Push(Map("label", "Open", "name", "Open" . settingName))
+
+        if (extraButton) {
+            menuItems.Push(Map("label", extraButton, "name", StrReplace(extraButton, " ", "") . settingName))
+        }
+
+        btn := this.AddButton("w" . btnWidth . " h" . btnHeight . " x+" (this.margin/2) . " yp", "arrowDown", "OnLocationOptions", "symbol")
+        btn.MenuItems := menuItems
+        btn.Tooltip := "Change options"
     }
 
-    AddLocationText(locationText, ctlName, inGroupBox := true) {
+    OnLocationOptions(btn, info) {
+        this.app.GuiManager.Menu("MenuGui", btn.MenuItems, this, this.windowKey)
+    }
+
+    AddLocationText(locationText, ctlName, inGroupBox := true, width := "") {
+        if (width == "") {
+            width := this.windowSettings["contentWidth"]
+        }
+
         position := "xs"
 
         if (inGroupBox) {
@@ -77,7 +91,7 @@
         position .= " y+m"
 
         this.SetFont("", "Bold")
-        ctl := this.guiObj.AddText("v" . ctlName . " " . position . " w" . this.windowSettings["contentWidth"] . " +0x200 +0x100 c" . this.themeObj.GetColor("linkText"), locationText)
+        ctl := this.guiObj.AddText("v" . ctlName . " " . position . " w" . width . " +0x200 +0x100 c" . this.themeObj.GetColor("linkText"), locationText)
         ctl.ToolTip := locationText
         this.SetFont()
     }
@@ -117,10 +131,18 @@
     }
 
     OnOpenDestinationDir(btn, info) {
+        if (btn.HasProp("Menu")) {
+            btn.Menu.Close()
+        }
+
         this.app.Config.OpenDestinationDir()
     }
 
     OnChangeDestinationDir(btn, info) {
+        if (btn.HasProp("Menu")) {
+            btn.Menu.Close()
+        }
+        
         this.app.Config.ChangeDestinationDir()
         this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
     }

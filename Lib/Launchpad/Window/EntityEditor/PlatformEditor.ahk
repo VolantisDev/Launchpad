@@ -63,7 +63,11 @@
         this.entityObj.IsInstalled := ctl.Value
     }
 
-    OnChangeInstallDir(ctlObj, info) {
+    OnChangeInstallDir(btn, info) {
+        if (btn.HasProp("Menu")) {
+            btn.Menu.Close()
+        }
+
         existingVal := this.entityObj.GetConfigValue("InstallDir")
 
         if existingVal {
@@ -78,7 +82,11 @@
         }
     }
 
-    OnOpenInstallDir(ctlObj, info) {
+    OnOpenInstallDir(btn, info) {
+        if (btn.HasProp("Menu")) {
+            btn.Menu.Close()
+        }
+
         val := this.entityObj.InstallDir
 
         if (val) {
@@ -86,11 +94,19 @@
         }
     }
 
-    OnClearInstallDir(ctlObj, info) {
+    OnClearInstallDir(btn, info) {
+        if (btn.HasProp("Menu")) {
+            btn.Menu.Close()
+        }
+
         this.entityObj.SetConfigValue("InstallDir", "")
     }
 
-    OnChangeExePath(ctlObj, info) {
+    OnChangeExePath(btn, info) {
+        if (btn.HasProp("Menu")) {
+            btn.Menu.Close()
+        }
+        
         existingVal := this.entityObj.GetConfigValue("ExePath", false)
         file := FileSelect(1,, this.entityObj.Key . ": Select the .exe that will launch this platform.", "Exe (*.exe)")
 
@@ -100,7 +116,11 @@
         }
     }
 
-    OnOpenExePath(ctlObj, info) {
+    OnOpenExePath(btn, info) {
+        if (btn.HasProp("Menu")) {
+            btn.Menu.Close()
+        }
+
         val := this.entityObj.ExePath
 
         if (val) {
@@ -108,11 +128,19 @@
         }
     }
 
-    OnClearExePath(ctlObj, info) {
+    OnClearExePath(btn, info) {
+        if (btn.HasProp("Menu")) {
+            btn.Menu.Close()
+        }
+
         this.entityObj.SetConfigValue("ExePath", "")
     }
 
     OnChangeIconSrc(btn, info) {
+        if (btn.HasProp("Menu")) {
+            btn.Menu.Close()
+        }
+
         existingVal := this.entityObj.GetConfigValue("IconSrc", false)
         file := FileSelect(1,, this.entityObj.Key . ": Select icon or .exe retrieve icon from.", "Icons (*.ico; *.exe)")
 
@@ -123,12 +151,20 @@
     }
 
     OnOpenIconSrc(btn, info) {
+        if (btn.HasProp("Menu")) {
+            btn.Menu.Close()
+        }
+
         if (this.entityObj.IconSrc) {
             Run this.entityObj.IconSrc
         }
     }
 
     OnClearIconSrc(btn, info) {
+        if (btn.HasProp("Menu")) {
+            btn.Menu.Close()
+        }
+        
         if (this.entityObj.UnmergedConfig.Has("IconSrc")) {
             this.entityObj.UnmergedConfig.Delete("IconSrc")
             this.guiObj["IconSrc"].Text := this.entityObj.IconSrc

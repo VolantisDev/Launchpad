@@ -4,6 +4,8 @@ class GuiSymbolBase {
     strokeWidth := ""
     bgColor := ""
     pen := ""
+    fgBrush := ""
+    bgBrush := ""
     dimPen := ""
     margin := 2
 
@@ -13,6 +15,8 @@ class GuiSymbolBase {
     __New(config) {
         this.config := this.MergeDefaults(config)
         this.pen := this.CreatePen(this.config["textColor"])
+        this.fgBrush := this.CreateBrush(this.config["textColor"])
+        this.bgBrush := this.CreateBrush(this.config["bgColor"])
         this.dimPen := this.CreatePen(this.config["dimColor"])
     }
 
@@ -41,6 +45,14 @@ class GuiSymbolBase {
 
         if (this.dimPen) {
             Gdip_DeletePen(this.dimPen)
+        }
+
+        if (this.fgBrush) {
+            Gdip_DeleteBrush(this.fgBrush)
+        }
+
+        if (this.bgBrush) {
+            Gdip_DeleteBrush(this.bgBrush)
         }
         
         super.__Delete()
