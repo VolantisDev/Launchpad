@@ -684,7 +684,6 @@ class GuiBase {
                 this.guiObj["WindowTitlebar"].GetPos(,, titleW)
                 this.guiObj["StatusIndicator"].GetPos(statusX,, statusW)
                 difference := newW - oldW
-                MsgBox("Old title width: " . titleW . "`n`nNew title width: " . (titleW - difference))
                 this.guiObj["WindowTitlebar"].Move(,, titleW - difference)
                 this.guiObj["StatusIndicator"].Move(statusX - difference,, statusW + difference)
             }
