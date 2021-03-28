@@ -36,6 +36,8 @@
                     DirDelete(assetsDir, true)
                 }
             }
+
+            this.app.State.DeleteLauncherInfo(this.entityObj.Key)
         }
 
         return super.ProcessResult(result)

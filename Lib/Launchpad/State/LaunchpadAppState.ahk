@@ -126,6 +126,20 @@ class LaunchpadAppState extends JsonState {
         this.SaveState()
     }
 
+    DeleteLauncherInfo(launcherKey, infoKey := "") {
+        if (this.Launchers.Has(launcherKey)) {
+            if (infoKey != "" && this.Launchers[launcherKey].Has(infoKey)) {
+                this.Launchers[launcherKey].Delete(infoKey)
+            }
+
+            if (infoKey == "" || this.Launchers.Count == 0) {
+                this.Launchers.Delete(launcherKey)
+            }
+
+            this.SaveState()
+        }
+    }
+
     GetLauncherInfo(launcherKey, infoKey) {
         value := ""
 

@@ -142,10 +142,20 @@
         }
     }
 
+    ImportShortcut() {
+        entity := this.app.GuiManager.Form("ImportShortcutForm", this.windowKey)
+
+        if (entity) {
+            this.launcherManager.AddEntity(entity.Key, entity)
+            this.launcherManager.SaveModifiedEntities()
+            this.PopulateListView()
+        }
+    }
+
     AddLauncher() {
         entity := this.app.GuiManager.Form("LauncherWizard", this.windowKey)
 
-        if (entity != "") {
+        if (entity) {
             this.launcherManager.AddEntity(entity.Key, entity)
             this.launcherManager.SaveModifiedEntities()
             this.PopulateListView()
