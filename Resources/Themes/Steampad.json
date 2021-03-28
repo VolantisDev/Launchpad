@@ -208,19 +208,22 @@
                         "bgColor": "{{dimblue}}",
                         "textColor": "{{textLight}}",
                         "borderColor": "{{border}}",
-                        "shape": "StatusIndicatorButtonShape"
+                        "shape": "StatusIndicatorButtonShape",
+                        "textAlign": "Left"
                     },
                     "disabled": {
                         "bgColor": "{{gray}}",
                         "textColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "shape": "StatusIndicatorButtonShape"
+                        "shape": "StatusIndicatorButtonShape",
+                        "textAlign": "Left"
                     },
                     "hovered": {
                         "bgColor": "{{dimblue}}",
                         "textColor": "{{text}}",
                         "borderColor": "{{border}}",
-                        "shape": "StatusIndicatorButtonShape"
+                        "shape": "StatusIndicatorButtonShape",
+                        "textAlign": "Left"
                     }
                 }
             }

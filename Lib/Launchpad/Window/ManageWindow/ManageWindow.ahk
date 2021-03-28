@@ -44,13 +44,13 @@
         this.AddButton("vBuildAllButton " . position, "Build All", "", "primary")
     }
 
-    GetStatusText() {
-        return this.app.Auth.GetStatusText()
+    GetStatusInfo() {
+        return this.app.Auth.GetStatusInfo()
     }
 
     OnStatusIndicatorClick(btn, info) {
         if (this.app.Auth.IsAuthenticated()) {
-            this.app.GuiManager.Dialog("AccountInfo", this.windowKey)
+            this.app.GuiManager.Dialog("AccountInfoWindow", this.windowKey)
         } else {
             this.app.Auth.Login()
         }

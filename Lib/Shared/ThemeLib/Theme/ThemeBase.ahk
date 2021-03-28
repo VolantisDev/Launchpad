@@ -357,7 +357,7 @@ class ThemeBase {
         throw MethodNotImplementedException.new("ThemeBase", "GetThemeMap")
     }
 
-    AddButton(guiObj, options, content, handlerName := "", style := "normal") {
+    AddButton(guiObj, options, content, handlerName := "", style := "normal", drawConfig := "") {
         picObj := guiObj.AddPicture(options . " 0xE")
 
         if (handlerName or picObj.Name) {
@@ -368,10 +368,10 @@ class ThemeBase {
             picObj.OnEvent("Click", handlerName)
         }
 
-        return this.DrawButton(picObj, content, style)
+        return this.DrawButton(picObj, content, style, drawConfig)
     }
 
-    DrawButton(picObj, content, style := "normal") {
+    DrawButton(picObj, content, style := "normal", drawConfig := "") {
         picObj.IsPrimary := (style == "primary")
 
         states := Map()
@@ -383,13 +383,13 @@ class ThemeBase {
             hoveredStyle := buttonStyle.Has("hovered") ? buttonStyle["hovered"] : buttonStyle["enabled"]
 
             enabledShape := enabledStyle.Has("shape") ? enabledStyle["shape"] : "ButtonShape"
-            states["enabled"] := %enabledShape%.new(this, content, enabledStyle)
+            states["enabled"] := %enabledShape%.new(this, content, enabledStyle, drawConfig)
             
             disabledShape := disabledStyle.Has("shape") ? disabledStyle["shape"] : "ButtonShape"
-            states["disabled"] := %disabledShape%.new(this, content, disabledStyle)
+            states["disabled"] := %disabledShape%.new(this, content, disabledStyle, drawConfig)
             
             hoveredShape := hoveredStyle.Has("shape") ? hoveredStyle["shape"] : "ButtonShape"
-            states["hovered"] := %hoveredShape%.new(this, content, hoveredStyle)
+            states["hovered"] := %hoveredShape%.new(this, content, hoveredStyle, drawConfig)
 
             states["enabled"].DrawOn(picObj)
 

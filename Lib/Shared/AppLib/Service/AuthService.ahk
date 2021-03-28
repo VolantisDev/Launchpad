@@ -50,15 +50,17 @@ class AuthService extends AppServiceBase {
         }
     }
 
-    GetStatusText() {
+    GetStatusInfo() {
         statusText := "Not logged in"
+        imgPath := ""
 
         if (this.IsAuthenticated()) {
             email := this.authInfoObj.Get("email")
             statusText := email ? email : "Logged in"
+            imgPath := this.authInfoObj.Get("photo")
         }
 
-        return statusText
+        return Map("name", statusText, "photo", imgPath)
     }
 
     Logout() {
@@ -108,8 +110,14 @@ class AuthService extends AppServiceBase {
         if (dataSource) {
             apiStatus := dataSource.GetStatus()
 
-            if (apiStatus && apiStatus.Has("email")) {
-                authInfoObj.Set("email", apiStatus["email"], true)
+            if (apiStatus) {
+                if (apiStatus.Has("email")) {
+                    authInfoObj.Set("email", apiStatus["email"], true)
+                }
+
+                if (apiStatus.Has("photo")) {
+                    authInfoObj.Set("photo", apiStatus["photo"], true)
+                }
             }
         }
     }

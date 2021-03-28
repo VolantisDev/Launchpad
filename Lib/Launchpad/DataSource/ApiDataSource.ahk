@@ -84,18 +84,44 @@ class ApiDataSource extends DataSourceBase {
         path := "status"
         statusExpire := 5 ;60
 
-        status := Map("authenticated", false, "email", "")
+        status := Map("authenticated", false, "email", "", "photo", "")
 
         if (this.app.Config.ApiAuthentication && this.app.Auth.IsAuthenticated()) {
-            status := this.ReadItem(path, true)
+            statusResult := this.ReadItem(path, true)
 
-            if (status) {
+            if (statusResult) {
                 json := JsonData.new()
-                status := json.FromString(status)
+                status := json.FromString(statusResult)
+                this.app.Debugger.Inspect(status)
+            }
+
+            if (status.Has("photo") && status["photo"]) {
+                imgPath := this.app.tmpDir . "\Images\Profile.jpg"
+
+                if (FileExist(imgPath)) {
+                    modified := FileGetTime(imgPath)
+                    if (DateDiff(modified, A_Now, "S") >= -86400) {
+                        FileDelete(imgPath)
+                    }
+                }
+
+                if (!FileExist(imgPath)) {
+                    if (!DirExist(this.app.tmpDir . "\Images")) {
+                        DirCreate(this.app.tmpDir . "\Images")
+                    }
+                    
+                    Download(status["photo"], imgPath)
+                }
+
+                status["photo"] := imgPath
             }
         }
 
         return status
+    }
+
+    GetExt(path) {
+
     }
 
     Open() {

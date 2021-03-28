@@ -39,7 +39,7 @@ class GuiBase {
     tabNames := []
     frameShadow := true
     showStatusIndicator := false
-    statusIndicatorW := 150
+    statusIndicatorW := 100
     showOptions := ""
 
     positionAtMouseCursor := false
@@ -549,6 +549,8 @@ class GuiBase {
 
         buttonsW := 0
 
+        this.statusIndicatorW := this.CalculateStatusIndicatorWidth()
+
         if (this.showStatusIndicator) {
             buttonsW += this.statusIndicatorW + (this.margin * 2)
         }
@@ -602,6 +604,52 @@ class GuiBase {
         this.guiObj.AddText("x" . this.margin . " y31 w0 h0", "")
     }
 
+    CalculateStatusIndicatorWidth() {
+        width := this.statusIndicatorW
+        statusInfo := this.GetStatusInfo()
+        requiredW := 10
+
+        if (statusInfo) {
+            if (statusInfo.Has("name")) {
+                graphics := ""
+                font := "Arial"
+                size := 12
+                options := "Regular"
+                style := 0
+                styles := "Regular|Bold|Italic|BoldItalic|Underline|Strikeout"
+                formatStyle := 0x4000 | 0x1000
+
+                for eachStyle, valStyle in StrSplit(styles, "|")
+                {
+                    if RegExMatch(options, "\b" valStyle) {
+                        style |= (valStyle != "StrikeOut") ? (A_Index-1) : 8
+                    }  
+                }
+
+                hdc := GetDC()
+                graphics := Gdip_GraphicsFromHDC(hdc)
+                hFamily := Gdip_FontFamilyCreate(font)
+                hFont := Gdip_FontCreate(hFamily, size, style)
+                hFormat := Gdip_StringFormatCreate(formatStyle)
+                CreateRectF(RC, 0, 0, 0, 0)
+                returnRc := Gdip_MeasureString(graphics, statusInfo["name"], hFont, hFormat, RC)
+                returnRc := StrSplit(ReturnRC, "|")
+
+                requiredW += returnRc[3]
+            }
+
+            if (StatusInfo.Has("photo")) {
+                requiredW += 26
+            }
+        }
+
+        if (requiredW > width) {
+            width := requiredW
+        }
+
+        return width
+    }
+
     AddEdit(name, defaultValue := "", options := "", width := "") {
         if (width == "") {
             width := this.windowSettings["contentWidth"]
@@ -621,17 +669,19 @@ class GuiBase {
     AddStatusIndicator() {
         if (this.showStatusIndicator) {
             options := "x+" . this.margin . " y5 w" . this.statusIndicatorW . " h26 vStatusIndicator"
-            this.themeObj.AddButton(this.guiObj, options, this.GetStatusText(), "OnStatusIndicatorClick", "status")
+            statusInfo := this.GetStatusInfo()
+            this.themeObj.AddButton(this.guiObj, options, statusInfo["name"], "OnStatusIndicatorClick", "status", Map("photo", statusInfo["photo"]))
         }
     }
 
-    GetStatusText() {
-        return ""
+    GetStatusInfo() {
+        return Map("name", "", "photo", "")
     }
 
     UpdateStatusIndicator() {
         if (this.showStatusIndicator) {
-            this.themeObj.DrawButton(this.guiObj["StatusIndicator"], this.GetStatusText(), "status")
+            statusInfo := this.GetStatusInfo()
+            this.themeObj.DrawButton(this.guiObj["StatusIndicator"], statusInfo["name"], "status", Map("photo", statusInfo["photo"]))
         }
     }
 

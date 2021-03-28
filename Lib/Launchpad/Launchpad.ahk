@@ -111,7 +111,7 @@
 
     UpdateStatusIndicators() {
         if (this.GuiManager.WindowExists("ManageWindow")) {
-            this.GuiManager.GetWindow["ManageWindow"].UpdateStatusIndicator()
+            this.GuiManager.GetWindow("ManageWindow").UpdateStatusIndicator()
         }
     }
 

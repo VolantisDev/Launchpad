@@ -4,14 +4,19 @@ class ButtonShape extends GuiShapeBase {
     graphics := ""
     bitmap := ""
     hbitmap := ""
+    drawConfig := Map()
 
     config := ""
     defaults := Map("bgColor", "000000", "textColor", "FFFFFF", "dimColor", "EEEEEE", "borderColor", "EEEEEE", "borderThickness", 1, "font", "Arial", "strokeWidth", 1, "textAlign", "Center", "margin", 1)
 
-    __New(themeObj, btnText, config) {
+    __New(themeObj, btnText, config, drawConfig := "") {
         this.themeObj := themeObj
         this.btnText := btnText
         this.config := this.MergeDefaults(config)
+        
+        if (drawConfig) {
+            this.drawConfig := drawConfig
+        }
     }
 
     MergeDefaults(config) {
