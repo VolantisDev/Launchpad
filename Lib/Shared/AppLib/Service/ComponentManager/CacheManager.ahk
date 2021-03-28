@@ -23,7 +23,10 @@ class CacheManager extends AppComponentServiceBase {
     }
 
     SetCacheDir(cacheDir) {
-        this.app.Config.CacheDir := cacheDir
+        if (this.app.Config.HasProp("CacheDir")) {
+            this.app.Config.CacheDir := cacheDir
+        }
+        
         this.cacheDir := this.app.Config.CacheDir
     }
 
@@ -49,6 +52,7 @@ class CacheManager extends AppComponentServiceBase {
     }
 
     ChangeCacheDir() {
+        cacheDir := this.app.Config.HasProp("CacheDir") ? this.app.Config.CacheDir : this.cacheDir
         cacheDir := DirSelect("*" . this.app.Config.CacheDir, 3, "Create or select the folder to save Launchpad's cache files to")
         
         if (cacheDir != "") {

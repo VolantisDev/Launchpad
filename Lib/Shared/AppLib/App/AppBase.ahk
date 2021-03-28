@@ -260,7 +260,13 @@ class AppBase {
             defaultTheme := config["themeName"]
         }
 
-        this.Services.Set("CacheManager", CacheManager.new(this, this.Config.CacheDir, this.GetCaches()))
+        cacheDir := this.tmpDir . "\Cache"
+
+        if (this.Config.HasProp("CacheDir") && this.Config.CacheDir) {
+            cacheDir := this.Config.CacheDir
+        }
+
+        this.Services.Set("CacheManager", CacheManager.new(this, cacheDir, this.GetCaches()))
         this.Services.Set("ThemeManager", ThemeManager.new(this, themesDir, resourcesDir, defaultTheme))
         this.Services.Set("NotificationService", NotificationService.new(this, ToastNotifier.new(this)))
         this.Services.Set("GuiManager", GuiManager.new(this))
