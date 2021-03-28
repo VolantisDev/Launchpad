@@ -39,6 +39,7 @@ class GuiBase {
     tabNames := []
     frameShadow := true
     showStatusIndicator := false
+    statusIndicatorMinW := 100
     statusIndicatorW := 100
     showOptions := ""
 
@@ -605,7 +606,7 @@ class GuiBase {
     }
 
     CalculateStatusIndicatorWidth() {
-        width := this.statusIndicatorW
+        width := this.statusIndicatorMinW
         statusInfo := this.GetStatusInfo()
         requiredW := 10
 
