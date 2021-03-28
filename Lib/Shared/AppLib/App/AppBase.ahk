@@ -79,6 +79,11 @@ class AppBase {
         set => this.Services.Set("VersionChecker", value)
     }
 
+    Debugger {
+        get => this.Services.Get("Debugger")
+        set => this.Services.Set("Debugger", value)
+    }
+
     __New(config := "") {
         global appVersion
 
@@ -131,6 +136,7 @@ class AppBase {
 
         ; @todo Create any services required for initialization
         services := Map()
+        services["Debugger"] := Debugger.new()
         services["IdGenerator"] := UuidGenerator.new()
         services["VersionChecker"] := VersionChecker.new()
         services["EventManager"] := EventManager.new()
@@ -240,6 +246,7 @@ class AppBase {
         }
 
         this.Services.Set("LoggerService", LoggerService.new(FileLogger.new(logPath, loggingLevel, true)))
+        this.Debugger.SetLogger(this.Logger)
         this.Services.Set("ModuleManager", ModuleManager.new(this))
 
         themesDir := this.appDir . "\Resources\Themes"
