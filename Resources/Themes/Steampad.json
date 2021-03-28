@@ -43,7 +43,7 @@
         },
         "buttons": {
             "styles": {
-                "normal": {
+                "default": {
                     "enabled": {
                         "bgColor": "{{dimblue}}",
                         "textColor": "{{brightblue}}",
@@ -66,54 +66,47 @@
                         "borderThickness": 0
                     }
                 },
+                "normal": {
+                    "enabled": {},
+                    "disabled": {},
+                    "hovered": {}
+                },
                 "primary": {
                     "enabled": {
                         "bgColor": "{{greenmeddim}}",
                         "textColor": "{{light}}",
-                        "dimColor": "{{dim}}",
-                        "borderColor": "{{greenmeddim}}",
-                        "borderThickness": 0
+                        "borderColor": "{{greenmeddim}}"
                     },
                     "disabled": {
                         "bgColor": "{{brightmidblue}}",
                         "textColor": "{{light}}",
-                        "dimColor": "{{dim}}",
-                        "borderColor": "{{brightmidblue}}",
-                        "borderThickness": 0
+                        "borderColor": "{{brightmidblue}}"
                     },
                     "hovered": {
                         "bgColor": "{{greenmed}}",
                         "textColor": "{{white}}",
-                        "dimColor": "{{dim}}",
-                        "borderColor": "{{greenmed}}",
-                        "borderThickness": 0
+                        "borderColor": "{{greenmed}}"
                     }
                 },
                 "menu": {
                     "enabled": {
                         "bgColor": "{{darkgray}}",
                         "textColor": "{{textLight}}",
-                        "dimColor": "{{dim}}",
                         "borderColor": "{{background}}",
-                        "borderThickness": 0,
                         "textAlign": "Left",
                         "margin": 4
                     },
                     "disabled": {
                         "bgColor": "{{darkgray}}",
                         "textColor": "{{dim}}",
-                        "dimColor": "{{dim}}",
                         "borderColor": "{{background}}",
-                        "borderThickness": 0,
                         "textAlign": "Left",
                         "margin": 4
                     },
                     "hovered": {
                         "bgColor": "{{darkgray}}",
                         "textColor": "{{light}}",
-                        "dimColor": "{{dim}}",
                         "borderColor": "{{background}}",
-                        "borderThickness": 0,
                         "textAlign": "Left",
                         "margin": 4
                     }
@@ -122,27 +115,21 @@
                     "enabled": {
                         "bgColor": "{{background}}",
                         "textColor": "{{textLight}}",
-                        "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderThickness": 0,
                         "shape": "SymbolButtonShape",
                         "margin": 4
                     },
                     "disabled": {
                         "bgColor": "{{background}}",
                         "textColor": "{{textLight}}",
-                        "dimColor": "{{dim}}",
                         "borderColor": "{{background}}",
-                        "borderThickness": 0,
                         "shape": "SymbolButtonShape",
                         "margin": 4
                     },
                     "hovered": {
                         "bgColor": "{{background}}",
                         "textColor": "{{text}}",
-                        "dimColor": "{{dim}}",
                         "borderColor": "{{background}}",
-                        "borderThickness": 0,
                         "shape": "SymbolButtonShape",
                         "margin": 4
                     }
@@ -151,21 +138,18 @@
                     "enabled": {
                         "bgColor": "{{background}}",
                         "textColor": "{{textLight}}",
-                        "dimColor": "{{dim}}",
                         "borderColor": "{{textLight}}",
                         "borderThickness": 1
                     },
                     "disabled": {
                         "bgColor": "{{background}}",
                         "textColor": "{{disabledlightblue}}",
-                        "dimColor": "{{dim}}",
                         "borderColor": "{{disabledblue}}",
                         "borderThickness": 1
                     },
                     "hovered": {
                         "bgColor": "{{background}}",
                         "textColor": "{{brightblue}}",
-                        "dimColor": "{{dim}}",
                         "borderColor": "{{text}}",
                         "borderThickness": 1
                     }
@@ -174,27 +158,21 @@
                     "enabled": {
                         "bgColor": "{{background}}",
                         "textColor": "{{textLight}}",
-                        "dimColor": "{{dim}}",
                         "borderColor": "{{textLight}}",
-                        "borderThickness": 0,
                         "shape": "SymbolButtonShape",
                         "strokeWidth": 2
                     },
                     "disabled": {
                         "bgColor": "{{background}}",
                         "textColor": "{{textLight}}",
-                        "dimColor": "{{dim}}",
                         "borderColor": "{{background}}",
-                        "borderThickness": 0,
                         "shape": "SymbolButtonShape",
                         "strokeWidth": 2
                     },
                     "hovered": {
                         "bgColor": "{{background}}",
                         "textColor": "{{brightblue}}",
-                        "dimColor": "{{dim}}",
                         "borderColor": "{{text}}",
-                        "borderThickness": 0,
                         "shape": "SymbolButtonShape",
                         "strokeWidth": 2
                     }
@@ -203,7 +181,6 @@
                     "enabled": {
                         "bgColor": "{{background}}",
                         "textColor": "{{textLight}}",
-                        "dimColor": "{{dim}}",
                         "borderColor": "{{textLight}}",
                         "borderThickness": 1,
                         "shape": "SymbolButtonShape",
@@ -212,7 +189,6 @@
                     "disabled": {
                         "bgColor": "{{background}}",
                         "textColor": "{{textLight}}",
-                        "dimColor": "{{dim}}",
                         "borderColor": "{{background}}",
                         "borderThickness": 1,
                         "shape": "SymbolButtonShape",
@@ -221,7 +197,6 @@
                     "hovered": {
                         "bgColor": "{{background}}",
                         "textColor": "{{brightblue}}",
-                        "dimColor": "{{dim}}",
                         "borderColor": "{{text}}",
                         "borderThickness": 1,
                         "shape": "SymbolButtonShape",
@@ -232,25 +207,19 @@
                     "enabled": {
                         "bgColor": "{{dimblue}}",
                         "textColor": "{{textLight}}",
-                        "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderThickness": 0,
                         "shape": "StatusIndicatorButtonShape"
                     },
                     "disabled": {
                         "bgColor": "{{gray}}",
                         "textColor": "{{dim}}",
-                        "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderThickness": 0,
                         "shape": "StatusIndicatorButtonShape"
                     },
                     "hovered": {
                         "bgColor": "{{dimblue}}",
                         "textColor": "{{text}}",
-                        "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderThickness": 0,
                         "shape": "StatusIndicatorButtonShape"
                     }
                 }

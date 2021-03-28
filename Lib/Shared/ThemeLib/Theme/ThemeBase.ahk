@@ -150,7 +150,7 @@ class ThemeBase {
         windowOptions := ""
         windowSettings := this.GetWindowSettings(windowKey)
 
-        opts := (windowSettings.Has("options") && windowSettings["options"] != "") ? windowSettings["options"] : Map()
+        opts := (windowSettings.Has("options") && windowSettings["options"] != "") ? windowSettings["options"].Clone() : Map()
 
         if (extraOptions) {
             for key, val in extraOptions {
@@ -158,7 +158,7 @@ class ThemeBase {
             }
         }
 
-        for key, val in windowSettings["options"] {
+        for key, val in opts {
             if (val != "") {
                 if this.windowStyles.Has(key) {
                     key := this.DereferenceValue(this.windowStyles[key], this.windowStyles)
@@ -292,9 +292,9 @@ class ThemeBase {
 
     MergeProperty(existingValue, newValue, overwriteMapKeys := false) {
         if (Type(existingValue) == "Map" && Type(newValue) == "Map") {
-            newValue := this.MergeMap(existingValue, newValue, overwriteMapKeys)
+            newValue := this.MergeMap(existingValue.Clone(), newValue, overwriteMapKeys)
         } else if (Type(existingValue) == "Array" && Type(newValue) == "Array") {
-            newValue := this.MergeArray(existingValue, newValue, overwriteMapKeys)
+            newValue := this.MergeArray(existingValue.Clone(), newValue, overwriteMapKeys)
         }
 
         return newValue
@@ -408,7 +408,7 @@ class ThemeBase {
     }
 
     GetButtonStyle(style) {
-        result := (style != "normal") ? this.GetButtonStyle("normal") : Map()
+        result := (style != "default") ? this.GetButtonStyle("default") : Map()
 
         if (this.buttons.Has("styles") and this.buttons["styles"].Has(style)) {
             result := this.MergeProperty(result, this.buttons["styles"][style], true)

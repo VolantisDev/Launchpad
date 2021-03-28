@@ -76,7 +76,7 @@ class GuiBase {
             extraOptions["Border"] := true
         }
 
-        if (this.owner != "") {
+        if (this.owner != "" && this.app.GuiManager.GetWindowFromGui(this.owner)) {
             extraOptions["Owner" . this.owner.Hwnd] := true
         }
 
@@ -677,8 +677,7 @@ class GuiBase {
         return this.End()
     }
 
-
-    Create() {
+    Create() {      
         this.guiObj := Gui.New(this.windowOptions, this.GetTitle(this.title), this)
         this.guiObj.BackColor := this.themeObj.GetColor("background")
         this.guiObj.MarginX := this.margin
