@@ -69,7 +69,7 @@
         for key, launcher in this.launcherManager.Entities {
             focusOption := index == focusedItem ? " Focus" : ""
 
-            apiStatus := launcher.DataSourceItemKey ? "Merged" : "Not found"
+            apiStatus := launcher.DataSourceItemKey ? "Linked" : "Not linked"
 
             platformName := launcher.Platform
 
