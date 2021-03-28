@@ -62,7 +62,7 @@
                 releaseInfo := data.FromString(releaseInfoStr)
 
                 if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this.VersionChecker.VersionIsOutdated(releaseInfo["data"]["version"], this.Version)) {
-                    this.GuiManager.Dialog("UpdateAvailable", releaseInfo)
+                    this.GuiManager.Dialog("UpdateAvailableWindow", releaseInfo)
                 }
             }
         }
