@@ -647,7 +647,7 @@ class GuiBase {
             width := requiredW
         }
 
-        return width
+        return Ceil(width)
     }
 
     AddEdit(name, defaultValue := "", options := "", width := "") {
@@ -674,15 +674,27 @@ class GuiBase {
         }
     }
 
-    GetStatusInfo() {
-        return Map("name", "", "photo", "")
-    }
-
     UpdateStatusIndicator() {
         if (this.showStatusIndicator) {
+            oldW := this.statusIndicatorW
+            newW := this.CalculateStatusIndicatorWidth()
+
+            if (oldW != newW) {
+                this.guiObj["WindowTitlebar"].GetPos(,, titleW)
+                this.guiObj["StatusIndicator"].GetPos(statusX,, statusW)
+                difference := newW - oldW
+                MsgBox("Old title width: " . titleW . "`n`nNew title width: " . (titleW - difference))
+                this.guiObj["WindowTitlebar"].Move(,, titleW - difference)
+                this.guiObj["StatusIndicator"].Move(statusX - difference,, statusW + difference)
+            }
+
             statusInfo := this.GetStatusInfo()
             this.themeObj.DrawButton(this.guiObj["StatusIndicator"], statusInfo["name"], "status", Map("photo", statusInfo["photo"]))
         }
+    }
+
+    GetStatusInfo() {
+        return Map("name", "", "photo", "")
     }
 
     SetFont(fontPreset := "normal", extraStyles := "", colorName := "text") {
