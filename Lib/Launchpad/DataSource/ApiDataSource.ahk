@@ -95,24 +95,15 @@ class ApiDataSource extends DataSourceBase {
             }
 
             if (status.Has("photo") && status["photo"]) {
+                cachePath := "Profile.jpg"
                 imgPath := this.app.tmpDir . "\Images\Profile.jpg"
+                cache := this.app.Cache.GetItem("file")
 
-                ; if (FileExist(imgPath)) {
-                    ; modified := FileGetTime(imgPath)
-                    ; if (DateDiff(modified, A_Now, "S") <= -86400) {
-                    ;     FileDelete(imgPath)
-                    ; }
-                ; }
-
-                if (!FileExist(imgPath)) {
-                    if (!DirExist(this.app.tmpDir . "\Images")) {
-                        DirCreate(this.app.tmpDir . "\Images")
-                    }
-                    
-                    Download(status["photo"], imgPath)
+                if (cache.ItemNeedsUpdate(cachePath)) {
+                    cache.ImportItemFromUrl(cachePath, status["photo"])
                 }
 
-                status["photo"] := imgPath
+                status["photo"] := cache.GetCachePath(cachePath)
             }
         }
 
