@@ -210,10 +210,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     }
 
     OnChangeInstallDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         existingVal := this.entityObj.GetConfigValue("InstallDir")
 
         if existingVal {
@@ -229,10 +225,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     }
 
     OnOpenInstallDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         val := this.entityObj.GetConfigValue("InstallDir")
 
         if (val) {
@@ -241,18 +233,10 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     }
 
     OnClearInstallDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.entityObj.SetConfigValue("InstallDir", "")
     }
 
     OnChangeWorkingDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         existingVal := this.entityObj.GetConfigValue("WorkingDir")
 
         if (existingVal) {
@@ -268,10 +252,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     }
 
     OnOpenWorkingDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         val := this.entityObj.GetConfigValue("WorkingDir")
 
         if (val) {
@@ -280,10 +260,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     }
 
     OnClearWorkingDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.entityObj.SetConfigValue("WorkingDir", "")
     }
 
@@ -320,10 +296,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     }
 
     OnChangeShortcutSrc(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         existingVal := this.entityObj.GetConfigValue("ShortcutSrc")
         file := FileSelect(1,, this.entityObj.configPrefix . ": Select a shortcut file or .exe that will launch the application", "Shortcuts (*.lnk; *.url; *.exe)")
 
@@ -334,20 +306,12 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     }
 
     OnOpenShortcutSrc(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         if (this.entityObj.ShortcutSrc) {
             Run this.entityObj.ShortcurSrc
         }
     }
 
     OnClearShortcutSrc(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-        
         if (this.entityObj.UnmergedConfig.Has("ShortcutSrc")) {
             this.entityObj.UnmergedConfig.Delete("ShortcutSrc")
             this.guiObj["ShortcutSrc"].Text := this.entityObj.ShortcutSrc

@@ -83,10 +83,6 @@ class LauncherEditorSimple extends LauncherEditorBase {
     }
 
     OnChangeInstallDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         existingVal := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("InstallDir")
 
         if existingVal {
@@ -102,10 +98,6 @@ class LauncherEditorSimple extends LauncherEditorBase {
     }
 
     OnOpenInstallDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         val := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("InstallDir")
 
         if (val) {
@@ -114,10 +106,6 @@ class LauncherEditorSimple extends LauncherEditorBase {
     }
 
     OnClearInstallDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.entityObj.ManagedLauncher.ManagedGame.SetConfigValue("InstallDir", "")
     }
 }

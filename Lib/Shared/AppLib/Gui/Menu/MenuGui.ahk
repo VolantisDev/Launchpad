@@ -69,9 +69,10 @@
 
     MenuItemClick(btn, info) {
         sync := this.menuEventSync
+        functionName := "On" . btn.Name
+        this.Close()
         
         if (sync) {
-            functionName := "On" . btn.Name
             sync.%functionName%(btn, info)
         }
     }

@@ -60,6 +60,7 @@
 #Include Window\EntityEditor\PlatformEditor.ahk
 #Include Window\Form\DetectedGameEditor.ahk
 #Include Window\Form\ImportShortcutForm.ahk
+#Include Window\Form\LauncherCreateFormBase.ahk
 #Include Window\Form\LauncherWizard.ahk
 #Include Window\Form\SettingsWindow.ahk
 #Include Window\Form\SetupWindow.ahk

@@ -177,68 +177,36 @@
     }
 
     OnReloadLauncherFile(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.app.Launchers.ReloadLauncherFile()
     }
 
     OnReloadPlatformsFile(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.app.Platforms.ReloadPlatformsFile()
     }
 
     OnOpenLauncherFile(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.app.Config.OpenLauncherFile()
     }
 
     OnOpenPlatformsFile(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.app.Config.OpenPlatformsFile()
     }
 
     OnChangeLauncherFile(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.app.Config.ChangeLauncherFile()
         this.SetText("LauncherFile", this.app.Config.LauncherFile, "Bold")
     }
 
     OnChangePlatformsFile(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.app.Config.ChangePlatformsFile()
         this.SetText("PlatformsFile", this.app.Config.PlatformsFile, "Bold")
     }
 
     OnOpenDestinationDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.app.Config.OpenDestinationDir()
     }
 
     OnChangeDestinationDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-        
         this.app.Config.ChangeDestinationDir()
         this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
     }
@@ -249,85 +217,46 @@
     }
 
     OnOpenAssetsDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.app.Config.OpenAssetsDir()
     }
 
     OnChangeAssetsDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.app.Config.ChangeAssetsDir()
         this.SetText("AssetsDir", this.app.Config.AssetsDir, "Bold")
     }
 
     OnOpenApiEndpoint(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.app.DataSources.GetItem("api").Open()
     }
 
     OnChangeApiEndpoint(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.app.DataSources.GetItem("api").ChangeApiEndpoint("", "")
         this.SetText("ApiEndpoint", this.app.Config.ApiEndpoint, "Bold")
     }
 
     OnFlushCache(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.app.Cache.FlushCaches()
     }
 
     OnOpenCacheDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.app.Cache.OpenCacheDir()
     }
 
     OnChangeCacheDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.app.Cache.ChangeCacheDir()
         this.SetText("TxtCacheDir", this.app.Config.CacheDir, "Bold")
     }
 
     OnOpenBackupDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.app.Backups.OpenBackupDir()
     }
 
     OnChangeBackupDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.app.Backups.ChangeBackupDir()
         this.SetText("TxtBackupDir", this.app.Config.BackupDir, "Bold")
     }
 
     OnManageBackupDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
         ; @todo Open Backup Manager window
     }
 

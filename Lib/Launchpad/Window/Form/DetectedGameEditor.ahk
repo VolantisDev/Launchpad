@@ -132,8 +132,6 @@
     }
 
     OnChangeInstallDir(btn, info) {
-        btn.Menu.Close()
-
         existingVal := this.GetValue("installDir")
 
         if (existingVal) {
@@ -150,8 +148,6 @@
     }
 
     OnOpenInstallDir(btn, info) {
-        btn.Menu.Close()
-        
         installDir := this.detectedGameObj.installDir
 
         if (this.newValues.Has("installDir")) {
