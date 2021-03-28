@@ -1,11 +1,7 @@
 class VersionChecker extends ServiceBase {
     VersionIsOutdated(latestVersion, installedVersion) {
-        if (latestVersion == "{{VERSION}}") {
-            return installedVersion != "0.0.0.0" && latestVersion != installedVersion
-        }
-
-        splitLatestVersion := StrSplit(latestVersion, ".")
-        splitInstalledVersion := StrSplit(installedVersion, ".")
+        splitLatestVersion := StrSplit(this.FilterVersion(latestVersion), ".")
+        splitInstalledVersion := StrSplit(this.FilterVersion(installedVersion), ".")
 
         for (index, numPart in splitInstalledVersion) {
             latestVersionPart := splitLatestVersion.Has(index) ? splitLatestVersion[index] : 0
@@ -18,5 +14,13 @@ class VersionChecker extends ServiceBase {
         }
 
         return false
+    }
+
+    FilterVersion(version) {
+         if (version == "0.0.0.0" || version == "{{VERSION}}") {
+            version := "9999.9999.9999"
+        }
+
+        return version
     }
 }
