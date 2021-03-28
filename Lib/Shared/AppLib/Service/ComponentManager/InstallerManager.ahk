@@ -12,19 +12,19 @@ class InstallerManager extends AppComponentServiceBase {
         this.SetItem("Themes", ThemeInstaller.new(this.app.Version, this.app.State, cache, extraThemes, tmpDir))
     }
 
-    InstallRequirements(owner := "ManageWindow") {
+    InstallRequirements(owner := "") {
         installerKeys := ["Themes", "Dependencies"]
         op := InstallOp.new(this.app, installerKeys, owner)
         return op.Run()
     }
 
-    UpdateApp(owner := "UpdateWindow") {
+    UpdateApp(owner := "") {
         installerKeys := ["LaunchpadUpdate"]
         op := UpdateOp.new(this.app, installerKeys, owner)
         return op.Run()
     }
 
-    UpdateDependencies(owner := "ManageWindow") {
+    UpdateDependencies(owner := "") {
         installerKeys := ["Dependencies"]
         op := UpdateOp.new(this.app, installerKeys, owner)
         return op.Run()

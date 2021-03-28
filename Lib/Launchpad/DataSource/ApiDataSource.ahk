@@ -102,7 +102,7 @@ class ApiDataSource extends DataSourceBase {
         Run(this.endpointUrl)
     }
 
-    ChangeApiEndpoint(existingEndpoint := "", owner := "ManageWindow", parent := "") {
+    ChangeApiEndpoint(existingEndpoint := "", owner := "", parent := "") {
         if (existingEndpoint == "") {
             existingEndpoint := this.app.Config.ApiEndpoint
         }
