@@ -183,7 +183,7 @@ class AppBase {
         occurredIn := e.What ? " in " . e.What : ""
         developer := this.developer ? this.developer : "the developer(s)"
 
-        errorText := this.appName . " has experienced an unhandled exception. You can find the details below, and submit the error to " . developer . " to be fixed."
+        errorText := this.appName . " has experienced an unhandled exception. You can find the details below."
         errorText .= "`n`n" . e.Message . extra
         errorText .= "`n`nOccurred in: " . e.What
         
@@ -204,7 +204,7 @@ class AppBase {
                 btns := allowContinue ? "*&Continue|&Exit" : "*&Exit"
                 result := this.GuiManager.Dialog("ErrorDialog", err, "Unhandled Exception", errorText, "", "", btns)
             } else {
-                this.ShowUnthemedError(title, errorText, err, "", allowContinue)
+                this.ShowUnthemedError(title, err.Message, err, "", allowContinue)
             }
 
             if (result == "Exit") {
@@ -218,9 +218,8 @@ class AppBase {
     }
 
     ShowUnthemedError(title, errorText, err, displayErr := "", allowContinue := true) {
-        otherErrorInfo := (displayErr && err != displayErr) ? "The application could not show the usual error dialog because of another error:`n`n" . displayErr.File . ": " . displayErr.Line . ": " . displayErr.What . ": " . displayErr.Message . "`n`nThe original error is:`n`n" : ""
-
-        MsgBox("Launchpad has experienced an error.`n`n" . otherErrorInfo . err.File . ": " . err.Line . ": " . err.What . ": " . err.Message)
+        otherErrorInfo := (displayErr && err != displayErr) ? "`n`nThe application could not show the usual error dialog because of another error:`n`n" . displayErr.File . ": " . displayErr.Line . ": " . displayErr.What . ": " . displayErr.Message : ""
+        MsgBox(errorText . otherErrorInfo, "Error")
     }
 
     InitializeApp(config) {
