@@ -130,10 +130,27 @@ class LauncherEntity extends EntityBase {
     LauncherIsOutdated() {
         outdated := true
 
-        launcherVersion := FileGetVersion(this.GetLauncherFile(this.Key))
+        file := this.GetLauncherFile(this.Key)
 
-        if (launcherVersion && !this.app.VersionChecker.VersionIsOutdated(this.app.Version, launcherVersion)) {
-            outdated := false
+        if (file && FileExist(file)) {
+            launcherVersion := FileGetVersion(this.GetLauncherFile(this.Key))
+
+            if (launcherVersion && !this.app.VersionChecker.VersionIsOutdated(this.app.Version, launcherVersion)) {
+                outdated := false
+            }
+
+            configInfo := this.app.State.GetLauncherInfo(this.Key, "Config")
+            buildInfo := this.app.State.GetLauncherInfo(this.Key, "Build")
+
+            if (!buildInfo["Version"] || !buildInfo["Timestamp"]) {
+                outdated := true
+            } else {
+                if (configInfo["Version"] && this.app.VersionChecker.VersionIsOutdated(configInfo["Version"], buildInfo["Version"])) {
+                    outdated := true
+                } else if (configInfo["Timestamp"] && DateDiff(configInfo["Timestamp"], buildInfo["Timestamp"], "S") > 0) {
+                    outdated := true
+                }
+            }
         }
 
         return outdated
@@ -175,6 +192,11 @@ class LauncherEntity extends EntityBase {
         ; @todo more launcher validation
 
         return ValidateResult
+    }
+
+    SaveModifiedData() {
+        super.SaveModifiedData()
+        this.app.State.SetLauncherConfigInfo(this.Key)
     }
 
     GetDataSourceItemKey() {

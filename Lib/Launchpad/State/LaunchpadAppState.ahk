@@ -24,6 +24,11 @@ class LaunchpadAppState extends JsonState {
         set => this.SetAuthentication(value)
     }
 
+    Launchers {
+        get => this.State.Has("Launchers") ? this.State["Launchers"] : this.State["Launchers"] := Map()
+        set => this.SetLaunchers(value)
+    }
+
     /**
     * IMPLEMENTED METHODS
     */
@@ -89,5 +94,57 @@ class LaunchpadAppState extends JsonState {
     SetComponentInstalled(key, installed) {
         this.InstalledComponents[key] := installed
         this.SaveState()
+    }
+
+    SetLaunchers(versions) {
+        this.State["Launchers"] := versions
+        this.SaveState()
+    }
+
+    SetLauncherConfigInfo(launcherKey, version := "", timestamp := "") {
+        this.SetLauncherInfo(launcherKey, "Config", version, timestamp)
+    }
+
+    SetLauncherBuildInfo(launcherKey, version := "", timestamp := "") {
+        this.SetLauncherInfo(launcherKey, "Build", version, timestamp)
+    }
+
+    SetLauncherInfo(launcherKey, infoKey, version := "", timestamp := "") {
+        if (version == "") {
+            version := this.app.Version
+        }
+
+        if (timestamp == "") {
+            timestamp := FormatTime(,"yyyyMMddHHmmss")
+        }
+
+        if (!this.Launchers.Has(launcherKey)) {
+            this.Launchers[launcherKey] := Map()
+        }
+
+        this.Launchers[launcherKey][infoKey] := Map("Version", version, "Timestamp", timestamp)
+        this.SaveState()
+    }
+
+    GetLauncherInfo(launcherKey, infoKey) {
+        value := ""
+
+        if (this.Launchers.Has(launcherKey) && this.Launchers[launcherKey].Has(infoKey)) {
+            value := this.Launchers[launcherKey][infoKey]
+        }
+
+        if (Type(value) != "Map") {
+            value := Map()
+        }
+
+        if (!value.Has("Version")) {
+            value["Version"] := ""
+        }
+
+        if (!value.Has("Timestamp")) {
+            value["Timestamp"] := ""
+        }
+
+        return value
     }
 }

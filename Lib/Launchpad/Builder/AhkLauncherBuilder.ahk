@@ -9,8 +9,12 @@ class AhkLauncherBuilder extends BuilderBase {
             gameExeObj := GameExeFile.new(entityObj)
             result := gameExeObj.Build()
 
-            if (result && this.app.Config.CreateDesktopShortcuts) {
-                this.CreateShortcut(entityObj)
+            if (result) {
+                if (this.app.Config.CreateDesktopShortcuts) {
+                    this.CreateShortcut(entityObj)
+                }
+
+                this.app.State.SetLauncherBuildInfo(entityObj.Key)
             }
         }
 
