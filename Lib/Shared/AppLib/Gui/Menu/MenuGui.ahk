@@ -8,6 +8,7 @@
     buttonHeight := 25
     menuItems := ""
     menuEventSync := ""
+    showOptions := "NoActivate"
 
     __New(app, themeObj, windowKey, menuItems := "", menuEventSync := "", owner := "", parent := "") {
         if (menuItems == "") {

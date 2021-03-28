@@ -40,6 +40,7 @@ class GuiBase {
     frameShadow := true
     showStatusIndicator := false
     statusIndicatorW := 150
+    showOptions := ""
 
     positionAtMouseCursor := false
     openWindowWithinScreenBounds := true
@@ -790,7 +791,7 @@ class GuiBase {
             windowSize .= " x" . windowX . " y" . windowY
         }
 
-        this.guiObj.Show(windowSize)
+        this.guiObj.Show(windowSize . " " . this.showOptions)
 
         if (this.lvHeaderHwnd) {
             WinRedraw("ahk_id " . this.lvHeaderHwnd)
