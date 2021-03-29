@@ -4,15 +4,14 @@ class FeedbackWindow extends DialogBox {
     notifierObj := ""
     apiEndpointUrl := ""
 
-    __New(app, themeObj, windowKey, notifierObj, apiEndpointUrl, title, text := "", owner := "", parent := "", btns := "*&Send|&Cancel") {
-        this.notifierObj := notifierObj
-        this.apiEndpointUrl := apiEndpointUrl
-
+    __New(app, themeObj, windowKey, text := "", owner := "", parent := "", btns := "*&Send|&Cancel") {
+        this.notifierObj := app.Notifications.notifierObj
+        this.apiEndpointUrl := app.Config.ApiEndpoint
         if (text == "") {
             text := "You can use this form to provide any sort of feedback you wish. All feedback will be reviewed by hand, and responded to if you would like."
         }
 
-        super.__New(app, themeObj, windowKey, title, text, owner, parent, btns)
+        super.__New(app, themeObj, windowKey, "Provide Feedback", text, owner, parent, btns)
     }
 
     Controls() {
@@ -26,7 +25,7 @@ class FeedbackWindow extends DialogBox {
     }
 
     ProcessResult(result) {
-        if (result == "Submit") {
+        if (result == "Send") {
             this.SendFeedback()
         }
 
