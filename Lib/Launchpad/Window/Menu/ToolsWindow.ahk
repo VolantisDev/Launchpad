@@ -69,6 +69,6 @@
 
     OnAboutLaunchpad(btn, info) {
         this.Close()
-        this.app.GuiManager.OpenWindow("AboutWindow", "AboutWindow")
+        this.app.GuiManager.Dialog("AboutWindow")
     }
 }
