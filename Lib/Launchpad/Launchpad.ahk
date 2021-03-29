@@ -68,8 +68,26 @@
         }
     }
 
+    OnUpdateIncludes(itemName, itemPos, menu) {
+        RunWait(A_ScriptDir . "\Scripts\UpdateIncludes.bat", A_ScriptDir . "\Scripts")
+        Reload()
+    }
+
+    OnBuildLaunchpad(itemName, itemPos, menu) {
+        Run(A_ScriptDir . "\Scripts\Build.bat", A_ScriptDir . "\Scripts")
+    }
+
     InitializeApp(config) {
         super.InitializeApp(config)
+
+        if (!A_IsCompiled) {
+            this.updateIncludesCallback := ObjBindMethod(this, "OnUpdateIncludes")
+            this.buildLaunchpadCallback := ObjBindMethod(this, "OnBuildLaunchpad")
+
+            trayMenu := A_TrayMenu
+            trayMenu.Add("Update Includes", this.updateIncludesCallback)
+            trayMenu.Add("Build Launchpad", this.buildLaunchpadCallback)
+        }
 
         this.Builders.SetItem("ahk", AhkLauncherBuilder.new(this), true)
         this.DataSources.SetItem("api", ApiDataSource.new(this, this.Cache.GetItem("api"), this.Config.ApiEndpoint), true)
