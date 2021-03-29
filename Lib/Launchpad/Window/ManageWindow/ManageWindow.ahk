@@ -56,6 +56,10 @@
         }
     }
 
+    StatusWindowIsOnline() {
+        return this.app.Auth.IsAuthenticated()
+    }
+
     SetupManageEvents(lv) {
         lv.OnEvent("DoubleClick", "OnDoubleClick")
     }

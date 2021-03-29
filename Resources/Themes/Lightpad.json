@@ -196,6 +196,25 @@
                         "borderThickness": 0,
                         "shape": "StatusIndicatorButtonShape"
                     }
+                },
+                "statusOffline": {
+                    "enabled": {
+                        "bgColor": "{{accentDark}}",
+                        "textColor": "{{textLight}}",
+                        "borderThickness": 0,
+                        "shape": "StatusIndicatorButtonShape"
+                    },
+                    "disabled": {
+                        "bgColor": "{{gray}}",
+                        "textColor": "{{dim}}",
+                        "borderThickness": 0,
+                        "shape": "StatusIndicatorButtonShape"
+                    },
+                    "hovered": {
+                        "textColor": "{{text}}",
+                        "borderThickness": 0,
+                        "shape": "StatusIndicatorButtonShape"
+                    }
                 }
             }
         },

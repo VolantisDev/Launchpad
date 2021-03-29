@@ -20,6 +20,8 @@
             "disabledlightblue": "355D79",
             "lighttextblue": "63AAD0",
             "dimblue": "283B47",
+            "deepblue": "182D42",
+            "deepdarkblue": "12273C",
             "disabledblue": "1D2E3F",
             "gray": "646E70",
             "darkgray": "32363E",
@@ -205,8 +207,8 @@
                 },
                 "status": {
                     "enabled": {
-                        "bgColor": "{{dimblue}}",
-                        "textColor": "{{textLight}}",
+                        "bgColor": "{{deepdarkblue}}",
+                        "textColor": "{{brightblue}}",
                         "borderColor": "{{border}}",
                         "shape": "StatusIndicatorButtonShape",
                         "textAlign": "Left"
@@ -219,7 +221,30 @@
                         "textAlign": "Left"
                     },
                     "hovered": {
-                        "bgColor": "{{dimblue}}",
+                        "bgColor": "{{deepblue}}",
+                        "textColor": "{{brightblue}}",
+                        "borderColor": "{{border}}",
+                        "shape": "StatusIndicatorButtonShape",
+                        "textAlign": "Left"
+                    }
+                },
+                "statusOffline": {
+                    "enabled": {
+                        "bgColor": "{{darkgray}}",
+                        "textColor": "{{dim}}",
+                        "borderColor": "{{border}}",
+                        "shape": "StatusIndicatorButtonShape",
+                        "textAlign": "Left"
+                    },
+                    "disabled": {
+                        "bgColor": "{{gray}}",
+                        "textColor": "{{dim}}",
+                        "borderColor": "{{border}}",
+                        "shape": "StatusIndicatorButtonShape",
+                        "textAlign": "Left"
+                    },
+                    "hovered": {
+                        "bgColor": "{{gray}}",
                         "textColor": "{{text}}",
                         "borderColor": "{{border}}",
                         "shape": "StatusIndicatorButtonShape",

@@ -15,7 +15,12 @@ class StatusIndicatorButtonShape extends ButtonShape {
             imageBitmap := Gdip_CreateBitmapFromFile(this.drawConfig["photo"])
             Gdip_DrawImage(this.graphics, imageBitmap, imgX, imgY, imgW, imgH)
         }
-        textX += 5
+
+        fgPen := Gdip_CreatePen("0xff" . this.config["textColor"], 1)
+        Gdip_DrawLine(this.graphics, fgPen, textX, textY, textX, textY + h)
+        Gdip_DeletePen(fgPen)
+
+        textX += 6
         Gdip_TextToGraphics(this.graphics, this.GetButtonText(), this.config["textAlign"] . " vCenter cff" . this.config["textColor"] . " X" . textX . " Y" . textY, this.config["font"], textW, textH)
     }
 }

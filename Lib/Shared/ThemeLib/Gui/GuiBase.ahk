@@ -671,7 +671,8 @@ class GuiBase {
         if (this.showStatusIndicator) {
             options := "x+" . this.margin . " y5 w" . this.statusIndicatorW . " h26 vStatusIndicator"
             statusInfo := this.GetStatusInfo()
-            this.themeObj.AddButton(this.guiObj, options, statusInfo["name"], "OnStatusIndicatorClick", "status", Map("photo", statusInfo["photo"]))
+            buttonStyle := this.StatusWindowIsOnline() ? "status" : "statusOffline"
+            this.themeObj.AddButton(this.guiObj, options, statusInfo["name"], "OnStatusIndicatorClick", buttonStyle, Map("photo", statusInfo["photo"]))
         }
     }
 
@@ -689,8 +690,13 @@ class GuiBase {
             }
 
             statusInfo := this.GetStatusInfo()
-            this.themeObj.DrawButton(this.guiObj["StatusIndicator"], statusInfo["name"], "status", Map("photo", statusInfo["photo"]))
+            buttonStyle := this.StatusWindowIsOnline() ? "status" : "statusOffline"
+            this.themeObj.DrawButton(this.guiObj["StatusIndicator"], statusInfo["name"], buttonStyle, Map("photo", statusInfo["photo"]))
         }
+    }
+
+    StatusWindowIsOnline() {
+        return false
     }
 
     GetStatusInfo() {
