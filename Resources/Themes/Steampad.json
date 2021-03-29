@@ -79,30 +79,40 @@
                     "enabled": {
                         "bgColor": "{{buttongray}}",
                         "textColor": "{{light}}",
-                        "textAlign": "Left"
+                        "textAlign": "Left",
+                        "textUpper": true
                     },
-                    "disabled": {},
+                    "disabled": {
+                        "bgColor": "{{buttongray}}",
+                        "textColor": "{{light}}",
+                        "textAlign": "Left",
+                        "textUpper": true
+                    },
                     "hovered": {
                         "bgColor": "{{buttongraylight}}",
                         "textColor": "{{light}}",
-                        "textAlign": "Left"
+                        "textAlign": "Left",
+                        "textUpper": true
                     }
                 },
                 "primary": {
                     "enabled": {
                         "bgColor": "{{greenmeddim}}",
                         "textColor": "{{light}}",
-                        "borderColor": "{{greenmeddim}}"
+                        "borderColor": "{{greenmeddim}}",
+                        "textUpper": true
                     },
                     "disabled": {
                         "bgColor": "{{brightmidblue}}",
                         "textColor": "{{light}}",
-                        "borderColor": "{{brightmidblue}}"
+                        "borderColor": "{{brightmidblue}}",
+                        "textUpper": true
                     },
                     "hovered": {
                         "bgColor": "{{greenmed}}",
                         "textColor": "{{white}}",
-                        "borderColor": "{{greenmed}}"
+                        "borderColor": "{{greenmed}}",
+                        "textUpper": true
                     }
                 },
                 "menu": {

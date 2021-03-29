@@ -62,7 +62,8 @@
                         "borderThickness": 3,
                         "shape": "ButtonShape",
                         "strokeWidth": 1,
-                        "textAlign": "Center"
+                        "textAlign": "Center",
+                        "textUpper": false
                     },
                     "disabled": {
                         "bgColor": "{{background}}",
@@ -72,7 +73,8 @@
                         "borderThickness": 3,
                         "shape": "ButtonShape",
                         "strokeWidth": 1,
-                        "textAlign": "Center"
+                        "textAlign": "Center",
+                        "textUpper": false
                     },
                     "hovered": {
                         "bgColor": "{{accentDark}}",
@@ -82,7 +84,8 @@
                         "borderThickness": 3,
                         "shape": "ButtonShape",
                         "strokeWidth": 1,
-                        "textAlign": "Center"
+                        "textAlign": "Center",
+                        "textUpper": false
                     }
                 },
                 "dialog": {

@@ -52,7 +52,13 @@ class ButtonShape extends GuiShapeBase {
     RenderContent(w, h) {
         x := "X" . this.config["margin"]*4
         textW := w - (this.config["margin"]*8)
-        Gdip_TextToGraphics(this.graphics, this.GetButtonText(), this.config["textAlign"] . " " . x . " W" . textW . " vCenter cff" . this.config["textColor"], this.config["font"], w, h)
+        buttonText := this.GetButtonText()
+
+        if (this.config["textUpper"]) {
+            buttonText := StrUpper(buttonText)
+        }
+
+        Gdip_TextToGraphics(this.graphics, buttonText, this.config["textAlign"] . " " . x . " W" . textW . " vCenter cff" . this.config["textColor"], this.config["font"], w, h)
     }
 
     Cleanup() {
