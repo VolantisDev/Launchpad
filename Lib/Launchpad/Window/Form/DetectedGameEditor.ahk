@@ -7,10 +7,10 @@
     launcherTypes := ""
     gameTypes := ""
  
-    __New(app, themeObj, windowKey, detectedGameObj, title, owner := "", parent := "") {
+    __New(app, themeObj, windowKey, detectedGameObj, owner := "", parent := "") {
         InvalidParameterException.CheckTypes("DetectedGameEditor", "detectedGameObj", detectedGameObj, "DetectedGame")
         this.detectedGameObj := detectedGameObj
-        super.__New(app, themeObj, windowKey, title, this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
+        super.__New(app, themeObj, windowKey, "Detected Game Editor", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
     }
 
     Create() {
