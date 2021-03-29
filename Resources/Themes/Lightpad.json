@@ -85,6 +85,11 @@
                         "textAlign": "Center"
                     }
                 },
+                "dialog": {
+                    "enabled": {},
+                    "disabled": {},
+                    "hovered": {}
+                },
                 "normal": {
                     "enabled": {},
                     "disabled": {},

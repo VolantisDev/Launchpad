@@ -92,9 +92,9 @@
         tabs.UseTab()
 
         closeW := 100
-        closeX := this.margin + (this.windowSettings["contentWidth"] / 2) - (closeW / 2)
+        closeX := this.margin + this.windowSettings["contentWidth"] - closeW
 
-        this.AddSettingsButton("&Done", "CloseButton", closeW, 30, "x" . closeX)
+        this.AddSettingsButton("&Done", "CloseButton", closeW, 30, "x" . closeX, "dialog")
     }
 
     AddConfigLocationBlock(settingName, extraButton := "", helpText := "") {
@@ -148,7 +148,7 @@
         this.app.Config.%ctlName% := chk.Value
     }
 
-    AddSettingsButton(buttonLabel, ctlName, width := "", height := "", position := "xs y+m") {
+    AddSettingsButton(buttonLabel, ctlName, width := "", height := "", position := "xs y+m", buttonStyle := "normal") {
         buttonSize := this.themeObj.GetButtonSize("s", true)
 
         if (width == "") {
@@ -159,7 +159,7 @@
             height := (buttonSize.Has("h") && buttonSize["h"] != "auto") ? buttonSize["h"] : 20
         }
 
-        btn := this.AddButton("v" . ctlName . " " . position . " w" . width . " h" . height, buttonLabel)
+        btn := this.AddButton("v" . ctlName . " " . position . " w" . width . " h" . height, buttonLabel, "", buttonStyle)
     }
 
     SetText(ctlName, ctlText, fontStyle := "") {

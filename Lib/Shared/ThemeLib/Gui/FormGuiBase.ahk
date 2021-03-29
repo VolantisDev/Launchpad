@@ -51,11 +51,15 @@ class FormGuiBase extends GuiBase {
 
         btns := StrSplit(this.btns, "|")
 
+        btnW := 100
+        btnsW := (btnW * btns.Length) + (this.margin * (btns.Length - 1))
+        btnsStart := this.margin + this.windowSettings["contentWidth"] - btnsW
+
         loop btns.Length {
-            position := (A_Index == 1) ? "xm " : "x+m yp "
+            position := (A_Index == 1) ? "x" . btnsStart " " : "x+m yp "
             ;defaultOption := InStr(btns[A_Index], "*") ? "Default " : " "
             defaultOption := " "
-            btn := this.AddButton(position . defaultOption . "w100 h30", RegExReplace(btns[A_Index], "\*"), "OnFormGuiButton")
+            btn := this.AddButton(position . defaultOption . "w100 h30", RegExReplace(btns[A_Index], "\*"), "OnFormGuiButton", "dialog")
         }
     }
 

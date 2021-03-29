@@ -23,6 +23,8 @@
             "deepblue": "182D42",
             "deepdarkblue": "12273C",
             "disabledblue": "1D2E3F",
+            "buttongray": "353A41",
+            "buttongraylight": "535965",
             "gray": "646E70",
             "darkgray": "32363E",
             "lightgray": "C8D0BF",
@@ -72,6 +74,19 @@
                     "enabled": {},
                     "disabled": {},
                     "hovered": {}
+                },
+                "dialog": {
+                    "enabled": {
+                        "bgColor": "{{buttongray}}",
+                        "textColor": "{{light}}",
+                        "textAlign": "Left"
+                    },
+                    "disabled": {},
+                    "hovered": {
+                        "bgColor": "{{buttongraylight}}",
+                        "textColor": "{{light}}",
+                        "textAlign": "Left"
+                    }
                 },
                 "primary": {
                     "enabled": {

@@ -50,8 +50,8 @@ class ButtonShape extends GuiShapeBase {
     }
 
     RenderContent(w, h) {
-        x := "X" . this.config["margin"]
-        textW := w - (this.config["margin"]*2)
+        x := "X" . this.config["margin"]*4
+        textW := w - (this.config["margin"]*8)
         Gdip_TextToGraphics(this.graphics, this.GetButtonText(), this.config["textAlign"] . " " . x . " W" . textW . " vCenter cff" . this.config["textColor"], this.config["font"], w, h)
     }
 
