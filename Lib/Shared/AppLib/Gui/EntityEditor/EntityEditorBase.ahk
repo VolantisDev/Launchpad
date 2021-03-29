@@ -167,7 +167,7 @@ class EntityEditorBase extends FormGuiBase {
             ctl := this.DefaultCheckbox(settingName, entityObj, addPrefix)
             ctl.GetPos(,,checkW)
             checkW := checkW + this.margin
-            disabledText := entityObj.UnmergedConfig.Has(prefixedName) ? "" : " Hidden"
+            disabledText := entityObj.UnmergedConfig.Has(prefixedName) ? "" : " Disabled"
         }
 
         btnWidth := 20
@@ -180,7 +180,9 @@ class EntityEditorBase extends FormGuiBase {
             textW -= checkW + this.margin
         }
 
-        ctl := this.AddLocationText(location, settingName, locationPos, textW)
+        ctl := this.AddLocationText(location, settingName, locationPos . disabledText, textW)
+
+
 
         if (helpText) {
             ctl.ToolTip := helpText
