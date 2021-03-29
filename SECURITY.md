@@ -7,17 +7,17 @@ always use the latest supported version.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 5.x     | :white_check_mark: |
-| < 5.0   | :x:                |
+| 6.x     | :white_check_mark: |
+| < 6.0   | :x:                |
 
 ## Reporting a Vulnerability
 
-If you come acorss a security vulnerability, please contact support@volantisdev directly with the details.
+If you find a security vulnerability, please do NOT open an issue or disclose the vulnerability publicly. Any security issues should be sent directly to security@volantisdev.com with as much detail as you can so that we can assess the impact and come up with a solution before divulging the issue to potential attackers.
 
-Please DO NOT report the details of security vulnerabilities in the issue queue or any other public location.
+Not sure if you're dealing with a bug or a security issue? If you answer yes to any of these questions, it's a security issue:
+* Can I access something that I shouldn't have access to?
+* Can I do something that puts other Launchpad users at risk?
 
-You will receive a reply to confirm the issue and giving you an estimated timeline on a fix if the issue is accepted as a 
-valid vulnerability.
+Even if you're still not sure, email security@volantisdev.com just to be safe. If it turns out it's not a security issue, no harm done!
 
-You will be asked to keep the issue a secret until such time as the issue is announced publicly. This should not 
-occur before a fix is available to protect users as much as possible.
+We ask that you please keep the issue a secret until we fix it and publicly announce it.
