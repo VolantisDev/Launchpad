@@ -18,8 +18,11 @@
         global appVersion
 
         super.Controls()
-        this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " y+" . (this.margin*2), "Latest version: " . this.releaseInfo["data"]["version"])
-        this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " y+" . (this.margin), "Current version: " . appVersion)
+        this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " y+" . (this.margin*2), "Current version: " . appVersion)
+        this.SetFont("normal", "Bold")
+        this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " y+" . (this.margin), "Latest version: " . this.releaseInfo["data"]["version"])
+        this.SetFont()
+        this.guiObj.AddLink("w" . this.windowSettings["contentWidth"] . " y+" . (this.margin), '<a href="' .  this.releaseInfo["data"]["release-page"] . '">View release notes</a>')
         this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " y+" . (this.margin*2), "Would you like to update Launchpad now?")
     }
 
@@ -37,8 +40,6 @@
         if (!DirExist(this.app.tmpDir . "\Installers")) {
             DirCreate(this.app.tmpDir . "\Installers")
         }
-        
-        
         
         if (downloadUrl) {
             localFile := this.app.tmpDir . "\Installers\Launchpad-" . this.releaseInfo["data"]["version"] . ".exe"
