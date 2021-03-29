@@ -15,7 +15,7 @@ class BuildLaunchersOp extends LauncherBuilderOpBase {
         success := true
         message := "Launcher skipped."
 
-        if (this.updateExisting or !exists) {
+        if (this.updateExisting or launcherEntityObj.IsOutdated) {
             detailText := exists ? "Rebuilding launcher..." : "Building launcher..."
 
             if (this.useProgress) {
