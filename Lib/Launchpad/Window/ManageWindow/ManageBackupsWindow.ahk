@@ -55,9 +55,9 @@ class ManageBackupsWindow extends ManageWindowBase {
 
     CreateIconList() {
         IL := IL_Create(this.backupManager.CountEntities(), 1, false)
-        defaultIcon := A_ScriptDir . "\Resources\Graphics\Backup.ico"
-        
+        defaultIcon := this.themeObj.GetIconPath("Backup")
         iconNum := 1
+
         for key, backup in this.backupManager.Entities {
             iconSrc := backup.IconSrc
 

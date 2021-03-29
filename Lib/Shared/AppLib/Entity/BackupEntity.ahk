@@ -60,7 +60,7 @@ class BackupEntity extends EntityBase {
         defaults["BaseFilename"] := this.Key
         defaults["BackupClass"] := "FileBackup"
         defaults["IsEnabled"] := true
-        defaults["IconSrc"] := A_ScriptDir . "\Resources\Graphics\Backup.ico"
+        defaults["IconSrc"] := this.app.Themes.GetItem().GetIconPath("Backup")
         return defaults
     }
 

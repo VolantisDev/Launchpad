@@ -2,6 +2,7 @@
     "theme": {
         "name": "Lightpad",
         "parentTheme": "",
+        "iconTheme": "Light",
         "vars": {},
         "colors": {
             "light": "ffffff",

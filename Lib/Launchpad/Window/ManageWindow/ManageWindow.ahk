@@ -97,9 +97,9 @@
 
     CreateIconList() {
         IL := IL_Create(this.launcherManager.CountEntities(), 1, false)
-        defaultIcon := A_ScriptDir . "\Resources\Graphics\Game.ico"
-        
+        defaultIcon := this.themeObj.GetIconPath("Game")
         iconNum := 1
+
         for key, launcher in this.launcherManager.Entities {
             iconSrc := launcher.iconSrc
             

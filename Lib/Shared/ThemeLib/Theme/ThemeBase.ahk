@@ -2,6 +2,7 @@ class ThemeBase {
     eventManagerObj := ""
     idGenerator := ""
     themeId := ""
+    iconTheme := "Light"
     mouseMoveCallback := ""
     static Gdip := ""
     name := ""
@@ -73,6 +74,10 @@ class ThemeBase {
         if (iconSrc != "" && FileExist(iconSrc)) {
             TraySetIcon(iconSrc)
         }
+    }
+
+    GetIconPath(name) {
+        return this.resourcesDir . "\Graphics\Icons\" . this.iconTheme . "\" . name . ".ico"
     }
 
     GetColor(id) {

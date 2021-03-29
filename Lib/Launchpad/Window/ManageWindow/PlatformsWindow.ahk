@@ -59,9 +59,9 @@ class PlatformsWindow extends ManageWindowBase {
 
     CreateIconList() {
         IL := IL_Create(this.platformManager.CountEntities(), 1, false)
-        defaultIcon := A_ScriptDir . "\Resources\Graphics\Platform.ico"
-        
+        defaultIcon := this.themeObj.GetIconPath("Platform")
         iconNum := 1
+        
         for key, platform in this.platformManager.Entities {
             iconSrc := platform.IconSrc
 

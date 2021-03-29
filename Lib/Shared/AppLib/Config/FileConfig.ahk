@@ -88,7 +88,7 @@ class FileConfig extends ConfigBase {
             if (!this.app.Backups.Entities.Has(this.configKey)) {
                 backupConfig := Map()
                 backupConfig["IsEditable"] := false
-                backupConfig["IconSrc"] := A_ScriptDir . "\Resources\Graphics\Config.ico"
+                backupConfig["IconSrc"] := this.app.Themes.GetItem().GetIconPath("Config")
                 backupConfig["Source"] := this.ConfigPath
                 backupConfig["BackupClass"] := "FileBackup"
                 this.app.Backups.CreateBackupEntity(this.configKey, backupConfig)
