@@ -61,7 +61,7 @@ class PlatformsWindow extends ManageWindowBase {
         IL := IL_Create(this.platformManager.CountEntities(), 1, false)
         defaultIcon := this.themeObj.GetIconPath("Platform")
         iconNum := 1
-        
+
         for key, platform in this.platformManager.Entities {
             iconSrc := platform.IconSrc
 
@@ -148,7 +148,7 @@ class PlatformsWindow extends ManageWindowBase {
         selected := this.guiObj["ListView"].GetNext(, "Focused")
 
         if (selected > 0) {
-            key := this.guiObj["ListView"].GetText(selected, 1)
+            key := this.platformRows[selected]
             this.EditPlatform(key)
         }
     }
