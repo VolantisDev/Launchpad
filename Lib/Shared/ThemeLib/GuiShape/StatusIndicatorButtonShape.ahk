@@ -14,6 +14,7 @@ class StatusIndicatorButtonShape extends ButtonShape {
             textW -= imgW
             imageBitmap := Gdip_CreateBitmapFromFile(this.drawConfig["photo"])
             Gdip_DrawImage(this.graphics, imageBitmap, imgX, imgY, imgW, imgH)
+            Gdip_DisposeImage(imageBitmap)
         }
 
         fgPen := Gdip_CreatePen("0xff" . this.config["textColor"], 1)
