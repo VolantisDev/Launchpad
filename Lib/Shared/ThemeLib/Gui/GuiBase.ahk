@@ -677,6 +677,10 @@ class GuiBase {
         }
     }
 
+    OnStatusIndicatorClick(btn, info) {
+
+    }
+
     UpdateStatusIndicator() {
         if (this.showStatusIndicator) {
             oldW := this.statusIndicatorW
@@ -1111,5 +1115,15 @@ class GuiBase {
             DllCall("dwmapi\DwmSetWindowAttribute", "Ptr", this.guiObj.Hwnd, "UInt", 2, "Int*", 2, "UInt", 4)
             DllCall("dwmapi\DwmExtendFrameIntoClientArea", "Ptr", this.guiObj.Hwnd, "Ptr", margins)
         }
+    }
+
+    ; Generic login callback that can be used for authentication buttons
+    OnLogin(btn, info) {
+        this.app.Auth.Login()
+    }
+
+    ; Generic logout callback that can be used for authentication buttons
+    OnLogout(btn, info) {
+        this.app.Auth.Logout()
     }
 }

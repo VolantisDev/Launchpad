@@ -49,11 +49,20 @@
     }
 
     OnStatusIndicatorClick(btn, info) {
+        menuItems := []
+
         if (this.app.Auth.IsAuthenticated()) {
-            this.app.GuiManager.Dialog("AccountInfoWindow", this.windowKey)
+            menuItems.Push(Map("label", "Account Details", "name", "AccountDetails"))
+            menuItems.Push(Map("label", "Logout", "name", "Login"))
         } else {
-            this.app.Auth.Login()
+            menuItems.Push(Map("label", "Login", "name", "Logout"))
         }
+
+        this.app.GuiManager.Menu("MenuGui", menuItems, this, this.windowKey)
+    }
+
+    OnAccountDetails(btn, info) {
+        this.app.GuiManager.Dialog("AccountInfoWindow", this.windowKey)
     }
 
     StatusWindowIsOnline() {
