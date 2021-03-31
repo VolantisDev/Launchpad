@@ -39,8 +39,8 @@ class GuiBase {
     tabNames := []
     frameShadow := true
     showStatusIndicator := false
-    statusIndicatorMinW := 100
-    statusIndicatorW := 100
+    statusIndicatorMinW := 120
+    statusIndicatorW := 120
     showOptions := ""
     titleIsMenu := false
 
@@ -733,10 +733,8 @@ class GuiBase {
             this.statusIndicatorW := newW
 
             if (oldW != newW) {
-                this.guiObj["WindowTitleText"].GetPos(,, titleW)
                 this.guiObj["StatusIndicator"].GetPos(statusX,, statusW)
                 difference := newW - oldW
-                this.guiObj["WindowTitleText"].Move(,, titleW - difference)
                 this.guiObj["StatusIndicator"].Move(statusX - difference,, statusW + difference)
             }
 
