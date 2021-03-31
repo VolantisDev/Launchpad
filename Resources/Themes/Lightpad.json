@@ -104,9 +104,26 @@
                     "hovered": {}
                 },
                 "menu": {
-                    "enabled": {},
-                    "disabled": {},
-                    "hovered": {}
+                    "enabled": {
+                        "borderThickness": 0
+                    },
+                    "disabled": {
+                        "borderThickness": 0
+                    },
+                    "hovered": {
+                        "borderThickness": 0
+                    }
+                },
+                "mainMenu": {
+                    "enabled": {
+                        "borderThickness": 0
+                    },
+                    "disabled": {
+                        "borderThickness": 0
+                    },
+                    "hovered": {
+                        "borderThickness": 0
+                    }
                 },
                 "symbol": {
                     "enabled": {

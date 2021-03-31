@@ -543,13 +543,11 @@ class GuiBase {
         titlebarW := this.windowSettings["contentWidth"] + (this.margin * 2)
         startingPos := "x" . this.margin . " y10"
         textPos := "x" . this.margin . " y10"
-        handlePos := "x0 y0"
         iconSrc := this.iconSrc ? this.iconSrc : A_IconFile
 
         if (this.showIcon && iconSrc) {
             this.guiObj.AddPicture(startingPos . " h16 w16 +BackgroundTrans vWindowIcon", iconSrc)
             textPos := "x31 y10"
-            handlePos := "x26 y0"
         }
 
         buttonsW := 0
@@ -582,12 +580,8 @@ class GuiBase {
             textW -= 21
         }
 
-        titlebarObj := this.guiObj.AddText(handlePos . " w" . textW . " h31 vWindowTitlebar", "")
-        titlebarObj.OnEvent("Click", "OnWindowTitleClick")
-        titlebarObj.OnEvent("DoubleClick", "OnWindowMaxButton")
-
         titleText := this.showTitle ? this.title : ""
-        this.guiObj.AddText(textPos . " w" . textW . " vWindowTitleText", titleText)
+        this.guiObj.AddText(textPos . " w" . textW . " vWindowTitleText +BackgroundTrans", titleText)
         
         this.AddStatusIndicator()
 
@@ -599,12 +593,15 @@ class GuiBase {
             maxBtn := this.AddTitlebarButton("WindowMaxButton", "maximize", "OnWindowMaxButton")
             unMaxBtn := this.AddTitlebarButton("WindowUnmaxButton", "unmaximize", "OnWindowMaxButton", true)
             unMaxBtn.Visible := false
-            
         }
 
         if (this.showClose) {
             this.AddTitlebarButton("WindowCloseButton", "close", "OnWindowCloseButton")
         }
+
+        titlebarObj := this.guiObj.AddPicture("x0 y0 w" . titlebarW . " h31 vWindowTitlebar +BackgroundTrans", "")
+        titlebarObj.OnEvent("Click", "OnWindowTitleClick")
+        titlebarObj.OnEvent("DoubleClick", "OnWindowMaxButton")
 
         this.guiObj.AddText("x" . this.margin . " y31 w0 h0", "")
     }
@@ -686,10 +683,10 @@ class GuiBase {
             newW := this.CalculateStatusIndicatorWidth()
 
             if (oldW != newW) {
-                this.guiObj["WindowTitlebar"].GetPos(,, titleW)
+                this.guiObj["WindowTitleText"].GetPos(,, titleW)
                 this.guiObj["StatusIndicator"].GetPos(statusX,, statusW)
                 difference := newW - oldW
-                this.guiObj["WindowTitlebar"].Move(,, titleW - difference)
+                this.guiObj["WindowTitleText"].Move(,, titleW - difference)
                 this.guiObj["StatusIndicator"].Move(statusX - difference,, statusW + difference)
             }
 
@@ -796,7 +793,8 @@ class GuiBase {
         }
 
         if (this.showTitlebar) {
-            this.AutoXYWH("w", ["WindowTitleText", "WindowTitlebar"])
+            this.AutoXYWH("w", ["WindowTitlebar"])
+            this.AutoXYWH("w", ["WindowTitleText"])
 
             if (this.showStatusIndicator) {
                 this.AutoXYWH("x*", ["StatusIndicator"])
@@ -844,9 +842,9 @@ class GuiBase {
 
     End() {
         static CS_DROPSHADOW := 0x00020000
-        windowSize := ""
 
         width := this.windowSettings["contentWidth"] + (this.margin * 2)
+        windowSize := "w" . width
         MonitorGetWorkArea(, monitorL, monitorT, monitorR, monitorB)
 
         if (this.positionAtMouseCursor) {    
@@ -863,6 +861,11 @@ class GuiBase {
         }
 
         this.guiObj.Show(windowSize . " " . this.showOptions)
+
+        if (this.showMinimize) {
+            this.guiObj["WindowMinButton"].Visible := 0
+            this.guiObj["WindowMinButton"].Visible := 1
+        }
 
         if (this.lvHeaderHwnd) {
             WinRedraw("ahk_id " . this.lvHeaderHwnd)
