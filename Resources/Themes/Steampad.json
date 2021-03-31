@@ -144,21 +144,24 @@
                         "textColor": "{{textLight}}",
                         "borderColor": "{{background}}",
                         "textAlign": "Left",
-                        "margin": 4
+                        "margin": 0,
+                        "shape": "MainMenuButtonShape"
                     },
                     "disabled": {
                         "bgColor": "{{background}}",
                         "textColor": "{{dim}}",
                         "borderColor": "{{background}}",
                         "textAlign": "Left",
-                        "margin": 4
+                        "margin": 0,
+                        "shape": "MainMenuButtonShape"
                     },
                     "hovered": {
                         "bgColor": "{{background}}",
                         "textColor": "{{light}}",
                         "borderColor": "{{background}}",
                         "textAlign": "Left",
-                        "margin": 4
+                        "margin": 0,
+                        "shape": "MainMenuButtonShape"
                     }
                 },
                 "titlebar": {

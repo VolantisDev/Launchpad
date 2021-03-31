@@ -15,6 +15,33 @@
         },
         "themeAssets": {
             "logo": ""
+        },
+        "buttons": {
+            "styles": {
+                "status": {
+                    "enabled": {
+                        "bgColor": "{{accentDarkBg}}",
+                        "textColor": "{{light}}",
+                        "borderThickness": 0,
+                        "shape": "StatusIndicatorButtonShape",
+                        "textAlign": "Left"
+                    },
+                    "disabled": {
+                        "bgColor": "{{gray}}",
+                        "textColor": "{{dim}}",
+                        "borderThickness": 0,
+                        "shape": "StatusIndicatorButtonShape",
+                        "textAlign": "Left"
+                    },
+                    "hovered": {
+                        "bgColor": "{{accentDark}}",
+                        "textColor": "{{light}}",
+                        "borderThickness": 0,
+                        "shape": "StatusIndicatorButtonShape",
+                        "textAlign": "Left"
+                    }
+                }
+            }
         }
     }
 }

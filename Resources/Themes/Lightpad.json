@@ -16,9 +16,10 @@
             "accentDark": "8a57f0",
             "transColor": "",
             "border": "{{accentDark}}",
-            "linkText": "{{accentLight}}",
+            "linkText": "{{accent}}",
             "inputText": "{{text}}",
-            "lvHeaderText": "{{text}}"
+            "lvHeaderText": "{{text}}",
+            "accentDarkBg": "470BC0"
         },
         "themeAssets": {
             "icon": "Graphics\\Launchpad.ico",
@@ -59,7 +60,7 @@
                         "textColor": "{{text}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderThickness": 3,
+                        "borderThickness": 1,
                         "shape": "ButtonShape",
                         "strokeWidth": 1,
                         "textAlign": "Center",
@@ -70,7 +71,7 @@
                         "textColor": "{{text}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderThickness": 3,
+                        "borderThickness": 1,
                         "shape": "ButtonShape",
                         "strokeWidth": 1,
                         "textAlign": "Center",
@@ -81,7 +82,7 @@
                         "textColor": "{{light}}",
                         "dimColor": "{{dim}}",
                         "borderColor": "{{border}}",
-                        "borderThickness": 3,
+                        "borderThickness": 1,
                         "shape": "ButtonShape",
                         "strokeWidth": 1,
                         "textAlign": "Center",
@@ -114,43 +115,67 @@
                         "borderThickness": 0
                     }
                 },
-                "mainMenu": {
-                    "enabled": {
-                        "borderThickness": 0
-                    },
-                    "disabled": {
-                        "borderThickness": 0
-                    },
-                    "hovered": {
-                        "borderThickness": 0
-                    }
-                },
                 "symbol": {
                     "enabled": {
+                        "bgColor": "{{background}}",
                         "borderThickness": 0,
                         "shape": "SymbolButtonShape"
                     },
                     "disabled": {
+                        "bgColor": "{{background}}",
                         "borderThickness": 0,
                         "shape": "SymbolButtonShape"
                     },
                     "hovered": {
+                        "bgColor": "{{background}}",
                         "borderThickness": 0,
                         "shape": "SymbolButtonShape"
                     }
                 },
                 "titlebar": {
                     "enabled": {
+                        "bgColor": "{{background}}",
+                        "textColor": "{{textLight}}",
                         "borderThickness": 0,
-                        "shape": "SymbolButtonShape"
+                        "shape": "SymbolButtonShape",
+                        "margin": 3
                     },
                     "disabled": {
+                        "bgColor": "{{background}}",
+                        "textColor": "{{textLight}}",
                         "borderThickness": 0,
-                        "shape": "SymbolButtonShape"
+                        "shape": "SymbolButtonShape",
+                        "margin": 3
                     },
                     "hovered": {
+                        "bgColor": "{{background}}",
+                        "textColor": "{{accentDark}}",
                         "borderThickness": 0,
-                        "shape": "SymbolButtonShape"
+                        "shape": "SymbolButtonShape",
+                        "margin": 3
+                    }
+                },
+                "mainMenu": {
+                    "enabled": {
+                        "bgColor": "{{background}}",
+                        "textColor": "{{textLight}}",
+                        "borderThickness": 0,
+                        "textAlign": "Left",
+                        "shape": "MainMenuButtonShape"
+                    },
+                    "disabled": {
+                        "bgColor": "{{background}}",
+                        "textColor": "{{textLight}}",
+                        "borderThickness": 0,
+                        "textAlign": "Left",
+                        "shape": "MainMenuButtonShape"
+                    },
+                    "hovered": {
+                        "bgColor": "{{background}}",
+                        "textColor": "{{text}}",
+                        "borderThickness": 0,
+                        "textAlign": "Left",
+                        "shape": "MainMenuButtonShape"
                     }
                 },
                 "manageText": {
@@ -206,40 +231,47 @@
                 },
                 "status": {
                     "enabled": {
-                        "bgColor": "{{accentDark}}",
-                        "textColor": "{{textLight}}",
+                        "bgColor": "{{accentLight}}",
+                        "textColor": "{{accentDark}}",
                         "borderThickness": 0,
-                        "shape": "StatusIndicatorButtonShape"
+                        "shape": "StatusIndicatorButtonShape",
+                        "textAlign": "Left"
                     },
                     "disabled": {
                         "bgColor": "{{gray}}",
                         "textColor": "{{dim}}",
                         "borderThickness": 0,
-                        "shape": "StatusIndicatorButtonShape"
+                        "shape": "StatusIndicatorButtonShape",
+                        "textAlign": "Left"
                     },
                     "hovered": {
-                        "textColor": "{{text}}",
+                        "bgColor": "{{accentDark}}",
+                        "textColor": "{{light}}",
                         "borderThickness": 0,
-                        "shape": "StatusIndicatorButtonShape"
+                        "shape": "StatusIndicatorButtonShape",
+                        "textAlign": "Left"
                     }
                 },
                 "statusOffline": {
                     "enabled": {
                         "bgColor": "{{accentDark}}",
                         "textColor": "{{textLight}}",
-                        "borderThickness": 0,
-                        "shape": "StatusIndicatorButtonShape"
+                        "borderThickness": 1,
+                        "shape": "StatusIndicatorButtonShape",
+                        "textAlign": "Left"
                     },
                     "disabled": {
                         "bgColor": "{{gray}}",
                         "textColor": "{{dim}}",
-                        "borderThickness": 0,
-                        "shape": "StatusIndicatorButtonShape"
+                        "borderThickness": 1,
+                        "shape": "StatusIndicatorButtonShape",
+                        "textAlign": "Left"
                     },
                     "hovered": {
                         "textColor": "{{text}}",
-                        "borderThickness": 0,
-                        "shape": "StatusIndicatorButtonShape"
+                        "borderThickness": 1,
+                        "shape": "StatusIndicatorButtonShape",
+                        "textAlign": "Left"
                     }
                 }
             }

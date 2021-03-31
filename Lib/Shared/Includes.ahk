@@ -121,6 +121,7 @@
 #Include ThemeLib\Gui\Progress\ProgressIndicatorBase.ahk
 #Include ThemeLib\GuiShape\ButtonShape.ahk
 #Include ThemeLib\GuiShape\GuiShapeBase.ahk
+#Include ThemeLib\GuiShape\MainMenuButtonShape.ahk
 #Include ThemeLib\GuiShape\StatusIndicatorButtonShape.ahk
 #Include ThemeLib\GuiShape\SymbolButtonShape.ahk
 #Include ThemeLib\GuiSymbol\AddSymbol.ahk
