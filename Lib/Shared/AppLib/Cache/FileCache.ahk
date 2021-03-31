@@ -81,4 +81,16 @@ class FileCache extends CacheBase {
 
         return destination
     }
+
+    GetCachedDownload(cachePath, downloadUrl) {
+        filePath := cachePath
+
+        if (!this.ItemExists(cachePath) || this.ItemNeedsUpdate(cachePath)) {
+            filePath := this.ImportItemFromUrl(cachePath, downloadUrl)
+        } else {
+            filePath := this.GetCachePath(cachePath)
+        }
+
+        return filePath
+    }
 }

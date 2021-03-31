@@ -93,18 +93,6 @@ class ApiDataSource extends DataSourceBase {
                 json := JsonData.new()
                 status := json.FromString(statusResult)
             }
-
-            if (status.Has("photo") && status["photo"]) {
-                cachePath := "Profile.jpg"
-                imgPath := this.app.tmpDir . "\Images\Profile.jpg"
-                cache := this.app.Cache.GetItem("file")
-
-                if (cache.ItemNeedsUpdate(cachePath)) {
-                    cache.ImportItemFromUrl(cachePath, status["photo"])
-                }
-
-                status["photo"] := cache.GetCachePath(cachePath)
-            }
         }
 
         return status

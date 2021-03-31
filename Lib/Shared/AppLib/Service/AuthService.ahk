@@ -58,6 +58,11 @@ class AuthService extends AppServiceBase {
             email := this.authInfoObj.Get("email")
             statusText := email ? email : "Logged in"
             imgPath := this.authInfoObj.Get("photo")
+
+            if (SubStr(imgPath, 1, 4) == "http") {
+                cachePath := "account--profile.jpg"
+                imgPath := this.app.Cache.GetItem("file").GetCachedDownload(cachePath, imgPath)
+            }
         }
 
         return Map("name", statusText, "photo", imgPath)
