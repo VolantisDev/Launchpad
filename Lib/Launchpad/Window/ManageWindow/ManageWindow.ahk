@@ -112,7 +112,11 @@
     }
 
     OnAccountDetails(btn, info) {
-        this.app.GuiManager.Dialog("AccountInfoWindow", this.windowKey)
+        result := this.app.GuiManager.Dialog("AccountInfoWindow", this.windowKey)
+
+        if (result == "OK") {
+            this.UpdateStatusIndicator()
+        }
     }
 
     StatusWindowIsOnline() {
