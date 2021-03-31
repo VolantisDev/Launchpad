@@ -4,6 +4,7 @@ class BuildLaunchersOp extends LauncherBuilderOpBase {
     verbProper := "Building"
     verbPast := "built"
     verbPastProper := "Built"
+    skipped := 0
 
     __New(app, launcherEntities := "", builder := "", updateExisting := false, owner := "") {
         this.updateExisting := !!(updateExisting)
@@ -33,8 +34,18 @@ class BuildLaunchersOp extends LauncherBuilderOpBase {
             if (this.useProgress) {
                 this.progress.SetDetailText(launcherEntityObj.Key . ": " . message)
             }
+        } else {
+            this.skipped++
         }
 
         return success
+    }
+
+    RunAction() {
+        super.RunAction()
+
+        if (this.skipped > 0) {
+            this.successCount -= this.skipped
+        }
     }
 }

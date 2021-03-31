@@ -48,7 +48,7 @@ class BulkOperationBase {
         this.running := false
         this.completed := true
         this.LogResults()
-        return (this.successCount > 0 && this.failedCount == 0)
+        return (this.failedCount == 0)
     }
 
     LogResults() {
