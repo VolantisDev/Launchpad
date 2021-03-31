@@ -9,7 +9,7 @@
     }
 
     GetTextDefinition() {
-        return "Select an existing shortcut and platform, and " . this.app.appName . " will create a launcher for your game. You can modify or add the launcher details after it's added."
+        return "Select an existing shortcut and platform, and Launchpad will create a launcher for your game. You can modify or add the launcher details after it's added."
     }
 
     Controls() {
