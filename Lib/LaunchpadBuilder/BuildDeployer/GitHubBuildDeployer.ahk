@@ -1,5 +1,6 @@
 class GitHubBuildDeployer extends BuildDeployerBase {
     Deploy(deployInfo) {
+        ; TODO: Fix GitHub API request to post new release
         request := this.GetHttpReq("https://api.github.com/repos/" . this.app.Config.GitHubRepo . "/releases")
         response := request.Send("POST", this.GetPostData(deployInfo))
         success := !!(response == -1 && request.GetStatusCode() == 200)
