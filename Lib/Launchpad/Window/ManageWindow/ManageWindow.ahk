@@ -19,8 +19,7 @@
     }
 
     AddBottomControls() {
-        buttonRowOffset := 10
-        position := "x" . this.margin . " y+" . (this.margin + buttonRowOffset-2)
+        position := "x" . this.margin . " y+" . (this.margin)
         this.AddManageButton("AddButton", position, "add", true)
         position := "x+" . (this.margin) . " yp+5 w60 h25"
         this.AddButton("vEditButton " . position, "Edit", "", "manageText")
@@ -29,20 +28,21 @@
         this.AddButton("vRunButton " . position, "Run", "", "manageText")
         this.AddButton("vDeleteButton " . position, "Delete", "", "manageText")
 
-        abMargin := this.margin/2
-        smallH := 20
-        bigH := 25
         actionButtonsW := 110
-
         actionButtonsX := (this.margin + this.windowSettings["contentWidth"] - actionButtonsW)
-        position := "x" actionButtonsX . " yp-" . buttonRowOffset . " w" . actionButtonsW . " h" . smallH . " Section"
-        this.AddButton("vToolsButton " . position, "Tools")
-        position := "x" . actionButtonsX . " y+" . abMargin . " w" . actionButtonsW . " h" . bigH
+        position := "x" actionButtonsX . " yp-2 w" . actionButtonsW . " h30 Section"
         this.AddButton("vBuildAllButton " . position, "Build All", "", "primary")
     }
 
     ShowTitleMenu() {
+        toolsItems := []
+        toolsItems.Push(Map("label", "Manage &Platforms", "name", "ManagePlatforms"))
+        toolsItems.Push(Map("label", "Manage &Backups", "name", "ManageBackups"))
+        toolsItems.Push(Map("label", "&Clean Launchers", "name", "CleanLaunchers"))
+        toolsItems.Push(Map("label", "&Reload Launchers", "name", "ReloadLaunchers"))
+
         menuItems := []
+        menuItems.Push(Map("label", "&Tools", "name", "ToolsMenu", "childItems", toolsItems))
         menuItems.Push(Map("label", "&Settings", "name", "SettingsButton"))
         menuItems.Push(Map("label", "&Flush Cache", "name", "FlushCache"))
         menuItems.Push(Map("label", "Check for &Updates", "name", "CheckForUpdates"))
@@ -52,6 +52,26 @@
         menuItems.Push(Map("label", "&Restart Launchpad", "name", "Reload"))
         menuItems.Push(Map("label", "E&xit Launchpad", "name", "Exit"))
         this.app.GuiManager.Menu("MenuGui", menuItems, this, this.windowKey)
+    }
+
+    OnManagePlatforms(btn, info) {
+        this.app.GuiManager.OpenWindow("PlatformsWindow")
+    }
+
+    OnManageBackups(btn, info) {
+        this.app.GuiManager.OpenWindow("ManageBackupsWindow")
+    }
+
+    OnCleanLaunchers(btn, info) {
+        this.app.Builders.CleanLaunchers()
+    }
+
+    OnReloadLaunchers(btn, info) {
+        this.app.Launchers.LoadComponents(this.app.Config.LauncherFile)
+
+        if (this.app.GuiManager.WindowExists("ManageWindow")) {
+            this.app.GuiManager.GetWindow("ManageWindow").PopulateListView()
+        }
     }
 
     GetStatusInfo() {
@@ -241,10 +261,6 @@
         this.app.GuiManager.Form("SettingsWindow")
     }
 
-    OnToolsButton(btn, info) {
-        this.app.GuiManager.Menu("ToolsWindow")
-    }
-
     OnBuildButton(btn, info) {
         selected := this.guiObj["ListView"].GetNext(, "Focused")
 
@@ -296,7 +312,6 @@
 
         this.AutoXYWH("y", ["AddButton", "EditButton", "BuildButton", "RunButton", "DeleteButton"])
         this.AutoXYWH("xy", ["BuildAllButton"])
-        this.AutoXYWH("xy*", ["ToolsButton"])
     }
 
     Destroy() {

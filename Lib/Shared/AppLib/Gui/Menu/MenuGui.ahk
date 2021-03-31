@@ -9,16 +9,19 @@
     menuItems := ""
     menuEventSync := ""
     showOptions := "NoActivate"
+    parentMenu := ""
 
-    __New(app, themeObj, windowKey, menuItems := "", menuEventSync := "", owner := "", parent := "") {
+    __New(app, themeObj, windowKey, menuItems := "", menuEventSync := "", owner := "", parentMenu := "") {
         if (menuItems == "") {
             menuItems := []
         }
 
+        this.parentMenu := parentMenu
+
         this.menuEventSync := menuEventSync
         this.menuItems := menuItems
         this.onLButtonCallback := ObjBindMethod(this, "OnLButton")
-        super.__New(app, themeObj, windowKey, this.menuTitle, owner, parent)
+        super.__New(app, themeObj, windowKey, this.menuTitle, owner, "")
     }
 
     OnLButton(hotKey) {
@@ -46,11 +49,15 @@
         this.nextPos := "x" . this.margin
         
         for index, item in this.menuItems {
-            this.AddMenuButton(item["label"], item["name"])
+            if (!item.Has("childItems")) {
+                item["childItems"] := ""
+            }
+
+            this.AddMenuButton(item["label"], item["name"], item["childItems"])
         }
     }
 
-    AddMenuButton(buttonLabel, ctlName) {
+    AddMenuButton(buttonLabel, ctlName, childItems := "") {
         buttonSpacing := this.windowSettings["spacing"]["buttonSpacing"]
         marginSpace := (buttonSpacing * this.buttonsPerRow) - buttonSpacing
         width := (this.windowSettings["contentWidth"] - marginSpace) / this.buttonsPerRow
@@ -58,9 +65,10 @@
         buttonSize := this.themeObj.GetButtonSize("menu")
         buttonH := (buttonSize.Has("h") && buttonSize["h"] != "auto") ? buttonSize["h"] : this.buttonHeight
 
-        handler := this.menuEventSync ? "MenuItemClick" : ""
+        handler := childItems ? "ParentItemClick" : (this.menuEventSync ? "MenuItemClick" : "")
         btn := this.AddButton("v" . ctlName . " " . this.nextPos . " w" . width . " h" . buttonH, buttonLabel, handler, "menu")
         btn.Menu := this
+        btn.ChildItems := childItems
 
         if (this.buttonsPerRow > 1) {
             this.nextPos := this.nextPos == "x" . this.margin ? "x+" . buttonSpacing . " yp" : "x" . this.margin
@@ -79,6 +87,15 @@
         }
     }
 
+    ParentItemClick(btn, info) {
+        if (btn.ChildItems) {
+            childItems := btn.ChildItems
+            sync := this.menuEventSync
+            owner := this.owner
+            this.app.GuiManager.Menu("MenuGui", ChildItems, sync, owner, this)
+        }
+    }
+
     OnClose(guiObj) {
         this.Close()
         super.OnClose(guiObj)
@@ -87,5 +104,14 @@
     OnEscape(guiObj) {
         this.Close()
         super.OnEscape(guiObj)
+    }
+
+    Close() {
+        parentMenu := this.parentMenu
+        super.Close()
+        
+        if (parentMenu) {
+            parentMenu.Close()
+        }
     }
 }
