@@ -691,11 +691,11 @@ class GuiBase {
         return this.guiObj.AddEdit(opts, defaultValue)
     }
 
-    OnReload() {
+    OnReload(btn, info) {
         Reload()
     }
 
-    OnExit() {
+    OnExit(btn, info) {
         this.app.ExitApp()
     }
 
