@@ -685,6 +685,7 @@ class GuiBase {
         if (this.showStatusIndicator) {
             oldW := this.statusIndicatorW
             newW := this.CalculateStatusIndicatorWidth()
+            this.statusIndicatorW := newW
 
             if (oldW != newW) {
                 this.guiObj["WindowTitleText"].GetPos(,, titleW)
