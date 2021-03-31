@@ -243,17 +243,11 @@ class AppBase {
 
     ShowError(title, errorText, err, allowContinue := true) {
         try {
-            result := "Exit"
-
             if (this.GuiManager) {
-                btns := allowContinue ? "*&Continue|&Exit" : "*&Exit"
-                result := this.GuiManager.Dialog("ErrorDialog", err, "Unhandled Exception", errorText, "", "", btns)
+                btns := allowContinue ? "*&Continue|&Reload|&Exit" : "*&Reload|&Exit"
+                this.GuiManager.Dialog("ErrorDialog", err, "Unhandled Exception", errorText, "", "", btns)
             } else {
                 this.ShowUnthemedError(title, err.Message, err, "", allowContinue)
-            }
-
-            if (result == "Exit") {
-                ExitApp
             }
         } catch (ex) {
             this.ShowUnthemedError(title, errorText, err, ex, allowContinue)

@@ -4,7 +4,7 @@ class ErrorDialog extends DialogBox {
     notifierObj := ""
     apiEndpointUrl := ""
 
-    __New(app, themeObj, windowKey, errorObj, title, text := "", owner := "", parent := "", btns := "*&Continue|&Exit") {
+    __New(app, themeObj, windowKey, errorObj, title, text := "", owner := "", parent := "", btns := "*&Continue|&Reload|&Exit") {
         this.errorObj := errorObj
         this.notifierObj := app.Notifications.notifierObj
 
@@ -35,6 +35,14 @@ class ErrorDialog extends DialogBox {
     ProcessResult(result, submittedData := "") {
         if (this.guiObj["SubmitError"].Value) {
             this.SendError()
+        }
+
+        if (result == "Exit") {
+            this.app.ExitApp()
+        }
+
+        if (result == "Reload") {
+            Reload()
         }
 
         return super.ProcessResult(result, submittedData)
