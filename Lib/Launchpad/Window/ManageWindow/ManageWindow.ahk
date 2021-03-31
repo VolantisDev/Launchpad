@@ -53,9 +53,9 @@
 
         if (this.app.Auth.IsAuthenticated()) {
             menuItems.Push(Map("label", "Account Details", "name", "AccountDetails"))
-            menuItems.Push(Map("label", "Logout", "name", "Login"))
+            menuItems.Push(Map("label", "Logout", "name", "Logout"))
         } else {
-            menuItems.Push(Map("label", "Login", "name", "Logout"))
+            menuItems.Push(Map("label", "Login", "name", "Login"))
         }
 
         this.app.GuiManager.Menu("MenuGui", menuItems, this, this.windowKey)
