@@ -158,6 +158,10 @@
             }
         }
 
+        if (result == "Exit") {
+            this.app.ExitApp()
+        }
+
         return result
     }
 }
