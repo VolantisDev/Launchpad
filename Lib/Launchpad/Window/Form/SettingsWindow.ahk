@@ -37,10 +37,14 @@
 
         tabs.UseTab("Platforms", true)
 
+        this.AddButton("xs y+" . this.margin . " w200 h25", "Manage Platforms", "OnManagePlatforms")
+
         this.AddHeading("Platforms File")
         this.AddConfigLocationBlock("PlatformsFile", "Reload")
 
         tabs.UseTab("Backups")
+
+        this.AddButton("xs y+" . this.margin . " w200 h25", "Manage Backups", "OnManageBackups")
 
         this.AddHeading("Backup Dir")
         this.AddConfigLocationBlock("BackupDir", "&Manage")
@@ -63,6 +67,8 @@
         ctl := this.guiObj.AddDDL("vThemeName xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"), this.availableThemes)
         ctl.OnEvent("Change", "OnThemeNameChange")
         ctl.ToolTip := "Select a theme for Launchpad to use."
+
+        this.AddButton("xs y+" . this.margin . " w250 h25", "Reload Launchpad", "OnReload")
 
         tabs.UseTab("Cache", true)
 
@@ -95,6 +101,14 @@
         closeX := this.margin + this.windowSettings["contentWidth"] - closeW
 
         this.AddSettingsButton("&Done", "CloseButton", closeW, 30, "x" . closeX, "dialog")
+    }
+
+    OnManageBackups(btn, info) {
+        this.app.GuiManager.OpenWindow("ManageBackupsWindow")
+    }
+
+    OnManagePlatforms(btn, info) {
+        this.app.GuiManager.OpenWindow("PlatformsWindow")
     }
 
     AddConfigLocationBlock(settingName, extraButton := "", helpText := "") {
