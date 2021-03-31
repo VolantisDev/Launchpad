@@ -4,7 +4,7 @@ class LoadModulesOp extends BulkOperationBase {
     progressTitle := "Adding Selected Games"
     progressText := "Please wait while Launchpad adds the selected games..."
     notify := true
-    successMessage := "Added {n} games to Launchpad."
+    successMessage := "Added {n} games."
     failedMessage := "Failed to add {n} games."
 
     __New(app, moduleDirs, state, owner := "") {

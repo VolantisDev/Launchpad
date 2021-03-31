@@ -19,7 +19,7 @@
         this.deleteAssets := !!ctl.Value
     }
 
-    ProcessResult(result) {
+    ProcessResult(result, submittedData := "") {
         if (result == "Delete") {
             if (this.deleteLauncher and this.entityObj.IsBuilt) {
                 file := this.entityObj.GetLauncherFile(this.entityObj.Key, false)
@@ -40,6 +40,6 @@
             this.app.State.DeleteLauncherInfo(this.entityObj.Key)
         }
 
-        return super.ProcessResult(result)
+        return super.ProcessResult(result, submittedData)
     }
 }

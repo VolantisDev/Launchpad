@@ -27,8 +27,8 @@ class LauncherEditor extends LauncherEditorBase {
         
         this.AddSelect("Platform", "Platform", this.entityObj.Platform, this.platforms, false, "", "", "Select the platform that this game is run through.", false)
 
-        this.AddEntityTypeSelect("Launcher", "LauncherType", this.entityObj.ManagedLauncher.EntityType, this.launcherTypes, "LauncherConfiguration", "This tells Launchpad how to interact with any launcher your game might require. If your game's launcher isn't listed, or your game doesn't have a launcher, start with `"Default`".")
-        this.AddEntityTypeSelect("Game", "GameType", this.entityObj.ManagedLauncher.ManagedGame.EntityType, this.gameTypes, "GameConfiguration", "This tells Launchpad how to launch your game. Most games can use 'default', but launchers can support different game types.")
+        this.AddEntityTypeSelect("Launcher", "LauncherType", this.entityObj.ManagedLauncher.EntityType, this.launcherTypes, "LauncherConfiguration", "This tells " . this.app.appName . " how to interact with any launcher your game might require. If your game's launcher isn't listed, or your game doesn't have a launcher, start with `"Default`".")
+        this.AddEntityTypeSelect("Game", "GameType", this.entityObj.ManagedLauncher.ManagedGame.EntityType, this.gameTypes, "GameConfiguration", "This tells " . this.app.appName . " how to launch your game. Most games can use 'default', but launchers can support different game types.")
 
         tabs.UseTab("Sources", true)
         this.AddLocationBlock("Icon Source", "IconSrc", "Clear", true, true)

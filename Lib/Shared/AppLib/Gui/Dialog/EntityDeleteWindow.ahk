@@ -12,7 +12,7 @@
     }
 
     GetTextDefinition() {
-        return "This will delete the '" . this.entityObj.Key . "' entity from Launchpad and cannot be undone."
+        return "This will delete the '" . this.entityObj.Key . "' entity from " . this.app.appName . " and cannot be undone."
     }
 
     GetButtonsDefinition() {
@@ -27,7 +27,7 @@
         super.Controls()
     }
 
-    ProcessResult(result) {
+    ProcessResult(result, submittedData := "") {
         if (result == "Delete") {
             this.entityManager.RemoveEntity(this.entityObj.Key)
             this.entityManager.SaveModifiedEntities()

@@ -124,6 +124,10 @@ class GuiBase {
         this.tabsAdjustRectCallback := ObjBindMethod(this, "OnTabsAdjustRect")
     }
 
+    OnCheckbox(chk, info) {
+        ; Dummy method that can be overridden or used as a generic checkbox callback
+    }
+
     __Delete() {
         if (this.app) {
             this.app.Events.Unregister(Events.MOUSE_MOVE, "Gui" . this.guiId, this.mouseMoveCallback)

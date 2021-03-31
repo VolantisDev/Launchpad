@@ -103,12 +103,12 @@ class ProgressIndicatorBase extends FormGuiBase {
     
     }
 
-    ProcessResult(result) {
+    ProcessResult(result, submittedData := "") {
         if (result != "Cancel") {
             result := this.currentPosition
         }
 
-        return super.ProcessResult(result)
+        return super.ProcessResult(result, submittedData)
     }
 
     OnDialogBoxButton(btn, info) {

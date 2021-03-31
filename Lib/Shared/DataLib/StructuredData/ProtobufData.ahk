@@ -1,4 +1,5 @@
 class ProtobufData extends StructuredDataBase {
+	; TODO: Remove dependency on A_ScriptDir
 	static protoc := A_ScriptDir . "\Vendor\Protoc\bin\protoc.exe"
 
     FromString(ByRef src, args*) {

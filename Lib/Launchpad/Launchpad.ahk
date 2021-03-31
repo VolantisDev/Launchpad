@@ -24,11 +24,6 @@
         set => this.Services.Set("BlizzardProductDb", value)
     }
 
-    Auth {
-        get => this.Services.Get("AuthService")
-        set => this.Services.Set("AuthService", value)
-    }
-
     Backups {
         get => this.Services.Get("BackupManager")
         set => this.Services.Set("BackupManager", value)
@@ -38,11 +33,12 @@
         super.LoadServices(config)
         this.Backups := BackupManager.new(this, this.Config.BackupsFile)
         this.DataSources := DataSourceManager.new(this.Events)
+        this.DataSources.SetItem("api", ApiDataSource.new(this, this.Cache.GetItem("api"), this.Config.ApiEndpoint), true)
         this.Builders := BuilderManager.new(this)
         this.BlizzardProductDb := BlizzardProductDb.new(this)
         this.Launchers := LauncherManager.new(this)
         this.Platforms := PlatformManager.new(this)
-        this.Auth := AuthService.new(this, "", this.State)
+        
     }
 
     GetCaches() {
@@ -69,12 +65,12 @@
     }
 
     OnUpdateIncludes(itemName, itemPos, menu) {
-        RunWait(A_ScriptDir . "\Scripts\UpdateIncludes.bat", A_ScriptDir . "\Scripts")
+        RunWait(this.appDir . "\Scripts\UpdateIncludes.bat", this.appDir . "\Scripts")
         Reload()
     }
 
     OnBuildLaunchpad(itemName, itemPos, menu) {
-        Run(A_ScriptDir . "\Scripts\Build.bat", A_ScriptDir . "\Scripts")
+        Run(this.appDir . "\Scripts\Build.bat", this.appDir . "\Scripts")
     }
 
     InitializeApp(config) {
@@ -86,11 +82,10 @@
 
             trayMenu := A_TrayMenu
             trayMenu.Add("Update Includes", this.updateIncludesCallback)
-            trayMenu.Add("Build Launchpad", this.buildLaunchpadCallback)
+            trayMenu.Add("Build " . this.appName, this.buildLaunchpadCallback)
         }
 
         this.Builders.SetItem("ahk", AhkLauncherBuilder.new(this), true)
-        this.DataSources.SetItem("api", ApiDataSource.new(this, this.Cache.GetItem("api"), this.Config.ApiEndpoint), true)
         this.Installers.SetItem("LaunchpadUpdate", LaunchpadUpdate.new(this.Version, this.State, this.Cache.GetItem("file"), this.tmpDir))
         this.Installers.SetItem("Dependencies", DependencyInstaller.new(this.Version, this.State, this.Cache.GetItem("file"), [], this.tmpDir))
         this.Installers.SetupInstallers()
@@ -112,7 +107,7 @@
 
         result := ""
 
-        if (!FileExist(A_ScriptDir . "\Launchpad.ini")) {
+        if (!FileExist(this.appDir . "\" . this.appName . ".ini")) {
             result := this.GuiManager.OpenWindow("SetupWindow")
 
             if (result == "Exit") {

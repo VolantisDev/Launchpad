@@ -4,6 +4,7 @@
 Launchpad.ini
 Launchpad.build.ini
 /Build
+/Dist
 /Launchpad.zip
 /Launchpad-*.zip
 /Launchpad.exe

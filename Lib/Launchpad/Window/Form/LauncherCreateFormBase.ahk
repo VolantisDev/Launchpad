@@ -22,7 +22,7 @@
         this.knownPlatforms := this.dataSource.ReadListing("platforms")
     }
 
-    ProcessResult(result) {
+    ProcessResult(result, submittedData := "") {
         entity := ""
 
         if (result == "Save") {

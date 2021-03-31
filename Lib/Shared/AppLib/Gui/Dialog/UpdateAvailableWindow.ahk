@@ -7,7 +7,7 @@
     }
 
     GetTextDefinition() {
-        return "There is a new version of Launchpad available!" ; @todo Populate based on whether you're currently logged in
+        return "There is a new version of " . this.app.appName . " available!" ; @todo Populate based on whether you're currently logged in
     }
 
     GetButtonsDefinition() {
@@ -23,10 +23,10 @@
         this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " y+" . (this.margin), "Latest version: " . this.releaseInfo["data"]["version"])
         this.SetFont()
         this.guiObj.AddLink("w" . this.windowSettings["contentWidth"] . " y+" . (this.margin), '<a href="' .  this.releaseInfo["data"]["release-page"] . '">View release notes</a>')
-        this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " y+" . (this.margin*2), "Would you like to update Launchpad now?")
+        this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " y+" . (this.margin*2), "Would you like to update " . this.app.appName . " now?")
     }
 
-    ProcessResult(result) {
+    ProcessResult(result, submittedData := "") {
         if (result == "Update") {
             this.ApplyUpdate()
         }
@@ -42,8 +42,8 @@
         }
         
         if (downloadUrl) {
-            localFile := this.app.tmpDir . "\Installers\Launchpad-" . this.releaseInfo["data"]["version"] . ".exe"
-            FileDelete(this.app.tmpDir . "\Installers\Launchpad-*")
+            localFile := this.app.tmpDir . "\Installers\" . this.app.appName . "-" . this.releaseInfo["data"]["version"] . ".exe"
+            FileDelete(this.app.tmpDir . "\Installers\" . this.app.appName . "-*")
             Download(downloadUrl, localFile)
             Run(localFile)
             ExitApp()

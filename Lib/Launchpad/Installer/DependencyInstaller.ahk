@@ -1,5 +1,5 @@
 class DependencyInstaller extends InstallerBase {
-    name := "Launchpad Dependency Installer"
+    name := "Dependency Installer"
 
     __New(version, appState, cache, extraComponents := "", tmpDir := "") {
         components := []
@@ -18,6 +18,7 @@ class DependencyInstaller extends InstallerBase {
         ;ahk2ExeComponent := DownloadableInstallerComponent.new(dbVersion, ahk2ExeUrl, false, ahk2ExePath, appState, "Ahk2Exe", cache, "AutoHotKey", true, tmpDir, false)
         ;components.Push(ahk2ExeComponent)
 
+        ; TODO: Remove dependency on A_ScriptDir
         ahkBins := A_ScriptDir . "\Resources\Dependencies\AHkBins.zip"
         dest := A_ScriptDir . "\Vendor\AutoHotKey\Compiler"
         ahkBinsComponent := CopyableInstallerComponent.new(dbVersion, ahkBins, true, dest, appState, "AhkBins", cache, "Dependencies", true, tmpDir, false)

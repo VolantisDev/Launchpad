@@ -22,7 +22,7 @@ VIAddVersionKey "FileVersion"  "${VERSION}"
 SetCompressor ZLIB
 Name "${APP_NAME}"
 Caption "${APP_NAME}"
-OutFile "Build\${APP_NAME}Installer.exe"
+OutFile "Dist\${APP_NAME}Installer.exe"
 BrandingText "${APP_NAME}"
 XPStyle on
 InstallDirRegKey "${REG_ROOT}" "${REG_APP_PATH}" ""

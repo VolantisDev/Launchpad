@@ -84,6 +84,16 @@ class AppBase {
         set => this.Services.Set("Debugger", value)
     }
 
+    Auth {
+        get => this.Services.Get("AuthService")
+        set => this.Services.Set("AuthService", value)
+    }
+
+    Shell {
+        get => this.Services.Get("Shell")
+        set => this.Services.Set("Shell", value)
+    }
+
     __New(config := "") {
         global appVersion
 
@@ -134,8 +144,21 @@ class AppBase {
         this.configObj := this.LoadAppConfig(config)
         this.stateObj := this.LoadAppState(config)
 
+        shell := ""
+
+        if (!config.Has("useShell") || config["useShell"]) {
+            if (config.Has("shell") && config["shell"]) {
+                shell := config["shell"]
+            } else {
+                shell := ComObjCreate("WScript.Shell")
+            }
+
+            shell.CurrentDirectory := this.appDir
+        }
+
         ; @todo Create any services required for initialization
         services := Map()
+        services["Shell"] := shell
         services["Debugger"] := Debugger.new()
         services["IdGenerator"] := UuidGenerator.new()
         services["VersionChecker"] := VersionChecker.new()
@@ -148,12 +171,28 @@ class AppBase {
         this.InitializeApp(config)
     }
 
+    GetCmdOutput(command, trimOutput := true) {
+        output := ""
+
+        if (!this.Shell) {
+            throw AppException.new("The shell is disabled, so shell commands cannot currently be run.")
+        }
+        
+        result := this.Shell.Exec(A_ComSpec . " /C " . command).StdOut.ReadAll()
+
+        if (trimOutput) {
+            result := Trim(result, " `r`n`t")
+        }
+
+        return result
+    }
+
     GetCaches() {
         return Map()
     }
 
     LoadAppConfig(config) {
-        configFile := A_ScriptDir . "\" . this.appName . ".ini"
+        configFile := this.appDir . "\" . this.appName . ".ini"
 
         if (config.Has("configFile") && config["configFile"]) {
             configFile := config["configFile"]
@@ -230,6 +269,19 @@ class AppBase {
 
     InitializeApp(config) {
         this.LoadServices(config)
+        this.CheckForUpdates()
+
+        if (!FileExist(this.Config.ConfigPath)) {
+            this.InitialSetup(config)
+        }
+    }
+
+    InitialSetup(config) {
+        ; Optional method to override
+    }
+
+    CheckForUpdates() {
+        ; Optional method to override
     }
     
     LoadServices(config) {
@@ -278,6 +330,7 @@ class AppBase {
         this.Services.Set("NotificationService", NotificationService.new(this, ToastNotifier.new(this)))
         this.Services.Set("GuiManager", GuiManager.new(this))
         this.Services.Set("InstallerManager", InstallerManager.new(this))
+        this.Services.Set("AuthService", AuthService.new(this, "", this.State))
     }
 
     ExitApp() {

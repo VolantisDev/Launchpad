@@ -4,7 +4,7 @@ class ErrorDialog extends DialogBox {
     notifierObj := ""
     apiEndpointUrl := ""
 
-    __New(app, themeObj, windowKey, errorObj, title, text := "", owner := "", parent := "", btns := "*&Continue|&Exit Launchpad") {
+    __New(app, themeObj, windowKey, errorObj, title, text := "", owner := "", parent := "", btns := "*&Continue|&Exit") {
         this.errorObj := errorObj
         this.notifierObj := app.Notifications.notifierObj
 
@@ -32,12 +32,12 @@ class ErrorDialog extends DialogBox {
         ; @todo perhaps break out a separate ResizeDialog function which automatically moves the buttons
     }
 
-    ProcessResult(result) {
+    ProcessResult(result, submittedData := "") {
         if (this.guiObj["SubmitError"].Value) {
             this.SendError()
         }
 
-        return super.ProcessResult(result)
+        return super.ProcessResult(result, submittedData)
     }
 
     SendError() {

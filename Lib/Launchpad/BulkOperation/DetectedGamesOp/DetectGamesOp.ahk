@@ -1,7 +1,7 @@
 class DetectGamesOp extends BulkOperationBase {
     platforms := ""
     progressTitle := "Detecting Games"
-    progressText := "Please wait while Launchpad detects installed games..."
+    progressText := "Please wait while your games are detected..."
     notify := false
     successMessage := "Found games from {n} platforms."
     failedMessage := "Failed to detect games from {n} platforms."

@@ -24,12 +24,12 @@ class FeedbackWindow extends DialogBox {
         this.AddEdit("Email", "", "")
     }
 
-    ProcessResult(result) {
+    ProcessResult(result, submittedData := "") {
         if (result == "Send") {
             this.SendFeedback()
         }
 
-        return super.ProcessResult(result)
+        return super.ProcessResult(result, submittedData)
     }
 
     SendFeedback() {

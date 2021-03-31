@@ -62,13 +62,13 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         this.AddSelect(prefix . " Run Type", "RunType", this.entityObj.RunType, this.runTypes, true, "", "", "", true)
         this.AddTextBlock("RunCmd", prefix . " Run Command", true, "", true)
         this.AddLocationBlock(prefix . " Shortcut", "ShortcutSrc", "Clear", true, true, true)
-        this.AddSelect(prefix . " Run Method", "RunMethod", this.entityObj.RunMethod, this.runMethods, true, "", "", "RunWait: The simplest method when it works, runs a process and waits for it to complete in one command`nRun: The most compatible method, runs a process and then separately waits for it to start`nScheduled: Helpful to avoid Launchpad owning the process, this creates a scheduled task that will run the process immediately and then delete itself", true)
+        this.AddSelect(prefix . " Run Method", "RunMethod", this.entityObj.RunMethod, this.runMethods, true, "", "", "RunWait: The simplest method when it works, runs a process and waits for it to complete in one command`nRun: The most compatible method, runs a process and then separately waits for it to start`nScheduled: Helpful to avoid " . this.app.appName . " owning the process, this creates a scheduled task that will run the process immediately and then delete itself", true)
 
         tabs.UseTab("Process", true)
         ctl := this.AddSelect(prefix . " Process Detection Type", "ProcessType", this.entityObj.ProcessType, this.processTypes, true, "", "", "Exe: Use the .exe filename to detect this item's process`nTitle: Use all or part of the window title to detect this item's process`nClass: Use the window class name to detect this item's process", true)
         ctl := this.AddTextBlock("ProcessId", prefix . " Process ID", true, "This value depends on the Process Type selected above, and can often be determined automatically.", true)
         ctl := this.AddNumberBlock("ProcessTimeout", "Process Timeout", true, "How long to wait when detecting this items' process", true)
-        this.AddCheckBoxBlock("ReplaceProcess", "Replace process after launching", true, "After the process is detected, immediately kill and re-launch it so that Launchpad is its parent process.", true)
+        this.AddCheckBoxBlock("ReplaceProcess", "Replace process after launching", true, "After the process is detected, immediately kill and re-launch it so that " . this.app.appName . " is its parent process.", true)
         
         tabs.UseTab()
         this.ExtraTabControls(tabs)

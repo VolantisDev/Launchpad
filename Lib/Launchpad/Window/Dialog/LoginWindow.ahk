@@ -27,7 +27,7 @@
         Run("https://launchpad.games/profile")
     }
 
-    ProcessResult(result) {
+    ProcessResult(result, submittedData := "") {
         return (result == "Login") ? this.guiObj["AuthToken"].Text : ""
     }
 }

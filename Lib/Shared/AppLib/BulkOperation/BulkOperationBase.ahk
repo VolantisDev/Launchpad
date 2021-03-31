@@ -28,7 +28,7 @@ class BulkOperationBase {
 
     Run() {
         if (this.completed) {
-            return this.results
+            return (this.successCount > 0 && this.failedCount == 0)
         }
 
         if (this.running) {

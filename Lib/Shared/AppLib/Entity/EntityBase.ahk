@@ -86,7 +86,7 @@ class EntityBase {
     }
 
     __New(app, key, configObj, requiredConfigKeys := "", parentEntity := "") {
-        InvalidParameterException.CheckTypes("EntityBase", "app", app, "Launchpad", "key", key, "String", "configObj", configObj, "Map")
+        InvalidParameterException.CheckTypes("EntityBase", "app", app, "AppBase", "key", key, "String", "configObj", configObj, "Map")
     
         if (parentEntity != "") {
             InvalidParameterException.CheckTypes("EntityBase", "parentEntity", parentEntity, "EntityBase")

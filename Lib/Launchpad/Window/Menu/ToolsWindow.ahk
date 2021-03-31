@@ -17,10 +17,10 @@
         this.AddMenuButton("&Reload Launchers", "ReloadLaunchers")
         this.AddMenuButton("&Clean Launchers", "CleanLaunchers")
         this.AddMenuButton("&Flush Cache", "FlushCache")
-        this.AddMenuButton("&Update Launchpad", "CheckForUpdates")
+        this.AddMenuButton("&Update " . this.app.appName, "CheckForUpdates")
         this.AddMenuButton("&Open Website", "OpenWebsite")
         this.AddMenuButton("Provide &Feedback", "ProvideFeedback")
-        this.AddMenuButton("&About Launchpad", "AboutLaunchpad")
+        this.AddMenuButton("&About " . this.app.appName, "AboutLaunchpad")
     }
 
     OnManagePlatforms(btn, info) {

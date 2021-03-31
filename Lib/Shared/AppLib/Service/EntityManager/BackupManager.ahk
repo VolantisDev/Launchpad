@@ -28,7 +28,7 @@ class BackupManager extends EntityManagerBase {
     }
 
     ChangeBackupDir() {
-        backupDir := DirSelect("*" . this.app.Config.BackupDir, 3, "Create or select the folder to save Launchpad's backups to")
+        backupDir := DirSelect("*" . this.app.Config.BackupDir, 3, "Create or select the folder to save " . this.app.appName . "'s backups to")
         
         if (backupDir != "") {
             this.SetBackupDir(backupDir)

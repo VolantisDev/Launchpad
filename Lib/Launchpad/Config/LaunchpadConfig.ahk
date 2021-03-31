@@ -122,7 +122,7 @@
     }
 
     SelectDestinationDir(existingDir) {
-        MsgBox("Launchpad creates .exe files for each of the launchers you define in your Launcher File.`n`nOn the following dialog, select the destination directory that Launchpad should create your launchers within.", "Launchpad Destination Dir", "OK")
+        MsgBox(this.app.appName . " creates .exe files for each of the launchers you define in your Launcher File.`n`nOn the following dialog, select the destination directory that " . this.app.appName . " should create your launchers within.", this.app.appName . " Destination Dir", "OK")
 
         if (existingDir != "") {
             existingDir := "*" . existingDir
@@ -150,8 +150,8 @@
     }
 
     SelectLauncherFile(existingFile) {
-        MsgBox("Launchpad uses a Launcher File to keep a list of games and settings for your launchers. The file is in JSON format and can be edited by hand or through the Launcher Manager in Launchpad.`n`nIf you have an existing Launcher File, select it on the following screen. If you want to create a new one, browse to the folder you would like and type in a new .json filename to use.", "Launchpad Launcher File", "OK")
-        path := FileSelect(8, existingFile, "Select or create the Launcher File you would like Launchpad to use.", "JSON Documents (*.json)")
+        MsgBox(this.app.appName . " uses a Launcher File to keep a list of games and settings for your launchers. The file is in JSON format and can be edited by hand or through the Launcher Manager in " . this.app.appName . ".`n`nIf you have an existing Launcher File, select it on the following screen. If you want to create a new one, browse to the folder you would like and type in a new .json filename to use.", this.app.appName . " Launcher File", "OK")
+        path := FileSelect(8, existingFile, "Select or create the Launcher File you would like " . this.app.appName . " to use.", "JSON Documents (*.json)")
 
         if (!FileExist(path)) {
             FileAppend("{`"Games`": {}}", path)
@@ -179,8 +179,8 @@
     }
 
     SelectPlatformsFile(existingFile) {
-        MsgBox("Launchpad uses a Platforms file to track a list of game platforms you have installed, and can use this for things such as detecting your installed games. This file is in JSON format, and can be edited by hand or through the Platform Manager in Launchpad.`n`nIf you have an existing Platforms file, sleect it on the following screen. If you want to create a new one, browse to th efolder you would like and type in a new .json filename to use", "Launchpad Platforms File", "OK")
-        path := FileSelect(8, existingFile, "Select or create the Platforms File you would like Launchpad to use.", "JSON Documents (*.json)")
+        MsgBox(this.app.appName . " uses a Platforms file to track a list of game platforms you have installed, and can use this for things such as detecting your installed games. This file is in JSON format, and can be edited by hand or through the Platform Manager in " . this.app.appName . ".`n`nIf you have an existing Platforms file, sleect it on the following screen. If you want to create a new one, browse to th efolder you would like and type in a new .json filename to use", this.app.appName . " Platforms File", "OK")
+        path := FileSelect(8, existingFile, "Select or create the Platforms File you would like " . this.app.appName . " to use.", "JSON Documents (*.json)")
 
         if (!FileExist(path)) {
             FileAppend("{`"Platforms`": {}}", path)
@@ -198,7 +198,7 @@
             existingDir := this.AssetsDir
         }
 
-        MsgBox("Launchpad sometimes creates and uses other files when building and/or running your launchers. These files are known as Assets, and they are stored in a separate directory for each launcher you create.`n`nOn the following dialog, select the parent directory that Launchpad should create launcher assets within.", "Launchpad Assets Dir", "OK")
+        MsgBox(this.app.appName . " sometimes creates and uses other files when building and/or running your launchers. These files are known as Assets, and they are stored in a separate directory for each launcher you create.`n`nOn the following dialog, select the parent directory that " . this.app.appName . " should create launcher assets within.", this.app.appName . " Assets Dir", "OK")
         assetsDir := this.SelectAssetsDir(existingDir)
 
         if (assetsDir != "") {

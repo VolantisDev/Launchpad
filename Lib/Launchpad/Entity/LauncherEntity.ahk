@@ -288,7 +288,7 @@ class LauncherEntity extends EntityBase {
             } else if (this.children.Has("ManagedLauncher") && this.ManagedLauncher.ManagedGame.GetConfigValue("Exe") != "") {
                 detectedValues["IconSrc"] := this.ManagedLauncher.ManagedGame.LocateExe()
             } else {
-                detectedValues["IconSrc"] := A_ScriptDir . "\Resources\Graphics\Game.ico"
+                detectedValues["IconSrc"] := this.app.appDir . "\Resources\Graphics\Game.ico"
             }
         }
 

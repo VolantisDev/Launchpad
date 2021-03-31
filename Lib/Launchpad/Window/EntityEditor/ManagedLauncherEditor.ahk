@@ -6,7 +6,7 @@ class ManagedLauncherEditor extends ManagedEntityEditorBase {
     }
 
     CustomTabControls() {
-        this.AddCheckBoxBlock("CloseBeforeRun", "Close launcher before run", true, "If selected, the launcher will be closed before attempting to run the game. This can be useful to ensure the process starts under Launchpad's process instead of the existing launcher's process.", true)
+        this.AddCheckBoxBlock("CloseBeforeRun", "Close launcher before run", true, "If selected, the launcher will be closed before attempting to run the game. This can be useful to ensure the process starts under " . this.app.appName . "'s process instead of the existing launcher's process.", true)
         this.AddCheckBoxBlock("CloseAfterRun", "Close launcher after run", true, "If selected, the launcher will be closed after the game closes. This can be useful to ensure Steam or other applications know you are done playing the game.", true)
         this.AddSelect("Launcher Close Method", "CloseMethod", this.entityObj.CloseMethod, this.closeMethods, true, "", "", "Prompt: Show a prompt that allows the user to either trigger a recheck or cancel waiting for the launcher to close`nWait: Waits up to WaitTimeout seconds for the launcher to close on its own.`nAuto: Make one polite close attempt, wait a bit, then kill the process if it is still running.`nAutoPolite: Attempt to close the launcher politely, but do not forcefully kill it if it's still running.`nAutoKill: Automatically close the launcher by force without a polite attempt.", true)
         this.AddNumberBlock("WaitTimeout", "Launcher Wait Timeout", true, "How many seconds to wait for the launcher to close before giving up.", true)
@@ -19,7 +19,7 @@ class ManagedLauncherEditor extends ManagedEntityEditorBase {
         this.AddNumberBlock("ClosePostDelay", "Close Launcher Post-Delay", true, "How many MS to wait after closing the launcher, which can be useful to allow time for helper processes to fully exit", true)
         this.AddNumberBlock("KillPreDelay", "Kill Launcher Pre-Delay", true, "How many MS to wait before forcefully killing the launcher. This is in addition to any existing delays.", true)
         this.AddNumberBlock("KillPostDelay", "Kill Launcher Post-Delay", true, "How many MS to wait after forcefully killing the launcher. This is in addition to any existing delays.", true)
-        this.AddNumberBlock("RecheckDelay", "Launcher Recheck Delay", true, "How many MS to wait between Launchpad checking if the launcher is running or not. Lower numbers increase Launchpad's responsiveness, but use more CPU.", true)
+        this.AddNumberBlock("RecheckDelay", "Launcher Recheck Delay", true, "How many MS to wait between " . this.app.appName . " checking if the launcher is running or not. Lower numbers increase " . this.app.appName . "'s responsiveness, but use more CPU.", true)
     }
 
     GetTabNames() {

@@ -12,9 +12,9 @@
         tabs := this.guiObj.Add("Tab3", " x" . this.margin . " w" . this.windowSettings["contentWidth"] . " +0x100", ["General", "Sources"])
 
         tabs.UseTab("General", true)
-        this.AddCheckBoxBlock("IsEnabled", "Enable Platform", true, "Whether or not Launchpad should utilize this platform at all.")
-        this.AddCheckBoxBlock("DetectGames", "Enable Game Detection", true, "Whether or not Launchpad should detect games installed from this platform")
-        this.AddCheckBoxBlock("IsInstalled", "Platform Is Installed", true, "Whether or not the platform is currently installed. Usually Launchpad can detect this automatically.")
+        this.AddCheckBoxBlock("IsEnabled", "Enable Platform", true, "Whether or not " . this.app.appName . " should utilize this platform at all.")
+        this.AddCheckBoxBlock("DetectGames", "Enable Game Detection", true, "Whether or not " . this.app.appName . " should detect games installed from this platform")
+        this.AddCheckBoxBlock("IsInstalled", "Platform Is Installed", true, "Whether or not the platform is currently installed. Usually " . this.app.appName . " can detect this automatically.")
 
         tabs.UseTab("Sources", true)
         this.AddLocationBlock("Install Directory", "InstallDir", "Clear", true, true)

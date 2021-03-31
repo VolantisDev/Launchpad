@@ -36,8 +36,8 @@ class FormGuiBase extends GuiBase {
                 Sleep(50)
             }
 
-            this.Submit()
-            result := this.ProcessResult(this.result)
+            submittedData := this.Submit()
+            result := this.ProcessResult(this.result, submittedData)
             this.Close()
         } else {
             result := this
@@ -68,7 +68,7 @@ class FormGuiBase extends GuiBase {
         this.result := StrReplace(btnText, "&")
     }
 
-    ProcessResult(result) {
+    ProcessResult(result, submittedData := "") {
         return result
     }
 
@@ -150,7 +150,7 @@ class FormGuiBase extends GuiBase {
 
         checkedText := !entity.UnmergedConfig.Has(prefixedName) ? " Checked" : ""
         ctl := this.guiObj.AddCheckBox("vDefault" . ctlKey . " xs h25 y+m" . checkedText, "Default")
-        ctl.ToolTip := "When checked, the default value determined by various other factors in Launchpad will be used (and shown to the right if available). When unchecked, the value you set here will be used instead."
+        ctl.ToolTip := "When checked, the default value determined by various other factors in " . this.app.appName . " will be used (and shown to the right if available). When unchecked, the value you set here will be used instead."
         ctl.OnEvent("Click", "OnDefault" . ctlKey)
         return ctl
     }

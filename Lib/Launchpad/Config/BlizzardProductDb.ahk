@@ -3,6 +3,7 @@
     configKey := "BlizzardProductDb"
 
     __New(app, autoLoad := true) {
+        ; TODO: Remove dependency on A_ScriptDir
         path := A_AppDataCommon . "\Battle.net\Agent\product.db"
         protoFile := A_ScriptDir . "\Resources\Dependencies\BlizzardProductDb.proto"
         super.__New(app, path, protoFile, autoLoad)

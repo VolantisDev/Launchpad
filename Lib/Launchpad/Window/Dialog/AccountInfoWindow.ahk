@@ -17,7 +17,7 @@
         ; @todo Add fields showing account information
     }
 
-    ProcessResult(result) {
+    ProcessResult(result, submittedData := "") {
         if (result == "Logout") {
             this.app.Auth.Logout()
         }

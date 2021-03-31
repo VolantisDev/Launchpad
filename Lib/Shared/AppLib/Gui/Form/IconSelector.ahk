@@ -51,14 +51,14 @@ class IconSelector extends DialogBox {
         ; Show listview in icon format
     }
 
-    ProcessResult(result) {
+    ProcessResult(result, submittedData := "") {
         result := (result == "Select") ? this.iconSrc : ""
 
         if (result && IsInteger(this.iconItem)) {
             result .= ":" . this.iconItem
         }
 
-        return super.ProcessResult(result)
+        return super.ProcessResult(result, submittedData)
     }
 
     GetIconSrc() {
