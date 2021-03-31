@@ -867,11 +867,6 @@ class GuiBase {
 
         this.guiObj.Show(windowSize . " " . this.showOptions)
 
-        if (this.showMinimize) {
-            this.guiObj["WindowMinButton"].Visible := 0
-            this.guiObj["WindowMinButton"].Visible := 1
-        }
-
         if (this.lvHeaderHwnd) {
             WinRedraw("ahk_id " . this.lvHeaderHwnd)
         }
