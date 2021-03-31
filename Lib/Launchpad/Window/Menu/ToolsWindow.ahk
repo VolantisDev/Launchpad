@@ -12,15 +12,11 @@
 
     Controls() {
         super.Controls()
-        this.AddMenuButton("&Manage Platforms", "ManagePlatforms")
+        this.AddMenuButton("Manage &Platforms", "ManagePlatforms")
         this.AddMenuButton("Manage &Backups", "ManageBackups")
-        this.AddMenuButton("&Reload Launchers", "ReloadLaunchers")
         this.AddMenuButton("&Clean Launchers", "CleanLaunchers")
-        this.AddMenuButton("&Flush Cache", "FlushCache")
-        this.AddMenuButton("&Update " . this.app.appName, "CheckForUpdates")
-        this.AddMenuButton("&Open Website", "OpenWebsite")
+        this.AddMenuButton("&Reload Launchers", "ReloadLaunchers")
         this.AddMenuButton("Provide &Feedback", "ProvideFeedback")
-        this.AddMenuButton("&About " . this.app.appName, "AboutLaunchpad")
     }
 
     OnManagePlatforms(btn, info) {
@@ -33,13 +29,9 @@
         this.app.GuiManager.OpenWindow("ManageBackupsWindow")
     }
 
-    OnReloadLaunchers(btn, info) {
+    OnProvideFeedback(btn, info) {
         this.Close()
-        this.app.Launchers.LoadComponents(this.app.Config.LauncherFile)
-
-        if (this.app.GuiManager.WindowExists("ManageWindow")) {
-            this.app.GuiManager.GetWindow("ManageWindow").PopulateListView()
-        }
+        this.app.ProvideFeedback()
     }
 
     OnCleanLaunchers(btn, info) {
@@ -47,28 +39,12 @@
         this.app.Builders.CleanLaunchers()
     }
 
-    OnFlushCache(btn, info) {
+    OnReloadLaunchers(btn, info) {
         this.Close()
-        this.app.Cache.FlushCaches()
-    }
+        this.app.Launchers.LoadComponents(this.app.Config.LauncherFile)
 
-    OnCheckForUpdates(btn, info) {
-        this.Close()
-        this.app.CheckForUpdates()
-    }
-
-    OnOpenWebsite(btn, info) {
-        this.Close()
-        this.app.OpenWebsite()
-    }
-
-    OnProvideFeedback(btn, info) {
-        this.Close()
-        this.app.ProvideFeedback()
-    }
-
-    OnAboutLaunchpad(btn, info) {
-        this.Close()
-        this.app.GuiManager.Dialog("AboutWindow")
+        if (this.app.GuiManager.WindowExists("ManageWindow")) {
+            this.app.GuiManager.GetWindow("ManageWindow").PopulateListView()
+        }
     }
 }

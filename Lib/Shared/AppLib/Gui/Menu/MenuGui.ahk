@@ -65,6 +65,8 @@
         if (this.buttonsPerRow > 1) {
             this.nextPos := this.nextPos == "x" . this.margin ? "x+" . buttonSpacing . " yp" : "x" . this.margin
         }
+
+        return btn
     }
 
     MenuItemClick(btn, info) {

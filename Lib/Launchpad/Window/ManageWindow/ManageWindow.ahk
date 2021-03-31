@@ -4,6 +4,7 @@
     launcherManager := ""
     platformManager := ""
     showStatusIndicator := true
+    titleIsMenu := true
 
     __New(app, themeObj, windowKey, owner := "", parent := "") {
         this.launcherManager := app.Launchers
@@ -29,23 +30,52 @@
         this.AddButton("vDeleteButton " . position, "Delete", "", "manageText")
 
         abMargin := this.margin/2
-        toolsW := 50
-        settingsW := 60
         smallH := 20
         bigH := 25
-        actionButtonsW := toolsW + settingsW + abMargin
+        actionButtonsW := 110
 
         actionButtonsX := (this.margin + this.windowSettings["contentWidth"] - actionButtonsW)
-        position := "x" actionButtonsX . " yp-" . buttonRowOffset . " w" . toolsW . " h" . smallH . " Section"
+        position := "x" actionButtonsX . " yp-" . buttonRowOffset . " w" . actionButtonsW . " h" . smallH . " Section"
         this.AddButton("vToolsButton " . position, "Tools")
-        position := "x+" . abMargin . " yp w" . settingsW . " h" . smallH
-        this.AddButton("vSettingsButton " . position, "Settings")
         position := "x" . actionButtonsX . " y+" . abMargin . " w" . actionButtonsW . " h" . bigH
         this.AddButton("vBuildAllButton " . position, "Build All", "", "primary")
     }
 
+    ShowTitleMenu() {
+        menuItems := []
+        menuItems.Push(Map("label", "&Settings", "name", "SettingsButton"))
+        menuItems.Push(Map("label", "&Flush Cache", "name", "FlushCache"))
+        menuItems.Push(Map("label", "Check for &Updates", "name", "CheckForUpdates"))
+        menuItems.Push(Map("label", "Provide &Feedback", "name", "ProvideFeedback"))
+        menuItems.Push(Map("label", "&Open Website", "name", "OpenWebsite"))
+        menuItems.Push(Map("label", "&About Launchpad", "name", "About"))
+        menuItems.Push(Map("label", "&Restart Launchpad", "name", "Reload"))
+        menuItems.Push(Map("label", "E&xit Launchpad", "name", "Exit"))
+        this.app.GuiManager.Menu("MenuGui", menuItems, this, this.windowKey)
+    }
+
     GetStatusInfo() {
         return this.app.Auth.GetStatusInfo()
+    }
+
+    OnFlushCache(btn, info) {
+        this.app.Cache.FlushCaches()
+    }
+
+    OnOpenWebsite(btn, info) {
+        this.app.OpenWebsite()
+    }
+
+    OnCheckForUpdates(btn, info) {
+        this.app.CheckForUpdates()
+    }
+
+    OnAbout(btn, info) {
+        this.app.GuiManager.Dialog("AboutWindow")
+    }
+
+    OnProvideFeedback(btn, info) {
+        this.app.ProvideFeedback()
     }
 
     OnStatusIndicatorClick(btn, info) {
@@ -266,7 +296,7 @@
 
         this.AutoXYWH("y", ["AddButton", "EditButton", "BuildButton", "RunButton", "DeleteButton"])
         this.AutoXYWH("xy", ["BuildAllButton"])
-        this.AutoXYWH("xy*", ["SettingsButton", "ToolsButton"])
+        this.AutoXYWH("xy*", ["ToolsButton"])
     }
 
     Destroy() {

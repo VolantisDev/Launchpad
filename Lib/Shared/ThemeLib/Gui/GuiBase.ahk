@@ -42,6 +42,7 @@ class GuiBase {
     statusIndicatorMinW := 100
     statusIndicatorW := 100
     showOptions := ""
+    titleIsMenu := false
 
     positionAtMouseCursor := false
     openWindowWithinScreenBounds := true
@@ -575,18 +576,34 @@ class GuiBase {
         }
 
         textW := titlebarW - buttonsW
+        buttonsX := textW
 
         if (iconSrc) {
             textW -= 21
+            buttonsX += 21
         }
 
         titleText := this.showTitle ? this.title : ""
-        this.guiObj.AddText(textPos . " w" . textW . " vWindowTitleText +BackgroundTrans", titleText)
-        
-        this.AddStatusIndicator()
 
+        if (this.titleIsMenu) {
+            titleButtonW := this.CalculateTextWidth(titleText) + 25
+
+            if (titleButtonW > textW) {
+                titleButtonW := textW
+            }
+
+            this.AddButton(textPos . " w" . titleButtonW . " h20 vWindowTitleText", titleText, "OnWindowTitleTextClick", "mainMenu")
+        } else {
+            this.guiObj.AddText(textPos . " w" . textW . " vWindowTitleText c" . this.themeObj.GetColor("textLight") . " +BackgroundTrans", titleText)
+        }
+        
+        if (this.showStatusIndicator) {
+            this.AddStatusIndicator(buttonsX, "5")
+            buttonsX += this.statusIndicatorW + (this.margin * 2)
+        }
+        
         if (this.showMinimize) {
-            this.AddTitlebarButton("WindowMinButton", "minimize", "OnWindowMinButton", false, this.showStatusIndicator)
+            this.AddTitlebarButton("WindowMinButton", "minimize", "OnWindowMinButton", false, buttonsX)
         }
 
         if (this.showMaximize) {
@@ -606,6 +623,16 @@ class GuiBase {
         this.guiObj.AddText("x" . this.margin . " y31 w0 h0", "")
     }
 
+    OnWindowTitleTextClick(btn, info) {
+        if (this.titleIsMenu) {
+            this.ShowTitleMenu()
+        }
+    }
+
+    ShowTitleMenu() {
+
+    }
+
     CalculateStatusIndicatorWidth() {
         width := this.statusIndicatorMinW
         statusInfo := this.GetStatusInfo()
@@ -613,31 +640,7 @@ class GuiBase {
 
         if (statusInfo) {
             if (statusInfo.Has("name")) {
-                graphics := ""
-                font := "Arial"
-                size := 12
-                options := "Regular"
-                style := 0
-                styles := "Regular|Bold|Italic|BoldItalic|Underline|Strikeout"
-                formatStyle := 0x4000 | 0x1000
-
-                for eachStyle, valStyle in StrSplit(styles, "|")
-                {
-                    if RegExMatch(options, "\b" valStyle) {
-                        style |= (valStyle != "StrikeOut") ? (A_Index-1) : 8
-                    }  
-                }
-
-                hdc := GetDC()
-                graphics := Gdip_GraphicsFromHDC(hdc)
-                hFamily := Gdip_FontFamilyCreate(font)
-                hFont := Gdip_FontCreate(hFamily, size, style)
-                hFormat := Gdip_StringFormatCreate(formatStyle)
-                CreateRectF(RC, 0, 0, 0, 0)
-                returnRc := Gdip_MeasureString(graphics, statusInfo["name"], hFont, hFormat, RC)
-                returnRc := StrSplit(ReturnRC, "|")
-
-                requiredW += returnRc[3]
+                requiredW += this.CalculateTextWidth(statusInfo["name"])
             }
 
             if (StatusInfo.Has("photo")) {
@@ -652,6 +655,33 @@ class GuiBase {
         return Ceil(width)
     }
 
+    CalculateTextWidth(text) {
+        graphics := ""
+        font := "Arial"
+        size := 12
+        options := "Regular"
+        style := 0
+        styles := "Regular|Bold|Italic|BoldItalic|Underline|Strikeout"
+        formatStyle := 0x4000 | 0x1000
+
+        for eachStyle, valStyle in StrSplit(styles, "|")
+        {
+            if RegExMatch(options, "\b" valStyle) {
+                style |= (valStyle != "StrikeOut") ? (A_Index-1) : 8
+            }  
+        }
+
+        hdc := GetDC()
+        graphics := Gdip_GraphicsFromHDC(hdc)
+        hFamily := Gdip_FontFamilyCreate(font)
+        hFont := Gdip_FontCreate(hFamily, size, style)
+        hFormat := Gdip_StringFormatCreate(formatStyle)
+        CreateRectF(RC, 0, 0, 0, 0)
+        returnRc := Gdip_MeasureString(graphics, text, hFont, hFormat, RC)
+        returnRc := StrSplit(returnRc, "|")
+        return returnRc[3]
+    }
+
     AddEdit(name, defaultValue := "", options := "", width := "") {
         if (width == "") {
             width := this.windowSettings["contentWidth"]
@@ -661,16 +691,31 @@ class GuiBase {
         return this.guiObj.AddEdit(opts, defaultValue)
     }
 
-    AddTitlebarButton(name, symbol, handlerName, overlayPrevious := false, afterStatus := false) {
-        leftMargin := afterStatus ? this.margin * 2 : this.margin
-        position := overlayPrevious ? "xp yp" : "x+" . leftMargin . " y10"
+    OnReload() {
+        Reload()
+    }
+
+    OnExit() {
+        this.app.ExitApp()
+    }
+
+    AddTitlebarButton(name, symbol, handlerName, overlayPrevious := false, xPos := "") {
+        if (xPos == "") {
+            xPos := "+" . this.margin
+        }
+
+        if (overlayPrevious) {
+            xPos := "p"
+        }
+
+        position := overlayPrevious ? "xp yp" : "x" . xPos . " y10"
         options := position . " w16 h16 v" . name
         return this.themeObj.AddButton(this.guiObj, options, symbol, handlerName, "titlebar")
     }
 
-    AddStatusIndicator() {
+    AddStatusIndicator(xPos, yPos) {
         if (this.showStatusIndicator) {
-            options := "x+" . this.margin . " y5 w" . this.statusIndicatorW . " h26 vStatusIndicator"
+            options := "x" . xPos . " y" . yPos . " w" . this.statusIndicatorW . " h26 vStatusIndicator"
             statusInfo := this.GetStatusInfo()
             buttonStyle := this.StatusWindowIsOnline() ? "status" : "statusOffline"
             this.themeObj.AddButton(this.guiObj, options, statusInfo["name"], "OnStatusIndicatorClick", buttonStyle, Map("photo", statusInfo["photo"]))
