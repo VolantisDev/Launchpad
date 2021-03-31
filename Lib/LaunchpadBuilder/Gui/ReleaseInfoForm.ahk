@@ -28,8 +28,8 @@ class ReleaseInfoForm extends FormGuiBase {
         this.AddCheckBox("Mark as prerelease", "MarkAsPrerelease", false, false, "OnCheckbox")
 
         this.AddHeading("Deployment Options")
-        this.AddCheckBox("Deploy release info to GitHub", "DeployToGitHub", this.app.Config.DeployRelease)
-        this.AddCheckBox("Deploy release to Launchpad.games API", "DeployToApi", this.app.Config.DeployRelease)
+        this.AddCheckBox("Deploy release info to GitHub", "DeployToGitHub", this.app.Config.DeployRelease, false, "OnCheckbox")
+        this.AddCheckBox("Deploy release to Launchpad.games API", "DeployToApi", this.app.Config.DeployRelease, false, "OnCheckbox")
     }
 
     ProcessResult(result, submittedData := "") {
