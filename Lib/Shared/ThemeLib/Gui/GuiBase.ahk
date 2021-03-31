@@ -1109,9 +1109,13 @@ class GuiBase {
     }
 
     Submit(hide := true) {
+        submittedData := ""
+
         if (!this.isClosed) {
-            this.guiObj.Submit(hide)
+            submittedData := this.guiObj.Submit(hide)
         }
+
+        return submittedData
     }
 
     OnWindowMaxButton(btn, info) {

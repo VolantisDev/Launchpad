@@ -55,8 +55,17 @@ class AuthService extends AppServiceBase {
         imgPath := ""
 
         if (this.IsAuthenticated()) {
+            playerName := this.app.Config.PlayerName
             email := this.authInfoObj.Get("email")
-            statusText := email ? email : "Logged in"
+            
+            if (playerName) {
+                statusText := playerName
+            } else if (email) {
+                statusText := email
+            } else {
+                statusText := "Logged in"
+            }
+
             imgPath := this.authInfoObj.Get("photo")
 
             if (SubStr(imgPath, 1, 4) == "http") {

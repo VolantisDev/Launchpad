@@ -1,4 +1,9 @@
 ﻿class LaunchpadConfig extends AppConfig {
+    PlayerName {
+        get => this.GetIniValue("PlayerName") || ""
+        set => this.SetIniValue("PlayerName", value)
+    }
+
     DestinationDir {
         get => this.GetIniValue("DestinationDir") || this.app.dataDir . "\Launchers"
         set => this.SetIniValue("DestinationDir", value)
