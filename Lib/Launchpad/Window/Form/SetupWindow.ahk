@@ -131,18 +131,10 @@
     }
 
     OnOpenDestinationDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-
         this.app.Config.OpenDestinationDir()
     }
 
     OnChangeDestinationDir(btn, info) {
-        if (btn.HasProp("Menu")) {
-            btn.Menu.Close()
-        }
-        
         this.app.Config.ChangeDestinationDir()
         this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
     }
