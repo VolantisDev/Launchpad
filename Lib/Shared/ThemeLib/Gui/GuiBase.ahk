@@ -1196,7 +1196,7 @@ class GuiBase {
         this.AddHeading(heading)
         btnWidth := 20
         btnHeight := 20
-        ctl := this.AddLocationText(location, field, "xs y+m", this.windowSettings["contentWidth"] - btnWidth - (this.margin/2))
+        ctl := this.AddLocationText(location, field, "xs y+" . (this.margin/2), this.windowSettings["contentWidth"] - btnWidth - (this.margin/2))
 
         if (helpText) {
             ctl.ToolTip := helpText
