@@ -4,8 +4,8 @@ class AboutWindow extends DialogBox {
 
     __New(app, themeObj, windowKey, text := "", owner := "", parent := "", btns := "*&OK") {
         if (text = "") {
-            text := this.app.appName . " lets you launch your games from any platform in a universally-compatible way. It was born out of frustration with trying to manage non-Steam games effectively, but it has grown hugely since those humble origins into a full-fledged game launching multi-tool."
-            text .= "`n`n" . this.app.appName . " was conceived and created by Ben McClure of Volantis Development. It is a free software project that welcomes contributions from everyone, including you!`n"        
+            text := app.appName . " lets you launch your games from any platform in a universally-compatible way. It was born out of frustration with trying to manage non-Steam games effectively, but it has grown hugely since those humble origins into a full-fledged game launching multi-tool."
+            text .= "`n`n" . app.appName . " was conceived and created by Ben McClure of Volantis Development. It is a free software project that welcomes contributions from everyone, including you!`n"        
         }
         
         super.__New(app, themeObj, windowKey, "About " . app.appName, text, owner, parent, btns)
