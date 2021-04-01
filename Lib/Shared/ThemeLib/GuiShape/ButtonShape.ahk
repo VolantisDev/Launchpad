@@ -50,8 +50,8 @@ class ButtonShape extends GuiShapeBase {
     }
 
     RenderContent(w, h) {
-        x := "X" . this.config["margin"]*4
-        textW := w - (this.config["margin"]*8)
+        x := "X5"
+        textW := w - 8
         buttonText := this.GetButtonText()
 
         if (this.config["textUpper"]) {

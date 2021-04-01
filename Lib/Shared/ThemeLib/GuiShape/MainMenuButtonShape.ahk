@@ -4,8 +4,8 @@ class MainMenuButtonShape extends ButtonShape {
     RenderContent(w, h) {
         symbolMargin := 2
         symbolH := h - (symbolMargin*2)
-        x := "X" . this.config["margin"]*4
-        maxTextW := w - (this.config["margin"]*8) - symbolH
+        x := "X0"
+        maxTextW := w - 8 - symbolH
         buttonText := this.GetButtonText()
 
         if (this.config["textUpper"]) {
