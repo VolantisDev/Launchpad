@@ -69,5 +69,4 @@
 #Include Window\ManageWindow\ManageWindow.ahk
 #Include Window\ManageWindow\ManageWindowBase.ahk
 #Include Window\ManageWindow\PlatformsWindow.ahk
-#Include Window\Menu\AddMenu.ahk
 ; End of auto-generated includes.

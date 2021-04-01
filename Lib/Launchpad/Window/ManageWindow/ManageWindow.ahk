@@ -243,7 +243,27 @@
     }
 
     OnAddButton(btn, info) {
-        this.app.GuiManager.Menu("AddMenu")
+        menuItems := []
+        menuItems.Push(Map("label", "&Add Game", "name", "AddGame"))
+        menuItems.Push(Map("label", "&Import Shortcut", "name", "ImportShortcut"))
+        menuItems.Push(Map("label", "&Detect Games", "name", "DetectGames"))
+        this.app.GuiManager.Menu("MenuGui", menuItems, this, this.windowKey)
+    }
+
+    OnDetectGames(btn, info) {
+        this.app.Platforms.DetectGames()
+    }
+
+    OnImportShortcut(btn, info) {
+        if (this.app.GuiManager.WindowExists("ManageWindow")) {
+            this.app.GuiManager.GetWindow("ManageWindow").ImportShortcut()
+        }
+    }
+
+    OnAddGame(btn, info) {
+        if (this.app.GuiManager.WindowExists("ManageWindow")) {
+            this.app.GuiManager.GetWindow("ManageWindow").AddLauncher()
+        }
     }
 
     OnEditButton(btn, info) {
