@@ -44,7 +44,7 @@ class IconSelector extends DialogBox {
 
     Controls() {
         super.Controls()
-        this.AddLocationBlock("Location")
+        ;this.AddIconLocationBlock("Location")
         this.AddIconList()
 
 
@@ -73,24 +73,6 @@ class IconSelector extends DialogBox {
         }
 
         return iconNum
-    }
-
-    AddLocationBlock(fieldName) {
-        location := this.listPath ? this.listPath : "Not selected"
-        this.AddLocationText(location, fieldName)
-        buttonSize := this.themeObj.GetButtonSize("s", true)
-        buttonW := (buttonSize.Has("w") && buttonSize["w"] != "auto") ? buttonSize["w"] : 80
-        buttonH := (buttonSize.Has("h") && buttonSize["h"] != "auto") ? buttonSize["h"] : 20
-        btn := this.AddButton("xs y+m w" . buttonW . " h" . buttonH . " vSelectFile" . fieldName, "Select File")
-        btn := this.AddButton("x+m yp w" . buttonW . " h" . buttonH . " vSelectDir" . fieldName, "Select Dir")
-    }
-
-    AddLocationText(locationText, fieldName) {
-        position := "xs y+m"
-        this.SetFont("", "Bold")
-        ctl := this.guiObj.AddText("v" . fieldName . " " . position . " w" . this.windowSettings["contentWidth"] . " +0x200 +0x100 c" . this.themeObj.GetColor("linkText"), locationText)
-        ctl.ToolTip := locationText
-        this.SetFont()
     }
 
     AddIconList() {

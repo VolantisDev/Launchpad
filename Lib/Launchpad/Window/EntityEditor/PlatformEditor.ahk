@@ -17,9 +17,9 @@
         this.AddCheckBoxBlock("IsInstalled", "Platform Is Installed", true, "Whether or not the platform is currently installed. Usually " . this.app.appName . " can detect this automatically.")
 
         tabs.UseTab("Sources", true)
-        this.AddLocationBlock("Install Directory", "InstallDir", "Clear", true, true)
-        this.AddLocationBlock("Exe Path", "ExePath", "Clear", true, true)
-        this.AddLocationBlock("Icon Source", "IconSrc", "Clear", true, true)
+        this.AddEntityLocationBlock("Install Directory", "InstallDir", "Clear", true, true)
+        this.AddEntityLocationBlock("Exe Path", "ExePath", "Clear", true, true)
+        this.AddEntityLocationBlock("Icon Source", "IconSrc", "Clear", true, true)
 
         tabs.UseTab()
     }

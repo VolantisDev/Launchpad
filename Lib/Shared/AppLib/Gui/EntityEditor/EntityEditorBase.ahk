@@ -148,7 +148,7 @@ class EntityEditorBase extends FormGuiBase {
         return this.SetDefaultValue(fieldName, isDefault, includePrefix, "Not set", entityObj)
     }
 
-    AddLocationBlock(heading, settingName, extraButton := "", showOpen := true, showDefaultCheckbox := false, addPrefix := false, helpText := "", entityObj := "") {
+    AddEntityLocationBlock(heading, settingName, extraButton := "", showOpen := true, showDefaultCheckbox := false, addPrefix := false, helpText := "", entityObj := "") {
         if (entityObj == "") {
             entityObj := this.entityObj
         }
@@ -173,7 +173,7 @@ class EntityEditorBase extends FormGuiBase {
         btnWidth := 20
         btnHeight := 20
         fieldW := this.windowSettings["contentWidth"] - checkW
-        locationPos := checkW ? "x+m yp" : "xs y+m"
+        locationPos := checkW ? "x+" . this.margin . " yp" : "xs y+" . this.margin
         textW := this.windowSettings["contentWidth"] - btnWidth - (this.margin/2)
 
         if (showDefaultCheckbox) {
@@ -181,8 +181,6 @@ class EntityEditorBase extends FormGuiBase {
         }
 
         ctl := this.AddLocationText(location, settingName, locationPos . disabledText, textW)
-
-
 
         if (helpText) {
             ctl.ToolTip := helpText
@@ -202,27 +200,6 @@ class EntityEditorBase extends FormGuiBase {
         btn := this.AddButton("w" . btnWidth . " h" . btnHeight . " x+" (this.margin/2) . " yp v" . settingName . "Options", "arrowDown", "OnLocationOptions", "symbol")
         btn.MenuItems := menuItems
         btn.Tooltip := "Change options"
-    }
-
-    OnLocationOptions(btn, info) {
-        result := this.app.GuiManager.Menu("MenuGui", btn.MenuItems, this, btn)
-
-        if (result) {
-            callback := "On" . btn.Name
-            this.%callback%()
-        }
-    }
-
-    AddLocationText(locationText, ctlName, position := "xs y+m", width := "") {
-        if (width == "") {
-            width := this.windowSettings["contentWidth"]
-        }
-
-        ;this.guiObj.SetFont("Bold")
-        ctl := this.guiObj.AddText("v" . ctlName . " " . position . " w" . width . " +0x200 c" . this.themeObj.GetColor("linkText"), locationText)
-        ctl.ToolTip := locationText
-        ;this.guiObj.SetFont()
-        return ctl
     }
 
     Create() {

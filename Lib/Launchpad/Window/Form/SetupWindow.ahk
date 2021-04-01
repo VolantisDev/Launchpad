@@ -54,7 +54,8 @@
         btnWidth := 20
         btnHeight := 20
 
-        ctl := this.AddLocationText(location, settingName, inGroupBox, this.windowSettings["contentWidth"] - btnWidth - (this.margin/2))
+        pos := inGroupBox ? "xs+" . this.margin . " y+" . this.margin : ""
+        ctl := this.AddLocationText(location, settingName, pos, this.windowSettings["contentWidth"] - btnWidth - (this.margin/2))
 
         if (helpText) {
             ctl.ToolTip := helpText
@@ -71,34 +72,6 @@
         btn := this.AddButton("w" . btnWidth . " h" . btnHeight . " x+" (this.margin/2) . " yp", "arrowDown", "OnLocationOptions", "symbol")
         btn.MenuItems := menuItems
         btn.Tooltip := "Change options"
-    }
-
-    OnLocationOptions(btn, info) {
-        result := this.app.GuiManager.Menu("MenuGui", btn.MenuItems, this, btn)
-
-        if (result) {
-            callback := "On" . btn.Name
-            this.%callback%()
-        }
-    }
-
-    AddLocationText(locationText, ctlName, inGroupBox := true, width := "") {
-        if (width == "") {
-            width := this.windowSettings["contentWidth"]
-        }
-
-        position := "xs"
-
-        if (inGroupBox) {
-            position .= "+" . this.margin
-        }
-
-        position .= " y+m"
-
-        this.SetFont("", "Bold")
-        ctl := this.guiObj.AddText("v" . ctlName . " " . position . " w" . width . " +0x200 +0x100 c" . this.themeObj.GetColor("linkText"), locationText)
-        ctl.ToolTip := locationText
-        this.SetFont()
     }
 
     AddPlatformCheckboxes() {

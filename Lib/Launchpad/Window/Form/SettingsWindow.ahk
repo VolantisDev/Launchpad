@@ -116,7 +116,7 @@
         btnWidth := 20
         btnHeight := 20
 
-        ctl := this.AddLocationText(location, settingName, this.windowSettings["contentWidth"] - btnWidth - (this.margin/2))
+        ctl := this.AddLocationText(location, settingName, "", this.windowSettings["contentWidth"] - btnWidth - (this.margin/2))
 
         if (helpText) {
             ctl.ToolTip := helpText
@@ -133,27 +133,6 @@
         btn := this.AddButton("w" . btnWidth . " h" . btnHeight . " x+" (this.margin/2) . " yp", "arrowDown", "OnLocationOptions", "symbol")
         btn.MenuItems := menuItems
         btn.Tooltip := "Change options"
-    }
-
-    OnLocationOptions(btn, info) {
-        result := this.app.GuiManager.Menu("MenuGui", btn.MenuItems, this, btn)
-
-        if (result) {
-            callback := "On" . result
-            this.%callback%()
-        }
-    }
-
-    AddLocationText(locationText, ctlName, width := "") {
-        if (width == "") {
-            width := this.windowSettings["contentWidth"]
-        }
-
-        position := "xs y+m"
-        this.SetFont("", "Bold")
-        ctl := this.guiObj.AddText("v" . ctlName . " " . position . " w" . width . " +0x200 +0x100 c" . this.themeObj.GetColor("linkText"), locationText)
-        ctl.ToolTip := locationText
-        this.SetFont()
     }
 
     AddConfigCheckBox(checkboxText, settingName) {

@@ -47,8 +47,8 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         this.CustomTabControls()
 
         tabs.UseTab("Sources", true)
-        this.AddLocationBlock(prefix . " Install Directory", "InstallDir", "Clear", true, true, true, "Select the installation folder, or use default for auto-detection.")
-        this.AddLocationBlock(prefix . " Working Directory", "WorkingDir", "Clear", true, true, true, "Optionally, set a working directory to run from. This is not often required.")
+        this.AddEntityLocationBlock(prefix . " Install Directory", "InstallDir", "Clear", true, true, true, "Select the installation folder, or use default for auto-detection.")
+        this.AddEntityLocationBlock(prefix . " Working Directory", "WorkingDir", "Clear", true, true, true, "Optionally, set a working directory to run from. This is not often required.")
         this.AddSelect(prefix . " Install Locate Method", "LocateMethod", this.entityObj.LocateMethod, this.locateMethods, true, "", "", "Search: Searches a list of possible directories (Defaulting to some common possibilities) for the .exe file and uses that directory`nRegistry: Looks for the provided registry key and uses its value as the install path if present`nBlizzardProductDb: Searches for LauncherSpecificId within the Blizzard product.db file if present", true)
         this.AddTextBlock("LauncherSpecificId", prefix . " Launcher-Specific ID", true, "If required, an ID that the launcher uses to reference this item", true)
         
@@ -61,7 +61,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         tabs.UseTab("Running", true)
         this.AddSelect(prefix . " Run Type", "RunType", this.entityObj.RunType, this.runTypes, true, "", "", "", true)
         this.AddTextBlock("RunCmd", prefix . " Run Command", true, "", true)
-        this.AddLocationBlock(prefix . " Shortcut", "ShortcutSrc", "Clear", true, true, true)
+        this.AddEntityLocationBlock(prefix . " Shortcut", "ShortcutSrc", "Clear", true, true, true)
         this.AddSelect(prefix . " Run Method", "RunMethod", this.entityObj.RunMethod, this.runMethods, true, "", "", "RunWait: The simplest method when it works, runs a process and waits for it to complete in one command`nRun: The most compatible method, runs a process and then separately waits for it to start`nScheduled: Helpful to avoid " . this.app.appName . " owning the process, this creates a scheduled task that will run the process immediately and then delete itself", true)
 
         tabs.UseTab("Process", true)
