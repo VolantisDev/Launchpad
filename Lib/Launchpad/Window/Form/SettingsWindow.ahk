@@ -19,14 +19,9 @@
 
         tabs.UseTab("Launchers", true)
 
-        this.AddHeading("Launcher File")
-        this.AddConfigLocationBlock("LauncherFile", "Reload")
-
-        this.AddHeading("Launcher Directory")
-        this.AddConfigLocationBlock("DestinationDir")
-
-        this.AddHeading("Assets Directory")
-        this.AddConfigLocationBlock("AssetsDir")
+        this.AddConfigLocationBlock("Launcher File", "LauncherFile", "Reload")
+        this.AddConfigLocationBlock("Launcher Directory", "DestinationDir")
+        this.AddConfigLocationBlock("Assets Directory", "AssetsDir")
 
         this.AddHeading("Launcher Settings")
         this.AddConfigCheckBox("Create desktop shortcuts for launchers", "CreateDesktopShortcuts")
@@ -38,19 +33,13 @@
         tabs.UseTab("Platforms", true)
 
         this.AddButton("xs y+" . this.margin . " w200 h25", "Manage Platforms", "OnManagePlatforms")
-
-        this.AddHeading("Platforms File")
-        this.AddConfigLocationBlock("PlatformsFile", "Reload")
+        this.AddConfigLocationBlock("Platforms File", "PlatformsFile", "Reload")
 
         tabs.UseTab("Backups")
 
         this.AddButton("xs y+" . this.margin . " w200 h25", "Manage Backups", "OnManageBackups")
-
-        this.AddHeading("Backup Dir")
-        this.AddConfigLocationBlock("BackupDir", "&Manage")
-
-        this.AddHeading("Backups File")
-        this.AddConfigLocationBlock("BackupsFile")
+        this.AddConfigLocationBlock("Backup Dir", "BackupDir", "&Manage")
+        this.AddConfigLocationBlock("Backups File", "BackupsFile")
 
         this.AddHeading("Backups to Keep")
         ctl := this.AddEdit("BackupsToKeep", this.app.Config.BackupsToKeep, "y+" . this.margin, 100)
@@ -72,8 +61,7 @@
 
         tabs.UseTab("Cache", true)
 
-        this.AddHeading("Cache Dir")
-        this.AddConfigLocationBlock("CacheDir", "&Flush")
+        this.AddConfigLocationBlock("Cache Dir", "CacheDir", "&Flush")
 
         this.AddHeading("Cache Settings")
         this.AddConfigCheckBox("Flush cache on exit (Recommended only for debugging)", "FlushCacheOnExit")
@@ -88,8 +76,7 @@
         ctl := this.guiObj.AddDDL("vLoggingLevel xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"), this.logLevels)
         ctl.OnEvent("Change", "OnLoggingLevelChange")
 
-        this.AddHeading("API Endpoint")
-        this.AddConfigLocationBlock("ApiEndpoint")
+        this.AddConfigLocationBlock("API Endpoint", "ApiEndpoint")
 
         this.AddHeading("API Settings")
         this.AddConfigCheckBox("Enable API login for enhanced functionality", "ApiAuthentication")
@@ -111,28 +98,9 @@
         this.app.GuiManager.OpenWindow("PlatformsWindow")
     }
 
-    AddConfigLocationBlock(settingName, extraButton := "", helpText := "") {
+    AddConfigLocationBlock(heading, settingName, extraButton := "", helpText := "") {
         location := this.app.Config.%settingName% ? this.app.Config.%settingName% : "Not selected"
-        btnWidth := 20
-        btnHeight := 20
-
-        ctl := this.AddLocationText(location, settingName, "", this.windowSettings["contentWidth"] - btnWidth - (this.margin/2))
-
-        if (helpText) {
-            ctl.ToolTip := helpText
-        }
-
-        menuItems := []
-        menuItems.Push(Map("label", "Change", "name", "Change" . settingName))
-        menuItems.Push(Map("label", "Open", "name", "Open" . settingName))
-
-        if (extraButton) {
-            menuItems.Push(Map("label", extraButton, "name", StrReplace(extraButton, " ", "") . settingName))
-        }
-
-        btn := this.AddButton("w" . btnWidth . " h" . btnHeight . " x+" (this.margin/2) . " yp", "arrowDown", "OnLocationOptions", "symbol")
-        btn.MenuItems := menuItems
-        btn.Tooltip := "Change options"
+        this.AddLocationBlock(heading, settingName, location, extraButton, true, helpText)
     }
 
     AddConfigCheckBox(checkboxText, settingName) {

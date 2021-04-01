@@ -1237,7 +1237,7 @@ class GuiBase {
         result := this.app.GuiManager.Menu("MenuGui", btn.MenuItems, this, btn)
 
         if (result) {
-            callback := "On" . btn.Name
+            callback := "On" . result
             this.%callback%()
         }
     }
