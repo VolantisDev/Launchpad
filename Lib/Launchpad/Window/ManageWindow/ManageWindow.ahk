@@ -5,6 +5,7 @@
     platformManager := ""
     showStatusIndicator := true
     titleIsMenu := true
+    launcherRows := []
 
     __New(app, themeObj, windowKey, owner := "", parent := "") {
         this.launcherManager := app.Launchers
@@ -132,6 +133,7 @@
         this.guiObj["ListView"].SetImageList(this.CreateIconList())
         iconNum := 1
         index := 1
+        this.launcherRows := []
 
         for key, launcher in this.launcherManager.Entities {
             focusOption := index == focusedItem ? " Focus" : ""
@@ -148,7 +150,8 @@
                 }
             }
 
-            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, launcher.Key, platformName, launcher.GetStatus(), apiStatus)
+            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, launcher.DisplayName, platformName, launcher.GetStatus(), apiStatus)
+            this.launcherRows.Push(key)
             iconNum++
             index++
         }
@@ -188,7 +191,7 @@
     }
 
     OnDoubleClick(LV, rowNum) {
-        key := LV.GetText(rowNum)
+        key := this.launcherRows[rowNum]
         this.EditLauncher(key)
     }
 
@@ -234,7 +237,7 @@
         selected := this.guiObj["ListView"].GetNext(, "Focused")
 
         if (selected > 0) {
-            key := this.guiObj["ListView"].GetText(selected, 1)
+            key := this.launcherRows[selected]
             launcherObj := this.launcherManager.Entities[key]
             showButton := launcherObj.IsBuilt
         }
@@ -270,7 +273,7 @@
         selected := this.guiObj["ListView"].GetNext(, "Focused")
 
         if (selected > 0) {
-            key := this.guiObj["ListView"].GetText(selected, 1)
+            key := this.launcherRows[selected]
             this.EditLauncher(key)
         }
         
@@ -289,7 +292,7 @@
         selected := this.guiObj["ListView"].GetNext(, "Focused")
 
         if (selected > 0) {
-            key := this.guiObj["ListView"].GetText(selected, 1)
+            key := this.launcherRows[selected]
             launcherObj := this.launcherManager.Entities[key]
             this.app.Builders.BuildLaunchers(Map(key, launcherObj), true)
             this.PopulateListView()
@@ -300,7 +303,7 @@
         selected := this.guiObj["ListView"].GetNext(, "Focused")
 
         if (selected > 0) {
-            key := this.guiObj["ListView"].GetText(selected, 1)
+            key := this.launcherRows[selected]
             launcherObj := this.launcherManager.Entities[key]
             
             if (launcherObj.IsBuilt) {
@@ -317,7 +320,7 @@
         selected := this.guiObj["ListView"].GetNext(, "Focused")
 
         if (selected > 0) {
-            key := this.guiObj["ListView"].GetText(selected, 1)
+            key := this.launcherRows[selected]
             launcherObj := this.launcherManager.Entities[key]
             result := this.app.GuiManager.Dialog("LauncherDeleteWindow", launcherObj, this.app.Services.Get("LauncherManager"), this.windowKey)
 
