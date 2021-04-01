@@ -209,7 +209,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         this.entityObj.ProcessTimeout := ctlObj.Value
     }
 
-    OnChangeInstallDir(btn, info) {
+    OnChangeInstallDir() {
         existingVal := this.entityObj.GetConfigValue("InstallDir")
 
         if existingVal {
@@ -224,7 +224,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         }
     }
 
-    OnOpenInstallDir(btn, info) {
+    OnOpenInstallDir() {
         val := this.entityObj.GetConfigValue("InstallDir")
 
         if (val) {
@@ -232,11 +232,11 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         }
     }
 
-    OnClearInstallDir(btn, info) {
+    OnClearInstallDir() {
         this.entityObj.SetConfigValue("InstallDir", "")
     }
 
-    OnChangeWorkingDir(btn, info) {
+    OnChangeWorkingDir() {
         existingVal := this.entityObj.GetConfigValue("WorkingDir")
 
         if (existingVal) {
@@ -251,7 +251,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         }
     }
 
-    OnOpenWorkingDir(btn, info) {
+    OnOpenWorkingDir() {
         val := this.entityObj.GetConfigValue("WorkingDir")
 
         if (val) {
@@ -259,7 +259,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         }
     }
 
-    OnClearWorkingDir(btn, info) {
+    OnClearWorkingDir() {
         this.entityObj.SetConfigValue("WorkingDir", "")
     }
 
@@ -295,7 +295,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         this.entityObj.RunCmd := ctlObj.Text
     }
 
-    OnChangeShortcutSrc(btn, info) {
+    OnChangeShortcutSrc() {
         existingVal := this.entityObj.GetConfigValue("ShortcutSrc")
         file := FileSelect(1,, this.entityObj.configPrefix . ": Select a shortcut file or .exe that will launch the application", "Shortcuts (*.lnk; *.url; *.exe)")
 
@@ -305,13 +305,13 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         }
     }
 
-    OnOpenShortcutSrc(btn, info) {
+    OnOpenShortcutSrc() {
         if (this.entityObj.ShortcutSrc) {
             Run this.entityObj.ShortcurSrc
         }
     }
 
-    OnClearShortcutSrc(btn, info) {
+    OnClearShortcutSrc() {
         if (this.entityObj.UnmergedConfig.Has("ShortcutSrc")) {
             this.entityObj.UnmergedConfig.Delete("ShortcutSrc")
             this.guiObj["ShortcutSrc"].Text := this.entityObj.ShortcutSrc

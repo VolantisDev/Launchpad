@@ -22,30 +22,6 @@ class FormGuiBase extends GuiBase {
         }
     }
 
-    End() {
-        super.End()
-        result := ""
-
-        if (this.waitForResult) {
-            Loop
-            {
-                If (this.result) {
-                    Break
-                }
-
-                Sleep(50)
-            }
-
-            submittedData := this.Submit()
-            result := this.ProcessResult(this.result, submittedData)
-            this.Close()
-        } else {
-            result := this
-        }
-
-        return result
-    }
-
     AddButtons() {
         super.AddButtons()
 
@@ -66,10 +42,6 @@ class FormGuiBase extends GuiBase {
     OnFormGuiButton(btn, info) {
         btnText := this.themeObj.themedButtons.Has(btn.Hwnd) ? this.themeObj.themedButtons[btn.Hwnd]["content"] : "OK"
         this.result := StrReplace(btnText, "&")
-    }
-
-    ProcessResult(result, submittedData := "") {
-        return result
     }
 
     OnClose(guiObj) {

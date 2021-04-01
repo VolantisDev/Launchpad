@@ -82,7 +82,7 @@ class LauncherEditorSimple extends LauncherEditorBase {
         this.entityObj.ManagedLauncher.ManagedGame.ReplaceProcess := !!(ctlObj.Value)
     }
 
-    OnChangeInstallDir(btn, info) {
+    OnChangeInstallDir() {
         existingVal := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("InstallDir")
 
         if existingVal {
@@ -97,7 +97,7 @@ class LauncherEditorSimple extends LauncherEditorBase {
         }
     }
 
-    OnOpenInstallDir(btn, info) {
+    OnOpenInstallDir() {
         val := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("InstallDir")
 
         if (val) {
@@ -105,7 +105,7 @@ class LauncherEditorSimple extends LauncherEditorBase {
         }
     }
 
-    OnClearInstallDir(btn, info) {
+    OnClearInstallDir() {
         this.entityObj.ManagedLauncher.ManagedGame.SetConfigValue("InstallDir", "")
     }
 }

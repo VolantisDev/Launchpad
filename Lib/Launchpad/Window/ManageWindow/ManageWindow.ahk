@@ -56,56 +56,45 @@
         menuItems.Push("")
         menuItems.Push(Map("label", "&About", "name", "About", "childItems", aboutItems))
         menuItems.Push("")
-        menuItems.Push(Map("label", "&Settings", "name", "SettingsButton"))
+        menuItems.Push(Map("label", "&Settings", "name", "Settings"))
         menuItems.Push(Map("label", "Check for &Updates", "name", "CheckForUpdates"))
         menuItems.Push("")
         menuItems.Push(Map("label", "&Restart", "name", "Reload"))
         menuItems.Push(Map("label", "E&xit", "name", "Exit"))
-        this.app.GuiManager.Menu("MenuGui", menuItems, this, this.windowKey, "", this.guiObj["WindowTitleText"])
-    }
+        
+        
+        result := this.app.GuiManager.Menu("MenuGui", menuItems, this.windowKey, "", this.guiObj["WindowTitleText"])
 
-    OnManagePlatforms(btn, info) {
-        this.app.GuiManager.OpenWindow("PlatformsWindow")
-    }
-
-    OnManageBackups(btn, info) {
-        this.app.GuiManager.OpenWindow("ManageBackupsWindow")
-    }
-
-    OnCleanLaunchers(btn, info) {
-        this.app.Builders.CleanLaunchers()
-    }
-
-    OnReloadLaunchers(btn, info) {
-        this.app.Launchers.LoadComponents(this.app.Config.LauncherFile)
-
-        if (this.app.GuiManager.WindowExists("ManageWindow")) {
-            this.app.GuiManager.GetWindow("ManageWindow").PopulateListView()
+        if (result == "ManagePlatforms") {
+            this.app.GuiManager.OpenWindow("PlatformsWindow")
+        } else if (result == "ManageBackups") {
+            this.app.GuiManager.OpenWindow("ManageBackupsWindow")
+        } else if (result == "FlushCache") {
+            this.app.Cache.FlushCaches()
+        } else if (result == "CleanLaunchers") {
+            this.app.Builders.CleanLaunchers()
+        } else if (result == "ReloadLaunchers") {
+            this.app.Launchers.LoadComponents(this.app.Config.LauncherFile)
+            this.PopulateListView()
+        } else if (result == "About") {
+            this.app.GuiManager.Dialog("AboutWindow")
+        } else if (result == "OpenWebsite") {
+            this.app.OpenWebsite()
+        } else if (result == "ProvideFeedback") {
+            this.app.ProvideFeedback()
+        } else if (result == "Settings") {
+            this.app.GuiManager.Form("SettingsWindow")
+        } else if (result == "CheckForUpdates") {
+            this.app.CheckForUpdates()
+        } else if (result == "Reload") {
+            Reload()
+        } else if (result == "Exit") {
+            this.app.ExitApp()
         }
     }
 
     GetStatusInfo() {
         return this.app.Auth.GetStatusInfo()
-    }
-
-    OnFlushCache(btn, info) {
-        this.app.Cache.FlushCaches()
-    }
-
-    OnOpenWebsite(btn, info) {
-        this.app.OpenWebsite()
-    }
-
-    OnCheckForUpdates(btn, info) {
-        this.app.CheckForUpdates()
-    }
-
-    OnAbout(btn, info) {
-        this.app.GuiManager.Dialog("AboutWindow")
-    }
-
-    OnProvideFeedback(btn, info) {
-        this.app.ProvideFeedback()
     }
 
     OnStatusIndicatorClick(btn, info) {
@@ -118,14 +107,18 @@
             menuItems.Push(Map("label", "Login", "name", "Login"))
         }
 
-        this.app.GuiManager.Menu("MenuGui", menuItems, this, this.windowKey, "", btn)
-    }
+        result := this.app.GuiManager.Menu("MenuGui", menuItems, this.windowKey, "", btn)
 
-    OnAccountDetails(btn, info) {
-        result := this.app.GuiManager.Dialog("AccountInfoWindow", this.windowKey)
+        if (result == "AccountDetails") {
+            accountResult := this.app.GuiManager.Dialog("AccountInfoWindow", this.windowKey)
 
-        if (result == "OK") {
-            this.UpdateStatusIndicator()
+            if (accountResult == "OK") {
+                this.UpdateStatusIndicator()
+            }
+        } else if (result == "Logout") {
+            this.app.Auth.Logout()
+        } else if (result == "Login") {
+            this.app.Auth.Login()
         }
     }
 
@@ -259,22 +252,15 @@
         menuItems.Push(Map("label", "&Add Game", "name", "AddGame"))
         menuItems.Push(Map("label", "&Import Shortcut", "name", "ImportShortcut"))
         menuItems.Push(Map("label", "&Detect Games", "name", "DetectGames"))
-        this.app.GuiManager.Menu("MenuGui", menuItems, this, this.windowKey, "", btn)
-    }
 
-    OnDetectGames(btn, info) {
-        this.app.Platforms.DetectGames()
-    }
+        result := this.app.GuiManager.Menu("MenuGui", menuItems, this.windowKey, "", btn)
 
-    OnImportShortcut(btn, info) {
-        if (this.app.GuiManager.WindowExists("ManageWindow")) {
-            this.app.GuiManager.GetWindow("ManageWindow").ImportShortcut()
-        }
-    }
-
-    OnAddGame(btn, info) {
-        if (this.app.GuiManager.WindowExists("ManageWindow")) {
-            this.app.GuiManager.GetWindow("ManageWindow").AddLauncher()
+        if (result == "AddGame") {
+            this.AddLauncher()
+        } else if (result == "ImportShortcut") {
+            this.ImportShortcut()
+        } else if (result == "DetectGames") {
+            this.app.Platforms.DetectGames()
         }
     }
 
@@ -291,10 +277,6 @@
     OnBuildAllButton(btn, info) {
         this.app.Builders.BuildLaunchers(this.app.Launchers.Entities, this.app.Config.RebuildExistingLaunchers)
         this.PopulateListView()
-    }
-
-    OnSettingsButton(btn, info) {
-        this.app.GuiManager.Form("SettingsWindow")
     }
 
     OnBuildButton(btn, info) {

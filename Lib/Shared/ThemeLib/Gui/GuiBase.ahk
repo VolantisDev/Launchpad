@@ -45,6 +45,9 @@ class GuiBase {
     titleIsMenu := false
     openAtCtl := ""
     openAtCtlSide := "bottom" ; bottom or right
+    waitForResult := false
+    result := ""
+    canceled := false
 
     positionAtMouseCursor := false
     openWindowWithinScreenBounds := true
@@ -693,14 +696,6 @@ class GuiBase {
         return this.guiObj.AddEdit(opts, defaultValue)
     }
 
-    OnReload(btn, info) {
-        Reload()
-    }
-
-    OnExit(btn, info) {
-        this.app.ExitApp()
-    }
-
     AddTitlebarButton(name, symbol, handlerName, overlayPrevious := false, xPos := "") {
         if (xPos == "") {
             xPos := "+" . this.margin
@@ -945,7 +940,28 @@ class GuiBase {
 
         this.AdjustWindowPosition()
 
-        return this
+        result := this
+
+        if (this.waitForResult) {
+            Loop
+            {
+                If (this.result || this.canceled) {
+                    Break
+                }
+
+                Sleep(50)
+            }
+
+            submittedData := this.Submit()
+            result := this.ProcessResult(this.result, submittedData)
+            this.Close()
+        }
+
+        return result
+    }
+
+    ProcessResult(result, submittedData := "") {
+        return result
     }
 
     AdjustWindowPosition() {
@@ -1174,15 +1190,5 @@ class GuiBase {
             DllCall("dwmapi\DwmSetWindowAttribute", "Ptr", this.guiObj.Hwnd, "UInt", 2, "Int*", 2, "UInt", 4)
             DllCall("dwmapi\DwmExtendFrameIntoClientArea", "Ptr", this.guiObj.Hwnd, "Ptr", margins)
         }
-    }
-
-    ; Generic login callback that can be used for authentication buttons
-    OnLogin(btn, info) {
-        this.app.Auth.Login()
-    }
-
-    ; Generic logout callback that can be used for authentication buttons
-    OnLogout(btn, info) {
-        this.app.Auth.Logout()
     }
 }

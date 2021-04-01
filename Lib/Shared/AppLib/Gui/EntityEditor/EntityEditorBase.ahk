@@ -205,7 +205,12 @@ class EntityEditorBase extends FormGuiBase {
     }
 
     OnLocationOptions(btn, info) {
-        this.app.GuiManager.Menu("MenuGui", btn.MenuItems, this, this.windowKey, "", btn)
+        result := this.app.GuiManager.Menu("MenuGui", btn.MenuItems, this.windowKey, "", btn)
+
+        if (result) {
+            callback := "On" . btn.Name
+            this.%callback%()
+        }
     }
 
     AddLocationText(locationText, ctlName, position := "xs y+m", width := "") {

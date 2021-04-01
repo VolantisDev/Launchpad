@@ -158,7 +158,7 @@
         MsgBox(this.app.appName . " uses a Launcher File to keep a list of games and settings for your launchers. The file is in JSON format and can be edited by hand or through the Launcher Manager in " . this.app.appName . ".`n`nIf you have an existing Launcher File, select it on the following screen. If you want to create a new one, browse to the folder you would like and type in a new .json filename to use.", this.app.appName . " Launcher File", "OK")
         path := FileSelect(8, existingFile, "Select or create the Launcher File you would like " . this.app.appName . " to use.", "JSON Documents (*.json)")
 
-        if (!FileExist(path)) {
+        if (path && !FileExist(path)) {
             FileAppend("{`"Games`": {}}", path)
         }
 
@@ -187,7 +187,7 @@
         MsgBox(this.app.appName . " uses a Platforms file to track a list of game platforms you have installed, and can use this for things such as detecting your installed games. This file is in JSON format, and can be edited by hand or through the Platform Manager in " . this.app.appName . ".`n`nIf you have an existing Platforms file, sleect it on the following screen. If you want to create a new one, browse to th efolder you would like and type in a new .json filename to use", this.app.appName . " Platforms File", "OK")
         path := FileSelect(8, existingFile, "Select or create the Platforms File you would like " . this.app.appName . " to use.", "JSON Documents (*.json)")
 
-        if (!FileExist(path)) {
+        if (path && !FileExist(path)) {
             FileAppend("{`"Platforms`": {}}", path)
         }
 

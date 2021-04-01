@@ -8,17 +8,17 @@
     buttonHeight := 25
     separatorHeight := 9
     menuItems := ""
-    menuEventSync := ""
     showOptions := "NoActivate"
     parentMenu := ""
+    waitForResult := true
+    childOpen := false
 
-    __New(app, themeObj, windowKey, menuItems := "", menuEventSync := "", owner := "", parentMenu := "", openAtCtl := "", openAtCtlSide := "") {
+    __New(app, themeObj, windowKey, menuItems := "", owner := "", parentMenu := "", openAtCtl := "", openAtCtlSide := "") {
         if (menuItems == "") {
             menuItems := []
         }
 
         this.parentMenu := parentMenu
-        this.menuEventSync := menuEventSync
         this.menuItems := menuItems
         this.onLButtonCallback := ObjBindMethod(this, "OnLButton")
 
@@ -35,18 +35,18 @@
     }
 
     OnLButton(hotKey) {
-        if (this.app && this.app.GuiManager && this.app.GuiManager.WindowExists(this.windowKey)) {
+        if (!this.childOpen) {
             MouseGetPos(,, mouseWindow)
             
             if (this.guiObj && this.guiObj.Hwnd != mouseWindow) {
-                this.Close()
+                this.canceled := true
             }
         }
     }
 
     Show() {
         Hotkey("~LButton", this.onLButtonCallback, "On")
-        super.Show()
+        return super.Show()
     }
 
     Destroy() {
@@ -81,7 +81,7 @@
         buttonSize := this.themeObj.GetButtonSize("menu")
         buttonH := (buttonSize.Has("h") && buttonSize["h"] != "auto") ? buttonSize["h"] : this.buttonHeight
 
-        handler := childItems ? "ParentItemClick" : (this.menuEventSync ? "MenuItemClick" : "")
+        handler := childItems ? "ParentItemClick" : "MenuItemClick"
         btn := this.AddButton("v" . ctlName . " " . this.nextPos . " w" . width . " h" . buttonH, buttonLabel, handler, "menu")
         btn.Menu := this
         btn.ChildItems := childItems
@@ -105,21 +105,20 @@
     }
 
     MenuItemClick(btn, info) {
-        sync := this.menuEventSync
-        functionName := "On" . btn.Name
-        this.Close()
-        
-        if (sync) {
-            sync.%functionName%(btn, info)
-        }
+        this.result := btn.Name
     }
 
     ParentItemClick(btn, info) {
+        result := ""
+
         if (btn.ChildItems) {
-            childItems := btn.ChildItems
-            sync := this.menuEventSync
-            owner := this.owner
-            this.app.GuiManager.Menu("MenuGui", ChildItems, sync, this, this, btn, "right")
+            this.childOpen := true
+            this.result := this.app.GuiManager.Menu("MenuGui", btn.ChildItems, this, this, btn, "right")
+            this.childOpen := false
+        }
+
+        if (!result) {
+            this.canceled := true
         }
     }
 
@@ -131,14 +130,5 @@
     OnEscape(guiObj) {
         this.Close()
         super.OnEscape(guiObj)
-    }
-
-    Close() {
-        parentMenu := this.parentMenu
-        super.Close()
-        
-        if (parentMenu) {
-            parentMenu.Close()
-        }
     }
 }

@@ -63,7 +63,7 @@
         this.entityObj.IsInstalled := ctl.Value
     }
 
-    OnChangeInstallDir(btn, info) {
+    OnChangeInstallDir() {
         existingVal := this.entityObj.GetConfigValue("InstallDir")
 
         if existingVal {
@@ -78,7 +78,7 @@
         }
     }
 
-    OnOpenInstallDir(btn, info) {
+    OnOpenInstallDir() {
         val := this.entityObj.InstallDir
 
         if (val) {
@@ -86,7 +86,7 @@
         }
     }
 
-    OnClearInstallDir(btn, info) {
+    OnClearInstallDir() {
         this.entityObj.SetConfigValue("InstallDir", "")
     }
 
@@ -100,7 +100,7 @@
         }
     }
 
-    OnOpenExePath(btn, info) {
+    OnOpenExePath() {
         val := this.entityObj.ExePath
 
         if (val) {
@@ -108,11 +108,11 @@
         }
     }
 
-    OnClearExePath(btn, info) {
+    OnClearExePath() {
         this.entityObj.SetConfigValue("ExePath", "")
     }
 
-    OnChangeIconSrc(btn, info) {
+    OnChangeIconSrc() {
         existingVal := this.entityObj.GetConfigValue("IconSrc", false)
         file := FileSelect(1,, this.entityObj.Key . ": Select icon or .exe retrieve icon from.", "Icons (*.ico; *.exe)")
 
@@ -122,13 +122,13 @@
         }
     }
 
-    OnOpenIconSrc(btn, info) {
+    OnOpenIconSrc() {
         if (this.entityObj.IconSrc) {
-            Run this.entityObj.IconSrc
+            ; TODO: Determine what it means to open an icon
         }
     }
 
-    OnClearIconSrc(btn, info) {
+    OnClearIconSrc() {
         if (this.entityObj.UnmergedConfig.Has("IconSrc")) {
             this.entityObj.UnmergedConfig.Delete("IconSrc")
             this.guiObj["IconSrc"].Text := this.entityObj.IconSrc

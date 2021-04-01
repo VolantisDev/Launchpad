@@ -43,7 +43,7 @@
         return config
     }
 
-    OnChangeInstallDir(btn, info) {
+    OnChangeInstallDir() {
         installDir := this.installDir
 
         if (installDir) {
@@ -58,13 +58,13 @@
         }
     }
 
-    OnOpenInstallDir(btn, info) {
+    OnOpenInstallDir() {
         if (this.installDir) {
             Run(this.installDir)
         }
     }
 
-    OnChangeExe(btn, info) {
+    OnChangeExe() {
         selectedFile := FileSelect(1, this.exe, "Select Game Exe", "Executables (*.exe)")
 
         if (selectedFile) {
@@ -73,7 +73,7 @@
         }
     }
 
-    OnOpenExe(btn, info) {
+    OnOpenExe() {
         if (this.exe) {
             Run(this.exe)
         }

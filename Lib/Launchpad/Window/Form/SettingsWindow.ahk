@@ -136,7 +136,12 @@
     }
 
     OnLocationOptions(btn, info) {
-        this.app.GuiManager.Menu("MenuGui", btn.MenuItems, this, this.windowKey, "", btn)
+        result := this.app.GuiManager.Menu("MenuGui", btn.MenuItems, this.windowKey, "", btn)
+
+        if (result) {
+            callback := "On" . result
+            this.%callback%()
+        }
     }
 
     AddLocationText(locationText, ctlName, width := "") {
@@ -198,29 +203,29 @@
         this.app.Platforms.ReloadPlatformsFile()
     }
 
-    OnOpenLauncherFile(btn, info) {
+    OnOpenLauncherFile() {
         this.app.Config.OpenLauncherFile()
     }
 
-    OnOpenPlatformsFile(btn, info) {
+    OnOpenPlatformsFile() {
         this.app.Config.OpenPlatformsFile()
     }
 
-    OnChangeLauncherFile(btn, info) {
+    OnChangeLauncherFile() {
         this.app.Config.ChangeLauncherFile()
         this.SetText("LauncherFile", this.app.Config.LauncherFile, "Bold")
     }
 
-    OnChangePlatformsFile(btn, info) {
+    OnChangePlatformsFile() {
         this.app.Config.ChangePlatformsFile()
         this.SetText("PlatformsFile", this.app.Config.PlatformsFile, "Bold")
     }
 
-    OnOpenDestinationDir(btn, info) {
+    OnOpenDestinationDir() {
         this.app.Config.OpenDestinationDir()
     }
 
-    OnChangeDestinationDir(btn, info) {
+    OnChangeDestinationDir() {
         this.app.Config.ChangeDestinationDir()
         this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
     }
@@ -230,20 +235,20 @@
         this.app.Config.ApiToken := ctl.Text
     }
 
-    OnOpenAssetsDir(btn, info) {
+    OnOpenAssetsDir() {
         this.app.Config.OpenAssetsDir()
     }
 
-    OnChangeAssetsDir(btn, info) {
+    OnChangeAssetsDir() {
         this.app.Config.ChangeAssetsDir()
         this.SetText("AssetsDir", this.app.Config.AssetsDir, "Bold")
     }
 
-    OnOpenApiEndpoint(btn, info) {
+    OnOpenApiEndpoint() {
         this.app.DataSources.GetItem("api").Open()
     }
 
-    OnChangeApiEndpoint(btn, info) {
+    OnChangeApiEndpoint() {
         this.app.DataSources.GetItem("api").ChangeApiEndpoint("", "")
         this.SetText("ApiEndpoint", this.app.Config.ApiEndpoint, "Bold")
     }
@@ -252,26 +257,22 @@
         this.app.Cache.FlushCaches()
     }
 
-    OnOpenCacheDir(btn, info) {
+    OnOpenCacheDir() {
         this.app.Cache.OpenCacheDir()
     }
 
-    OnChangeCacheDir(btn, info) {
+    OnChangeCacheDir() {
         this.app.Cache.ChangeCacheDir()
         this.SetText("TxtCacheDir", this.app.Config.CacheDir, "Bold")
     }
 
-    OnOpenBackupDir(btn, info) {
+    OnOpenBackupDir() {
         this.app.Backups.OpenBackupDir()
     }
 
-    OnChangeBackupDir(btn, info) {
+    OnChangeBackupDir() {
         this.app.Backups.ChangeBackupDir()
         this.SetText("TxtBackupDir", this.app.Config.BackupDir, "Bold")
-    }
-
-    OnManageBackupDir(btn, info) {
-        ; @todo Open Backup Manager window
     }
 
     OnThemeNameChange(ctl, info) {

@@ -78,7 +78,7 @@
         }
     }
 
-    OnChangeShortcutSrc(btn, info) {
+    OnChangeShortcutSrc() {
         this.AskShortcutSrc()
 
         if (this.shortcutSrc) {
@@ -86,7 +86,7 @@
         }
     }
 
-    OnOpenShortcutSrc(btn, info) {
+    OnOpenShortcutSrc() {
         if (this.shortcutSrc) {
             Run(this.shortcutSrc)
         }

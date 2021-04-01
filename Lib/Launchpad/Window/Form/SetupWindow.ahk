@@ -74,7 +74,12 @@
     }
 
     OnLocationOptions(btn, info) {
-        this.app.GuiManager.Menu("MenuGui", btn.MenuItems, this, this.windowKey, "", btn)
+        result := this.app.GuiManager.Menu("MenuGui", btn.MenuItems, this.windowKey, "", btn)
+
+        if (result) {
+            callback := "On" . btn.Name
+            this.%callback%()
+        }
     }
 
     AddLocationText(locationText, ctlName, inGroupBox := true, width := "") {
@@ -130,11 +135,11 @@
         this.Close()
     }
 
-    OnOpenDestinationDir(btn, info) {
+    OnOpenDestinationDir() {
         this.app.Config.OpenDestinationDir()
     }
 
-    OnChangeDestinationDir(btn, info) {
+    OnChangeDestinationDir() {
         this.app.Config.ChangeDestinationDir()
         this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
     }

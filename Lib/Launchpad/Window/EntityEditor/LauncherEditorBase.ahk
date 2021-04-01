@@ -168,7 +168,7 @@ class LauncherEditorBase extends EntityEditorBase {
         this.entityObj.%property% := value
     }
 
-    OnChangeIconSrc(btn, info) {
+    OnChangeIconSrc() {
         existingVal := this.entityObj.GetConfigValue("IconSrc", false)
         file := FileSelect(1,, this.entityObj.Key . ": Select icon or .exe to extract icon from.", "Icons (*.ico; *.exe)")
 
@@ -178,21 +178,20 @@ class LauncherEditorBase extends EntityEditorBase {
         }
     }
 
-    OnOpenIconSrc(btn, info) {
+    OnOpenIconSrc() {
         if (this.entityObj.IconSrc && FileExist(this.entityObj.IconSrc)) {
-            ;Run this.entityObj.IconSrc
             ; @todo How to open an icon by default?
         }
     }
 
-    OnClearIconSrc(btn, info) {
+    OnClearIconSrc() {
         if (this.entityObj.UnmergedConfig.Has("IconSrc")) {
             this.entityObj.UnmergedConfig.Delete("IconSrc")
             this.guiObj["IconSrc"].Text := this.entityObj.IconSrc
         }
     }
 
-    OnChangeLogPath(btn, info) {
+    OnChangeLogPath() {
         existingVal := this.entityObj.GetConfigValue("LogPath", false)
         file := FileSelect(8,, this.entityObj.Key . ": Select or create log file.", "Files (*.*)")
 
@@ -202,13 +201,13 @@ class LauncherEditorBase extends EntityEditorBase {
         }
     }
 
-    OnOpenLogPath(btn, info) {
+    OnOpenLogPath() {
         if (this.entityObj.LogPath && FileExist(this.entityObj.LogPath)) {
             Run this.entityObj.LogPath
         }
     }
 
-    OnClearLogPath(btn, info) {
+    OnClearLogPath() {
         if (this.entityObj.UnmergedConfig.Has("LogPath")) {
             this.entityObj.UnmergedConfig.Delete("LogPath")
             this.guiObj["LogPath"].Text := this.entityObj.LogPath
