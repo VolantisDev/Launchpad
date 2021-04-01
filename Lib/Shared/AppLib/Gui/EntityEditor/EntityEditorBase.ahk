@@ -180,7 +180,7 @@ class EntityEditorBase extends FormGuiBase {
             textW -= checkW + this.margin
         }
 
-        ctl := this.AddLocationText(location, settingName, locationPos . disabledText, textW)
+        ctl := this.AddLocationText(location, settingName, locationPos, textW)
 
         if (helpText) {
             ctl.ToolTip := helpText
@@ -197,7 +197,7 @@ class EntityEditorBase extends FormGuiBase {
             menuItems.Push(Map("label", extraButton, "name", StrReplace(extraButton, " ", "") . settingName))
         }
 
-        btn := this.AddButton("w" . btnWidth . " h" . btnHeight . " x+" (this.margin/2) . " yp v" . settingName . "Options", "arrowDown", "OnLocationOptions", "symbol")
+        btn := this.AddButton("w" . btnWidth . " h" . btnHeight . " x+" (this.margin/2) . " yp v" . settingName . "Options Hidden" . (!entityObj.UnmergedConfig.Has(prefixedName)), "arrowDown", "OnLocationOptions", "symbol")
         btn.MenuItems := menuItems
         btn.Tooltip := "Change options"
     }
@@ -224,7 +224,10 @@ class EntityEditorBase extends FormGuiBase {
             entityObj.UnmergedConfig[prefixedName] := entityObj.Config.Has(prefixedName) ? entityObj.Config[prefixedName] : ""
         }
 
-        this.guiObj[fieldKey].Enabled := !useDefault
+        if (this.guiObj[fieldKey].Type != "Text") {
+            this.guiObj[fieldKey].Enabled := !useDefault
+        }
+        
     }
 
     SetDefaultSelectValue(fieldKey, allItems, useDefault := true, addPrefix := false) {
