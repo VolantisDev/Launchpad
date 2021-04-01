@@ -25,10 +25,6 @@ class ThemeBase {
     hoveredButton := ""
 
     __New(name, resourcesDir, eventManagerObj, idGenerator, autoLoad := false) {
-        if (ThemeBase.Gdip == "") {
-            ThemeBase.Gdip := Gdip_Startup()
-        }
-
         this.name := name
         this.resourcesDir := resourcesDir
         this.themesDir := resourcesDir . "\Themes"

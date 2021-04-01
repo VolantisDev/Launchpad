@@ -94,6 +94,11 @@ class AppBase {
         set => this.Services.Set("Shell", value)
     }
 
+    Gdip {
+        get => this.Services.Get("Gdip")
+        set => this.Services.Set("Gdip", value)
+    }
+
     __New(config := "") {
         global appVersion
 
@@ -159,6 +164,7 @@ class AppBase {
         ; @todo Create any services required for initialization
         services := Map()
         services["Shell"] := shell
+        services["Gdip"] := Gdip_Startup()
         services["Debugger"] := Debugger.new()
         services["IdGenerator"] := UuidGenerator.new()
         services["VersionChecker"] := VersionChecker.new()
@@ -325,6 +331,10 @@ class AppBase {
         this.Services.Set("GuiManager", GuiManager.new(this))
         this.Services.Set("InstallerManager", InstallerManager.new(this))
         this.Services.Set("AuthService", AuthService.new(this, "", this.State))
+    }
+
+    __Delete() {
+        Gdip_Shutdown(this.Gdip)
     }
 
     ExitApp() {
