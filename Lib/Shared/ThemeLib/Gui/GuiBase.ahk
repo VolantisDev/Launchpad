@@ -43,6 +43,8 @@ class GuiBase {
     statusIndicatorW := 120
     showOptions := ""
     titleIsMenu := false
+    openAtCtl := ""
+    openAtCtlSide := "bottom" ; bottom or right
 
     positionAtMouseCursor := false
     openWindowWithinScreenBounds := true
@@ -904,6 +906,24 @@ class GuiBase {
             this.guiObj.GetPos(,,guiW, guiH)
             windowX := monitorR - this.margin - width
             windowY := monitorB - this.margin - guiH
+            windowSize .= " x" . windowX . " y" . windowY
+        } else if (this.openAtCtl) {
+            this.openAtCtl.GetPos(ctlX, ctlY, ctlW, ctlH)
+            this.openAtCtl.Gui.GetClientPos(clientX, clientY)
+            
+            windowX := clientX
+            windowY := clientY
+
+            if (this.openAtCtlSide == "right") {
+                windowX += ctlX + ctlW
+                windowY += ctlY
+            } else if (this.openAtCtlSide == "bottom") {
+                windowX += ctlX
+                windowY += ctlY + ctlH
+            }
+
+            
+
             windowSize .= " x" . windowX . " y" . windowY
         }
 

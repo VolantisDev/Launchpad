@@ -11,16 +11,25 @@
     showOptions := "NoActivate"
     parentMenu := ""
 
-    __New(app, themeObj, windowKey, menuItems := "", menuEventSync := "", owner := "", parentMenu := "") {
+    __New(app, themeObj, windowKey, menuItems := "", menuEventSync := "", owner := "", parentMenu := "", openAtCtl := "", openAtCtlSide := "") {
         if (menuItems == "") {
             menuItems := []
         }
 
         this.parentMenu := parentMenu
-
         this.menuEventSync := menuEventSync
         this.menuItems := menuItems
         this.onLButtonCallback := ObjBindMethod(this, "OnLButton")
+
+        if (openAtCtl) {
+            this.openAtCtl := openAtCtl
+            this.positionAtMouseCursor := false
+        }
+
+        if (openAtCtlSide) {
+            this.openAtCtlSide := openAtCtlSide
+        }
+
         super.__New(app, themeObj, windowKey, this.menuTitle, owner, "")
     }
 
@@ -92,7 +101,7 @@
             childItems := btn.ChildItems
             sync := this.menuEventSync
             owner := this.owner
-            this.app.GuiManager.Menu("MenuGui", ChildItems, sync, owner, this)
+            this.app.GuiManager.Menu("MenuGui", ChildItems, sync, owner, this, btn, "right")
         }
     }
 

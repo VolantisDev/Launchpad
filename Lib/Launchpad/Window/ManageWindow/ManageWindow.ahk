@@ -51,7 +51,7 @@
         menuItems.Push(Map("label", "&About Launchpad", "name", "About"))
         menuItems.Push(Map("label", "&Restart Launchpad", "name", "Reload"))
         menuItems.Push(Map("label", "E&xit Launchpad", "name", "Exit"))
-        this.app.GuiManager.Menu("MenuGui", menuItems, this, this.windowKey)
+        this.app.GuiManager.Menu("MenuGui", menuItems, this, this.windowKey, "", this.guiObj["WindowTitleText"])
     }
 
     OnManagePlatforms(btn, info) {
@@ -108,7 +108,7 @@
             menuItems.Push(Map("label", "Login", "name", "Login"))
         }
 
-        this.app.GuiManager.Menu("MenuGui", menuItems, this, this.windowKey)
+        this.app.GuiManager.Menu("MenuGui", menuItems, this, this.windowKey, "", btn)
     }
 
     OnAccountDetails(btn, info) {
@@ -247,7 +247,7 @@
         menuItems.Push(Map("label", "&Add Game", "name", "AddGame"))
         menuItems.Push(Map("label", "&Import Shortcut", "name", "ImportShortcut"))
         menuItems.Push(Map("label", "&Detect Games", "name", "DetectGames"))
-        this.app.GuiManager.Menu("MenuGui", menuItems, this, this.windowKey)
+        this.app.GuiManager.Menu("MenuGui", menuItems, this, this.windowKey, "", btn)
     }
 
     OnDetectGames(btn, info) {

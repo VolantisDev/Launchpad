@@ -136,7 +136,7 @@
     }
 
     OnLocationOptions(btn, info) {
-        this.app.GuiManager.Menu("MenuGui", btn.MenuItems, this, this.windowKey)
+        this.app.GuiManager.Menu("MenuGui", btn.MenuItems, this, this.windowKey, "", btn)
     }
 
     AddLocationText(locationText, ctlName, width := "") {
