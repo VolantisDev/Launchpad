@@ -53,7 +53,7 @@
 
         this.AddHeading("Theme")
         chosen := this.GetItemIndex(this.availableThemes, this.app.Config.ThemeName)
-        ctl := this.guiObj.AddDDL("vThemeName xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"), this.availableThemes)
+        ctl := this.guiObj.AddDDL("vThemeName xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.availableThemes)
         ctl.OnEvent("Change", "OnThemeNameChange")
         ctl.ToolTip := "Select a theme for Launchpad to use."
 
@@ -73,7 +73,7 @@
 
         this.AddHeading("Logging Level")
         chosen := this.GetItemIndex(this.logLevels, this.app.Config.LoggingLevel)
-        ctl := this.guiObj.AddDDL("vLoggingLevel xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"), this.logLevels)
+        ctl := this.guiObj.AddDDL("vLoggingLevel xs y+m Choose" . chosen . " w200 c" . this.themeObj.GetColor("editText"), this.logLevels)
         ctl.OnEvent("Change", "OnLoggingLevelChange")
 
         this.AddConfigLocationBlock("API Endpoint", "ApiEndpoint")
