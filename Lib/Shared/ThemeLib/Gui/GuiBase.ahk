@@ -922,8 +922,6 @@ class GuiBase {
                 windowY += ctlY + ctlH
             }
 
-            
-
             windowSize .= " x" . windowX . " y" . windowY
         }
 
@@ -933,7 +931,6 @@ class GuiBase {
             WinRedraw("ahk_id " . this.lvHeaderHwnd)
         }
 
-        ; @todo is this really needed?
         if (!this.positionAtMouseCursor && this.showInNotificationArea) {
             this.guiObj.GetPos(,,guiW, guiH)
             windowX := monitorR - this.margin - guiW

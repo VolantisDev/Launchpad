@@ -101,7 +101,7 @@
             childItems := btn.ChildItems
             sync := this.menuEventSync
             owner := this.owner
-            this.app.GuiManager.Menu("MenuGui", ChildItems, sync, owner, this, btn, "right")
+            this.app.GuiManager.Menu("MenuGui", ChildItems, sync, this, this, btn, "right")
         }
     }
 
