@@ -115,6 +115,20 @@
                         "borderThickness": 0
                     }
                 },
+                "menuSeparator": {
+                    "enabled": {
+                        "borderThickness": 0,
+                        "shape": "MenuSeparatorShape"
+                    },
+                    "disabled": {
+                        "borderThickness": 0,
+                        "shape": "MenuSeparatorShape"
+                    },
+                    "hovered": {
+                        "borderThickness": 0,
+                        "shape": "MenuSeparatorShape"
+                    }
+                },
                 "symbol": {
                     "enabled": {
                         "bgColor": "{{background}}",

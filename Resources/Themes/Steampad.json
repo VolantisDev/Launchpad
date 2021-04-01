@@ -138,6 +138,23 @@
                         "margin": 4
                     }
                 },
+                "menuSeparator": {
+                    "enabled": {
+                        "bgColor": "{{darkgray}}",
+                        "textColor": "{{dim}}",
+                        "borderColor": "{{background}}"
+                    },
+                    "disabled": {
+                        "bgColor": "{{darkgray}}",
+                        "textColor": "{{dim}}",
+                        "borderColor": "{{background}}"
+                    },
+                    "hovered": {
+                        "bgColor": "{{darkgray}}",
+                        "textColor": "{{dim}}",
+                        "borderColor": "{{background}}"
+                    }
+                },
                 "mainMenu": {
                     "enabled": {
                         "bgColor": "{{background}}",

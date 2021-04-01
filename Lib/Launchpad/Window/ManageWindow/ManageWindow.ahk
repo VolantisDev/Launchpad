@@ -39,19 +39,28 @@
         toolsItems := []
         toolsItems.Push(Map("label", "Manage &Platforms", "name", "ManagePlatforms"))
         toolsItems.Push(Map("label", "Manage &Backups", "name", "ManageBackups"))
-        toolsItems.Push(Map("label", "&Clean Launchers", "name", "CleanLaunchers"))
-        toolsItems.Push(Map("label", "&Reload Launchers", "name", "ReloadLaunchers"))
+        toolsItems.Push(Map("label", "&Flush Cache", "name", "FlushCache"))
+
+        launchersItems := []
+        launchersItems.Push(Map("label", "&Clean Launchers", "name", "CleanLaunchers"))
+        launchersItems.Push(Map("label", "&Reload Launchers", "name", "ReloadLaunchers"))
+
+        aboutItems := []
+        aboutItems.Push(Map("label", "&About Launchpad", "name", "About"))
+        aboutItems.Push(Map("label", "&Open Website", "name", "OpenWebsite"))
+        aboutItems.Push(Map("label", "Provide &Feedback", "name", "ProvideFeedback"))
 
         menuItems := []
         menuItems.Push(Map("label", "&Tools", "name", "ToolsMenu", "childItems", toolsItems))
+        menuItems.Push(Map("label", "&Launchers", "name", "LaunchersMenu", "childItems", launchersItems))
+        menuItems.Push("")
+        menuItems.Push(Map("label", "&About", "name", "About", "childItems", aboutItems))
+        menuItems.Push("")
         menuItems.Push(Map("label", "&Settings", "name", "SettingsButton"))
-        menuItems.Push(Map("label", "&Flush Cache", "name", "FlushCache"))
         menuItems.Push(Map("label", "Check for &Updates", "name", "CheckForUpdates"))
-        menuItems.Push(Map("label", "Provide &Feedback", "name", "ProvideFeedback"))
-        menuItems.Push(Map("label", "&Open Website", "name", "OpenWebsite"))
-        menuItems.Push(Map("label", "&About Launchpad", "name", "About"))
-        menuItems.Push(Map("label", "&Restart Launchpad", "name", "Reload"))
-        menuItems.Push(Map("label", "E&xit Launchpad", "name", "Exit"))
+        menuItems.Push("")
+        menuItems.Push(Map("label", "&Restart", "name", "Reload"))
+        menuItems.Push(Map("label", "E&xit", "name", "Exit"))
         this.app.GuiManager.Menu("MenuGui", menuItems, this, this.windowKey, "", this.guiObj["WindowTitleText"])
     }
 

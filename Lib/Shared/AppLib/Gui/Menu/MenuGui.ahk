@@ -6,6 +6,7 @@
     menuTitle := "Menu"
     windowSettingsKey := "Menu"
     buttonHeight := 25
+    separatorHeight := 9
     menuItems := ""
     menuEventSync := ""
     showOptions := "NoActivate"
@@ -58,11 +59,17 @@
         this.nextPos := "x" . this.margin
         
         for index, item in this.menuItems {
-            if (!item.Has("childItems")) {
-                item["childItems"] := ""
+            if (item == "") {
+                this.AddMenuSeparator()
+            } else {
+                if (!item.Has("childItems")) {
+                    item["childItems"] := ""
+                }
+
+                this.AddMenuButton(item["label"], item["name"], item["childItems"])
             }
 
-            this.AddMenuButton(item["label"], item["name"], item["childItems"])
+            
         }
     }
 
@@ -84,6 +91,17 @@
         }
 
         return btn
+    }
+
+    AddMenuSeparator() {
+        buttonSpacing := this.windowSettings["spacing"]["buttonSpacing"]
+        marginSpace := (buttonSpacing * this.buttonsPerRow) - buttonSpacing
+        width := (this.windowSettings["contentWidth"] - marginSpace) / this.buttonsPerRow
+        btn := this.AddButton(this.nextPos . " w" . width . " h" . this.separatorHeight, "", "OnSeparator", "menuSeparator")
+
+        if (this.buttonsPerRow > 1) {
+            this.nextPos := this.nextPos == "x" . this.margin ? "x+" . buttonSpacing . " yp" : "x" . this.margin
+        }
     }
 
     MenuItemClick(btn, info) {
