@@ -6,7 +6,7 @@
     menuTitle := "Menu"
     windowSettingsKey := "Menu"
     buttonHeight := 25
-    separatorHeight := 9
+    separatorHeight := 5
     menuItems := ""
     showOptions := "NoActivate"
     parentMenu := ""
