@@ -1224,7 +1224,7 @@ class GuiBase {
         }
 
         if (position == "") {
-            position := "xs y+" . this.margin
+            position := "xs y+" . (this.margin/2)
         }
 
         ;this.SetFont("", "Bold")
