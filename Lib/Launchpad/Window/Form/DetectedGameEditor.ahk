@@ -92,7 +92,7 @@
     }
 
     OnLocationOptions(btn, info) {
-        result := this.app.GuiManager.Menu("MenuGui", btn.MenuItems, this.windowKey, "", btn)
+        result := this.app.GuiManager.Menu("MenuGui", btn.MenuItems, this, btn)
 
         if (result) {
             callback := "On" . btn.Name

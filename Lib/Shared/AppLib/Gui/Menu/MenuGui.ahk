@@ -13,12 +13,19 @@
     waitForResult := true
     childOpen := false
 
-    __New(app, themeObj, windowKey, menuItems := "", owner := "", parentMenu := "", openAtCtl := "", openAtCtlSide := "") {
+    __New(app, themeObj, windowKey, menuItems := "", parent := "", openAtCtl := "", openAtCtlSide := "") {
         if (menuItems == "") {
             menuItems := []
         }
 
-        this.parentMenu := parentMenu
+        if (parent) {
+            parent := app.GuiManager.DereferenceGui(parent)
+
+            if (parent.HasBase(MenuGui.Prototype)) {
+                this.parentMenu := parent
+            }
+        }
+
         this.menuItems := menuItems
         this.onLButtonCallback := ObjBindMethod(this, "OnLButton")
 
@@ -31,7 +38,7 @@
             this.openAtCtlSide := openAtCtlSide
         }
 
-        super.__New(app, themeObj, windowKey, this.menuTitle, owner, "")
+        super.__New(app, themeObj, windowKey, this.menuTitle, "", parent)
     }
 
     OnLButton(hotKey) {
@@ -113,7 +120,7 @@
 
         if (btn.ChildItems) {
             this.childOpen := true
-            this.result := this.app.GuiManager.Menu("MenuGui", btn.ChildItems, this, this, btn, "right")
+            this.result := this.app.GuiManager.Menu("MenuGui", btn.ChildItems, this, btn, "right")
             this.childOpen := false
         }
 

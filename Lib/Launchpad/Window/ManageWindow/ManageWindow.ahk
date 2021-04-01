@@ -63,7 +63,7 @@
         menuItems.Push(Map("label", "E&xit", "name", "Exit"))
         
         
-        result := this.app.GuiManager.Menu("MenuGui", menuItems, this.windowKey, "", this.guiObj["WindowTitleText"])
+        result := this.app.GuiManager.Menu("MenuGui", menuItems, this, this.guiObj["WindowTitleText"])
 
         if (result == "ManagePlatforms") {
             this.app.GuiManager.OpenWindow("PlatformsWindow")
@@ -107,7 +107,7 @@
             menuItems.Push(Map("label", "Login", "name", "Login"))
         }
 
-        result := this.app.GuiManager.Menu("MenuGui", menuItems, this.windowKey, "", btn)
+        result := this.app.GuiManager.Menu("MenuGui", menuItems, this, btn)
 
         if (result == "AccountDetails") {
             accountResult := this.app.GuiManager.Dialog("AccountInfoWindow", this.windowKey)
@@ -253,7 +253,7 @@
         menuItems.Push(Map("label", "&Import Shortcut", "name", "ImportShortcut"))
         menuItems.Push(Map("label", "&Detect Games", "name", "DetectGames"))
 
-        result := this.app.GuiManager.Menu("MenuGui", menuItems, this.windowKey, "", btn)
+        result := this.app.GuiManager.Menu("MenuGui", menuItems, this, btn)
 
         if (result == "AddGame") {
             this.AddLauncher()

@@ -39,7 +39,8 @@ class GuiManager extends ContainerServiceBase {
     }
 
     Menu(className, params*) {
-        return this.Form(className, params*)
+        window := %className%.new(this.app, this.GetTheme(), this.app.IdGen.Generate(), params*)
+        return window.Show()
     }
 
     OpenWindow(key, className := "", params*) {
