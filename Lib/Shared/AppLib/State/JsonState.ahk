@@ -3,7 +3,6 @@ class JsonState extends StateBase {
 
     __New(app, filePath, autoLoad := false) {
         InvalidParameterException.CheckTypes("JsonState", "filePath", filePath, "")
-        InvalidParameterException.CheckEmpty("JsonState", "filePath", filePath)
         this.filePath := filePath
         super.__New(app, "", autoLoad)
     }
@@ -13,24 +12,27 @@ class JsonState extends StateBase {
             this.stateMap := newState
         }
 
-        stateToSave := Map("State", this.stateMap)
-        data := JsonData.new(stateToSave)
-        jsonString := data.ToString("", 4)
+        if (this.filePath) {
+            stateToSave := Map("State", this.stateMap)
+            data := JsonData.new(stateToSave)
+            jsonString := data.ToString("", 4)
 
-        if (jsonString == "") {
-            throw(OperationFailedException.new("Converting state map to JSON failed", "AppState", stateToSave))
-        }
+            if (jsonString == "") {
+                throw(OperationFailedException.new("Converting state map to JSON failed", "AppState", stateToSave))
+            }
 
-        if (FileExist(this.filePath)) {
-            FileDelete(this.filePath)
+            if (FileExist(this.filePath)) {
+                FileDelete(this.filePath)
+            }
+                
+            FileAppend(jsonString, this.filePath)
         }
-            
-        FileAppend(jsonString, this.filePath)
+        
         return this.stateMap
     }
 
     LoadState() {
-        if (!this.stateLoaded) {
+        if (this.filePath && !this.stateLoaded) {
             newState := super.LoadState()
 
             if (FileExist(this.filePath)) {

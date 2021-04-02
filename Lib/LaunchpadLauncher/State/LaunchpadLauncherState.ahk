@@ -1,19 +1,9 @@
-class LaunchpadLauncherState extends StateBase {
+class LaunchpadLauncherState extends AppState {
     __New(app, state := "") {
         if (Type(state) != "Map") {
             state := ""
         }
 
-        super.__New(app)
-    }
-
-    SaveState(newState := "") {
-        if (newState && Type(newState) == "Map") {
-            this.State := newState
-        }
-    }
-
-    LoadState() {
-
+        super.__New(app, "", false)
     }
 }
