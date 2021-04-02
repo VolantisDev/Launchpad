@@ -29,6 +29,6 @@ class ReleaseInfoForm extends FormGuiBase {
     }
 
     ProcessResult(result, submittedData := "") {
-        result := (result == "Upload") ? submittedData : ""
+        return (result == "Upload") ? submittedData : ""
     }
 }
