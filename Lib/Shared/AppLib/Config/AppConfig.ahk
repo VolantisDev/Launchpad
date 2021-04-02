@@ -15,7 +15,7 @@
     }
 
     LoggingLevel {
-        get => this.GetIniValue("LoggingLevel") || "None"
+        get => this.GetIniValue("LoggingLevel") || "Warning"
         set => this.SetIniValue("LoggingLevel", value)
     }
 }
