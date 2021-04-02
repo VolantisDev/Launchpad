@@ -210,7 +210,7 @@
 
     OnChangeCacheDir() {
         this.app.Cache.ChangeCacheDir()
-        this.SetText("TxtCacheDir", this.app.Config.CacheDir, "Bold")
+        this.SetText("CacheDir", this.app.Config.CacheDir, "Bold")
     }
 
     OnOpenBackupDir() {
@@ -219,7 +219,7 @@
 
     OnChangeBackupDir() {
         this.app.Backups.ChangeBackupDir()
-        this.SetText("TxtBackupDir", this.app.Config.BackupDir, "Bold")
+        this.SetText("BackupDir", this.app.Config.BackupDir, "Bold")
     }
 
     OnThemeNameChange(ctl, info) {
