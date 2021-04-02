@@ -98,11 +98,7 @@ class FileInstallerComponentBase extends InstallerComponentBase {
     }
 
     ExistsAction() {
-        if (!FileExist(this.destPath)) {
-            return false
-        }
-
-        return true
+        return (!!FileExist(this.destPath))
     }
 
     UninstallAction() {

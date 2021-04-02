@@ -1,8 +1,10 @@
 class CopyableInstallerComponent extends FileInstallerComponentBase {
     sourcePath := ""
     deleteZip := false
+    testFile := ""
 
-    __New(version, sourcePath, zipped, destPath, appState, stateKey, cache, parentStateKey := "", overwrite := false, tmpDir := "", onlyCompiled := false) {
+    __New(version, sourcePath, zipped, destPath, appState, stateKey, cache, parentStateKey := "", overwrite := false, tmpDir := "", onlyCompiled := false, testFile := "") {
+        this.testFile := testFile
         this.zipped := zipped
         this.sourcePath := sourcePath
         super.__New(version, destPath, appState, stateKey, cache, parentStateKey, overwrite, tmpDir, onlyCompiled)
@@ -20,5 +22,15 @@ class CopyableInstallerComponent extends FileInstallerComponentBase {
 
     GetSourcePath() {
         return this.sourcePath
+    }
+
+    ExistsAction() {
+        exists := super.ExistsAction()
+
+        if (exists && this.testFile) {
+            return (!!FileExist(this.destPath . "\" . this.testFile))
+        }
+
+        return exists
     }
 }
