@@ -7,7 +7,7 @@
     }
 
     GetTextDefinition() {
-        return "There is a new version of " . this.app.appName . " available!" ; @todo Populate based on whether you're currently logged in
+        return "There is a new version of Launchpad available!" ; @todo Populate based on whether you're currently logged in
     }
 
     GetButtonsDefinition() {
