@@ -100,7 +100,7 @@
 
     AddConfigLocationBlock(heading, settingName, extraButton := "", helpText := "") {
         location := this.app.Config.%settingName% ? this.app.Config.%settingName% : "Not selected"
-        this.AddLocationBlock(heading, settingName, location, extraButton, true, helpText)
+        LocationBlock.new(this, "", heading, settingName, location, extraButton, true, helpText)
     }
 
     AddConfigCheckBox(checkboxText, settingName) {
@@ -150,29 +150,29 @@
         this.app.Platforms.ReloadPlatformsFile()
     }
 
-    OnOpenLauncherFile() {
+    OnOpenLauncherFile(btn, info) {
         this.app.Config.OpenLauncherFile()
     }
 
-    OnOpenPlatformsFile() {
+    OnOpenPlatformsFile(btn, info) {
         this.app.Config.OpenPlatformsFile()
     }
 
-    OnChangeLauncherFile() {
+    OnChangeLauncherFile(btn, info) {
         this.app.Config.ChangeLauncherFile()
         this.SetText("LauncherFile", this.app.Config.LauncherFile, "Bold")
     }
 
-    OnChangePlatformsFile() {
+    OnChangePlatformsFile(btn, info) {
         this.app.Config.ChangePlatformsFile()
         this.SetText("PlatformsFile", this.app.Config.PlatformsFile, "Bold")
     }
 
-    OnOpenDestinationDir() {
+    OnOpenDestinationDir(btn, info) {
         this.app.Config.OpenDestinationDir()
     }
 
-    OnChangeDestinationDir() {
+    OnChangeDestinationDir(btn, info) {
         this.app.Config.ChangeDestinationDir()
         this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
     }
@@ -182,20 +182,20 @@
         this.app.Config.ApiToken := ctl.Text
     }
 
-    OnOpenAssetsDir() {
+    OnOpenAssetsDir(btn, info) {
         this.app.Config.OpenAssetsDir()
     }
 
-    OnChangeAssetsDir() {
+    OnChangeAssetsDir(btn, info) {
         this.app.Config.ChangeAssetsDir()
         this.SetText("AssetsDir", this.app.Config.AssetsDir, "Bold")
     }
 
-    OnOpenApiEndpoint() {
+    OnOpenApiEndpoint(btn, info) {
         this.app.DataSources.GetItem("api").Open()
     }
 
-    OnChangeApiEndpoint() {
+    OnChangeApiEndpoint(btn, info) {
         this.app.DataSources.GetItem("api").ChangeApiEndpoint("", "")
         this.SetText("ApiEndpoint", this.app.Config.ApiEndpoint, "Bold")
     }
@@ -204,20 +204,20 @@
         this.app.Cache.FlushCaches()
     }
 
-    OnOpenCacheDir() {
+    OnOpenCacheDir(btn, info) {
         this.app.Cache.OpenCacheDir()
     }
 
-    OnChangeCacheDir() {
+    OnChangeCacheDir(btn, info) {
         this.app.Cache.ChangeCacheDir()
         this.SetText("CacheDir", this.app.Config.CacheDir, "Bold")
     }
 
-    OnOpenBackupDir() {
+    OnOpenBackupDir(btn, info) {
         this.app.Backups.OpenBackupDir()
     }
 
-    OnChangeBackupDir() {
+    OnChangeBackupDir(btn, info) {
         this.app.Backups.ChangeBackupDir()
         this.SetText("BackupDir", this.app.Config.BackupDir, "Bold")
     }
