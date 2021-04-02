@@ -1,4 +1,4 @@
-﻿class BlizzardGame extends SimpleGame {
+class BlizzardGame extends SimpleGame {
     GetRunCmd() {
         launcherPath := this.launcherConfig["LauncherInstallDir"] . "\" . this.launcherConfig["LauncherExe"]
         
@@ -33,7 +33,7 @@
 
             ; Click the Play button
             CoordMode("Mouse", "Window")
-            WinGetPos(,,, winH, winTitle)
+            WinGetClientPos(,,, winH, winTitle)
             buttonX := 100
             buttonY := winH - 100
             Click(buttonX . " " . buttonY)
