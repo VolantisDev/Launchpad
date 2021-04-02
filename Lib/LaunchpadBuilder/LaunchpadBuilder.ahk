@@ -4,11 +4,6 @@ class LaunchpadBuilder extends AppBase {
         set => this.Services.Set("GitTagVersionIdentifier", value)
     }
 
-    DialogVersionId {
-        get => this.Services.Get("DialogVersionIdentifier")
-        set => this.Services.Set("DialogVersionIdentifier", value)
-    }
-
     DataSources {
         get => this.Services.Get("DataSourceManager")
         set => this.Services.Set("DataSourceManager", value)
@@ -19,12 +14,17 @@ class LaunchpadBuilder extends AppBase {
         set => this.Services.Set("LaunchpadConfig", value)
     }
 
+    FileHasher {
+        get => this.Services.Get("FileHasher")
+        set => this.Services.Set("FileHasher", value)
+    }
+
     LoadServices(config) {
         super.LoadServices(config)
         this.LaunchpadConfig := LaunchpadConfig.new(this, this.appDir . "\" . this.appName . ".ini")
         this.DataSources := DataSourceManager.new(this.Events)
+        this.FileHasher := FileHasher.new(this)
         this.GitTagVersionId := GitTagVersionIdentifier.new(this)
-        this.DialogVersionId := DialogVersionIdentifier.new(this)
     }
 
     GetCaches() {
@@ -36,33 +36,40 @@ class LaunchpadBuilder extends AppBase {
         super.InitializeApp(config)
         this.Auth.SetAuthProvider(LaunchpadApiAuthProvider.new(this, this.State))
 
-        if (this.Config.DeployRelease) {
+        version := this.GitTagVersionId.IdentifyVersion()
+
+        buildInfo := this.GuiManager.Form("BuildSettingsForm", version)
+
+        if (!buildInfo) {
+            this.ExitApp()
+        }
+
+        if (buildInfo.DeployToApi) {
             this.Auth.Login()
         }
 
-        version := this.GitTagVersionId.IdentifyVersion()
-        version := this.DialogVersionId.IdentifyVersion(version)
-        
+        version := buildInfo.Version
+
         if (!version) {
-            this.ExitApp()
+            throw AppException.new("Version not provided.")
         }
 
         this.Version := version
         this.CreateGitTag(version)
-        success := LaunchpadBuildOp.new(this, this.GetBuilders()).Run()
+        success := LaunchpadBuildOp.new(this, this.GetBuilders(buildInfo)).Run()
 
         if (!success) {
             throw AppException.new(this.appName . "build failed. Skipping deploy...")
         }
 
-        if (this.Config.DeployRelease) {
+        if (buildInfo.DeployToGitHub || buildInfo.DeployToApi || buildInfo.DeployToChocolatey) {
             releaseInfo := this.GuiManager.Form("ReleaseInfoForm")
 
             if (!releaseInfo) {
                 this.ExitApp()
             }
 
-            success := LaunchpadDeployOp.new(this, this.GetDeployers()).Run()
+            success := LaunchpadDeployOp.new(this, this.GetDeployers(buildInfo)).Run()
 
             if (!success) {
                 throw AppException.new(this.appName . " deployment failed. You might need to handle things manually...")
@@ -70,19 +77,39 @@ class LaunchpadBuilder extends AppBase {
         }
 
         TrayTip("Finished building " . this.appName . "!", this.appName . " Build", 1)
+        this.ExitApp()
     }
 
-    GetBuilders() {
+    GetBuilders(buildInfo) {
         builders := Map()
         builders["Exe"] := AhkExeBuilder.new(this)
-        builders["Installer"] := NsisInstallerBuilder.new(this)
+
+        if (buildInfo.BuildInstaller) {
+            builders["Installer"] := NsisInstallerBuilder.new(this)
+
+            if (buildInfo.BuildChocoPkg) {
+                builders["Chocolatey Package"] := ChocoPkgBuilder.new(this)
+            }
+        }
+        
         return builders
     }
 
-    GetDeployers() {
+    GetDeployers(buildInfo) {
         deployers := Map()
-        deployers["GitHub"] := GitHubBuildDeployer.new(this)
-        deployers["Api"] := ApiBuildDeployer.new(this)
+
+        if (buildInfo.DeployToGitHub) {
+            deployers["GitHub"] := GitHubBuildDeployer.new(this)
+        }
+
+        if (buildInfo.DeployToApi) {
+            deployers["Api"] := ApiBuildDeployer.new(this)
+        }
+        
+        if (buildInfo.DeployToChocolatey) {
+            deployers["Chocolatey"] := ChocoDeployer.new(this)
+        }
+        
         return deployers
     }
 
@@ -113,10 +140,9 @@ class LaunchpadBuilder extends AppBase {
 
     CleanupBuild() {
         if (this.Config.CleanupBuildArtifacts) {
-            DirDelete(this.Config.BuildDir . "\Lib", true)
-            DirDelete(this.Config.BuildDir . "\Resources", true)
-            DirDelete(this.Config.BuildDir . "\Vendor", true)
-            FileDelete(this.Config.BuildDir . "\" . this.appName . ".exe")
+            if (DirExist(this.Config.BuildDir)) {
+                DirDelete(this.Config.BuildDir, true)
+            }
         }
     }
 }

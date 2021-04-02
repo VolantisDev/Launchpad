@@ -84,6 +84,7 @@
 #Include AppLib\Service\EntityManager\BackupManager.ahk
 #Include AppLib\Service\EntityManager\EntityManagerBase.ahk
 #Include AppLib\Service\Utility\Debugger.ahk
+#Include AppLib\Service\Utility\FileHasher.ahk
 #Include AppLib\Service\Utility\VersionChecker.ahk
 #Include AppLib\State\AppState.ahk
 #Include AppLib\State\CacheState.ahk

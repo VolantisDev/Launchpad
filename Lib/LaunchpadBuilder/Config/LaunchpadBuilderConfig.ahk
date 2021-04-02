@@ -27,11 +27,6 @@
         set => this.SetIniValue("GitHubRepo", value)
     }
 
-    DeployRelease {
-        get => this.GetBooleanValue("DeployToApi", true)
-        set => this.SetBooleanValue("DeployToApi", value)
-    }
-
     ApiEndpoint {
         get => this.GetIniValue("ApiEndpoint") || "https://api.launchpad.games/v1"
         set => this.SetIniValue("ApiEndpoint", value)
@@ -59,6 +54,17 @@
     OpenDistDir {
         get => this.GetBooleanValue("OpenDistDir", true)
         set => this.SetBooleanValue("OpenDistDir", value)
+    }
+
+    ChocoPkgName {
+        get => this.GetIniValue("ChocoPkgName") || this.GenerateChocoPkgName()
+        set => this.SetIniValue("ChocoPkgName", value)
+    }
+
+    GenerateChocoPkgName() {
+        name := StrLower(this.app.appName)
+        StrReplace(name, " ", "-")
+        return name
     }
 
     OpenDestinationDir() {
