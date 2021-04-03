@@ -104,7 +104,7 @@
         buttonSpacing := this.windowSettings["spacing"]["buttonSpacing"]
         marginSpace := (buttonSpacing * this.buttonsPerRow) - buttonSpacing
         width := (this.windowSettings["contentWidth"] - marginSpace) / this.buttonsPerRow
-        btn := this.Add("ButtonControl", this.nextPos . " w" . width . " h" . this.separatorHeight, "", "OnSeparator", "menuSeparator")
+        this.Add("ButtonControl", this.nextPos . " w" . width . " h" . this.separatorHeight, "", "OnSeparator", "menuSeparator")
 
         if (this.buttonsPerRow > 1) {
             this.nextPos := this.nextPos == "x" . this.margin ? "x+" . buttonSpacing . " yp" : "x" . this.margin

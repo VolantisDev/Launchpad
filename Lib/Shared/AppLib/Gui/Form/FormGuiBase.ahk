@@ -35,7 +35,7 @@ class FormGuiBase extends GuiBase {
             position := (A_Index == 1) ? "x" . btnsStart " " : "x+m yp "
             ;defaultOption := InStr(btns[A_Index], "*") ? "Default " : " "
             defaultOption := " "
-            btn := this.Add("ButtonControl", position . defaultOption . "w100 h30", RegExReplace(btns[A_Index], "\*"), "OnFormGuiButton", "dialog")
+            this.Add("ButtonControl", position . defaultOption . "w100 h30", RegExReplace(btns[A_Index], "\*"), "OnFormGuiButton", "dialog")
         }
     }
 
