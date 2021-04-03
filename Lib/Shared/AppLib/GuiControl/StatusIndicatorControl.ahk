@@ -19,6 +19,7 @@ class StatusIndicatorControl extends GuiControlBase {
         oldW := this.statusIndicatorW
         newW := this.CalculateWidth(statusInfo)
         this.statusIndicatorW := newW
+        difference := 0
 
         if (oldW != newW) {
             this.ctl.GetPos(statusX,, statusW)
@@ -27,7 +28,7 @@ class StatusIndicatorControl extends GuiControlBase {
         }
 
         this.guiObj.themeObj.DrawButton(this.ctl, statusInfo["name"], statusStyle, Map("photo", statusInfo["photo"]))
-        return newW
+        return difference
     }
 
     CalculateWidth(statusInfo) {
