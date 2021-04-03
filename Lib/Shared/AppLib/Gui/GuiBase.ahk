@@ -24,7 +24,6 @@ class GuiBase {
     showClose := true
     showMinimize := true
     showMaximize := false
-    titlebarHeight := 31
     lv := ""
     lvHeaderHwnd := 0
     listViewColumns := []
@@ -47,11 +46,10 @@ class GuiBase {
     result := ""
     canceled := false
     statusIndicator := ""
-
+    titlebar := ""
     positionAtMouseCursor := false
     openWindowWithinScreenBounds := true
     showInNotificationArea := false
-    ownedWindows := Map()
 
     __New(app, themeObj, windowKey, title, owner := "", parent := "", iconSrc := "") {
         InvalidParameterException.CheckTypes("GuiBase", "app", app, "AppBase", "title", title, "", "themeObj", themeObj, "ThemeBase", "windowKey", windowKey, "")
@@ -547,99 +545,6 @@ class GuiBase {
         return chk
     }
 
-    AddTitlebar() {
-        ; titlebar = margin + icon + 5 + text + 5 + button + 5 + button + 5 + button + margin
-        titlebarW := this.windowSettings["contentWidth"] + (this.margin * 2)
-        startingPos := "x" . this.margin . " y10"
-        textPos := "x" . this.margin . " y10"
-        iconSrc := this.iconSrc ? this.iconSrc : A_IconFile
-
-        if (this.showIcon && iconSrc) {
-            this.guiObj.AddPicture(startingPos . " h16 w16 +BackgroundTrans vWindowIcon", iconSrc)
-            textPos := "x31 y10"
-        }
-
-        buttonsW := 0
-
-        statusIndicatorW := this.showStatusIndicator ? 120 : 0
-
-        if (this.showStatusIndicator) {
-            buttonsW += statusIndicatorW + (this.margin * 2)
-        }
-
-        if (this.showMinimize) {
-            buttonsW += 16 + this.margin
-        }
-
-        if (this.showMaximize) {
-            buttonsW += 16 + this.margin
-        }
-
-        if (this.showClose) {
-            buttonsW += 16 + this.margin
-        }
-
-        if (buttonsW) {
-            buttonsW += this.margin * 2
-        }
-
-        textW := titlebarW - buttonsW
-        buttonsX := textW
-
-        if (iconSrc) {
-            textW -= 21
-            buttonsX += 21
-        }
-
-        titleText := this.showTitle ? this.title : ""
-
-        if (this.titleIsMenu) {
-            titleButtonW := this.themeObj.CalculateTextWidth(titleText) + 25
-
-            if (titleButtonW > textW) {
-                titleButtonW := textW
-            }
-
-            this.Add("ButtonControl", textPos . " w" . titleButtonW . " h20 vWindowTitleText", titleText, "OnWindowTitleTextClick", "mainMenu")
-        } else {
-            this.guiObj.AddText(textPos . " w" . textW . " vWindowTitleText c" . this.themeObj.GetColor("textLight") . " +BackgroundTrans", titleText)
-        }
-        
-        if (this.showStatusIndicator) {
-            opts := "x" . buttonsX . " y5 w" . statusIndicatorW
-            statusStyle := this.StatusWindowIsOnline() ? "status" : "statusOffline"
-            statusInfo := this.GetStatusInfo()
-            this.statusIndicator := this.Add("StatusIndicatorControl", opts, statusInfo, "", statusStyle)
-            buttonsX += this.statusIndicator.UpdateStatusIndicator(statusInfo, statusStyle) + (this.margin * 2)
-        }
-        
-        if (this.showMinimize) {
-            this.AddTitlebarButton("WindowMinButton", "minimize", "OnTitlebarButtonClick", false, buttonsX)
-        }
-
-        if (this.showMaximize) {
-            maxBtn := this.AddTitlebarButton("WindowMaxButton", "maximize", "OnTitlebarButtonClick")
-            unMaxBtn := this.AddTitlebarButton("WindowUnmaxButton", "unmaximize", "OnTitlebarButtonClick", true)
-            unMaxBtn.Visible := false
-        }
-
-        if (this.showClose) {
-            this.AddTitlebarButton("WindowCloseButton", "close", "OnTitlebarButtonClick")
-        }
-
-        titlebarObj := this.guiObj.AddPicture("x0 y0 w" . titlebarW . " h31 vWindowTitlebar +BackgroundTrans", "")
-        titlebarObj.OnEvent("Click", "OnWindowTitleClick")
-        titlebarObj.OnEvent("DoubleClick", "OnTitlebarDblClick")
-
-        this.guiObj.AddText("x" . this.margin . " y31 w0 h0", "")
-    }
-
-    OnWindowTitleTextClick(btn, info) {
-        if (this.titleIsMenu) {
-            this.ShowTitleMenu()
-        }
-    }
-
     ShowTitleMenu() {
 
     }
@@ -653,23 +558,9 @@ class GuiBase {
         return this.guiObj.AddEdit(opts, defaultValue)
     }
 
-    AddTitlebarButton(name, symbol, handlerName, overlayPrevious := false, xPos := "") {
-        if (xPos == "") {
-            xPos := "+" . this.margin
-        }
-
-        if (overlayPrevious) {
-            xPos := "p"
-        }
-
-        position := overlayPrevious ? "xp yp" : "x" . xPos . " y10"
-        options := position . " w16 h16 v" . name
-        return this.Add("ButtonControl", options, symbol, handlerName, "titlebar")
-    }
-
     UpdateStatusIndicator() {
         if (this.showStatusIndicator) {
-            this.statusIndicator.UpdateStatusIndicator(this.GetStatusInfo(), this.StatusWindowIsOnline() ? "status" : "statusOffline")
+            this.titlebar.statusIndicator.UpdateStatusIndicator(this.GetStatusInfo(), this.StatusWindowIsOnline() ? "status" : "statusOffline")
         }
     }
 
@@ -714,7 +605,8 @@ class GuiBase {
         this.Start()
         
         if (this.showTitlebar) {
-            this.AddTitlebar()
+            titleText := this.showTitle ? this.title : ""
+            this.titlebar := this.Add("TitlebarControl", "", titleText, this.titleIsMenu, this.iconSrc)
         }
 
         this.Controls()
@@ -1057,74 +949,8 @@ class GuiBase {
     }
 
     OnSize(guiObj, minMax, width, height) {
-        if (minMax == 1 and this.showMaximize) {
-            this.guiObj["WindowUnmaxButton"].Visible := true
-            this.guiObj["WindowMaxButton"].Visible := false
-        } else if (minMax != 1 && this.showMaximize) {
-            this.guiObj["WindowUnmaxButton"].Visible := false
-            this.guiObj["WindowMaxButton"].Visible := true
-        }
-
-        if (minMax == -1) {
-            return
-        }
-
         if (this.showTitlebar) {
-            this.AutoXYWH("w", ["WindowTitlebar"])
-
-            if (this.showStatusIndicator) {
-                this.AutoXYWH("x*", ["StatusIndicator"])
-            }
-
-            if (this.showClose) {
-                this.AutoXYWH("x*", ["WindowCloseButton"])
-            }
-
-            if (this.showMaximize) {
-                this.AutoXYWH("x*", ["WindowMaxButton", "WindowUnmaxButton"])
-            }
-
-            if (this.showMinimize) {
-                this.AutoXYWH("x*", ["WindowMinButton"])
-            }
+            this.titlebar.OnSize(minMax, width, height)
         }
-    }
-
-    OnTitlebarDblClick(btn, info) {
-        if (this.showMaximize) {
-            winId := "ahk_id " . this.guiObj.Hwnd
-            minMaxResult := WinGetMinMax(winId)
-
-            if (minMaxResult == 1) {
-                this.Restore()
-            } else {
-                this.Maximize()
-            }
-        }
-    }
-
-    OnTitlebarButtonClick(btn, info) {
-        winId := "ahk_id " . this.guiObj.Hwnd
-        minMaxResult := WinGetMinMax(winId)
-
-        if (btn.Name == "WindowMinButton") {
-            if (minMaxResult == -1) {
-                this.Restore()
-            } else {
-                this.Minimize()
-            }
-        } else if (btn.Name == "WindowMaxButton" || btn.Name == "WindowUnmaxButton") {
-            if (minMaxResult == 1) {
-                this.Restore()
-            } else {
-                this.Maximize()
-            }
-        } else if (btn.Name == "WindowCloseButton") {
-            this.Close()
-        }
-    }
-
-    OnWindowTitleClick(btn, info) {
-        PostMessage(0xA1, 2,,, "A")
     }
 }

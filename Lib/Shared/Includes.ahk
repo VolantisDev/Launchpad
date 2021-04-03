@@ -68,6 +68,7 @@
 #Include AppLib\GuiControl\GuiControlBase.ahk
 #Include AppLib\GuiControl\LocationBlock.ahk
 #Include AppLib\GuiControl\StatusIndicatorControl.ahk
+#Include AppLib\GuiControl\TitlebarControl.ahk
 #Include AppLib\Installer\InstallerBase.ahk
 #Include AppLib\Installer\ThemeInstaller.ahk
 #Include AppLib\Installer\InstallerComponent\CopyableInstallerComponent.ahk

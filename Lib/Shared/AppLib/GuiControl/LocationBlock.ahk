@@ -37,9 +37,9 @@ class LocationBlock extends GuiControlBase {
         callback := this.RegisterCallback("OnLocationOptions")
         btnOptions := this.SetDefaultOptions(btnOptions, "v" . fieldName . "Options w20 h20 x+" . (this.guiObj.margin/2) . " yp")
         btn := this.guiObj.Add("ButtonControl", this.GetOptionsString(btnOptions), "arrowDown", callback, "symbol")
-        btn.MenuItems := menuItems
-        btn.ToolTip := "Change options"
-        btn.Callback := "On" . fieldName . "MenuClick"
+        btn.ctl.MenuItems := menuItems
+        btn.ctl.ToolTip := "Change options"
+        btn.ctl.Callback := "On" . fieldName . "MenuClick"
         this.btnCtl := btn
 
         return ctl
@@ -56,6 +56,6 @@ class LocationBlock extends GuiControlBase {
 
     ToggleEnabled(isEnabled) {
         super.ToggleEnabled(isEnabled)
-        this.btnCtl.Visible := (isEnabled)
+        this.btnCtl.ctl.Visible := (isEnabled)
     }
 }

@@ -90,8 +90,8 @@
 
         handler := childItems ? "ParentItemClick" : "MenuItemClick"
         btn := this.Add("ButtonControl", "v" . ctlName . " " . this.nextPos . " w" . width . " h" . buttonH, buttonLabel, handler, "menu")
-        btn.Menu := this
-        btn.ChildItems := childItems
+        btn.ctl.Menu := this
+        btn.ctl.ChildItems := childItems
 
         if (this.buttonsPerRow > 1) {
             this.nextPos := this.nextPos == "x" . this.margin ? "x+" . buttonSpacing . " yp" : "x" . this.margin
