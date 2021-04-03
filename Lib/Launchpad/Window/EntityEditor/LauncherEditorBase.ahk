@@ -168,49 +168,45 @@ class LauncherEditorBase extends EntityEditorBase {
         this.entityObj.%property% := value
     }
 
-    OnChangeIconSrc() {
-        existingVal := this.entityObj.GetConfigValue("IconSrc", false)
-        file := FileSelect(1,, this.entityObj.Key . ": Select icon or .exe to extract icon from.", "Icons (*.ico; *.exe)")
+    OnIconSrcMenuClick(btn) {
+        if (btn == "ChangeIconSrc") {
+            existingVal := this.entityObj.GetConfigValue("IconSrc", false)
+            file := FileSelect(1,, this.entityObj.Key . ": Select icon or .exe to extract icon from.", "Icons (*.ico; *.exe)")
 
-        if (file) {
-            this.entityObj.SetConfigValue("IconSrc", file, false)
-            this.guiObj["IconSrc"].Text := file
+            if (file) {
+                this.entityObj.SetConfigValue("IconSrc", file, false)
+                this.guiObj["IconSrc"].Text := file
+            }
+        } else if (btn == "OpenIconSrc") {
+            if (this.entityObj.IconSrc && FileExist(this.entityObj.IconSrc)) {
+                ; @todo How to open an icon by default?
+            }
+        } else if (btn == "ClearIconSrc") {
+            if (this.entityObj.UnmergedConfig.Has("IconSrc")) {
+                this.entityObj.UnmergedConfig.Delete("IconSrc")
+                this.guiObj["IconSrc"].Text := this.entityObj.IconSrc
+            }
         }
     }
 
-    OnOpenIconSrc() {
-        if (this.entityObj.IconSrc && FileExist(this.entityObj.IconSrc)) {
-            ; @todo How to open an icon by default?
-        }
-    }
+    OnLogPathMenuClick(btn) {
+        if (btn == "ChangeLogPath") {
+            existingVal := this.entityObj.GetConfigValue("LogPath", false)
+            file := FileSelect(8,, this.entityObj.Key . ": Select or create log file.", "Files (*.*)")
 
-    OnClearIconSrc() {
-        if (this.entityObj.UnmergedConfig.Has("IconSrc")) {
-            this.entityObj.UnmergedConfig.Delete("IconSrc")
-            this.guiObj["IconSrc"].Text := this.entityObj.IconSrc
-        }
-    }
-
-    OnChangeLogPath() {
-        existingVal := this.entityObj.GetConfigValue("LogPath", false)
-        file := FileSelect(8,, this.entityObj.Key . ": Select or create log file.", "Files (*.*)")
-
-        if (file) {
-            this.entityObj.SetConfigValue("LogPath", false)
-            this.guiObj["LogPath"].Text := file
-        }
-    }
-
-    OnOpenLogPath() {
-        if (this.entityObj.LogPath && FileExist(this.entityObj.LogPath)) {
-            Run this.entityObj.LogPath
-        }
-    }
-
-    OnClearLogPath() {
-        if (this.entityObj.UnmergedConfig.Has("LogPath")) {
-            this.entityObj.UnmergedConfig.Delete("LogPath")
-            this.guiObj["LogPath"].Text := this.entityObj.LogPath
+            if (file) {
+                this.entityObj.SetConfigValue("LogPath", false)
+                this.guiObj["LogPath"].Text := file
+            }
+        } else if (btn == "OpenLogPath") {
+            if (this.entityObj.LogPath && FileExist(this.entityObj.LogPath)) {
+                Run this.entityObj.LogPath
+            }
+        } else if (btn == "ClearLogPath") {
+            if (this.entityObj.UnmergedConfig.Has("LogPath")) {
+                this.entityObj.UnmergedConfig.Delete("LogPath")
+                this.guiObj["LogPath"].Text := this.entityObj.LogPath
+            }
         }
     }
 

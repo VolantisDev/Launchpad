@@ -165,6 +165,35 @@
         return path
     }
 
+    OpenBackupsFile() {
+        Run(this.BackupsFile)
+    }
+
+    ChangeBackupsFile(existingFile := "") {
+        if (existingFile == "") {
+            existingFile := this.BackupsFile
+        }
+
+        backupsFile := this.SelectBackupsFile(existingFile)
+
+        if (backupsFile != "") {
+            this.BackupsFile := backupsFile
+        }
+
+        return backupsFile
+    }
+
+    SelectBackupsFile(existingFile) {
+        MsgBox(this.app.appName . " uses a Backups File to keep a list of files to manage backups for. The file is in JSON format and can be edited by hand or through the Backup Manager in " . this.app.appName . ".`n`nIf you have an existing Backups File, select it on the following screen. If you want to create a new one, browse to the folder you would like and type in a new .json filename to use.", this.app.appName . " Backups File", "OK")
+        path := FileSelect(8, existingFile, "Select or create the Backups File you would like " . this.app.appName . " to use.", "JSON Documents (*.json)")
+
+        if (path && !FileExist(path)) {
+            FileAppend("{`"Backups`": {}}", path)
+        }
+
+        return path
+    }
+
     OpenPlatformsFile() {
         Run(this.PlatformsFile)
     }

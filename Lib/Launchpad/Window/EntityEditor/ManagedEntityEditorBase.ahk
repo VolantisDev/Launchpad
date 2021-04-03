@@ -42,7 +42,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
 
         tabs.UseTab(this.entityTypeName, true)
         this.AddEntityTypeSelect(prefix . " Type", "Type", this.entityObj.EntityType, this.entityObj.ListEntityTypes(), "", "You can select from the available entity types if the default doesn't work for your use case.")
-        this.AddTextBlock("Exe", prefix . " Executable", true, "The main .exe file, not including any path information.", true)
+        this.AddEntityLocationBlock(prefix . " Executable", "Exe", "Clear", true, true, true, "The main .exe file, not including any path information.")
         this.AddTextBlock("WindowTitle", prefix . " Window Title", true, "The part of the main window's title which identifies it uniquely.", true)
         this.CustomTabControls()
 
@@ -84,7 +84,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     }
 
     OnDefaultExe(ctlObj, info) {
-        return this.SetDefaultValue("Exe", !!(ctlObj.Value), true)
+        return this.SetDefaultLocationValue(ctlObj, "Exe", true)
     }
 
     OnDefaultWindowTitle(ctlObj, info) {
@@ -164,11 +164,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         this.entityObj.UpdateDataSourceDefaults()
     }
 
-    OnExeChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.Exe := ctlObj.Value
-    }
-
     OnProcessIdChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.ProcessId := ctlObj.Value
@@ -209,58 +204,42 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         this.entityObj.ProcessTimeout := ctlObj.Value
     }
 
-    OnChangeInstallDir() {
-        existingVal := this.entityObj.GetConfigValue("InstallDir")
-
-        if existingVal {
-            existingVal := "*" . existingVal
-        }
-
-        dir := DirSelect(existingVal, 2, this.entityObj.configPrefix . ": Select the installation directory")
-
-        if (dir) {
-            this.entityObj.SetConfigValue("InstallDir", dir)
-            this.guiObj["InstallDir"].Text := dir
-        }
+    OnInstallDirMenuClick(btn) {
+        this.OnDirMenuClick("InstallDir", btn, "Select the installation directory")
     }
 
-    OnOpenInstallDir() {
-        val := this.entityObj.GetConfigValue("InstallDir")
-
-        if (val) {
-            Run val
-        }
+    OnWorkingDirMenuClick(btn) {
+        this.OnDirMenuClick("WorkingDir", btn, "Select the working directory")
     }
 
-    OnClearInstallDir() {
-        this.entityObj.SetConfigValue("InstallDir", "")
-    }
-
-    OnChangeWorkingDir() {
-        existingVal := this.entityObj.GetConfigValue("WorkingDir")
-
-        if (existingVal) {
-            existingVal := "*" . existingVal
+    OnDirMenuClick(field, btn, text := "") {
+        if (text == "") {
+            text := "Select the directory"
         }
 
-        dir := DirSelect(existingVal, 2, this.entityObj.configPrefix . ": Select the working directory")
+        if (btn == "Change" . field) {
+            existingVal := this.entityObj.GetConfigValue(field)
 
-        if (dir) {
-            this.entityObj.SetConfigValue("WorkingDir", dir)
-            this.guiObj["WorkingDir"].Text := dir
+            if existingVal {
+                existingVal := "*" . existingVal
+            }
+
+            dir := DirSelect(existingVal, 2, this.entityObj.configPrefix . ": " . text)
+
+            if (dir) {
+                this.entityObj.SetConfigValue(field, dir)
+                this.guiObj[field].Text := dir
+            }
+        } else if (btn == "Open" .field) {
+            val := this.entityObj.GetConfigValue(field)
+
+            if (val) {
+                Run val
+            }
+        } else if (btn == "Clear" . field) {
+            this.entityObj.SetConfigValue(field, "")
+            this.guiObj[field].Text := ""
         }
-    }
-
-    OnOpenWorkingDir() {
-        val := this.entityObj.GetConfigValue("WorkingDir")
-
-        if (val) {
-            Run val
-        }
-    }
-
-    OnClearWorkingDir() {
-        this.entityObj.SetConfigValue("WorkingDir", "")
     }
 
     OnRunTypeChange(ctlObj, info) {
@@ -295,26 +274,45 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         this.entityObj.RunCmd := ctlObj.Text
     }
 
-    OnChangeShortcutSrc() {
-        existingVal := this.entityObj.GetConfigValue("ShortcutSrc")
-        file := FileSelect(1,, this.entityObj.configPrefix . ": Select a shortcut file or .exe that will launch the application", "Shortcuts (*.lnk; *.url; *.exe)")
-
-        if (file) {
-            this.entityObj.SetConfigValue("ShortcutSrc", file, true)
-            this.guiObj["ShortcutSrc"].Text := file
-        }
+    OnExeMenuClick(btn) {
+        this.OnFileMenuClick("Exe", btn, "Select the executable file", "Executables (*.exe)")
     }
 
-    OnOpenShortcutSrc() {
-        if (this.entityObj.ShortcutSrc) {
-            Run this.entityObj.ShortcurSrc
-        }
+    OnShortcutSrcMenuClick(btn) {
+        this.OnFileMenuClick("ShortcutSrc", btn, "Select a shortcut file or .exe that will launch the application", "Shortcuts (*.lnk; *.url; *.exe)")
     }
 
-    OnClearShortcutSrc() {
-        if (this.entityObj.UnmergedConfig.Has("ShortcutSrc")) {
-            this.entityObj.UnmergedConfig.Delete("ShortcutSrc")
-            this.guiObj["ShortcutSrc"].Text := this.entityObj.ShortcutSrc
+    OnFileMenuClick(field, btn, text := "", selector := "") {
+        if (text == "") {
+            text := "Select the file"
+        }
+
+        if (selector == "") {
+            selector := "All Files (*.*)"
+        }
+
+        if (btn == "Change" . field) {
+            existingVal := this.entityObj.GetConfigValue(field)
+
+            if (!existingVal) {
+                existingVal := this.entityObj.GetConfigValue(field)
+            }
+
+            file := FileSelect(1, existingVal, text, selector)
+
+            if (file) {
+                this.entityObj.SetConfigValue(field, file)
+                this.guiObj[field].Text := file
+            }
+        } else if (btn == "Open" . field) {
+            val := this.entityObj.GetConfigValue(field)
+
+            if (val) {
+                Run val
+            }
+        } else if (btn == "Clear" . field) {
+            this.entityObj.SetConfigValue(field, "")
+            this.guiObj[field].Text := ""
         }
     }
 }

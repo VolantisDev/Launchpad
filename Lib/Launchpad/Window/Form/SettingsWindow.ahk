@@ -100,7 +100,7 @@
 
     AddConfigLocationBlock(heading, settingName, extraButton := "", helpText := "") {
         location := this.app.Config.%settingName% ? this.app.Config.%settingName% : "Not selected"
-        LocationBlock.new(this, "", heading, settingName, location, extraButton, true, helpText)
+        this.Add("LocationBlock", "", heading, settingName, location, extraButton, true, helpText)
     }
 
     AddConfigCheckBox(checkboxText, settingName) {
@@ -142,39 +142,46 @@
         }
     }
 
-    OnReloadLauncherFile(btn, info) {
-        this.app.Launchers.ReloadLauncherFile()
+    OnLauncherFileMenuClick(btn) {
+        if (btn == "ChangeLauncherFile") {
+            this.app.Config.ChangeLauncherFile()
+            this.SetText("LauncherFile", this.app.Config.LauncherFile, "Bold")
+        } else if (btn == "OpenLauncherFile") {
+            this.app.Config.OpenLauncherFile()
+        } else if (btn == "ReloadLauncherFile") {
+            this.app.Launchers.ReloadLauncherFile()
+        }
     }
 
-    OnReloadPlatformsFile(btn, info) {
-        this.app.Platforms.ReloadPlatformsFile()
+    OnBackupsFileMenuClick(btn) {
+        if (btn == "ChangeBackupsFile") {
+            this.app.Config.ChangeBackupsFile()
+            this.SetText("BackupsFile", this.app.Config.LauncherFile, "Bold")
+        } else if (btn == "OpenBackupsFile") {
+            this.app.Config.OpenBackupsFile()
+        } else if (btn == "ReloadBackupsFile") {
+            this.app.Launchers.ReloadBackupsFile()
+        }
     }
 
-    OnOpenLauncherFile(btn, info) {
-        this.app.Config.OpenLauncherFile()
+    OnPlatformsFileMenuClick(btn) {
+        if (btn == "ChangePlatformsFile") {
+            this.app.Config.ChangePlatformsFile()
+            this.SetText("PlatformsFile", this.app.Config.PlatformsFile, "Bold")
+        } else if (btn == "OpenPlatformsFile") {
+            this.app.Config.OpenPlatformsFile()
+        } else if (btn == "ReloadPlatformsFile") {
+            this.app.Platforms.ReloadPlatformsFile()
+        }
     }
 
-    OnOpenPlatformsFile(btn, info) {
-        this.app.Config.OpenPlatformsFile()
-    }
-
-    OnChangeLauncherFile(btn, info) {
-        this.app.Config.ChangeLauncherFile()
-        this.SetText("LauncherFile", this.app.Config.LauncherFile, "Bold")
-    }
-
-    OnChangePlatformsFile(btn, info) {
-        this.app.Config.ChangePlatformsFile()
-        this.SetText("PlatformsFile", this.app.Config.PlatformsFile, "Bold")
-    }
-
-    OnOpenDestinationDir(btn, info) {
-        this.app.Config.OpenDestinationDir()
-    }
-
-    OnChangeDestinationDir(btn, info) {
-        this.app.Config.ChangeDestinationDir()
-        this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
+    OnDestinationDirMenuClick(btn) {
+        if (btn == "ChangeDestinationDir") {
+            this.app.Config.ChangeDestinationDir()
+            this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
+        } else if (btn == "OpenDestinationDir") {
+            this.app.Config.OpenDestinationDir()
+        }
     }
 
     OnApiTokenChange(ctl, info) {
@@ -182,44 +189,42 @@
         this.app.Config.ApiToken := ctl.Text
     }
 
-    OnOpenAssetsDir(btn, info) {
-        this.app.Config.OpenAssetsDir()
+    OnAssetsDirMenuClick(btn) {
+        if (btn == "ChangeAssetsDir") {
+            this.app.Config.ChangeAssetsDir()
+            this.SetText("AssetsDir", this.app.Config.AssetsDir, "Bold")
+        } else if (btn == "OpenAssetsDir") {
+            this.app.Config.OpenAssetsDir()
+        }
     }
 
-    OnChangeAssetsDir(btn, info) {
-        this.app.Config.ChangeAssetsDir()
-        this.SetText("AssetsDir", this.app.Config.AssetsDir, "Bold")
+    OnApiEndpointMenuClick(btn) {
+        if (btn == "ChangeApiEndpoint") {
+            this.app.DataSources.GetItem("api").ChangeApiEndpoint("", "")
+            this.SetText("ApiEndpoint", this.app.Config.ApiEndpoint, "Bold")
+        } else if (btn == "OpenApiEndpoint") {
+            this.app.DataSources.GetItem("api").Open()
+        }
     }
 
-    OnOpenApiEndpoint(btn, info) {
-        this.app.DataSources.GetItem("api").Open()
+    OnCacheDirMenuClick(btn) {
+        if (btn == "ChangeCacheDir") {
+            this.app.Cache.ChangeCacheDir()
+            this.SetText("CacheDir", this.app.Config.CacheDir, "Bold")
+        } else if (btn == "OpenCacheDir") {
+            this.app.Cache.OpenCacheDir()
+        } else if (btn == "FlushCacheDir") {
+            this.app.Cache.FlushCaches()
+        }
     }
 
-    OnChangeApiEndpoint(btn, info) {
-        this.app.DataSources.GetItem("api").ChangeApiEndpoint("", "")
-        this.SetText("ApiEndpoint", this.app.Config.ApiEndpoint, "Bold")
-    }
-
-    OnFlushCache(btn, info) {
-        this.app.Cache.FlushCaches()
-    }
-
-    OnOpenCacheDir(btn, info) {
-        this.app.Cache.OpenCacheDir()
-    }
-
-    OnChangeCacheDir(btn, info) {
-        this.app.Cache.ChangeCacheDir()
-        this.SetText("CacheDir", this.app.Config.CacheDir, "Bold")
-    }
-
-    OnOpenBackupDir(btn, info) {
-        this.app.Backups.OpenBackupDir()
-    }
-
-    OnChangeBackupDir(btn, info) {
-        this.app.Backups.ChangeBackupDir()
-        this.SetText("BackupDir", this.app.Config.BackupDir, "Bold")
+    OnBackupDirMenuClick(btn) {
+        if (btn == "ChangeBackupDir") {
+            this.app.Backups.ChangeBackupDir()
+            this.SetText("BackupDir", this.app.Config.BackupDir, "Bold")
+        } else if (btn == "OpenBackupDir") {
+            this.app.Backups.OpenBackupDir()
+        }
     }
 
     OnThemeNameChange(ctl, info) {

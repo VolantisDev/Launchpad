@@ -63,75 +63,69 @@
         this.entityObj.IsInstalled := ctl.Value
     }
 
-    OnChangeInstallDir() {
-        existingVal := this.entityObj.GetConfigValue("InstallDir")
+    OnInstallDirMenuClick(btn) {
+        if (btn == "ChangeInstallDir") {
+            existingVal := this.entityObj.GetConfigValue("InstallDir")
 
-        if existingVal {
-            existingVal := "*" . existingVal
-        }
+            if existingVal {
+                existingVal := "*" . existingVal
+            }
 
-        dir := DirSelect(existingVal, 2, this.entityObj.configPrefix . ": Select the installation directory")
+            dir := DirSelect(existingVal, 2, this.entityObj.configPrefix . ": Select the installation directory")
 
-        if (dir) {
-            this.entityObj.SetConfigValue("InstallDir", dir)
-            this.guiObj["InstallDir"].Text := dir
-        }
-    }
+            if (dir) {
+                this.entityObj.SetConfigValue("InstallDir", dir)
+                this.guiObj["InstallDir"].Text := dir
+            }
+        } else if (btn == "OpenInstallDir") {
+            val := this.entityObj.InstallDir
 
-    OnOpenInstallDir() {
-        val := this.entityObj.InstallDir
-
-        if (val) {
-            Run val
-        }
-    }
-
-    OnClearInstallDir() {
-        this.entityObj.SetConfigValue("InstallDir", "")
-    }
-
-    OnChangeExePath(btn, info) {
-        existingVal := this.entityObj.GetConfigValue("ExePath", false)
-        file := FileSelect(1,, this.entityObj.Key . ": Select the .exe that will launch this platform.", "Exe (*.exe)")
-
-        if (file) {
-            this.entityObj.SetConfigValue("ExePath", file, false)
-            this.guiObj["ExePath"].Text := file
+            if (val) {
+                Run val
+            }
+        } else if (btn == "ClearInstallDir") {
+            this.entityObj.SetConfigValue("InstallDir", "")
         }
     }
 
-    OnOpenExePath() {
-        val := this.entityObj.ExePath
+    OnExePathMenuClick(btn) {
+        if (btn == "ChangeExePath") {
+            existingVal := this.entityObj.GetConfigValue("ExePath", false)
+            file := FileSelect(1,, this.entityObj.Key . ": Select the .exe that will launch this platform.", "Exe (*.exe)")
 
-        if (val) {
-            Run val
+            if (file) {
+                this.entityObj.SetConfigValue("ExePath", file, false)
+                this.guiObj["ExePath"].Text := file
+            }
+        } else if (btn == "OpenExePath") {
+            val := this.entityObj.ExePath
+
+            if (val) {
+                Run val
+            }
+        } else if (btn == "ClearExePath") {
+            this.entityObj.SetConfigValue("ExePath", "")
         }
     }
 
-    OnClearExePath() {
-        this.entityObj.SetConfigValue("ExePath", "")
-    }
+    OnIconSrcMenuClick(btn) {
+        if (btn == "ChangeIconSrc") {
+            existingVal := this.entityObj.GetConfigValue("IconSrc", false)
+            file := FileSelect(1,, this.entityObj.Key . ": Select icon or .exe retrieve icon from.", "Icons (*.ico; *.exe)")
 
-    OnChangeIconSrc() {
-        existingVal := this.entityObj.GetConfigValue("IconSrc", false)
-        file := FileSelect(1,, this.entityObj.Key . ": Select icon or .exe retrieve icon from.", "Icons (*.ico; *.exe)")
-
-        if (file) {
-            this.entityObj.SetConfigValue("IconSrc", file, false)
-            this.guiObj["IconSrc"].Text := file
-        }
-    }
-
-    OnOpenIconSrc() {
-        if (this.entityObj.IconSrc) {
-            ; TODO: Determine what it means to open an icon
-        }
-    }
-
-    OnClearIconSrc() {
-        if (this.entityObj.UnmergedConfig.Has("IconSrc")) {
-            this.entityObj.UnmergedConfig.Delete("IconSrc")
-            this.guiObj["IconSrc"].Text := this.entityObj.IconSrc
+            if (file) {
+                this.entityObj.SetConfigValue("IconSrc", file, false)
+                this.guiObj["IconSrc"].Text := file
+            }
+        } else if (btn == "OpenIconSrc") {
+            if (this.entityObj.IconSrc) {
+                ; TODO: Determine what it means to open an icon
+            }
+        } else if (btn == "ClearIconSrc") {
+            if (this.entityObj.UnmergedConfig.Has("IconSrc")) {
+                this.entityObj.UnmergedConfig.Delete("IconSrc")
+                this.guiObj["IconSrc"].Text := this.entityObj.IconSrc
+            }
         }
     }
 }

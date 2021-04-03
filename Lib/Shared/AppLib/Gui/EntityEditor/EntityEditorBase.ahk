@@ -156,7 +156,6 @@ class EntityEditorBase extends FormGuiBase {
         this.AddHeading(heading)
         location := entityObj.HasConfigValue(settingName, addPrefix, false) ? entityObj.GetConfigValue(settingName, addPrefix) : "Not set"
         checkW := 0
-        disabledText := ""
 
         prefixedName := settingName
         if (addPrefix) {
@@ -167,12 +166,10 @@ class EntityEditorBase extends FormGuiBase {
             ctl := this.DefaultCheckbox(settingName, entityObj, addPrefix)
             ctl.GetPos(,,checkW)
             checkW := checkW + this.margin
-            disabledText := entityObj.UnmergedConfig.Has(prefixedName) ? "" : " Disabled"
         }
 
         btnWidth := 20
         btnHeight := 20
-        fieldW := this.windowSettings["contentWidth"] - checkW
         locationPos := checkW ? "x+" . this.margin . " yp" : "xs y+" . this.margin
         textW := this.windowSettings["contentWidth"] - btnWidth - (this.margin/2)
 
@@ -180,26 +177,7 @@ class EntityEditorBase extends FormGuiBase {
             textW -= checkW + this.margin
         }
 
-        ctl := this.AddLocationText(location, settingName, locationPos, textW)
-
-        if (helpText) {
-            ctl.ToolTip := helpText
-        }
-
-        menuItems := []
-        menuItems.Push(Map("label", "Change", "name", "Change" . settingName))
-
-        if (showOpen) {
-            menuItems.Push(Map("label", "Open", "name", "Open" . settingName))
-        }
-
-        if (extraButton) {
-            menuItems.Push(Map("label", extraButton, "name", StrReplace(extraButton, " ", "") . settingName))
-        }
-
-        btn := this.AddButton("w" . btnWidth . " h" . btnHeight . " x+" (this.margin/2) . " yp v" . settingName . "Options Hidden" . (!entityObj.UnmergedConfig.Has(prefixedName)), "arrowDown", "OnLocationOptions", "symbol")
-        btn.MenuItems := menuItems
-        btn.Tooltip := "Change options"
+        this.Add("LocationBlock", locationPos . " w" . textW, "", settingName, location, extraButton, showOpen, helpText, "Hidden" . (!entityObj.UnmergedConfig.Has(prefixedName)))
     }
 
     Create() {

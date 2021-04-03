@@ -33,9 +33,7 @@
         ctl.OnEvent("Change", "OnThemeNameChange")
         ctl.ToolTip := "Select a theme for " . this.app.appName . " to use."
 
-        this.AddHeading("Launcher Directory")
-        this.AddDescription(this.app.appName . " will create a separate .exe file for every game you configure. You can store these launchers in any folder you wish.")
-        this.AddConfigLocationBlock("DestinationDir")
+        this.AddConfigLocationBlock("Launcher Directory", "DestinationDir", "", this.app.appName . " will create a separate .exe file for every game you configure. You can store these launchers in any folder you wish.")
 
         this.AddHeading("Platforms")
         this.AddDescription(this.app.appName . " has detected the following game platforms on your computer. Check the ones you wish " . this.app.appName . " to detect your installed games from.")
@@ -49,29 +47,9 @@
         closeX := this.margin + (this.windowSettings["contentWidth"] / 2) - (closeW / 2)
     }
 
-    AddConfigLocationBlock(settingName, extraButton := "", inGroupBox := false, helpText := "") {
+    AddConfigLocationBlock(heading, settingName, extraButton := "", helpText := "") {
         location := this.app.Config.%settingName% ? this.app.Config.%settingName% : "Not selected"
-        btnWidth := 20
-        btnHeight := 20
-
-        pos := inGroupBox ? "xs+" . this.margin . " y+" . this.margin : ""
-        ctl := this.AddLocationText(location, settingName, pos, this.windowSettings["contentWidth"] - btnWidth - (this.margin/2))
-
-        if (helpText) {
-            ctl.ToolTip := helpText
-        }
-
-        menuItems := []
-        menuItems.Push(Map("label", "Change", "name", "Change" . settingName))
-        menuItems.Push(Map("label", "Open", "name", "Open" . settingName))
-
-        if (extraButton) {
-            menuItems.Push(Map("label", extraButton, "name", StrReplace(extraButton, " ", "") . settingName))
-        }
-
-        btn := this.AddButton("w" . btnWidth . " h" . btnHeight . " x+" (this.margin/2) . " yp", "arrowDown", "OnLocationOptions", "symbol")
-        btn.MenuItems := menuItems
-        btn.Tooltip := "Change options"
+        this.Add("LocationBlock", "", heading, settingName, location, extraButton, true, helpText)
     }
 
     AddPlatformCheckboxes() {
@@ -108,13 +86,13 @@
         this.Close()
     }
 
-    OnOpenDestinationDir() {
-        this.app.Config.OpenDestinationDir()
-    }
-
-    OnChangeDestinationDir() {
-        this.app.Config.ChangeDestinationDir()
-        this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
+    OnDestinationDirMenuClick(btn) {
+        if (btn == "ChangeDestinationDir") {
+            this.app.Config.ChangeDestinationDir()
+            this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
+        } else if (btn == "OpenDestinationDir") {
+            this.app.Config.OpenDestinationDir()
+        }
     }
 
     OnThemeNameChange(ctl, info) {

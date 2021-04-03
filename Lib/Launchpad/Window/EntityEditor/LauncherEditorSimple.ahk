@@ -72,40 +72,60 @@ class LauncherEditorSimple extends LauncherEditorBase {
         this.entityObj.ManagedLauncher.CloseAfterRun := !!(ctlObj.Value)
     }
 
-    OnExeChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.ManagedLauncher.ManagedGame.Exe := ctlObj.Value
-    }
-
     OnReplaceProcessChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.ManagedLauncher.ManagedGame.ReplaceProcess := !!(ctlObj.Value)
     }
 
-    OnChangeInstallDir() {
-        existingVal := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("InstallDir")
+    OnExeMenuClick(btn) {
+        if (btn == "ChangeExe") {
+            existingVal := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("Exe")
 
-        if existingVal {
-            existingVal := "*" . existingVal
-        }
+            if (!existingVal) {
+                existingVal := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("InstallDir")
+            }
 
-        dir := DirSelect(existingVal, 2, this.entityObj.ManagedLauncher.ManagedGame.configPrefix . ": Select the installation directory")
+            file := FileSelect(1, existingVal, "Select Game Exe", "Executables (*.exe)")
 
-        if (dir) {
-            this.entityObj.ManagedLauncher.ManagedGame.SetConfigValue("InstallDir", dir)
-            this.guiObj["InstallDir"].Text := dir
+            if (file) {
+                this.entityObj.ManagedLauncher.ManagedGame.SetConfigValue("Exe", file)
+                this.guiObj["Exe"].Text := file
+            }
+        } else if (btn == "OpenExe") {
+            val := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("Exe")
+
+            if (val) {
+                Run val
+            }
+        } else if (btn == "ClearExe") {
+            this.entityObj.ManagedLauncher.ManagedGame.SetConfigValue("Exe", "")
+            this.guiObj["Exe"].Text := ""
         }
     }
 
-    OnOpenInstallDir() {
-        val := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("InstallDir")
+    OnInstallDirMenuClick(btn) {
+        if (btn == "ChangeInstallDir") {
+            existingVal := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("InstallDir")
 
-        if (val) {
-            Run val
+            if existingVal {
+                existingVal := "*" . existingVal
+            }
+
+            dir := DirSelect(existingVal, 2, this.entityObj.ManagedLauncher.ManagedGame.configPrefix . ": Select the installation directory")
+
+            if (dir) {
+                this.entityObj.ManagedLauncher.ManagedGame.SetConfigValue("InstallDir", dir)
+                this.guiObj["InstallDir"].Text := dir
+            }
+        } else if (btn == "OpenInstallDir") {
+            val := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("InstallDir")
+
+            if (val) {
+                Run val
+            }
+        } else if (btn == "ClearInstallDir") {
+            this.entityObj.ManagedLauncher.ManagedGame.SetConfigValue("InstallDir", "")
+            this.guiObj["InstallDir"].Text := ""
         }
-    }
-
-    OnClearInstallDir() {
-        this.entityObj.ManagedLauncher.ManagedGame.SetConfigValue("InstallDir", "")
     }
 }

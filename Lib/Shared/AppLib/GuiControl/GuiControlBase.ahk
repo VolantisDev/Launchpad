@@ -4,6 +4,7 @@ class GuiControlBase {
     ctl := ""
     defaultH := 20
     callbacks := Map()
+    options := ""
 
     __New(guiObj, options := "", params*) {
         InvalidParameterException.CheckTypes("GuiControlBase", "guiObj", guiObj, "GuiBase")
@@ -46,7 +47,7 @@ class GuiControlBase {
                     }
                 }
             } else {
-                opts := StrSplit(options, [A_Tab, A_Space], " `t")
+                opts := StrSplit(options, " ", " `t")
             }
         }
 
@@ -104,11 +105,23 @@ class GuiControlBase {
     SetDefaultOptions(options, defaults) {
         isPos := false
 
+        if (Type(options) == "String") {
+            options := this.ParseOptions(options)
+        }
+
+        if (Type(defaults) == "String") {
+            defaults := this.ParseOptions(defaults)
+        }
+
         for index, option in defaults {
             firstChar := SubStr(option, 1, 1)
 
             if (firstChar == "x" || firstChar == "y" || firstChar == "w" || firstChar == "h") {
                 if (!this.GetOptionIndex(options, firstChar)) {
+                    options.Push(option)
+                }
+            } else {
+                if (!this.GetOptionIndex(options, option)) {
                     options.Push(option)
                 }
             }

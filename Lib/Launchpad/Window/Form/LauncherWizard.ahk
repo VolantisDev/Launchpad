@@ -14,8 +14,8 @@
         super.Controls()
         this.AddComboBox("Key", "Key", "", this.knownGames, "Select an existing game from the API, or enter a custom game key to create your own. If choosing an existing game, most advanced values can be loaded from the API.")
         this.AddSelect("Platform", "Platform", "", this.knownPlatforms, false, "", "", "Select the platform that this game is run through.", false)
-        LocationBlock.new(this, "", "Install Dir", "InstallDir", this.installDir, "", true, "Select the directory the game is installed in")
-        LocationBlock.new(this, "", "Game Exe", "Exe", this.exe, "", true, "Select the game's main .exe file")
+        this.Add("LocationBlock", "", "Install Dir", "InstallDir", this.installDir, "", true, "Select the directory the game is installed in")
+        this.Add("LocationBlock", "", "Game Exe", "Exe", this.exe, "", true, "Select the game's main .exe file")
     }
 
     OnKeyChange(ctlObj, info) {
@@ -43,39 +43,45 @@
         return config
     }
 
-    OnChangeInstallDir(btn, info) {
-        installDir := this.installDir
+    OnInstallDirMenuClick(btn) {
+        if (btn == "ChangeInstallDir") {
+            installDir := this.installDir
 
-        if (installDir) {
-            installDir := "*" . installDir
-        }
+            if (installDir) {
+                installDir := "*" . installDir
+            }
 
-        dir := DirSelect(installDir, 2, "Select the game's installation directory")
+            dir := DirSelect(installDir, 2, "Select the game's installation directory")
 
-        if (dir) {
-            this.installDir := dir
-            this.guiObj["InstallDir"].Text := dir
-        }
-    }
-
-    OnOpenInstallDir(btn, info) {
-        if (this.installDir) {
-            Run(this.installDir)
-        }
-    }
-
-    OnChangeExe(btn, info) {
-        selectedFile := FileSelect(1, this.exe, "Select Game Exe", "Executables (*.exe)")
-
-        if (selectedFile) {
-            this.exe := selectedFile
-            this.guiObj["Exe"].Text := this.exe
+            if (dir) {
+                this.installDir := dir
+                this.guiObj["InstallDir"].Text := dir
+            }
+        } else if (btn == "OpenInstallDir") {
+            if (this.installDir) {
+                Run(this.installDir)
+            }
+        } else if (btn == "ClearInstallDir") {
+            this.installDir := ""
+            this.guiObj["InstallDir"].Text := ""
         }
     }
 
-    OnOpenExe(btn, info) {
-        if (this.exe) {
-            Run(this.exe)
+    OnExeMenuClick(btn) {
+        if (btn == "ChangeExe") {
+            selectedFile := FileSelect(1, this.exe, "Select Game Exe", "Executables (*.exe)")
+
+            if (selectedFile) {
+                this.exe := selectedFile
+                this.guiObj["Exe"].Text := this.exe
+            }
+        } else if (btn == "OpenExe") {
+            if (this.exe) {
+                Run(this.exe)
+            }
+        } else if (btn == "ClearExe") {
+            this.exe := ""
+            this.guiObj["Exe"].Text := ""
         }
     }
 }

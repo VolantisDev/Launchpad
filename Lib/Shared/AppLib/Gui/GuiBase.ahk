@@ -167,6 +167,10 @@ class GuiBase {
         }
     }
 
+    Add(ctlClass, options := "", params*) {
+        return %ctlClass%.new(this, options, params*)
+    }
+
     OnCalcSize(wParam, lParam, msg, hwnd) {
         if hwnd == A_ScriptHwnd || hwnd == this.GetHwnd() {
             if (wParam) {
@@ -608,17 +612,17 @@ class GuiBase {
         }
         
         if (this.showMinimize) {
-            this.AddTitlebarButton("WindowMinButton", "minimize", "OnWindowMinButton", false, buttonsX)
+            this.AddTitlebarButton("WindowMinButton", "minimize", "OnTitlebarButtonClick", false, buttonsX)
         }
 
         if (this.showMaximize) {
-            maxBtn := this.AddTitlebarButton("WindowMaxButton", "maximize", "OnWindowMaxButton")
-            unMaxBtn := this.AddTitlebarButton("WindowUnmaxButton", "unmaximize", "OnWindowMaxButton", true)
+            maxBtn := this.AddTitlebarButton("WindowMaxButton", "maximize", "OnTitlebarButtonClick")
+            unMaxBtn := this.AddTitlebarButton("WindowUnmaxButton", "unmaximize", "OnTitlebarButtonClick", true)
             unMaxBtn.Visible := false
         }
 
         if (this.showClose) {
-            this.AddTitlebarButton("WindowCloseButton", "close", "OnWindowCloseButton")
+            this.AddTitlebarButton("WindowCloseButton", "close", "OnTitlebarButtonClick")
         }
 
         titlebarObj := this.guiObj.AddPicture("x0 y0 w" . titlebarW . " h31 vWindowTitlebar +BackgroundTrans", "")
@@ -1149,28 +1153,50 @@ class GuiBase {
         return submittedData
     }
 
-    OnWindowMaxButton(btn, info) {
-        winId := "ahk_id " . this.guiObj.Hwnd
-        minMaxResult := WinGetMinMax(winId)
-        if (minMaxResult == 1) {
-            WinRestore(winId)
-        } else {
-            WinMaximize(winId)
+    OnTitlebarDblClick(btn, info) {
+        if (this.showMaximize) {
+            winId := "ahk_id " . this.guiObj.Hwnd
+            minMaxResult := WinGetMinMax(winId)
+
+            if (minMaxResult == 1) {
+                this.Restore()
+            } else {
+                this.Maximize()
+            }
         }
     }
 
-    OnWindowMinButton(btn, info) {
+    OnTitlebarButtonClick(btn, info) {
         winId := "ahk_id " . this.guiObj.Hwnd
         minMaxResult := WinGetMinMax(winId)
-        if (minMaxResult == -1) {
-            WinRestore(winId)
-        } else {
-            WinMinimize(winId)
+
+        if (btn.Name == "WindowMinButton") {
+            if (minMaxResult == -1) {
+                this.Restore()
+            } else {
+                this.Minimize()
+            }
+        } else if (btn.Name == "WindowMaxButton" || btn.Name == "WindowUnmaxButton") {
+            if (minMaxResult == 1) {
+                this.Restore()
+            } else {
+                this.Maximize()
+            }
+        } else if (btn.Name == "WindowCloseButton") {
+            this.Close()
         }
     }
 
-    OnWindowCloseButton(btn, info) {
-        WinClose("ahk_id " . this.guiObj.Hwnd)
+    Minimize() {
+        WinMinimize("ahk_id " . this.guiObj.Hwnd)
+    }
+
+    Maximize() {
+        WinMaximize("ahk_id " . this.guiObj.Hwnd)
+    }
+
+    Restore() {
+        WinRestore("ahk_id " . this.guiObj.Hwnd)
     }
 
     OnWindowTitleClick(btn, info) {

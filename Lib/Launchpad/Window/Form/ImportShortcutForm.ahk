@@ -14,7 +14,7 @@
 
     Controls() {
         super.Controls()
-        LocationBlock.new(this, "", "Shortcut", "ShortcutSrc", this.shortcutSrc, "", true, "Select the shortcut file that launches the game")
+        this.Add("LocationBlock", "", "Shortcut", "ShortcutSrc", this.shortcutSrc, "", true, "Select the shortcut file that launches the game")
         this.AddSelect("Platform", "Platform", "", this.knownPlatforms, false, "", "", "Select the platform that this game is run through.", false)
     }
 
@@ -78,17 +78,20 @@
         }
     }
 
-    OnChangeShortcutSrc(btn, info) {
-        this.AskShortcutSrc()
+    OnShortcutSrcMenuClick(btn) {
+        if (btn == "ChangeShortcutSrc") {
+            this.AskShortcutSrc()
 
-        if (this.shortcutSrc) {
-            this.guiObj["ShortcutSrc"].Text := this.shortcutSrc
-        }
-    }
-
-    OnOpenShortcutSrc(btn, info) {
-        if (this.shortcutSrc) {
-            Run(this.shortcutSrc)
+            if (this.shortcutSrc) {
+                this.guiObj["ShortcutSrc"].Text := this.shortcutSrc
+            }
+        } else if (btn == "OpenShortcutSrc") {
+            if (this.shortcutSrc) {
+                Run(this.shortcutSrc)
+            }
+        } else if (btn == "ClearShortcutSrc") {
+            this.shortcutSrc := ""
+            this.guiObj["ShortcutSrc"].Text := ""
         }
     }
 }

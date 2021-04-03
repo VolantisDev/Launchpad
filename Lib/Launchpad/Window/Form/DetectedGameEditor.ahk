@@ -47,7 +47,7 @@
         this.AddComboBox("Key", "Key", this.detectedGameObj.key, this.knownGames, "You can change the detected game key here, which will become the name of your launcher. Your existing launchers, and all launchers known about via the API, can be selected to match this game up with one of those items.")
         this.AddEntityTypeSelect("Launcher Type", "LauncherType", this.detectedGameObj.launcherType, this.launcherTypes, "", "This tells " . this.app.appName . " how to interact with any launcher your game might require. If your game's launcher isn't listed, or your game doesn't have a launcher, start with `"Default`".`n`nYou can customize the details of the launcher type after it is added.")
         this.AddEntityTypeSelect("Game Type", "GameType", this.detectedGameObj.gameType, this.gameTypes, "", "This tells " . this.app.appName . " how to launch your game. Most games can use 'default', but launchers can support different game types.`n`nYou can customize the details of the game type after it is added.")
-        LocationBlock.new(this, "", "Install Dir", "InstallDir", this.detectedGameObj.installDir, "", true, "This is the directory that the game is installed in, if it could be detected.")
+        this.Add("LocationBlock", "", "Install Dir", "InstallDir", this.detectedGameObj.installDir, "", true, "This is the directory that the game is installed in, if it could be detected.")
         this.AddComboBox("Exe", "Exe", this.detectedGameObj.exeName, this.detectedGameObj.possibleExeNames, "The main Exe, if detected, should be pre-selected. You may change it to be the name (or path) of another exe, or select another one of the detected .exe files from the list (if more than one was found).")
         this.AddTextBlock("Launcher-Specific ID", "LauncherSpecificId", this.detectedGameObj.launcherSpecificId, "This is typically the ID which the game platform or launcher uses when referring to the game internally. Changing this value could cause issues with game launching.")
     }
@@ -90,31 +90,34 @@
         return val
     }
 
-    OnChangeInstallDir(btn, info) {
-        existingVal := this.GetValue("installDir")
+    OnInstallDirMenuClick(btn) {
+        if (btn == "ChangeInstallDir") {
+            existingVal := this.GetValue("installDir")
 
-        if (existingVal) {
-            existingVal := "*" . existingVal
-        }
+            if (existingVal) {
+                existingVal := "*" . existingVal
+            }
 
-        key := this.GetValue("key")
-        dir := DirSelect(existingVal, 2, key . ": Select the installation directory")
+            key := this.GetValue("key")
+            dir := DirSelect(existingVal, 2, key . ": Select the installation directory")
 
-        if (dir) {
-            this.newValues["installDir"] := dir
-            this.guiObj["InstallDir"].Text := dir
-        }
-    }
+            if (dir) {
+                this.newValues["installDir"] := dir
+                this.guiObj["InstallDir"].Text := dir
+            }
+        } else if (btn == "OpenInstallDir") {
+            installDir := this.detectedGameObj.installDir
 
-    OnOpenInstallDir(btn, info) {
-        installDir := this.detectedGameObj.installDir
-
-        if (this.newValues.Has("installDir")) {
-            installDir := this.newValues["installDir"]
-        }
-        
-        if (installDir && DirExist(installDir)) {
-            Run(installDir)
+            if (this.newValues.Has("installDir")) {
+                installDir := this.newValues["installDir"]
+            }
+            
+            if (installDir && DirExist(installDir)) {
+                Run(installDir)
+            }
+        } else if (btn == "ClearInstallDir") {
+            this.newValues["installDir"] := ""
+            this.guiObj["InstallDir"].Text := ""
         }
     }
 
