@@ -70,8 +70,8 @@ class LauncherEditorSimple extends LauncherEditorBase {
         this.entityObj.ManagedLauncher.ManagedGame.ReplaceProcess := !!(ctlObj.Value)
     }
 
-    OnExeMenuClick(btn) {
-        if (btn == "ChangeExe") {
+    OnGameExeMenuClick(btn) {
+        if (btn == "ChangeGameExe") {
             existingVal := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("Exe")
 
             if (!existingVal) {
@@ -84,20 +84,20 @@ class LauncherEditorSimple extends LauncherEditorBase {
                 this.entityObj.ManagedLauncher.ManagedGame.SetConfigValue("Exe", file)
                 this.guiObj["Exe"].Text := file
             }
-        } else if (btn == "OpenExe") {
+        } else if (btn == "OpenGameExe") {
             val := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("Exe")
 
             if (val) {
                 Run val
             }
-        } else if (btn == "ClearExe") {
+        } else if (btn == "ClearGameExe") {
             this.entityObj.ManagedLauncher.ManagedGame.SetConfigValue("Exe", "")
             this.guiObj["Exe"].Text := ""
         }
     }
 
-    OnInstallDirMenuClick(btn) {
-        if (btn == "ChangeInstallDir") {
+    OnGameInstallDirMenuClick(btn) {
+        if (btn == "ChangeGameInstallDir") {
             existingVal := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("InstallDir")
 
             if existingVal {
@@ -110,13 +110,13 @@ class LauncherEditorSimple extends LauncherEditorBase {
                 this.entityObj.ManagedLauncher.ManagedGame.SetConfigValue("InstallDir", dir)
                 this.guiObj["InstallDir"].Text := dir
             }
-        } else if (btn == "OpenInstallDir") {
+        } else if (btn == "OpenGameInstallDir") {
             val := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("InstallDir")
 
             if (val) {
                 Run val
             }
-        } else if (btn == "ClearInstallDir") {
+        } else if (btn == "ClearGameInstallDir") {
             this.entityObj.ManagedLauncher.ManagedGame.SetConfigValue("InstallDir", "")
             this.guiObj["InstallDir"].Text := ""
         }

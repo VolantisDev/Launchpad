@@ -117,4 +117,20 @@ class ManagedLauncherEditor extends ManagedEntityEditorBase {
         this.guiObj.Submit(false)
         
     }
+
+    OnLauncherInstallDirMenuClick(btn) {
+        this.OnDirMenuClick("LauncherInstallDir", btn, "Select the launcher's installation directory")
+    }
+
+    OnLauncherWorkingDirMenuClick(btn) {
+        this.OnDirMenuClick("LauncherWorkingDir", btn, "Select the launcher's working directory")
+    }
+
+    OnLauncherExeMenuClick(btn) {
+        this.OnFileMenuClick("LauncherExe", btn, "Select the launcher's executable file", "Executables (*.exe)")
+    }
+
+    OnLauncherShortcutSrcMenuClick(btn) {
+        this.OnFileMenuClick("LauncherShortcutSrc", btn, "Select a shortcut file or .exe that will launch the application", "Shortcuts (*.lnk; *.url; *.exe)")
+    }
 }

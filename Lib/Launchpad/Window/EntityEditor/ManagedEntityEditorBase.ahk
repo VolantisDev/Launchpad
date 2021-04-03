@@ -61,7 +61,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         tabs.UseTab("Running", true)
         this.AddSelect(prefix . " Run Type", "RunType", this.entityObj.RunType, this.runTypes, true, "", "", "", true)
         this.AddTextBlock("RunCmd", prefix . " Run Command", true, "", true)
-        this.AddEntityCtl(prefix . "Shortcut", prefix . " Shortcut", "LocationBlock", "", "", prefix . "Shortcut", this.entityObj.Config[prefix . "Shortcut"], "Clear", true, "Select the shortcut that will launch the program.")
+        this.AddEntityCtl(prefix . "ShortcutSrc", prefix . " Shortcut", "LocationBlock", "", "", prefix . "ShortcutSrc", this.entityObj.Config[prefix . "ShortcutSrc"], "Clear", true, "Select the shortcut that will launch the program.")
         this.AddSelect(prefix . " Run Method", "RunMethod", this.entityObj.RunMethod, this.runMethods, true, "", "", "RunWait: The simplest method when it works, runs a process and waits for it to complete in one command`nRun: The most compatible method, runs a process and then separately waits for it to start`nScheduled: Helpful to avoid " . this.app.appName . " owning the process, this creates a scheduled task that will run the process immediately and then delete itself", true)
 
         tabs.UseTab("Process", true)
@@ -70,7 +70,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         ctl := this.AddNumberBlock("ProcessTimeout", "Process Timeout", true, "How long to wait when detecting this items' process", true)
         this.AddCheckBoxBlock("ReplaceProcess", "Replace process after launching", true, "After the process is detected, immediately kill and re-launch it so that " . this.app.appName . " is its parent process.", true)
         
-        tabs.UseTab()
+        ;tabs.UseTab()
         this.ExtraTabControls(tabs)
         tabs.UseTab()
     }
@@ -188,14 +188,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         this.entityObj.ProcessTimeout := ctlObj.Value
     }
 
-    OnInstallDirMenuClick(btn) {
-        this.OnDirMenuClick("InstallDir", btn, "Select the installation directory")
-    }
-
-    OnWorkingDirMenuClick(btn) {
-        this.OnDirMenuClick("WorkingDir", btn, "Select the working directory")
-    }
-
     OnDirMenuClick(field, btn, text := "") {
         if (text == "") {
             text := "Select the directory"
@@ -256,14 +248,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     OnRunCmdChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.RunCmd := ctlObj.Text
-    }
-
-    OnExeMenuClick(btn) {
-        this.OnFileMenuClick("Exe", btn, "Select the executable file", "Executables (*.exe)")
-    }
-
-    OnShortcutSrcMenuClick(btn) {
-        this.OnFileMenuClick("ShortcutSrc", btn, "Select a shortcut file or .exe that will launch the application", "Shortcuts (*.lnk; *.url; *.exe)")
     }
 
     OnFileMenuClick(field, btn, text := "", selector := "") {

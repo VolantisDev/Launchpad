@@ -47,4 +47,20 @@ class ManagedGameEditor extends ManagedEntityEditorBase {
         this.guiObj.Submit(false)
         this.entityObj.LoadingWindowProcessId := ctlObj.Text
     }
+
+    OnGameInstallDirMenuClick(btn) {
+        this.OnDirMenuClick("GameInstallDir", btn, "Select the game installation directory")
+    }
+
+    OnGameWorkingDirMenuClick(btn) {
+        this.OnDirMenuClick("GameWorkingDir", btn, "Select the game working directory")
+    }
+
+    OnGameExeMenuClick(btn) {
+        this.OnFileMenuClick("GameExe", btn, "Select the executable file", "Executables (*.exe)")
+    }
+
+    OnGameShortcutSrcMenuClick(btn) {
+        this.OnFileMenuClick("GameShortcutSrc", btn, "Select a shortcut file or .exe that will launch the application", "Shortcuts (*.lnk; *.url; *.exe)")
+    }
 }
