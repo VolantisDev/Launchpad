@@ -12,9 +12,9 @@ class LocationBlock extends GuiControlBase {
         if (w) {
             w := SubStr(w, 2)
             w -= (20 + (this.guiObj.margin / 2))
+            this.SetOption(textOptions, "w", w)
         }
-
-        this.SetOption(textOptions, "w", w)
+        
         textOptions := this.SetDefaultOptions(textOptions, "v" . fieldName . " h22 c" . (this.guiObj.themeObj.GetColor("linkText")) . " y+" . (this.guiObj.margin/2) . " w" . (this.guiObj.windowSettings["contentWidth"]-20-(this.guiObj.margin/2)))
         ctl := this.AddText(location, textOptions)
         this.ctl := ctl
@@ -36,7 +36,7 @@ class LocationBlock extends GuiControlBase {
 
         callback := this.RegisterCallback("OnLocationOptions")
         btnOptions := this.SetDefaultOptions(btnOptions, "v" . fieldName . "Options w20 h20 x+" . (this.guiObj.margin/2) . " yp")
-        btn := this.guiObj.AddButton(this.GetOptionsString(btnOptions), "arrowDown", callback, "symbol")
+        btn := this.guiObj.Add("ButtonControl", this.GetOptionsString(btnOptions), "arrowDown", callback, "symbol")
         btn.MenuItems := menuItems
         btn.ToolTip := "Change options"
         btn.Callback := "On" . fieldName . "MenuClick"

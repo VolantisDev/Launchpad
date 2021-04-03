@@ -18,7 +18,7 @@
 
     Controls() {
         super.Controls()
-        this.AddButton("xs y+m vGetAuthToken w150 h30", "Get Token")
+        this.Add("ButtonControl", "xs y+m vGetAuthToken w150 h30", "Get Token")
         this.AddHeading("Login Token")
         this.guiObj.AddEdit("vAuthToken xs y+m r1 w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"))
     }

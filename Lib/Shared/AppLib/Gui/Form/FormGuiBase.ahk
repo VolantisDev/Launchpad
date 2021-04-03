@@ -35,7 +35,7 @@ class FormGuiBase extends GuiBase {
             position := (A_Index == 1) ? "x" . btnsStart " " : "x+m yp "
             ;defaultOption := InStr(btns[A_Index], "*") ? "Default " : " "
             defaultOption := " "
-            btn := this.AddButton(position . defaultOption . "w100 h30", RegExReplace(btns[A_Index], "\*"), "OnFormGuiButton", "dialog")
+            btn := this.Add("ButtonControl", position . defaultOption . "w100 h30", RegExReplace(btns[A_Index], "\*"), "OnFormGuiButton", "dialog")
         }
     }
 
@@ -104,7 +104,7 @@ class FormGuiBase extends GuiBase {
         ctl.OnEvent("Change", "On" . field . "Change")
 
         if (buttonName) {
-            this.AddButton("v" . buttonName . " x+m yp w" . buttonW . " h25", buttonText, "On" . buttonName)
+            this.Add("ButtonControl", "v" . buttonName . " x+m yp w" . buttonW . " h25", buttonText, "On" . buttonName)
         }
 
         if (helpText) {

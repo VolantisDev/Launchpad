@@ -32,12 +32,12 @@
 
         tabs.UseTab("Platforms", true)
 
-        this.AddButton("xs y+" . this.margin . " w200 h25", "Manage Platforms", "OnManagePlatforms")
+        this.Add("ButtonControl", "", "Manage Platforms", "OnManagePlatforms")
         this.AddConfigLocationBlock("Platforms File", "PlatformsFile", "Reload")
 
         tabs.UseTab("Backups")
 
-        this.AddButton("xs y+" . this.margin . " w200 h25", "Manage Backups", "OnManageBackups")
+        this.Add("ButtonControl", "", "Manage Backups", "OnManageBackups")
         this.AddConfigLocationBlock("Backup Dir", "BackupDir", "&Manage")
         this.AddConfigLocationBlock("Backups File", "BackupsFile")
 
@@ -57,7 +57,7 @@
         ctl.OnEvent("Change", "OnThemeNameChange")
         ctl.ToolTip := "Select a theme for Launchpad to use."
 
-        this.AddButton("xs y+" . this.margin . " w250 h25", "Reload Launchpad", "OnReload")
+        this.Add("ButtonControl", "", "Reload Launchpad", "OnReload")
 
         tabs.UseTab("Cache", true)
 
@@ -125,7 +125,7 @@
             height := (buttonSize.Has("h") && buttonSize["h"] != "auto") ? buttonSize["h"] : 20
         }
 
-        btn := this.AddButton("v" . ctlName . " " . position . " w" . width . " h" . height, buttonLabel, "", buttonStyle)
+        return this.Add("ButtonControl", "v" . ctlName . " " . position . " w" . width . " h" . height, buttonLabel, "", buttonStyle)
     }
 
     SetText(ctlName, ctlText, fontStyle := "") {

@@ -24,7 +24,7 @@
     AddManageButton(name, position, symbol, primary := false) {
         options := "v" . name . " " . position
         options .= " w35 h35"
-        return this.themeObj.AddButton(this.guiObj, options, symbol, "On" . name, primary ? "managePrimary" : "manage")
+        return this.Add("ButtonControl", options, symbol, "On" . name, primary ? "managePrimary" : "manage")
     }
 
     AddManageList() {

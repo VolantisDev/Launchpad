@@ -20,17 +20,17 @@
     AddBottomControls() {
         buttonRowOffset := 3
         position := "x" . this.margin . " y+" . (this.margin + buttonRowOffset) . " w60 h25"
-        this.AddButton("vEditButton " . position, "Edit", "", "manageText")
+        this.Add("ButtonControl", "vEditButton " . position, "Edit", "", "manageText")
         position := "x+" . (this.margin*3) . " yp w80 h25"
-        this.AddButton("vCheckAllButton " . position, "Check All", "", "manageText")
+        this.Add("ButtonControl", "vCheckAllButton " . position, "Check All", "", "manageText")
         position := "x+" . this.margin . " yp w80 h25"
-        this.AddButton("vUncheckAllButton " . position, "Uncheck All", "", "manageText")
+        this.Add("ButtonControl", "vUncheckAllButton " . position, "Uncheck All", "", "manageText")
 
         bigH := 30
         actionButtonsW := 120
         actionButtonsX := (this.margin + this.windowSettings["contentWidth"] - actionButtonsW)
         position := "x" . actionButtonsX . " yp-" . buttonRowOffset . " w" . actionButtonsW . " h" . bigH
-        this.AddButton("vAddSelectedButton " . position, "Add Selected", "", "primary")
+        this.Add("ButtonControl", "vAddSelectedButton " . position, "Add Selected", "", "primary")
     }
 
     SetupManageEvents(lv) {

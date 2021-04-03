@@ -601,7 +601,7 @@ class GuiBase {
                 titleButtonW := textW
             }
 
-            this.AddButton(textPos . " w" . titleButtonW . " h20 vWindowTitleText", titleText, "OnWindowTitleTextClick", "mainMenu")
+            this.Add("ButtonControl", textPos . " w" . titleButtonW . " h20 vWindowTitleText", titleText, "OnWindowTitleTextClick", "mainMenu")
         } else {
             this.guiObj.AddText(textPos . " w" . textW . " vWindowTitleText c" . this.themeObj.GetColor("textLight") . " +BackgroundTrans", titleText)
         }
@@ -711,7 +711,7 @@ class GuiBase {
 
         position := overlayPrevious ? "xp yp" : "x" . xPos . " y10"
         options := position . " w16 h16 v" . name
-        return this.themeObj.AddButton(this.guiObj, options, symbol, handlerName, "titlebar")
+        return this.Add("ButtonControl", options, symbol, handlerName, "titlebar")
     }
 
     AddStatusIndicator(xPos, yPos) {
@@ -719,7 +719,7 @@ class GuiBase {
             options := "x" . xPos . " y" . yPos . " w" . this.statusIndicatorW . " h26 vStatusIndicator"
             statusInfo := this.GetStatusInfo()
             buttonStyle := this.StatusWindowIsOnline() ? "status" : "statusOffline"
-            this.themeObj.AddButton(this.guiObj, options, statusInfo["name"], "OnStatusIndicatorClick", buttonStyle, Map("photo", statusInfo["photo"]))
+            this.Add("ButtonControl", options, statusInfo["name"], "OnStatusIndicatorClick", buttonStyle, Map("photo", statusInfo["photo"]))
         }
     }
 
@@ -802,7 +802,7 @@ class GuiBase {
         this.guiObj.MarginY := this.margin
 
         if (this.frameShadow) {
-            this.FrameShadow()
+            this.themeObj.SetFrameShadow(this.guiObj.Hwnd)
         }
 
         this.SetFont()
@@ -884,13 +884,7 @@ class GuiBase {
     AddButtons() {
     }
 
-    AddButton(options, text, handlerName := "", buttonStyle := "normal") {
-        return this.themeObj.AddButton(this.guiObj, options, text, handlerName, buttonStyle)
-    }
-
     End() {
-        static CS_DROPSHADOW := 0x00020000
-
         width := this.windowSettings["contentWidth"] + (this.margin * 2)
         windowSize := "w" . width
         MonitorGetWorkArea(, monitorL, monitorT, monitorR, monitorB)
@@ -909,7 +903,6 @@ class GuiBase {
         } else if (this.openAtCtl) {
             this.openAtCtl.GetPos(ctlX, ctlY, ctlW, ctlH)
             this.openAtCtl.Gui.GetClientPos(clientX, clientY)
-            
             windowX := clientX
             windowY := clientY
 
@@ -943,7 +936,6 @@ class GuiBase {
         }
 
         this.AdjustWindowPosition()
-
         result := this
 
         if (this.waitForResult) {
@@ -967,6 +959,69 @@ class GuiBase {
     ProcessResult(result, submittedData := "") {
         return result
     }
+
+    Minimize() {
+        WinMinimize("ahk_id " . this.guiObj.Hwnd)
+    }
+
+    Maximize() {
+        WinMaximize("ahk_id " . this.guiObj.Hwnd)
+    }
+
+    Restore() {
+        WinRestore("ahk_id " . this.guiObj.Hwnd)
+    }
+
+    Submit(hide := true) {
+        submittedData := ""
+
+        if (!this.isClosed) {
+            submittedData := this.guiObj.Submit(hide)
+        }
+
+        return submittedData
+    }
+
+    Close(submit := false) {
+        if (submit && !this.isClosed) {
+            this.guiObj.Submit(true)
+            this.isClosed := true
+        } else if (!this.isClosed) {
+            this.guiObj.Hide()
+        }
+
+        if (!this.isClosed && WinExist("ahk_id " . this.guiObj.Hwnd)) {
+            WinClose("ahk_id " . this.guiObj.Hwnd)
+        } else {
+            this.Destroy()
+        }
+    }
+
+    Destroy() {
+        if (this.tabsHwnd) {
+            OnMessage(0x002B, this.tabsCustomDrawCallback, 0)
+        }
+
+        if (this.owner) {
+            this.app.GuiManager.ReleaseFromParent(this.windowKey)
+        }
+
+        this.Cleanup()
+
+        if (!this.isClosed) {
+            this.isClosed := true
+            this.guiObj.Destroy()
+        }
+    }
+
+    Cleanup() {
+        this.app.GuiManager.container.Delete(this.windowKey)
+        ; Extend to clear any global variables used
+    }
+
+    /*
+        UTILITIES
+    */
 
     AdjustWindowPosition() {
         this.guiObj.GetPos(guiX, guiY, guiW, guiH)
@@ -1013,45 +1068,6 @@ class GuiBase {
         }
     }
 
-    Close(submit := false) {
-        if (submit && !this.isClosed) {
-            this.guiObj.Submit(true)
-            this.isClosed := true
-        } else if (!this.isClosed) {
-            this.guiObj.Hide()
-        }
-
-        if (!this.isClosed && WinExist("ahk_id " . this.guiObj.Hwnd)) {
-            WinClose("ahk_id " . this.guiObj.Hwnd)
-        } else {
-            this.Destroy()
-        }
-    }
-
-    Destroy() {
-        WS_EX_TOPMOST := 0x00000008
-
-        if (this.tabsHwnd) {
-            OnMessage(0x002B, this.tabsCustomDrawCallback, 0)
-        }
-
-        if (this.owner) {
-            this.app.GuiManager.ReleaseFromParent(this.windowKey)
-        }
-
-        this.Cleanup()
-
-        if (!this.isClosed) {
-            this.isClosed := true
-            this.guiObj.Destroy()
-        }
-    }
-
-    Cleanup() {
-        this.app.GuiManager.container.Delete(this.windowKey)
-        ; Extend to clear any global variables used
-    }
-
     ButtonWidth(numberOfButtons, availableWidth := 0) {
         if (availableWidth == 0) {
             availableWidth := this.windowSettings["contentWidth"]
@@ -1059,6 +1075,29 @@ class GuiBase {
 
         marginWidth := (numberOfButtons <= 1) ? 0 : (this.margin * (numberOfButtons - 1))
         return (availableWidth - marginWidth) / numberOfButtons
+    }
+
+    ParseDimensions(options, infoMap) {
+        optionSplit := StrSplit(RegExReplace(options, "i)[^xywh]"))
+        fx := fy := fw := fh := 0
+
+        for (, dim in optionSplit) {
+            if (!RegExMatch(options, "i)" . dim . "\s*\K[\d.-]+", f%dim%)) {
+                f%dim% := 1
+            }
+        }
+
+        infoMap["fx"] := fx
+        infoMap["fy"] := fy
+        infoMap["fw"] := fw
+        infoMap["fh"] := fh
+
+        return infoMap
+    }
+
+    GetControlDimensions(ctlObj) {
+        ctlObj.GetPos(ix, iy, iw, ih)
+        return Map("x", ix, "y", iy, "w", iw, "h", ih)
     }
 
     ; Originally based on https://www.autohotkey.com/boards/viewtopic.php?t=1079
@@ -1120,38 +1159,9 @@ class GuiBase {
         return infoMap
     }
 
-    ParseDimensions(options, infoMap) {
-        optionSplit := StrSplit(RegExReplace(options, "i)[^xywh]"))
-        fx := fy := fw := fh := 0
-
-        for (, dim in optionSplit) {
-            if (!RegExMatch(options, "i)" . dim . "\s*\K[\d.-]+", f%dim%)) {
-                f%dim% := 1
-            }
-        }
-
-        infoMap["fx"] := fx
-        infoMap["fy"] := fy
-        infoMap["fw"] := fw
-        infoMap["fh"] := fh
-
-        return infoMap
-    }
-
-    GetControlDimensions(ctlObj) {
-        ctlObj.GetPos(ix, iy, iw, ih)
-        return Map("x", ix, "y", iy, "w", iw, "h", ih)
-    }
-
-    Submit(hide := true) {
-        submittedData := ""
-
-        if (!this.isClosed) {
-            submittedData := this.guiObj.Submit(hide)
-        }
-
-        return submittedData
-    }
+    /*
+        EVENT HANDLERS
+    */
 
     OnTitlebarDblClick(btn, info) {
         if (this.showMaximize) {
@@ -1187,34 +1197,7 @@ class GuiBase {
         }
     }
 
-    Minimize() {
-        WinMinimize("ahk_id " . this.guiObj.Hwnd)
-    }
-
-    Maximize() {
-        WinMaximize("ahk_id " . this.guiObj.Hwnd)
-    }
-
-    Restore() {
-        WinRestore("ahk_id " . this.guiObj.Hwnd)
-    }
-
     OnWindowTitleClick(btn, info) {
         PostMessage(0xA1, 2,,, "A")
-    }
-
-    FrameShadow() {
-        isEnabled := 0
-        DllCall("dwmapi\DwmIsCompositionEnabled", "IntP", isEnabled)
-
-        if (isEnabled) {
-            margins := BufferAlloc(16)
-            NumPut("UInt", 1, margins, 0)
-            NumPut("UInt", 1, margins, 4)
-            NumPut("UInt", 1, margins, 8)
-            NumPut("UInt", 1, margins, 12)
-            DllCall("dwmapi\DwmSetWindowAttribute", "Ptr", this.guiObj.Hwnd, "UInt", 2, "Int*", 2, "UInt", 4)
-            DllCall("dwmapi\DwmExtendFrameIntoClientArea", "Ptr", this.guiObj.Hwnd, "Ptr", margins)
-        }
     }
 }

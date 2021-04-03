@@ -22,11 +22,11 @@ class ManageBackupsWindow extends ManageWindowBase {
         position := "x" . this.margin . " y+" . (this.margin + buttonRowOffset-2)
         this.AddManageButton("AddButton", position, "add", true)
         position := "x+" . (this.margin) . " yp+5 w60 h25"
-        this.AddButton("vEditButton " . position, "Edit", "", "manageText")
+        this.Add("ButtonControl", "vEditButton " . position, "Edit", "", "manageText")
         position := "x+" . this.margin . " yp w60 h25"
-        this.AddButton("vBackupButton " . position, "Backup", "", "manageText")
-        this.AddButton("vRestoreButton " . position, "Restore", "", "manageText")
-        this.AddButton("vDeleteButton " . position, "Delete", "", "manageText")
+        this.Add("ButtonControl", "vBackupButton " . position, "Backup", "", "manageText")
+        this.Add("ButtonControl", "vRestoreButton " . position, "Restore", "", "manageText")
+        this.Add("ButtonControl", "vDeleteButton " . position, "Delete", "", "manageText")
     }
 
     SetupManageEvents(lv) {

@@ -89,7 +89,7 @@
         buttonH := (buttonSize.Has("h") && buttonSize["h"] != "auto") ? buttonSize["h"] : this.buttonHeight
 
         handler := childItems ? "ParentItemClick" : "MenuItemClick"
-        btn := this.AddButton("v" . ctlName . " " . this.nextPos . " w" . width . " h" . buttonH, buttonLabel, handler, "menu")
+        btn := this.Add("ButtonControl", "v" . ctlName . " " . this.nextPos . " w" . width . " h" . buttonH, buttonLabel, handler, "menu")
         btn.Menu := this
         btn.ChildItems := childItems
 
@@ -104,7 +104,7 @@
         buttonSpacing := this.windowSettings["spacing"]["buttonSpacing"]
         marginSpace := (buttonSpacing * this.buttonsPerRow) - buttonSpacing
         width := (this.windowSettings["contentWidth"] - marginSpace) / this.buttonsPerRow
-        btn := this.AddButton(this.nextPos . " w" . width . " h" . this.separatorHeight, "", "OnSeparator", "menuSeparator")
+        btn := this.Add("ButtonControl", this.nextPos . " w" . width . " h" . this.separatorHeight, "", "OnSeparator", "menuSeparator")
 
         if (this.buttonsPerRow > 1) {
             this.nextPos := this.nextPos == "x" . this.margin ? "x+" . buttonSpacing . " yp" : "x" . this.margin

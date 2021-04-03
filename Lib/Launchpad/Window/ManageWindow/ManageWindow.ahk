@@ -23,16 +23,16 @@
         position := "x" . this.margin . " y+" . (this.margin)
         this.AddManageButton("AddButton", position, "add", true)
         position := "x+" . (this.margin) . " yp+5 w60 h25"
-        this.AddButton("vEditButton " . position, "Edit", "", "manageText")
+        this.Add("ButtonControl", "vEditButton " . position, "Edit", "", "manageText")
         position := "x+" . this.margin . " yp w60 h25"
-        this.AddButton("vBuildButton " . position, "Build", "", "manageText")
-        this.AddButton("vRunButton " . position, "Run", "", "manageText")
-        this.AddButton("vDeleteButton " . position, "Delete", "", "manageText")
+        this.Add("ButtonControl", "vBuildButton " . position, "Build", "", "manageText")
+        this.Add("ButtonControl", "vRunButton " . position, "Run", "", "manageText")
+        this.Add("ButtonControl", "vDeleteButton " . position, "Delete", "", "manageText")
 
         actionButtonsW := 110
         actionButtonsX := (this.margin + this.windowSettings["contentWidth"] - actionButtonsW)
         position := "x" actionButtonsX . " yp-2 w" . actionButtonsW . " h30 Section"
-        this.AddButton("vBuildAllButton " . position, "Build All", "", "primary")
+        this.Add("ButtonControl", "vBuildAllButton " . position, "Build All", "", "primary")
     }
 
     ShowTitleMenu() {

@@ -19,15 +19,15 @@ class PlatformsWindow extends ManageWindowBase {
 
     AddBottomControls() {
         position := "x" . this.margin . " y+" . this.margin . " w60 h25"
-        this.AddButton("vReloadButton ys " . position, "Reload", "", "manageText")
+        this.Add("ButtonControl", "vReloadButton ys " . position, "Reload", "", "manageText")
         position := "x+" . this.margin . " yp w60 h25"
-        this.AddButton("vEnableButton " . position, "Enable", "", "manageText")
-        this.AddButton("vDisableButton " . position, "Disable", "", "manageText")
-        this.AddButton("vEditButton " . position, "Edit", "", "manageText")
-        this.AddButton("vInstallButton " . position, "Install", "", "manageText")
-        this.AddButton("vUpdateButton " . position, "Update", "", "manageText") ; @todo get this working again
-        this.AddButton("vRunButton " . position, "Run", "", "manageText")
-        this.AddButton("vUninstallButton " . position, "Uninstall", "", "manageText")
+        this.Add("ButtonControl", "vEnableButton " . position, "Enable", "", "manageText")
+        this.Add("ButtonControl", "vDisableButton " . position, "Disable", "", "manageText")
+        this.Add("ButtonControl", "vEditButton " . position, "Edit", "", "manageText")
+        this.Add("ButtonControl", "vInstallButton " . position, "Install", "", "manageText")
+        this.Add("ButtonControl", "vUpdateButton " . position, "Update", "", "manageText") ; @todo get this working again
+        this.Add("ButtonControl", "vRunButton " . position, "Run", "", "manageText")
+        this.Add("ButtonControl", "vUninstallButton " . position, "Uninstall", "", "manageText")
     }
 
     SetupManageEvents(lv) {

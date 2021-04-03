@@ -358,20 +358,6 @@ class ThemeBase {
         throw MethodNotImplementedException.new("ThemeBase", "GetThemeMap")
     }
 
-    AddButton(guiObj, options, content, handlerName := "", style := "normal", drawConfig := "") {
-        picObj := guiObj.AddPicture(options . " 0xE")
-
-        if (handlerName or picObj.Name) {
-            if (handlerName == "") {
-                handlerName := "On" . picObj.Name
-            }
-
-            picObj.OnEvent("Click", handlerName)
-        }
-
-        return this.DrawButton(picObj, content, style, drawConfig)
-    }
-
     DrawButton(picObj, content, style := "normal", drawConfig := "") {
         picObj.IsPrimary := (style == "primary")
 
@@ -462,5 +448,20 @@ class ThemeBase {
 
         this.hoveredButton := btn.Hwnd
         return btn
+    }
+
+    SetFrameShadow(hwnd) {
+        isEnabled := 0
+        DllCall("dwmapi\DwmIsCompositionEnabled", "IntP", isEnabled)
+
+        if (isEnabled) {
+            margins := BufferAlloc(16)
+            NumPut("UInt", 1, margins, 0)
+            NumPut("UInt", 1, margins, 4)
+            NumPut("UInt", 1, margins, 8)
+            NumPut("UInt", 1, margins, 12)
+            DllCall("dwmapi\DwmSetWindowAttribute", "Ptr", hwnd, "UInt", 2, "Int*", 2, "UInt", 4)
+            DllCall("dwmapi\DwmExtendFrameIntoClientArea", "Ptr", hwnd, "Ptr", margins)
+        }
     }
 }
