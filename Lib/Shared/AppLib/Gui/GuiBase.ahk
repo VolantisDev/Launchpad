@@ -39,8 +39,6 @@ class GuiBase {
     tabNames := []
     frameShadow := true
     showStatusIndicator := false
-    statusIndicatorMinW := 120
-    statusIndicatorW := 120
     showOptions := ""
     titleIsMenu := false
     openAtCtl := ""
@@ -48,6 +46,7 @@ class GuiBase {
     waitForResult := false
     result := ""
     canceled := false
+    statusIndicator := ""
 
     positionAtMouseCursor := false
     openWindowWithinScreenBounds := true
@@ -562,10 +561,10 @@ class GuiBase {
 
         buttonsW := 0
 
-        this.statusIndicatorW := this.CalculateStatusIndicatorWidth()
+        statusIndicatorW := this.showStatusIndicator ? 120 : 0
 
         if (this.showStatusIndicator) {
-            buttonsW += this.statusIndicatorW + (this.margin * 2)
+            buttonsW += statusIndicatorW + (this.margin * 2)
         }
 
         if (this.showMinimize) {
@@ -595,7 +594,7 @@ class GuiBase {
         titleText := this.showTitle ? this.title : ""
 
         if (this.titleIsMenu) {
-            titleButtonW := this.CalculateTextWidth(titleText) + 25
+            titleButtonW := this.themeObj.CalculateTextWidth(titleText) + 25
 
             if (titleButtonW > textW) {
                 titleButtonW := textW
@@ -607,8 +606,11 @@ class GuiBase {
         }
         
         if (this.showStatusIndicator) {
-            this.AddStatusIndicator(buttonsX, "5")
-            buttonsX += this.statusIndicatorW + (this.margin * 2)
+            opts := "x" . buttonsX . " y5 w" . statusIndicatorW
+            statusStyle := this.StatusWindowIsOnline() ? "status" : "statusOffline"
+            statusInfo := this.GetStatusInfo()
+            this.statusIndicator := this.Add("StatusIndicatorControl", opts, statusInfo, "", statusStyle)
+            buttonsX += this.statusIndicator.UpdateStatusIndicator(statusInfo, statusStyle) + (this.margin * 2)
         }
         
         if (this.showMinimize) {
@@ -642,55 +644,6 @@ class GuiBase {
 
     }
 
-    CalculateStatusIndicatorWidth() {
-        width := this.statusIndicatorMinW
-        statusInfo := this.GetStatusInfo()
-        requiredW := 10
-
-        if (statusInfo) {
-            if (statusInfo.Has("name")) {
-                requiredW += this.CalculateTextWidth(statusInfo["name"])
-            }
-
-            if (StatusInfo.Has("photo")) {
-                requiredW += 26
-            }
-        }
-
-        if (requiredW > width) {
-            width := requiredW
-        }
-
-        return Ceil(width)
-    }
-
-    CalculateTextWidth(text) {
-        graphics := ""
-        font := "Arial"
-        size := 12
-        options := "Regular"
-        style := 0
-        styles := "Regular|Bold|Italic|BoldItalic|Underline|Strikeout"
-        formatStyle := 0x4000 | 0x1000
-
-        for eachStyle, valStyle in StrSplit(styles, "|")
-        {
-            if RegExMatch(options, "\b" valStyle) {
-                style |= (valStyle != "StrikeOut") ? (A_Index-1) : 8
-            }  
-        }
-
-        hdc := GetDC()
-        graphics := Gdip_GraphicsFromHDC(hdc)
-        hFamily := Gdip_FontFamilyCreate(font)
-        hFont := Gdip_FontCreate(hFamily, size, style)
-        hFormat := Gdip_StringFormatCreate(formatStyle)
-        CreateRectF(RC, 0, 0, 0, 0)
-        returnRc := Gdip_MeasureString(graphics, text, hFont, hFormat, RC)
-        returnRc := StrSplit(returnRc, "|")
-        return returnRc[3]
-    }
-
     AddEdit(name, defaultValue := "", options := "", width := "") {
         if (width == "") {
             width := this.windowSettings["contentWidth"]
@@ -714,34 +667,9 @@ class GuiBase {
         return this.Add("ButtonControl", options, symbol, handlerName, "titlebar")
     }
 
-    AddStatusIndicator(xPos, yPos) {
-        if (this.showStatusIndicator) {
-            options := "x" . xPos . " y" . yPos . " w" . this.statusIndicatorW . " h26 vStatusIndicator"
-            statusInfo := this.GetStatusInfo()
-            buttonStyle := this.StatusWindowIsOnline() ? "status" : "statusOffline"
-            this.Add("ButtonControl", options, statusInfo["name"], "OnStatusIndicatorClick", buttonStyle, Map("photo", statusInfo["photo"]))
-        }
-    }
-
-    OnStatusIndicatorClick(btn, info) {
-
-    }
-
     UpdateStatusIndicator() {
         if (this.showStatusIndicator) {
-            oldW := this.statusIndicatorW
-            newW := this.CalculateStatusIndicatorWidth()
-            this.statusIndicatorW := newW
-
-            if (oldW != newW) {
-                this.guiObj["StatusIndicator"].GetPos(statusX,, statusW)
-                difference := newW - oldW
-                this.guiObj["StatusIndicator"].Move(statusX - difference,, statusW + difference)
-            }
-
-            statusInfo := this.GetStatusInfo()
-            buttonStyle := this.StatusWindowIsOnline() ? "status" : "statusOffline"
-            this.themeObj.DrawButton(this.guiObj["StatusIndicator"], statusInfo["name"], buttonStyle, Map("photo", statusInfo["photo"]))
+            this.statusIndicator.UpdateStatusIndicator(this.GetStatusInfo(), this.StatusWindowIsOnline() ? "status" : "statusOffline")
         }
     }
 
@@ -812,56 +740,6 @@ class GuiBase {
         this.guiObj.OnEvent("Size", "OnSize")
     }
 
-    OnClose(guiObj) {
-        if (!this.isClosed) {
-            this.Destroy()
-        }
-        
-        return true
-    }
-
-    OnEscape(guiObj) {
-        if (!this.isClosed) {
-            this.Destroy()
-        }
-
-        return true
-    }
-
-    OnSize(guiObj, minMax, width, height) {
-        if (minMax == 1 and this.showMaximize) {
-            this.guiObj["WindowUnmaxButton"].Visible := true
-            this.guiObj["WindowMaxButton"].Visible := false
-        } else if (minMax != 1 && this.showMaximize) {
-            this.guiObj["WindowUnmaxButton"].Visible := false
-            this.guiObj["WindowMaxButton"].Visible := true
-        }
-
-        if (minMax == -1) {
-            return
-        }
-
-        if (this.showTitlebar) {
-            this.AutoXYWH("w", ["WindowTitlebar"])
-
-            if (this.showStatusIndicator) {
-                this.AutoXYWH("x*", ["StatusIndicator"])
-            }
-
-            if (this.showClose) {
-                this.AutoXYWH("x*", ["WindowCloseButton"])
-            }
-
-            if (this.showMaximize) {
-                this.AutoXYWH("x*", ["WindowMaxButton", "WindowUnmaxButton"])
-            }
-
-            if (this.showMinimize) {
-                this.AutoXYWH("x*", ["WindowMinButton"])
-            }
-        }
-    }
-
     AddToolbar() {
         ; Define a callback and call CreateToolbar from this function if needed
         return false
@@ -878,7 +756,6 @@ class GuiBase {
     }
 
     Controls() {
-        
     }
 
     AddButtons() {
@@ -1162,6 +1039,56 @@ class GuiBase {
     /*
         EVENT HANDLERS
     */
+
+    OnClose(guiObj) {
+        if (!this.isClosed) {
+            this.Destroy()
+        }
+        
+        return true
+    }
+
+    OnEscape(guiObj) {
+        if (!this.isClosed) {
+            this.Destroy()
+        }
+
+        return true
+    }
+
+    OnSize(guiObj, minMax, width, height) {
+        if (minMax == 1 and this.showMaximize) {
+            this.guiObj["WindowUnmaxButton"].Visible := true
+            this.guiObj["WindowMaxButton"].Visible := false
+        } else if (minMax != 1 && this.showMaximize) {
+            this.guiObj["WindowUnmaxButton"].Visible := false
+            this.guiObj["WindowMaxButton"].Visible := true
+        }
+
+        if (minMax == -1) {
+            return
+        }
+
+        if (this.showTitlebar) {
+            this.AutoXYWH("w", ["WindowTitlebar"])
+
+            if (this.showStatusIndicator) {
+                this.AutoXYWH("x*", ["StatusIndicator"])
+            }
+
+            if (this.showClose) {
+                this.AutoXYWH("x*", ["WindowCloseButton"])
+            }
+
+            if (this.showMaximize) {
+                this.AutoXYWH("x*", ["WindowMaxButton", "WindowUnmaxButton"])
+            }
+
+            if (this.showMinimize) {
+                this.AutoXYWH("x*", ["WindowMinButton"])
+            }
+        }
+    }
 
     OnTitlebarDblClick(btn, info) {
         if (this.showMaximize) {

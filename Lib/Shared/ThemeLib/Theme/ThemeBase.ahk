@@ -464,4 +464,31 @@ class ThemeBase {
             DllCall("dwmapi\DwmExtendFrameIntoClientArea", "Ptr", hwnd, "Ptr", margins)
         }
     }
+
+    CalculateTextWidth(text) {
+        graphics := ""
+        font := "Arial"
+        size := 12
+        options := "Regular"
+        style := 0
+        styles := "Regular|Bold|Italic|BoldItalic|Underline|Strikeout"
+        formatStyle := 0x4000 | 0x1000
+
+        for eachStyle, valStyle in StrSplit(styles, "|")
+        {
+            if RegExMatch(options, "\b" valStyle) {
+                style |= (valStyle != "StrikeOut") ? (A_Index-1) : 8
+            }  
+        }
+
+        hdc := GetDC()
+        graphics := Gdip_GraphicsFromHDC(hdc)
+        hFamily := Gdip_FontFamilyCreate(font)
+        hFont := Gdip_FontCreate(hFamily, size, style)
+        hFormat := Gdip_StringFormatCreate(formatStyle)
+        CreateRectF(RC, 0, 0, 0, 0)
+        returnRc := Gdip_MeasureString(graphics, text, hFont, hFormat, RC)
+        returnRc := StrSplit(returnRc, "|")
+        return returnRc[3]
+    }
 }
