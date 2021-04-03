@@ -627,7 +627,7 @@ class GuiBase {
 
         titlebarObj := this.guiObj.AddPicture("x0 y0 w" . titlebarW . " h31 vWindowTitlebar +BackgroundTrans", "")
         titlebarObj.OnEvent("Click", "OnWindowTitleClick")
-        titlebarObj.OnEvent("DoubleClick", "OnWindowMaxButton")
+        titlebarObj.OnEvent("DoubleClick", "OnTitlebarDblClick")
 
         this.guiObj.AddText("x" . this.margin . " y31 w0 h0", "")
     }

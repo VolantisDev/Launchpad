@@ -2,14 +2,14 @@ class EntityControl extends GuiControlBase {
     innerControl := ""
     defaultCtl := ""
     entityObj := ""
-    prefixedName := ""
+    fieldName := ""
     emptyValue := ""
 
-    CreateControl(entity, fieldName, heading, addPrefix, params*) {
+    CreateControl(entity, fieldName, heading, params*) {
         if (entity == "") {
             entity := this.guiObj.entityObj
         }
-
+        this.fieldName := fieldName
         this.entityObj := entity
 
         if (heading) {
@@ -17,33 +17,23 @@ class EntityControl extends GuiControlBase {
         }
 
         checkW := 0
-        prefixedName := fieldName
-
-        if (addPrefix) {
-            prefixedName := entity.configPrefix . prefixedName
-        }
-
-        this.prefixedName := prefixedName
         ctl := this.DefaultCheckbox(entity, fieldName)
         this.defaultCtl := ctl
         ctl.GetPos(,,checkW)
-        isDisabled := !entity.UnmergedConfig.Has(prefixedName)
+        isDisabled := !entity.UnmergedConfig.Has(fieldName)
         defaults := ["w" . this.guiObj.windowSettings["contentWidth"] - checkW - this.guiObj.margin, "x+" . this.guiObj.margin, "yp"]
         params[2] := this.GetOptionsString(this.SetDefaultOptions(params[2], defaults))
         this.innerControl := this.guiObj.Add(params*)
         this.ctl := this.innerControl.ctl
         this.ToggleEnabled(!isDisabled)
-        this.SetText((this.entityObj.Config.Has(this.prefixedName) && this.entityObj.Config[this.prefixedName] != "") ? this.entityObj.Config[this.prefixedName] : this.emptyValue)
+        this.SetText((this.entityObj.Config.Has(fieldName) && this.entityObj.Config[fieldName] != "") ? this.entityObj.Config[fieldName] : this.emptyValue)
         return this.innerControl
     }
 
-    DefaultCheckbox(entity, fieldName, includePrefixInName := false) {
-        prefixedName := this.prefixedName
-        ctlKey := includePrefixInName ? prefixedName : fieldName
-
-        checkedText := !entity.UnmergedConfig.Has(prefixedName) ? " Checked" : ""
+    DefaultCheckbox(entity, fieldName) {
+        checkedText := !entity.UnmergedConfig.Has(fieldName) ? " Checked" : ""
         checkOpts := this.options.Clone()
-        checkOpts := this.SetDefaultOptions(checkOpts, "vDefault" . ctlKey . " xs h25 y+" . this.guiObj.margin . checkedText)
+        checkOpts := this.SetDefaultOptions(checkOpts, "vDefault" . fieldName . " xs h25 y+" . this.guiObj.margin . checkedText)
         ctl := this.guiObj.guiObj.AddCheckBox(this.GetOptionsString(checkOpts), "Default")
         ctl.ToolTip := "When checked, the default value determined by various other factors in " . this.app.appName . " will be used (and shown to the right if available). When unchecked, the value you set here will be used instead."
         ctl.OnEvent("Click", this.RegisterCallback("OnDefaultCheckbox"))
@@ -55,10 +45,10 @@ class EntityControl extends GuiControlBase {
         useDefault := !!(chk.Value)
 
         if (useDefault) {
-            this.entityObj.RevertToDefault(this.prefixedName)
-            this.SetText((this.entityObj.Config.Has(this.prefixedName) && this.entityObj.Config[this.prefixedName] != "") ? this.entityObj.Config[this.prefixedName] : this.emptyValue)
+            this.entityObj.RevertToDefault(this.fieldName)
+            this.SetText((this.entityObj.Config.Has(this.fieldName) && this.entityObj.Config[this.fieldName] != "") ? this.entityObj.Config[this.fieldName] : this.emptyValue)
         } else {
-            this.entityObj.UnmergedConfig[this.prefixedName] := this.entityObj.Config.Has(this.prefixedName) ? this.entityObj.Config[this.prefixedName] : ""
+            this.entityObj.UnmergedConfig[this.fieldName] := this.entityObj.Config.Has(this.fieldName) ? this.entityObj.Config[this.fieldName] : ""
         }
 
         this.ToggleEnabled(!useDefault)

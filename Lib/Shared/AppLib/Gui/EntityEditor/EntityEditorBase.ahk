@@ -59,6 +59,10 @@ class EntityEditorBase extends FormGuiBase {
         super.Controls()
     }
 
+    AddEntityCtl(fieldName, heading, params*) {
+        return this.Add("EntityControl", "", this.entityObj, fieldName, heading, params*)
+    }
+
     AddTextBlock(field, settingName, showDefaultCheckbox := false, helpText := "", addPrefix := false, rows := 1, replaceWithNewline := "", entityObj := "") {
         if (entityObj == "") {
             entityObj := this.entityObj
@@ -136,48 +140,6 @@ class EntityEditorBase extends FormGuiBase {
         }
 
         return ctl
-    }
-
-    SetDefaultLocationValue(ctlObj, fieldName, includePrefix := false, entityObj := "") {
-        if (!entityObj) {
-            entityObj := this.entityObj
-        }
-
-        isDefault := !!(ctlObj.Value)
-        this.guiObj[fieldName . "Options"].Opt("Hidden" . isDefault)
-        return this.SetDefaultValue(fieldName, isDefault, includePrefix, "Not set", entityObj)
-    }
-
-    AddEntityLocationBlock(heading, settingName, extraButton := "", showOpen := true, showDefaultCheckbox := false, addPrefix := false, helpText := "", entityObj := "") {
-        if (entityObj == "") {
-            entityObj := this.entityObj
-        }
-        
-        this.AddHeading(heading)
-        location := entityObj.HasConfigValue(settingName, addPrefix, false) ? entityObj.GetConfigValue(settingName, addPrefix) : "Not set"
-        checkW := 0
-
-        prefixedName := settingName
-        if (addPrefix) {
-            prefixedName := entityObj.configPrefix . prefixedName
-        }
-
-        if (showDefaultCheckbox) {
-            ctl := this.DefaultCheckbox(settingName, entityObj, addPrefix)
-            ctl.GetPos(,,checkW)
-            checkW := checkW + this.margin
-        }
-
-        btnWidth := 20
-        btnHeight := 20
-        locationPos := checkW ? "x+" . this.margin . " yp" : "xs y+" . this.margin
-        textW := this.windowSettings["contentWidth"] - btnWidth - (this.margin/2)
-
-        if (showDefaultCheckbox) {
-            textW -= checkW + this.margin
-        }
-
-        this.Add("LocationBlock", locationPos . " w" . textW, "", settingName, location, extraButton, showOpen, helpText, "Hidden" . (!entityObj.UnmergedConfig.Has(prefixedName)))
     }
 
     Create() {

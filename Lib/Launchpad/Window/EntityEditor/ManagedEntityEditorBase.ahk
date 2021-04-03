@@ -42,13 +42,13 @@ class ManagedEntityEditorBase extends EntityEditorBase {
 
         tabs.UseTab(this.entityTypeName, true)
         this.AddEntityTypeSelect(prefix . " Type", "Type", this.entityObj.EntityType, this.entityObj.ListEntityTypes(), "", "You can select from the available entity types if the default doesn't work for your use case.")
-        this.AddEntityLocationBlock(prefix . " Executable", "Exe", "Clear", true, true, true, "The main .exe file, not including any path information.")
+        this.AddEntityCtl(prefix . "Exe", prefix . " Executable", "LocationBlock", "", "", prefix . "Exe", this.entityObj.Config[prefix . "Exe"], "Clear", true, "The main .exe file, not including any path information.")
         this.AddTextBlock("WindowTitle", prefix . " Window Title", true, "The part of the main window's title which identifies it uniquely.", true)
         this.CustomTabControls()
 
         tabs.UseTab("Sources", true)
-        this.AddEntityLocationBlock(prefix . " Install Directory", "InstallDir", "Clear", true, true, true, "Select the installation folder, or use default for auto-detection.")
-        this.AddEntityLocationBlock(prefix . " Working Directory", "WorkingDir", "Clear", true, true, true, "Optionally, set a working directory to run from. This is not often required.")
+        this.AddEntityCtl(prefix . "InstallDir", prefix . " Install Directory", "LocationBlock", "", "", prefix . "InstallDir", this.entityObj.Config[prefix . "InstallDir"], "Clear", true, "Select the installation folder, or use default for auto-detection.")
+        this.AddEntityCtl(prefix . "WorkingDir", prefix . " Working Directory", "LocationBlock", "", "", prefix . "WorkingDir", this.entityObj.Config[prefix . "WorkingDir"], "Clear", true, "Optionally, set a working directory to run from. This is not often required.")
         this.AddSelect(prefix . " Install Locate Method", "LocateMethod", this.entityObj.LocateMethod, this.locateMethods, true, "", "", "Search: Searches a list of possible directories (Defaulting to some common possibilities) for the .exe file and uses that directory`nRegistry: Looks for the provided registry key and uses its value as the install path if present`nBlizzardProductDb: Searches for LauncherSpecificId within the Blizzard product.db file if present", true)
         this.AddTextBlock("LauncherSpecificId", prefix . " Launcher-Specific ID", true, "If required, an ID that the launcher uses to reference this item", true)
         
@@ -61,7 +61,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         tabs.UseTab("Running", true)
         this.AddSelect(prefix . " Run Type", "RunType", this.entityObj.RunType, this.runTypes, true, "", "", "", true)
         this.AddTextBlock("RunCmd", prefix . " Run Command", true, "", true)
-        this.AddEntityLocationBlock(prefix . " Shortcut", "ShortcutSrc", "Clear", true, true, true)
+        this.AddEntityCtl(prefix . "Shortcut", prefix . " Shortcut", "LocationBlock", "", "", prefix . "Shortcut", this.entityObj.Config[prefix . "Shortcut"], "Clear", true, "Select the shortcut that will launch the program.")
         this.AddSelect(prefix . " Run Method", "RunMethod", this.entityObj.RunMethod, this.runMethods, true, "", "", "RunWait: The simplest method when it works, runs a process and waits for it to complete in one command`nRun: The most compatible method, runs a process and then separately waits for it to start`nScheduled: Helpful to avoid " . this.app.appName . " owning the process, this creates a scheduled task that will run the process immediately and then delete itself", true)
 
         tabs.UseTab("Process", true)
@@ -81,10 +81,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
 
     ExtraTabControls(tabs) {
         ; Assume no extra tab controls unless overridden.
-    }
-
-    OnDefaultExe(ctlObj, info) {
-        return this.SetDefaultLocationValue(ctlObj, "Exe", true)
     }
 
     OnDefaultWindowTitle(ctlObj, info) {
@@ -125,18 +121,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
 
     OnDefaultLocateRegValue(ctlObj, info) {
         return this.SetDefaultValue("LocateRegValue", !!(ctlObj.Value), true)
-    }
-
-    OnDefaultInstallDir(ctlObj, info) {
-        return this.SetDefaultLocationValue(ctlObj, "InstallDir", true)
-    }
-
-    OnDefaultWorkingDir(ctlObj, info) {
-        return this.SetDefaultLocationValue(ctlObj, "WorkingDir", true)
-    }
-
-    OnDefaultShortcutSrc(ctlObj, info) {
-        return this.SetDefaultLocationValue(ctlObj, "ShortcutSrc", true)
     }
 
     OnDefaultRunMethod(ctlObj, info) {

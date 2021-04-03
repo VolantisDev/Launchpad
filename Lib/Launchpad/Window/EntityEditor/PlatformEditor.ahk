@@ -17,9 +17,9 @@
         this.AddCheckBoxBlock("IsInstalled", "Platform Is Installed", true, "Whether or not the platform is currently installed. Usually " . this.app.appName . " can detect this automatically.")
 
         tabs.UseTab("Sources", true)
-        this.AddEntityLocationBlock("Install Directory", "InstallDir", "Clear", true, true)
-        this.AddEntityLocationBlock("Exe Path", "ExePath", "Clear", true, true)
-        this.AddEntityLocationBlock("Icon Source", "IconSrc", "Clear", true, true)
+        this.AddEntityCtl("InstallDir", "Install Directory", "LocationBlock", "", "", "InstallDir", this.entityObj.Config["InstallDir"], "Clear", true, "Select the platform installation directory.")
+        this.AddEntityCtl("ExePath", "Exe Path", "LocationBlock", "", "", "ExePath", this.entityObj.Config["ExePath"], "Clear", true, "Select the platform's .exe file.")
+        this.AddEntityCtl("IconSrc", "Icon Source", "LocationBlock", "", "", "IconSrc", this.entityObj.Config["IconSrc"], "Clear", true, "Select the icon source to use for this platform.")
 
         tabs.UseTab()
     }
@@ -34,18 +34,6 @@
 
     OnDefaultIsInstalled(ctl, info) {
         return this.SetDefaultValue("IsInstalled", !!(ctl.Value))
-    }
-
-    OnDefaultInstallDir(ctl, info) {
-        return this.SetDefaultLocationValue(ctl, "InstallDir")
-    }
-
-    OnDefaultExePath(ctl, info) {
-        return this.SetDefaultLocationValue(ctl, "ExePath")
-    }
-
-    OnDefaultIconSrc(ctl, info) {
-        return this.SetDefaultLocationValue(ctl, "IconSrc")
     }
 
     OnIsEnabledChange(ctl, info) {

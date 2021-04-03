@@ -55,14 +55,6 @@ class LauncherEditorBase extends EntityEditorBase {
         return this.SetDefaultValue("GameType", !!(ctlObj.Value))
     }
 
-    OnDefaultIconSrc(ctlObj, info) {
-        return this.SetDefaultLocationValue(ctlObj, "IconSrc", false)
-    }
-
-    OnDefaultLogPath(ctlObj, info) {
-        return this.SetDefaultLocationValue(ctlObj, "LogPath", false)
-    }
-
     OnDefaultLoggingLevel(ctlObj, info) {
         return this.SetDefaultValue("LoggingLevel", !!(ctlObj.Value))
     }
