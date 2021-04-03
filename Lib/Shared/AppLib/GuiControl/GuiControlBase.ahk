@@ -179,4 +179,16 @@ class GuiControlBase {
         options.Push(opt)
         return options
     }
+
+    SetText(text) {
+        if (this.ctl) {
+            this.ctl.Text := text
+        }
+    }
+
+    ToggleEnabled(isEnabled) {
+        if (this.ctl.Type != "Text") {
+            this.ctl.Enabled := !!(isEnabled)
+        }
+    }
 }

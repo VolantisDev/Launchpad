@@ -62,6 +62,8 @@
 #Include AppLib\Gui\Progress\MiniProgressIndicator.ahk
 #Include AppLib\Gui\Progress\ProgressIndicator.ahk
 #Include AppLib\Gui\Progress\ProgressIndicatorBase.ahk
+#Include AppLib\GuiControl\BasicControl.ahk
+#Include AppLib\GuiControl\EntityControl.ahk
 #Include AppLib\GuiControl\GuiControlBase.ahk
 #Include AppLib\GuiControl\LocationBlock.ahk
 #Include AppLib\Installer\InstallerBase.ahk

@@ -31,8 +31,8 @@ class LauncherEditor extends LauncherEditorBase {
         this.AddEntityTypeSelect("Game", "GameType", this.entityObj.ManagedLauncher.ManagedGame.EntityType, this.gameTypes, "GameConfiguration", "This tells " . this.app.appName . " how to launch your game. Most games can use 'default', but launchers can support different game types.")
 
         tabs.UseTab("Sources", true)
-        this.AddEntityLocationBlock("Icon Source", "IconSrc", "Clear", true, true)
-        ; @todo Add data source keys checkboxes
+        this.AddEntityCtl("IconSrc", "Icon Source", false, "LocationBlock", "", "", "IconSrc", "", "Clear", true)
+
         this.AddTextBlock("DataSourceItemKey", "DataSource Item Key", true, "The key to use when looking this item up in its datasource(s). By default, this is the same as the main key.")
 
         tabs.UseTab("UI", true)
@@ -53,9 +53,12 @@ class LauncherEditor extends LauncherEditorBase {
         chosen := this.GetItemIndex(this.logLevels, this.entityObj.LoggingLevel)
         ctl := this.guiObj.AddDDL("vLoggingLevel xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"), this.logLevels)
         ctl.OnEvent("Change", "OnLoggingLevelChange")
-
-        this.AddEntityLocationBlock("Log Path", "LogPath", "Clear", true, true)
-
+        this.AddEntityCtl("LogPath", "Log Path", false, "LocationBlock", "", "", "LogPath", "", "Clear", true)
+        
         tabs.UseTab()
+    }
+
+    AddEntityCtl(fieldName, heading, addPrefix, params*) {
+        return this.Add("EntityControl", "", this.entityObj, fieldName, heading, addPrefix, params*)
     }
 }
