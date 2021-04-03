@@ -9,7 +9,7 @@ class LocationBlock extends GuiControlBase {
         }
 
         textOptions := this.options.Clone()
-        textOptions := this.SetDefaultOptions(textOptions, "v" . fieldName . " h22 c" . (this.guiObj.themeObj.GetColor("linkText")) . " w" . (this.guiObj.windowSettings["contentWidth"]-20-(this.guiObj.margin/2)))
+        textOptions := this.SetDefaultOptions(textOptions, "v" . fieldName . " h22 c" . (this.guiObj.themeObj.GetColor("linkText")) . " y+" . (this.guiObj.margin/2) . " w" . (this.guiObj.windowSettings["contentWidth"]-20-(this.guiObj.margin/2)))
         ctl := this.AddText(location, textOptions)
 
         if (helpText) {

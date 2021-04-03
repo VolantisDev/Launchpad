@@ -56,7 +56,7 @@ class GuiControlBase {
 
     AddHeading(text, options := "") {
         options := this.ParseOptions(options)
-        options := this.SetDefaultOptions(options, ["Section", "+0x200", "y+" . (this.guiObj.margin)])
+        options := this.SetDefaultOptions(options, ["Section", "+0x200", "y+" . (this.guiObj.margin*1.5)])
         options := this.SetDefaultPosition(options, true)
 
         this.guiObj.SetFont("normal", "Bold")
