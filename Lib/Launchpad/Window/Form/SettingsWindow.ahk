@@ -1,6 +1,7 @@
-﻿class SettingsWindow extends GuiBase {
+﻿class SettingsWindow extends FormGuiBase {
     availableThemes := Map()
     logLevels := ["None", "Error", "Warning", "Info", "Debug"]
+    needsRestart := false
 
     __New(app, themeObj, windowKey, owner := "", parent := "") {
         if (owner == "") {
@@ -8,7 +9,7 @@
         }
 
         this.availableThemes := app.Themes.GetAvailableThemes(true)
-        super.__New(app, themeObj, windowKey, "Settings", owner, parent)
+        super.__New(app, themeObj, windowKey, "Settings", "", owner, parent, "*&Done")
     }
 
     Controls() {
@@ -79,15 +80,15 @@
         this.AddConfigLocationBlock("API Endpoint", "ApiEndpoint")
 
         this.AddHeading("API Settings")
-        this.AddConfigCheckBox("Enable API login for enhanced functionality", "ApiAuthentication")
-        this.AddConfigCheckBox("Automatically initiate API login when needed", "ApiAutoLogin")
+        ctl := this.AddConfigCheckBox("Enable API login for enhanced functionality", "ApiAuthentication")
+        ctl.NeedsRestart := true
+        ctl := this.AddConfigCheckBox("Automatically initiate API login when needed", "ApiAutoLogin")
+        ctl.NeedsRestart := true
 
         tabs.UseTab()
 
         closeW := 100
         closeX := this.margin + this.windowSettings["contentWidth"] - closeW
-
-        this.AddSettingsButton("&Done", "CloseButton", closeW, 30, "x" . closeX, "dialog")
     }
 
     OnManageBackups(btn, info) {
@@ -105,13 +106,17 @@
 
     AddConfigCheckBox(checkboxText, settingName) {
         isChecked := this.app.Config.%settingName%
-        this.AddCheckBox(checkboxText, settingName, isChecked, false, "OnSettingsCheckBox")
+        return this.AddCheckBox(checkboxText, settingName, isChecked, false, "OnSettingsCheckBox")
     }
 
     OnSettingsCheckBox(chk, info) {
         this.guiObj.Submit(false)
         ctlName := chk.Name
         this.app.Config.%ctlName% := chk.Value
+
+        if (chk.HasProp("NeedsRestart") && chk.NeedsRestart) {
+            this.needsRestart := true
+        }
     }
 
     AddSettingsButton(buttonLabel, ctlName, width := "", height := "", position := "xs y+m", buttonStyle := "normal") {
@@ -132,14 +137,6 @@
         this.guiObj.SetFont(fontStyle)
         this.guiObj[ctlName].Text := ctlText
         this.SetFont()
-    }
-
-    OnCloseButton(btn, info) {
-        this.Close()
-
-        if (this.app.GuiManager.WindowExists("ManageWindow")) {
-            this.app.GuiManager.GetWindow("ManageWindow").PopulateListView()
-        }
     }
 
     OnLauncherFileMenuClick(btn) {
@@ -179,6 +176,7 @@
         if (btn == "ChangeDestinationDir") {
             this.app.Config.ChangeDestinationDir()
             this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
+            this.requiresRestart := true
         } else if (btn == "OpenDestinationDir") {
             this.app.Config.OpenDestinationDir()
         }
@@ -186,6 +184,7 @@
 
     OnApiTokenChange(ctl, info) {
         this.guiObj.Submit(false)
+        this.requiresRestart := true
         this.app.Config.ApiToken := ctl.Text
     }
 
@@ -193,6 +192,7 @@
         if (btn == "ChangeAssetsDir") {
             this.app.Config.ChangeAssetsDir()
             this.SetText("AssetsDir", this.app.Config.AssetsDir, "Bold")
+            this.requiresRestart := true
         } else if (btn == "OpenAssetsDir") {
             this.app.Config.OpenAssetsDir()
         }
@@ -202,6 +202,7 @@
         if (btn == "ChangeApiEndpoint") {
             this.app.DataSources.GetItem("api").ChangeApiEndpoint("", "")
             this.SetText("ApiEndpoint", this.app.Config.ApiEndpoint, "Bold")
+            this.requiresRestart := true
         } else if (btn == "OpenApiEndpoint") {
             this.app.DataSources.GetItem("api").Open()
         }
@@ -222,6 +223,7 @@
         if (btn == "ChangeBackupDir") {
             this.app.Backups.ChangeBackupDir()
             this.SetText("BackupDir", this.app.Config.BackupDir, "Bold")
+            this.requiresRestart := true
         } else if (btn == "OpenBackupDir") {
             this.app.Backups.OpenBackupDir()
         }
@@ -231,6 +233,7 @@
         this.guiObj.Submit(false)
         this.app.Config.ThemeName := this.availableThemes[ctl.Value]
         this.app.Themes.LoadMainTheme()
+        this.requiresRestart := true
     }
 
     OnLoggingLevelChange(ctl, info) {
@@ -241,5 +244,21 @@
     OnBackupsToKeepChange(ctl, info) {
         this.guiObj.Submit(false)
         this.app.Config.BackupsToKeep := ctl.Text
+    }
+
+    ProcessResult(result, submittedData := "") {
+        if (this.needsRestart) {
+            response := this.app.GuiManager.Dialog("DialogBox", "Restart " . this.app.appName . "?", "One or more settings that have been changed require restarting " . this.app.appName . " to fully take effect.`n`nWould you like to restart " . this.app.appName . " now?")
+
+            if (response == "Yes") {
+                this.app.RestartApp()
+            }
+        }
+
+        if (this.app.GuiManager.WindowExists("ManageWindow")) {
+            this.app.GuiManager.GetWindow("ManageWindow").PopulateListView()
+        }
+
+        return result
     }
 }
