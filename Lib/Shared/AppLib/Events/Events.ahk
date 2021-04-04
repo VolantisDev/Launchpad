@@ -7,6 +7,8 @@ class Events {
     static MOUSE_LEFT_DOWN := 0x201
     static MOUSE_LEFT_UP := 0x202
     static MOUSE_CLICK := 0x203
+    static MOUSE_RIGHT_DOWN := 0x204
+    static MOUSE_RIGHT_UP := 0x205
 
     static APP_STARTUP := 0x1001
     static APP_SHUTDOWN := 0x1010
@@ -28,4 +30,6 @@ class Events {
 
     static DATASOURCES_REGISTER := 0x3000
     static DATASOURCES_ALTER := 0x3005
+
+    static AHK_NOTIFYICON := 0x404
 }

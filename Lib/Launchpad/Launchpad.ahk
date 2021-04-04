@@ -1,4 +1,4 @@
-﻿class Launchpad extends AppBase {
+class Launchpad extends AppBase {
     Launchers {
         get => this.Services.Get("LauncherManager")
         set => this.Services.Set("LauncherManager", value)
@@ -117,7 +117,7 @@
             }
         }
 
-        this.GuiManager.OpenWindow("ManageWindow")
+        this.OpenApp()
 
         if (result == "Detect") {
             this.Platforms.DetectGames()
@@ -125,8 +125,8 @@
     }
 
     UpdateStatusIndicators() {
-        if (this.GuiManager.WindowExists("ManageWindow")) {
-            this.GuiManager.GetWindow("ManageWindow").UpdateStatusIndicator()
+        if (this.GuiManager.WindowExists("MainWindow")) {
+            this.GuiManager.GetWindow("MainWindow").UpdateStatusIndicator()
         }
     }
 

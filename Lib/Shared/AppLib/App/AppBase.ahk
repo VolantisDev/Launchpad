@@ -8,6 +8,8 @@ class AppBase {
     configObj := ""
     stateObj := ""
     serviceContainerObj := ""
+    customTrayMenu := false
+    mainWindowKey := "MainWindow"
 
     Version {
         get => this.versionStr
@@ -268,7 +270,14 @@ class AppBase {
     }
 
     InitializeApp(config) {
+        A_AllowMainWindow := false
+        
         this.LoadServices(config)
+
+        if (this.customTrayMenu) {
+            A_TrayMenu.Delete()
+            this.Events.Register(Events.AHK_NOTIFYICON, "TrayClick", ObjBindMethod(this, "OnTrayIconRightClick"), 1)
+        }
 
         if (this.Config.HasProp("CheckUpdatesOnStart") && this.Config.CheckUpdatesOnStart) {
             this.CheckForUpdates(false)
@@ -278,6 +287,15 @@ class AppBase {
             this.InitialSetup(config)
         }
     }
+    
+    OnTrayIconRightClick(wParam, lParam, msg, hwnd) {
+        if (lParam == Events.MOUSE_RIGHT_UP) {
+            if (this.customTrayMenu) {
+                this.ShowTrayMenu()
+                return 0
+            }
+        }
+    }
 
     InitialSetup(config) {
         ; Optional method to override
@@ -285,6 +303,44 @@ class AppBase {
 
     CheckForUpdates(notify := true) {
         ; Optional method to override
+    }
+
+    ShowTrayMenu() {
+        menuItems := []
+        menuItems.Push(Map("label", "Open " . this.appName, "name", "OpenApp"))
+        menuItems := this.SetTrayMenuItems(menuItems)
+        menuItems.Push("")
+        menuItems.Push(Map("label", "Restart", "name", "RestartApp"))
+        menuItems.Push(Map("label", "Exit", "name", "ExitApp"))
+
+        result := this.GuiManager.Menu("MenuGui", menuItems, this)
+        this.HandleTrayMenuClick(result)
+    }
+
+    SetTrayMenuItems(menuItems) {
+        return menuItems
+    }
+
+    HandleTrayMenuClick(result) {
+        if (result == "OpenApp") {
+            this.OpenApp()
+        } else if (result == "RestartApp") {
+            this.RestartApp()
+        } else if (result == "ExitApp") {
+            this.ExitApp()
+        }
+
+        return result
+    }
+
+    OpenApp() {
+        if (this.mainWindowKey) {
+            if (this.GuiManager.WindowExists(this.mainWindowKey)) {
+                WinActivate("ahk_id " . this.GuiManager.GetWindow("MainWindow").GetHwnd())
+            } else {
+                this.GuiManager.OpenWindow(this.mainWindowKey)
+            }
+        }
     }
     
     LoadServices(config) {

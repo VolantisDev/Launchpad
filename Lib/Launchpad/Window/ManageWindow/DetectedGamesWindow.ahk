@@ -163,7 +163,7 @@
         op := AddDetectedGamesOp.new(this.app, games, this.launcherManager, this.state, "DetectedGamesWindow")
         op.Run()
 
-        win := this.launcherManager.app.GuiManager.GetWindow("ManageWindow")
+        win := this.launcherManager.app.GuiManager.GetWindow("MainWindow")
         win.PopulateListView()
         this.Destroy()
     }

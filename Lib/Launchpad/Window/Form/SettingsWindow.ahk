@@ -5,7 +5,7 @@
 
     __New(app, themeObj, windowKey, owner := "", parent := "") {
         if (owner == "") {
-            owner := "ManageWindow"
+            owner := "MainWindow"
         }
 
         this.availableThemes := app.Themes.GetAvailableThemes(true)
@@ -258,8 +258,8 @@
             }
         }
 
-        if (this.app.GuiManager.WindowExists("ManageWindow")) {
-            this.app.GuiManager.GetWindow("ManageWindow").PopulateListView()
+        if (this.app.GuiManager.WindowExists("MainWindow")) {
+            this.app.GuiManager.GetWindow("MainWindow").PopulateListView()
         }
 
         return result

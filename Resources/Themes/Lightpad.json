@@ -417,7 +417,7 @@
             "ManagedLauncherEditor": {
                 "settings": "editor"
             },
-            "ManageWindow": {
+            "MainWindow": {
                 "settings": "default",
                 "contentWidth": 650,
                 "listViewHeight": 400,
