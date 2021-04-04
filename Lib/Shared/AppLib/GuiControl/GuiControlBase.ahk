@@ -5,12 +5,14 @@ class GuiControlBase {
     defaultH := 20
     callbacks := Map()
     options := ""
+    heading := ""
 
-    __New(guiObj, options := "", params*) {
+    __New(guiObj, options := "", heading := "", params*) {
         InvalidParameterException.CheckTypes("GuiControlBase", "guiObj", guiObj, "GuiBase")
         this.app := guiObj.app
         this.guiObj := guiObj
         this.options := this.ParseOptions(options)
+        this.heading := heading
 
         if (this.ctl == "") {
             this.CreateControl(params*)
@@ -22,8 +24,10 @@ class GuiControlBase {
         return this.callbacks[funcName]
     }
 
-    CreateControl(params*) {
-        
+    CreateControl(showHeading := true, params*) {
+        if showHeading && this.heading {
+            this.AddHeading(this.heading)
+        } 
     }
 
     GetCtl() {
@@ -105,7 +109,7 @@ class GuiControlBase {
     SetDefaultOptions(options, defaults) {
         isPos := false
 
-        if (Type(options) == "String") {
+        if (Type(options) != "Array") {
             options := this.ParseOptions(options)
         }
 
@@ -133,16 +137,19 @@ class GuiControlBase {
     GetOptionIndex(options, key) {
         result := 0
 
-        for index, option in options {
-            firstChar := SubStr(option, 1, 1)
-            test := (firstChar == "+" || firstChar == "-") ? SubStr(option, 2, 1) : option
-            len := StrLen(key)
+        if (Type(options) == "Array") {
+            for index, option in options {
+                firstChar := SubStr(option, 1, 1)
+                test := (firstChar == "+" || firstChar == "-") ? SubStr(option, 2, 1) : option
+                len := StrLen(key)
 
-            if (SubStr(test, 1, len) == key) {
-                result := index
-                break
+                if (SubStr(test, 1, len) == key) {
+                    result := index
+                    break
+                }
             }
         }
+        
 
         return result
     }

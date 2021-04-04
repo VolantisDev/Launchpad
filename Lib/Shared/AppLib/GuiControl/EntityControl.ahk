@@ -5,25 +5,23 @@ class EntityControl extends GuiControlBase {
     fieldName := ""
     emptyValue := ""
 
-    CreateControl(entity, fieldName, heading, params*) {
+    CreateControl(entity, fieldName, controlClass, params*) {
+        super.CreateControl()
+
         if (entity == "") {
             entity := this.guiObj.entityObj
         }
+        
         this.fieldName := fieldName
         this.entityObj := entity
-
-        if (heading) {
-            this.AddHeading(heading)
-        }
-
         checkW := 0
         ctl := this.DefaultCheckbox(entity, fieldName)
         this.defaultCtl := ctl
         ctl.GetPos(,,checkW)
         isDisabled := !entity.UnmergedConfig.Has(fieldName)
         defaults := ["w" . this.guiObj.windowSettings["contentWidth"] - checkW - this.guiObj.margin, "x+" . this.guiObj.margin, "yp"]
-        params[2] := this.GetOptionsString(this.SetDefaultOptions(params[2], defaults))
-        this.innerControl := this.guiObj.Add(params*)
+        opts := this.SetDefaultOptions(this.options, defaults)
+        this.innerControl := this.guiObj.Add(controlClass, this.GetOptionsString(opts), "", params*)
         this.ctl := this.innerControl.ctl
         this.ToggleEnabled(!isDisabled)
         this.SetText((this.entityObj.Config.Has(fieldName) && this.entityObj.Config[fieldName] != "") ? this.entityObj.Config[fieldName] : this.emptyValue)

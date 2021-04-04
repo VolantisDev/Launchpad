@@ -59,8 +59,8 @@ class EntityEditorBase extends FormGuiBase {
         super.Controls()
     }
 
-    AddEntityCtl(fieldName, heading, params*) {
-        return this.Add("EntityControl", "", this.entityObj, fieldName, heading, params*)
+    AddEntityCtl(heading, fieldName, params*) {
+        return this.Add("EntityControl", "", heading, this.entityObj, fieldName, params*)
     }
 
     AddTextBlock(field, settingName, showDefaultCheckbox := false, helpText := "", addPrefix := false, rows := 1, replaceWithNewline := "", entityObj := "") {

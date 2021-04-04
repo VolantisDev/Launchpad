@@ -1,5 +1,8 @@
 class ButtonControl extends GuiControlBase {
-    CreateControl(text, handler := "", buttonStyle := "normal", drawConfig := "") {
+    CreateControl(handler := "", buttonStyle := "normal", drawConfig := "") {
+        super.CreateControl(false)
+        text := this.heading
+
         options := this.SetDefaultOptions(this.options.Clone(), ["h25", "w200", "xs", "y+" . this.guiObj.margin, "0xE"])
         this.ctl := this.guiObj.guiObj.AddPicture(this.GetOptionsString(options))
 

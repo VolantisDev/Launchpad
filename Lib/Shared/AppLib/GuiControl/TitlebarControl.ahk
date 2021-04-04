@@ -15,7 +15,9 @@ class TitlebarControl extends GuiControlBase {
     closeBtn := ""
     spacer := ""
 
-    CreateControl(titleText, titleMenu := false, iconSrc := "") {
+    CreateControl(titleMenu := false, iconSrc := "") {
+        super.CreateControl(false)
+        titleText := this.heading
         titlebarW := this.guiObj.windowSettings["contentWidth"] + (this.guiObj.margin * 2)
         startingPos := "x" . this.guiObj.margin . " y" . this.topMargin
         textPos := startingPos
@@ -83,7 +85,7 @@ class TitlebarControl extends GuiControlBase {
             statusInfo := this.guiObj.GetStatusInfo()
             initialInfo := statusInfo.Clone()
             initialInfo["name"] := ""
-            this.statusIndicator := this.guiObj.Add("StatusIndicatorControl", opts, initialInfo, "", statusStyle)
+            this.statusIndicator := this.guiObj.Add("StatusIndicatorControl", opts, "", initialInfo, "", statusStyle)
             difference := this.statusIndicator.UpdateStatusIndicator(statusInfo, statusStyle)
             buttonsX += this.initialStatusIndicatorW + (this.guiObj.margin * 2)
         }

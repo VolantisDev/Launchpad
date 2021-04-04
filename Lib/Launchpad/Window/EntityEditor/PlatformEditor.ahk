@@ -17,9 +17,9 @@
         this.AddCheckBoxBlock("IsInstalled", "Platform Is Installed", true, "Whether or not the platform is currently installed. Usually " . this.app.appName . " can detect this automatically.")
 
         tabs.UseTab("Sources", true)
-        this.AddEntityCtl("InstallDir", "Install Directory", "LocationBlock", "", "", "InstallDir", this.entityObj.Config["InstallDir"], "Clear", true, "Select the platform installation directory.")
-        this.AddEntityCtl("ExePath", "Exe Path", "LocationBlock", "", "", "ExePath", this.entityObj.Config["ExePath"], "Clear", true, "Select the platform's .exe file.")
-        this.AddEntityCtl("IconSrc", "Icon Source", "LocationBlock", "", "", "IconSrc", this.entityObj.Config["IconSrc"], "Clear", true, "Select the icon source to use for this platform.")
+        this.AddEntityCtl("Install Directory", "InstallDir", "LocationBlock", "InstallDir", this.entityObj.Config["InstallDir"], "Clear", true, "Select the platform installation directory.")
+        this.AddEntityCtl("Exe Path", "ExePath", "LocationBlock", "ExePath", this.entityObj.Config["ExePath"], "Clear", true, "Select the platform's .exe file.")
+        this.AddEntityCtl("Icon Source", "IconSrc", "LocationBlock", "IconSrc", this.entityObj.Config["IconSrc"], "Clear", true, "Select the icon source to use for this platform.")
 
         tabs.UseTab()
     }

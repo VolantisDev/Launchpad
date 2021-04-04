@@ -4,6 +4,8 @@ class StatusIndicatorControl extends GuiControlBase {
     innerControl := ""
 
     CreateControl(statusInfo, handler := "", statusStyle := "status") {
+        super.CreateControl(false)
+
         if (handler == "" && HasMethod(this.guiObj, "OnStatusIndicatorClick")) {
             handler := "OnStatusIndicatorClick"
         }
