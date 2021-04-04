@@ -113,10 +113,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         return this.SetDefaultValue("LocateRegValue", !!(ctlObj.Value), true)
     }
 
-    OnDefaultProcessId(ctlObj, info) {
-        return this.SetDefaultValue("ProcessId", !!(ctlObj.Value), true)
-    }
-
     OnDefaultLauncherSpecificId(ctlObj, info) {
         return this.SetDefaultValue("LauncherSpecificId", !!(ctlObj.Value), true)
     }
@@ -125,11 +121,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         this.guiObj.Submit(false)
         this.entityObj.EntityType := ctlObj.Text
         this.entityObj.UpdateDataSourceDefaults()
-    }
-
-    OnProcessIdChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.ProcessId := ctlObj.Value
     }
 
     OnWindowTitleChange(ctlObj, info) {

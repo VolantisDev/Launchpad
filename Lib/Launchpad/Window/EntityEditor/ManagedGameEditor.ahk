@@ -6,8 +6,9 @@ class ManagedGameEditor extends ManagedEntityEditorBase {
     ExtraTabControls(tabs) {
         tabs.UseTab("Loading Window")
         this.AddCheckBoxBlock("HasLoadingWindow", "Game has loading window", true, "If the game has a loading or interstitial window, " . this.app.appName . " can optionally track that separately from the game window itself.", true)
-        this.AddSelect("Loading Window Process Type", "LoadingWindowProcessType", this.entityObj.LoadingWindowProcessType, this.processTypes, true, "", "", "The process detection type to use for the loading window itself. See the Process tab for further details.", true)
-        this.AddTextBlock("LoadingWindowProcessId", "Loading Window Process ID", true, "The process ID for the loading window itself if applicable. See the Process ID field on the Process tab for full details.", true)
+        ctl := this.AddEntityCtl("Loading Window Process Type", "GameLoadingWindowProcessType", true, "SelectControl", this.processTypes, "OnGameLoadingWindowProcessTypeChange", "The process detection type to use for the loading window itself. See the Process tab for further details.")
+        ctl.AddDependentField("GameLoadingWindowProcessId")
+        this.AddTextBlock("GameLoadingWindowProcessId", "Loading Window Process ID", true, "The process ID for the loading window itself if applicable. See the Process ID field on the Process tab for full details.", false)
     }
 
     GetTabNames() {
@@ -20,14 +21,11 @@ class ManagedGameEditor extends ManagedEntityEditorBase {
         return this.SetDefaultValue("HasLoadingWindow", !!(ctlObj.Value), true)
     }
 
-    OnDefaultLoadingWindowProcessType(ctlObj, info) {
-        val := this.SetDefaultSelectValue("LoadingWindowProcessType", this.processTypes, !!(ctlObj.Value), true)
-        this.entityObj.UpdateDataSourceDefaults()
-        this.guiObj["LoadingWindowProcessId"].Value := this.entityObj.LoadingWindowProcessId
-        return val
+    OnDefaultGameProcessId(ctlObj, info) {
+        return this.SetDefaultValue("ProcessId", !!(ctlObj.Value), true)
     }
 
-    OnDefaultLoadingWindowProcessId(ctlObj, info) {
+    OnDefaultGameLoadingWindowProcessId(ctlObj, info) {
         return this.SetDefaultValue("LoadingWindowProcessId", !!(ctlObj.Value), true)
     }
 
@@ -36,14 +34,14 @@ class ManagedGameEditor extends ManagedEntityEditorBase {
         this.entityObj.HasLoadingWindow := !!(ctlObj.Value)
     }
 
-    OnLoadingWindowProcessTypeChange(ctlObj, info) {
+    OnGameLoadingWindowProcessTypeChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.LoadingWindowProcessType := ctlObj.Text
         this.entityObj.UpdateDataSourceDefaults()
-        this.guiObj["LoadingWindowProcessId"].Value := this.entityObj.LoadingWindowProcessId
+        this.guiObj["GameLoadingWindowProcessId"].Value := this.entityObj.LoadingWindowProcessId
     }
 
-    OnLoadingWindowProcessIdChange(ctlObj, info) {
+    OnGameLoadingWindowProcessIdChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.LoadingWindowProcessId := ctlObj.Text
     }
@@ -89,5 +87,10 @@ class ManagedGameEditor extends ManagedEntityEditorBase {
         this.entityObj.ProcessType := ctlObj.Text
         this.entityObj.UpdateDataSourceDefaults()
         this.guiObj["GameProcessId"].Value := this.entityObj.ProcessId
+    }
+
+    OnGameProcessIdChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.ProcessId := ctlObj.Value
     }
 }
