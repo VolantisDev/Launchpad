@@ -37,7 +37,10 @@ class LauncherEditor extends LauncherEditorBase {
 
         tabs.UseTab("UI", true)
         this.AddEntityCtl("Launcher Theme", "ThemeName", true, "SelectControl", this.knownThemes, "", "The theme to use if/when the launcher shows GUI windows")
-        this.AddCheckBoxBlock("ShowProgress", "Show Progress Window", true, "Whether or not to show a window indicating the current status of the launcher")
+        
+        ctl := this.AddEntityCtl("", "ShowProgress", true, "BasicControl", "CheckBox", "Show Progress Window")
+        ctl.ctl.ToolTip := "Whether or not to show a window indicating the current status of the launcher"
+
         this.AddTextBlock("ProgressTitle", "Progress Window Title", true, "The title that the progress window will use if shown")
         this.AddTextBlock("ProgressText", "Progress Window Text", true, "The text displayed at the top of the progress window if shown")
 
