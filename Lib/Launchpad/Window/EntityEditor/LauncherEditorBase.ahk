@@ -27,10 +27,6 @@ class LauncherEditorBase extends EntityEditorBase {
         this.knownThemes := this.app.Themes.GetAvailableThemes(true)
     }
 
-    OnDefaultThemeName(ctlObj, info) {
-        return this.SetDefaultSelectValue("ThemeName", this.knownThemes, !!(ctlObj.Value))
-    }
-
     OnKeyChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.Key := ctlObj.Text

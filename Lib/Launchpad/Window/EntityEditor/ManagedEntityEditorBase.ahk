@@ -87,15 +87,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         ; Assume no extra tab controls unless overridden.
     }
 
-    OnDefaultProcessTimeout(ctlObj, info) {
-        return this.SetDefaultValue("ProcessTimeout", !!(ctlObj.Value), true)
-    }
-
-    OnProcessTimeoutChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.ProcessTimeout := ctlObj.Value
-    }
-
     OnDirMenuClick(field, btn, text := "") {
         if (text == "") {
             text := "Select the directory"
