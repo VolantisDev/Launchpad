@@ -63,51 +63,6 @@ class EntityEditorBase extends FormGuiBase {
         return this.Add("EntityControl", "", heading, this.entityObj, fieldName, showDefaultCheckbox, params*)
     }
 
-    AddTextBlock(field, settingName, showDefaultCheckbox := false, helpText := "", addPrefix := false, rows := 1, replaceWithNewline := "", entityObj := "") {
-        if (entityObj == "") {
-            entityObj := this.entityObj
-        }
-        
-        this.AddHeading(settingName)
-        checkW := 0
-        disabledText := ""
-
-        prefixedName := field
-        if (addPrefix) {
-            prefixedName := entityObj.configPrefix . field
-        }
-
-        if (showDefaultCheckbox) {
-            ctl := this.DefaultCheckbox(field, entityObj, addPrefix)
-            ctl.GetPos(,,checkW)
-            checkW := checkW + this.margin
-            disabledText := entityObj.UnmergedConfig.Has(prefixedName) ? "" : " Disabled"
-        }
-        
-        fieldW := this.windowSettings["contentWidth"] - checkW
-        pos := showDefaultCheckbox ? "x+m yp" : "xs y+m"
-        val := entityObj.GetConfigValue(field, addPrefix)
-
-        if (replaceWithNewline) {
-            val := StrReplace(val, replaceWithNewline, "`n")
-        }
-
-        ctl := this.guiObj.AddEdit("v" . field . " " . pos . " w" . fieldW . disabledText . " r" . rows . " c" . this.themeObj.GetColor("editText"), val)
-        ctl.OnEvent("Change", "On" . field . "Change")
-
-        if (helpText) {
-            ctl.ToolTip := helpText
-        }
-
-        return ctl
-    }
-
-    AddNumberBlock(field, settingName, showDefaultCheckbox := false, helpText := "", addPrefix := false) {
-        ctl := this.AddTextBlock(field, settingName, showDefaultCheckbox, helpText, addPrefix)
-        ctl.Opt("Number")
-        return ctl
-    }
-
     Create() {
         super.Create()
         this.dataSource := this.app.DataSources.GetItem("api")

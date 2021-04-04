@@ -31,47 +31,10 @@ class LauncherEditorBase extends EntityEditorBase {
         return this.SetDefaultSelectValue("ThemeName", this.knownThemes, !!(ctlObj.Value))
     }
 
-    OnDefaultDisplayName(ctlObj, info) {
-        return this.SetDefaultValue("DisplayName", !!(ctlObj.Value))
-    }
-
-    OnDefaultRunBefore(ctlObj, info) {
-        return this.SetDefaultValue("RunBefore", !!(ctlObj.Value))
-    }
-
-    OnDefaultRunAfter(ctlObj, info) {
-        return this.SetDefaultValue("RunAfter", !!(ctlObj.Value))
-    }
-
-    OnDefaultCloseBefore(ctlObj, info) {
-        return this.SetDefaultValue("CloseBefore", !!(ctlObj.Value))
-    }
-
-    OnDefaultCloseAfter(ctlObj, info) {
-        return this.SetDefaultValue("CloseAfter", !!(ctlObj.Value))
-    }
-
-    OnDefaultDataSourceItemKey(ctlObj, info) {
-        return this.SetDefaultValue("DataSourceItemKey", !!(ctlObj.Value))
-    }
-
-    OnDefaultProgressTitle(ctlObj, info) {
-        return this.SetDefaultValue("ProgressTitle", !!(ctlObj.Value))
-    }
-
-    OnDefaultProgressText(ctlObj, info) {
-        return this.SetDefaultValue("ProgressText", !!(ctlObj.Value))
-    }
-
     OnKeyChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.Key := ctlObj.Text
         ; @todo If new game type doesn't offer the selected launcher type, change to the default launcher type
-    }
-
-    OnDataSourceItemKeyChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.DataSourceItemKey := ctlObj.Text
     }
 
     OnManageLauncherType(ctlObj, info) {
@@ -90,34 +53,6 @@ class LauncherEditorBase extends EntityEditorBase {
                 this.guiObj[field].Value := this.GetItemIndex(this.gameTypes, entity.Config[field])
             }
         }
-    }
-
-    OnDisplayNameChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.DisplayName := ctlObj.Value
-    }
-
-    OnRunBeforeChange(ctlObj, info) {
-        this.SetProcessList("RunBefore", ctlObj)
-    }
-
-    OnRunAfterChange(ctlObj, info) {
-        this.SetProcessList("RunAfter", ctlObj)
-    }
-
-    OnCloseBeforeChange(ctlObj, info) {
-        this.SetProcessList("CloseBefore", ctlObj)
-    }
-
-    OnCloseAfterChange(ctlObj, info) {
-        this.SetProcessList("CloseAfter", ctlObj)
-    }
-
-    SetProcessList(property, ctlObj) {
-        this.guiObj.Submit(false)
-        value := StrReplace(ctlObj.Value, "`r`n", ";")
-        value := StrReplace(value, "`n", ";")
-        this.entityObj.%property% := value
     }
 
     OnIconSrcMenuClick(btn) {
@@ -160,15 +95,5 @@ class LauncherEditorBase extends EntityEditorBase {
                 this.guiObj["LogPath"].Text := this.entityObj.LogPath
             }
         }
-    }
-
-    OnProgressTitleChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.ProgressTitle := ctlObj.Text
-    }
-
-    OnProgressTextChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.ProgressText := ctlObj.Text
     }
 }
