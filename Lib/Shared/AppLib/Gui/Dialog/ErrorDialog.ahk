@@ -2,14 +2,14 @@ class ErrorDialog extends DialogBox {
     displaySubmissionForm := true
     errorObj := ""
     notifierObj := ""
-    apiEndpointUrl := ""
+    apiEndpoint := ""
 
     __New(app, themeObj, windowKey, errorObj, title, text := "", owner := "", parent := "", btns := "*&Continue|&Reload|&Exit") {
         this.errorObj := errorObj
         this.notifierObj := app.Notifications.notifierObj
 
         if (app.HasProp("DataSources")) {
-            this.apiEndpointUrl := app.DataSources.GetItem("api")
+            this.apiEndpoint := app.DataSources.GetItem("api")
         }
         
         super.__New(app, themeObj, windowKey, title, text, owner, parent, btns)
@@ -17,12 +17,9 @@ class ErrorDialog extends DialogBox {
 
     Controls() {
         super.Controls()
-
-        this.AddCheckBox("Submit error to Volantis Development", "SubmitError", false, false)
-
+        this.Add("BasicControl", "vSubmitError", "", false, "CheckBox", "Submit error to Volantis Development")
         this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " +0x200 +0x100", "Please add as much detail as possible about what you were doing when the error occurred:")
         this.AddEdit("ErrorDetails", "", "r4")
-
         this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " +0x200 +0x100", "Optionally, enter your email address if you would like us to reach out to you for further information:")
         this.AddEdit("Email", "", "")
     }
@@ -51,8 +48,8 @@ class ErrorDialog extends DialogBox {
     SendError() {
         global appVersion
 
-        if (this.apiEndpointUrl) {
-            endpoint := this.apiEndpointUrl . "/submit-error"
+        if (this.apiEndpoint) {
+            endpoint := this.apiEndpoint.endpointUrl . "/submit-error"
 
             body := Map()
             body["message"] := this.errorObj.Message
