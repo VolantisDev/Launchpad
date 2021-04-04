@@ -381,7 +381,7 @@ class EntityBase {
         } else {
             fullDiff := this.DiffChanges(true)
 
-            if (mode == "config") {
+            if (mode == "config" && fullDiff.HasChanges()) {
                 this.SaveModifiedData()
                 this.StoreOriginal(true, true)
             }
