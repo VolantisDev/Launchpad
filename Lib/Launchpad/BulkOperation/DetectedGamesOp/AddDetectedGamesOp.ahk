@@ -3,7 +3,7 @@ class AddDetectedGamesOp extends BulkOperationBase {
     launcherManager := ""
     state := ""
     progressTitle := "Adding Selected Games"
-    progressText := "Please wait while " . this.app.appName . " adds the selected games..."
+    progressText := "Please wait while Launchpad adds the selected games..."
     notify := true
     successMessage := "Added {n} games."
     failedMessage := "Failed to add {n} games."
