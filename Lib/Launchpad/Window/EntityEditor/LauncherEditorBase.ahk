@@ -55,10 +55,6 @@ class LauncherEditorBase extends EntityEditorBase {
         return this.SetDefaultValue("DataSourceItemKey", !!(ctlObj.Value))
     }
 
-    OnDefaultShowProgress(ctlObj, info) {
-        return this.SetDefaultValue("ShowProgress", !!(ctlObj.Value))
-    }
-
     OnDefaultProgressTitle(ctlObj, info) {
         return this.SetDefaultValue("ProgressTitle", !!(ctlObj.Value))
     }
@@ -168,11 +164,6 @@ class LauncherEditorBase extends EntityEditorBase {
                 this.guiObj["LogPath"].Text := this.entityObj.LogPath
             }
         }
-    }
-
-    OnShowProgressChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.ShowProgress := !!(ctlObj.Value)
     }
 
     OnProgressTitleChange(ctlObj, info) {

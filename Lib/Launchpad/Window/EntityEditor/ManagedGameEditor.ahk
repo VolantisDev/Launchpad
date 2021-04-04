@@ -5,7 +5,6 @@ class ManagedGameEditor extends ManagedEntityEditorBase {
 
     ExtraTabControls(tabs) {
         tabs.UseTab("Loading Window")
-
         ctl := this.AddEntityCtl("", "GameHasLoadingWindow", true, "BasicControl", "CheckBox", "Game has loading window")
         ctl.ctl.ToolTip := "If the game has a loading or interstitial window, " . this.app.appName . " can optionally track that separately from the game window itself."
         ctl := this.AddEntityCtl("Loading Window Process Type", "GameLoadingWindowProcessType", true, "SelectControl", this.processTypes, "", "The process detection type to use for the loading window itself. See the Process tab for further details.")

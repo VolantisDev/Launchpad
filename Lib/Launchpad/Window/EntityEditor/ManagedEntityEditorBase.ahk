@@ -132,11 +132,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         this.entityObj.LocateRegValue := ctlObj.Value
     }
 
-    OnLocateRegStripQuotesChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.LocateRegStripQuotes := !!(ctlObj.Value)
-    }
-
     OnProcessTimeoutChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.ProcessTimeout := ctlObj.Value
