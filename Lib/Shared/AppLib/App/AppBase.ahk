@@ -340,4 +340,8 @@ class AppBase {
     ExitApp() {
         ExitApp
     }
+
+    RestartApp() {
+        Reload()
+    }
 }
