@@ -33,7 +33,7 @@ class EntityControl extends GuiControlBase {
 
         defaultX := checkW ? "x+" . this.guiObj.margin : "x" . this.guiObj.margin
         defaultY := checkW ? "yp" : "y+" . this.guiObj.margin
-        defaults := ["w" . controlW, defaultX, defaultY]
+        defaults := ["w" . controlW, defaultX, defaultY, "v" . fieldName]
         opts := this.SetDefaultOptions(this.options, defaults)
         text := (this.entityObj.Config.Has(this.fieldName) && this.entityObj.Config[this.fieldName] != "") ? this.entityObj.Config[this.fieldName] : this.emptyValue
         this.innerControl := this.guiObj.Add(controlClass, this.GetOptionsString(opts), "", text, params*)

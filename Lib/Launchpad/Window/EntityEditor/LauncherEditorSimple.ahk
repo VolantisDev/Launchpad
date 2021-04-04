@@ -26,15 +26,12 @@ class LauncherEditorSimple extends LauncherEditorBase {
         this.AddEntityCtl("Platform", "Platform", false, "SelectControl", this.platforms, "OnPlatformChange", "Select the platform that this game is run through.")
         
         tabs.UseTab("Launcher", true)
-
-        this.AddEntityTypeSelect("Launcher", "LauncherType", this.entityObj.ManagedLauncher.EntityType, this.launcherTypes, "", "This tells " . this.app.appName . " how to interact with any launcher your game might require. If your game's launcher isn't listed, or your game doesn't have a launcher, start with `"Default`".", false)
+        this.Add("EntityControl", "", "Launcher", this.entityObj.ManagedLauncher, "LauncherType", false, "SelectControl", this.launcherTypes, "OnLauncherTypeChange", "This tells " . this.app.appName . " how to interact with any launcher your game might require. If your game's launcher isn't listed, or your game doesn't have a launcher, start with `"Default`"")
         this.AddCheckBoxBlock("CloseBeforeRun", "Close launcher before run", true, "If selected, the launcher will be closed before attempting to run the game. This can be useful to ensure the process starts under " . this.app.appName . "'s process instead of the existing launcher's process.", true, this.entityObj.ManagedLauncher)
         this.AddCheckBoxBlock("CloseAfterRun", "Close launcher after run", true, "If selected, the launcher will be closed after the game closes. This can be useful to ensure Steam or other applications know you are done playing the game.", true, this.entityObj.ManagedLauncher)
 
         tabs.UseTab("Game", true)
-
-        this.AddEntityTypeSelect("Game", "GameType", this.entityObj.ManagedLauncher.ManagedGame.EntityType, this.gameTypes, "", "This tells " . this.app.appName . " how to launch your game. Most games can use 'default', but launchers can support different game types.", false)
-        
+        this.Add("EntityControl", "", "Game", this.entityObj.ManagedLauncher.ManagedGame, "GameType", false, "SelectControl", this.gameTypes, "OnGameTypeChange", "This tells " . this.app.appName . " how to launch your game. Most games can use 'default', but launchers can support different game types.")
         this.Add("EntityControl", "", "Game Install Directory", this.entityObj.ManagedLauncher.ManagedGame, "GameInstallDir", true, "LocationBlock", "GameInstallDir", "Clear", true, "Select the installation folder, or use default for auto-detection.")
         this.Add("EntityControl", "", "Game Executable", this.entityObj.ManagedLauncher.ManagedGame, "GameExe", true, "LocationBlock", "GameExe", "Clear", true, "The main .exe file, not including any path information.")
         this.AddCheckBoxBlock("ReplaceProcess", "Replace process after launching", true, "After the process is detected, immediately kill and re-launch it so that " . this.app.appName . " is its parent process.", true, this.entityObj.ManagedLauncher.ManagedGame)

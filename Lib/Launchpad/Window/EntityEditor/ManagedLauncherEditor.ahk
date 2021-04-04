@@ -158,11 +158,17 @@ class ManagedLauncherEditor extends ManagedEntityEditorBase {
         this.guiObj.Submit(false)
         this.entityObj.ProcessType := ctlObj.Text
         this.entityObj.UpdateDataSourceDefaults()
-        this.guiObj["LauncherProcessId"].Value := this.entityObj.ProcessId
+        this.guiObj["LauncherProcessId"].Value := this.entityObj.Config["LauncherProcessId"]
     }
 
     OnLauncherProcessIdChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.ProcessId := ctlObj.Value
+    }
+
+    OnLauncherTypeChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.EntityType := ctlObj.Text
+        this.entityObj.UpdateDataSourceDefaults()
     }
 }

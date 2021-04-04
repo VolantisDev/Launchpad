@@ -2,6 +2,7 @@
     shortcutSrc := ""
     gameKey := ""
     shortcutExt := ""
+    defaultPlatform := ""
 
     __New(app, themeObj, windowKey, owner := "", parent := "") {
         this.AskShortcutSrc()
@@ -15,11 +16,7 @@
     Controls() {
         super.Controls()
         this.Add("LocationBlock", "", "Shortcut", this.shortcutSrc, "ShortcutSrc", "", true, "Select the shortcut file that launches the game")
-        this.AddSelect("Platform", "Platform", "", this.knownPlatforms, false, "", "", "Select the platform that this game is run through.", false)
-    }
-
-    OnPlatformChange(ctlObj, info) {
-        
+        this.Add("SelectControl", "", "Platform", "", this.knownPlatforms, this.defaultPlatform, "Select the platform that this game is run through.")
     }
 
     GetLauncherKey() {

@@ -26,8 +26,8 @@ class LauncherEditor extends LauncherEditorBase {
         this.AddTextBlock("DisplayName", "Display Name", true, "You can change the display name of the game if it differs from the key. The launcher filename will still be created using the key.")
         
         this.AddEntityCtl("Platform", "Platform", false, "SelectControl", this.platforms, "OnPlatformChange")
-        this.AddEntityTypeSelect("Launcher", "LauncherType", this.entityObj.ManagedLauncher.EntityType, this.launcherTypes, "LauncherConfiguration", "This tells " . this.app.appName . " how to interact with any launcher your game might require. If your game's launcher isn't listed, or your game doesn't have a launcher, start with `"Default`".")
-        this.AddEntityTypeSelect("Game", "GameType", this.entityObj.ManagedLauncher.ManagedGame.EntityType, this.gameTypes, "GameConfiguration", "This tells " . this.app.appName . " how to launch your game. Most games can use 'default', but launchers can support different game types.")
+        this.AddEntityCtl("Launcher", "LauncherType", false, "SelectControl", this.launcherTypes, "OnLauncherTypeChange", "This tells " . this.app.appName . " how to interact with any launcher your game might require. If your game's launcher isn't listed, or your game doesn't have a launcher, start with `"Default`".", "Manage", "OnManageLauncherType")
+        this.AddEntityCtl("Game", "GameType", false, "SelectControl", this.gameTypes, "OnGameTypeChange", "This tells " . this.app.appName . " how to launch your game. Most games can use 'default', but launchers can support different game types.", "Manage", "OnManageGameType")
 
         tabs.UseTab("Sources", true)
         this.AddEntityCtl("Icon Source", "IconSrc", true, "LocationBlock", "IconSrc", "Clear", true)

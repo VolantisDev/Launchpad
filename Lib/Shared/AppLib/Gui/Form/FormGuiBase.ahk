@@ -65,53 +65,6 @@ class FormGuiBase extends GuiBase {
         }
     }
 
-    AddEntityTypeSelect(heading, field, currentValue, allItems, buttonName := "", helpText := "", showManage := true) {
-        return this.AddSelect(heading, field, currentValue,  allItems, false, buttonName, showManage ? "Manage" : "", helpText, false)
-    }
-
-    AddSelect(heading, field, currentValue, allItems, showDefaultCheckbox := false, buttonName := "", buttonText := "", helpText := "", addPrefix := false) {
-        this.AddHeading(heading)
-
-        checkW := 0
-        buttonW := buttonName ? 150 : 0
-        disabledText := ""
-
-        prefixedName := field
-        if (addPrefix) {
-            prefixedName := this.entityObj.configPrefix . field
-        }
-
-        if (showDefaultCheckbox) {
-            disabledText := this.entityObj.UnmergedConfig.Has(prefixedName) ? "" : " Disabled"
-            ctl := this.DefaultCheckbox(field, "", addPrefix)
-            ctl.GetPos(,,checkW)
-        }
-        
-        fieldW := this.windowSettings["contentWidth"]
-
-        if (checkW) {
-            fieldW := fieldW - checkW - this.margin
-        }
-
-        if (buttonW) {
-            fieldW := fieldW - buttonW - this.margin
-        }
-
-        chosen := this.GetItemIndex(allItems, currentValue)
-        pos := showDefaultCheckbox ? "x+m yp" : "xs y+m"
-        pos := pos . disabledText
-        ctl := this.guiObj.AddDDL("v" . field . " " . pos . " Choose" . chosen . " w" . fieldW . " c" . this.themeObj.GetColor("editText"), allItems)
-        ctl.OnEvent("Change", "On" . field . "Change")
-
-        if (buttonName) {
-            this.Add("ButtonControl", "v" . buttonName . " x+m yp w" . buttonW . " h25", buttonText, "On" . buttonName)
-        }
-
-        if (helpText) {
-            ctl.ToolTip := helpText
-        }
-    }
-
     DefaultCheckbox(fieldKey, entity, addPrefix := false, includePrefixInCtlName := false) {
         prefixedName := fieldKey
         if (addPrefix) {

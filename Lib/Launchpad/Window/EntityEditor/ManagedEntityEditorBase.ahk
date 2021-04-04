@@ -41,7 +41,8 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         tabs := this.guiObj.Add("Tab3", " x" . this.margin . " w" . this.windowSettings["contentWidth"] . " +0x100", this.GetTabNames())
 
         tabs.UseTab(this.entityTypeName, true)
-        this.AddEntityTypeSelect(prefix . " Type", "Type", this.entityObj.EntityType, this.entityObj.ListEntityTypes(), "", "You can select from the available entity types if the default doesn't work for your use case.")
+
+        this.AddEntityCtl(prefix . " Type", prefix . "Type", false, "SelectControl", this.entityObj.ListEntityTypes(), "On" . prefix . "TypeChange", "You can select from the available entity types if the default doesn't work for your use case.")
         this.AddEntityCtl(prefix . " Executable", prefix . "Exe", true, "LocationBlock", prefix . "Exe", "Clear", true, "The main .exe file, not including any path information.")
         this.AddTextBlock("WindowTitle", prefix . " Window Title", true, "The part of the main window's title which identifies it uniquely.", true)
         this.CustomTabControls()
@@ -115,12 +116,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
 
     OnDefaultLauncherSpecificId(ctlObj, info) {
         return this.SetDefaultValue("LauncherSpecificId", !!(ctlObj.Value), true)
-    }
-
-    OnTypeChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.EntityType := ctlObj.Text
-        this.entityObj.UpdateDataSourceDefaults()
     }
 
     OnWindowTitleChange(ctlObj, info) {

@@ -86,11 +86,17 @@ class ManagedGameEditor extends ManagedEntityEditorBase {
         this.guiObj.Submit(false)
         this.entityObj.ProcessType := ctlObj.Text
         this.entityObj.UpdateDataSourceDefaults()
-        this.guiObj["GameProcessId"].Value := this.entityObj.ProcessId
+        this.guiObj["GameProcessId"].Value := this.entityObj.Config["GameProcessId"]
     }
 
     OnGameProcessIdChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.ProcessId := ctlObj.Value
+    }
+
+    OnGameTypeChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.EntityType := ctlObj.Text
+        this.entityObj.UpdateDataSourceDefaults()
     }
 }

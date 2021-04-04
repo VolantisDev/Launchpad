@@ -6,16 +6,25 @@ class SelectControl extends GuiControlBase {
         super.CreateControl()
         this.selectOptions := selectOptions
         
-        buttonW := buttonText ? this.CalculateTextWidth(buttonText) : 0
+        buttonW := buttonText ? (this.guiObj.themeObj.CalculateTextWidth(buttonText) + this.guiObj.margin*2) : 0
 
-        fieldW := this.guiObj.windowSettings["contentWidth"]
+        opts := this.options.Clone()
+        w := this.GetOption(opts, "w")
 
-        if (buttonW) {
-            fieldW -= (buttonW + this.margin)
+        if (w) {
+            w := SubStr(w, 2)
+        } else {
+            w := this.guiObj.windowSettings["contentWidth"]
         }
 
+        if (buttonW) {
+            w -= (buttonW + this.guiObj.margin)
+        }
+        this.SetOption(opts, "w", w)
+
+        fieldW := w
         index := this.GetItemIndex(value)
-        opts := this.SetDefaultOptions(this.options.Clone(), ["Choose" . index, "c" . this.guiObj.themeObj.GetColor("editText")])
+        opts := this.SetDefaultOptions(opts, ["w" . fieldW, "Choose" . index, "c" . this.guiObj.themeObj.GetColor("editText")])
         ctl := this.guiObj.guiObj.AddDDL(this.GetOptionsString(opts), this.selectOptions)
         this.ctl := ctl
 
@@ -29,7 +38,7 @@ class SelectControl extends GuiControlBase {
 
         if (buttonText) {
             opts := this.SetDefaultOptions(buttonOpts, "x+m yp w" . buttonW . " h25")
-            this.btnCtl := this.Add("ButtonControl", this.GetOptionsString(opts), buttonText, buttonHandler)
+            this.btnCtl := this.guiObj.Add("ButtonControl", this.GetOptionsString(opts), buttonText, buttonHandler)
         }
 
         return this.ctl

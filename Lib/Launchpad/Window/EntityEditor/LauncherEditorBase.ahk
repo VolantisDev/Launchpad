@@ -110,7 +110,7 @@ class LauncherEditorBase extends EntityEditorBase {
         this.entityObj.ManagedLauncher.ManagedGame.UpdateDataSourceDefaults()
     }
 
-    OnLauncherConfiguration(ctlObj, info) {
+    OnManageLauncherType(ctlObj, info) {
         entity := this.entityObj.ManagedLauncher
         diff := entity.Edit(this.mode, this.guiObj)
 
@@ -121,7 +121,7 @@ class LauncherEditorBase extends EntityEditorBase {
         }
     }
 
-    OnGameConfiguration(ctlObj, info) {
+    OnManageGameType(ctlObj, info) {
         entity := this.entityObj.ManagedLauncher.ManagedGame
         diff := entity.Edit(this.mode, this.guiObj)
 
