@@ -65,8 +65,8 @@
 #Include Window\Form\SettingsWindow.ahk
 #Include Window\Form\SetupWindow.ahk
 #Include Window\ManageWindow\DetectedGamesWindow.ahk
-#Include Window\ManageWindow\ManageBackupsWindow.ahk
 #Include Window\ManageWindow\MainWindow.ahk
+#Include Window\ManageWindow\ManageBackupsWindow.ahk
 #Include Window\ManageWindow\ManageWindowBase.ahk
 #Include Window\ManageWindow\PlatformsWindow.ahk
 ; End of auto-generated includes.

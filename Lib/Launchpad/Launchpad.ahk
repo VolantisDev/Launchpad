@@ -1,4 +1,6 @@
-class Launchpad extends AppBase {
+﻿class Launchpad extends AppBase {
+    customTrayMenu := true
+
     Launchers {
         get => this.Services.Get("LauncherManager")
         set => this.Services.Set("LauncherManager", value)
@@ -71,27 +73,41 @@ class Launchpad extends AppBase {
         }
     }
 
-    OnUpdateIncludes(itemName, itemPos, menu) {
+    UpdateIncludes() {
         RunWait(this.appDir . "\Scripts\UpdateIncludes.bat", this.appDir . "\Scripts")
         Reload()
     }
 
-    OnBuildLaunchpad(itemName, itemPos, menu) {
+    BuildApp() {
         Run(this.appDir . "\Scripts\Build.bat", this.appDir . "\Scripts")
+    }
+
+    SetTrayMenuItems(menuItems) {
+        menuItems := super.SetTrayMenuItems(menuItems)
+
+        if (!A_IsCompiled) {
+            menuItems.Push("")
+            menuItems.Push(Map("label", "Build Launchpad", "name", "BuildApp"))
+            menuItems.Push(Map("label", "Update Includes", "name", "UpdateIncludes"))
+        }
+
+        return menuItems
+    }
+
+    HandleTrayMenuClick(result) {
+        result := super.HandleTrayMenuClick(result)
+
+        if (result == "BuildApp") {
+            this.BuildApp()
+        } else if (result == "UpdateIncludes") {
+            this.UpdateIncludes()
+        }
+
+        return result
     }
 
     InitializeApp(config) {
         super.InitializeApp(config)
-
-        if (!A_IsCompiled) {
-            this.updateIncludesCallback := ObjBindMethod(this, "OnUpdateIncludes")
-            this.buildLaunchpadCallback := ObjBindMethod(this, "OnBuildLaunchpad")
-
-            trayMenu := A_TrayMenu
-            trayMenu.Add("Update Includes", this.updateIncludesCallback)
-            trayMenu.Add("Build " . this.appName, this.buildLaunchpadCallback)
-        }
-
         this.Builders.SetItem("ahk", AhkLauncherBuilder.new(this), true)
         this.Installers.SetItem("LaunchpadUpdate", LaunchpadUpdate.new(this.Version, this.State, this.Cache.GetItem("file"), this.tmpDir))
         this.Installers.SetItem("Dependencies", DependencyInstaller.new(this.Version, this.State, this.Cache.GetItem("file"), [], this.tmpDir))
