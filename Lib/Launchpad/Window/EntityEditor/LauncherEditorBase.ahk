@@ -75,23 +75,19 @@ class LauncherEditorBase extends EntityEditorBase {
     }
 
     OnManageLauncherType(ctlObj, info) {
-        entity := this.entityObj.ManagedLauncher
-        diff := entity.Edit(this.mode, this.guiObj)
-
-        if (diff != "" && diff.HasChanges()) {
-            if (diff.ValueIsModified("LauncherType")) {
-                this.guiObj["LauncherType"].Value := this.GetItemIndex(this.launcherTypes, entity.GetConfigValue("Type"))
-            }
-        }
+        this.EditManagedEntityType(this.entityObj.ManagedLauncher, "LauncherType")
     }
 
     OnManageGameType(ctlObj, info) {
-        entity := this.entityObj.ManagedLauncher.ManagedGame
-        diff := entity.Edit(this.mode, this.guiObj)
+        this.EditManagedEntityType(this.entityObj.ManagedLauncher.ManagedGame, "GameType")
+    }
+
+    EditManagedEntityType(entity, field) {
+        diff := entity.Edit("child", this.guiObj)
 
         if (diff != "" && diff.HasChanges()) {
-            if (diff.ValueIsModified("GameType")) {
-                this.guiObj["GameType"].Value := this.GetItemIndex(this.gameTypes, entity.GetConfigValue("Type"))
+            if (diff.ValueIsModified(field)) {
+                this.guiObj[field].Value := this.GetItemIndex(this.gameTypes, entity.Config[field])
             }
         }
     }

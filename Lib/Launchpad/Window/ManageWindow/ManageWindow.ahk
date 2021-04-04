@@ -198,18 +198,18 @@
     }
 
     EditLauncher(key) {
-        launcherObj := this.launcherManager.Entities[key]
-        diff := launcherObj.Edit("config", this.guiObj)
-        keyChanged := (launcherObj.Key != key)
+        entity := this.launcherManager.Entities[key]
+        diff := entity.Edit("config", this.guiObj)
+        keyChanged := (entity.Key != key)
 
         if (keyChanged || diff != "" && diff.HasChanges()) {
             if (keyChanged) {
                 this.launcherManager.RemoveEntity(key)
-                this.launcherManager.AddEntity(launcherObj.Key, launcherObj)
+                this.launcherManager.AddEntity(entity.Key, entity)
             }
 
             this.launcherManager.SaveModifiedEntities()
-            launcherObj.UpdateDataSourceDefaults()
+            entity.UpdateDataSourceDefaults()
             this.PopulateListView()
         }
     }

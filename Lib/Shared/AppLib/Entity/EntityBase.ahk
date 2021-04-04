@@ -364,9 +364,16 @@ class EntityBase {
         return DiffResult.new(added, modified, deleted)
     }
 
+    /*
+        Default modes:
+            - config - saves changes
+            - validate - diffs without saving
+            - child - similar to config but doesn't save
+    */
     Edit(mode := "config", owner := "") {
         this.StoreOriginal()
-        result := this.LaunchEditWindow(mode, owner)
+        editMode := mode == "child" ? "config" : mode
+        result := this.LaunchEditWindow(editMode, owner)
         fullDiff := ""
 
         if (result == "Cancel" || result == "Skip") {
