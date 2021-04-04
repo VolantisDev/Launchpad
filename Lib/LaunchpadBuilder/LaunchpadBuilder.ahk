@@ -129,7 +129,7 @@ class LaunchpadBuilder extends AppBase {
         ; TODO: Ask initial build setup questions and store them in Launchpad.build.ini
     }
 
-    CheckForUpdates() {
+    CheckForUpdates(notify := true) {
         ; TODO: Offer to pull the latest git code if it's outdated, and then restart the script if updates were applied
     }
 

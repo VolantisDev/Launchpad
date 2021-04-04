@@ -48,7 +48,9 @@
         return caches
     }
 
-    CheckForUpdates() {
+    CheckForUpdates(notify := true) {
+        updateAvailable := false
+
         if (this.Version != "{{VERSION}}") {
             dataSource := this.DataSources.GetItem("api")
             releaseInfoStr := dataSource.ReadItem("release-info")
@@ -58,9 +60,14 @@
                 releaseInfo := data.FromString(releaseInfoStr)
 
                 if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this.VersionChecker.VersionIsOutdated(releaseInfo["data"]["version"], this.Version)) {
+                    updateAvailable := true
                     this.GuiManager.Dialog("UpdateAvailableWindow", releaseInfo)
                 }
             }
+        }
+
+        if (!updateAvailable && notify) {
+            this.Notifications.Info("You're running the latest version of Launchpad. Shiny!")
         }
     }
 
@@ -90,11 +97,6 @@
         this.Installers.SetItem("Dependencies", DependencyInstaller.new(this.Version, this.State, this.Cache.GetItem("file"), [], this.tmpDir))
         this.Installers.SetupInstallers()
         this.Installers.InstallRequirements()
-
-        if (this.Config.CheckUpdatesOnStart) {
-            this.CheckForUpdates()
-        }
-
         this.Auth.SetAuthProvider(LaunchpadApiAuthProvider.new(this, this.State))
 
         if (this.Config.ApiAutoLogin) {

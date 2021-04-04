@@ -269,7 +269,10 @@ class AppBase {
 
     InitializeApp(config) {
         this.LoadServices(config)
-        this.CheckForUpdates()
+
+        if (this.Config.HasProp("CheckUpdatesOnStart") && this.Config.CheckUpdatesOnStart) {
+            this.CheckForUpdates(false)
+        }
 
         if (!FileExist(this.Config.ConfigPath)) {
             this.InitialSetup(config)
@@ -280,7 +283,7 @@ class AppBase {
         ; Optional method to override
     }
 
-    CheckForUpdates() {
+    CheckForUpdates(notify := true) {
         ; Optional method to override
     }
     
