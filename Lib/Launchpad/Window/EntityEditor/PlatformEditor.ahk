@@ -105,10 +105,6 @@
                 this.entityObj.SetConfigValue("IconSrc", file, false)
                 this.guiObj["IconSrc"].Text := file
             }
-        } else if (btn == "OpenIconSrc") {
-            if (this.entityObj.IconSrc) {
-                ; TODO: Determine what it means to open an icon
-            }
         } else if (btn == "ClearIconSrc") {
             if (this.entityObj.UnmergedConfig.Has("IconSrc")) {
                 this.entityObj.UnmergedConfig.Delete("IconSrc")
