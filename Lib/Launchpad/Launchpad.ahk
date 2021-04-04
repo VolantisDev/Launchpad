@@ -110,7 +110,7 @@
         result := ""
 
         if (!FileExist(this.appDir . "\" . this.appName . ".ini")) {
-            result := this.GuiManager.OpenWindow("SetupWindow")
+            result := this.GuiManager.Form("SetupWindow")
 
             if (result == "Exit") {
                 this.ExitApp()
