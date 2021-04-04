@@ -64,7 +64,14 @@ class TitlebarControl extends GuiControlBase {
         }
 
         if (titleMenu) {
-            titleButtonW := this.guiObj.themeObj.CalculateTextWidth(titleText) + 25
+            titlebarButtonW := 200
+
+            try {
+                titleButtonW := this.guiObj.themeObj.CalculateTextWidth(titleText) + 25
+            } catch (ex) {
+                throw AppException.new("Could not determine title text width. There seems to be a problem with GDI+.")
+            }
+            
             ; TODO: Determine how to calculate this "25" number
 
             if (titleButtonW > textW) {
