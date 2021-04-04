@@ -193,9 +193,8 @@ class GuiControlBase {
             if (this.ctl.Type == "CheckBox") {
                 this.ctl.Value := !!(text)
             } else {
-                this.ctl.Text := text
+                this.ctl.Value := text
             }
-            
         }
     }
 
