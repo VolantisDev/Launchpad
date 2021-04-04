@@ -49,24 +49,26 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         tabs.UseTab("Sources", true)
         this.AddEntityCtl(prefix . " Install Directory", prefix . "InstallDir", true, "LocationBlock", prefix . "InstallDir", "Clear", true, "Select the installation folder, or use default for auto-detection.")
         this.AddEntityCtl(prefix . " Working Directory", prefix . "WorkingDir", true, "LocationBlock", prefix . "WorkingDir", "Clear", true, "Optionally, set a working directory to run from. This is not often required.")
-        this.AddSelect(prefix . " Install Locate Method", "LocateMethod", this.entityObj.LocateMethod, this.locateMethods, true, "", "", "Search: Searches a list of possible directories (Defaulting to some common possibilities) for the .exe file and uses that directory`nRegistry: Looks for the provided registry key and uses its value as the install path if present`nBlizzardProductDb: Searches for LauncherSpecificId within the Blizzard product.db file if present", true)
+        this.AddEntityCtl(prefix . " Install Locate Method", prefix . "LocateMethod", true, "SelectControl", this.locateMethods, "On" . prefix . "LocateMethodChange", "Search: Searches a list of possible directories (Defaulting to some common possibilities) for the .exe file and uses that directory`nRegistry: Looks for the provided registry key and uses its value as the install path if present`nBlizzardProductDb: Searches for LauncherSpecificId within the Blizzard product.db file if present")
+        
         this.AddTextBlock("LauncherSpecificId", prefix . " Launcher-Specific ID", true, "If required, an ID that the launcher uses to reference this item", true)
         
         tabs.UseTab("Registry", true)
-        this.AddSelect("Locate Registry View", "LocateRegView", this.entityObj.LocateRegView, this.regViews, true, "", "", "The registry view to use when locating the install dir", true)
+        this.AddEntityCtl("Locate Registry View", prefix . "LocateRegView", true, "SelectControl", this.regViews, "On" . prefix . "LocateRegViewChange", "The registry view to use when locating the install dir")
         this.AddTextBlock("LocateRegKey", "Locate Registry Key", true, "The registry key to look up the install dir within. Path parts should be separated with backslashes and must start with one of: HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT, HKEY_CURRENT_CONFIG, or the abbreviation of one of those. To read from a remote registry, prefix the root path with two backslashes and the computer name.`n`nSimple example: HKLM\Path\To\Key`nRemote example: \\OTHERPC\HKLM\Path\To\Key", true)
         this.AddTextBlock("LocateRegValue", "Locate Registry Value", true, "The name of the registry value to look up within the specified key.`n`nExample: InstallPath", true)
         this.AddCheckBoxBlock("LocateRegStripQuotes", "Strip quotes from registry value", true, "", true)
         
         tabs.UseTab("Running", true)
-        this.AddSelect(prefix . " Run Type", "RunType", this.entityObj.RunType, this.runTypes, true, "", "", "", true)
+        this.AddEntityCtl(prefix . " Run Type", prefix . "RunType", true, "SelectControl", this.runTypes, "On" . prefix . "RunTypeChange")
         this.AddTextBlock("RunCmd", prefix . " Run Command", true, "", true)
         this.AddEntityCtl(prefix . " Shortcut", prefix . "ShortcutSrc", true, "LocationBlock", prefix . "ShortcutSrc", "Clear", true, "Select the shortcut that will launch the program.")
-        this.AddSelect(prefix . " Run Method", "RunMethod", this.entityObj.RunMethod, this.runMethods, true, "", "", "RunWait: The simplest method when it works, runs a process and waits for it to complete in one command`nRun: The most compatible method, runs a process and then separately waits for it to start`nScheduled: Helpful to avoid " . this.app.appName . " owning the process, this creates a scheduled task that will run the process immediately and then delete itself", true)
+        this.AddEntityCtl(prefix . " Run Method", prefix . "RunMethod", true, "SelectControl", this.runMethods, "On" . prefix . "RunMethodChange", "RunWait: The simplest method when it works, runs a process and waits for it to complete in one command`nRun: The most compatible method, runs a process and then separately waits for it to start`nScheduled: Helpful to avoid " . this.app.appName . " owning the process, this creates a scheduled task that will run the process immediately and then delete itself")
 
         tabs.UseTab("Process", true)
-        ctl := this.AddSelect(prefix . " Process Detection Type", "ProcessType", this.entityObj.ProcessType, this.processTypes, true, "", "", "Exe: Use the .exe filename to detect this item's process`nTitle: Use all or part of the window title to detect this item's process`nClass: Use the window class name to detect this item's process", true)
-        ctl := this.AddTextBlock("ProcessId", prefix . " Process ID", true, "This value depends on the Process Type selected above, and can often be determined automatically.", true)
+        ctl := this.AddEntityCtl(prefix . " Process Detection Type", prefix . "ProcessType", true, "SelectControl", this.processTypes, "On" . prefix . "ProcessTypeChange", "Exe: Use the .exe filename to detect this item's process`nTitle: Use all or part of the window title to detect this item's process`nClass: Use the window class name to detect this item's process")
+        ctl.AddDependentField(prefix . "ProcessId")
+        ctl := this.AddTextBlock(prefix . "ProcessId", prefix . " Process ID", true, "This value depends on the Process Type selected above, and can often be determined automatically.", false)
         ctl := this.AddNumberBlock("ProcessTimeout", "Process Timeout", true, "How long to wait when detecting this items' process", true)
         this.AddCheckBoxBlock("ReplaceProcess", "Replace process after launching", true, "After the process is detected, immediately kill and re-launch it so that " . this.app.appName . " is its parent process.", true)
         
@@ -91,18 +93,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         return this.SetDefaultValue("RunCmd", !!(ctlObj.Value), true)
     }
 
-    OnDefaultRunType(ctlObj, info) {
-        return this.SetDefaultSelectValue("RunType", this.runTypes, !!(ctlObj.Value), true)
-    }
-
-    OnDefaultLocateMethod(ctlObj, info) {
-        return this.SetDefaultSelectValue("LocateMethod", this.locateMethods, !!(ctlObj.Value), true)
-    }
-
-    OnDefaultLocateRegView(ctlObj, info) {
-        return this.SetDefaultSelectValue("LocateRegView", this.regViews, !!(ctlObj.Value), true)
-    }
-
     OnDefaultLocateRegStripQuotes(ctlObj, info) {
         return this.SetDefaultValue("LocateRegStripQuotes", !!(ctlObj.Value), true)
     }
@@ -121,17 +111,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
 
     OnDefaultLocateRegValue(ctlObj, info) {
         return this.SetDefaultValue("LocateRegValue", !!(ctlObj.Value), true)
-    }
-
-    OnDefaultRunMethod(ctlObj, info) {
-        return this.SetDefaultSelectValue("RunMethod", this.runMethods, !!(ctlObj.Value), true)
-    }
-
-    OnDefaultProcessType(ctlObj, info) {
-        val := this.SetDefaultSelectValue("ProcessType", this.processTypes, !!(ctlObj.Value), true)
-        this.entityObj.UpdateDataSourceDefaults()
-        this.guiObj["ProcessId"].Value := this.entityObj.ProcessId
-        return val
     }
 
     OnDefaultProcessId(ctlObj, info) {
@@ -216,33 +195,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
             this.entityObj.SetConfigValue(field, "")
             this.guiObj[field].Text := ""
         }
-    }
-
-    OnRunTypeChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.RunType := ctlObj.Text
-    }
-
-    OnLocateMethodChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.LocateMethod := ctlObj.Text
-    }
-
-    OnProcessTypeChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.ProcessType := ctlObj.Text
-        this.entityObj.UpdateDataSourceDefaults()
-        this.guiObj["ProcessId"].Value := this.entityObj.ProcessId
-    }
-
-    OnLocateRegViewChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entitObj.LocateRegView := ctlObj.Text
-    }
-
-    OnRunMethodChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.RunMethod := ctlObj.Text
     }
 
     OnRunCmdChange(ctlObj, info) {

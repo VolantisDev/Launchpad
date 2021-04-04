@@ -63,4 +63,31 @@ class ManagedGameEditor extends ManagedEntityEditorBase {
     OnGameShortcutSrcMenuClick(btn) {
         this.OnFileMenuClick("GameShortcutSrc", btn, "Select a shortcut file or .exe that will launch the application", "Shortcuts (*.lnk; *.url; *.exe)")
     }
+
+    OnGameLocateMethodChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.LocateMethod := ctlObj.Text
+    }
+
+    OnGameLocateRegViewChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entitObj.LocateRegView := ctlObj.Text
+    }
+
+    OnGameRunTypeChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.RunType := ctlObj.Text
+    }
+
+    OnGameRunMethodChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.RunMethod := ctlObj.Text
+    }
+
+    OnGameProcessTypeChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.ProcessType := ctlObj.Text
+        this.entityObj.UpdateDataSourceDefaults()
+        this.guiObj["GameProcessId"].Value := this.entityObj.ProcessId
+    }
 }

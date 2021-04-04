@@ -4,6 +4,7 @@ class EntityControl extends GuiControlBase {
     entityObj := ""
     fieldName := ""
     emptyValue := ""
+    dependentFields := []
 
     CreateControl(entity, fieldName, showDefaultCheckbox, controlClass, params*) {
         super.CreateControl()
@@ -41,6 +42,11 @@ class EntityControl extends GuiControlBase {
         return this.innerControl
     }
 
+    AddDependentField(field) {
+        this.dependentFields.Push(field)
+        return this.dependentFields
+    }
+
     DefaultCheckbox(entity, fieldName) {
         checkedText := !entity.UnmergedConfig.Has(fieldName) ? " Checked" : ""
         checkOpts := this.options.Clone()
@@ -48,6 +54,7 @@ class EntityControl extends GuiControlBase {
         ctl := this.guiObj.guiObj.AddCheckBox(this.GetOptionsString(checkOpts), "Default")
         ctl.ToolTip := "When checked, the default value determined by various other factors in " . this.app.appName . " will be used (and shown to the right if available). When unchecked, the value you set here will be used instead."
         ctl.OnEvent("Click", this.RegisterCallback("OnDefaultCheckbox"))
+
         return ctl
     }
 
@@ -60,6 +67,14 @@ class EntityControl extends GuiControlBase {
             this.SetText((this.entityObj.Config.Has(this.fieldName) && this.entityObj.Config[this.fieldName] != "") ? this.entityObj.Config[this.fieldName] : this.emptyValue)
         } else {
             this.entityObj.UnmergedConfig[this.fieldName] := this.entityObj.Config.Has(this.fieldName) ? this.entityObj.Config[this.fieldName] : ""
+        }
+
+        if (this.dependentFields && this.dependentFields.Length > 0) {
+            this.entityObj.UpdateDataSourceDefaults()
+
+            for index, field in this.dependentFields {
+                this.guiObj.guiObj[field].Value := this.entityObj.Config[field]
+            }
         }
 
         this.ToggleEnabled(!useDefault)

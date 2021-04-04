@@ -23,8 +23,7 @@ class LauncherEditorSimple extends LauncherEditorBase {
 
         tabs.UseTab("General", true)
         this.AddComboBox("Key", "Key", this.entityObj.Key, this.knownGames, "Select an existing game from the API, or enter a custom game key to create your own. Use caution when changing this value, as it will change which data is requested from the API.")
-        
-        this.AddSelect("Platform", "Platform", this.entityObj.Platform, this.platforms, false, "", "", "Select the platform that this game is run through.", false)
+        this.AddEntityCtl("Platform", "Platform", false, "SelectControl", this.platforms, "OnPlatformChange", "Select the platform that this game is run through.")
         
         tabs.UseTab("Launcher", true)
 

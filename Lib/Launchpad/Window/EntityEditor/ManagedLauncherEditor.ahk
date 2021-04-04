@@ -133,4 +133,31 @@ class ManagedLauncherEditor extends ManagedEntityEditorBase {
     OnLauncherShortcutSrcMenuClick(btn) {
         this.OnFileMenuClick("LauncherShortcutSrc", btn, "Select a shortcut file or .exe that will launch the application", "Shortcuts (*.lnk; *.url; *.exe)")
     }
+
+    OnLauncherLocateMethodChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.LocateMethod := ctlObj.Text
+    }
+
+    OnLauncherLocateRegViewChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entitObj.LocateRegView := ctlObj.Text
+    }
+
+    OnLauncherRunTypeChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.RunType := ctlObj.Text
+    }
+
+    OnLauncherRunMethodChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.RunMethod := ctlObj.Text
+    }
+
+    OnLauncherProcessTypeChange(ctlObj, info) {
+        this.guiObj.Submit(false)
+        this.entityObj.ProcessType := ctlObj.Text
+        this.entityObj.UpdateDataSourceDefaults()
+        this.guiObj["LauncherProcessId"].Value := this.entityObj.ProcessId
+    }
 }

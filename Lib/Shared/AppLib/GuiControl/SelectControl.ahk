@@ -1,7 +1,8 @@
 class SelectControl extends GuiControlBase {
     selectOptions := []
+    btnCtl := ""
 
-    CreateControl(value, selectOptions, handler := "", buttonText := "", buttonHandler := "", buttonOpts := "") {
+    CreateControl(value, selectOptions, handler := "", helpText := "", buttonText := "", buttonHandler := "", buttonOpts := "") {
         super.CreateControl()
         this.selectOptions := selectOptions
         
@@ -14,8 +15,23 @@ class SelectControl extends GuiControlBase {
         }
 
         index := this.GetItemIndex(value)
-        opts := this.SetDefaultOptions(this.options.Clone(), ["Choose" . index, "c" . this.themeObj.GetColor("editText")])
-        ctl := this.guiObj.guiObj.AddDDL(opts, this.selectOptions)
+        opts := this.SetDefaultOptions(this.options.Clone(), ["Choose" . index, "c" . this.guiObj.themeObj.GetColor("editText")])
+        ctl := this.guiObj.guiObj.AddDDL(this.GetOptionsString(opts), this.selectOptions)
+        this.ctl := ctl
+
+        if (handler) {
+            ctl.OnEvent("Change", handler)
+        }
+
+        if (helpText) {
+            ctl.ToolTip := helpText
+        }
+
+        if (buttonText) {
+            opts := this.SetDefaultOptions(buttonOpts, "x+m yp w" . buttonW . " h25")
+            this.btnCtl := this.Add("ButtonControl", this.GetOptionsString(opts), buttonText, buttonHandler)
+        }
+
         return this.ctl
     }
 

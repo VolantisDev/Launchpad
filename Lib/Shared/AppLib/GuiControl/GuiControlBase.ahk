@@ -6,6 +6,7 @@ class GuiControlBase {
     callbacks := Map()
     options := ""
     heading := ""
+    changeCallback := ""
 
     __New(guiObj, options := "", heading := "", params*) {
         InvalidParameterException.CheckTypes("GuiControlBase", "guiObj", guiObj, "GuiBase")
