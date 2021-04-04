@@ -14,8 +14,8 @@
         super.Controls()
         this.AddComboBox("Key", "Key", "", this.knownGames, "Select an existing game from the API, or enter a custom game key to create your own. If choosing an existing game, most advanced values can be loaded from the API.")
         this.AddSelect("Platform", "Platform", "", this.knownPlatforms, false, "", "", "Select the platform that this game is run through.", false)
-        this.Add("LocationBlock", "", "Install Dir", "InstallDir", this.installDir, "", true, "Select the directory the game is installed in")
-        this.Add("LocationBlock", "", "Game Exe", "Exe", this.exe, "", true, "Select the game's main .exe file")
+        this.Add("LocationBlock", "", "Install Dir", this.installDir, "InstallDir", "", true, "Select the directory the game is installed in")
+        this.Add("LocationBlock", "", "Game Exe", this.exe, "Exe", "", true, "Select the game's main .exe file")
     }
 
     OnKeyChange(ctlObj, info) {

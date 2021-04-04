@@ -100,7 +100,7 @@
 
     AddConfigLocationBlock(heading, settingName, extraButton := "", helpText := "") {
         location := this.app.Config.%settingName% ? this.app.Config.%settingName% : "Not selected"
-        this.Add("LocationBlock", "", heading, settingName, location, extraButton, true, helpText)
+        this.Add("LocationBlock", "", heading, location, settingName, extraButton, true, helpText)
     }
 
     AddConfigCheckBox(checkboxText, settingName) {

@@ -1,7 +1,7 @@
 class LocationBlock extends GuiControlBase {
     btnCtl := ""
 
-    CreateControl(fieldName, location, extraButton := "", showOpen := true, helpText := "", btnOptions := "") {
+    CreateControl(location, fieldName, extraButton := "", showOpen := true, helpText := "", btnOptions := "") {
         super.CreateControl()
 
         textOptions := this.options.Clone()

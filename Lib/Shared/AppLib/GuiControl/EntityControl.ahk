@@ -11,7 +11,7 @@ class EntityControl extends GuiControlBase {
         if (entity == "") {
             entity := this.guiObj.entityObj
         }
-        
+
         this.fieldName := fieldName
         this.entityObj := entity
         checkW := 0
@@ -21,10 +21,10 @@ class EntityControl extends GuiControlBase {
         isDisabled := !entity.UnmergedConfig.Has(fieldName)
         defaults := ["w" . this.guiObj.windowSettings["contentWidth"] - checkW - this.guiObj.margin, "x+" . this.guiObj.margin, "yp"]
         opts := this.SetDefaultOptions(this.options, defaults)
-        this.innerControl := this.guiObj.Add(controlClass, this.GetOptionsString(opts), "", params*)
+        text := (this.entityObj.Config.Has(this.fieldName) && this.entityObj.Config[this.fieldName] != "") ? this.entityObj.Config[this.fieldName] : this.emptyValue
+        this.innerControl := this.guiObj.Add(controlClass, this.GetOptionsString(opts), "", text, params*)
         this.ctl := this.innerControl.ctl
         this.ToggleEnabled(!isDisabled)
-        this.SetText((this.entityObj.Config.Has(fieldName) && this.entityObj.Config[fieldName] != "") ? this.entityObj.Config[fieldName] : this.emptyValue)
         return this.innerControl
     }
 

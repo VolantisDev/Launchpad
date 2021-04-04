@@ -14,7 +14,7 @@
 
     Controls() {
         super.Controls()
-        this.Add("LocationBlock", "", "Shortcut", "ShortcutSrc", this.shortcutSrc, "", true, "Select the shortcut file that launches the game")
+        this.Add("LocationBlock", "", "Shortcut", this.shortcutSrc, "ShortcutSrc", "", true, "Select the shortcut file that launches the game")
         this.AddSelect("Platform", "Platform", "", this.knownPlatforms, false, "", "", "Select the platform that this game is run through.", false)
     }
 

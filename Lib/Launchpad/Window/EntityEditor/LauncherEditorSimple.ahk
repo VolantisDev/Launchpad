@@ -36,8 +36,8 @@ class LauncherEditorSimple extends LauncherEditorBase {
 
         this.AddEntityTypeSelect("Game", "GameType", this.entityObj.ManagedLauncher.ManagedGame.EntityType, this.gameTypes, "", "This tells " . this.app.appName . " how to launch your game. Most games can use 'default', but launchers can support different game types.", false)
         
-        this.Add("EntityControl", "", "Game Install Directory", this.entityObj.ManagedLauncher.ManagedGame, "GameInstallDir", "LocationBlock", "GameInstallDir", this.entityObj.ManagedLauncher.ManagedGame.Config["GameInstallDir"], "Clear", true, "Select the installation folder, or use default for auto-detection.")
-        this.Add("EntityControl", "", "Game Executable", this.entityObj.ManagedLauncher.ManagedGame, "GameExe", "LocationBlock", "GameExe", this.entityObj.ManagedLauncher.ManagedGame.Config["GameExe"], "Clear", true, "The main .exe file, not including any path information.")
+        this.Add("EntityControl", "", "Game Install Directory", this.entityObj.ManagedLauncher.ManagedGame, "GameInstallDir", "LocationBlock", "GameInstallDir", "Clear", true, "Select the installation folder, or use default for auto-detection.")
+        this.Add("EntityControl", "", "Game Executable", this.entityObj.ManagedLauncher.ManagedGame, "GameExe", "LocationBlock", "GameExe", "Clear", true, "The main .exe file, not including any path information.")
         this.AddCheckBoxBlock("ReplaceProcess", "Replace process after launching", true, "After the process is detected, immediately kill and re-launch it so that " . this.app.appName . " is its parent process.", true, this.entityObj.ManagedLauncher.ManagedGame)
 
         tabs.UseTab()
