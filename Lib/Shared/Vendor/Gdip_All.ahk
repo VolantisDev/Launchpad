@@ -2540,8 +2540,8 @@ Gdip_Startup()
 	if !DllCall("GetModuleHandle", "str", "gdiplus", "Ptr")
 		DllCall("LoadLibrary", "str", "gdiplus")
 	si := BufferAlloc(A_PtrSize == 8 ? 24 : 16, 0)
-    si := Chr(1)
-	DllCall("gdiplus\GdiplusStartup", "UPtr*", pToken, "Ptr", StrPtr(si), "Ptr", 0)
+	StrPut(Chr(1), si)
+	DllCall("gdiplus\GdiplusStartup", "UPtr*", pToken, "Ptr", si, "Ptr", 0)
 	return pToken
 }
 
