@@ -1,7 +1,12 @@
 class BasicControl extends GuiControlBase {
-    CreateControl(ctlType, params*) {
+    CreateControl(value, ctlType, params*) {
         super.CreateControl()
-        this.ctl := this.guiObj.Add(ctlType, this.GetOptionsString(this.options), params*)
+        this.ctl := this.guiObj.guiObj.Add(ctlType, this.GetOptionsString(this.options), params*)
+
+        if (value) {
+            this.SetText(value)
+        }
+
         return this.ctl
     }
 }

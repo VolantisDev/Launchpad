@@ -28,44 +28,22 @@ class LauncherEditorSimple extends LauncherEditorBase {
         tabs.UseTab("Launcher", true)
         ctl := this.Add("EntityControl", "", "Launcher", this.entityObj.ManagedLauncher, "LauncherType", false, "SelectControl", this.launcherTypes, "", "This tells " . this.app.appName . " how to interact with any launcher your game might require. If your game's launcher isn't listed, or your game doesn't have a launcher, start with `"Default`"")
         ctl.refreshDataOnChange := true
-        this.AddCheckBoxBlock("CloseBeforeRun", "Close launcher before run", true, "If selected, the launcher will be closed before attempting to run the game. This can be useful to ensure the process starts under " . this.app.appName . "'s process instead of the existing launcher's process.", true, this.entityObj.ManagedLauncher)
-        this.AddCheckBoxBlock("CloseAfterRun", "Close launcher after run", true, "If selected, the launcher will be closed after the game closes. This can be useful to ensure Steam or other applications know you are done playing the game.", true, this.entityObj.ManagedLauncher)
+        
+        ctl := this.Add("EntityControl", "", "", this.entityObj.ManagedLauncher, "LauncherCloseBeforeRun", true, "BasicControl", "CheckBox", "Close launcher before run")
+        ctl.ctl.ToolTip := "If selected, the launcher will be closed before attempting to run the game. This can be useful to ensure the process starts under " . this.app.appName . "'s process instead of the existing launcher's process."
+
+        ctl := this.Add("EntityControl", "", "", this.entityObj.ManagedLauncher, "LauncherCloseAfterRun", true, "BasicControl", "CheckBox", "Close launcher after run")
+        ctl.ctl.ToolTip := "If selected, the launcher will be closed after the game closes. This can be useful to ensure Steam or other applications know you are done playing the game."
 
         tabs.UseTab("Game", true)
         ctl := this.Add("EntityControl", "", "Game", this.entityObj.ManagedLauncher.ManagedGame, "GameType", false, "SelectControl", this.gameTypes, "", "This tells " . this.app.appName . " how to launch your game. Most games can use 'default', but launchers can support different game types.")
         ctl.refreshDataOnChange := true
         this.Add("EntityControl", "", "Game Install Directory", this.entityObj.ManagedLauncher.ManagedGame, "GameInstallDir", true, "LocationBlock", "GameInstallDir", "Clear", true, "Select the installation folder, or use default for auto-detection.")
         this.Add("EntityControl", "", "Game Executable", this.entityObj.ManagedLauncher.ManagedGame, "GameExe", true, "LocationBlock", "GameExe", "Clear", true, "The main .exe file, not including any path information.")
-        this.AddCheckBoxBlock("ReplaceProcess", "Replace process after launching", true, "After the process is detected, immediately kill and re-launch it so that " . this.app.appName . " is its parent process.", true, this.entityObj.ManagedLauncher.ManagedGame)
+        ctl := this.Add("EntityControl", "", "", this.entityObj.ManagedLauncher.ManagedGame, "GameReplaceProcess", true, "BasicControl", "CheckBox", "Replace process after launching")
+        ctl.ctl.ToolTip := "After the process is detected, immediately kill and re-launch it so that " . this.app.appName . " is its parent process."
 
         tabs.UseTab()
-    }
-
-    OnDefaultCloseBeforeRun(ctlObj, info) {
-        this.SetDefaultValue("CloseBeforeRun", !!(ctlObj.Value), true, "", this.entityObj.ManagedLauncher)
-    }
-
-    OnDefaultCloseAfterRun(ctlObj, info) {
-        this.SetDefaultValue("CloseAfterRun", !!(ctlObj.Value), true, "", this.entityObj.ManagedLauncher)
-    }
-
-    OnDefaultReplaceProcess(ctlObj, info) {
-        return this.SetDefaultValue("ReplaceProcess", !!(ctlObj.Value), true, this.entityObj.ManagedLauncher.ManagedGame)
-    }
-
-    OnCloseBeforeRunChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.ManagedLauncher.CloseBeforeRun := !!(ctlObj.Value)
-    }
-
-    OnCloseAfterRunChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.ManagedLauncher.CloseAfterRun := !!(ctlObj.Value)
-    }
-
-    OnReplaceProcessChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.ManagedLauncher.ManagedGame.ReplaceProcess := !!(ctlObj.Value)
     }
 
     OnGameExeMenuClick(btn) {

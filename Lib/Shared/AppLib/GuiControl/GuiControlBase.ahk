@@ -190,7 +190,12 @@ class GuiControlBase {
 
     SetText(text) {
         if (this.ctl) {
-            this.ctl.Text := text
+            if (this.ctl.Type == "CheckBox") {
+                this.ctl.Value := !!(text)
+            } else {
+                this.ctl.Text := text
+            }
+            
         }
     }
 
@@ -202,7 +207,7 @@ class GuiControlBase {
         value := ""
 
         if (this.ctl) {
-            if (this.ctl.Type == "Checkbox") {
+            if (this.ctl.Type == "CheckBox") {
                 value := !!(this.ctl.Value)
             } else if (this.ctl.Type == "DDL" || this.ctl.Type == "ComboBox" || this.ctl.Type == "Edit") {
                 value := this.ctl.Text
@@ -224,7 +229,10 @@ class GuiControlBase {
         if (this.ctl) {
             if (eventName == "Change") {
                 if (this.SupportsChangeEvent()) {
-                    this.ctl.OnEvent("Change", handler)
+                    if (this.ctl.Type == "CheckBox") {
+                        eventName := "Click"
+                    }
+                    this.ctl.OnEvent(eventName, handler)
                 }
             } else {
                 this.ctl.OnEvent(eventName, handler)
