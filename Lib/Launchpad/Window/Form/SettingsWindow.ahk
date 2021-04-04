@@ -81,9 +81,9 @@
 
         this.AddHeading("API Settings")
         ctl := this.AddConfigCheckBox("Enable API login for enhanced functionality", "ApiAuthentication")
-        ctl.NeedsRestart := true
+        ctl.ctl.NeedsRestart := true
         ctl := this.AddConfigCheckBox("Automatically initiate API login when needed", "ApiAutoLogin")
-        ctl.NeedsRestart := true
+        ctl.ctl.NeedsRestart := true
 
         tabs.UseTab()
 
@@ -101,15 +101,18 @@
 
     AddConfigLocationBlock(heading, settingName, extraButton := "", helpText := "") {
         location := this.app.Config.%settingName% ? this.app.Config.%settingName% : "Not selected"
-        this.Add("LocationBlock", "", heading, location, settingName, extraButton, true, helpText)
+        return this.Add("LocationBlock", "", heading, location, settingName, extraButton, true, helpText)
     }
 
-    AddConfigCheckBox(checkboxText, settingName) {
+    AddConfigCheckbox(checkboxText, settingName) {
         isChecked := this.app.Config.%settingName%
-        return this.AddCheckBox(checkboxText, settingName, isChecked, false, "OnSettingsCheckBox")
+        opts := ["v" . settingName, "w" . this.windowSettings["contentWidth"], "Checked" . isChecked]
+        ctl := this.Add("BasicControl", opts, "", "", "CheckBox", checkboxText)
+        ctl.RegisterHandler("Click", "OnSettingsCheckbox")
+        return ctl
     }
 
-    OnSettingsCheckBox(chk, info) {
+    OnSettingsCheckbox(chk, info) {
         this.guiObj.Submit(false)
         ctlName := chk.Name
         this.app.Config.%ctlName% := chk.Value
