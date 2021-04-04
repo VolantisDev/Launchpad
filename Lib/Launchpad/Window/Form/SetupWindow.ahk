@@ -41,7 +41,7 @@
 
         this.AddHeading("Detect Games")
         this.AddDescription(this.app.appName . " can detect your installed games automatically right away, or you can do it later from the Tools menu.")
-        this.AddCheckBox("Detect my games now", "DetectGames", true, false)
+        this.Add("BasicControl", "vDetectGames", "", true, "CheckBox", "Detect my games now")
 
         closeW := 100
         closeX := this.margin + (this.windowSettings["contentWidth"] / 2) - (closeW / 2)
@@ -59,7 +59,8 @@
 
         for key, platform in this.app.Platforms.Entities {
             if (platform.IsInstalled) {
-                 this.AddCheckBox(platform.GetDisplayName(), "PlatformToggle" . key, platform.DetectGames, false, "OnPlatformToggle")
+                 ctl := this.Add("BasicControl", "vPlatformToggle" . key, "", platform.DetectGames, "CheckBox", platform.GetDisplayName())
+                 ctl.RegisterHandler("Click", "OnPlatformToggle")
             }
         }
     }
@@ -109,7 +110,7 @@
                 FileAppend("", this.app.appDir . "\" . this.app.appName . ".ini")
             }
 
-            if (this.guiObj["DetectGames"].Value) {
+            if (submittedData.DetectGames) {
                 result := "Detect"
             }
         }
