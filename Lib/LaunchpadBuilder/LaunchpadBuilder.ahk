@@ -117,7 +117,7 @@ class LaunchpadBuilder extends AppBase {
         if (!this.GetCmdOutput("git show-ref " . version)) {
             RunWait("git tag " . version, this.appDir)
 
-            response := this.GuiManager.Dialog("DialogBox", "Push git tag?" "Would you like to push the git tag that was just created (" . version . ") to origin?")
+            response := this.GuiManager.Dialog("DialogBox", "Push git tag?", "Would you like to push the git tag that was just created (" . version . ") to origin?")
         
             if (response == "Yes") {
                 RunWait("git push origin " . version, this.appDir)
