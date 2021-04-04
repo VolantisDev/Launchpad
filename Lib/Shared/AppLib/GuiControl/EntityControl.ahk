@@ -5,7 +5,7 @@ class EntityControl extends GuiControlBase {
     fieldName := ""
     emptyValue := ""
 
-    CreateControl(entity, fieldName, controlClass, params*) {
+    CreateControl(entity, fieldName, showDefaultCheckbox, controlClass, params*) {
         super.CreateControl()
 
         if (entity == "") {
@@ -15,11 +15,24 @@ class EntityControl extends GuiControlBase {
         this.fieldName := fieldName
         this.entityObj := entity
         checkW := 0
-        ctl := this.DefaultCheckbox(entity, fieldName)
-        this.defaultCtl := ctl
-        ctl.GetPos(,,checkW)
-        isDisabled := !entity.UnmergedConfig.Has(fieldName)
-        defaults := ["w" . this.guiObj.windowSettings["contentWidth"] - checkW - this.guiObj.margin, "x+" . this.guiObj.margin, "yp"]
+        isDisabled := false
+
+        if (showDefaultCheckbox) {
+            ctl := this.DefaultCheckbox(entity, fieldName)
+            this.defaultCtl := ctl
+            ctl.GetPos(,,checkW)
+            isDisabled := !entity.UnmergedConfig.Has(fieldName)
+        }
+        
+        controlW := this.guiObj.windowSettings["contentWidth"]
+
+        if (checkW) {
+            controlW -= (checkW + this.guiObj.margin)
+        }
+
+        defaultX := checkW ? "x+" . this.guiObj.margin : "x" . this.guiObj.margin
+        defaultY := checkW ? "yp" : "y+" . this.guiObj.margin
+        defaults := ["w" . controlW, defaultX, defaultY]
         opts := this.SetDefaultOptions(this.options, defaults)
         text := (this.entityObj.Config.Has(this.fieldName) && this.entityObj.Config[this.fieldName] != "") ? this.entityObj.Config[this.fieldName] : this.emptyValue
         this.innerControl := this.guiObj.Add(controlClass, this.GetOptionsString(opts), "", text, params*)
