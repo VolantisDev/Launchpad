@@ -108,40 +108,6 @@ class EntityEditorBase extends FormGuiBase {
         return ctl
     }
 
-    AddCheckBoxBlock(field, settingName, showDefaultCheckbox := false, helpText := "", addPrefix := false, entityObj := "") {
-        if (entityObj == "") {
-            entityObj := this.entityObj
-        }
-
-        checkW := 0
-        disabledText := ""
-
-        prefixedName := field
-        if (addPrefix) {
-            prefixedName := entityObj.configPrefix . field
-        }
-
-        if (showDefaultCheckbox) {
-            ctl := this.DefaultCheckbox(field, entityObj, addPrefix)
-            ctl.GetPos(,,checkW)
-            checkW := checkW + this.margin
-            disabledText := entityObj.UnmergedConfig.Has(prefixedName) ? "" : " Disabled"
-        }
-
-        checked := !!(entityObj.GetConfigValue(field, addPrefix))
-
-        fieldW := this.windowSettings["contentWidth"] - checkW
-        pos := showDefaultCheckbox ? "x+m yp" : "xs y+m"
-        pos := pos . " h25" . disabledText
-        ctl := this.AddCheckBox(settingName, field, checked, false, "On" . field . "Change", false, pos)
-
-        if (helpText) {
-            ctl.ToolTip := helpText
-        }
-
-        return ctl
-    }
-
     Create() {
         super.Create()
         this.dataSource := this.app.DataSources.GetItem("api")

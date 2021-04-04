@@ -12,43 +12,19 @@
         tabs := this.guiObj.Add("Tab3", " x" . this.margin . " w" . this.windowSettings["contentWidth"] . " +0x100", ["General", "Sources"])
 
         tabs.UseTab("General", true)
-        this.AddCheckBoxBlock("IsEnabled", "Enable Platform", true, "Whether or not " . this.app.appName . " should utilize this platform at all.")
-        this.AddCheckBoxBlock("DetectGames", "Enable Game Detection", true, "Whether or not " . this.app.appName . " should detect games installed from this platform")
-        this.AddCheckBoxBlock("IsInstalled", "Platform Is Installed", true, "Whether or not the platform is currently installed. Usually " . this.app.appName . " can detect this automatically.")
+        ctl := this.AddEntityCtl("", "IsEnabled", true, "BasicControl", "CheckBox", "Enable Platform")
+        ctl.ctl.ToolTip := "Whether or not " . this.app.appName . " should utilize this platform at all."
+        ctl := this.AddEntityCtl("", "DetectGames", true, "BasicControl", "CheckBox", "Enable Game Detection")
+        ctl.ctl.ToolTip := "Whether or not " . this.app.appName . " should detect games installed from this platform"
+        ctl := this.AddEntityCtl("", "IsInstalled", true, "BasicControl", "CheckBox", "Platform Is Installed")
+        ctl.ctl.ToolTip := "Whether or not the platform is currently installed. Usually " . this.app.appName . " can detect this automatically."
 
         tabs.UseTab("Sources", true)
         this.AddEntityCtl("Install Directory", "InstallDir", true, "LocationBlock", "InstallDir", "Clear", true, "Select the platform installation directory.")
-        this.AddEntityCtl("Exe Path", "ExePath", "LocationBlock", true, "ExePath", "Clear", true, "Select the platform's .exe file.")
-        this.AddEntityCtl("Icon Source", "IconSrc", "LocationBlock", true, "IconSrc", "Clear", true, "Select the icon source to use for this platform.")
+        this.AddEntityCtl("Exe Path", "ExePath", true, "LocationBlock", "ExePath", "Clear", true, "Select the platform's .exe file.")
+        this.AddEntityCtl("Icon Source", "IconSrc", true, "LocationBlock", "IconSrc", "Clear", true, "Select the icon source to use for this platform.")
 
         tabs.UseTab()
-    }
-
-    OnDefaultIsEnabled(ctl, info) {
-        return this.SetDefaultValue("IsEnabled", !!(ctl.Value))
-    }
-
-    OnDefaultDetectGames(ctl, info) {
-        return this.SetDefaultValue("DetectGames", !!(ctl.Value))
-    }
-
-    OnDefaultIsInstalled(ctl, info) {
-        return this.SetDefaultValue("IsInstalled", !!(ctl.Value))
-    }
-
-    OnIsEnabledChange(ctl, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.IsEnabled := ctl.Value
-    }
-
-    OnDetectGamesChange(ctl, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.DetectGames := ctl.Value
-    }
-
-    OnIsInstalledChange(ctl, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.IsInstalled := ctl.Value
     }
 
     OnInstallDirMenuClick(btn) {

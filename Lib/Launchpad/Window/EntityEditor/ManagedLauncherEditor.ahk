@@ -6,8 +6,12 @@ class ManagedLauncherEditor extends ManagedEntityEditorBase {
     }
 
     CustomTabControls() {
-        this.AddCheckBoxBlock("CloseBeforeRun", "Close launcher before run", true, "If selected, the launcher will be closed before attempting to run the game. This can be useful to ensure the process starts under " . this.app.appName . "'s process instead of the existing launcher's process.", true)
-        this.AddCheckBoxBlock("CloseAfterRun", "Close launcher after run", true, "If selected, the launcher will be closed after the game closes. This can be useful to ensure Steam or other applications know you are done playing the game.", true)
+        ctl := this.AddEntityCtl("", "LauncherCloseBeforeRun", true, "BasicControl", "CheckBox", "Close launcher before run")
+        ctl.ctl.ToolTip := "If selected, the launcher will be closed before attempting to run the game. This can be useful to ensure the process starts under " . this.app.appName . "'s process instead of the existing launcher's process."
+
+        ctl := this.AddEntityCtl("", "LauncherCloseAfterRun", true, "BasicControl", "CheckBox", "Close launcher after run")
+        ctl.ctl.ToolTip := "If selected, the launcher will be closed after the game closes. This can be useful to ensure Steam or other applications know you are done playing the game."
+        
         this.AddEntityCtl("Launcher Close Method", "LauncherCloseMethod", true, "SelectControl", this.closeMethods, "", "Prompt: Show a prompt that allows the user to either trigger a recheck or cancel waiting for the launcher to close`nWait: Waits up to WaitTimeout seconds for the launcher to close on its own.`nAuto: Make one polite close attempt, wait a bit, then kill the process if it is still running.`nAutoPolite: Attempt to close the launcher politely, but do not forcefully kill it if it's still running.`nAutoKill: Automatically close the launcher by force without a polite attempt.")
         this.AddNumberBlock("WaitTimeout", "Launcher Wait Timeout", true, "How many seconds to wait for the launcher to close before giving up.", true)
         this.AddNumberBlock("PoliteCloseWait", "Launcher Polite Close Wait", true, "How many seconds to give the launcher to close after asking politely before forcefully killing it (if applicable)", true)
@@ -30,14 +34,6 @@ class ManagedLauncherEditor extends ManagedEntityEditorBase {
 
     OnDefaultLauncherProcessId(ctlObj, info) {
         return this.SetDefaultValue("ProcessId", !!(ctlObj.Value), true)
-    }
-
-    OnDefaultCloseBeforeRun(ctlObj, info) {
-        this.SetDefaultValue("CloseBeforeRun", !!(ctlObj.Value), true)
-    }
-
-    OnDefaultCloseAfterRun(ctlObj, info) {
-        this.SetDefaultValue("CloseAfterRun", !!(ctlObj.Value), true)
     }
 
     OnDefaultClosePreDelay(ctlObj, info) {
@@ -66,16 +62,6 @@ class ManagedLauncherEditor extends ManagedEntityEditorBase {
 
     OnDefaultPoliteCloseWait(ctlObj, info) {
         this.SetDefaultValue("PoliteCloseWait", !!(ctlObj.Value), true)
-    }
-
-    OnCloseBeforeRunChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.CloseBeforeRun := !!(ctlObj.Value)
-    }
-
-    OnCloseAfterRunChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.CloseAfterRun := !!(ctlObj.Value)
     }
 
     OnClosePreDelayChange(ctlObj, info) {

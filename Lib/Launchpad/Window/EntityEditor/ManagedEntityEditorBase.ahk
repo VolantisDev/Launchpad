@@ -59,7 +59,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         this.AddEntityCtl("Locate Registry View", prefix . "LocateRegView", true, "SelectControl", this.regViews, "", "The registry view to use when locating the install dir")
         this.AddTextBlock("LocateRegKey", "Locate Registry Key", true, "The registry key to look up the install dir within. Path parts should be separated with backslashes and must start with one of: HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT, HKEY_CURRENT_CONFIG, or the abbreviation of one of those. To read from a remote registry, prefix the root path with two backslashes and the computer name.`n`nSimple example: HKLM\Path\To\Key`nRemote example: \\OTHERPC\HKLM\Path\To\Key", true)
         this.AddTextBlock("LocateRegValue", "Locate Registry Value", true, "The name of the registry value to look up within the specified key.`n`nExample: InstallPath", true)
-        this.AddCheckBoxBlock("LocateRegStripQuotes", "Strip quotes from registry value", true, "", true)
+        this.AddEntityCtl("", prefix . "LocateRegStripQuotes", true, "BasicControl", "CheckBox", "Strip quotes from registry value")
         
         tabs.UseTab("Running", true)
         this.AddEntityCtl(prefix . " Run Type", prefix . "RunType", true, "SelectControl", this.runTypes)
@@ -72,7 +72,8 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         ctl.AddDependentField(prefix . "ProcessId")
         ctl := this.AddTextBlock(prefix . "ProcessId", prefix . " Process ID", true, "This value depends on the Process Type selected above, and can often be determined automatically.", false)
         ctl := this.AddNumberBlock("ProcessTimeout", "Process Timeout", true, "How long to wait when detecting this items' process", true)
-        this.AddCheckBoxBlock("ReplaceProcess", "Replace process after launching", true, "After the process is detected, immediately kill and re-launch it so that " . this.app.appName . " is its parent process.", true)
+        ctl := this.AddEntityCtl("", prefix . "ReplaceProcess", true, "BasicControl", "CheckBox", "Replace process after launching")
+        ctl.ctl.ToolTip := "After the process is detected, immediately kill and re-launch it so that " . this.app.appName . " is its parent process."
         
         ;tabs.UseTab()
         this.ExtraTabControls(tabs)
@@ -93,14 +94,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
 
     OnDefaultRunCmd(ctlObj, info) {
         return this.SetDefaultValue("RunCmd", !!(ctlObj.Value), true)
-    }
-
-    OnDefaultLocateRegStripQuotes(ctlObj, info) {
-        return this.SetDefaultValue("LocateRegStripQuotes", !!(ctlObj.Value), true)
-    }
-
-    OnDefaultReplaceProcess(ctlObj, info) {
-        return this.SetDefaultValue("ReplaceProcess", !!(ctlObj.Value), true)
     }
 
     OnDefaultProcessTimeout(ctlObj, info) {
@@ -142,11 +135,6 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     OnLocateRegStripQuotesChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.LocateRegStripQuotes := !!(ctlObj.Value)
-    }
-
-    OnReplaceProcessChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.ReplaceProcess := !!(ctlObj.Value)
     }
 
     OnProcessTimeoutChange(ctlObj, info) {
