@@ -6,7 +6,7 @@ class ManagedGameEditor extends ManagedEntityEditorBase {
     ExtraTabControls(tabs) {
         tabs.UseTab("Loading Window")
         this.AddCheckBoxBlock("HasLoadingWindow", "Game has loading window", true, "If the game has a loading or interstitial window, " . this.app.appName . " can optionally track that separately from the game window itself.", true)
-        ctl := this.AddEntityCtl("Loading Window Process Type", "GameLoadingWindowProcessType", true, "SelectControl", this.processTypes, "OnGameLoadingWindowProcessTypeChange", "The process detection type to use for the loading window itself. See the Process tab for further details.")
+        ctl := this.AddEntityCtl("Loading Window Process Type", "GameLoadingWindowProcessType", true, "SelectControl", this.processTypes, "", "The process detection type to use for the loading window itself. See the Process tab for further details.")
         ctl.AddDependentField("GameLoadingWindowProcessId")
         this.AddTextBlock("GameLoadingWindowProcessId", "Loading Window Process ID", true, "The process ID for the loading window itself if applicable. See the Process ID field on the Process tab for full details.", false)
     }
@@ -34,13 +34,6 @@ class ManagedGameEditor extends ManagedEntityEditorBase {
         this.entityObj.HasLoadingWindow := !!(ctlObj.Value)
     }
 
-    OnGameLoadingWindowProcessTypeChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.LoadingWindowProcessType := ctlObj.Text
-        this.entityObj.UpdateDataSourceDefaults()
-        this.guiObj["GameLoadingWindowProcessId"].Value := this.entityObj.LoadingWindowProcessId
-    }
-
     OnGameLoadingWindowProcessIdChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.LoadingWindowProcessId := ctlObj.Text
@@ -62,41 +55,8 @@ class ManagedGameEditor extends ManagedEntityEditorBase {
         this.OnFileMenuClick("GameShortcutSrc", btn, "Select a shortcut file or .exe that will launch the application", "Shortcuts (*.lnk; *.url; *.exe)")
     }
 
-    OnGameLocateMethodChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.LocateMethod := ctlObj.Text
-    }
-
-    OnGameLocateRegViewChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entitObj.LocateRegView := ctlObj.Text
-    }
-
-    OnGameRunTypeChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.RunType := ctlObj.Text
-    }
-
-    OnGameRunMethodChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.RunMethod := ctlObj.Text
-    }
-
-    OnGameProcessTypeChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.ProcessType := ctlObj.Text
-        this.entityObj.UpdateDataSourceDefaults()
-        this.guiObj["GameProcessId"].Value := this.entityObj.Config["GameProcessId"]
-    }
-
     OnGameProcessIdChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.ProcessId := ctlObj.Value
-    }
-
-    OnGameTypeChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.EntityType := ctlObj.Text
-        this.entityObj.UpdateDataSourceDefaults()
     }
 }

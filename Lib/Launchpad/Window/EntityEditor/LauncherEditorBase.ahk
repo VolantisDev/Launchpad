@@ -51,14 +51,6 @@ class LauncherEditorBase extends EntityEditorBase {
         return this.SetDefaultValue("CloseAfter", !!(ctlObj.Value))
     }
 
-    OnDefaultGameType(ctlObj, info) {
-        return this.SetDefaultValue("GameType", !!(ctlObj.Value))
-    }
-
-    OnDefaultLoggingLevel(ctlObj, info) {
-        return this.SetDefaultValue("LoggingLevel", !!(ctlObj.Value))
-    }
-
     OnDefaultDataSourceItemKey(ctlObj, info) {
         return this.SetDefaultValue("DataSourceItemKey", !!(ctlObj.Value))
     }
@@ -81,33 +73,9 @@ class LauncherEditorBase extends EntityEditorBase {
         ; @todo If new game type doesn't offer the selected launcher type, change to the default launcher type
     }
 
-    OnLoggingLevelChange(ctl, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.LoggingLevel := ctl.Text
-    }
-
     OnDataSourceItemKeyChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.DataSourceItemKey := ctlObj.Text
-    }
-
-    OnPlatformChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.Platform := ctlObj.Text
-        ; @todo Offer to set defaults
-    }
-
-    OnLauncherTypeChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.ManagedLauncher.EntityType := ctlObj.Text
-        this.entityObj.ManagedLauncher.UpdateDataSourceDefaults()
-        ; @todo If new launcher type changes the game type, change it here
-    }
-
-    OnGameTypeChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.ManagedLauncher.ManagedGame.EntityType := ctlObj.Text
-        this.entityObj.ManagedLauncher.ManagedGame.UpdateDataSourceDefaults()
     }
 
     OnManageLauncherType(ctlObj, info) {
@@ -200,11 +168,6 @@ class LauncherEditorBase extends EntityEditorBase {
                 this.guiObj["LogPath"].Text := this.entityObj.LogPath
             }
         }
-    }
-
-    OnThemeNameChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.ThemeName := ctlObj.Text
     }
 
     OnShowProgressChange(ctlObj, info) {

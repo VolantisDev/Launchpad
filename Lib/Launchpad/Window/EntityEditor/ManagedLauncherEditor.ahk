@@ -8,7 +8,7 @@ class ManagedLauncherEditor extends ManagedEntityEditorBase {
     CustomTabControls() {
         this.AddCheckBoxBlock("CloseBeforeRun", "Close launcher before run", true, "If selected, the launcher will be closed before attempting to run the game. This can be useful to ensure the process starts under " . this.app.appName . "'s process instead of the existing launcher's process.", true)
         this.AddCheckBoxBlock("CloseAfterRun", "Close launcher after run", true, "If selected, the launcher will be closed after the game closes. This can be useful to ensure Steam or other applications know you are done playing the game.", true)
-        this.AddEntityCtl("Launcher Close Method", "LauncherCloseMethod", true, "SelectControl", this.closeMethods, "OnLauncherCloseMethodChange", "Prompt: Show a prompt that allows the user to either trigger a recheck or cancel waiting for the launcher to close`nWait: Waits up to WaitTimeout seconds for the launcher to close on its own.`nAuto: Make one polite close attempt, wait a bit, then kill the process if it is still running.`nAutoPolite: Attempt to close the launcher politely, but do not forcefully kill it if it's still running.`nAutoKill: Automatically close the launcher by force without a polite attempt.")
+        this.AddEntityCtl("Launcher Close Method", "LauncherCloseMethod", true, "SelectControl", this.closeMethods, "", "Prompt: Show a prompt that allows the user to either trigger a recheck or cancel waiting for the launcher to close`nWait: Waits up to WaitTimeout seconds for the launcher to close on its own.`nAuto: Make one polite close attempt, wait a bit, then kill the process if it is still running.`nAutoPolite: Attempt to close the launcher politely, but do not forcefully kill it if it's still running.`nAutoKill: Automatically close the launcher by force without a polite attempt.")
         this.AddNumberBlock("WaitTimeout", "Launcher Wait Timeout", true, "How many seconds to wait for the launcher to close before giving up.", true)
         this.AddNumberBlock("PoliteCloseWait", "Launcher Polite Close Wait", true, "How many seconds to give the launcher to close after asking politely before forcefully killing it (if applicable)", true)
     }
@@ -88,11 +88,6 @@ class ManagedLauncherEditor extends ManagedEntityEditorBase {
         this.entityObj.ClosePostDelay := ctlObj.Text
     }
 
-    OnLauncherCloseMethodChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.CloseMethod := ctlObj.Text
-    }
-
     OnRecheckDelayChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.RecheckDelay := ctlObj.Text
@@ -134,41 +129,8 @@ class ManagedLauncherEditor extends ManagedEntityEditorBase {
         this.OnFileMenuClick("LauncherShortcutSrc", btn, "Select a shortcut file or .exe that will launch the application", "Shortcuts (*.lnk; *.url; *.exe)")
     }
 
-    OnLauncherLocateMethodChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.LocateMethod := ctlObj.Text
-    }
-
-    OnLauncherLocateRegViewChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entitObj.LocateRegView := ctlObj.Text
-    }
-
-    OnLauncherRunTypeChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.RunType := ctlObj.Text
-    }
-
-    OnLauncherRunMethodChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.RunMethod := ctlObj.Text
-    }
-
-    OnLauncherProcessTypeChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.ProcessType := ctlObj.Text
-        this.entityObj.UpdateDataSourceDefaults()
-        this.guiObj["LauncherProcessId"].Value := this.entityObj.Config["LauncherProcessId"]
-    }
-
     OnLauncherProcessIdChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.ProcessId := ctlObj.Value
-    }
-
-    OnLauncherTypeChange(ctlObj, info) {
-        this.guiObj.Submit(false)
-        this.entityObj.EntityType := ctlObj.Text
-        this.entityObj.UpdateDataSourceDefaults()
     }
 }

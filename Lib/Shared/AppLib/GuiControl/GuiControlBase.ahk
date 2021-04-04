@@ -194,9 +194,46 @@ class GuiControlBase {
         }
     }
 
+    GetValue(submit := false) {
+        if (submit) {
+            this.guiObj.guiObj.Submit(false)
+        }
+
+        value := ""
+
+        if (this.ctl) {
+            if (this.ctl.Type == "Checkbox") {
+                value := !!(this.ctl.Value)
+            } else if (this.ctl.Type == "DDL" || this.ctl.Type == "ComboBox" || this.ctl.Type == "Edit") {
+                value := this.ctl.Text
+            } else {
+                value := this.ctl.Value
+            }
+        }
+
+        return value
+    }
+
     ToggleEnabled(isEnabled) {
         if (this.ctl.Type != "Text") {
             this.ctl.Enabled := !!(isEnabled)
         }
+    }
+
+    RegisterHandler(eventName, handler) {
+        if (this.ctl) {
+            if (eventName == "Change") {
+                if (this.SupportsChangeEvent()) {
+                    this.ctl.OnEvent("Change", handler)
+                }
+            } else {
+                this.ctl.OnEvent(eventName, handler)
+            }
+        }
+        
+    }
+
+    SupportsChangeEvent() {
+        return this.ctl && this.ctl.Type != "Button" && this.ctl.Type != "Text"
     }
 }

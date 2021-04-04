@@ -5,6 +5,7 @@ class EntityControl extends GuiControlBase {
     fieldName := ""
     emptyValue := ""
     dependentFields := []
+    refreshDataOnChange := false
 
     CreateControl(entity, fieldName, showDefaultCheckbox, controlClass, params*) {
         super.CreateControl()
@@ -38,8 +39,23 @@ class EntityControl extends GuiControlBase {
         text := (this.entityObj.Config.Has(this.fieldName) && this.entityObj.Config[this.fieldName] != "") ? this.entityObj.Config[this.fieldName] : this.emptyValue
         this.innerControl := this.guiObj.Add(controlClass, this.GetOptionsString(opts), "", text, params*)
         this.ctl := this.innerControl.ctl
+        this.innerControl.RegisterHandler("Change", this.RegisterCallback("OnInnerControlChange"))
         this.ToggleEnabled(!isDisabled)
         return this.innerControl
+    }
+
+    OnInnerControlChange(ctl, info) {
+        this.entityObj.Config[this.fieldName] := this.innerControl.GetValue(true)
+
+        if (this.refreshDataOnChange || this.dependentFields && this.dependentFields.Length > 0) {
+            this.entityObj.UpdateDataSourceDefaults()
+        }
+
+        if (this.dependentFields && this.dependentFields.Length > 0) {
+            for index, field in this.dependentFields {
+                this.guiObj.guiObj[field].Value := this.entityObj.Config[field]
+            }
+        }
     }
 
     AddDependentField(field) {
