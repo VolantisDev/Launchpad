@@ -45,7 +45,8 @@ class EntityControl extends GuiControlBase {
     }
 
     OnInnerControlChange(ctl, info) {
-        this.entityObj.Config[this.fieldName] := this.innerControl.GetValue(true)
+        val := Trim(this.innerControl.GetValue(true))
+        this.entityObj.SetConfigValue(this.fieldName, val, false)
 
         if (this.refreshDataOnChange || this.dependentFields && this.dependentFields.Length > 0) {
             this.entityObj.UpdateDataSourceDefaults()
