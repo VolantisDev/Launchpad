@@ -15,10 +15,18 @@
 
     }
 
-    AddManageButton(name, position, symbol, primary := false) {
-        options := "v" . name . " " . position
-        options .= " w35 h35"
-        return this.Add("ButtonControl", options, symbol, "On" . name, primary ? "managePrimary" : "manage")
+    AddManageButton(name, position, symbol, primary := false, text := "") {
+        options := "v" . name . " " . position . " h35"
+        width := 35
+
+        if (text) {
+            width += this.themeObj.CalculateTextWidth(text) + (this.margin*2)
+        }
+
+        options .= " w" . width
+        drawConfig := Map()
+        drawConfig["text"] := text
+        return this.Add("ButtonControl", options, symbol, "On" . name, primary ? "managePrimary" : "manage", drawConfig)
     }
 
     AddManageList() {

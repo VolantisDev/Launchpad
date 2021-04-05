@@ -40,13 +40,17 @@ class ButtonShape extends GuiShapeBase {
 
         if (this.config["borderThickness"] > 0) {
             borderPen := Gdip_CreatePen("0xff" . this.config["borderColor"], this.config["borderThickness"])
-            Gdip_DrawRectangle(this.graphics, borderPen, 0 + Floor(this.config["borderThickness"] / 2), 0 + Floor(this.config["borderThickness"] / 2), w - this.config["borderThickness"], h - this.config["borderThickness"])
-            Gdip_DeletePen(borderPen)
+            this.DrawBorder(borderPen, w, h)
         }
         
         this.RenderContent(w, h)
         this.hBitmap := Gdip_CreateHBITMAPFromBitmap(this.bitmap)
         return this.hBitmap
+    }
+
+    DrawBorder(borderPen, w, h) {
+        Gdip_DrawRectangle(this.graphics, borderPen, 0 + Floor(this.config["borderThickness"] / 2), 0 + Floor(this.config["borderThickness"] / 2), w - this.config["borderThickness"], h - this.config["borderThickness"])
+        Gdip_DeletePen(borderPen)
     }
 
     RenderContent(w, h) {

@@ -206,41 +206,47 @@
                 "manage": {
                     "enabled": {
                         "borderThickness": 0,
-                        "shape": "SymbolButtonShape",
+                        "shape": "ManageButtonShape",
                         "strokeWidth": 2,
-                        "margin": 4
+                        "margin": 4,
+                        "textAlign": "Left"
                     },
                     "disabled": {
                         "borderThickness": 0,
-                        "shape": "SymbolButtonShape",
+                        "shape": "ManageButtonShape",
                         "strokeWidth": 2,
-                        "margin": 4
+                        "margin": 4,
+                        "textAlign": "Left"
                     },
                     "hovered": {
                         "borderThickness": 0,
-                        "shape": "SymbolButtonShape",
+                        "shape": "ManageButtonShape",
                         "strokeWidth": 2,
-                        "margin": 4
+                        "margin": 4,
+                        "textAlign": "Left"
                     }
                 },
                 "managePrimary": {
                     "enabled": {
                         "borderThickness": 1,
-                        "shape": "SymbolButtonShape",
+                        "shape": "ManageButtonShape",
                         "strokeWidth": 2,
-                        "margin": 4
+                        "margin": 4,
+                        "textAlign": "Left"
                     },
                     "disabled": {
                         "borderThickness": 1,
-                        "shape": "SymbolButtonShape",
+                        "shape": "ManageButtonShape",
                         "strokeWidth": 2,
-                        "margin": 4
+                        "margin": 4,
+                        "textAlign": "Left"
                     },
                     "hovered": {
                         "borderThickness": 1,
-                        "shape": "SymbolButtonShape",
+                        "shape": "ManageButtonShape",
                         "strokeWidth": 2,
-                        "margin": 4
+                        "margin": 4,
+                        "textAlign": "Left"
                     }
                 },
                 "status": {

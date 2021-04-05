@@ -135,6 +135,7 @@
 #Include ThemeLib\GuiShape\ButtonShape.ahk
 #Include ThemeLib\GuiShape\GuiShapeBase.ahk
 #Include ThemeLib\GuiShape\MainMenuButtonShape.ahk
+#Include ThemeLib\GuiShape\ManageButtonShape.ahk
 #Include ThemeLib\GuiShape\MenuSeparatorShape.ahk
 #Include ThemeLib\GuiShape\StatusIndicatorButtonShape.ahk
 #Include ThemeLib\GuiShape\SymbolButtonShape.ahk

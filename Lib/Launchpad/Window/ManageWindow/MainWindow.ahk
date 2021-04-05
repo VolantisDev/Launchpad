@@ -21,7 +21,7 @@
 
     AddBottomControls() {
         position := "x" . this.margin . " y+" . (this.margin)
-        this.AddManageButton("AddButton", position, "add", true)
+        this.AddManageButton("AddButton", position, "add", true, "Add a Game")
         actionButtonsW := 110
         actionButtonsX := (this.margin + this.windowSettings["contentWidth"] - actionButtonsW)
         position := "x" actionButtonsX . " yp+3 w" . actionButtonsW . " h30 Section"

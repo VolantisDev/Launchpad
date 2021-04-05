@@ -229,22 +229,28 @@
                         "bgColor": "{{background}}",
                         "textColor": "{{textLight}}",
                         "borderColor": "{{textLight}}",
-                        "shape": "SymbolButtonShape",
-                        "strokeWidth": 2
+                        "shape": "ManageButtonShape",
+                        "strokeWidth": 2,
+                        "textAlign": "Left",
+                        "textUpper": true
                     },
                     "disabled": {
                         "bgColor": "{{background}}",
                         "textColor": "{{textLight}}",
                         "borderColor": "{{background}}",
-                        "shape": "SymbolButtonShape",
-                        "strokeWidth": 2
+                        "shape": "ManageButtonShape",
+                        "strokeWidth": 2,
+                        "textAlign": "Left",
+                        "textUpper": true
                     },
                     "hovered": {
                         "bgColor": "{{background}}",
                         "textColor": "{{brightblue}}",
                         "borderColor": "{{text}}",
-                        "shape": "SymbolButtonShape",
-                        "strokeWidth": 2
+                        "shape": "ManageButtonShape",
+                        "strokeWidth": 2,
+                        "textAlign": "Left",
+                        "textUpper": true
                     }
                 },
                 "managePrimary": {
@@ -253,24 +259,30 @@
                         "textColor": "{{textLight}}",
                         "borderColor": "{{textLight}}",
                         "borderThickness": 1,
-                        "shape": "SymbolButtonShape",
-                        "strokeWidth": 2
+                        "shape": "ManageButtonShape",
+                        "strokeWidth": 2,
+                        "textAlign": "Left",
+                        "textUpper": true
                     },
                     "disabled": {
                         "bgColor": "{{background}}",
                         "textColor": "{{textLight}}",
                         "borderColor": "{{background}}",
                         "borderThickness": 1,
-                        "shape": "SymbolButtonShape",
-                        "strokeWidth": 2
+                        "shape": "ManageButtonShape",
+                        "strokeWidth": 2,
+                        "textAlign": "Left",
+                        "textUpper": true
                     },
                     "hovered": {
                         "bgColor": "{{background}}",
                         "textColor": "{{brightblue}}",
                         "borderColor": "{{text}}",
                         "borderThickness": 1,
-                        "shape": "SymbolButtonShape",
-                        "strokeWidth": 2
+                        "shape": "ManageButtonShape",
+                        "strokeWidth": 2,
+                        "textAlign": "Left",
+                        "textUpper": true
                     }
                 },
                 "status": {
