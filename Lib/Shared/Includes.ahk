@@ -121,6 +121,8 @@
 #Include DataLib\IdGenerator\UuidGenerator.ahk
 #Include DataLib\LayeredData\LayeredDataBase.ahk
 #Include DataLib\LayeredData\LayeredEntityData.ahk
+#Include DataLib\Locator\FileLocator.ahk
+#Include DataLib\Locator\LocatorBase.ahk
 #Include DataLib\StructuredData\AhkVariable.ahk
 #Include DataLib\StructuredData\JsonData.ahk
 #Include DataLib\StructuredData\ProtobufData.ahk

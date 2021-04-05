@@ -43,6 +43,7 @@
 #Include GamePlatform\SteamPlatform.ahk
 #Include Installer\DependencyInstaller.ahk
 #Include Installer\LaunchpadUpdate.ahk
+#Include Locator\GameExeLocator.ahk
 #Include Service\BuilderManager.ahk
 #Include Service\LauncherManager.ahk
 #Include Service\PlatformManager.ahk

@@ -243,15 +243,8 @@ class GamePlatformBase {
 
                 key := this.GetLauncherKey(A_LoopFileName)
                 installDir := A_LoopFileFullPath
-                possibleExes := []
-                exeName := ""
-
-                Loop Files installDir . "\*.exe", "R" {
-                    if (this.ExeIsValid(A_LoopFileName, A_LoopFileFullPath)) {
-                        possibleExes.Push(A_LoopFileFullPath)
-                    }
-                }
-
+                locator := GameExeLocator.new(installDir)
+                possibleExes := locator.Locate("")
                 exeName := this.DetermineMainExe(key, possibleExes)
                 launcherSpecificId := this.GetLauncherSpecificId(key)
                 detectedGameObj := DetectedGame.new(key, this, this.launcherType, this.gameType, installDir, exeName, launcherSpecificId, possibleExes)
