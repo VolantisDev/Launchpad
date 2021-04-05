@@ -426,7 +426,7 @@
             },
             "MainWindow": {
                 "settings": "default",
-                "contentWidth": 650,
+                "contentWidth": 600,
                 "listViewHeight": 400,
                 "options": {
                     "Resize": true,
