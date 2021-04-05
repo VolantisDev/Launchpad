@@ -298,7 +298,8 @@
         "fonts": {
             "small": "s10 w200",
             "normal": "s11",
-            "large": "s13"
+            "large": "s13",
+            "xl": "s22"
         },
         "windowStyles": {
             "Child": "E0x40000000L",

@@ -12,7 +12,7 @@ class GuiControlBase {
         InvalidParameterException.CheckTypes("GuiControlBase", "guiObj", guiObj, "GuiBase")
         this.app := guiObj.app
         this.guiObj := guiObj
-        this.options := this.ParseOptions(options)
+        this.options := this.SetDefaultPosition(this.ParseOptions(options))
         this.heading := heading
 
         if (this.ctl == "") {

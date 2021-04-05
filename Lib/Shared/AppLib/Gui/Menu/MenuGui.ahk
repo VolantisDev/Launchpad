@@ -61,6 +61,10 @@
         super.Destroy()
     }
 
+    OnSeparator(btn, info) {
+        
+    }
+
     Controls() {
         super.Controls()
         this.nextPos := "x" . this.margin

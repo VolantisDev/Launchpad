@@ -8,7 +8,7 @@ class BasicControl extends GuiControlBase {
         }
 
         opts := this.SetDefaultOptions(this.options, defaults)
-        this.ctl := this.guiObj.guiObj.Add(ctlType, this.GetOptionsString(this.options), params*)
+        this.ctl := this.guiObj.guiObj.Add(ctlType, this.GetOptionsString(opts), params*)
 
         if (value) {
             this.SetText(value)
