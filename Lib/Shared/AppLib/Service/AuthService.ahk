@@ -53,6 +53,7 @@ class AuthService extends AppServiceBase {
     GetStatusInfo() {
         statusText := "Not logged in"
         imgPath := ""
+        email := ""
 
         if (this.IsAuthenticated()) {
             playerName := this.app.Config.PlayerName
@@ -74,7 +75,7 @@ class AuthService extends AppServiceBase {
             }
         }
 
-        return Map("name", statusText, "photo", imgPath)
+        return Map("name", statusText, "email", email, "photo", imgPath)
     }
 
     Logout() {
