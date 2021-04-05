@@ -13,14 +13,10 @@
 
     Controls() {
         super.Controls()
-        this.AddComboBox("Key", "Key", "", this.knownGames, "Select an existing game from the API, or enter a custom game key to create your own. If choosing an existing game, most advanced values can be loaded from the API.")
-        this.Add("SelectControl", "", "Platform", this.defaultPlatform, this.knownPlatforms, "", "Select the platform that this game is run through.")
-        this.Add("LocationBlock", "", "Install Dir", this.installDir, "InstallDir", "", true, "Select the directory the game is installed in")
-        this.Add("LocationBlock", "", "Game Exe", this.exe, "Exe", "", true, "Select the game's main .exe file")
-    }
-
-    OnKeyChange(ctlObj, info) {
-        
+        this.Add("ComboBoxControl", "vKey", "Key", "", this.knownGames, "", "Select an existing game from the API, or enter a custom game key to create your own. If choosing an existing game, most advanced values can be loaded from the API.")
+        this.Add("SelectControl", "vPlatform", "Platform", this.defaultPlatform, this.knownPlatforms, "", "Select the platform that this game is run through.")
+        this.Add("LocationBlock", "vInstallDir", "Install Dir", this.installDir, "InstallDir", "", true, "Select the directory the game is installed in")
+        this.Add("LocationBlock", "vGameExe", "Game Exe", this.exe, "Exe", "", true, "Select the game's main .exe file")
     }
 
     GetLauncherKey() {

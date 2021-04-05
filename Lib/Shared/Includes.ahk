@@ -64,6 +64,7 @@
 #Include AppLib\Gui\Progress\ProgressIndicatorBase.ahk
 #Include AppLib\GuiControl\BasicControl.ahk
 #Include AppLib\GuiControl\ButtonControl.ahk
+#Include AppLib\GuiControl\ComboBoxControl.ahk
 #Include AppLib\GuiControl\EditControl.ahk
 #Include AppLib\GuiControl\EntityControl.ahk
 #Include AppLib\GuiControl\GuiControlBase.ahk

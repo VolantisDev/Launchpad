@@ -22,7 +22,7 @@ class LauncherEditorSimple extends LauncherEditorBase {
         tabs := this.guiObj.Add("Tab3", " x" . this.margin . " w" . this.windowSettings["contentWidth"] . " +0x100", ["General", "Launcher", "Game"])
 
         tabs.UseTab("General", true)
-        this.AddComboBox("Key", "Key", this.entityObj.Key, this.knownGames, "Select an existing game from the API, or enter a custom game key to create your own. Use caution when changing this value, as it will change which data is requested from the API.")
+        this.Add("ComboBoxControl", "vKey", "Key", this.entityObj.key, this.knownGames, "OnKeyChange", "Select an existing game from the API, or enter a custom game key to create your own. Use caution when changing this value, as it will change which data is requested from the API.")
         this.AddEntityCtl("Platform", "Platform", false, "SelectControl", this.platforms, "", "Select the platform that this game is run through.")
         
         tabs.UseTab("Launcher", true)

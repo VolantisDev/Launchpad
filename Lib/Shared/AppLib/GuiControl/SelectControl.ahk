@@ -1,6 +1,7 @@
 class SelectControl extends GuiControlBase {
     selectOptions := []
     btnCtl := ""
+    ctlType := "DDL"
 
     CreateControl(value, selectOptions, handler := "", helpText := "", buttonText := "", buttonHandler := "", buttonOpts := "") {
         super.CreateControl()
@@ -23,9 +24,21 @@ class SelectControl extends GuiControlBase {
         this.SetOption(opts, "w", w)
 
         fieldW := w
-        index := this.GetItemIndex(value)
-        opts := this.SetDefaultOptions(opts, ["w" . fieldW, "Choose" . index, "c" . this.guiObj.themeObj.GetColor("editText")])
-        ctl := this.guiObj.guiObj.AddDDL(this.GetOptionsString(opts), this.selectOptions)
+        
+        defaults := ["w" . fieldW, "c" . this.guiObj.themeObj.GetColor("editText")]
+
+        if (this.ctlType == "DDL") {
+            index := this.GetItemIndex(value)
+            defaults.Push("Choose" . index)
+        }
+
+        opts := this.SetDefaultOptions(opts, defaults)
+        ctl := this.guiObj.guiObj.Add(this.ctlType, this.GetOptionsString(opts), this.selectOptions)
+
+        if (this.ctlType == "ComboBox") {
+            ctl.Text := value
+        }
+
         this.ctl := ctl
 
         if (handler) {

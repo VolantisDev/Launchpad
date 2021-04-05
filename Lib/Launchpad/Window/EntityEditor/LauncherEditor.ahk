@@ -22,7 +22,7 @@ class LauncherEditor extends LauncherEditorBase {
         tabs := this.guiObj.Add("Tab3", " x" . this.margin . " w" . this.windowSettings["contentWidth"] . " +0x100", ["General", "Sources", "UI", "Processes", "Advanced"])
 
         tabs.UseTab("General", true)
-        this.AddComboBox("Key", "Key", this.entityObj.Key, this.knownGames, "Select an existing game from the API, or enter a custom game key to create your own. Use caution when changing this value, as it will change which data is requested from the API.")
+        this.Add("ComboBoxControl", "vKey", "Key", this.entityObj.key, this.knownGames, "OnKeyChange", "Select an existing game from the API, or enter a custom game key to create your own. Use caution when changing this value, as it will change which data is requested from the API.")
         this.AddEntityCtl("Display Name", "DisplayName", true, "EditControl", 1, "", "You can change the display name of the game if it differs from the key. The launcher filename will still be created using the key.")
         this.AddEntityCtl("Platform", "Platform", false, "SelectControl", this.platforms, "")
         ctl := this.AddEntityCtl("Launcher", "LauncherType", false, "SelectControl", this.launcherTypes, "", "This tells " . this.app.appName . " how to interact with any launcher your game might require. If your game's launcher isn't listed, or your game doesn't have a launcher, start with `"Default`".", "Manage", "OnManageLauncherType")
