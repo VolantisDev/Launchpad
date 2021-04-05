@@ -64,19 +64,4 @@ class FormGuiBase extends GuiBase {
             ctl.ToolTip := helpText
         }
     }
-
-    DefaultCheckbox(fieldKey, entity, addPrefix := false, includePrefixInCtlName := false) {
-        prefixedName := fieldKey
-        if (addPrefix) {
-            prefixedName := entity.configPrefix . prefixedName
-        }
-
-        ctlKey := includePrefixInCtlName ? prefixedName : fieldKey
-
-        checkedText := !entity.UnmergedConfig.Has(prefixedName) ? " Checked" : ""
-        ctl := this.guiObj.AddCheckBox("vDefault" . ctlKey . " xs h25 y+m" . checkedText, "Default")
-        ctl.ToolTip := "When checked, the default value determined by various other factors in " . this.app.appName . " will be used (and shown to the right if available). When unchecked, the value you set here will be used instead."
-        ctl.OnEvent("Click", "OnDefault" . ctlKey)
-        return ctl
-    }
 }

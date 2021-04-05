@@ -47,14 +47,6 @@ class EntityEditorBase extends FormGuiBase {
         return super.GetTitle(this.entityObj.Key . " - " . title)
     }
 
-    DefaultCheckbox(fieldKey, entity := "", addPrefix := false, includePrefixInCtlName := false) {
-        if (entity == "") {
-            entity := this.entityObj
-        }
-
-        return super.DefaultCheckbox(fieldKey, entity, addPrefix, includePrefixInCtlName)
-    }
-
     Controls() {
         super.Controls()
     }

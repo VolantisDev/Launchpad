@@ -34,14 +34,6 @@
         return super.GetTitle(title . ": " . this.detectedGameObj.key)
     }
 
-    DefaultCheckbox(fieldKey, entity := "", addPrefix := false) {
-        if (entity == "") {
-            entity := this.detectedGameObj
-        }
-
-        return super.DefaultCheckbox(fieldKey, entity, addPrefix)
-    }
-
     Controls() {
         super.Controls()
         this.AddComboBox("Key", "Key", this.detectedGameObj.key, this.knownGames, "You can change the detected game key here, which will become the name of your launcher. Your existing launchers, and all launchers known about via the API, can be selected to match this game up with one of those items.")
