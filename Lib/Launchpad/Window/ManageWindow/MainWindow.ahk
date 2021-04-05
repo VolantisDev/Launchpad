@@ -23,16 +23,50 @@
         position := "x" . this.margin . " y+" . (this.margin)
         this.AddManageButton("AddButton", position, "add", true)
         position := "x+" . (this.margin) . " yp+5 w60 h25"
-        this.Add("ButtonControl", "vEditButton " . position, "Edit", "", "manageText")
+        ;this.Add("ButtonControl", "vEditButton " . position, "Edit", "", "manageText")
         position := "x+" . this.margin . " yp w60 h25"
-        this.Add("ButtonControl", "vBuildButton " . position, "Build", "", "manageText")
-        this.Add("ButtonControl", "vRunButton " . position, "Run", "", "manageText")
-        this.Add("ButtonControl", "vDeleteButton " . position, "Delete", "", "manageText")
+        ;this.Add("ButtonControl", "vBuildButton " . position, "Build", "", "manageText")
+        ;this.Add("ButtonControl", "vRunButton " . position, "Run", "", "manageText")
+        ;this.Add("ButtonControl", "vDeleteButton " . position, "Delete", "", "manageText")
 
         actionButtonsW := 110
         actionButtonsX := (this.margin + this.windowSettings["contentWidth"] - actionButtonsW)
-        position := "x" actionButtonsX . " yp-2 w" . actionButtonsW . " h30 Section"
+        position := "x" actionButtonsX . " yp+3 w" . actionButtonsW . " h30 Section"
         this.Add("ButtonControl", "vBuildAllButton " . position, "Build All", "", "primary")
+    }
+
+    ShowListViewContextMenu(lv, item, isRightClick, X, Y) {
+        launcherKey := this.launcherRows[item]
+        launcher := this.launcherManager.Entities[launcherKey]
+
+        menuItems := []
+        menuItems.Push(Map("label", "Edit", "name", "EditLauncher"))
+        menuItems.Push(Map("label", "Build", "name", "BuildLauncher"))
+        menuItems.Push(Map("label", "Run", "name", "RunLauncher"))
+        menuItems.Push(Map("label", "Delete", "name", "DeleteLauncher"))
+
+        result := this.app.GuiManager.Menu("MenuGui", menuItems, this)
+
+        if (result == "EditLauncher") {
+            this.EditLauncher(launcherKey)
+        } else if (result == "BuildLauncher") {
+            this.app.Builders.BuildLaunchers(Map(launcherKey, launcher), true)
+            this.PopulateListView()
+        } else if (result == "RunLauncher") {
+            if (launcher.IsBuilt) {
+                file := launcher.GetLauncherFile(launcherKey, false)
+
+                if (file) {
+                    Run(file,, "Hide")
+                }
+            }
+        } else if (result == "DeleteLauncher") {
+            result := this.app.GuiManager.Dialog("LauncherDeleteWindow", launcher, this.app.Services.Get("LauncherManager"), this.windowKey)
+
+            if (result == "Delete") {
+                this.guiObj["ListView"].Delete(item)
+            }
+        }
     }
 
     ShowTitleMenu() {
@@ -127,6 +161,7 @@
     }
 
     SetupManageEvents(lv) {
+        super.SetupManageEvents(lv)
         lv.OnEvent("DoubleClick", "OnDoubleClick")
     }
 
@@ -328,7 +363,8 @@
             return
         }
 
-        this.AutoXYWH("y", ["AddButton", "EditButton", "BuildButton", "RunButton", "DeleteButton"])
+        ;this.AutoXYWH("y", ["AddButton", "EditButton", "BuildButton", "RunButton", "DeleteButton"])
+        this.AutoXYWH("y", ["AddButton"])
         this.AutoXYWH("xy", ["BuildAllButton"])
     }
 

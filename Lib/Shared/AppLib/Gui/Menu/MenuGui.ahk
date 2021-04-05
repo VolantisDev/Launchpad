@@ -13,7 +13,7 @@
     waitForResult := true
     childOpen := false
 
-    __New(app, themeObj, windowKey, menuItems := "", parent := "", openAtCtl := "", openAtCtlSide := "") {
+    __New(app, themeObj, windowKey, menuItems := "", parent := "", openAtCtl := "", openAtCtlSide := "", isChild := false) {
         if (menuItems == "") {
             menuItems := []
         }
@@ -24,6 +24,10 @@
             if (parent.HasBase(MenuGui.Prototype)) {
                 this.parentMenu := parent
             }
+        }
+
+        if (!isChild) {
+            app.GuiManager.CloseMenus(windowKey)
         }
 
         this.menuItems := menuItems
@@ -124,7 +128,7 @@
 
         if (btn.ChildItems) {
             this.childOpen := true
-            this.result := this.app.GuiManager.Menu("MenuGui", btn.ChildItems, this, btn, "right")
+            this.result := this.app.GuiManager.Menu("MenuGui", btn.ChildItems, this, btn, "right", true)
             this.childOpen := false
         }
 

@@ -31,6 +31,7 @@ class PlatformsWindow extends ManageWindowBase {
     }
 
     SetupManageEvents(lv) {
+        super.SetupManageEvents(lv)
         lv.OnEvent("DoubleClick", "OnDoubleClick")
     }
 

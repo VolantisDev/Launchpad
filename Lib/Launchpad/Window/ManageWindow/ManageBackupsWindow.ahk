@@ -30,6 +30,7 @@ class ManageBackupsWindow extends ManageWindowBase {
     }
 
     SetupManageEvents(lv) {
+        super.SetupManageEvents(lv)
         lv.OnEvent("DoubleClick", "OnDoubleClick")
     }
 

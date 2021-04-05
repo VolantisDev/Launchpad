@@ -5,6 +5,7 @@ class GuiManager extends ContainerServiceBase {
     parents := Map()
     children := Map()
     locked := Map()
+    menus := Map()
 
     GetTheme() {
         return this.app.Themes.GetItem()
@@ -39,8 +40,38 @@ class GuiManager extends ContainerServiceBase {
     }
 
     Menu(className, params*) {
-        window := %className%.new(this.app, this.GetTheme(), this.app.IdGen.Generate(), params*)
-        return window.Show()
+        key := this.app.IdGen.Generate()
+        window := %className%.new(this.app, this.GetTheme(), key, params*)
+        this.menus[key] := window
+        result := window.Show()
+
+        if (this.menus.Has(key)) {
+            this.menus.Delete(key)
+        }
+        
+        return result
+    }
+
+    CloseMenus(menuToKeepOpen := "") {
+        keepMenu := ""
+
+        if (menuToKeepOpen && this.menus.Has(menuToKeepOpen)) {
+            keepMenu := this.menus[menuToKeepOpen]
+        }
+
+        for index, window in this.menus {
+            if (window.windowKey != menuToKeepOpen) {
+                window.Close()
+            }
+        }
+
+        newMenus := Map()
+
+        if (keepMenu) {
+            newMenus.Push(menuToKeep, keepMenu)
+        }
+
+        this.menus := newMenus
     }
 
     OpenWindow(key, className := "", params*) {

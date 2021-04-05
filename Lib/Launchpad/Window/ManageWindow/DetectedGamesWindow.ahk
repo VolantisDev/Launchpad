@@ -34,6 +34,7 @@
     }
 
     SetupManageEvents(lv) {
+        super.SetupManageEvents(lv)
         lv.OnEvent("DoubleClick", "OnDoubleClick")
         lv.OnEvent("ItemCheck", "OnItemCheck")
         lv.OnEvent("ItemSelect", "OnItemSelect")

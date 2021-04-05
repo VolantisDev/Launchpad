@@ -1,5 +1,4 @@
 ﻿class ManageWindowBase extends GuiBase {
-    sidebarWidth := 85
     listViewColumns := Array()
     numSelected := 0
     lvCount := 0
@@ -10,11 +9,6 @@
         super.Controls()
         this.AddManageList()
         this.AddBottomControls()
-        this.AddSidebarControls()
-    }
-
-    AddSidebarControls() {
-
     }
 
     AddBottomControls() {
@@ -37,6 +31,10 @@
     }
 
     SetupManageEvents(lv) {
+        lv.OnEvent("ContextMenu", "ShowListViewContextMenu")
+    }
+
+    ShowListViewContextMenu(lv, item, isRightClick, X, Y) {
 
     }
 
