@@ -3,9 +3,7 @@
 Manage your game platforms and create beautifully-simple .exe files to launch games from any platform 
 within Steam or other applications.
 
-![main_window](https://user-images.githubusercontent.com/277977/104806114-147db300-57a3-11eb-90cd-d69bf8ffe39b.png)
-
-![generated_launchers](https://user-images.githubusercontent.com/277977/106828218-c0eede80-6657-11eb-963f-5228b67f3957.png)
+![main-window--tri](https://user-images.githubusercontent.com/277977/113593737-c25f6780-9604-11eb-8b72-ad191c45570a.png)
 
 (See below for more screenshots)
 
