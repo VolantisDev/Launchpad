@@ -55,10 +55,9 @@ class LauncherEditorSimple extends LauncherEditorBase {
         ctl.refreshDataOnChange := true
         this.Add("EntityControl", "", "Game Install Directory", this.entityObj.ManagedLauncher.ManagedGame, "GameInstallDir", true, "LocationBlock", "GameInstallDir", "Clear", true, "Select the installation folder, or use default for auto-detection.")
         this.Add("EntityControl", "", "Game Executable", this.entityObj.ManagedLauncher.ManagedGame, "GameExe", true, "ComboBoxControl", this.possibleExes, "", "The main .exe file, not including any path information.")
-        
         ctl := this.Add("EntityControl", "", "", this.entityObj.ManagedLauncher.ManagedGame, "GameReplaceProcess", true, "BasicControl", "CheckBox", "Replace process after launching")
         ctl.ctl.ToolTip := "After the process is detected, immediately kill and re-launch it so that " . this.app.appName . " is its parent process."
-
+        this.Add("EntityControl", "", "Launcher-Specific ID", this.entityObj.ManagedLauncher.ManagedGame, "GameLauncherSpecificId", true, "EditControl", 1, "", "If required, an ID that the launcher uses to reference this item")
         tabs.UseTab()
     }
 
