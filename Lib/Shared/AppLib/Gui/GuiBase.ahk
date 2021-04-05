@@ -50,6 +50,7 @@ class GuiBase {
     positionAtMouseCursor := false
     openWindowWithinScreenBounds := true
     showInNotificationArea := false
+    width := ""
 
     __New(app, themeObj, windowKey, title, owner := "", parent := "", iconSrc := "") {
         InvalidParameterException.CheckTypes("GuiBase", "app", app, "AppBase", "title", title, "", "themeObj", themeObj, "ThemeBase", "windowKey", windowKey, "")
@@ -654,7 +655,7 @@ class GuiBase {
     }
 
     End() {
-        width := this.windowSettings["contentWidth"] + (this.margin * 2)
+        width := this.width ? this.width : (this.windowSettings["contentWidth"] + (this.margin * 2))
         windowSize := "w" . width
         MonitorGetWorkArea(, monitorL, monitorT, monitorR, monitorB)
 

@@ -1,6 +1,5 @@
 ﻿class MenuGui extends GuiBase {
     positionAtMouseCursor := true
-    nextPos := "x" . this.margin
     showTitlebar := false
     buttonsPerRow := 1
     menuTitle := "Menu"
@@ -72,6 +71,22 @@
     Controls() {
         super.Controls()
         this.nextPos := "x" . this.margin
+
+        if (!this.width) {
+            widest := 0
+
+            for index, item in this.menuItems {
+                if (item && item.Has("label") && item["label"]) {
+                    width := Ceil(this.themeObj.CalculateTextWidth(item["label"]))
+
+                    if (width > widest) {
+                        widest := width
+                    }
+                }
+            }
+
+            this.width := (widest + (this.margin*2) + 20)
+        }
         
         for index, item in this.menuItems {
             if (item == "") {
@@ -89,34 +104,22 @@
     }
 
     AddMenuButton(buttonLabel, ctlName, childItems := "") {
-        buttonSpacing := this.windowSettings["spacing"]["buttonSpacing"]
-        marginSpace := (buttonSpacing * this.buttonsPerRow) - buttonSpacing
-        width := (this.windowSettings["contentWidth"] - marginSpace) / this.buttonsPerRow
+        width := this.width ? this.width : this.windowSettings["contentWidth"]
 
         buttonSize := this.themeObj.GetButtonSize("menu")
         buttonH := (buttonSize.Has("h") && buttonSize["h"] != "auto") ? buttonSize["h"] : this.buttonHeight
 
         handler := childItems ? "ParentItemClick" : "MenuItemClick"
-        btn := this.Add("ButtonControl", "v" . ctlName . " " . this.nextPos . " w" . width . " h" . buttonH, buttonLabel, handler, "menu")
+        btn := this.Add("ButtonControl", "v" . ctlName . " x" . this.margin . " w" . width . " h" . buttonH, buttonLabel, handler, "menu")
         btn.ctl.Menu := this
         btn.ctl.ChildItems := childItems
-
-        if (this.buttonsPerRow > 1) {
-            this.nextPos := this.nextPos == "x" . this.margin ? "x+" . buttonSpacing . " yp" : "x" . this.margin
-        }
 
         return btn
     }
 
     AddMenuSeparator() {
-        buttonSpacing := this.windowSettings["spacing"]["buttonSpacing"]
-        marginSpace := (buttonSpacing * this.buttonsPerRow) - buttonSpacing
-        width := (this.windowSettings["contentWidth"] - marginSpace) / this.buttonsPerRow
-        this.Add("ButtonControl", this.nextPos . " w" . width . " h" . this.separatorHeight, "", "OnSeparator", "menuSeparator")
-
-        if (this.buttonsPerRow > 1) {
-            this.nextPos := this.nextPos == "x" . this.margin ? "x+" . buttonSpacing . " yp" : "x" . this.margin
-        }
+        width := this.width ? this.width : this.windowSettings["contentWidth"]
+        this.Add("ButtonControl", this.nextPos . " w" . width . " h" . this.separatorHeight, "", "", "menuSeparator")
     }
 
     MenuItemClick(btn, info) {

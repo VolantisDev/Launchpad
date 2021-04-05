@@ -22,13 +22,6 @@
     AddBottomControls() {
         position := "x" . this.margin . " y+" . (this.margin)
         this.AddManageButton("AddButton", position, "add", true)
-        position := "x+" . (this.margin) . " yp+5 w60 h25"
-        ;this.Add("ButtonControl", "vEditButton " . position, "Edit", "", "manageText")
-        position := "x+" . this.margin . " yp w60 h25"
-        ;this.Add("ButtonControl", "vBuildButton " . position, "Build", "", "manageText")
-        ;this.Add("ButtonControl", "vRunButton " . position, "Run", "", "manageText")
-        ;this.Add("ButtonControl", "vDeleteButton " . position, "Delete", "", "manageText")
-
         actionButtonsW := 110
         actionButtonsX := (this.margin + this.windowSettings["contentWidth"] - actionButtonsW)
         position := "x" actionButtonsX . " yp+3 w" . actionButtonsW . " h30 Section"
@@ -299,61 +292,9 @@
         }
     }
 
-    OnEditButton(btn, info) {
-        selected := this.guiObj["ListView"].GetNext(, "Focused")
-
-        if (selected > 0) {
-            key := this.launcherRows[selected]
-            this.EditLauncher(key)
-        }
-        
-    }
-
     OnBuildAllButton(btn, info) {
         this.app.Builders.BuildLaunchers(this.app.Launchers.Entities, this.app.Config.RebuildExistingLaunchers)
         this.PopulateListView()
-    }
-
-    OnBuildButton(btn, info) {
-        selected := this.guiObj["ListView"].GetNext(, "Focused")
-
-        if (selected > 0) {
-            key := this.launcherRows[selected]
-            launcherObj := this.launcherManager.Entities[key]
-            this.app.Builders.BuildLaunchers(Map(key, launcherObj), true)
-            this.PopulateListView()
-        }
-    }
-
-    OnRunButton(btn, info) {
-        selected := this.guiObj["ListView"].GetNext(, "Focused")
-
-        if (selected > 0) {
-            key := this.launcherRows[selected]
-            launcherObj := this.launcherManager.Entities[key]
-            
-            if (launcherObj.IsBuilt) {
-                file := launcherObj.GetLauncherFile(key, false)
-
-                if (file) {
-                    Run(file,, "Hide")
-                }
-            }
-        }
-    }
-
-    OnDeleteButton(btn, info) {
-        selected := this.guiObj["ListView"].GetNext(, "Focused")
-
-        if (selected > 0) {
-            key := this.launcherRows[selected]
-            launcherObj := this.launcherManager.Entities[key]
-            result := this.app.GuiManager.Dialog("LauncherDeleteWindow", launcherObj, this.app.Services.Get("LauncherManager"), this.windowKey)
-
-            if (result == "Delete") {
-                this.guiObj["ListView"].Delete(selected)
-            }
-        }
     }
 
     OnSize(guiObj, minMax, width, height) {
