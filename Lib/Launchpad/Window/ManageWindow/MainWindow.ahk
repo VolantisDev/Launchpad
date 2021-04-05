@@ -24,7 +24,7 @@
         this.AddManageButton("AddButton", position, "add", true, "Add a Game")
         actionButtonsW := 110
         actionButtonsX := (this.margin + this.windowSettings["contentWidth"] - actionButtonsW)
-        position := "x" actionButtonsX . " yp+3 w" . actionButtonsW . " h30 Section"
+        position := "x" actionButtonsX . " yp w" . actionButtonsW . " h30 Section"
         this.Add("ButtonControl", "vBuildAllButton " . position, "Build All", "", "primary")
     }
 

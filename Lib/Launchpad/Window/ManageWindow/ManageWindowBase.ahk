@@ -16,8 +16,9 @@
     }
 
     AddManageButton(name, position, symbol, primary := false, text := "") {
-        options := "v" . name . " " . position . " h35"
-        width := 35
+        width := 30
+        options := "v" . name . " " . position . " h" . width
+        
 
         if (text) {
             width += this.themeObj.CalculateTextWidth(text) + (this.margin*2)
