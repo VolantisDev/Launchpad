@@ -32,15 +32,8 @@ class BlizzardPlatform extends RegistryLookupGamePlatformBase {
                 installPath := productData["settings"]["installPath"]
                 installPath := StrReplace(installPath, "/", "\")
                 SplitPath(installPath, key)
-                possibleExes := []
-                mainExe := ""
-
-                Loop Files installPath . "\*.exe", "R" {
-                    if (this.ExeIsValid(A_LoopFileName, A_LoopFileFullPath)) {
-                        possibleExes.Push(A_LoopFileFullPath)
-                    }
-                }
-
+                locator := GameExeLocator.new(installPath)
+                possibleExes := locator.Locate("")
                 mainExe := this.DetermineMainExe(key, possibleExes)
                 games.Push(DetectedGame.new(key, this, this.launcherType, this.gameType, installPath, mainExe, launcherSpecificId, possibleExes))
             }

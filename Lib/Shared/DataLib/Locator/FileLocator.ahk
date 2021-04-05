@@ -8,8 +8,8 @@ class FileLocator extends LocatorBase {
         }
 
         this.searchDirs := searchDirs
-        this.InitializeFilters()
         super.__New(config)
+        this.InitializeFilters()
     }
 
     InitializeFilters() {
@@ -38,7 +38,25 @@ class FileLocator extends LocatorBase {
     }
 
     ResultIsValid(filename, fullPath) {
-        return !!(FileExist(fullPath))
+        isValid := !!(FileExist(fullPath))
+
+        if (isValid) {
+            for index, filter in this.filters {
+                if (filter["type"] == "Filename") {
+                    if (StrLower(filename) == StrLower(filter["pattern"])) {
+                        isValid := false
+                        break
+                    }
+                } else if (filter["type"] == "PathPart") {
+                    if (InStr(fullPath, "\" . filter["pattern"] . "\")) {
+                        isValid := false
+                        break
+                    }
+                }
+            }
+        }
+
+        return isValid
     }
 
     FilterPattern(pattern) {

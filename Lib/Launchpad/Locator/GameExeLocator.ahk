@@ -48,6 +48,9 @@ class GameExeLocator extends FileLocator {
         this.AddFilter("register.exe")
         this.AddFilter("LuaCompiler.exe")
         this.AddFilter("sandboxpython.exe")
+        this.AddFilter("BlizzardError.exe")
+        this.AddFilter("CrashMailer_64.exe")
+        this.AddFilter("CrashMailer.exe")
 
         this.AddFilter("__Installer", "PathPart")
         this.AddFilter("DotNetCore", "PathPart")
@@ -56,29 +59,6 @@ class GameExeLocator extends FileLocator {
         this.AddFilter("ModTools", "PathPart")
         this.AddFilter("mono", "PathPart")
         this.AddFilter("test", "PathPart")
-    }
-
-    ResultIsValid(filename, fullPath) {
-        isValid := true
-
-        for index, filter in this.filters {
-            pattern := filter["pattern"]
-            type := filter["type"]
-
-            if (filter["type"] == "Filename") {
-                if (!!InStr(fullPath, "\" . filter["pattern"] . "\")) {
-                    isValid := false
-                    break
-                }
-            } else if (filter["type"] == "PathPart") {
-                if (StrLower(filename) == StrLower(filter["pattern"])) {
-                    isValid := false
-                    break
-                }
-            }
-        }
-
-        return isValid
     }
 
     FilterPattern(pattern) {

@@ -69,14 +69,10 @@ class SteamPlatform extends RegistryLookupGamePlatformBase {
                     installDir := dir . "\common\" . gameState["installdir"]
                     installDir := StrReplace(installDir, "/", "\")
                     possibleExes := []
-                    mainExe := ""
 
                     if (DirExist(installDir)) {
-                        Loop Files installDir . "\*.exe", "R" {
-                            if (this.ExeIsValid(A_LoopFileName, A_LoopFileFullPath)) {
-                                possibleExes.Push(A_LoopFileFullPath)
-                            }
-                        }
+                        locator := GameExeLocator.new(installDir)
+                        possibleExes := locator.Locate("")
                     }
 
                     mainExe := this.DetermineMainExe(key, possibleExes)

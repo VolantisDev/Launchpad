@@ -7,6 +7,8 @@
 */
 
 class LauncherEditorSimple extends LauncherEditorBase {
+    possibleExes := ""
+    
     __New(app, themeObj, windowKey, entityObj, mode := "config", owner := "", parent := "") {
         super.__New(app, themeObj, windowKey, entityObj, "Launcher Editor", mode, owner, parent)
     }
@@ -15,6 +17,19 @@ class LauncherEditorSimple extends LauncherEditorBase {
         buttonsDef := super.GetButtonsDefinition()
         buttonsDef .= "|&Advanced"
         return buttonsDef
+    }
+
+    Create() {
+        super.Create()
+
+        possibleExes := []
+
+        if (this.entityObj.Config["GameInstallDir"]) {
+            locator := GameExeLocator.new(this.entityObj.Config["GameInstallDir"])
+            possibleExes := locator.Locate("")
+        }
+        
+        this.possibleExes := possibleExes
     }
 
     Controls() {
@@ -39,7 +54,7 @@ class LauncherEditorSimple extends LauncherEditorBase {
         ctl := this.Add("EntityControl", "", "Game", this.entityObj.ManagedLauncher.ManagedGame, "GameType", false, "SelectControl", this.gameTypes, "", "This tells " . this.app.appName . " how to launch your game. Most games can use 'default', but launchers can support different game types.")
         ctl.refreshDataOnChange := true
         this.Add("EntityControl", "", "Game Install Directory", this.entityObj.ManagedLauncher.ManagedGame, "GameInstallDir", true, "LocationBlock", "GameInstallDir", "Clear", true, "Select the installation folder, or use default for auto-detection.")
-        this.Add("EntityControl", "", "Game Executable", this.entityObj.ManagedLauncher.ManagedGame, "GameExe", true, "LocationBlock", "GameExe", "Clear", true, "The main .exe file, not including any path information.")
+        this.Add("EntityControl", "", "Game Executable", this.entityObj.ManagedLauncher.ManagedGame, "GameExe", true, "ComboBoxControl", this.possibleExes, "", "The main .exe file, not including any path information.")
         
         ctl := this.Add("EntityControl", "", "", this.entityObj.ManagedLauncher.ManagedGame, "GameReplaceProcess", true, "BasicControl", "CheckBox", "Replace process after launching")
         ctl.ctl.ToolTip := "After the process is detected, immediately kill and re-launch it so that " . this.app.appName . " is its parent process."

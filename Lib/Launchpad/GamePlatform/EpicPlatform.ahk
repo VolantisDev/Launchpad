@@ -48,15 +48,8 @@ class EpicPlatform extends RegistryLookupGamePlatformBase {
                     launcherSpecificId := obj["AppName"]
                     ;exeName := obj["LaunchExecutable"]
                     ;possibleExes := [obj["LaunchExecutable"]]
-                    possibleExes := []
-                    mainExe := ""
-
-                    Loop Files installDir . "\*.exe", "R" {
-                        if (this.ExeIsValid(A_LoopFileName, A_LoopFileFullPath)) {
-                            possibleExes.Push(A_LoopFileFullPath)
-                        }
-                    }
-
+                    locator := GameExeLocator.new(installDir)
+                    possibleExes := locator.Locate("")
                     mainExe := this.DetermineMainExe(key, possibleExes)
                     games.Push(DetectedGame.new(key, this, this.launcherType, this.gameType, installDir, mainExe, launcherSpecificId, possibleExes))
                 }

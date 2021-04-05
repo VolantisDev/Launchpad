@@ -13,6 +13,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     locateMethods := ["Search", "Registry", "BlizzardProductDb"]
     regViews := ["32"]
     entityTypeName := ""
+    possibleExes := ""
 
     __New(app, themeObj, windowKey, entityObj, title, mode := "config", owner := "", parent := "") {
         if (owner == "") {
@@ -30,6 +31,19 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         super.__New(app, themeObj, windowKey, entityObj, title, mode, owner, parent)
     }
 
+    Create() {
+        super.Create()
+        possibleExes := []
+        prefix := this.entityObj.configPrefix
+
+        if (this.entityObj.Config[prefix . "InstallDir"]) {
+            locator := GameExeLocator.new(this.entityObj.Config[prefix . "InstallDir"])
+            possibleExes := locator.Locate("")
+        }
+        
+        this.possibleExes := possibleExes
+    }
+
     GetTabNames() {
         return [this.entityTypeName, "Sources", "Registry", "Running", "Process"]
     }
@@ -43,7 +57,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
 
         ctl := this.AddEntityCtl(prefix . " Type", prefix . "Type", false, "SelectControl", this.entityObj.ListEntityTypes(), "", "You can select from the available entity types if the default doesn't work for your use case.")
         ctl.refreshOnDataChange := true
-        this.AddEntityCtl(prefix . " Executable", prefix . "Exe", true, "LocationBlock", prefix . "Exe", "Clear", true, "The main .exe file, not including any path information.")
+        this.AddEntityCtl(prefix . " Executable", prefix . "Exe", true, "ComboBoxControl", this.possibleExes, "The main .exe file, not including any path information.")
         this.AddEntityCtl(prefix . " Window Title", prefix . "WindowTitle", true, "EditControl", 1, "", "The part of the main window's title which identifies it uniquely.")
         this.CustomTabControls()
 
