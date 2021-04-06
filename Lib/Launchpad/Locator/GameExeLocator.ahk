@@ -51,6 +51,9 @@ class GameExeLocator extends FileLocator {
         this.AddFilter("BlizzardError.exe")
         this.AddFilter("CrashMailer_64.exe")
         this.AddFilter("CrashMailer.exe")
+        this.AddFilter("UplayLaunch.exe")
+        this.AddFilter("UPlayInstaller.exe")
+        this.AddFilter("Autorun.exe")
 
         this.AddFilter("__Installer", "PathPart")
         this.AddFilter("DotNetCore", "PathPart")
