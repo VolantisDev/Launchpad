@@ -64,6 +64,15 @@ class ThemeBase {
         }
     }
 
+    RGB2BGR(color)
+	{
+        b := color & 255
+        g := (color >> 8) & 255
+        r := (color >> 16) & 255
+
+        return format("0x{1:02x}{2:02x}{3:02x}", b, g, r)
+	}
+
     InitializeTheme() {
         iconSrc := this.GetThemeAsset("icon")
 

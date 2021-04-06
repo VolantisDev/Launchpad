@@ -126,7 +126,7 @@ class GuiBase {
     }
 
     OnCheckbox(chk, info) {
-        ; Dummy method that can be overridden or used as a generic checkbox callback
+        ; TODO: Remove the need for a dummy callback
     }
 
     __Delete() {
@@ -183,7 +183,7 @@ class GuiBase {
     }
 
     OnHitTest(wParam, lParam, msg, hwnd) {
-        ; @todo Replace titlebar callbacks with https://autohotkey.com/board/topic/23969-resizable-window-border/#entry155480
+        ; TODO: Replace titlebar callbacks with https://autohotkey.com/board/topic/23969-resizable-window-border/#entry155480
 
         static border_size := 6
 
@@ -263,15 +263,6 @@ class GuiBase {
         this.guiObj.AddText(position . " w" . this.windowSettings["contentWidth"] . " Section +0x200", groupLabel)
         this.SetFont()
     }
-
-    _RGB2BGR(color)
-	{
-        b := color & 255
-        g := (color >> 8) & 255
-        r := (color >> 16) & 255
-
-        return format("0x{1:02x}{2:02x}{3:02x}", b, g, r)
-	}
 
     AddListView(name, options) {
         styling := "C" . this.themeObj.GetColor("text") . " Background" . this.themeObj.GetColor("background")
@@ -360,8 +351,8 @@ class GuiBase {
             tabIndex := NumGet(lParam + 0, OCtlId, "UInt")
             tabName := this.tabNames[tabIndex + 1]
 
-            textColor := this._RGB2BGR("0x" . this.themeObj.GetColor(isSelected ? "textLight" : "text"))
-            bgColor := this._RGB2BGR("0x" . this.themeObj.GetColor("background"))
+            textColor := this.themeObj.RGB2BGR("0x" . this.themeObj.GetColor(isSelected ? "textLight" : "text"))
+            bgColor := this.themeObj.RGB2BGR("0x" . this.themeObj.GetColor("background"))
             hdc := NumGet(lParam + 0, OHDC, "Ptr")
 
             bgRect := BufferAlloc(16, 0)
@@ -458,8 +449,8 @@ class GuiBase {
         static ORect := OHDC + 4 + (A_PtrSize - 4)
         static OItemSpec := OHDC + 16 + A_PtrSize
 
-        textColor := this._RGB2BGR("0x" . this.themeObj.GetColor("lvHeaderText"))
-        bgColor := this._RGB2BGR("0x" . this.themeObj.GetColor("background"))
+        textColor := this.themeObj.RGB2BGR("0x" . this.themeObj.GetColor("lvHeaderText"))
+        bgColor := this.themeObj.RGB2BGR("0x" . this.themeObj.GetColor("background"))
 
         hdc := NumGet(l + 0, OHDC, "Ptr")
 
