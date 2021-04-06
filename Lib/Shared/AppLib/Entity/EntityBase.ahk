@@ -100,8 +100,9 @@ class EntityBase {
         this.parentEntity := parentEntity
 
         this.entityData := LayeredEntityData.new(configObj.Clone(), this.InitializeDefaults())
-        this.entityData.SetLayer("parent", (parentEntity != "" ? parentEntity.InitializeDefaults() : Map()))
+        this.entityData.SetLayer("parentDefaults", (parentEntity != "" ? parentEntity.InitializeDefaults() : Map()))
         this.entityData.SetLayer("ds", this.AggregateDataSourceDefaults())
+        this.entityData.SetLayer("parent", (parentEntity != "" ? this.AggregateParentOverrides() : Map()))
         this.entityData.SetLayer("auto", this.AutoDetectValues())
         this.entityData.StoreOriginal()
         
@@ -122,6 +123,16 @@ class EntityBase {
         for index, child in this.children {
             child.RestoreFromOriginal(recursive)
         }
+    }
+
+    AggregateParentOverrides() {
+        parentOverrides := Map()
+
+        if (this.parentEntity) {
+            parentOverrides := this.MergeFromObject(this.parentEntity.AggregateDataSourceDefaults(), this.parentEntity.AggregateParentOverrides()) 
+        }
+
+        return parentOverrides
     }
 
     UpdateDataSourceDefaults() {
@@ -180,12 +191,19 @@ class EntityBase {
         itemKey := this.GetDataSourceItemKey()
 
         if (itemKey) {
-             dsData := dataSource.ReadJson(this.GetDataSourceItemKey(), this.GetDataSourceItemPath())
+            dsData := dataSource.ReadJson(this.GetDataSourceItemKey(), this.GetDataSourceItemPath())
 
-            if (dsData != "" && dsData.Has("data") && dsData["data"].Has("defaults")) {
+            if (dsData) {
                 this.existsInDataSource := true
-                defaults := this.MergeFromObject(defaults, dsData["data"]["defaults"], false)
-                defaults := this.MergeAdditionalDataSourceDefaults(defaults, dsData["data"])
+
+                if (dsData.Has("data")) {
+                    dsData := dsData["data"]
+                }
+
+                if (dsData.Has("defaults")) {
+                    defaults := this.MergeFromObject(defaults, dsData["defaults"], false)
+                    defaults := this.MergeAdditionalDataSourceDefaults(defaults, dsData)
+                }
             }
         }
 
