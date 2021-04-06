@@ -152,6 +152,5 @@
 #Include ThemeLib\GuiSymbol\UnmaximizeSymbol.ahk
 #Include ThemeLib\Theme\JsonTheme.ahk
 #Include ThemeLib\Theme\ThemeBase.ahk
-#Include ThemeLib\Toolbar\ToolbarBase.ahk
 #Include Vendor\Gdip_All.ahk
 ; End of auto-generated includes.

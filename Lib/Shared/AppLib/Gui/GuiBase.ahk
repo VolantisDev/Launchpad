@@ -11,8 +11,6 @@ class GuiBase {
     windowSettingsKey := ""
     windowSettings := Map()
     windowOptions := ""
-    hasToolbar := false
-    hToolbar := ""
     margin := ""
     buttons := []
     isClosed := false
@@ -599,13 +597,6 @@ class GuiBase {
     }
 
     Show() {
-        global hToolbar
-
-        if (this.hasToolbar) {
-            this.hToolbar := this.AddToolbar()
-            hToolbar := this.hToolbar
-        }
-
         this.Start()
         
         if (this.showTitlebar) {
@@ -634,15 +625,6 @@ class GuiBase {
         this.guiObj.OnEvent("Close", "OnClose")
         this.guiObj.OnEvent("Escape", "OnEscape")
         this.guiObj.OnEvent("Size", "OnSize")
-    }
-
-    AddToolbar() {
-        ; Define a callback and call CreateToolbar from this function if needed
-        return false
-    }
-
-    CreateToolbar(callback, imageList, btns) {
-        ;return ToolbarCreate(callback, btns, imageList, "Flat List Tooltips")
     }
 
     Start() {
