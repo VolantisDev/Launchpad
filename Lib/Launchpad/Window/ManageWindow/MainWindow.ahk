@@ -5,7 +5,6 @@
     platformManager := ""
     showStatusIndicator := true
     titleIsMenu := true
-    launcherRows := []
 
     __New(app, themeObj, windowKey, owner := "", parent := "") {
         this.launcherManager := app.Launchers
@@ -29,7 +28,7 @@
     }
 
     ShowListViewContextMenu(lv, item, isRightClick, X, Y) {
-        launcherKey := this.launcherRows[item]
+        launcherKey := this.listView.GetRowKey(item)
         launcher := this.launcherManager.Entities[launcherKey]
 
         menuItems := []
@@ -160,7 +159,6 @@
 
     GetListViewData(lv) {
         data := Map()
-        this.launcherRows := []
 
         for key, launcher in this.launcherManager.Entities {
             apiStatus := launcher.DataSourceItemKey ? "Linked" : "Not linked"
@@ -175,7 +173,6 @@
             }
 
             data[key] := [launcher.DisplayName, platformName, launcher.GetStatus(), apiStatus]
-            this.launcherRows.Push(key)
         }
 
         return data
@@ -211,7 +208,7 @@
     }
 
     OnDoubleClick(LV, rowNum) {
-        key := this.launcherRows[rowNum]
+        key := this.listView.GetRowKey(rowNum)
         this.EditLauncher(key)
     }
 
@@ -257,7 +254,7 @@
         selected := this.guiObj["ListView"].GetNext(, "Focused")
 
         if (selected > 0) {
-            key := this.launcherRows[selected]
+            key := this.listView.GetRowKey(selected)
             launcherObj := this.launcherManager.Entities[key]
             showButton := launcherObj.IsBuilt
         }

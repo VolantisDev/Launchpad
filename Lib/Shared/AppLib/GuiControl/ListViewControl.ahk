@@ -134,6 +134,7 @@ class ListViewControl extends GuiControlBase {
             this.ctl.Add(this.GetOptionsString(opts), data*)
         }
 
+        this.ctl.ModifyCol(1, "Sort")
         this.ResizeColumns()
     }
 

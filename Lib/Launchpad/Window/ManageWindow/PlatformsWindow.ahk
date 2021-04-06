@@ -2,7 +2,6 @@ class PlatformsWindow extends ManageWindowBase {
     listViewColumns := Array("PLATFORM", "ENABLED", "DETECT GAMES", "INSTALLED", "VERSION")
     platformsFile := ""
     platformManager := ""
-    platformRows := []
     sidebarWidth := 0
 
     __New(app, themeObj, windowKey, platformsFile := "", owner := "", parent := "") {
@@ -32,14 +31,12 @@ class PlatformsWindow extends ManageWindowBase {
 
     GetListViewData(lv) {
         data := Map()
-        this.platformRows := []
 
         for key, platform in this.platformManager.Entities {
             enabledText := platform.IsEnabled ? "Yes" : "No"
             detectGamesText := platform.DetectGames ? "Yes" : "No"
             installedText := platform.IsInstalled ? "Yes" : "No"
             data[key] := [platform.GetDisplayName(), enabledText, detectGamesText, installedText, platform.InstalledVersion]
-            this.platformRows.Push(key)
         }
 
         return data
@@ -65,7 +62,7 @@ class PlatformsWindow extends ManageWindowBase {
     }
 
     OnDoubleClick(LV, rowNum) {
-        key := this.platformRows[rowNum]
+        key := this.listView.GetRowKey(rowNum)
         this.EditPlatform(key)
     }
 
@@ -88,7 +85,7 @@ class PlatformsWindow extends ManageWindowBase {
         platform := ""
 
         if (selected > 0) {
-            key := this.platformRows[selected]
+            key := this.listView.GetRowKey(selected)
             platform := this.platformManager.Entities[key]
         }
 
@@ -126,7 +123,7 @@ class PlatformsWindow extends ManageWindowBase {
         selected := this.guiObj["ListView"].GetNext(, "Focused")
 
         if (selected > 0) {
-            key := this.platformRows[selected]
+            key := this.listView.GetRowKey(selected)
             this.EditPlatform(key)
         }
     }

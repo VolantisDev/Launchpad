@@ -2,7 +2,6 @@ class ManageBackupsWindow extends ManageWindowBase {
     listViewColumns := Array("KEY", "COUNT", "TOTAL SIZE")
     backupsFile := ""
     backupManager := ""
-    backupRows := []
     sidebarWidth := 0
 
     __New(app, themeObj, windowKey, backupsFile := "", owner := "", parent := "") {
@@ -31,11 +30,9 @@ class ManageBackupsWindow extends ManageWindowBase {
 
     GetListViewData(lv) {
         data := Map()
-        this.backupRows := []
 
         for key, backup in this.backupManager.Entities {
             data[key] := [backup.Key, backup.GetBackupCount(), backup.GetTotalSize()]
-            this.backupRows.Push(key)
         }
 
         return data
@@ -61,7 +58,7 @@ class ManageBackupsWindow extends ManageWindowBase {
     }
 
     OnDoubleClick(LV, rowNum) {
-        key := this.backupRows[rowNum]
+        key := this.listView.GetRowKey(rowNum)
         this.EditBackup(key)
     }
 
@@ -84,7 +81,7 @@ class ManageBackupsWindow extends ManageWindowBase {
         backup := ""
 
         if (selected > 0) {
-            key := this.backupRows[selected]
+            key := this.listView.GetRowKey(selected)
             backup := this.backupManager.Entities[key]
         }
 
