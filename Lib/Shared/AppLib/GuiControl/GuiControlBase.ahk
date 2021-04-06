@@ -243,4 +243,32 @@ class GuiControlBase {
     SupportsChangeEvent() {
         return this.ctl && this.ctl.Type != "Button" && this.ctl.Type != "Text"
     }
+
+    SubclassControl(hctl, callback, data := 0) {
+        static controlCB := Map()
+
+        If controlCB.Has(hctl) {
+            DllCall("RemoveWindowSubclass", "Ptr", hctl, "Ptr", controlCB[hctl], "Ptr", hctl)
+            DllCall("GlobalFree", "Ptr", controlCB[hctl], "Ptr")
+            controlCB.Delete(hctl)
+
+            If (callback = "") {
+                return true
+            }
+        }
+
+        if (!DllCall("IsWindow", "Ptr", hctl, "UInt")) {
+            return false
+        }
+
+        if (!(CB := CallbackCreate(callback, , 6))) {
+            return false
+        }
+            
+        If !DllCall("SetWindowSubclass", "Ptr", hctl, "Ptr", CB, "Ptr", hctl, "Ptr", data) {
+            return (DllCall("GlobalFree", "Ptr", CB, "Ptr") & 0)
+        }
+            
+        return (controlCB[hctl] := CB)
+    }
 }

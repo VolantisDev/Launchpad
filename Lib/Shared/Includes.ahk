@@ -68,6 +68,7 @@
 #Include AppLib\GuiControl\EditControl.ahk
 #Include AppLib\GuiControl\EntityControl.ahk
 #Include AppLib\GuiControl\GuiControlBase.ahk
+#Include AppLib\GuiControl\ListViewControl.ahk
 #Include AppLib\GuiControl\LocationBlock.ahk
 #Include AppLib\GuiControl\SelectControl.ahk
 #Include AppLib\GuiControl\StatusIndicatorControl.ahk

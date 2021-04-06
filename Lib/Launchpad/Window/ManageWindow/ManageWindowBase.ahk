@@ -31,10 +31,18 @@
     }
 
     AddManageList() {
-        countOption := this.lvCount ? "Count" . this.lvCount : ""
-        checkOption := this.checkboxes ? " Checked" : ""
-        lv := this.AddListView("ListView", countOption . " Section +Report -Multi" . checkOption)
-        this.SetupManageEvents(lv)
+        opts := ["vListView", "Section", "+Report", "-Multi"]
+
+        if (this.lvCount) {
+            opts.Push("Count" . this.lvCount)
+        }
+
+        if (this.checkboxes) {
+            opts.Push("Checked")
+        }
+
+        lv := this.Add("ListViewControl", opts, "", this.listViewColumns)
+        this.SetupManageEvents(lv.ctl)
         this.PopulateListView()
         return lv
     }
