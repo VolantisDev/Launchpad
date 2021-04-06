@@ -3,7 +3,6 @@ class ProgressIndicatorBase extends FormGuiBase {
     rangeStop := 100
     currentPosition := 0
     waitForResult := false
-    isDialog := true
     detailText := "Initializing..."
     enableDetailText := true
     cancelCallback := ""

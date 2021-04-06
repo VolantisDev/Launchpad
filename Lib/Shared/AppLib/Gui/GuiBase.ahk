@@ -9,7 +9,6 @@ class GuiBase {
     parent := ""
     windowKey := ""
     windowSettingsKey := ""
-    isDialog := false
     windowSettings := Map()
     windowOptions := ""
     hasToolbar := false

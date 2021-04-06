@@ -1,7 +1,4 @@
 class AboutWindow extends DialogBox {
-    windowOptions := "+AlwaysOnTop"
-    isDialog := true
-
     __New(app, themeObj, windowKey, owner := "", parent := "", btns := "*&OK") {   
         super.__New(app, themeObj, windowKey, "About " . app.appName, "", owner, parent, btns)
     }
