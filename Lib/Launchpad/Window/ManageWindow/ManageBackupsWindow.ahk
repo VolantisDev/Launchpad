@@ -29,32 +29,19 @@ class ManageBackupsWindow extends ManageWindowBase {
         this.Add("ButtonControl", "vDeleteButton " . position, "Delete", "", "manageText")
     }
 
-    SetupManageEvents(lv) {
-        super.SetupManageEvents(lv)
-        lv.OnEvent("DoubleClick", "OnDoubleClick")
-    }
-
-    PopulateListView(focusedItem := 1) {
-        this.guiObj["ListView"].Delete()
-        this.guiObj["ListView"].SetImageList(this.CreateIconList())
-        iconNum := 1
-        index := 1
+    GetListViewData(lv) {
+        data := Map()
         this.backupRows := []
 
         for key, backup in this.backupManager.Entities {
-            focusOption := index == focusedItem ? " Focus" : ""
-            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, backup.Key, backup.GetBackupCount(), backup.GetTotalSize())
+            data[key] := [backup.Key, backup.GetBackupCount(), backup.GetTotalSize()]
             this.backupRows.Push(key)
-            iconNum++
-            index++
         }
 
-        for index, col in this.listViewColumns {
-            this.guiObj["ListView"].ModifyCol(index, "AutoHdr")
-        }
+        return data
     }
 
-    CreateIconList() {
+    GetListViewImgList(lv) {
         IL := IL_Create(this.backupManager.CountEntities(), 1, false)
         defaultIcon := this.themeObj.GetIconPath("Backup")
         iconNum := 1
@@ -84,7 +71,7 @@ class ManageBackupsWindow extends ManageWindowBase {
 
         if (diff != "" && diff.HasChanges()) {
             this.backupManager.SaveModifiedEntities()
-            this.PopulateListView()
+            this.UpdateListView()
         }
     }
 
@@ -112,13 +99,8 @@ class ManageBackupsWindow extends ManageWindowBase {
         backup := this.GetSelectedBackup()
         
         if (backup) {
-            selected := this.guiObj["ListView"].GetNext(, "Focused")
             backup.CreateBackup()
-            this.PopulateListView()
-
-            if (selected) {
-                this.guiObj["ListView"].Modify(selected, "Select")
-            }
+            this.UpdateListView()
         }
     }
 
@@ -126,22 +108,17 @@ class ManageBackupsWindow extends ManageWindowBase {
         backup := this.GetSelectedBackup()
         
         if (backup) {
-            selected := this.guiObj["ListView"].GetNext(, "Focused")
             ; @Todo implement Backup Selector window
             ;backupNumber := this.app.GuiManager.Dialog("BackupSelector", backup, this.windowKey)
             backupNumber := 1
             backup.RestoreBackup(backupNumber)
-            this.PopulateListView()
-
-            if (selected) {
-                this.guiObj["ListView"].Modify(selected, "Select")
-            }
+            this.UpdateListView()
         }
     }
 
     OnReloadButton(btn, info) {
         this.backupManager.LoadComponents()
-        this.PopulateListView()
+        this.UpdateListView()
     }
 
     OnEditButton(btn, info) {
@@ -165,7 +142,7 @@ class ManageBackupsWindow extends ManageWindowBase {
         if (entity != "") {
             this.backupManager.AddEntity(entity.Key, entity)
             this.backupManager.SaveModifiedEntities()
-            this.PopulateListView()
+            this.UpdateListView()
         }
     }
 
@@ -177,9 +154,5 @@ class ManageBackupsWindow extends ManageWindowBase {
         }
 
         this.AutoXYWH("y", ["AddButton", "BackupButton", "RestoreButton", "EditButton", "DeleteButton"])
-        
-        for index, col in this.listViewColumns {
-            this.guiObj["ListView"].ModifyCol(index, "AutoHdr")
-        }
     }
 }

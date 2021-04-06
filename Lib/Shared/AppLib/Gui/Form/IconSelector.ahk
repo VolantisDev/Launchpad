@@ -83,10 +83,10 @@ class IconSelector extends DialogBox {
         lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " +Icon " . styling . " Count" . this.platformManager.CountEntities() . " Section +Report -Multi " . lvStyles, this.listViewColumns)
         lv.OnEvent("DoubleClick", "OnDoubleClick")
         lv.OnEvent("ItemSelect", "OnItemSelect")
-        this.PopulateListView()
+        this.UpdateListView()
     }
 
-    PopulateListView() {
+    UpdateListView() {
         this.guiObj["ListView"].Delete()
         
     }

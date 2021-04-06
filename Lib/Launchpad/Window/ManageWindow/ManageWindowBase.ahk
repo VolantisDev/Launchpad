@@ -4,6 +4,7 @@
     lvCount := 0
     frameShadow := false
     checkboxes := false
+    listView := ""
 
     Controls() {
         super.Controls()
@@ -41,21 +42,32 @@
             opts.Push("Checked")
         }
 
-        lv := this.Add("ListViewControl", opts, "", this.listViewColumns)
-        this.SetupManageEvents(lv.ctl)
-        this.PopulateListView()
-        return lv
+        this.listView := this.Add("ListViewControl", opts, "", this.listViewColumns, "GetListViewData", "GetListViewImgList", "InitListView")
+        return this.listView
     }
 
-    SetupManageEvents(lv) {
-        lv.OnEvent("ContextMenu", "ShowListViewContextMenu")
+    GetListViewData(lv) {
+
+    }
+
+    GetListViewImgList(lv) {
+
+    }
+
+    UpdateListView(focusedRow := 0) {
+        this.listView.UpdateListView(focusedRow)
+    }
+
+    InitListView(lv) {
+        lv.ctl.OnEvent("ContextMenu", "ShowListViewContextMenu")
+        lv.ctl.OnEvent("DoubleClick", "OnDoubleClick")
+    }
+
+    OnDoubleClick(LV, rowNum) {
+
     }
 
     ShowListViewContextMenu(lv, item, isRightClick, X, Y) {
-
-    }
-
-    PopulateListView(focusedItem := 1) {
 
     }
 
@@ -66,10 +78,8 @@
             return
         }
 
-        this.AutoXYWH("wh", ["ListView"])
-
-        for index, col in this.listViewColumns {
-            this.guiObj["ListView"].ModifyCol(index, "AutoHdr")
+        if (this.listView) {
+            this.listView.OnSize(guiObj, minMax, width, height)
         }
     }
 }

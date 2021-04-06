@@ -44,7 +44,7 @@
             this.EditLauncher(launcherKey)
         } else if (result == "BuildLauncher") {
             this.app.Builders.BuildLaunchers(Map(launcherKey, launcher), true)
-            this.PopulateListView()
+            this.UpdateListView()
         } else if (result == "RunLauncher") {
             if (launcher.IsBuilt) {
                 file := launcher.GetLauncherFile(launcherKey, false)
@@ -102,7 +102,7 @@
             this.app.Builders.CleanLaunchers()
         } else if (result == "ReloadLaunchers") {
             this.app.Launchers.LoadComponents(this.app.Config.LauncherFile)
-            this.PopulateListView()
+            this.UpdateListView()
         } else if (result == "About") {
             this.app.GuiManager.Dialog("AboutWindow")
         } else if (result == "OpenWebsite") {
@@ -153,23 +153,17 @@
         return this.app.Auth.IsAuthenticated()
     }
 
-    SetupManageEvents(lv) {
-        super.SetupManageEvents(lv)
-        lv.OnEvent("DoubleClick", "OnDoubleClick")
+    InitListView(lv) {
+        super.InitListView(lv)
+        lv.ctl.OnEvent("DoubleClick", "OnDoubleClick")
     }
 
-    PopulateListView(focusedItem := 1) {
-        this.guiObj["ListView"].Delete()
-        this.guiObj["ListView"].SetImageList(this.CreateIconList())
-        iconNum := 1
-        index := 1
+    GetListViewData(lv) {
+        data := Map()
         this.launcherRows := []
 
         for key, launcher in this.launcherManager.Entities {
-            focusOption := index == focusedItem ? " Focus" : ""
-
             apiStatus := launcher.DataSourceItemKey ? "Linked" : "Not linked"
-
             platformName := launcher.Platform
 
             if (platformName) {
@@ -180,18 +174,14 @@
                 }
             }
 
-            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, launcher.DisplayName, platformName, launcher.GetStatus(), apiStatus)
+            data[key] := [launcher.DisplayName, platformName, launcher.GetStatus(), apiStatus]
             this.launcherRows.Push(key)
-            iconNum++
-            index++
         }
 
-        for index, col in this.listViewColumns {
-            this.guiObj["ListView"].ModifyCol(index, "AutoHdr")
-        }
+        return data
     }
 
-    CreateIconList() {
+    GetListViewImgList(lv) {
         IL := IL_Create(this.launcherManager.CountEntities(), 1, false)
         defaultIcon := this.themeObj.GetIconPath("Game")
         iconNum := 1
@@ -238,7 +228,7 @@
 
             this.launcherManager.SaveModifiedEntities()
             entity.UpdateDataSourceDefaults()
-            this.PopulateListView()
+            this.UpdateListView()
         }
     }
 
@@ -248,7 +238,7 @@
         if (entity) {
             this.launcherManager.AddEntity(entity.Key, entity)
             this.launcherManager.SaveModifiedEntities()
-            this.PopulateListView()
+            this.UpdateListView()
         }
     }
 
@@ -258,7 +248,7 @@
         if (entity) {
             this.launcherManager.AddEntity(entity.Key, entity)
             this.launcherManager.SaveModifiedEntities()
-            this.PopulateListView()
+            this.UpdateListView()
         }
     }
 
@@ -294,7 +284,7 @@
 
     OnBuildAllButton(btn, info) {
         this.app.Builders.BuildLaunchers(this.app.Launchers.Entities, this.app.Config.RebuildExistingLaunchers)
-        this.PopulateListView()
+        this.UpdateListView()
     }
 
     OnSize(guiObj, minMax, width, height) {

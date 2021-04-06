@@ -1,11 +1,20 @@
 class ListViewControl extends GuiControlBase {
     headerHwnd := 0
     columns := []
+    rowData := Map()
+    dataCallback := ""
+    rowOpts := []
+    keyCol := 2
+    imgListCallback := ""
+    imgList := ""
 
-    CreateControl(columns) {
+    CreateControl(columns, dataCallback, imgListCallback := "", initCallback := "") {
         super.CreateControl(false)
+        columns.InsertAt(this.keyCol, "")
 
         this.columns := columns
+        this.dataCallback := dataCallback
+        this.imgListCallback := imgListCallback
 
         sidebarWidth := this.guiObj.sidebarWidth
         
@@ -35,8 +44,125 @@ class ListViewControl extends GuiControlBase {
         LVM_GETHEADER := 0x101F
         this.headerHwnd := SendMessage(LVM_GETHEADER, 0, 0,, "ahk_id " . this.ctl.Hwnd) + 0
         this.SubclassControl(this.ctl.Hwnd, ObjBindMethod(this, "OnListViewDraw"))
+        this.ctl.ModifyCol(2, 0)
         this.ctl.ModifyCol(this.columns.Length, "AutoHdr")
+
+        if (initCallback) {
+            this.guiObj.%initCallback%(this)
+        }
+
+        if (dataCallback) {
+            this.UpdateListView()
+        }
+
         return this.ctl
+    }
+
+    GetSelected(type := "", getKeys := false) {
+        selected := []
+        rowNum := 0
+
+        Loop {
+            rowNum := this.ctl.GetNext(rowNum, type)
+
+            if !rowNum {
+                break
+            }
+
+            val := getKeys ? this.GetRowKey(rowNum) : rowNum
+
+            selected.Push(val)
+        }
+
+        return selected
+    }
+
+    UpdateListView(maintainSelections := true) {
+        selected := []
+        focused := []
+        checked := []
+
+        if (maintainSelections) {
+            selected := this.GetSelected()
+            focused := this.GetSelected("Focused")
+            checked := this.GetSelected("Checked")
+        }
+
+        this.imgList := ""
+
+        if (this.imgListCallback) {
+            func := this.imgListCallback
+            this.imgList := this.guiObj.%func%(this)
+            this.ctl.SetImageList(this.imgList)
+        }
+
+        func := this.dataCallback
+        this.rowData := this.guiObj.%func%(this)
+
+        this.ctl.Delete()
+
+        idx := 0
+
+        for key, data in this.rowData {
+            idx++
+            rowOpts := []
+
+            for index, rowNum in selected {
+                if (idx == rowNum) {
+                    rowOpts.Push("Select")
+                }
+            }
+
+            for index, rowNum in focused {
+                if (idx == rowNum) {
+                    rowOpts.Push("Focus")
+                }
+            }
+
+            for index, rowNum in checked {
+                if (idx == rowNum) {
+                    rowOpts.Push("Check")
+                }
+            }
+
+            if (this.imgList) {
+                rowOpts.Push("Icon" . idx)
+            }
+
+            data.InsertAt(this.keyCol, key)
+            opts := this.SetDefaultOptions(rowOpts, this.rowOpts)
+            this.ctl.Add(this.GetOptionsString(opts), data*)
+        }
+
+        this.ResizeColumns()
+    }
+
+    UpdateRow(rowNum, data, opts := "") {
+        key := this.GetRowKey(rowNum)
+        this.ctl.Modify(rowNum, opts, data*)
+    }
+
+    GetRowKey(rowNum) {
+        return this.ctl.GetText(rowNum, this.keyCol)
+    }
+
+    ResizeColumns() {
+        for index, col in this.columns {
+            val := (index == this.keyCol) ? 0 : "AutoHdr"
+            this.ctl.ModifyCol(index, val)
+        }
+    }
+
+    OnSize(guiObj, minMax, width, height) {
+        super.OnSize(guiObj, minMax, width, height)
+        
+        if (minMax == -1) {
+            return
+        }
+
+        this.guiObj.AutoXYWH("wh", ["ListView"])
+
+        this.ResizeColumns()
     }
 
     OnListViewDraw(h, m, w, l, idSubclass, refData) {

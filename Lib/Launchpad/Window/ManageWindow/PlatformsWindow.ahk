@@ -30,35 +30,22 @@ class PlatformsWindow extends ManageWindowBase {
         this.Add("ButtonControl", "vUninstallButton " . position, "Uninstall", "", "manageText")
     }
 
-    SetupManageEvents(lv) {
-        super.SetupManageEvents(lv)
-        lv.OnEvent("DoubleClick", "OnDoubleClick")
-    }
-
-    PopulateListView(focusedItem := 1) {
-        this.guiObj["ListView"].Delete()
-        this.guiObj["ListView"].SetImageList(this.CreateIconList())
-        iconNum := 1
-        index := 1
+    GetListViewData(lv) {
+        data := Map()
         this.platformRows := []
 
         for key, platform in this.platformManager.Entities {
             enabledText := platform.IsEnabled ? "Yes" : "No"
             detectGamesText := platform.DetectGames ? "Yes" : "No"
             installedText := platform.IsInstalled ? "Yes" : "No"
-            focusOption := index == focusedItem ? " Focus" : ""
-            this.guiObj["ListView"].Add("Icon" . iconNum . focusOption, platform.GetDisplayName(), enabledText, detectGamesText, installedText, platform.InstalledVersion)
+            data[key] := [platform.GetDisplayName(), enabledText, detectGamesText, installedText, platform.InstalledVersion]
             this.platformRows.Push(key)
-            iconNum++
-            index++
         }
 
-        for index, col in this.listViewColumns {
-            this.guiObj["ListView"].ModifyCol(index, "AutoHdr")
-        }
+        return data
     }
 
-    CreateIconList() {
+    GetListViewImgList(lv) {
         IL := IL_Create(this.platformManager.CountEntities(), 1, false)
         defaultIcon := this.themeObj.GetIconPath("Platform")
         iconNum := 1
@@ -88,7 +75,7 @@ class PlatformsWindow extends ManageWindowBase {
 
         if (diff != "" && diff.HasChanges()) {
             this.platformManager.SaveModifiedEntities()
-            this.PopulateListView()
+            this.UpdateListView()
         }
     }
 
@@ -110,39 +97,29 @@ class PlatformsWindow extends ManageWindowBase {
 
     OnEnableButton(btn, info) {
         platform := this.GetSelectedPlatform()
-        selected := this.guiObj["ListView"].GetNext(, "Focused")
 
         if (platform) {
             platform.IsEnabled := true
             platform.SaveModifiedData()
             this.platformManager.SaveModifiedEntities()
-            this.PopulateListView()
-
-            if (selected) {
-                this.guiObj["ListView"].Modify(selected, "Select")
-            }
+            this.UpdateListView()
         }
     }
 
     OnDisableButton(btn, info) {
         platform := this.GetSelectedPlatform()
-        selected := this.guiObj["ListView"].GetNext()
 
         if (platform) {
             platform.IsEnabled := false
             platform.SaveModifiedData()
             this.platformManager.SaveModifiedEntities()
-            this.PopulateListView()
-
-            if (selected) {
-                this.guiObj["ListView"].Modify(selected, "Select")
-            }
+            this.UpdateListView()
         }
     }
 
     OnReloadButton(btn, info) {
         this.platformManager.LoadComponents()
-        this.PopulateListView()
+        this.UpdateListView()
     }
 
     OnEditButton(btn, info) {
@@ -191,9 +168,5 @@ class PlatformsWindow extends ManageWindowBase {
         }
 
         this.AutoXYWH("y", ["ReloadButton", "EnableButton", "DisableButton", "EditButton", "RunButton", "InstallButton", "UpdateButton", "UninstallButton"])
-        
-        for index, col in this.listViewColumns {
-            this.guiObj["ListView"].ModifyCol(index, "AutoHdr")
-        }
     }
 }

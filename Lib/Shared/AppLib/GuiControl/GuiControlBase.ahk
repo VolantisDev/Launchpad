@@ -271,4 +271,8 @@ class GuiControlBase {
             
         return (controlCB[hctl] := CB)
     }
+
+    OnSize(guiObj, minMax, width, height) {
+
+    }
 }

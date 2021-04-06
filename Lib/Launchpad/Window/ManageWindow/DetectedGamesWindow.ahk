@@ -33,15 +33,17 @@
         this.Add("ButtonControl", "vAddSelectedButton " . position, "Add Selected", "", "primary")
     }
 
-    SetupManageEvents(lv) {
-        super.SetupManageEvents(lv)
-        lv.OnEvent("DoubleClick", "OnDoubleClick")
-        lv.OnEvent("ItemCheck", "OnItemCheck")
-        lv.OnEvent("ItemSelect", "OnItemSelect")
+    InitListView(lv) {
+        super.InitListView(lv)
+        lv.ctl.OnEvent("DoubleClick", "OnDoubleClick")
+        lv.ctl.OnEvent("ItemCheck", "OnItemCheck")
+        lv.ctl.OnEvent("ItemSelect", "OnItemSelect")
     }
 
-    PopulateListView(focusedItem := 1) {
-        this.guiObj["ListView"].Delete()
+    GetListViewData(lv) {
+        data := Map()
+
+        checked := lv.GetSelected("Checked", true)
 
         for key, detectedGameObj in this.detectedGames {
             if (!this.GameHasChanges(detectedGameObj)) {
@@ -50,16 +52,44 @@
 
             statusText := this.launcherManager.Entities.Has(detectedGameObj.key) ? "Exists" : "New"
             apiStatus := this.GameIsKnown(detectedGameObj) ? "Known" : "Unknown"
-            this.guiObj["ListView"].Add(, detectedGameObj.key, "Ignore", detectedGameObj.platform.displayName, statusText, apiStatus, detectedGameObj.exeName)
+            
+            isChecked := false
+            for index, checkedKey in checked {
+                if (checkedKey == detectedGameObj.key) {
+                    isChecked := true
+                    break
+                }
+            }
+
+            action := "Ignore"
+
+            if (isChecked) {
+                action := this.launcherManager.Entities.Has(key) ? "Modify" : "Create"
+            }
+
+            data[detectedGameObj.key] := [detectedGameObj.key, action, detectedGameObj.platform.displayName, statusText, apiStatus, detectedGameObj.exeName]
         }
 
-        this.guiObj["ListView"].ModifyCol(1, "Sort")
+        return data
+    }
 
-        this.guiObj["ListView"].ModifyCol(1, "AutoHdr")
-        this.guiObj["ListView"].ModifyCol(2, "AutoHdr")
-        this.guiObj["ListView"].ModifyCol(3, "AutoHdr")
-        this.guiObj["ListView"].ModifyCol(4, "AutoHdr")
-        this.guiObj["ListView"].ModifyCol(5, "AutoHdr")
+    GetListViewImgList(lv) {
+        IL := IL_Create(this.detectedGames.Count, 1, false)
+        defaultIcon := this.themeObj.GetIconPath("Game")
+        iconNum := 1
+
+        for key, detectedGameObj in this.detectedGames {
+            iconSrc := detectedGameObj.exeName
+
+            if (!iconSrc or !FileExist(iconSrc)) {
+                iconSrc := defaultIcon
+            }
+
+            IL_Add(IL, iconSrc)
+            iconNum++
+        }
+
+        return IL
     }
 
     GameHasChanges(detectedGameObj) {
@@ -107,7 +137,7 @@
             action := this.launcherManager.Entities.Has(key) ? "Modify" : "Create"
         }
 
-        this.guiObj["ListView"].Modify(rowNum,,, action)
+        this.guiObj["ListView"].Modify(rowNum,,,, action)
     }
 
     OnItemSelect(LV, rowNum, selected) {
@@ -120,13 +150,14 @@
         rowNum := this.guiObj["ListView"].GetNext()
 
         if (rowNum > 0) {
-            this.EditDetectedGame(rowNum)
+            this.EditDetectedGame(this.listView.GetRowKey(rowNum))
         }
     }
 
     OnDoubleClick(LV, rowNum) {
         if (rowNum > 0) {
-            this.EditDetectedGame(rowNum)
+            key := this.listView.GetRowKey(rowNum)
+            this.EditDetectedGame(key)
         }
     }
 
@@ -165,12 +196,15 @@
         op.Run()
 
         win := this.launcherManager.app.GuiManager.GetWindow("MainWindow")
-        win.PopulateListView()
+        win.UpdateListView()
         this.Destroy()
     }
 
-    EditDetectedGame(row) {
-        key := this.guiObj["ListView"].GetText(row)
+    EditDetectedGame(key) {
+        if (!key) {
+            throw AppException.new("Detected game key could not be determined.")
+        }
+
         detectedGameObj := this.detectedGames[key]
 
         result := this.app.GuiManager.Form("DetectedGameEditor", detectedGameObj, this.windowKey)
@@ -181,9 +215,7 @@
                 this.detectedGames[detectedGameObj.key] := detectedGameObj
             }
 
-            statusText := this.launcherManager.Entities.Has(detectedGameObj.key) ? "Exists" : "New"
-            apiStatus := this.GameIsKnown(detectedGameObj) ? "Known" : "Unknown"
-            this.guiObj["ListView"].Modify(row,, detectedGameObj.key,, detectedGameObj.platform.displayName, statusText, apiStatus, detectedGameObj.exeName)
+            this.listView.UpdateListView()
         }
     }
 

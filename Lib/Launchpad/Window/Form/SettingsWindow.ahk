@@ -259,7 +259,7 @@
         }
 
         if (this.app.GuiManager.WindowExists("MainWindow")) {
-            this.app.GuiManager.GetWindow("MainWindow").PopulateListView()
+            this.app.GuiManager.GetWindow("MainWindow").UpdateListView()
         }
 
         return result
