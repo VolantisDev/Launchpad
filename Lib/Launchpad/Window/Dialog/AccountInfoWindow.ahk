@@ -8,7 +8,7 @@
     }
 
     GetButtonsDefinition() {
-        return "*&OK|&Logout"
+        return "*&Save|&Cancel|&Logout"
     }
 
     Controls() {
@@ -38,7 +38,7 @@
     ProcessResult(result, submittedData := "") {
         if (result == "Logout") {
             this.app.Auth.Logout()
-        } else if (result == "OK" && submittedData) {
+        } else if (result == "Save" && submittedData) {
             this.app.Config.PlayerName := submittedData.PlayerName
         }
 
