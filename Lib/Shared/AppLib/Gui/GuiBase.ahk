@@ -546,6 +546,10 @@ class GuiBase {
         return chk
     }
 
+    OnReload(btn, info) {
+        this.app.RestartApp()
+    }
+
     ShowTitleMenu() {
 
     }
