@@ -18,9 +18,7 @@
 
     AddBottomControls() {
         buttonRowOffset := 3
-        position := "x" . this.margin . " y+" . (this.margin + buttonRowOffset) . " w60 h25"
-        this.Add("ButtonControl", "vEditButton " . position, "Edit", "", "manageText")
-        position := "x+" . (this.margin*3) . " yp w80 h25"
+        position := "x" . this.margin . " y+" . (this.margin + buttonRowOffset) . " w80 h25"
         this.Add("ButtonControl", "vCheckAllButton " . position, "Check All", "", "manageText")
         position := "x+" . this.margin . " yp w80 h25"
         this.Add("ButtonControl", "vUncheckAllButton " . position, "Uncheck All", "", "manageText")
@@ -34,9 +32,7 @@
 
     InitListView(lv) {
         super.InitListView(lv)
-        lv.ctl.OnEvent("DoubleClick", "OnDoubleClick")
         lv.ctl.OnEvent("ItemCheck", "OnItemCheck")
-        lv.ctl.OnEvent("ItemSelect", "OnItemSelect")
     }
 
     GetListViewData(lv) {
@@ -128,7 +124,7 @@
     }
 
     UpdateRowAction(rowNum, isChecked) {
-        key := this.guiObj["ListView"].GetText(rowNum)
+        key := this.listView.GetRowKey(rowNum)
 
         action := "Ignore"
 
@@ -136,15 +132,7 @@
             action := this.launcherManager.Entities.Has(key) ? "Modify" : "Create"
         }
 
-        this.guiObj["ListView"].Modify(rowNum,,,, action)
-    }
-
-    OnEditButton(btn, info) {
-        rowNum := this.guiObj["ListView"].GetNext()
-
-        if (rowNum > 0) {
-            this.EditDetectedGame(this.listView.GetRowKey(rowNum))
-        }
+        this.listView.ctl.Modify(rowNum,,,, action)
     }
 
     OnDoubleClick(LV, rowNum) {
@@ -219,7 +207,20 @@
             return
         }
 
-        this.AutoXYWH("y", ["EditButton", "CheckAllButton", "UncheckAllButton"])
+        this.AutoXYWH("y", ["CheckAllButton", "UncheckAllButton"])
         this.AutoXYWH("xy", ["AddSelectedButton"])
+    }
+
+    ShowListViewContextMenu(lv, item, isRightClick, X, Y) {
+        key := this.listView.GetRowKey(item)
+
+        menuItems := []
+        menuItems.Push(Map("label", "Edit", "name", "EditDetectedGame"))
+
+        result := this.app.GuiManager.Menu("MenuGui", menuItems, this)
+
+        if (result == "EditDetectedGame") {
+            this.EditDetectedGame(key)
+        }
     }
 }

@@ -66,18 +66,6 @@ class PlatformsWindow extends ManageWindowBase {
         }
     }
 
-    GetSelectedPlatform() {
-        selected := this.guiObj["ListView"].GetNext()
-        platform := ""
-
-        if (selected > 0) {
-            key := this.listView.GetRowKey(selected)
-            platform := this.platformManager.Entities[key]
-        }
-
-        return platform
-    }
-
     OnReloadButton(btn, info) {
         this.platformManager.LoadComponents()
         this.UpdateListView()

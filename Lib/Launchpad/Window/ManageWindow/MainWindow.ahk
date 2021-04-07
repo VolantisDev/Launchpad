@@ -151,11 +151,6 @@
         return this.app.Auth.IsAuthenticated()
     }
 
-    InitListView(lv) {
-        super.InitListView(lv)
-        lv.ctl.OnEvent("DoubleClick", "OnDoubleClick")
-    }
-
     GetListViewData(lv) {
         data := Map()
 

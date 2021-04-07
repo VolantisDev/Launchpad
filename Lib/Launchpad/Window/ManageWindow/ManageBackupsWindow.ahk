@@ -16,15 +16,8 @@ class ManageBackupsWindow extends ManageWindowBase {
     }
 
     AddBottomControls() {
-        buttonRowOffset := 10
-        position := "x" . this.margin . " y+" . (this.margin + buttonRowOffset-2)
+        position := "x" . this.margin . " y+" . this.margin
         this.AddManageButton("AddButton", position, "add", true)
-        position := "x+" . (this.margin) . " yp+5 w60 h25"
-        this.Add("ButtonControl", "vEditButton " . position, "Edit", "", "manageText")
-        position := "x+" . this.margin . " yp w60 h25"
-        this.Add("ButtonControl", "vBackupButton " . position, "Backup", "", "manageText")
-        this.Add("ButtonControl", "vRestoreButton " . position, "Restore", "", "manageText")
-        this.Add("ButtonControl", "vDeleteButton " . position, "Delete", "", "manageText")
     }
 
     GetListViewData(lv) {
@@ -71,46 +64,8 @@ class ManageBackupsWindow extends ManageWindowBase {
         }
     }
 
-    GetSelectedBackup() {
-        selected := this.guiObj["ListView"].GetNext()
-        backup := ""
-
-        if (selected > 0) {
-            key := this.listView.GetRowKey(selected)
-            backup := this.backupManager.Entities[key]
-        }
-
-        return backup
-    }
-
     OnAddButton(btn, info) {
         this.AddBackup()
-    }
-
-    OnBackupButton(btn, info) {
-        backup := this.GetSelectedBackup()
-        
-        if (backup) {
-            backup.CreateBackup()
-            this.UpdateListView()
-        }
-    }
-
-    OnRestoreButton(btn, info) {
-        backup := this.GetSelectedBackup()
-        
-        if (backup) {
-            ; @Todo implement Backup Selector window
-            ;backupNumber := this.app.GuiManager.Dialog("BackupSelector", backup, this.windowKey)
-            backupNumber := 1
-            backup.RestoreBackup(backupNumber)
-            this.UpdateListView()
-        }
-    }
-
-    OnReloadButton(btn, info) {
-        this.backupManager.LoadComponents()
-        this.UpdateListView()
     }
 
     OnEditButton(btn, info) {
@@ -122,12 +77,8 @@ class ManageBackupsWindow extends ManageWindowBase {
         }
     }
 
-    OnDeleteButton(btn, info) {
-        ; @todo implement backup deletion
-    }
-
     AddBackup() {
-        ; @todo Add Backup Wizard
+        ; TODO: Implement backup add operation
         ;entity := this.app.GuiManager.Form("BackupWizard", this.windowKey)
         entity := ""
 
@@ -145,6 +96,32 @@ class ManageBackupsWindow extends ManageWindowBase {
             return
         }
 
-        this.AutoXYWH("y", ["AddButton", "BackupButton", "RestoreButton", "EditButton", "DeleteButton"])
+        this.AutoXYWH("y", ["AddButton"])
+    }
+
+    ShowListViewContextMenu(lv, item, isRightClick, X, Y) {
+        key := this.listView.GetRowKey(item)
+        backup := this.backupManager.Entities[key]
+
+        menuItems := []
+        menuItems.Push(Map("label", "Edit", "name", "EditBackup"))
+        menuItems.Push(Map("label", "Backup", "name", "BackupBackup"))
+        menuItems.Push(Map("label", "Restore", "name", "RestoreBackup"))
+        menuItems.Push(Map("label", "Delete", "name", "DeleteBackup"))
+
+        result := this.app.GuiManager.Menu("MenuGui", menuItems, this)
+
+        if (result == "EditBackup") {
+            this.EditBackup(key)
+        } else if (result == "BackupBackup") {
+            backup.CreateBackup()
+            this.UpdateListView()
+        } else if (result == "RestoreBackup") {
+            backupNumber := 1
+            backup.RestoreBackup(backupNumber)
+            this.UpdateListView()
+        } else if (result == "DeleteBackup") {
+            ; TODO: Implement backup delete operation
+        }
     }
 }
