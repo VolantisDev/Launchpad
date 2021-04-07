@@ -13,6 +13,10 @@ class LauncherProgressIndicator extends MiniProgressIndicator {
         this.iconSrc := gameIcon ; @todo refactor so this is passed in to the parent constructor
     }
 
+    GetTitle(title) {
+        return title . " - " . this.app.appName
+    }
+
     Controls() {
         if (this.text != "") {
             this.guiObj.AddText("x" . this.margin . " w" . this.windowSettings["contentWidth"] . "", this.text)
