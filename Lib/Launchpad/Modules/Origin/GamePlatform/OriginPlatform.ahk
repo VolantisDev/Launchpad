@@ -33,7 +33,7 @@ class OriginPlatform extends RegistryLookupGamePlatformBase {
     }
 
     DetectInstalledGames() {
-        ; @todo Replace with functionality that reads from a config source
+        ; TODO: Read installed Origin games from a config source
         return super.DetectInstalledGames()
     }
 

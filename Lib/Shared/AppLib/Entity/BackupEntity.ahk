@@ -111,7 +111,7 @@ class BackupEntity extends EntityBase {
     }
 
     LaunchEditWindow(mode, owner := "", parent := "") {
-        ; @todo Implement backup edit window
+        ; TODO: Implement backup edit window
         ;return this.app.GuiManager.Form("BackupEditor", this, mode, owner, parent)
         return "Cancel"
     }

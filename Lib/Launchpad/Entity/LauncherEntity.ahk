@@ -116,7 +116,7 @@ class LauncherEntity extends EntityBase {
     __New(app, key, config, requiredConfigKeys := "", parentEntity := "") {
         super.__New(app, key, config, requiredConfigKeys, parentEntity)
         this.children["ManagedLauncher"] := ManagedLauncherEntity.new(app, key, config, "", this)
-        this.entityData.SetLayer("auto", this.AutoDetectValues()) ; Re-detect values now that children are loaded, @todo make this run only once
+        this.entityData.SetLayer("auto", this.AutoDetectValues())
     }
 
     /**
@@ -189,7 +189,7 @@ class LauncherEntity extends EntityBase {
             validateREsult["invalidFields"].push("IconSrc")
         }
 
-        ; @todo more launcher validation
+        ; TODO: Validate launcher entities here
 
         return ValidateResult
     }

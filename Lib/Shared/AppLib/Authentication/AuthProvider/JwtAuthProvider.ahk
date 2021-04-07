@@ -51,7 +51,6 @@ class JwtAuthProvider extends AuthProviderBase {
     }
 
     ShowLoginWindow() {
-        ; @todo Extend to implement this and return an auth code
         return ""
     }
 

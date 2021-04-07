@@ -14,9 +14,7 @@ class BlizzardPlatform extends RegistryLookupGamePlatformBase {
 
     GetLibraryDirs() {
         libraryDirs := super.GetLibraryDirs()
-        
-        ; @todo determine dirs from installed games?
-
+        ; TODO: Detect Blizzard library dirs
         return libraryDirs
     }
 

@@ -199,7 +199,6 @@ class GameBase {
     }
 
     RunGameRun() {
-        ; Assume Run or RunWait
         runCmd := this.config["GameRunMethod"]
         pid := ""
         this.Log("Running task with " . runCmd)
@@ -208,7 +207,7 @@ class GameBase {
     }
 
     RunGameMacro() {
-        ; @todo implement macro steps
+        ; TODO: Implement definable macro steps to automate running a game without writing code
     }
 
     CleanupScheduledTask() {
@@ -275,7 +274,7 @@ class GameBase {
     }
 
     WaitForLoadingWindow() {
-        ; @todo Run this in a loop that checks for both the loading screen and the game window
+        ; TODO: Run a loop that checks for both the loading screen and the game window
         if (this.config["GameLoadingWindowProcessType"] == "Title") {
             WinWait(this.config["GameLoadingWindowProcessId"],,, " - Launchpad")
         } else if (this.config["GameLoadingWindowProcessType"] == "Class") {
@@ -309,7 +308,8 @@ class GameBase {
         }
 
         if (this.GameIsRunning()) {
-            ProcessWaitClose(this.pid) ; @todo Figure out a good default timeout and how to handle that situation
+            ; TODO: Figure out a good default timeout and how to handle that situation
+            ProcessWaitClose(this.pid)
         }
 
         return !this.GameIsRunning()

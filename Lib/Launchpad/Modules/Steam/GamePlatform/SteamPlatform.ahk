@@ -1,8 +1,8 @@
 class SteamPlatform extends RegistryLookupGamePlatformBase {
     key := "Steam"
     displayName := "Steam"
-    launcherType := "Default" ; @todo Create steam type?
-    gameType := "Default" ; @todo Create steam type?
+    launcherType := "Default"
+    gameType := "Default"
     installDirRegKey := "HKCU\SOFTWARE\Valve\Steam"
     installDirRegValue := "SteamPath"
     exePathRegKey := "HKCU\SOFTWARE\Valve\Steam"

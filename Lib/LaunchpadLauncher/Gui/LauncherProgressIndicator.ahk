@@ -3,14 +3,12 @@ class LauncherProgressIndicator extends MiniProgressIndicator {
 
     __New(app, themeObj, windowKey, title, gameIcon, owner := "", parent := "", rangeStop := "", currentPosition := 0, showInNotificationArea := true) {
         this.gameTitle := title
-        
         if (windowKey == "") {
             windowKey := "LauncherProgressIndicator"
         }
 
         super.__New(app, themeObj, windowKey, title, "", owner, parent, rangeStop, currentPosition, showInNotificationArea)
-
-        this.iconSrc := gameIcon ; @todo refactor so this is passed in to the parent constructor
+        this.iconSrc := gameIcon
     }
 
     GetTitle(title) {
@@ -32,7 +30,7 @@ class LauncherProgressIndicator extends MiniProgressIndicator {
 
     AddGuiProgressIndicator() {
         spinner := this.themeObj.GetThemeAsset("spinner")
-        
+        ; TODO: Get spinner working
         ;this.guiObj.AddActiveX("x" . this.margin . " w40 h40", "mshtml:<img src='" . spinner . "' />")
         ;dllPath := this.themeObj.resourcesDir . "\Dependencies\AniGIF.dll"
         ;this.gif := AnimatedGif.new(this.guiObj, dllPath, "x" . this.margin . " w40 h40", spinner)

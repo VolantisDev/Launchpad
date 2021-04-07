@@ -168,7 +168,7 @@ class GuiBase {
     OnCalcSize(wParam, lParam, msg, hwnd) {
         if hwnd == A_ScriptHwnd || hwnd == this.GetHwnd() {
             if (wParam) {
-                ; @todo Get this working
+                ; TODO: Figure out how to use this callback to redefine the client window size to exclude the border
                 return 0 ; Size the client area to fill the entire window
             }
         }
@@ -287,7 +287,7 @@ class GuiBase {
         static OMsg := A_PtrSize
 
         if (this.tabsHwnd == h && m == WM_PAINT) {
-            ; @todo Paint the tab headers and the bare minimum elsewhere
+            ; TODO: Paint tab headers
         } else if (m == WM_DESTROY) {
             this.SubclassControl(h, "")
         }

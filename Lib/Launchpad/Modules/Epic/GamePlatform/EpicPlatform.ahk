@@ -16,9 +16,7 @@ class EpicPlatform extends RegistryLookupGamePlatformBase {
 
     GetLibraryDirs() {
         libraryDirs := super.GetLibraryDirs()
-        
-        ; @todo determine dirs from installed games?
-
+        ; TODO: Detect epic library dirs
         return libraryDirs
     }
 

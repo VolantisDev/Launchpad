@@ -324,7 +324,7 @@ class LayeredDataBase {
             output .= indent . "}`n"
         } else if (IsObject(val)) {
             output := "Object"
-            ; @todo Output properties
+            ; TODO: Output properties from object when inspecting
         }
 
         return output

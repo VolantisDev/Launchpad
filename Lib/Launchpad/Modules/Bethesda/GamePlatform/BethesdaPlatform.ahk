@@ -22,13 +22,11 @@ class BethesdaPlatform extends RegistryLookupGamePlatformBase {
             libraryDirs.Push(installDir . "\games")
         }
 
-        ; @todo Check if this is the best way
-
         return libraryDirs
     }
 
     DetectInstalledGames() {
-        ; @todo Replace with functionality that reads from a config source
+        ; TODO: Find a config source to read bethesda game directories from
         return super.DetectInstalledGames()
     }
 

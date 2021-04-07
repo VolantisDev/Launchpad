@@ -133,7 +133,7 @@ class ExeProcess {
         return ExeProcess.wmi.ExecQuery(query)
     }
 
-    ; @todo Replace this with a simple call to LookupPid from wherever needs to call it.
+    ; TODO: Replace this with a simple call to LookupPid from wherever needs to call it.
     WatchForProcessReplacement(pid := "", timeout := 60) {
         if (pid == "") {
             pid := this.pid

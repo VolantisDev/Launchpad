@@ -25,8 +25,7 @@ class ErrorDialog extends DialogBox {
     }
 
     OnSubmitError(ctl, info) {
-        ; @todo Show or hide the controls below, move the buttons, and resize the window
-        ; @todo perhaps break out a separate ResizeDialog function which automatically moves the buttons
+        ; TODO: Hide and show the error submission fields automatically based on the checkbox value
     }
 
     ProcessResult(result, submittedData := "") {

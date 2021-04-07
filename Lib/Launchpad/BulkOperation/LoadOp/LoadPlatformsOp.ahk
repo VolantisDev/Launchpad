@@ -42,7 +42,7 @@ class LoadPlatformsOp extends BulkOperationBase {
 
             platformConfig := this.platformsConfigObj.Platforms[key]
             platformConfig["PlatformClass"] := platformClass
-            requiredKeys := "" ; @todo Figure out if we need these or if they can just be passed in the config
+            requiredKeys := ""
             this.results[key] := PlatformEntity.new(this.app, key, platformConfig, requiredKeys)
             this.FinishItem(key, true, key . ": Loaded successfully.")
         }

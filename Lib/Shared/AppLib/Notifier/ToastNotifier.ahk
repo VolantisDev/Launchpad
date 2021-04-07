@@ -4,7 +4,8 @@ class ToastNotifier extends NotifierBase {
             title := "Launchpad"
         }
 
-        options := 17 ; @todo Update according to level
+        ; TODO Update toast notifier options according to message level 
+        options := 17
         TrayTip(message, title, options)
     }
 }

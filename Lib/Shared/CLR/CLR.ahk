@@ -95,7 +95,7 @@ class CLR {
 
         if (version == "") {
             Loop Files systemRoot . "\Microsoft.NET\Framework" . (A_PtrSize == 8 ? "64" : "") . "\*", "D" {
-                if (FileExist(A_LoopFileFullPath . "\mscorlib.dll")) { ; @todo compare versions
+                if (FileExist(A_LoopFileFullPath . "\mscorlib.dll")) {
                     version := A_LoopFileName
                 }
             }

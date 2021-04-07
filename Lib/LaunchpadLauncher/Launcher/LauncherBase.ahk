@@ -333,6 +333,6 @@ class LauncherBase {
     }
 
     PromptForLauncherToClose() {
-        ; @todo Implement GUI class and instantiate it here
+        ; TODO: Implement a gui window that prompts to close a launcher and show it here
     }
 }

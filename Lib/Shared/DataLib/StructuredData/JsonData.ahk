@@ -70,7 +70,7 @@ class JsonData extends StructuredDataBase {
                         }
 					}
 
-                    ; @todo Rewrite this to be more readable
+                    ; TODO: Make this code more readable
 					if (!i ? (pos--, next := "'") : 0) {
                         continue
                     }
@@ -88,7 +88,7 @@ class JsonData extends StructuredDataBase {
 					i := 0
 
 					while i := InStr(val, "\",, i + 1) {
-                        ; @todo rewrite this to be more readable
+                        ; TODO: Make this code more readable
 						if ((SubStr(val, i+1, 1) != "u") ? (pos -= StrLen(SubStr(val, i)), next := "\") : 0) {
                             continue 2
                         }
@@ -153,8 +153,7 @@ class JsonData extends StructuredDataBase {
 			memType := Type(obj)
 			is_array := (memType == "Array")
 			
-            ; @todo Rewrite for readability
-			
+            ; TODO: Make this code more readable
 			if (memType ? (memType != "Object" && memType != "Map" && memType != "Array") : (ObjGetCapacity(obj) == "")) {
                 throw OperationFailedException.new("Object type not supported.", -1, Format("<Object at 0x{:p}>", ObjPtr(obj)))
             }

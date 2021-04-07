@@ -187,7 +187,6 @@ class AppBase {
             shell.CurrentDirectory := this.appDir
         }
 
-        ; @todo Create any services required for initialization
         services := Map()
         services["Shell"] := shell
         services["Gdip"] := Gdip_Startup()

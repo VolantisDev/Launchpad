@@ -30,7 +30,7 @@ class LauncherEditorBase extends EntityEditorBase {
     OnKeyChange(ctlObj, info) {
         this.guiObj.Submit(false)
         this.entityObj.Key := ctlObj.Text
-        ; @todo If new game type doesn't offer the selected launcher type, change to the default launcher type
+        ; TODO: If new game type doesn't offer the selected launcher type, change to the default launcher type
     }
 
     OnManageLauncherType(ctlObj, info) {
@@ -61,9 +61,7 @@ class LauncherEditorBase extends EntityEditorBase {
                 this.guiObj["IconSrc"].Text := file
             }
         } else if (btn == "OpenIconSrc") {
-            if (this.entityObj.IconSrc && FileExist(this.entityObj.IconSrc)) {
-                ; @todo How to open an icon by default?
-            }
+            ; TODO: Disable opening for icon src
         } else if (btn == "ClearIconSrc") {
             if (this.entityObj.UnmergedConfig.Has("IconSrc")) {
                 this.entityObj.UnmergedConfig.Delete("IconSrc")

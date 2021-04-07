@@ -204,7 +204,7 @@ class ManagedEntityBase extends EntityBase {
         detectedValues[this.configPrefix . "UsesShortcut"] := usesShortcut
         detectedValues[this.configPrefix . "RunType"] := usesShortcut ? "Shortcut" : "Command"
 
-        ; @todo Can this be done JIT so it only runs for games that don't already have an install dir?
+        ; TODO: Make this value calculate only when needed
         detectedValues[this.configPrefix . "InstallDir"] := this.LocateInstallDir()
 
         if (this.ProcessType == "Exe") {
@@ -285,8 +285,7 @@ class ManagedEntityBase extends EntityBase {
             validateResult["invalidFields"].push("RunCmd")
         }
 
-        ; @todo more launcher type validation
-        ; @ todo more game type validation
+        ; TODO: Perform more launcher and game type validation here
 
         return validateResult
     }
@@ -307,7 +306,7 @@ class ManagedEntityBase extends EntityBase {
     LocateInstallDir() {
         installDir := ""
 
-        ; @todo Figure out more sources for determining the install dir
+        ; TODO: Add additional methods to detect the install dir
 
         if (this.LocateMethod == "BlizzardProductDb") {
             blizzardDir := this.GetBlizzardProductDir()
@@ -356,12 +355,12 @@ class ManagedEntityBase extends EntityBase {
                                 regDir := StrReplace(regDir, "`"", "")
                             }
 
-                            if (this.LocateRegRemovePrefix) {
-                                regDir := StrReplace(regDir, this.LocateRegRemovePrefix) ; @todo only remove if it's at the beginning of the string
+                            if (this.LocateRegRemovePrefix && SubStr(regDir, 1, StrLen(this.LocateRegRemovePrefix)) == this.LocateRegRemovePrefix) {
+                                regDir := SubStr(regDir, StrLen(this.LocateRegRemovePrefix) + 1)
                             }
 
-                            if (this.LocateRegRemoveSuffix) {
-                                regDir := StrReplace(regDir, this.LocateRegRemoveSuffix) ; @todo only remove if it's at the end of the string
+                            if (this.LocateRegRemoveSuffix && SubStr(regDir, 1, StrLen(this.LocateRegRemoveSuffix)) == this.LocateRegRemoveSuffix) {
+                                regDir := StrReplace(regDir, StrLen(this.LocateRegRemoveSuffix) + 1)
                             }
                             
                             searchDirs.Push(regDir)

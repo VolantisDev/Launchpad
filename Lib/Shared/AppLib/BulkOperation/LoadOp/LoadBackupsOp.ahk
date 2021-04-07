@@ -24,7 +24,7 @@ class LoadBackupsOp extends BulkOperationBase {
 
         for key, config in this.backupsConfigObj.Backups {
             this.StartItem(key, key . ": Loading...")
-            requiredKeys := "" ; @todo Figure out if we need these or if they can just be passed in the config
+            requiredKeys := ""
             this.results[key] := BackupEntity.new(this.app, key, config, requiredKeys)
             this.FinishItem(key, true, key . ": Loaded successfully.")
         }

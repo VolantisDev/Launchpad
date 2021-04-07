@@ -28,8 +28,7 @@ class LoadModulesOp extends BulkOperationBase {
 
         for index, moduleDir in this.moduleDirs {
             this.StartItem(index, "Loading modules from " . moduleDir . "...")
-            ; @todo Determine best way to dynamically load ahk files from a compiled script
-            ; @todo populate this.results with a map of all loaded modules
+            ; TODO: Move module loading here
             this.FinishItem(index, true, "Finished loading modules from " . moduleDir . ".")
         }
 

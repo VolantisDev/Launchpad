@@ -196,7 +196,6 @@ class DetectedGame {
             } else if (priorityExes.Length > 1) {
                 containsLikelyMatch := true
                 mainExe := priorityExes[1]
-                ; @todo determine what to do if there is more than one priority exe file
             }
 
             if (installDirExes.Length == 1) {
@@ -204,7 +203,7 @@ class DetectedGame {
             } else if (installDirExes.Length > 1) {
                 ;containsLikelyMatch := true
                 ;mainExe := installDirExes[1]
-                ; @todo Decide what to do if there is more than one exe in the main dir
+                ; TODO: Decide what to do if there is more than one exe in the main dir
             }
         }
 

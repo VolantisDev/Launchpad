@@ -433,7 +433,7 @@ class ThemeBase {
         try {
             btn := this.themedButtons[this.hoveredButton]["states"]["enabled"].DrawOn(btn)
         } catch ex {
-            ; @todo Log errors
+            ; TODO: Log errors here
         }
         
         return btn
@@ -452,7 +452,7 @@ class ThemeBase {
         try {
             btn := this.themedButtons[btn.Hwnd]["states"]["hovered"].DrawOn(btn)
         } catch ex {
-            ; @todo Log errors
+            ; TODO: Log errors here
         }
 
         this.hoveredButton := btn.Hwnd

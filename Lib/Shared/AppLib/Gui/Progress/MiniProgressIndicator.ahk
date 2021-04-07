@@ -2,8 +2,6 @@ class MiniProgressIndicator extends ProgressIndicatorBase {
     gif := ""
 
     __New(app, themeObj, windowKey, title, text, owner := "", parent := "", rangeStop := "", currentPosition := 0, showInNotificationArea := true) {
-        ; @todo display text somewhere?
-
         if (windowKey == "") {
             windowKey := "MiniProgressIndicator"
         }
