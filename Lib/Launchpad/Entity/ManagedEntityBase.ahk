@@ -416,7 +416,7 @@ class ManagedEntityBase extends EntityBase {
         productCode := this.GetBlizzardProductKey()
 
         if (productCode != "") {
-            path := this.app.BlizzardProductDb.GetProductInstallPath(productCode)
+            path := this.app.Services.Get("BlizzardProductDb").GetProductInstallPath(productCode)
         }
 
         return path

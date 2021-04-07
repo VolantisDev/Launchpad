@@ -1,6 +1,6 @@
 class PlatformManager extends EntityManagerBase {
-    _registerEvent := "" ;LaunchpadEvents.PLATFORMS_REGISTER
-    _alterEvent := "" ;LaunchpadEvents.PLATFORMS_ALTER
+    _registerEvent := LaunchpadEvents.PLATFORMS_REGISTER
+    _alterEvent := LaunchpadEvents.PLATFORMS_ALTER
 
     GetLoadOperation() {
         return LoadPlatformsOp.new(this.app, this.configObj)

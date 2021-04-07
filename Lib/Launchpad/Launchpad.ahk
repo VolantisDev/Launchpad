@@ -22,11 +22,6 @@
         set => this.Services.Set("BuilderManager", value)
     }
 
-    BlizzardProductDb {
-        get => this.Services.Get("BlizzardProductDb")
-        set => this.Services.Set("BlizzardProductDb", value)
-    }
-
     Backups {
         get => this.Services.Get("BackupManager")
         set => this.Services.Set("BackupManager", value)
@@ -38,7 +33,6 @@
         this.DataSources := DataSourceManager.new(this.Events)
         this.DataSources.SetItem("api", ApiDataSource.new(this, this.Cache.GetItem("api"), this.Config.ApiEndpoint), true)
         this.Builders := BuilderManager.new(this)
-        this.BlizzardProductDb := BlizzardProductDb.new(this)
         this.Launchers := LauncherManager.new(this)
         this.Platforms := PlatformManager.new(this)
     }
@@ -113,6 +107,9 @@
         this.Installers.SetItem("Dependencies", DependencyInstaller.new(this.Version, this.State, this.Cache.GetItem("file"), [], this.tmpDir))
         this.Installers.SetupInstallers()
         this.Installers.InstallRequirements()
+    }
+
+    RunApp(config) {
         this.Auth.SetAuthProvider(LaunchpadApiAuthProvider.new(this, this.State))
 
         if (this.Config.ApiAutoLogin) {
@@ -122,9 +119,7 @@
         this.Platforms.LoadComponents(this.Config.PlatformsFile)
         this.Launchers.LoadComponents(this.Config.LauncherFile)
         this.Backups.LoadComponents()
-    }
-
-    RunApp(config) {
+        
         super.RunApp(config)
         this.OpenApp()
 

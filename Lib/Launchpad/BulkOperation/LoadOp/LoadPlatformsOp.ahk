@@ -20,11 +20,14 @@ class LoadPlatformsOp extends BulkOperationBase {
 
         platforms := Map()
         platforms["Bethesda"] := "BethesdaPlatform"
-        platforms["Blizzard"] := "BlizzardPlatform"
         platforms["Epic"] := "EpicPlatform"
         platforms["Origin"] := "OriginPlatform"
         platforms["Riot"] := "RiotPlatform"
         platforms["Steam"] := "SteamPlatform"
+
+        event := DefineComponentsEvent.new(Events.PLATFORMS_DEFINE, platforms)
+        this.app.Events.DispatchEvent(Events.PLATFORMS_DEFINE, event)
+        platforms := event.components
 
         if (this.useProgress) {
             this.progress.SetRange(0, platforms.Count)

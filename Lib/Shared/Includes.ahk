@@ -38,6 +38,8 @@
 #Include AppLib\Entity\EntityBase.ahk
 #Include AppLib\Events\Events.ahk
 #Include AppLib\Events\Event\AlterComponentsEvent.ahk
+#Include AppLib\Events\Event\AppRunEvent.ahk
+#Include AppLib\Events\Event\DefineComponentsEvent.ahk
 #Include AppLib\Events\Event\EventBase.ahk
 #Include AppLib\Events\Event\RegisterComponentsEvent.ahk
 #Include AppLib\Exception\AppException.ahk
@@ -131,6 +133,7 @@
 #Include DataLib\StructuredData\StructuredDataBase.ahk
 #Include DataLib\StructuredData\VdfData.ahk
 #Include DataLib\StructuredData\Xml.ahk
+#Include Modules\Auth\AuthModule.ahk
 #Include ThemeLib\LV_Constants.ahk
 #Include ThemeLib\AnimatedGif\AnimatedGif.ahk
 #Include ThemeLib\GuiShape\ButtonShape.ahk

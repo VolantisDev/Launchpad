@@ -1,16 +1,16 @@
-class RegisterComponentsEvent extends EventBase {
-    container := ""
+class DefineComponentsEvent extends EventBase {
+    components := ""
 
     Items {
-        get => this.container.Items
+        get => this.components
     }
 
-    __New(eventName, container) {
-        this.container := container
+    __New(eventName, components) {
+        this.components := components
         super.__New(eventName)
     }
 
-    Register(key, componentObj) {
-        this.container.Set(key, componentObj)
+    Define(key, className) {
+        this.components[key] := className
     }
 }

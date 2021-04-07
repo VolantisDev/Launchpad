@@ -22,9 +22,6 @@ class BlizzardGame extends SimpleGame {
             Sleep(1500)
             winTitle := "ahk_id " . WinGetID(winTitle)
             WinActivate(winTitle)
-
-            ; Send("{Enter}") ; This worked with the old Blizzard client
-
             mouseCoordMode := A_CoordModeMouse
 
             ; Save original mouse position

@@ -103,10 +103,26 @@ class AppBase {
 
     __New(config := "") {
         this.Startup(config)
-        this.Startup(config)
+        event := AppRunEvent.new(Events.APP_POST_STARTUP, this, config)
+        this.Events.DispatchEvent(Events.APP_POST_STARTUP, event)
+
+        event := AppRunEvent.new(Events.APP_PRE_LOAD_SERVICES, this, config)
+        this.Events.DispatchEvent(Events.APP_PRE_LOAD_SERVICES, event)
         this.LoadServices(config)
+        event := AppRunEvent.new(Events.APP_POST_LOAD_SERVICES, this, config)
+        this.Events.DispatchEvent(Events.APP_POST_LOAD_SERVICES, event)
+
+        event := AppRunEvent.new(Events.APP_PRE_INITIALIZE, this, config)
+        this.Events.DispatchEvent(Events.APP_PRE_INITIALIZE, event)
         this.InitializeApp(config)
+        event := AppRunEvent.new(Events.APP_POST_INITIALIZE, this, config)
+        this.Events.DispatchEvent(Events.APP_POST_INITIALIZE, event)
+
+        event := AppRunEvent.new(Events.APP_PRE_RUN, this, config)
+        this.Events.DispatchEvent(Events.APP_PRE_RUN, event)
         this.RunApp(config)
+        event := AppRunEvent.new(Events.APP_POST_RUN, this, config)
+        this.Events.DispatchEvent(Events.APP_POST_RUN, event)
     }
 
     Startup(config) {
@@ -180,9 +196,48 @@ class AppBase {
         services["VersionChecker"] := VersionChecker.new()
         services["EventManager"] := EventManager.new()
         this.Services := ServiceContainer.new(services)
+
+        this.Modules := ModuleManager.new(this)
+        this.Modules.LoadModules(this.DiscoverModules(config))
+        this.Modules.RegisterSubscribers()
         
         this.errorCallback := ObjBindMethod(this, "OnException")
         OnError(this.errorCallback)
+    }
+
+    GetModuleDirs(config) {
+        dirs := []
+
+        Loop Files this.appDir . "\Lib\*", "D" {
+            moduleDir := this.appDir . "\Lib\" . A_LoopFileName . "\Modules"
+            
+            if (DirExist(moduleDir)) {
+                dirs.Push(moduleDir)
+            }
+        }
+
+        if (config.Has("modulesDir") && config["modulesDir"]) {
+            dirs.Push(config["modulesDir"])
+        }
+
+        return dirs
+    }
+
+    DiscoverModules(config) {
+        dirs := this.GetModuleDirs(config)
+        modules := Map()
+
+        for index, dir in dirs {
+            Loop Files dir . "\*", "D" {
+                moduleName := A_LoopFileName
+
+                if (FileExist(A_LoopFileFullPath . "\" A_LoopFileName . "Module.ahk")) {
+                    modules[A_LoopFileName] := A_LoopFileFullPath
+                }
+            }
+        }
+
+        return modules
     }
 
     GetCmdOutput(command, trimOutput := true) {
@@ -364,7 +419,6 @@ class AppBase {
 
         this.Services.Set("LoggerService", LoggerService.new(FileLogger.new(logPath, loggingLevel, true)))
         this.Debugger.SetLogger(this.Logger)
-        this.Services.Set("ModuleManager", ModuleManager.new(this))
 
         themesDir := this.appDir . "\Resources\Themes"
 
@@ -395,7 +449,6 @@ class AppBase {
         this.Services.Set("NotificationService", NotificationService.new(this, ToastNotifier.new(this)))
         this.Services.Set("GuiManager", GuiManager.new(this))
         this.Services.Set("InstallerManager", InstallerManager.new(this))
-        this.Services.Set("AuthService", AuthService.new(this, "", this.State))
     }
 
     __Delete() {
@@ -403,6 +456,9 @@ class AppBase {
     }
 
     ExitApp() {
+        event := AppRunEvent.new(Events.APP_SHUTDOWN, this, config)
+        this.Events.DispatchEvent(Events.APP_SHUTDOWN, event)
+
         ExitApp
     }
 
