@@ -35,9 +35,11 @@ class LaunchpadBuilder extends AppBase {
     InitializeApp(config) {
         super.InitializeApp(config)
         this.Auth.SetAuthProvider(LaunchpadApiAuthProvider.new(this, this.State))
+    }
 
+    RunApp(config) {
+        super.RunApp(config)
         version := this.GitTagVersionId.IdentifyVersion()
-
         buildInfo := this.GuiManager.Form("BuildSettingsForm", version)
 
         if (!buildInfo) {

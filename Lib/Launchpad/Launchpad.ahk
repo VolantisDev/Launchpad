@@ -1,5 +1,6 @@
 ﻿class Launchpad extends AppBase {
     customTrayMenu := true
+    detectGames := false
 
     Launchers {
         get => this.Services.Get("LauncherManager")
@@ -40,7 +41,6 @@
         this.BlizzardProductDb := BlizzardProductDb.new(this)
         this.Launchers := LauncherManager.new(this)
         this.Platforms := PlatformManager.new(this)
-        
     }
 
     GetCaches() {
@@ -122,21 +122,25 @@
         this.Platforms.LoadComponents(this.Config.PlatformsFile)
         this.Launchers.LoadComponents(this.Config.LauncherFile)
         this.Backups.LoadComponents()
+    }
 
-        result := ""
-
-        if (!FileExist(this.appDir . "\" . this.appName . ".ini")) {
-            result := this.GuiManager.Form("SetupWindow")
-
-            if (result == "Exit") {
-                this.ExitApp()
-            }
-        }
-
+    RunApp(config) {
+        super.RunApp(config)
         this.OpenApp()
 
-        if (result == "Detect") {
+        if (this.detectGames) {
             this.Platforms.DetectGames()
+        }
+    }
+
+    InitialSetup(config) {
+        super.InitialSetup(config)
+        result := this.GuiManager.Form("SetupWindow")
+
+        if (result == "Exit") {
+            this.ExitApp()
+        } else if (result == "Detect") {
+            this.detectGames := true
         }
     }
 

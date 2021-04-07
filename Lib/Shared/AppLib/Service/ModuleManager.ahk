@@ -1,7 +1,12 @@
-class ModuleManager extends AppServiceBase {
-    modules := Map()
+class ModuleManager extends ContainerServiceBase {
+    registerEvent := Events.MODULES_REGISTER
+    alterEvent := Events.MODULES_ALTER
+    
+    DispatchEvent(eventName, eventObj, extra := "", hwnd := "") {
+        modules := this.GetAll()
 
-    __New(app) {
-        super.__New(app)
+        for key, module in modules {
+            module.DispatchEvent(eventName, eventObj, extra, hwnd)
+        }
     }
 }

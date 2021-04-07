@@ -102,6 +102,14 @@ class AppBase {
     }
 
     __New(config := "") {
+        this.Startup(config)
+        this.Startup(config)
+        this.LoadServices(config)
+        this.InitializeApp(config)
+        this.RunApp(config)
+    }
+
+    Startup(config) {
         global appVersion
 
         if (!config) {
@@ -175,8 +183,6 @@ class AppBase {
         
         this.errorCallback := ObjBindMethod(this, "OnException")
         OnError(this.errorCallback)
-
-        this.InitializeApp(config)
     }
 
     GetCmdOutput(command, trimOutput := true) {
@@ -271,14 +277,14 @@ class AppBase {
 
     InitializeApp(config) {
         A_AllowMainWindow := false
-        
-        this.LoadServices(config)
 
         if (this.customTrayMenu) {
             A_TrayMenu.Delete()
             this.Events.Register(Events.AHK_NOTIFYICON, "TrayClick", ObjBindMethod(this, "OnTrayIconRightClick"), 1)
         }
+    }
 
+    RunApp(config) {
         if (this.Config.HasProp("CheckUpdatesOnStart") && this.Config.CheckUpdatesOnStart) {
             this.CheckForUpdates(false)
         }

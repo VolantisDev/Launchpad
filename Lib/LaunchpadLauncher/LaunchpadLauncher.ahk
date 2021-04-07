@@ -15,8 +15,8 @@ class LaunchpadLauncher extends AppBase {
         super.__New(config)
     }
 
-    InitializeApp(config) {
-        super.InitializeApp(config)
+    RunApp(config) {
+        super.RunApp(config)
         this.Launcher.LaunchGame()
     }
 

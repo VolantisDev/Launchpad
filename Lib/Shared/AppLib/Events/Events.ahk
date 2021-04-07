@@ -19,6 +19,9 @@ class Events {
     static INSTALLERS_REGISTER := 0x2020
     static INSTALLERS_ALTER := 0x2025
 
+    static MODULES_REGISTER := 0x2040
+    static MODULES_ALTER := 0x2045
+
     static THEMES_REGISTER := 0x2050
     static THEMES_ALTER := 0x2055
 
@@ -30,6 +33,9 @@ class Events {
 
     static DATASOURCES_REGISTER := 0x3000
     static DATASOURCES_ALTER := 0x3005
+
+    static LAUNCHPAD_INIT := 0x3050
+    static LAUNCHPAD_REGISTER_SERVICES := 0x3055
 
     static AHK_NOTIFYICON := 0x404
 }
