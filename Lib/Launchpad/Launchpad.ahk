@@ -44,6 +44,17 @@
         return caches
     }
 
+    DiscoverModules(config) {
+        modules := super.DiscoverModules(config)
+        modules["Bethesda"] := "BethesdaModule"
+        modules["Blizzard"] := "BlizzardModule"
+        modules["Epic"] := "EpicModule"
+        modules["Origin"] := "OriginModule"
+        modules["Riot"] := "RiotModule"
+        modules["Steam"] := "SteamModule"
+        return modules
+    }
+
     CheckForUpdates(notify := true) {
         updateAvailable := false
 

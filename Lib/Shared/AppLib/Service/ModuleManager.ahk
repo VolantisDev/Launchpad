@@ -35,18 +35,12 @@ class ModuleManager extends ContainerServiceBase {
     }
 
     LoadModules(modules) {
-        for moduleName, moduleDir in modules {
-            modulePath := moduleDir . "\" . moduleName . "Module.ahk"
-          
-            if (!FileExist(modulePath)) {
-                continue
-            }
-
-            if (!IsSet(moduleName)) {
+        for moduleName, moduleClass in modules {
+            
+            if (!IsSet(moduleClass)) {
                 throw AppException.new("Module " . moduleName . " does not seem to be loaded. Try rebuilding your include files and restarting.")
             }
-            className := moduleName . "Module"
-            this.Set(moduleName, %className%.new(this.app))
+            this.Set(moduleName, %moduleClass%.new(this.app))
         }
     }
 }

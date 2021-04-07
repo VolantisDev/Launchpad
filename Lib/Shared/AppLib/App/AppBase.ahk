@@ -208,12 +208,10 @@ class AppBase {
     GetModuleDirs(config) {
         dirs := []
 
-        Loop Files this.appDir . "\Lib\*", "D" {
-            moduleDir := this.appDir . "\Lib\" . A_LoopFileName . "\Modules"
-            
-            if (DirExist(moduleDir)) {
-                dirs.Push(moduleDir)
-            }
+        sharedDir := this.dataDir . "\Modules"
+
+        if (DirExist(sharedDir)) {
+            dirs.Push(sharedDir)
         }
 
         if (config.Has("modulesDir") && config["modulesDir"]) {
@@ -226,13 +224,14 @@ class AppBase {
     DiscoverModules(config) {
         dirs := this.GetModuleDirs(config)
         modules := Map()
+        modules["Auth"] := "AuthModule"
 
         for index, dir in dirs {
             Loop Files dir . "\*", "D" {
                 moduleName := A_LoopFileName
 
                 if (FileExist(A_LoopFileFullPath . "\" A_LoopFileName . "Module.ahk")) {
-                    modules[A_LoopFileName] := A_LoopFileFullPath
+                    modules[A_LoopFileName] := A_LoopFileName . "Module"
                 }
             }
         }
