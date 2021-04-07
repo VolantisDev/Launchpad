@@ -2,7 +2,6 @@ class ManageBackupsWindow extends ManageWindowBase {
     listViewColumns := Array("KEY", "COUNT", "TOTAL SIZE")
     backupsFile := ""
     backupManager := ""
-    sidebarWidth := 0
 
     __New(app, themeObj, windowKey, backupsFile := "", owner := "", parent := "") {
         if (backupsFile == "") {

@@ -16,12 +16,6 @@ class ListViewControl extends GuiControlBase {
         this.dataCallback := dataCallback
         this.imgListCallback := imgListCallback
 
-        sidebarWidth := this.guiObj.sidebarWidth
-        
-        if (sidebarWidth) {
-            sidebarWidth += this.guiObj.margin
-        }
-
         lvH := 400
 
         if (this.guiObj.windowSettings.Has("listViewHeight") && this.guiObj.windowSettings["listViewHeight"]) {
@@ -29,7 +23,7 @@ class ListViewControl extends GuiControlBase {
         } 
 
         defaults := []
-        defaults.Push("w" . this.guiObj.windowSettings["contentWidth"] - sidebarWidth)
+        defaults.Push("w" . this.guiObj.windowSettings["contentWidth"])
         defaults.Push("h" . lvH)
         defaults.Push("C" . this.guiObj.themeObj.GetColor("text"))
         defaults.Push("Background" . this.guiObj.themeObj.GetColor("background"))

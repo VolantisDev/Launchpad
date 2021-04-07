@@ -2,7 +2,6 @@ class PlatformsWindow extends ManageWindowBase {
     listViewColumns := Array("PLATFORM", "ENABLED", "DETECT GAMES", "INSTALLED", "VERSION")
     platformsFile := ""
     platformManager := ""
-    sidebarWidth := 0
 
     __New(app, themeObj, windowKey, platformsFile := "", owner := "", parent := "") {
         if (platformsFile == "") {
@@ -19,14 +18,6 @@ class PlatformsWindow extends ManageWindowBase {
     AddBottomControls() {
         position := "x" . this.margin . " y+" . this.margin . " w60 h25"
         this.Add("ButtonControl", "vReloadButton ys " . position, "Reload", "", "manageText")
-        position := "x+" . this.margin . " yp w60 h25"
-        this.Add("ButtonControl", "vEnableButton " . position, "Enable", "", "manageText")
-        this.Add("ButtonControl", "vDisableButton " . position, "Disable", "", "manageText")
-        this.Add("ButtonControl", "vEditButton " . position, "Edit", "", "manageText")
-        this.Add("ButtonControl", "vInstallButton " . position, "Install", "", "manageText")
-        this.Add("ButtonControl", "vUpdateButton " . position, "Update", "", "manageText") ; @todo get this working again
-        this.Add("ButtonControl", "vRunButton " . position, "Run", "", "manageText")
-        this.Add("ButtonControl", "vUninstallButton " . position, "Uninstall", "", "manageText")
     }
 
     GetListViewData(lv) {
@@ -62,8 +53,7 @@ class PlatformsWindow extends ManageWindowBase {
     }
 
     OnDoubleClick(LV, rowNum) {
-        key := this.listView.GetRowKey(rowNum)
-        this.EditPlatform(key)
+        this.EditPlatform(this.listView.GetRowKey(rowNum))
     }
 
     EditPlatform(key) {
@@ -88,69 +78,9 @@ class PlatformsWindow extends ManageWindowBase {
         return platform
     }
 
-    OnEnableButton(btn, info) {
-        platform := this.GetSelectedPlatform()
-
-        if (platform) {
-            platform.IsEnabled := true
-            platform.SaveModifiedData()
-            this.platformManager.SaveModifiedEntities()
-            this.UpdateListView()
-        }
-    }
-
-    OnDisableButton(btn, info) {
-        platform := this.GetSelectedPlatform()
-
-        if (platform) {
-            platform.IsEnabled := false
-            platform.SaveModifiedData()
-            this.platformManager.SaveModifiedEntities()
-            this.UpdateListView()
-        }
-    }
-
     OnReloadButton(btn, info) {
         this.platformManager.LoadComponents()
         this.UpdateListView()
-    }
-
-    OnEditButton(btn, info) {
-        selected := this.guiObj["ListView"].GetNext(, "Focused")
-
-        if (selected > 0) {
-            key := this.listView.GetRowKey(selected)
-            this.EditPlatform(key)
-        }
-    }
-
-    OnInstallButton(btn, info) {
-        platform := this.GetSelectedPlatform()
-        
-        if (platform) {
-            platform.Install()
-        }
-    }
-
-    OnUninstallButton(btn, info) {
-        platform := this.GetSelectedPlatform()
-
-        if (platform && platform.IsInstalled) {
-            platform.Uninstall()
-        }
-    }
-
-    OnUpdateButton(btn, info) {
-        platform := this.GetSelectedPlatform()
-
-        if (platform) {
-            platform.Update()
-        }
-    }
-
-    OnRunButton(btn, info) {
-        platform := this.GetSelectedPlatform()
-        platform.Run()
     }
 
     OnSize(guiObj, minMax, width, height) {
@@ -160,6 +90,52 @@ class PlatformsWindow extends ManageWindowBase {
             return
         }
 
-        this.AutoXYWH("y", ["ReloadButton", "EnableButton", "DisableButton", "EditButton", "RunButton", "InstallButton", "UpdateButton", "UninstallButton"])
+        this.AutoXYWH("y", ["ReloadButton"])
+    }
+
+    ShowListViewContextMenu(lv, item, isRightClick, X, Y) {
+        key := this.listView.GetRowKey(item)
+        platform := this.platformManager.Entities[key]
+
+        menuItems := []
+        menuItems.Push(Map("label", "Edit", "name", "EditPlatform"))
+
+        if (platform.IsEnabled) {
+            menuItems.Push(Map("label", "Disable", "name", "DisablePlatform"))
+        } else {
+            menuItems.Push(Map("label", "Enable", "name", "EnablePlatform"))
+        }
+
+        if (platform.IsInstalled) {
+            menuItems.Push(Map("label", "Run", "name", "RunPlatform"))
+            menuItems.Push(Map("label", "Update", "name", "UpdatePlatform"))
+            menuItems.Push(Map("label", "Uninstall", "name", "UninstallPlatform"))
+        } else {
+            menuItems.Push(Map("label", "Install", "name", "InstallPlatform"))
+        }
+
+        result := this.app.GuiManager.Menu("MenuGui", menuItems, this)
+
+        if (result == "EditPlatform") {
+            this.EditPlatform(key)
+        } else if (result == "DisablePlatform") {
+            platform.IsEnabled := false
+            platform.SaveModifiedData()
+            this.platformManager.SaveModifiedEntities()
+            this.UpdateListView()
+        } else if (result == "EnablePlatform") {
+            platform.IsEnabled := true
+            platform.SaveModifiedData()
+            this.platformManager.SaveModifiedEntities()
+            this.UpdateListView()
+        } else if (result == "RunPlatform") {
+            platform.Run()
+        } else if (result == "UpdatePlatform") {
+            platform.Update()
+        } else if (result == "UninstallPlatform") {
+            platform.Uninstall()
+        } else if (result == "InstallPlatform") {
+            platform.Install()
+        }
     }
 }

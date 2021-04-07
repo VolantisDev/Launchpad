@@ -1,5 +1,4 @@
 ﻿class MainWindow extends ManageWindowBase {
-    sidebarWidth := 0
     listViewColumns := Array("GAME", "PLATFORM", "STATUS", "API STATUS")
     launcherManager := ""
     platformManager := ""

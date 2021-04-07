@@ -5,7 +5,6 @@
     state := ""
     knownGames := ""
     checkboxes := true
-    sidebarWidth := 0
 
     __New(app, themeObj, windowKey, detectedGames, owner := "", parent := "") {
         this.detectedGames := detectedGames
