@@ -5,7 +5,7 @@ within Steam or other applications.
 
 ![main-window--tri](https://user-images.githubusercontent.com/277977/113593737-c25f6780-9604-11eb-8b72-ad191c45570a.png)
 
-Every launcher in the list creates a small .exe file you can add right to Steam that handles the entire launch process seamlessly.
+Every launcher in the list creates a small .exe file you can add right to Steam that handles the entire launch process seamlessly. Or if you don't want to use another platform, you can run all of your launchers directly from Launchpad!
 
 Check out my [introduction series on YouTube](https://www.youtube.com/watch?v=KsbVijnHt68&list=PLdWnfeiq_bKdDLcvORj8qoYnot5teCnMv&index=1).
 
