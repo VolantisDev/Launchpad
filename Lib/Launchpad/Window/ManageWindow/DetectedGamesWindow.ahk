@@ -140,12 +140,6 @@
         this.guiObj["ListView"].Modify(rowNum,,,, action)
     }
 
-    OnItemSelect(LV, rowNum, selected) {
-        this.numSelected += (selected) ? 1 : -1
-        buttonState := this.numSelected > 0 ? "-Hidden" : "+Hidden"
-        this.guiObj["EditButton"].Opt(buttonState)
-    }
-
     OnEditButton(btn, info) {
         rowNum := this.guiObj["ListView"].GetNext()
 

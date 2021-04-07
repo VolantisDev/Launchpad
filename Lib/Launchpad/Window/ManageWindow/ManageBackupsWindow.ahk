@@ -72,10 +72,6 @@ class ManageBackupsWindow extends ManageWindowBase {
         }
     }
 
-    OnItemSelect(LV, rowNum, selected) {
-        this.numSelected += (selected) ? 1 : -1
-    }
-
     GetSelectedBackup() {
         selected := this.guiObj["ListView"].GetNext()
         backup := ""

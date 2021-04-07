@@ -1,6 +1,5 @@
 ﻿class ManageWindowBase extends GuiBase {
     listViewColumns := Array()
-    numSelected := 0
     lvCount := 0
     frameShadow := false
     checkboxes := false

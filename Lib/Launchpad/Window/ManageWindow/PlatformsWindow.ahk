@@ -76,10 +76,6 @@ class PlatformsWindow extends ManageWindowBase {
         }
     }
 
-    OnItemSelect(LV, rowNum, selected) {
-        this.numSelected += (selected) ? 1 : -1
-    }
-
     GetSelectedPlatform() {
         selected := this.guiObj["ListView"].GetNext()
         platform := ""
