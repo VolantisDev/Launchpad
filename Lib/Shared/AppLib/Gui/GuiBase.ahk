@@ -472,14 +472,14 @@ class GuiBase {
     }
 
     GetTitle(title) {
-        return title . " - " . this.app.appName
+        return title
     }
 
     Show() {
         this.Start()
         
         if (this.showTitlebar) {
-            titleText := this.showTitle ? this.title : ""
+            titleText := this.showTitle ? this.GetTitle(this.title) : ""
             this.titlebar := this.Add("TitlebarControl", "", titleText, this.titleIsMenu, this.iconSrc)
         }
 
