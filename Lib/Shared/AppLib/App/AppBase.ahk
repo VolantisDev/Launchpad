@@ -451,10 +451,14 @@ class AppBase {
 
     __Delete() {
         Gdip_Shutdown(this.Gdip)
+
+        this.ExitApp()
+
+        super.__Delete()
     }
 
     ExitApp() {
-        event := AppRunEvent.new(Events.APP_SHUTDOWN, this, config)
+        event := AppRunEvent.new(Events.APP_SHUTDOWN, this)
         this.Events.DispatchEvent(Events.APP_SHUTDOWN, event)
 
         ExitApp

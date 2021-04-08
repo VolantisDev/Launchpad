@@ -10,7 +10,7 @@ class AppRunEvent extends EventBase {
         get => this.configObj
     }
 
-    __New(eventName, app, config) {
+    __New(eventName, app, config := "") {
         this.appObj := app
         this.configObj := config
         super.__New(eventName)

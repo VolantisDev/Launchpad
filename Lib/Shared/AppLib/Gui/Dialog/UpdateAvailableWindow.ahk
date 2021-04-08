@@ -46,7 +46,7 @@
             FileDelete(this.app.tmpDir . "\Installers\" . this.app.appName . "-*")
             Download(downloadUrl, localFile)
             Run(localFile)
-            ExitApp()
+            this.app.ExitApp()
         }
     }
 }

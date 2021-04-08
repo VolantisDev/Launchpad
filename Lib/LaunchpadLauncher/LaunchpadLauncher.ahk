@@ -29,8 +29,4 @@ class LaunchpadLauncher extends AppBase {
         launcherClass := config["launcherConfig"]["LauncherClass"]
         this.Launcher := %launcherClass%.new(this, config["launcherKey"], config["launcherConfig"])
     }
-
-    ExitApp() {
-        super.ExitApp()
-    }
 }
