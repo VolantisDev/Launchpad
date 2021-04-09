@@ -100,13 +100,18 @@ class EntityBase {
         this.parentEntity := parentEntity
 
         this.entityData := LayeredEntityData.new(configObj.Clone(), this.InitializeDefaults())
-        this.entityData.SetLayer("parentDefaults", (parentEntity != "" ? parentEntity.InitializeDefaults() : Map()))
-        this.entityData.SetLayer("ds", this.AggregateDataSourceDefaults())
-        this.entityData.SetLayer("parent", (parentEntity != "" ? this.AggregateParentOverrides() : Map()))
-        this.entityData.SetLayer("auto", this.AutoDetectValues())
+        this.entityData.SetParentDefaults((parentEntity != "") ? parentEntity.InitializeDefaults() : Map())
+        this.entityData.SetDataSourceDefaults(this.AggregateDataSourceDefaults())
+        this.entityData.SetParentConfig((parentEntity != "") ? this.AggregateParentOverrides() : Map())
+        this.entityData.SetAutoDetectedDefaults(this.AutoDetectValues())
         this.entityData.StoreOriginal()
         
         this.InitializeRequiredConfigKeys(requiredConfigKeys)
+    }
+
+    SetChildDefaults(data, updateStoredData := true) {
+        this.entityData.SetChildDefaults(data)
+        this.StoreOriginal(false, true)
     }
 
     StoreOriginal(recursive := true, update := false) {

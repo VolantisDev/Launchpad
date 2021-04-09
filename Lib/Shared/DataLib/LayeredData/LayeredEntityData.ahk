@@ -1,50 +1,45 @@
 class LayeredEntityData extends LayeredDataBase {
-    dataSources := ""
-    dsKey := ""
-    dsPath := ""
-
-    __New(config, defaults := "", dsData := "", autoData := "", parentDefaults := "", parentData := "") {
+    __New(config, defaults := "") {
         if (defaults == "") {
             defaults := Map()
         }
 
-        if (dsData == "") {
-            dsData := Map()
-        }
+        processors := []
+        processors.Push(PlaceholderExpander.new(this))
 
-        if (autoData == "") {
-            autoData := Map()
-        }
+        params := []
+        params.Push("defaults", defaults)
+        params.Push("parentDefaults", Map())
+        params.Push("childDefaults", Map())
+        params.Push("auto", Map())
+        params.Push("ds", Map())
+        params.Push("parent", Map())
+        params.Push("config", config)
 
-        if (parentDefaults == "") {
-            parentDefaults := Map()
-        }
-
-        if (parentData == "") {
-            parentData := Map()
-        }
-
-        processors := [PlaceholderExpander.new(this)]
-        super.__New(processors, "defaults", defaults, "parentDefaults", parentDefaults, "auto", autoData, "ds", dsData, "parent", parentData, "config", config)
+        super.__New(processors, params*)
     }
 
-    SetDefaults(defaults) {
-        this.layers["defaults"] := defaults
+    SetDefaults(data) {
+        this.layers["defaults"] := data
     }
 
-    SetAutoDetectedDefaults(defaults) {
-        this.layers["auto"] := defaults
+    SetAutoDetectedDefaults(data) {
+        this.layers["auto"] := data
     }
 
-    SetDataSourceDefaults(defaults) {
-        this.layers["ds"] := defaults
+    SetDataSourceDefaults(data) {
+        this.layers["ds"] := data
     }
 
-    SetParentDefaults(defaults) {
-        this.layers["parentDefaults"] := defaults
+    SetParentDefaults(data) {
+        this.layers["parentDefaults"] := data
     }
 
-    SetParentConfig(defaults) {
-        this.layers["parent"] := defaults
+    SetChildDefaults(data) {
+        this.layers["childDefaults"] := data
+    }
+
+    SetParentConfig(data) {
+        this.layers["parent"] := data
     }
 }
