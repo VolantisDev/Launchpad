@@ -82,7 +82,7 @@ class TitlebarControl extends GuiControlBase {
             handler := this.RegisterCallback("OnWindowTitleTextClick")
             this.titleButton := this.guiObj.Add("ButtonControl", opts, titleText, handler, "mainMenu")
         } else {
-            opts := textPos . " w" . textW . " vWindowTitleText c" . this.guiObj.themeObj.GetColor("textLight") . " +BackgroundTrans"
+            opts := textPos . " w" . textW . " vWindowTitleText c" . this.guiObj.themeObj.GetColor("textInactive") . " +BackgroundTrans"
             this.titleText := this.guiObj.guiObj.AddText(opts, titleText)
         }
 

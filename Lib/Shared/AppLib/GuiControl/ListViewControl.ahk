@@ -225,7 +225,7 @@ class ListViewControl extends GuiControlBase {
         static ORect := OHDC + 4 + (A_PtrSize - 4)
         static OItemSpec := OHDC + 16 + A_PtrSize
 
-        textColor := this.guiObj.themeObj.RGB2BGR("0x" . this.guiObj.themeObj.GetColor("lvHeaderText"))
+        textColor := this.guiObj.themeObj.RGB2BGR("0x" . this.guiObj.themeObj.GetColor("textListViewHeader"))
         bgColor := this.guiObj.themeObj.RGB2BGR("0x" . this.guiObj.themeObj.GetColor("background"))
         hdc := NumGet(l + 0, OHDC, "Ptr")
         rectL := NumGet(l + 0, ORect, "Int") + (this.guiObj.margin/2)

@@ -5,43 +5,71 @@
         "iconTheme": "Dark",
         "vars": {},
         "colors": {
-            "background": "000000",
-            "text": "FFFFFF",
-            "textLight": "EEEEEE",
-            "accent": "9466FC",
-            "accentLight": "EEE6FF",
-            "accentDark": "8A57F0",
-            "inputText": "{{background}}"
+            "accentBg": "8A57F0",
+            "accentText": "9466fc",
+            "accentBright": "EEE6FF",
+            "background": "{{dark}}",
+            "border": "{{accentBg}}",
+            "buttonBg": "{{background}}",
+            "buttonBgDisabled": "{{buttonBg}}",
+            "buttonBgHover": "{{accentBg}}",
+            "buttonBorder": "{{border}}",
+            "buttonBorderDisabled": "{{buttonBorder}}",
+            "buttonBorderHover": "{{buttonBorder}}",
+            "buttonText": "{{textInactive}}",
+            "buttonTextDisabled": "{{textDim}}",
+            "buttonTextHover": "{{light}}",
+            "dark": "000000",
+            "light": "FFFFFF",
+            "menuBg": "{{buttonBg}}",
+            "menuBgDisabled": "{{buttonBgDisabled}}",
+            "menuBgHover": "{{buttonBgHover}}",
+            "menuBorder": "{{buttonBorder}}",
+            "menuBorderDisabled": "{{buttonBorder}}",
+            "menuBorderHover": "{{buttonBorderHover}}",
+            "menuText": "{{buttonText}}",
+            "menuTextDisabled": "{{buttonTextDisabled}}",
+            "menuTextHover": "{{accentBright}}",
+            "primaryActionBg": "{{accentBg}}",
+            "primaryActionBgDisabled": "{{buttonBgDisabled}}",
+            "primaryActionBgHover": "{{accentText}}",
+            "primaryActionBorder": "{{primaryActionBg}}",
+            "primaryActionBorderDisabled": "{{primaryActionBgDisabled}}",
+            "primaryActionBorderHover": "{{primaryActionBgHover}}",
+            "primaryActionText": "{{accentBright}}",
+            "primaryActionTextDisabled": "{{buttonTextDisabled}}",
+            "primaryActionTextHover": "{{light}}",
+            "statusBgActive": "{{accentBg}}",
+            "statusBgActiveHover": "{{accentText}}",
+            "statusBgInactive": "{{background}}",
+            "statusBgInactiveHover": "{{background}}",
+            "statusBorderActive": "{{accentBright}}",
+            "statusBorderActiveHover": "{{light}}",
+            "statusBorderInactive": "{{textDim}}",
+            "statusBorderInactiveHover": "{{textLight}}",
+            "statusTextActive": "{{accentBright}}",
+            "statusTextActiveHover": "{{light}}",
+            "statusTextInactive": "{{textDim}}",
+            "statusTextInactiveHover": "{{textLight}}",
+            "text": "{{light}}",
+            "textHeading": "{{text}}",
+            "textListViewHeader": "{{textHeading}}",
+            "textInactive": "EEEEEE",
+            "textDim": "646E70",
+            "textInput": "{{dark}}",
+            "textLink": "{{accent}}",
+            "titlebarButtonBg": "{{background}}",
+            "titlebarButtonBgDisabled": "{{background}}",
+            "titlebarButtonBgHover": "{{background}}",
+            "titlebarButtonBorder": "{{background}}",
+            "titlebarButtonBorderDisabled": "{{background}}",
+            "titlebarButtonBorderHover": "{{background}}",
+            "titlebarButtonText": "{{buttonText}}",
+            "titlebarButtonTextDisabled": "{{buttonTextDisabled}}",
+            "titlebarButtonTextHover": "{{buttonTextHover}}"
         },
         "themeAssets": {
             "logo": ""
-        },
-        "buttons": {
-            "styles": {
-                "status": {
-                    "enabled": {
-                        "bgColor": "{{accentDarkBg}}",
-                        "textColor": "{{light}}",
-                        "borderThickness": 0,
-                        "shape": "StatusIndicatorButtonShape",
-                        "textAlign": "Left"
-                    },
-                    "disabled": {
-                        "bgColor": "{{gray}}",
-                        "textColor": "{{dim}}",
-                        "borderThickness": 0,
-                        "shape": "StatusIndicatorButtonShape",
-                        "textAlign": "Left"
-                    },
-                    "hovered": {
-                        "bgColor": "{{accentDark}}",
-                        "textColor": "{{light}}",
-                        "borderThickness": 0,
-                        "shape": "StatusIndicatorButtonShape",
-                        "textAlign": "Left"
-                    }
-                }
-            }
         }
     }
 }

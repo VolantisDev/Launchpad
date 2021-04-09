@@ -326,7 +326,7 @@ class GuiBase {
             tabIndex := NumGet(lParam + 0, OCtlId, "UInt")
             tabName := this.tabNames[tabIndex + 1]
 
-            textColor := this.themeObj.RGB2BGR("0x" . this.themeObj.GetColor(isSelected ? "textLight" : "text"))
+            textColor := this.themeObj.RGB2BGR("0x" . this.themeObj.GetColor(isSelected ? "textInactive" : "text"))
             bgColor := this.themeObj.RGB2BGR("0x" . this.themeObj.GetColor("background"))
             hdc := NumGet(lParam + 0, OHDC, "Ptr")
 

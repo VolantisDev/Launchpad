@@ -23,6 +23,6 @@ class ProgressIndicator extends ProgressIndicatorBase {
     }
 
     AddGuiProgressIndicator() {
-        this.guiObj.AddProgress("x" . this.margin . " w" . this.windowSettings["contentWidth"] . " h5 vDialogProgress c" . this.themeObj.GetColor("accent") . " Background" . this.themeObj.GetColor("accentLight") . " Range" . this.rangeStart . "-" . this.rangeStop, this.currentPosition)
+        this.guiObj.AddProgress("x" . this.margin . " w" . this.windowSettings["contentWidth"] . " h5 vDialogProgress c" . this.themeObj.GetColor("accent") . " Background" . this.themeObj.GetColor("accentBright") . " Range" . this.rangeStart . "-" . this.rangeStop, this.currentPosition)
     }
 }
