@@ -21,6 +21,24 @@
             "buttonTextHover": "{{light}}",
             "dark": "000000",
             "light": "FFFFFF",
+            "mainMenuBg": "{{background}}",
+            "mainMenuBgDisabled": "{{background}}",
+            "mainMenuBgHover": "{{background}}",
+            "mainMenuBorder": "{{menuBorder}}",
+            "mainMenuBorderDisabled": "{{menuBorderDisabled}}",
+            "mainMenuBorderHover": "{{menuBorderHover}}",
+            "mainMenuText": "{{menuText}}",
+            "mainMenuTextDisabled": "{{menuTextDisabled}}",
+            "mainMenuTextHover": "{{menuTextHover}}",
+            "manageButtonBg": "{{background}}",
+            "manageButtonBgDisabled": "{{buttonBg}}",
+            "manageButtonBgHover": "{{accentBg}}",
+            "manageButtonBorder": "{{border}}",
+            "manageButtonBorderDisabled": "{{buttonBorder}}",
+            "manageButtonBorderHover": "{{buttonBorder}}",
+            "manageButtonText": "{{textInactive}}",
+            "manageButtonTextDisabled": "{{textDim}}",
+            "manageButtonTextHover": "{{light}}",
             "menuBg": "{{buttonBg}}",
             "menuBgDisabled": "{{buttonBgDisabled}}",
             "menuBgHover": "{{accentBright}}",
@@ -39,6 +57,8 @@
             "primaryActionText": "{{accentBright}}",
             "primaryActionTextDisabled": "{{buttonTextDisabled}}",
             "primaryActionTextHover": "{{light}}",
+            "progressBarBg": "{{accentBright}}",
+            "progressBarFg": "{{accentText}}",
             "statusBgActive": "{{accentBg}}",
             "statusBgActiveHover": "{{accentText}}",
             "statusBgInactive": "{{background}}",
@@ -57,7 +77,7 @@
             "textInactive": "5D5D5D",
             "textDim": "646E70",
             "textInput": "{{dark}}",
-            "textLink": "{{accent}}",
+            "textLink": "{{accentText}}",
             "titlebarButtonBg": "{{background}}",
             "titlebarButtonBgDisabled": "{{background}}",
             "titlebarButtonBgHover": "{{background}}",
@@ -186,25 +206,25 @@
                 },
                 "mainMenu": {
                     "enabled": {
-                        "bgColor": "{{background}}",
-                        "textColor": "{{menuText}}",
-                        "borderColor": "{{menuBorder}}",
+                        "bgColor": "{{mainMenuBg}}",
+                        "textColor": "{{mainMenuText}}",
+                        "borderColor": "{{mainMenuBorder}}",
                         "borderThickness": 0,
                         "textAlign": "Left",
                         "shape": "MainMenuButtonShape"
                     },
                     "disabled": {
-                        "bgColor": "{{background}}",
-                        "textColor": "{{menuTextDisabled}}",
-                        "borderColor": "{{menuBorderDisabled}}",
+                        "bgColor": "{{mainMenuBgDisabled}}",
+                        "textColor": "{{mainMenuTextDisabled}}",
+                        "borderColor": "{{mainMenuBorderDisabled}}",
                         "borderThickness": 0,
                         "textAlign": "Left",
                         "shape": "MainMenuButtonShape"
                     },
                     "hovered": {
-                        "bgColor": "{{background}}",
-                        "textColor": "{{menuTextHover}}",
-                        "borderColor": "{{menuBorderHover}}",
+                        "bgColor": "{{mainMenuBgHover}}",
+                        "textColor": "{{mainMenuTextHover}}",
+                        "borderColor": "{{mainMenuBorderHover}}",
                         "borderThickness": 0,
                         "textAlign": "Left",
                         "shape": "MainMenuButtonShape"
@@ -286,6 +306,9 @@
                 },
                 "manage": {
                     "enabled": {
+                        "bgColor": "{{manageButtonBg}}",
+                        "textColor": "{{manageButtonText}}",
+                        "borderColor": "{{manageButtonBorder}}",
                         "borderThickness": 0,
                         "shape": "ManageButtonShape",
                         "strokeWidth": 2,
@@ -293,6 +316,9 @@
                         "textAlign": "Left"
                     },
                     "disabled": {
+                        "bgColor": "{{manageButtonBgDisabled}}",
+                        "textColor": "{{manageButtonTextDisabled}}",
+                        "borderColor": "{{manageButtonBorderDisabled}}",
                         "borderThickness": 0,
                         "shape": "ManageButtonShape",
                         "strokeWidth": 2,
@@ -300,7 +326,9 @@
                         "textAlign": "Left"
                     },
                     "hovered": {
-                        "textColor": "{{textLink}}",
+                        "bgColor": "{{manageButtonBgHover}}",
+                        "textColor": "{{manageButtonTextHover}}",
+                        "borderColor": "{{manageButtonBorderHover}}",
                         "borderThickness": 0,
                         "shape": "ManageButtonShape",
                         "strokeWidth": 2,
@@ -310,6 +338,9 @@
                 },
                 "managePrimary": {
                     "enabled": {
+                        "bgColor": "{{manageButtonBg}}",
+                        "textColor": "{{manageButtonText}}",
+                        "borderColor": "{{manageButtonBorder}}",
                         "borderThickness": 1,
                         "shape": "ManageButtonShape",
                         "strokeWidth": 2,
@@ -317,6 +348,9 @@
                         "textAlign": "Left"
                     },
                     "disabled": {
+                        "bgColor": "{{manageButtonBgDisabled}}",
+                        "textColor": "{{manageButtonTextDisabled}}",
+                        "borderColor": "{{manageButtonBorderDisabled}}",
                         "borderThickness": 1,
                         "shape": "ManageButtonShape",
                         "strokeWidth": 2,
@@ -324,7 +358,9 @@
                         "textAlign": "Left"
                     },
                     "hovered": {
-                        "textColor": "{{accentBright}}",
+                        "bgColor": "{{manageButtonBgHover}}",
+                        "textColor": "{{manageButtonTextHover}}",
+                        "borderColor": "{{manageButtonBorderHover}}",
                         "borderThickness": 1,
                         "shape": "ManageButtonShape",
                         "strokeWidth": 2,
