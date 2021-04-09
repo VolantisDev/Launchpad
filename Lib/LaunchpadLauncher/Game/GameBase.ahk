@@ -111,6 +111,7 @@ class GameBase {
         winId := 0
 
         if (this.config["GameProcessType"] == "Title") {
+            ; TODO: Replace title excludes with a better way to exclude the launcher window itself
             winId := WinExist(this.config["GameProcessId"],, " - Launchpad")
         } else if (this.config["GameProcessType"] == "Class") {
             winId := WinExist("ahk_class " . this.config["GameProcessId"],, " - Launchpad")

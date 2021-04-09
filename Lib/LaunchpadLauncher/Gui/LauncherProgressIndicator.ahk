@@ -12,7 +12,7 @@ class LauncherProgressIndicator extends MiniProgressIndicator {
     }
 
     GetTitle(title) {
-        return title . " - " . this.app.appName
+        return this.app.appName
     }
 
     Controls() {
