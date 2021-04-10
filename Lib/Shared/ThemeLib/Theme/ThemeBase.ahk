@@ -51,7 +51,7 @@ class ThemeBase {
 
             ; No button is hovered, reset hovered button
             if (this.hoveredButton != "") {
-                this.SetNormalButtonState(this.themedButtons[this.hoveredButton]["picture"])
+                this.SetNormalButtonState(this.themedButtons[this.hoveredButton]["picture"], true)
                 this.hoveredButton := ""
             }
         }
@@ -422,17 +422,19 @@ class ThemeBase {
         return result
     }
 
-    SetNormalButtonState(btn) {
+    SetNormalButtonState(btn, ignoreErrors := false) {
         try {
             btn := this.themedButtons[this.hoveredButton]["states"]["enabled"].DrawOn(btn)
         } catch ex {
-            throw AppException.new("Failed to change button state: " . ex.Message)
+            if (!ignoreErrors) {
+                throw AppException.new("Failed to change button state: " . ex.Message)
+            }
         }
         
         return btn
     }
 
-    SetHoveredButton(btn) {
+    SetHoveredButton(btn, ignoreErrors := false) {
         if (this.hoveredButton == btn.Hwnd) {
             return
         }
@@ -445,7 +447,9 @@ class ThemeBase {
         try {
             btn := this.themedButtons[btn.Hwnd]["states"]["hovered"].DrawOn(btn)
         } catch ex {
-            throw AppException.new("Failed to change button state: " . ex.Message)
+            if (!ignoreErrors) {
+                throw AppException.new("Failed to change button state: " . ex.Message)
+            }
         }
 
         this.hoveredButton := btn.Hwnd
