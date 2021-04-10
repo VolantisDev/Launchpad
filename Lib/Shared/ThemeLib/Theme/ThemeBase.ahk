@@ -426,7 +426,7 @@ class ThemeBase {
         try {
             btn := this.themedButtons[this.hoveredButton]["states"]["enabled"].DrawOn(btn)
         } catch ex {
-            ; TODO: Log errors here
+            throw AppException.new("Failed to change button state: " . ex.Message)
         }
         
         return btn
@@ -445,7 +445,7 @@ class ThemeBase {
         try {
             btn := this.themedButtons[btn.Hwnd]["states"]["hovered"].DrawOn(btn)
         } catch ex {
-            ; TODO: Log errors here
+            throw AppException.new("Failed to change button state: " . ex.Message)
         }
 
         this.hoveredButton := btn.Hwnd
