@@ -128,11 +128,12 @@
         }
         
         super.RunApp(config)
-        this.OpenApp()
-
+        
         this.Platforms.LoadComponents(this.Config.PlatformsFile)
         this.Launchers.LoadComponents(this.Config.LauncherFile)
         this.Backups.LoadComponents()
+
+        this.OpenApp()
 
         if (this.detectGames) {
             this.Platforms.DetectGames()
