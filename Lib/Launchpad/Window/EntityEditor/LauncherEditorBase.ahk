@@ -60,8 +60,6 @@ class LauncherEditorBase extends EntityEditorBase {
                 this.entityObj.SetConfigValue("IconSrc", file, false)
                 this.guiObj["IconSrc"].Text := file
             }
-        } else if (btn == "OpenIconSrc") {
-            ; TODO: Disable opening for icon src
         } else if (btn == "ClearIconSrc") {
             if (this.entityObj.UnmergedConfig.Has("IconSrc")) {
                 this.entityObj.UnmergedConfig.Delete("IconSrc")
