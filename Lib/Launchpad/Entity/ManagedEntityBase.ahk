@@ -204,8 +204,9 @@ class ManagedEntityBase extends EntityBase {
         detectedValues[this.configPrefix . "UsesShortcut"] := usesShortcut
         detectedValues[this.configPrefix . "RunType"] := usesShortcut ? "Shortcut" : "Command"
 
-        ; TODO: Make this value calculate only when needed
-        detectedValues[this.configPrefix . "InstallDir"] := this.LocateInstallDir()
+        if (!this.entityData.HasValue(this.configPrefix . "InstallDir")) {
+            detectedValues[this.configPrefix . "InstallDir"] := this.LocateInstallDir()
+        }
 
         if (this.ProcessType == "Exe") {
             SplitPath(this.Exe, processId)
@@ -214,7 +215,6 @@ class ManagedEntityBase extends EntityBase {
         }
 
         detectedValues[this.configPrefix . "ProcessId"] := processId
-
         detectedValues[this.configPrefix . "WorkingDir"] := this.InstallDir
 
         return detectedValues
