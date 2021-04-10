@@ -303,6 +303,8 @@ class AppBase {
             errorText .= "`nFile: " . e.File . " (Line " . e.Line . ")"
         }
 
+        this.Logger.Error(errorText)
+
         errorText .= "`n"
 
         return this.ShowError("Unhandled Exception", errorText, e, mode != "ExitApp")
