@@ -22,7 +22,7 @@
         tabs.UseTab("Sources", true)
         this.AddEntityCtl("Install Directory", "InstallDir", true, "LocationBlock", "InstallDir", "Clear", true, "Select the platform installation directory.")
         this.AddEntityCtl("Exe Path", "ExePath", true, "LocationBlock", "ExePath", "Clear", true, "Select the platform's .exe file.")
-        this.AddEntityCtl("Icon Source", "IconSrc", true, "LocationBlock", "IconSrc", "Clear", true, "Select the icon source to use for this platform.")
+        this.AddEntityCtl("Icon Source", "IconSrc", true, "LocationBlock", "IconSrc", "Clear", false, "Select the icon source to use for this platform.")
 
         tabs.UseTab()
     }

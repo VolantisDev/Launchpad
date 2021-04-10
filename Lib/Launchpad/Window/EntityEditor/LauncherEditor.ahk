@@ -31,7 +31,7 @@ class LauncherEditor extends LauncherEditorBase {
         ctl.refreshOnDataChange := true
 
         tabs.UseTab("Sources", true)
-        this.AddEntityCtl("Icon Source", "IconSrc", true, "LocationBlock", "IconSrc", "Clear", true)
+        this.AddEntityCtl("Icon Source", "IconSrc", true, "LocationBlock", "IconSrc", "Clear", false)
         this.AddEntityCtl("DataSource Item Key", "DataSourceItemKey", true, "EditControl", 1, "", "The key to use when looking this item up in its datasource(s). By default, this is the same as the main key.")
         
         tabs.UseTab("UI", true)
