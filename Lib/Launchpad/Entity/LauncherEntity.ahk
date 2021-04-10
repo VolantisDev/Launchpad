@@ -284,6 +284,10 @@ class LauncherEntity extends EntityBase {
             }
         }
 
+        if (this.app.Config.DefaultLauncherTheme && this.app.Config.OverrideLauncherTheme) {
+            detectedValues["ThemeName"] := this.app.Config.DefaultLauncherTheme
+        }
+
         return detectedValues
     }
 
