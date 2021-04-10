@@ -52,13 +52,21 @@
 
         tabs.UseTab("Appearance", true)
 
-        this.AddHeading("Theme")
+        this.AddHeading("Launchpad Theme")
         chosen := this.GetItemIndex(this.availableThemes, this.app.Config.ThemeName)
         ctl := this.guiObj.AddDDL("vThemeName xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.availableThemes)
         ctl.OnEvent("Change", "OnThemeNameChange")
         ctl.ToolTip := "Select a theme for Launchpad to use."
 
         this.Add("ButtonControl", "", "Reload Launchpad", "OnReload")
+
+        this.AddHeading("Default Launcher Theme")
+        chosen := this.GetItemIndex(this.availableThemes, this.app.Config.DefaultLauncherTheme)
+        ctl := this.guiObj.AddDDL("vDefaultLauncherTheme xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.availableThemes)
+        ctl.OnEvent("Change", "OnDefaultLauncherThemeChange")
+        ctl.ToolTip := "Select the theme your launchers will use unless overridden."
+
+        this.AddConfigCheckBox("Override API launcher themes with the default theme", "OverrideLauncherTheme")
 
         tabs.UseTab("Cache", true)
 

@@ -104,6 +104,16 @@
         set => this.SetBooleanValue("UseAdvancedEditor", value)
     }
 
+    DefaultLauncherTheme {
+        get => this.GetIniValue("DefaultLauncherTheme") || this.ThemeName
+        set => this.SetIniValue("DefaultLauncherTheme", value)
+    }
+
+    OverrideLauncherTheme {
+        get => this.GetBooleanValue("OverrideLauncherTheme", false)
+        set => this.SetBooleanValue("OverrideLauncherTheme", value)
+    }
+
     LaunchersLoaded() {
         return (this.app.Launchers != "")
     }
