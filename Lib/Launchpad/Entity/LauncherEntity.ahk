@@ -65,16 +65,6 @@ class LauncherEntity extends EntityBase {
         set => this.SetConfigValue("ShowProgress", value, false)
     }
 
-    ProgressTitle {
-        get => this.GetConfigValue("ProgressTitle", false)
-        set => this.SetConfigValue("ProgressTitle", value, false)
-    }
-
-    ProgressText {
-        get => this.GetConfigValue("ProgressText", false)
-        set => this.SetConfigValue("ProgressText", value, false)
-    }
-
     RunBefore {
         get => this.GetConfigValue("RunBefore", false)
         set => this.SetConfigValue("RunBefore", value, false)
@@ -306,8 +296,6 @@ class LauncherEntity extends EntityBase {
         defaults["ResourcesDir"] := this.app.appDir . "\Resources"
         defaults["ThemesDir"] := this.app.appDir . "\Resources\Themes"
         defaults["ShowProgress"] := true
-        defaults["ProgressTitle"] := "{g}"
-        defaults["ProgressText"] := "Monitoring {g}..."
         defaults["RunBefore"] := ""
         defaults["RunAfter"] := ""
         defaults["CloseBefore"] := ""

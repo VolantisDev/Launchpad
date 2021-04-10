@@ -38,8 +38,6 @@ class LauncherEditor extends LauncherEditorBase {
         this.AddEntityCtl("Launcher Theme", "ThemeName", true, "SelectControl", this.knownThemes, "", "The theme to use if/when the launcher shows GUI windows")
         ctl := this.AddEntityCtl("", "ShowProgress", true, "BasicControl", "CheckBox", "Show Progress Window")
         ctl.ctl.ToolTip := "Whether or not to show a window indicating the current status of the launcher"
-        this.AddEntityCtl("Progress Window Title", "ProgressTitle", true, "EditControl", 1, "", "The title that the progress window will use if shown")
-        this.AddEntityCtl("Progress Window Text", "ProgressText", true, "EditControl", 1, "", "The text displayed at the top of the progress window if shown")
 
         tabs.UseTab("Processes", true)
         this.AddEntityCtl("Run Before Game", "RunBefore", true, "EditControl", 3, "", "Run one or more processes before launching the game. Each line should contain a command to run or a full path to a .exe or shortcut file to launch.`n`nEach process will be run as a scheduled task so that it is not owned by the launcher.")

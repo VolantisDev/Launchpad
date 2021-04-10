@@ -28,9 +28,6 @@ class LauncherBase {
 
     CreateProgressGui() {
         if (this.progress == "") {
-            ; TODO: Make use of configured progress text and title
-            progressTitle := StrReplace(this.config["ProgressTitle"], "{g}", this.config["DisplayName"])
-            progressText := StrReplace(this.config["ProgressText"], "{g}", this.config["DisplayName"])
             this.progress := this.app.GuiManager.OpenWindow("LauncherProgressIndicator", "", this.key, A_ScriptFullPath, "", "", this.CountLaunchSteps())
         }
     }
