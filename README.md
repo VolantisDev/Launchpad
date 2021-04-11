@@ -42,7 +42,7 @@ or it might not work at all. Some common issues include:
   belong
 
 Launchpad was created to solve all of these issues and more. It gives you a simple way to create a lightweight .exe 
-file for any game taht looks and acts the way you want. You can add these files to Steam, or any other launcher. Or 
+file for any game that looks and acts the way you want. You can add these files to Steam, or any other launcher. Or 
 you can simply launch them directly to help you control how your games run.
 
 ## Features
