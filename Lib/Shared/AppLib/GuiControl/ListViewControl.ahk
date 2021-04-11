@@ -155,7 +155,7 @@ class ListViewControl extends GuiControlBase {
             return
         }
 
-        this.guiObj.AutoXYWH("wh", ["ListView"])
+        this.guiObj.AutoXYWH("wh", [this.ctl.Name])
 
         this.ResizeColumns()
     }
