@@ -4,6 +4,7 @@
     frameShadow := false
     checkboxes := false
     listView := ""
+    saveWindowState := true
 
     Controls() {
         super.Controls()

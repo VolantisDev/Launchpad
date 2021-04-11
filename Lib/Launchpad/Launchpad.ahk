@@ -176,4 +176,16 @@
     ProvideFeedback() {
         this.GuiManager.Dialog("FeedbackWindow")
     }
+
+    RestartApp() {
+        if (this.GuiManager) {
+            window := this.GuiManager.GetWindow("MainWindow")
+
+            if (window) {
+                this.GuiManager.StoreWindowState(window)
+            }
+        }
+
+        super.RestartApp()
+    }
 }

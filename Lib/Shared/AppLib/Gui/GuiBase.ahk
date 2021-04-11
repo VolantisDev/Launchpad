@@ -47,6 +47,7 @@ class GuiBase {
     showInNotificationArea := false
     width := ""
     height := ""
+    saveWindowState := false
 
     __New(app, themeObj, windowKey, title, owner := "", parent := "", iconSrc := "") {
         InvalidParameterException.CheckTypes("GuiBase", "app", app, "AppBase", "title", title, "", "themeObj", themeObj, "ThemeBase", "windowKey", windowKey, "")
@@ -397,15 +398,12 @@ class GuiBase {
             width := this.width
         }
 
+        windowSize := "w" . width
+
         height := ""
 
         if (this.height) {
             height := this.height
-        }
-
-        windowSize := "w" . width
-
-        if (height) {
             windowSize .= " h" . height
         }
 
@@ -440,7 +438,7 @@ class GuiBase {
             }
 
             windowSize .= " x" . windowX . " y" . windowY
-        } else if (windowState && windowState.Count) {
+        } else if (this.saveWindowState && windowState && windowState.Count) {
             if (windowState.Has("x")) {
                 windowSize .= " x" . windowState["x"]
             }
@@ -458,7 +456,7 @@ class GuiBase {
             }
         }
 
-        this.guiObj.Show(windowSize . " " . this.showOptions)\
+        this.guiObj.Show(windowSize . " " . this.showOptions)
 
         if (newH != height || newW != width) {
             this.guiObj.Move(,, newW, newH)
@@ -536,6 +534,7 @@ class GuiBase {
         }
 
         if (!this.isClosed && WinExist("ahk_id " . this.guiObj.Hwnd)) {
+            this.app.GuiManager.StoreWindowState(this)
             WinClose("ahk_id " . this.guiObj.Hwnd)
         } else {
             this.Destroy()
@@ -543,7 +542,7 @@ class GuiBase {
     }
 
     Destroy() {
-        if (!this.isClosed) {
+        if (!this.isClosed && this.saveWindowState) {
             this.app.GuiManager.StoreWindowState(this)
         }
 
