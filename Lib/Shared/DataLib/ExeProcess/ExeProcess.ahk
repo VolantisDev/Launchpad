@@ -132,13 +132,4 @@ class ExeProcess {
     SearchForProcesses(query) {
         return ExeProcess.wmi.ExecQuery(query)
     }
-
-    ; TODO: Replace this with a simple call to LookupPid from wherever needs to call it.
-    WatchForProcessReplacement(pid := "", timeout := 60) {
-        if (pid == "") {
-            pid := this.pid
-        }
-
-        pid := this.LookupPid(A_Now, timeout) ; This will update this.pid as well if found
-    }
 }
