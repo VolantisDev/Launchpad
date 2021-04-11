@@ -29,8 +29,6 @@ class GuiBase {
     calcSizeCallback := ""
     activateCallback := ""
     hitTestCallback := ""
-    headerCustomDrawCallback := ""
-    tabsCustomDrawCallback := ""
     tabsHwnd := ""
     tabNames := []
     frameShadow := true
@@ -48,6 +46,7 @@ class GuiBase {
     openWindowWithinScreenBounds := true
     showInNotificationArea := false
     width := ""
+    height := ""
 
     __New(app, themeObj, windowKey, title, owner := "", parent := "", iconSrc := "") {
         InvalidParameterException.CheckTypes("GuiBase", "app", app, "AppBase", "title", title, "", "themeObj", themeObj, "ThemeBase", "windowKey", windowKey, "")
@@ -119,9 +118,6 @@ class GuiBase {
         this.app.Events.Register(Events.WM_NCACTIVATE, "Gui" . this.guiId, this.activateCallback)
         this.hitTestCallback := ObjBindMethod(this, "OnHitTest")
         this.app.Events.Register(Events.WM_NCHITTEST, "Gui" . this.guiId, this.hitTestCallback)
-        this.tabsCustomDrawCallback := ObjBindMethod(this, "OnTabsDraw")
-        this.tabsSubclassCallback := ObjBindMethod(this, "OnTabsSubclass")
-        this.tabsAdjustRectCallback := ObjBindMethod(this, "OnTabsAdjustRect")
     }
 
     OnCheckbox(chk, info) {
@@ -351,7 +347,7 @@ class GuiBase {
         return title
     }
 
-    Show() {
+    Show(windowState := "") {
         this.Start()
         
         if (this.showTitlebar) {
@@ -362,7 +358,7 @@ class GuiBase {
         this.Controls()
         this.AddButtons()
 
-        return this.End()
+        return this.End(windowState)
     }
 
     Create() {      
@@ -394,9 +390,27 @@ class GuiBase {
     AddButtons() {
     }
 
-    End() {
-        width := this.width ? this.width : (this.windowSettings["contentWidth"] + (this.margin * 2))
+    End(windowState := "") {
+        width := this.windowSettings["contentWidth"] + (this.margin * 2)
+
+        ; TODO: Use width from window state if present
+        if (this.width) {
+            width := this.width
+        }
+
+        height := ""
+
+        ; TODO: Use height from window state if present
+        if (this.height) {
+            height := this.height
+        }
+
         windowSize := "w" . width
+
+        if (height) {
+            windowSize .= " h" . height
+        }
+
         MonitorGetWorkArea(, monitorL, monitorT, monitorR, monitorB)
 
         if (this.positionAtMouseCursor) {    
@@ -425,6 +439,14 @@ class GuiBase {
             }
 
             windowSize .= " x" . windowX . " y" . windowY
+        } else if (windowState && windowState.Count) {
+            if (windowState.Has("x")) {
+                windowSize .= " x" . windowState["x"]
+            }
+
+            if (windowState.Has("y")) {
+                windowSize .= " y" . windowState["y"]
+            }
         }
 
         this.guiObj.Show(windowSize . " " . this.showOptions)
@@ -508,8 +530,8 @@ class GuiBase {
     }
 
     Destroy() {
-        if (this.tabsHwnd) {
-            OnMessage(0x002B, this.tabsCustomDrawCallback, 0)
+        if (!this.isClosed) {
+            this.app.GuiManager.StoreWindowState(this)
         }
 
         if (this.owner) {

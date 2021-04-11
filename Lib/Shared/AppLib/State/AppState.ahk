@@ -19,6 +19,11 @@ class AppState extends JsonState {
         set => this.SetLastUpdateChecks(value)
     }
 
+    WindowState {
+        get => this.State.Has("WindowState") ? this.State["WindowState"] : this.State["WindowState"] := Map()
+        set => this.SetWindowState(value)
+    }
+
     SetVersions(versions) {
         this.State["Versions"] := versions
         this.SaveState()
@@ -27,6 +32,28 @@ class AppState extends JsonState {
     SetAuthentication(authentication) {
         this.State["Authentication"] := authentication
         this.SaveState()
+    }
+
+    SetWindowState(windowState) {
+        this.State["WindowState"] := windowState
+        this.SaveState()
+    }
+
+    StoreWindowState(windowKey, windowState) {
+        this.WindowState[windowKey] := windowState
+        this.SaveState()
+    }
+
+    RetrieveWindowState(windowKey) {
+        windowState := ""
+        
+        if (this.WindowState.Has(windowKey)) {
+            windowState := this.WindowState[windowKey]
+        } else {
+            windowState := Map()
+        }
+
+        return windowState
     }
 
     SetInstalledComponents(components) {

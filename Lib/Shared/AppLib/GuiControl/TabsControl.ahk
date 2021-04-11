@@ -24,6 +24,12 @@ class TabsControl extends GuiControlBase {
         return this.ctl
     }
 
+    __Delete() {
+        if (this.ctlHwnd) {
+            ;OnMessage(0x002B, this.tabsCustomDrawCallback, 0)
+        }
+    }
+
     OnTabsSubclass(h, m, w, l, idSubclass, refData) {
         static TCM_ADJUSTRECT := 0x1328
         static WM_DESTROY := 0x02

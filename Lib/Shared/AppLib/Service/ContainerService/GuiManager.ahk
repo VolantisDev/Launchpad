@@ -81,7 +81,7 @@ class GuiManager extends ContainerServiceBase {
 
         if (!this.container.Exists(key)) {
             guiObj := %className%.new(this.app, this.GetTheme(), key, params*)
-            guiObj.Show()
+            guiObj.Show(this.GetWindowState(key))
             this.container.Set(key, guiObj)
         }
 
@@ -245,5 +245,28 @@ class GuiManager extends ContainerServiceBase {
         }
 
         return guiObj
+    }
+
+    StoreWindowState(guiObj) {
+        guiObj.guiObj.GetPos(x, y, w, h)
+        windowState := Map("x", x, "y", y, "w", w, "h", h)
+        this.app.State.StoreWindowState(guiObj.windowKey, windowState)
+    }
+
+    GetWindowState(windowKey) {
+        return this.app.State.RetrieveWindowState(windowKey)
+    }
+
+    RestoreWindowState(guiObj) {
+        windowState := this.GetWindowState(guiObj.windowKey)
+
+        if (windowState && windowState.Count > 0) {
+            x := windowState.Has("x") ? windowState["x"] : ""
+            y := windowState.Has("y") ? windowState["y"] : ""
+            w := windowState.Has("w") ? windowState["w"] : ""
+            h := windowState.Has("h") ? windowState["h"] : ""
+
+            guiObj.guiObj.Move(x, y, w, h)
+        }
     }
 }

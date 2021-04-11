@@ -54,9 +54,9 @@
         }
     }
 
-    Show() {
+    Show(windowState := "") {
         Hotkey("~LButton", this.onLButtonCallback, "On")
-        return super.Show()
+        return super.Show(windowState)
     }
 
     Destroy() {
