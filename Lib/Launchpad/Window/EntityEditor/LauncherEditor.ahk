@@ -47,7 +47,6 @@ class LauncherEditor extends LauncherEditorBase {
 
         tabs.UseTab("Advanced", true)
 
-        this.AddHeading("Logging Level")
         this.AddEntityCtl("Logging Level", "LoggingLevel", true, "SelectControl", this.logLevels)
         this.AddEntityCtl("Log Path", "LogPath", true, "LocationBlock", "LogPath", "Clear", true)
 
