@@ -3,6 +3,7 @@ class FormGuiBase extends GuiBase {
     btns := ""
     result := ""
     waitForResult := true
+    buttonNames := []
 
     __New(app, themeObj, windowKey, title, text := "", owner := "", parent := "", btns := "*&Submit") {
         this.text := text
@@ -36,7 +37,10 @@ class FormGuiBase extends GuiBase {
             position := (A_Index == 1) ? "x" . btnsStart " " : "x+m yp "
             ;defaultOption := InStr(btns[A_Index], "*") ? "Default " : " "
             defaultOption := " "
-            this.Add("ButtonControl", position . defaultOption . "w" . btnW . " h" . btnH, RegExReplace(btns[A_Index], "\*"), "OnFormGuiButton", "dialog")
+            btnText := RegExReplace(btns[A_Index], "\*")
+            btnName := "Button" . StrReplace(btnText, " ", "")
+            this.buttonNames.Push(btnName)
+            this.Add("ButtonControl", position . defaultOption . "w" . btnW . " h" . btnH . " v" . btnName, btnText, "OnFormGuiButton", "dialog")
         }
     }
 
@@ -53,5 +57,11 @@ class FormGuiBase extends GuiBase {
     OnEscape(guiObj) {
         this.result := "Close"
         super.OnClose(guiObj)
+    }
+
+    OnSize(guiObj, minMax, width, height) {
+        super.OnSize(guiObj, minMax, width, height)
+
+        this.AutoXYWH("xy", this.buttonNames)
     }
 }
