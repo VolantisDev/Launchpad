@@ -119,7 +119,7 @@ installer file. Then, run the Launchpad icon on your desktop to get started!
 The setup screen that runs on first launch will walk you through some initial options and get you started 
 detecting your games and creating your first launchers.
 
-Once youv'e got some launchers created, simply Build All, and you will have a .exe file for each game launcher
+Once you've got some launchers created, simply Build All, and you will have a .exe file for each game launcher
 that you can add to Steam or any other platform.
 
 ## Updating Launchpad
