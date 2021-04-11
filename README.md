@@ -67,6 +67,8 @@ a game
 More information such as usage details is below, but since pictures speak a thousand words, here's some screenshots
 of various parts of Launchpad:
 
+Note: The following screenshots are out of date, but here for historical purposes. New screenshots will be posted soon.
+
 Initial Setup Window:
 
 ![setup_window](https://user-images.githubusercontent.com/277977/104859465-91b83d80-58f3-11eb-8cc6-d1e0f7700303.png)
@@ -114,7 +116,7 @@ Generated Launcher Files:
 ## How To Use
 
 If you're a new user, head over to the Releases page and simply download and run the latest Launchpad-x.x.x.exe
-installer file. Then, run the Launchpad icon on your desktop to get started!
+installer file!
 
 The setup screen that runs on first launch will walk you through some initial options and get you started 
 detecting your games and creating your first launchers.
@@ -124,11 +126,10 @@ that you can add to Steam or any other platform.
 
 ## Updating Launchpad
 
-Launchpad uses an installer to make it easy to get started. There is no automated update process yet, but 
-you can always download the latest installer and install it over the top of your existing installation.
+Launchpad automatically notifies you when there are updates available, and clicking Update will automatically download
+and start the latest installer.
 
-Launchpad currently does not notify you when a new release is available, so make sure to check periodically.
-Update notifications are coming soon!
+You can also click Check for Updates in the main Launchpad menu at any time.
 
 ## Note on Portability
 
