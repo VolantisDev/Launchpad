@@ -68,8 +68,8 @@
         return data
     }
 
-    GetListViewImgList(lv) {
-        IL := IL_Create(this.detectedGames.Count, 1, false)
+    GetListViewImgList(lv, large := false) {
+        IL := IL_Create(this.detectedGames.Count, 1, large)
         defaultIcon := this.themeObj.GetIconPath("Game")
         iconNum := 1
 

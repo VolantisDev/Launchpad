@@ -1,6 +1,7 @@
 ﻿class SettingsWindow extends FormGuiBase {
     availableThemes := Map()
     logLevels := ["None", "Error", "Warning", "Info", "Debug"]
+    listViewModes := ["Report", "Tile", "List"]
     needsRestart := false
 
     __New(app, themeObj, windowKey, owner := "", parent := "") {
@@ -21,6 +22,12 @@
 
         tabs.UseTab("Launchers", true)
 
+        this.AddHeading("Launchers View Mode")
+        chosen := this.GetItemIndex(this.listViewModes, this.app.Config.LaunchersViewMode)
+        ctl := this.guiObj.AddDDL("vLaunchersViewMode xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.listViewModes)
+        ctl.OnEvent("Change", "OnLaunchersViewModeChange")
+        ctl.ToolTip := "Select how you would like to view your launchers in the main window."
+
         this.AddConfigLocationBlock("Launcher File", "LauncherFile", "Reload")
         this.AddConfigLocationBlock("Launcher Directory", "DestinationDir")
         this.AddConfigLocationBlock("Assets Directory", "AssetsDir")
@@ -35,11 +42,25 @@
         tabs.UseTab("Platforms", true)
 
         this.Add("ButtonControl", "", "Manage Platforms", "OnManagePlatforms")
+
+        this.AddHeading("Platforms View Mode")
+        chosen := this.GetItemIndex(this.listViewModes, this.app.Config.PlatformsViewMode)
+        ctl := this.guiObj.AddDDL("vPlatformsViewMode xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.listViewModes)
+        ctl.OnEvent("Change", "OnPlatformsViewModeChange")
+        ctl.ToolTip := "Select how you would like to view your platforms in the Platform Manager."
+
         this.AddConfigLocationBlock("Platforms File", "PlatformsFile", "Reload")
 
         tabs.UseTab("Backups")
 
         this.Add("ButtonControl", "", "Manage Backups", "OnManageBackups")
+
+        this.AddHeading("Backups View Mode")
+        chosen := this.GetItemIndex(this.listViewModes, this.app.Config.BackupsViewMode)
+        ctl := this.guiObj.AddDDL("vBackupsViewMode xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.listViewModes)
+        ctl.OnEvent("Change", "OnBackupsViewModeChange")
+        ctl.ToolTip := "Select how you would like to view your backups in the Backup Manager."
+
         this.AddConfigLocationBlock("Backup Dir", "BackupDir", "&Manage")
         this.AddConfigLocationBlock("Backups File", "BackupsFile")
 
@@ -188,7 +209,7 @@
         if (btn == "ChangeDestinationDir") {
             this.app.Config.ChangeDestinationDir()
             this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
-            this.requiresRestart := true
+            this.needsRestart := true
         } else if (btn == "OpenDestinationDir") {
             this.app.Config.OpenDestinationDir()
         }
@@ -196,7 +217,7 @@
 
     OnApiTokenChange(ctl, info) {
         this.guiObj.Submit(false)
-        this.requiresRestart := true
+        this.needsRestart := true
         this.app.Config.ApiToken := ctl.Text
     }
 
@@ -204,7 +225,7 @@
         if (btn == "ChangeAssetsDir") {
             this.app.Config.ChangeAssetsDir()
             this.SetText("AssetsDir", this.app.Config.AssetsDir, "Bold")
-            this.requiresRestart := true
+            this.needsRestart := true
         } else if (btn == "OpenAssetsDir") {
             this.app.Config.OpenAssetsDir()
         }
@@ -214,7 +235,7 @@
         if (btn == "ChangeApiEndpoint") {
             this.app.DataSources.GetItem("api").ChangeApiEndpoint("", "")
             this.SetText("ApiEndpoint", this.app.Config.ApiEndpoint, "Bold")
-            this.requiresRestart := true
+            this.needsRestart := true
         } else if (btn == "OpenApiEndpoint") {
             this.app.DataSources.GetItem("api").Open()
         }
@@ -235,7 +256,7 @@
         if (btn == "ChangeBackupDir") {
             this.app.Backups.ChangeBackupDir()
             this.SetText("BackupDir", this.app.Config.BackupDir, "Bold")
-            this.requiresRestart := true
+            this.needsRestart := true
         } else if (btn == "OpenBackupDir") {
             this.app.Backups.OpenBackupDir()
         }
@@ -245,7 +266,23 @@
         this.guiObj.Submit(false)
         this.app.Config.ThemeName := this.availableThemes[ctl.Value]
         this.app.Themes.LoadMainTheme()
-        this.requiresRestart := true
+        this.needsRestart := true
+    }
+
+    OnLaunchersViewModeChange(ctl, info) {
+        this.guiObj.Submit(false)
+        this.app.Config.LaunchersViewMode := this.listViewModes[ctl.Value]
+        this.needsRestart := true
+    }
+
+    OnPlatformsViewModeChange(ctl, info) {
+        this.guiObj.Submit(false)
+        this.app.Config.PlatformsViewMode := this.listViewModes[ctl.Value]
+    }
+
+    OnBackupsViewModeChange(ctl, info) {
+        this.guiObj.Submit(false)
+        this.app.Config.BackupsViewMode := this.listViewModes[ctl.Value]
     }
 
     OnLoggingLevelChange(ctl, info) {

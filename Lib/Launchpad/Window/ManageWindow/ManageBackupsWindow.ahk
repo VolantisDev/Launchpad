@@ -30,8 +30,12 @@ class ManageBackupsWindow extends ManageWindowBase {
         return data
     }
 
-    GetListViewImgList(lv) {
-        IL := IL_Create(this.backupManager.CountEntities(), 1, false)
+    GetViewMode() {
+        return this.app.Config.BNackupsViewMode
+    }
+
+    GetListViewImgList(lv, large := false) {
+        IL := IL_Create(this.backupManager.CountEntities(), 1, large)
         defaultIcon := this.themeObj.GetIconPath("Backup")
         iconNum := 1
 

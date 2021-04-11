@@ -6,7 +6,8 @@ class ListViewControl extends GuiControlBase {
     rowOpts := []
     keyCol := 2
     imgListCallback := ""
-    imgList := ""
+    imgListS := ""
+    imgListL := ""
 
     CreateControl(columns, dataCallback, imgListCallback := "", initCallback := "") {
         super.CreateControl(false)
@@ -82,12 +83,15 @@ class ListViewControl extends GuiControlBase {
             checked := this.GetSelected("Checked")
         }
 
-        this.imgList := ""
+        this.imgListS := ""
+        this.imgListL := ""
 
         if (this.imgListCallback) {
             func := this.imgListCallback
-            this.imgList := this.guiObj.%func%(this)
-            this.ctl.SetImageList(this.imgList)
+            this.imgListS := this.guiObj.%func%(this, false)
+            this.imgListL := this.guiObj.%func%(this, true)
+            this.ctl.SetImageList(this.imgListS, 1)
+            this.ctl.SetImageList(this.imgListL, 0)
         }
 
         func := this.dataCallback
@@ -119,7 +123,7 @@ class ListViewControl extends GuiControlBase {
                 }
             }
 
-            if (this.imgList) {
+            if (this.imgListS) {
                 rowOpts.Push("Icon" . idx)
             }
 
@@ -216,6 +220,10 @@ class ListViewControl extends GuiControlBase {
 
         ; All messages not completely handled by the function must be passed to the DefSubclassProc:
         return DllCall("DefSubclassProc", "Ptr", h, "UInt", m, "Ptr", w, "Ptr", l, "Ptr")
+    }
+
+    SetViewMode(viewMode) {
+        this.ctl.Opt("+" . viewMode)
     }
 
     PaintListViewHeader(l, OHDC) {

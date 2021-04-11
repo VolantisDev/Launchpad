@@ -31,8 +31,12 @@
         return this.Add("ButtonControl", options, symbol, "On" . name, primary ? "managePrimary" : "manage", drawConfig)
     }
 
+    GetViewMode() {
+        return "Report"
+    }
+
     AddManageList() {
-        opts := ["vListView", "Section", "+Report", "-Multi"]
+        opts := ["vListView", "Section", "+" . this.GetViewMode(), "-Multi"]
 
         if (this.lvCount) {
             opts.Push("Count" . this.lvCount)
@@ -50,7 +54,7 @@
 
     }
 
-    GetListViewImgList(lv) {
+    GetListViewImgList(lv, large := false) {
 
     }
 

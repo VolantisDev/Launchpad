@@ -172,8 +172,12 @@
         return data
     }
 
-    GetListViewImgList(lv) {
-        IL := IL_Create(this.launcherManager.CountEntities(), 1, false)
+    GetViewMode() {
+        return this.app.Config.LaunchersViewMode
+    }
+
+    GetListViewImgList(lv, large := false) {
+        IL := IL_Create(this.launcherManager.CountEntities(), 1, large)
         defaultIcon := this.themeObj.GetIconPath("Game")
         iconNum := 1
 
