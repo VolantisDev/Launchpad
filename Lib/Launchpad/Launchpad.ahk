@@ -80,7 +80,7 @@
 
     UpdateIncludes() {
         RunWait(this.appDir . "\Scripts\UpdateIncludes.bat", this.appDir . "\Scripts")
-        Reload()
+        this.RestartApp()
     }
 
     BuildApp() {

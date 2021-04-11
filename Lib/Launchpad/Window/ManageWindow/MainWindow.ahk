@@ -112,7 +112,7 @@
         } else if (result == "CheckForUpdates") {
             this.app.CheckForUpdates()
         } else if (result == "Reload") {
-            Reload()
+            this.app.restartApp()
         } else if (result == "Exit") {
             this.app.ExitApp()
         }

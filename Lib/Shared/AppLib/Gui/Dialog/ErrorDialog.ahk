@@ -38,7 +38,7 @@ class ErrorDialog extends DialogBox {
         }
 
         if (result == "Reload") {
-            Reload()
+            this.app.RestartApp()
         }
 
         return super.ProcessResult(result, submittedData)
