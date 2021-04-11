@@ -393,14 +393,12 @@ class GuiBase {
     End(windowState := "") {
         width := this.windowSettings["contentWidth"] + (this.margin * 2)
 
-        ; TODO: Use width from window state if present
         if (this.width) {
             width := this.width
         }
 
         height := ""
 
-        ; TODO: Use height from window state if present
         if (this.height) {
             height := this.height
         }
@@ -410,6 +408,9 @@ class GuiBase {
         if (height) {
             windowSize .= " h" . height
         }
+
+        newW := width
+        newH := height
 
         MonitorGetWorkArea(, monitorL, monitorT, monitorR, monitorB)
 
@@ -447,9 +448,21 @@ class GuiBase {
             if (windowState.Has("y")) {
                 windowSize .= " y" . windowState["y"]
             }
+
+            if (windowState.Has("w")) {
+                newW := windowState["w"]
+            }
+
+            if (windowState.Has("h")) {
+                newH := windowState["h"]
+            }
         }
 
-        this.guiObj.Show(windowSize . " " . this.showOptions)
+        this.guiObj.Show(windowSize . " " . this.showOptions)\
+
+        if (newH != height || newW != width) {
+            this.guiObj.Move(,, newW, newH)
+        }
 
         if (this.lvHeaderHwnd) {
             WinRedraw("ahk_id " . this.lvHeaderHwnd)
