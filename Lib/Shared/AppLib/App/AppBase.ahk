@@ -197,44 +197,15 @@ class AppBase {
         this.Services := ServiceContainer.new(services)
 
         this.Modules := ModuleManager.new(this)
-        this.Modules.LoadModules(this.DiscoverModules(config))
-        this.Modules.RegisterSubscribers()
+        this.Modules.LoadModules(config)
         
         this.errorCallback := ObjBindMethod(this, "OnException")
         OnError(this.errorCallback)
     }
 
-    GetModuleDirs(config) {
-        dirs := []
-
-        sharedDir := this.dataDir . "\Modules"
-
-        if (DirExist(sharedDir)) {
-            dirs.Push(sharedDir)
-        }
-
-        if (config.Has("modulesDir") && config["modulesDir"]) {
-            dirs.Push(config["modulesDir"])
-        }
-
-        return dirs
-    }
-
-    DiscoverModules(config) {
-        dirs := this.GetModuleDirs(config)
+    GetDefaultModules(config) {
         modules := Map()
         modules["Auth"] := "AuthModule"
-
-        for index, dir in dirs {
-            Loop Files dir . "\*", "D" {
-                moduleName := A_LoopFileName
-
-                if (FileExist(A_LoopFileFullPath . "\" A_LoopFileName . "Module.ahk")) {
-                    modules[A_LoopFileName] := A_LoopFileName . "Module"
-                }
-            }
-        }
-
         return modules
     }
 

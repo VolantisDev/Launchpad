@@ -34,13 +34,34 @@ class ModuleManager extends ContainerServiceBase {
         }
     }
 
-    LoadModules(modules) {
-        for moduleName, moduleClass in modules {
-            
-            if (!IsSet(moduleClass)) {
-                throw AppException.new("Module " . moduleName . " does not seem to be loaded. Try rebuilding your include files and restarting.")
-            }
-            this.Set(moduleName, %moduleClass%.new(this.app))
+    LoadModules(config) {
+        moduleDirs := this.GetModuleDirs(config)
+        defaultModules := this.app.GetDefaultModules(config)
+
+        op := LoadModulesOp.new(this.app, moduleDirs, defaultModules, this.app.State)
+        op.Run()
+        results := op.GetResults()
+
+        for key, module in results {
+            this.Set(key, module)
         }
+
+        this.RegisterSubscribers()
+    }
+
+    GetModuleDirs(config) {
+        dirs := []
+
+        sharedDir := this.app.dataDir . "\Modules"
+
+        if (DirExist(sharedDir)) {
+            dirs.Push(sharedDir)
+        }
+
+        if (config.Has("modulesDir") && config["modulesDir"]) {
+            dirs.Push(config["modulesDir"])
+        }
+
+        return dirs
     }
 }

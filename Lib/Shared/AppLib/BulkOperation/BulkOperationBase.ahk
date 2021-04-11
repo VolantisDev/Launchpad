@@ -39,7 +39,10 @@ class BulkOperationBase {
             return false
         }
 
-        this.app.Logger.Debug(Type(this) . ": Starting bulk operation...")
+        if (this.app.Services.Exists("LoggerService")) {
+            this.app.Logger.Debug(Type(this) . ": Starting bulk operation...")
+        }
+        
         this.running := true
         this.ShowProgressWindow()
         this.RunAction()
@@ -52,7 +55,9 @@ class BulkOperationBase {
     }
 
     LogResults() {
-        this.app.Logger.Info(Type(this) . " Results: " . this.GetResultMessage())
+        if (this.app.Services.Exists("LoggerService")) {
+            this.app.Logger.Info(Type(this) . " Results: " . this.GetResultMessage())
+        }
     }
 
     VerifyRequirements() {
@@ -76,7 +81,7 @@ class BulkOperationBase {
     }
 
     ShowProgressWindow() {
-        if (this.useProgress) {
+        if (this.useProgress && this.app.Services.Exists("GuiManager")) {
             if (!IsObject(this.progress)) {
                 this.progress := this.app.GuiManager.OpenWindow("BulkOpProgress", "ProgressIndicator", this.progressTitle, this.progressText, this.owner, this.parent, this.allowCancel, this.progressRangeEnd, this.progressInitialValue, this.progressInitialDetailText)
             } else {
@@ -92,7 +97,7 @@ class BulkOperationBase {
     }
 
     Notify() {
-        if (this.notify) {
+        if (this.notify && this.app.Has("NotificationService")) {
             this.app.Notifications.Info(this.GetResultMessage())
         }
     }

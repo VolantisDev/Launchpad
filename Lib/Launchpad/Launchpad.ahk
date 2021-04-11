@@ -44,8 +44,8 @@
         return caches
     }
 
-    DiscoverModules(config) {
-        modules := super.DiscoverModules(config)
+    GetDefaultModules(config) {
+        modules := super.GetDefaultModules(config)
         modules["Bethesda"] := "BethesdaModule"
         modules["Blizzard"] := "BlizzardModule"
         modules["Epic"] := "EpicModule"
