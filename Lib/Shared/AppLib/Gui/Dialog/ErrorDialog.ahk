@@ -3,6 +3,10 @@ class ErrorDialog extends DialogBox {
     errorObj := ""
     notifierObj := ""
     apiEndpoint := ""
+    submitError := false
+    formShown := false
+    formH := 0
+    guiH := 0
 
     __New(app, themeObj, windowKey, errorObj, title, text := "", owner := "", parent := "", btns := "*&Continue|&Reload|&Exit") {
         this.errorObj := errorObj
@@ -11,21 +15,78 @@ class ErrorDialog extends DialogBox {
         if (app.HasProp("DataSources")) {
             this.apiEndpoint := app.DataSources.GetItem("api")
         }
+
+        this.formShown := this.submitError
         
         super.__New(app, themeObj, windowKey, title, text, owner, parent, btns)
     }
 
     Controls() {
         super.Controls()
-        this.Add("BasicControl", "vSubmitError", "", false, "CheckBox", "Submit error to Volantis Development")
-        this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " +0x200 +0x100", "Please add as much detail as possible about what you were doing when the error occurred:")
-        this.AddEdit("ErrorDetails", "", "r4")
-        this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " +0x200 +0x100", "Optionally, enter your email address if you would like us to reach out to you for further information:")
-        this.AddEdit("Email", "", "")
+        ctl := this.Add("BasicControl", "vSubmitError", "", this.submitError, "CheckBox", "Submit error to Volantis Development")
+        ctl.ctl.OnEvent("Click", "OnSubmitError")
+
+        ctl := this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " +0x200 +0x100 vDetailsDesc", "Add as much detail as possible about what you were trying to do:")
+        ctl := this.AddEdit("ErrorDetails", "", "r4")
+        ctl := this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " +0x200 +0x100 vEmailDesc", "Enter your email address if you would like to be contacted:")
+        ctl := this.AddEdit("Email", "", "")
+    }
+
+    GetFormHeight() {
+        if (!this.guiH) {
+            this.guiObj.GetPos(,,, guiH)
+            this.guiH := guiH
+        }
+
+        if (!this.formH) {
+            formH := 0
+
+            this.guiObj["DetailsDesc"].GetPos(,,, ctlH)
+            formH += ctlH + this.margin
+            this.guiObj["ErrorDetails"].GetPos(,,, ctlH)
+            formH += ctlH + this.margin
+            this.guiObj["EmailDesc"].GetPos(,,, ctlH)
+            formH += ctlH + this.margin
+            this.guiObj["Email"].GetPos(,,, ctlH)
+            formH += ctlH + this.margin
+
+            this.formH := formH
+        }
+        
+        return this.formH
+    }
+
+    ToggleForm(showForm := true, ignoreCurrentState := false) {
+        if (this.formShown != showForm || ignoreCurrentState) {
+            formH := this.GetFormHeight()
+
+            this.guiObj["DetailsDesc"].Visible := showForm
+            this.guiObj["ErrorDetails"].Visible := showForm
+            this.guiObj["EmailDesc"].Visible := showForm
+            this.guiObj["Email"].Visible := showForm
+
+            if (showForm) {
+                this.guiH += formH
+            } else {
+                this.guiH -= formH
+            }
+
+            this.guiObj.Move(,,, this.guiH)
+            this.formShown := showForm
+        }
+    }
+
+    OnShow(windowState := "") {
+        super.OnShow(windowState)
+
+        if (!this.formShown) {
+            this.ToggleForm(false, true)
+        }
     }
 
     OnSubmitError(ctl, info) {
-        ; TODO: Hide and show the error submission fields automatically based on the checkbox value
+        this.Submit(false)
+        this.ToggleForm(ctl.Value)
     }
 
     ProcessResult(result, submittedData := "") {
