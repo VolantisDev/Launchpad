@@ -462,8 +462,9 @@ class GuiBase {
             this.guiObj.Move(,, newW, newH)
         }
 
-        if (this.lvHeaderHwnd) {
-            WinRedraw("ahk_id " . this.lvHeaderHwnd)
+        transColorVal := this.themeObj.GetColor("transColor")
+        if (transColorVal != "") {
+            WinSetTransColor(transColorVal, "ahk_id " . this.guiObj.Hwnd)
         }
 
         if (!this.positionAtMouseCursor && this.showInNotificationArea) {
@@ -473,12 +474,8 @@ class GuiBase {
             this.guiObj.Move(windowX, windowY)
         }
 
-        transColorVal := this.themeObj.GetColor("transColor")
-        if (transColorVal != "") {
-            WinSetTransColor(transColorVal, "ahk_id " . this.guiObj.Hwnd)
-        }
+        this.OnShow(windowState)
 
-        this.AdjustWindowPosition()
         result := this
 
         if (this.waitForResult) {
@@ -497,6 +494,16 @@ class GuiBase {
         }
 
         return result
+    }
+
+    OnShow(windowState := "") {
+        
+
+        if (this.lvHeaderHwnd) {
+            WinRedraw("ahk_id " . this.lvHeaderHwnd)
+        }
+
+        this.AdjustWindowPosition()
     }
 
     ProcessResult(result, submittedData := "") {
