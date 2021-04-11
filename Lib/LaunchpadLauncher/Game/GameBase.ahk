@@ -309,7 +309,6 @@ class GameBase {
         }
 
         if (this.GameIsRunning()) {
-            ; TODO: Figure out a good default timeout and how to handle that situation
             ProcessWaitClose(this.pid)
         }
 
