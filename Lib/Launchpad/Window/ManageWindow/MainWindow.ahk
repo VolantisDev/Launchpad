@@ -44,18 +44,24 @@
             this.app.Builders.BuildLaunchers(Map(launcherKey, launcher), true)
             this.UpdateListView()
         } else if (result == "RunLauncher") {
-            if (launcher.IsBuilt) {
-                file := launcher.GetLauncherFile(launcherKey, false)
-
-                if (file) {
-                    Run(file,, "Hide")
-                }
-            }
+            this.RunLauncher(launcherKey)
         } else if (result == "DeleteLauncher") {
             result := this.app.GuiManager.Dialog("LauncherDeleteWindow", launcher, this.app.Services.Get("LauncherManager"), this.windowKey)
 
             if (result == "Delete") {
                 this.guiObj["ListView"].Delete(item)
+            }
+        }
+    }
+
+    RunLauncher(launcherKey) {
+        launcher := this.launcherManager.Entities[launcherKey]
+
+        if (launcher && launcher.IsBuilt) {
+            file := launcher.GetLauncherFile(launcherKey, false)
+
+            if (file) {
+                Run(file,, "Hide")
             }
         }
     }
@@ -207,7 +213,12 @@
 
     OnDoubleClick(LV, rowNum) {
         key := this.listView.GetRowKey(rowNum)
-        this.EditLauncher(key)
+
+        if (this.app.Config.LauncherDoubleClickAction == "Run") {
+            this.RunLauncher(key)
+        } else {
+            this.EditLauncher(key)
+        }
     }
 
     EditLauncher(key) {

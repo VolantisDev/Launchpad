@@ -2,6 +2,7 @@
     availableThemes := Map()
     logLevels := ["None", "Error", "Warning", "Info", "Debug"]
     listViewModes := ["Report", "Tile", "List"]
+    doubleClickActions := ["Edit", "Run"]
     needsRestart := false
 
     __New(app, themeObj, windowKey, owner := "", parent := "") {
@@ -27,6 +28,12 @@
         ctl := this.guiObj.AddDDL("vLaunchersViewMode xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.listViewModes)
         ctl.OnEvent("Change", "OnLaunchersViewModeChange")
         ctl.ToolTip := "Select how you would like to view your launchers in the main window."
+
+        this.AddHeading("Double-Click Action")
+        chosen := this.GetItemIndex(this.doubleClickActions, this.app.Config.LauncherDoubleClickAction)
+        ctl := this.guiObj.AddDDL("vLauncherDoubleClickAction xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.doubleClickActions)
+        ctl.OnEvent("Change", "OnLauncherDoubleClickActionChange")
+        ctl.ToolTip := "Select what you would like to happen when double-clicking a launcher in the main list."
 
         this.AddConfigLocationBlock("Launcher File", "LauncherFile", "Reload")
         this.AddConfigLocationBlock("Launcher Directory", "DestinationDir")
@@ -278,6 +285,11 @@
     OnPlatformsViewModeChange(ctl, info) {
         this.guiObj.Submit(false)
         this.app.Config.PlatformsViewMode := this.listViewModes[ctl.Value]
+    }
+
+    OnLauncherDoubleClickActionChange(ctl, info) {
+        this.guiObj.Submit(false)
+        this.app.Config.LauncherDoubleClickAction := this.doubleClickActions[ctl.Value]
     }
 
     OnBackupsViewModeChange(ctl, info) {

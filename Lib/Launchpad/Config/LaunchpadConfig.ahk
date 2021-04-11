@@ -129,6 +129,11 @@
         set => this.SetIniValue("PlatformsViewMode", value)
     }
 
+    LauncherDoubleClickAction {
+        get => this.GetIniValue("LauncherDoubleClickAction") || "Edit"
+        set => this.SetIniValue("LauncherDoubleClickAction", value)
+    }
+
     LaunchersLoaded() {
         return (this.app.Launchers != "")
     }
