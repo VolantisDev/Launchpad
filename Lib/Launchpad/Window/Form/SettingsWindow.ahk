@@ -16,7 +16,8 @@
         super.Controls()
         buttonSize := this.themeObj.GetButtonSize("s", true)
         buttonW := (buttonSize.Has("w") && buttonSize["w"] != "auto") ? buttonSize["w"] : 80
-        tabs := this.AddTabs("SettingsTabs", ["Launchers", "Platforms", "Backups", "Appearance", "Cache", "Advanced"], "x" . this.margin . " y+" . this.margin)
+        ctl := this.Add("TabsControl", "vSettingsTabs", "", ["Launchers", "Platforms", "Backups", "Appearance", "Cache", "Advanced"])
+        tabs := ctl.ctl
 
         tabs.UseTab("Launchers", true)
 

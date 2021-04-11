@@ -74,6 +74,7 @@
 #Include AppLib\GuiControl\LocationBlock.ahk
 #Include AppLib\GuiControl\SelectControl.ahk
 #Include AppLib\GuiControl\StatusIndicatorControl.ahk
+#Include AppLib\GuiControl\TabsControl.ahk
 #Include AppLib\GuiControl\TitlebarControl.ahk
 #Include AppLib\Installer\InstallerBase.ahk
 #Include AppLib\Installer\ThemeInstaller.ahk
