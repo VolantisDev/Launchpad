@@ -323,14 +323,15 @@ class LayeredDataBase {
 
             output .= indent . "}`n"
         } else if (IsObject(val)) {
-            output := "Object"
-            ; TODO: Output properties from object when inspecting
+            output := indent . "Object {`n"
+
+            for key, value in val.OwnProps() {
+                output .= indent . "`t" . key . ": " . this.DebugValue(value, indent . "`t") . "`n"
+            }
+
+            output .= indent . "}`n"
         }
 
         return output
-    }
-
-    DebugObject(obj) {
-
     }
 }
