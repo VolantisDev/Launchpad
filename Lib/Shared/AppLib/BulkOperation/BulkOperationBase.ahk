@@ -97,7 +97,7 @@ class BulkOperationBase {
     }
 
     Notify() {
-        if (this.notify && this.app.Has("NotificationService")) {
+        if (this.notify && this.app.Services.Exists("NotificationService")) {
             this.app.Notifications.Info(this.GetResultMessage())
         }
     }
