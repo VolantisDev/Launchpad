@@ -203,10 +203,7 @@ class ManagedEntityBase extends EntityBase {
 
         detectedValues[this.configPrefix . "UsesShortcut"] := usesShortcut
         detectedValues[this.configPrefix . "RunType"] := usesShortcut ? "Shortcut" : "Command"
-
-        if (!this.entityData.HasValue(this.configPrefix . "InstallDir")) {
-            detectedValues[this.configPrefix . "InstallDir"] := this.LocateInstallDir()
-        }
+        detectedValues[this.configPrefix . "InstallDir"] := this.LocateInstallDir() ; This needs to run to expand exes without a dir
 
         if (this.ProcessType == "Exe") {
             SplitPath(this.Exe, processId)
