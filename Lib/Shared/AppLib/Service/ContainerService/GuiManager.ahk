@@ -8,11 +8,11 @@ class GuiManager extends ContainerServiceBase {
     menus := Map()
 
     GetTheme() {
-        return this.app.Themes.GetItem()
+        return this.app.Service("ThemeManager").GetItem()
     }
 
     Dialog(className, params*) {
-        dialogId := this.app.IdGen.Generate()
+        dialogId := this.app.Service("IdGenerator").Generate()
         window := %className%.new(this.app, this.GetTheme(), dialogId, params*)
         this.container.Set(dialogId, window)
         ownerKey := ""
@@ -40,7 +40,7 @@ class GuiManager extends ContainerServiceBase {
     }
 
     Menu(className, params*) {
-        key := this.app.IdGen.Generate()
+        key := this.app.Service("IdGenerator").Generate()
         window := %className%.new(this.app, this.GetTheme(), key, params*)
         this.menus[key] := window
         result := window.Show()

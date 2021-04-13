@@ -56,7 +56,7 @@ class GuiBase {
         this.app := app
 
         if (owner) {
-            owner := this.app.GuiManager.DereferenceGui(owner)
+            owner := this.app.Service("GuiManager").DereferenceGui(owner)
             
             if (owner) {
                 this.owner := owner
@@ -64,7 +64,7 @@ class GuiBase {
         }
 
         if (parent) {
-            parent := this.app.GuiManager.DereferenceGui(parent)
+            parent := this.app.Service("GuiManager").DereferenceGui(parent)
             
             if (parent) {
                 this.parent := parent
@@ -78,7 +78,7 @@ class GuiBase {
             extraOptions["Border"] := true
         }
 
-        if (this.owner != "" && this.app.GuiManager.GetWindowFromGui(this.owner)) {
+        if (this.owner != "" && this.app.Service("GuiManager").GetWindowFromGui(this.owner)) {
             extraOptions["Owner" . this.owner.Hwnd] := true
         }
 
@@ -104,7 +104,7 @@ class GuiBase {
 
         this.margin := this.windowSettings["spacing"]["margin"]
         this.windowKey := windowKey
-        this.guiId := this.app.IdGen.Generate()
+        this.guiId := this.app.Service("IdGenerator").Generate()
 
         this.RegisterCallbacks()
         this.Create()
@@ -112,13 +112,13 @@ class GuiBase {
 
     RegisterCallbacks() {
         this.mouseMoveCallback := ObjBindMethod(this, "OnMouseMove")
-        this.app.Events.Register(Events.MOUSE_MOVE, "Gui" . this.guiId, this.mouseMoveCallback)
+        this.app.Service("EventManager").Register(Events.MOUSE_MOVE, "Gui" . this.guiId, this.mouseMoveCallback)
         this.calcSizeCallback := ObjBindMethod(this, "OnCalcSize")
-        this.app.Events.Register(Events.WM_NCCALCSIZE, "Gui" . this.guiId, this.calcSizeCallback)
+        this.app.Service("EventManager").Register(Events.WM_NCCALCSIZE, "Gui" . this.guiId, this.calcSizeCallback)
         this.activateCallback := ObjBindMethod(this, "OnActivate")
-        this.app.Events.Register(Events.WM_NCACTIVATE, "Gui" . this.guiId, this.activateCallback)
+        this.app.Service("EventManager").Register(Events.WM_NCACTIVATE, "Gui" . this.guiId, this.activateCallback)
         this.hitTestCallback := ObjBindMethod(this, "OnHitTest")
-        this.app.Events.Register(Events.WM_NCHITTEST, "Gui" . this.guiId, this.hitTestCallback)
+        this.app.Service("EventManager").Register(Events.WM_NCHITTEST, "Gui" . this.guiId, this.hitTestCallback)
     }
 
     OnCheckbox(chk, info) {
@@ -127,10 +127,10 @@ class GuiBase {
 
     __Delete() {
         if (this.app) {
-            this.app.Events.Unregister(Events.MOUSE_MOVE, "Gui" . this.guiId, this.mouseMoveCallback)
-            this.app.Events.Unregister(Events.WM_NCCALCSIZE, "Gui" . this.guiId, this.calcSizeCallback)
-            this.app.Events.Unregister(Events.WM_NCACTIVATE, "Gui" . this.guiId, this.activateCallback)
-            this.app.Events.Unregister(Events.WM_NCHITTEST, "Gui" . this.guiId, this.hitTestCallback)
+            this.app.Service("EventManager").Unregister(Events.MOUSE_MOVE, "Gui" . this.guiId, this.mouseMoveCallback)
+            this.app.Service("EventManager").Unregister(Events.WM_NCCALCSIZE, "Gui" . this.guiId, this.calcSizeCallback)
+            this.app.Service("EventManager").Unregister(Events.WM_NCACTIVATE, "Gui" . this.guiId, this.activateCallback)
+            this.app.Service("EventManager").Unregister(Events.WM_NCHITTEST, "Gui" . this.guiId, this.hitTestCallback)
         }
         
         if (this.activeTooltip) {
@@ -381,7 +381,7 @@ class GuiBase {
 
     Start() {
         if (this.owner != "") {
-            this.app.GuiManager.AddToParent(this.windowKey, this.owner)
+            this.app.Service("GuiManager").AddToParent(this.windowKey, this.owner)
 	    }
     }
 
@@ -541,7 +541,7 @@ class GuiBase {
         }
 
         if (!this.isClosed && WinExist("ahk_id " . this.guiObj.Hwnd)) {
-            this.app.GuiManager.StoreWindowState(this)
+            this.app.Service("GuiManager").StoreWindowState(this)
             WinClose("ahk_id " . this.guiObj.Hwnd)
         } else {
             this.Destroy()
@@ -550,11 +550,11 @@ class GuiBase {
 
     Destroy() {
         if (!this.isClosed && this.saveWindowState) {
-            this.app.GuiManager.StoreWindowState(this)
+            this.app.Service("GuiManager").StoreWindowState(this)
         }
 
         if (this.owner) {
-            this.app.GuiManager.ReleaseFromParent(this.windowKey)
+            this.app.Service("GuiManager").ReleaseFromParent(this.windowKey)
         }
 
         this.Cleanup()
@@ -566,7 +566,7 @@ class GuiBase {
     }
 
     Cleanup() {
-        this.app.GuiManager.container.Delete(this.windowKey)
+        this.app.Service("GuiManager").container.Delete(this.windowKey)
         ; Extend to clear any global variables used
     }
 

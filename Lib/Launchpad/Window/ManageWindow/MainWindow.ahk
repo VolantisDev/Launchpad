@@ -36,7 +36,7 @@
         menuItems.Push(Map("label", "Run", "name", "RunLauncher"))
         menuItems.Push(Map("label", "Delete", "name", "DeleteLauncher"))
 
-        result := this.app.GuiManager.Menu("MenuGui", menuItems, this)
+        result := this.app.Service("GuiManager").Menu("MenuGui", menuItems, this)
 
         if (result == "EditLauncher") {
             this.EditLauncher(launcherKey)
@@ -46,7 +46,7 @@
         } else if (result == "RunLauncher") {
             this.RunLauncher(launcherKey)
         } else if (result == "DeleteLauncher") {
-            result := this.app.GuiManager.Dialog("LauncherDeleteWindow", launcher, this.app.Services.Get("LauncherManager"), this.windowKey)
+            result := this.app.Service("GuiManager").Dialog("LauncherDeleteWindow", launcher, this.app.Services.Get("LauncherManager"), this.windowKey)
 
             if (result == "Delete") {
                 this.guiObj["ListView"].Delete(item)
@@ -94,27 +94,27 @@
         menuItems.Push(Map("label", "E&xit", "name", "Exit"))
         
         
-        result := this.app.GuiManager.Menu("MenuGui", menuItems, this, this.guiObj["WindowTitleText"])
+        result := this.app.Service("GuiManager").Menu("MenuGui", menuItems, this, this.guiObj["WindowTitleText"])
 
         if (result == "ManagePlatforms") {
-            this.app.GuiManager.OpenWindow("PlatformsWindow")
+            this.app.Service("GuiManager").OpenWindow("PlatformsWindow")
         } else if (result == "ManageBackups") {
-            this.app.GuiManager.OpenWindow("ManageBackupsWindow")
+            this.app.Service("GuiManager").OpenWindow("ManageBackupsWindow")
         } else if (result == "FlushCache") {
-            this.app.Cache.FlushCaches()
+            this.app.Service("CacheManager").FlushCaches()
         } else if (result == "CleanLaunchers") {
             this.app.Builders.CleanLaunchers()
         } else if (result == "ReloadLaunchers") {
             this.app.Launchers.LoadComponents(this.app.Config.LauncherFile)
             this.UpdateListView()
         } else if (result == "About") {
-            this.app.GuiManager.Dialog("AboutWindow")
+            this.app.Service("GuiManager").Dialog("AboutWindow")
         } else if (result == "OpenWebsite") {
             this.app.OpenWebsite()
         } else if (result == "ProvideFeedback") {
             this.app.ProvideFeedback()
         } else if (result == "Settings") {
-            this.app.GuiManager.Form("SettingsWindow")
+            this.app.Service("GuiManager").Form("SettingsWindow")
         } else if (result == "CheckForUpdates") {
             this.app.CheckForUpdates()
         } else if (result == "Reload") {
@@ -125,36 +125,36 @@
     }
 
     GetStatusInfo() {
-        return this.app.Auth.GetStatusInfo()
+        return this.app.Service("AuthService").GetStatusInfo()
     }
 
     OnStatusIndicatorClick(btn, info) {
         menuItems := []
 
-        if (this.app.Auth.IsAuthenticated()) {
+        if (this.app.Service("AuthService").IsAuthenticated()) {
             menuItems.Push(Map("label", "Account Details", "name", "AccountDetails"))
             menuItems.Push(Map("label", "Logout", "name", "Logout"))
         } else {
             menuItems.Push(Map("label", "Login", "name", "Login"))
         }
 
-        result := this.app.GuiManager.Menu("MenuGui", menuItems, this, btn)
+        result := this.app.Service("GuiManager").Menu("MenuGui", menuItems, this, btn)
 
         if (result == "AccountDetails") {
-            accountResult := this.app.GuiManager.Dialog("AccountInfoWindow", this.windowKey)
+            accountResult := this.app.Service("GuiManager").Dialog("AccountInfoWindow", this.windowKey)
 
             if (accountResult == "OK") {
                 this.UpdateStatusIndicator()
             }
         } else if (result == "Logout") {
-            this.app.Auth.Logout()
+            this.app.Service("AuthService").Logout()
         } else if (result == "Login") {
-            this.app.Auth.Login()
+            this.app.Service("AuthService").Login()
         }
     }
 
     StatusWindowIsOnline() {
-        return this.app.Auth.IsAuthenticated()
+        return this.app.Service("AuthService").IsAuthenticated()
     }
 
     GetListViewData(lv) {
@@ -239,7 +239,7 @@
     }
 
     ImportShortcut() {
-        entity := this.app.GuiManager.Form("ImportShortcutForm", this.windowKey)
+        entity := this.app.Service("GuiManager").Form("ImportShortcutForm", this.windowKey)
 
         if (entity) {
             this.launcherManager.AddEntity(entity.Key, entity)
@@ -249,7 +249,7 @@
     }
 
     AddLauncher() {
-        entity := this.app.GuiManager.Form("LauncherWizard", this.windowKey)
+        entity := this.app.Service("GuiManager").Form("LauncherWizard", this.windowKey)
 
         if (entity) {
             this.launcherManager.AddEntity(entity.Key, entity)
@@ -277,7 +277,7 @@
         menuItems.Push(Map("label", "&Import Shortcut", "name", "ImportShortcut"))
         menuItems.Push(Map("label", "&Detect Games", "name", "DetectGames"))
 
-        result := this.app.GuiManager.Menu("MenuGui", menuItems, this, btn)
+        result := this.app.Service("GuiManager").Menu("MenuGui", menuItems, this, btn)
 
         if (result == "AddGame") {
             this.AddLauncher()

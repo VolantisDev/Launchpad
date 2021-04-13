@@ -106,7 +106,7 @@ class PlatformsWindow extends ManageWindowBase {
             menuItems.Push(Map("label", "Install", "name", "InstallPlatform"))
         }
 
-        result := this.app.GuiManager.Menu("MenuGui", menuItems, this)
+        result := this.app.Service("GuiManager").Menu("MenuGui", menuItems, this)
 
         if (result == "EditPlatform") {
             this.EditPlatform(key)

@@ -37,7 +37,7 @@ class CacheManager extends AppComponentServiceBase {
         }
 
         if (notify) {
-            this.app.Notifications.Info("Flushed all caches.")
+            this.app.Service("NotificationService").Info("Flushed all caches.")
         }
     }
 
@@ -46,7 +46,7 @@ class CacheManager extends AppComponentServiceBase {
             this._components[key].FlushCache()
 
             if (notify) {
-                this.app.Notifications.Info("Flushed cache: " . key . ".")
+                this.app.Service("NotificationService").Info("Flushed cache: " . key . ".")
             }
         }
     }

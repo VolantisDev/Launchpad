@@ -44,7 +44,7 @@ class LocationBlock extends GuiControlBase {
     }
 
     OnLocationOptions(btn, info) {
-        result := this.app.GuiManager.Menu("MenuGui", btn.MenuItems, this.guiObj, btn)
+        result := this.app.Service("GuiManager").Menu("MenuGui", btn.MenuItems, this.guiObj, btn)
 
         if (result) {
             callback := btn.Callback

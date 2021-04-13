@@ -80,7 +80,7 @@ class GamePlatformBase {
     }
 
     NeedsUpdate() {
-        return this.app.VersionChecker.VersionIsOutdated(this.GetLatestVersion(), this.GetInstalledVersion())
+        return this.app.Service("VersionChecker").VersionIsOutdated(this.GetLatestVersion(), this.GetInstalledVersion())
     }
 
     GetInstalledVersion() {

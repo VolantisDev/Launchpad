@@ -28,7 +28,7 @@ class LauncherBase {
 
     CreateProgressGui() {
         if (this.progress == "") {
-            this.progress := this.app.GuiManager.OpenWindow("LauncherProgressIndicator", "", this.key, A_ScriptFullPath, "", "", this.CountLaunchSteps())
+            this.progress := this.app.Service("GuiManager").OpenWindow("LauncherProgressIndicator", "", this.key, A_ScriptFullPath, "", "", this.CountLaunchSteps())
         }
     }
 

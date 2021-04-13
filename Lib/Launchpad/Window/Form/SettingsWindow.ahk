@@ -10,7 +10,7 @@
             owner := "MainWindow"
         }
 
-        this.availableThemes := app.Themes.GetAvailableThemes(true)
+        this.availableThemes := app.Service("ThemeManager").GetAvailableThemes(true)
         super.__New(app, themeObj, windowKey, "Settings", "", owner, parent, "*&Done")
     }
 
@@ -129,11 +129,11 @@
     }
 
     OnManageBackups(btn, info) {
-        this.app.GuiManager.OpenWindow("ManageBackupsWindow")
+        this.app.Service("GuiManager").OpenWindow("ManageBackupsWindow")
     }
 
     OnManagePlatforms(btn, info) {
-        this.app.GuiManager.OpenWindow("PlatformsWindow")
+        this.app.Service("GuiManager").OpenWindow("PlatformsWindow")
     }
 
     AddConfigLocationBlock(heading, settingName, extraButton := "", helpText := "") {
@@ -250,12 +250,12 @@
 
     OnCacheDirMenuClick(btn) {
         if (btn == "ChangeCacheDir") {
-            this.app.Cache.ChangeCacheDir()
+            this.app.Service("CacheManager").ChangeCacheDir()
             this.SetText("CacheDir", this.app.Config.CacheDir, "Bold")
         } else if (btn == "OpenCacheDir") {
-            this.app.Cache.OpenCacheDir()
+            this.app.Service("CacheManager").OpenCacheDir()
         } else if (btn == "FlushCacheDir") {
-            this.app.Cache.FlushCaches()
+            this.app.Service("CacheManager").FlushCaches()
         }
     }
 
@@ -272,7 +272,7 @@
     OnThemeNameChange(ctl, info) {
         this.guiObj.Submit(false)
         this.app.Config.ThemeName := this.availableThemes[ctl.Value]
-        this.app.Themes.LoadMainTheme()
+        this.app.Service("ThemeManager").LoadMainTheme()
         this.needsRestart := true
     }
 
@@ -309,15 +309,15 @@
 
     ProcessResult(result, submittedData := "") {
         if (this.needsRestart) {
-            response := this.app.GuiManager.Dialog("DialogBox", "Restart " . this.app.appName . "?", "One or more settings that have been changed require restarting " . this.app.appName . " to fully take effect.`n`nWould you like to restart " . this.app.appName . " now?")
+            response := this.app.Service("GuiManager").Dialog("DialogBox", "Restart " . this.app.appName . "?", "One or more settings that have been changed require restarting " . this.app.appName . " to fully take effect.`n`nWould you like to restart " . this.app.appName . " now?")
 
             if (response == "Yes") {
                 this.app.RestartApp()
             }
         }
 
-        if (this.app.GuiManager.WindowExists("MainWindow")) {
-            this.app.GuiManager.GetWindow("MainWindow").UpdateListView()
+        if (this.app.Service("GuiManager").WindowExists("MainWindow")) {
+            this.app.Service("GuiManager").GetWindow("MainWindow").UpdateListView()
         }
 
         return result

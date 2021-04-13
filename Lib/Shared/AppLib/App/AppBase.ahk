@@ -21,49 +21,9 @@ class AppBase {
         set => this.configObj := value
     }
 
-    IdGen {
-        get => this.Services.Get("IdGenerator")
-        set => this.Services.Set("IdGenerator", value)
-    }
-
-    Modules {
-        get => this.Services.Get("ModuleManager")
-        set => this.Services.Set("ModuleManager", value)
-    }
-
-    Notifications {
-        get => this.Services.Get("NotificationService")
-        set => this.Services.Set("NotificationService", value)
-    }
-
-    Themes {
-        get => this.Services.Get("ThemeManager")
-        set => this.Services.Set("ThemeManager", value)
-    }
-
-    Events {
-        get => this.Services.Get("EventManager")
-        set => this.Services.Set("EventManager", value)
-    }
-
-    Cache {
-        get => this.Services.Get("CacheManager")
-        set => this.Services.Set("CacheManager", value)
-    }
-
-    GuiManager {
-        get => this.Services.Get("GuiManager")
-        set => this.Services.Set("GuiManager", value)
-    }
-
     State {
         get => this.stateObj
         set => this.stateObj := value
-    }
-
-    Installers {
-        get => this.Services.Get("InstallerManager")
-        set => this.Services.Set("InstallerManager", value)
     }
 
     Services {
@@ -76,53 +36,33 @@ class AppBase {
         set => this.Services.Set("LoggerService", value)
     }
 
-    VersionChecker {
-        get => this.Services.Get("VersionChecker")
-        set => this.Services.Set("VersionChecker", value)
-    }
-
     Debugger {
         get => this.Services.Get("Debugger")
         set => this.Services.Set("Debugger", value)
     }
 
-    Auth {
-        get => this.Services.Get("AuthService")
-        set => this.Services.Set("AuthService", value)
-    }
-
-    Shell {
-        get => this.Services.Get("Shell")
-        set => this.Services.Set("Shell", value)
-    }
-
-    Gdip {
-        get => this.Services.Get("Gdip")
-        set => this.Services.Set("Gdip", value)
-    }
-
     __New(config := "") {
         this.Startup(config)
         event := AppRunEvent.new(Events.APP_POST_STARTUP, this, config)
-        this.Events.DispatchEvent(Events.APP_POST_STARTUP, event)
+        this.Service("EventManager").DispatchEvent(Events.APP_POST_STARTUP, event)
 
         event := AppRunEvent.new(Events.APP_PRE_LOAD_SERVICES, this, config)
-        this.Events.DispatchEvent(Events.APP_PRE_LOAD_SERVICES, event)
+        this.Service("EventManager").DispatchEvent(Events.APP_PRE_LOAD_SERVICES, event)
         this.LoadServices(config)
         event := AppRunEvent.new(Events.APP_POST_LOAD_SERVICES, this, config)
-        this.Events.DispatchEvent(Events.APP_POST_LOAD_SERVICES, event)
+        this.Service("EventManager").DispatchEvent(Events.APP_POST_LOAD_SERVICES, event)
 
         event := AppRunEvent.new(Events.APP_PRE_INITIALIZE, this, config)
-        this.Events.DispatchEvent(Events.APP_PRE_INITIALIZE, event)
+        this.Service("EventManager").DispatchEvent(Events.APP_PRE_INITIALIZE, event)
         this.InitializeApp(config)
         event := AppRunEvent.new(Events.APP_POST_INITIALIZE, this, config)
-        this.Events.DispatchEvent(Events.APP_POST_INITIALIZE, event)
+        this.Service("EventManager").DispatchEvent(Events.APP_POST_INITIALIZE, event)
 
         event := AppRunEvent.new(Events.APP_PRE_RUN, this, config)
-        this.Events.DispatchEvent(Events.APP_PRE_RUN, event)
+        this.Service("EventManager").DispatchEvent(Events.APP_PRE_RUN, event)
         this.RunApp(config)
         event := AppRunEvent.new(Events.APP_POST_RUN, this, config)
-        this.Events.DispatchEvent(Events.APP_POST_RUN, event)
+        this.Service("EventManager").DispatchEvent(Events.APP_POST_RUN, event)
     }
 
     Startup(config) {
@@ -175,30 +115,47 @@ class AppBase {
         this.configObj := this.LoadAppConfig(config)
         this.stateObj := this.LoadAppState(config)
 
-        shell := ""
+        services := (config.Has("services") && config["services"]) ? config["services"] : Map()
 
-        if (!config.Has("useShell") || config["useShell"]) {
-            if (config.Has("shell") && config["shell"]) {
-                shell := config["shell"]
-            } else {
-                shell := ComObjCreate("WScript.Shell")
+
+        if (!services.Has("Shell") || !services["Shell"]) {
+             shell := ""
+
+            if (!config.Has("useShell") || config["useShell"]) {
+                if (config.Has("shell") && config["shell"]) {
+                    shell := config["shell"]
+                } else {
+                    shell := ComObjCreate("WScript.Shell")
+                }
+
+                shell.CurrentDirectory := this.appDir
             }
 
-            shell.CurrentDirectory := this.appDir
+            services["Shell"] := shell
         }
 
-        services := Map()
-        services["Shell"] := shell
-        services["Gdip"] := Gdip_Startup()
-        services["Debugger"] := Debugger.new()
-        services["IdGenerator"] := UuidGenerator.new()
-        services["VersionChecker"] := VersionChecker.new()
-        services["EventManager"] := EventManager.new()
-        this.Services := ServiceContainer.new(services)
+        if (!services.Has("Gdip") || !services["Gdip"]) {
+            services["Gdip"] := Gdip_Startup()
+        }
 
-        this.Modules := ModuleManager.new(this)
-        this.Modules.LoadModules(config)
+        if (!services.Has("Debugger") || !services["Debugger"]) {
+            services["Debugger"] := Debugger.new()
+        }
         
+        if (!services.Has("IdGenerator") || !services["IdGenerator"]) {
+            services["IdGenerator"] := UuidGenerator.new()
+        }
+
+        if (!services.Has("VersionChecker") || !services["VersionChecker"]) {
+            services["VersionChecker"] := VersionChecker.new()
+        }
+
+        if (!services.Has("EventManager") || !services["EventManager"]) {
+            services["EventManager"] := EventManager.new()
+        }
+
+        this.Services := ServiceContainer.new(services)
+        this.Services.Set("ModuleManager", ModuleManager.new(this).LoadModules(config))
         this.errorCallback := ObjBindMethod(this, "OnException")
         OnError(this.errorCallback)
     }
@@ -212,11 +169,11 @@ class AppBase {
     GetCmdOutput(command, trimOutput := true) {
         output := ""
 
-        if (!this.Shell) {
+        if (!this.Services.Exists("Shell")) {
             throw AppException.new("The shell is disabled, so shell commands cannot currently be run.")
         }
         
-        result := this.Shell.Exec(A_ComSpec . " /C " . command).StdOut.ReadAll()
+        result := this.Services("Shell").Exec(A_ComSpec . " /C " . command).StdOut.ReadAll()
 
         if (trimOutput) {
             result := Trim(result, " `r`n`t")
@@ -283,9 +240,9 @@ class AppBase {
 
     ShowError(title, errorText, err, allowContinue := true) {
         try {
-            if (this.GuiManager) {
+            if (this.Services.Exists("GuiManager")) {
                 btns := allowContinue ? "*&Continue|&Reload|&Exit" : "*&Reload|&Exit"
-                this.GuiManager.Dialog("ErrorDialog", err, "Unhandled Exception", errorText, "", "", btns)
+                this.Service("GuiManager").Dialog("ErrorDialog", err, "Unhandled Exception", errorText, "", "", btns)
             } else {
                 this.ShowUnthemedError(title, err.Message, err, "", allowContinue)
             }
@@ -306,7 +263,7 @@ class AppBase {
 
         if (this.customTrayMenu) {
             A_TrayMenu.Delete()
-            this.Events.Register(Events.AHK_NOTIFYICON, "TrayClick", ObjBindMethod(this, "OnTrayIconRightClick"), 1)
+            this.Service("EventManager").Register(Events.AHK_NOTIFYICON, "TrayClick", ObjBindMethod(this, "OnTrayIconRightClick"), 1)
         }
     }
 
@@ -345,7 +302,7 @@ class AppBase {
         menuItems.Push(Map("label", "Restart", "name", "RestartApp"))
         menuItems.Push(Map("label", "Exit", "name", "ExitApp"))
 
-        result := this.GuiManager.Menu("MenuGui", menuItems, this)
+        result := this.Service("GuiManager").Menu("MenuGui", menuItems, this)
         this.HandleTrayMenuClick(result)
     }
 
@@ -367,10 +324,10 @@ class AppBase {
 
     OpenApp() {
         if (this.mainWindowKey) {
-            if (this.GuiManager.WindowExists(this.mainWindowKey)) {
-                WinActivate("ahk_id " . this.GuiManager.GetWindow("MainWindow").GetHwnd())
+            if (this.Service("GuiManager").WindowExists(this.mainWindowKey)) {
+                WinActivate("ahk_id " . this.Service("GuiManager").GetWindow("MainWindow").GetHwnd())
             } else {
-                this.GuiManager.OpenWindow(this.mainWindowKey)
+                this.Service("GuiManager").OpenWindow(this.mainWindowKey)
             }
         }
     }
@@ -423,7 +380,9 @@ class AppBase {
     }
 
     __Delete() {
-        Gdip_Shutdown(this.Gdip)
+        if (this.Services.Exists("Gdip")) {
+            Gdip_Shutdown(this.Services.Get("Gdip"))
+        }
 
         this.ExitApp()
 
@@ -432,7 +391,7 @@ class AppBase {
 
     ExitApp() {
         event := AppRunEvent.new(Events.APP_SHUTDOWN, this)
-        this.Events.DispatchEvent(Events.APP_SHUTDOWN, event)
+        this.Service("EventManager").DispatchEvent(Events.APP_SHUTDOWN, event)
 
         ExitApp
     }

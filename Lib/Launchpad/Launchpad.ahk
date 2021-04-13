@@ -30,8 +30,8 @@
     LoadServices(config) {
         super.LoadServices(config)
         this.Backups := BackupManager.new(this, this.Config.BackupsFile)
-        this.DataSources := DataSourceManager.new(this.Events)
-        this.DataSources.SetItem("api", ApiDataSource.new(this, this.Cache.GetItem("api"), this.Config.ApiEndpoint), true)
+        this.DataSources := DataSourceManager.new(this.Service("EventManager"))
+        this.DataSources.SetItem("api", ApiDataSource.new(this, this.Service("CacheManager").GetItem("api"), this.Config.ApiEndpoint), true)
         this.Builders := BuilderManager.new(this)
         this.Launchers := LauncherManager.new(this)
         this.Platforms := PlatformManager.new(this)
@@ -66,15 +66,15 @@
                 data := JsonData.new()
                 releaseInfo := data.FromString(releaseInfoStr)
 
-                if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this.VersionChecker.VersionIsOutdated(releaseInfo["data"]["version"], this.Version)) {
+                if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this.Service("VersionChecker").VersionIsOutdated(releaseInfo["data"]["version"], this.Version)) {
                     updateAvailable := true
-                    this.GuiManager.Dialog("UpdateAvailableWindow", releaseInfo)
+                    this.Service("GuiManager").Dialog("UpdateAvailableWindow", releaseInfo)
                 }
             }
         }
 
         if (!updateAvailable && notify) {
-            this.Notifications.Info("You're running the latest version of Launchpad. Shiny!")
+            this.Service("NotificationService").Info("You're running the latest version of Launchpad. Shiny!")
         }
     }
 
@@ -114,17 +114,21 @@
     InitializeApp(config) {
         super.InitializeApp(config)
         this.Builders.SetItem("ahk", AhkLauncherBuilder.new(this), true)
-        this.Installers.SetItem("LaunchpadUpdate", LaunchpadUpdate.new(this.Version, this.State, this.Cache.GetItem("file"), this.tmpDir))
-        this.Installers.SetItem("Dependencies", DependencyInstaller.new(this.Version, this.State, this.Cache.GetItem("file"), [], this.tmpDir))
-        this.Installers.SetupInstallers()
-        this.Installers.InstallRequirements()
+        this.Service("InstallerManager").SetItem("LaunchpadUpdate", LaunchpadUpdate.new(this.Version, this.State, this.Service("CacheManager").GetItem("file"), this.tmpDir))
+        this.Service("InstallerManager").SetItem("Dependencies", DependencyInstaller.new(this.Version, this.State, this.Service("CacheManager").GetItem("file"), [], this.tmpDir))
+        this.Service("InstallerManager").SetupInstallers()
+        this.Service("InstallerManager").InstallRequirements()
+    }
+
+    Service(name) {
+        return this.Services.Get(name)
     }
 
     RunApp(config) {
-        this.Auth.SetAuthProvider(LaunchpadApiAuthProvider.new(this, this.State))
+        this.Service("AuthService").SetAuthProvider(LaunchpadApiAuthProvider.new(this, this.State))
 
         if (this.Config.ApiAutoLogin) {
-            this.Auth.Login()
+            this.Service("AuthService").Login()
         }
         
         super.RunApp(config)
@@ -142,7 +146,7 @@
 
     InitialSetup(config) {
         super.InitialSetup(config)
-        result := this.GuiManager.Form("SetupWindow")
+        result := this.Service("GuiManager").Form("SetupWindow")
 
         if (result == "Exit") {
             this.ExitApp()
@@ -152,8 +156,8 @@
     }
 
     UpdateStatusIndicators() {
-        if (this.GuiManager.WindowExists("MainWindow")) {
-            this.GuiManager.GetWindow("MainWindow").UpdateStatusIndicator()
+        if (this.Service("GuiManager").WindowExists("MainWindow")) {
+            this.Service("GuiManager").GetWindow("MainWindow").UpdateStatusIndicator()
         }
     }
 
@@ -163,7 +167,7 @@
         }
 
         if (this.Config.FlushCacheOnExit) {
-            this.Cache.FlushCaches(false)
+            this.Service("CacheManager").FlushCaches(false)
         }
 
         super.ExitApp()
@@ -174,15 +178,15 @@
     }
 
     ProvideFeedback() {
-        this.GuiManager.Dialog("FeedbackWindow")
+        this.Service("GuiManager").Dialog("FeedbackWindow")
     }
 
     RestartApp() {
-        if (this.GuiManager) {
-            window := this.GuiManager.GetWindow("MainWindow")
+        if (this.Service("GuiManager")) {
+            window := this.Service("GuiManager").GetWindow("MainWindow")
 
             if (window) {
-                this.GuiManager.StoreWindowState(window)
+                this.Service("GuiManager").StoreWindowState(window)
             }
         }
 

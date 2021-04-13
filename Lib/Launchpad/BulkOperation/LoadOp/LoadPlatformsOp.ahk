@@ -26,7 +26,7 @@ class LoadPlatformsOp extends BulkOperationBase {
         platforms["Steam"] := "SteamPlatform"
 
         event := DefineComponentsEvent.new(Events.PLATFORMS_DEFINE, platforms)
-        this.app.Events.DispatchEvent(Events.PLATFORMS_DEFINE, event)
+        this.app.Service("EventManager").DispatchEvent(Events.PLATFORMS_DEFINE, event)
         platforms := event.components
 
         if (this.useProgress) {

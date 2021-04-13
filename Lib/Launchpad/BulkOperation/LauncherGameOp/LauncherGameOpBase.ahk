@@ -60,12 +60,12 @@ class LauncherGameOpBase extends BulkOperationBase {
 
     VerifyRequirements() {
         if (this.app.Config.DestinationDir == "") {
-            this.app.Notifications.Error("Launcher directory is not set.")
+            this.app.Service("NotificationService").Error("Launcher directory is not set.")
             return false
         }
         
         if (this.app.Config.AssetsDir == "") {
-            this.app.Notifications.Error("Assets directory is not set.")
+            this.app.Service("NotificationService").Error("Assets directory is not set.")
             return false
         }
 

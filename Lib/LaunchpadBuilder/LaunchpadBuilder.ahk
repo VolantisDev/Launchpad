@@ -22,7 +22,7 @@ class LaunchpadBuilder extends AppBase {
     LoadServices(config) {
         super.LoadServices(config)
         this.LaunchpadConfig := LaunchpadConfig.new(this, this.appDir . "\" . this.appName . ".ini")
-        this.DataSources := DataSourceManager.new(this.Events)
+        this.DataSources := DataSourceManager.new(this.Service("EventManager"))
         this.FileHasher := FileHasher.new(this)
         this.GitTagVersionId := GitTagVersionIdentifier.new(this)
     }
@@ -34,20 +34,20 @@ class LaunchpadBuilder extends AppBase {
 
     InitializeApp(config) {
         super.InitializeApp(config)
-        this.Auth.SetAuthProvider(LaunchpadApiAuthProvider.new(this, this.State))
+        this.Service("AuthService").SetAuthProvider(LaunchpadApiAuthProvider.new(this, this.State))
     }
 
     RunApp(config) {
         super.RunApp(config)
         version := this.GitTagVersionId.IdentifyVersion()
-        buildInfo := this.GuiManager.Form("BuildSettingsForm", version)
+        buildInfo := this.Service("GuiManager").Form("BuildSettingsForm", version)
 
         if (!buildInfo) {
             this.ExitApp()
         }
 
         if (buildInfo.DeployToApi) {
-            this.Auth.Login()
+            this.Service("AuthService").Login()
         }
 
         version := buildInfo.Version
@@ -65,7 +65,7 @@ class LaunchpadBuilder extends AppBase {
         }
 
         if (buildInfo.DeployToGitHub || buildInfo.DeployToApi || buildInfo.DeployToChocolatey) {
-            releaseInfo := this.GuiManager.Form("ReleaseInfoForm")
+            releaseInfo := this.Service("GuiManager").Form("ReleaseInfoForm")
 
             if (!releaseInfo) {
                 this.ExitApp()
@@ -119,7 +119,7 @@ class LaunchpadBuilder extends AppBase {
         if (!this.GetCmdOutput("git show-ref " . version)) {
             RunWait("git tag " . version, this.appDir)
 
-            response := this.GuiManager.Dialog("DialogBox", "Push git tag?", "Would you like to push the git tag that was just created (" . version . ") to origin?")
+            response := this.Service("GuiManager").Dialog("DialogBox", "Push git tag?", "Would you like to push the git tag that was just created (" . version . ") to origin?")
         
             if (response == "Yes") {
                 RunWait("git push origin " . version, this.appDir)

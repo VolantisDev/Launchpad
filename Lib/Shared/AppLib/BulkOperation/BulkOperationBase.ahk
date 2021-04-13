@@ -83,7 +83,7 @@ class BulkOperationBase {
     ShowProgressWindow() {
         if (this.useProgress && this.app.Services.Exists("GuiManager")) {
             if (!IsObject(this.progress)) {
-                this.progress := this.app.GuiManager.OpenWindow("BulkOpProgress", "ProgressIndicator", this.progressTitle, this.progressText, this.owner, this.parent, this.allowCancel, this.progressRangeEnd, this.progressInitialValue, this.progressInitialDetailText)
+                this.progress := this.app.Service("GuiManager").OpenWindow("BulkOpProgress", "ProgressIndicator", this.progressTitle, this.progressText, this.owner, this.parent, this.allowCancel, this.progressRangeEnd, this.progressInitialValue, this.progressInitialDetailText)
             } else {
                 this.progress.Show()
             }
@@ -98,7 +98,7 @@ class BulkOperationBase {
 
     Notify() {
         if (this.notify && this.app.Services.Exists("NotificationService")) {
-            this.app.Notifications.Info(this.GetResultMessage())
+            this.app.Service("NotificationService").Info(this.GetResultMessage())
         }
     }
 

@@ -176,7 +176,7 @@
         op := AddDetectedGamesOp.new(this.app, games, this.launcherManager, this.state, "DetectedGamesWindow")
         op.Run()
 
-        win := this.launcherManager.app.GuiManager.GetWindow("MainWindow")
+        win := this.launcherManager.app.Service("GuiManager").GetWindow("MainWindow")
         win.UpdateListView()
         this.Destroy()
     }
@@ -188,7 +188,7 @@
 
         detectedGameObj := this.detectedGames[key]
 
-        result := this.app.GuiManager.Form("DetectedGameEditor", detectedGameObj, this.windowKey)
+        result := this.app.Service("GuiManager").Form("DetectedGameEditor", detectedGameObj, this.windowKey)
 
         if (result == "Save") {
             if (key != detectedGameObj.key) {
@@ -217,7 +217,7 @@
         menuItems := []
         menuItems.Push(Map("label", "Edit", "name", "EditDetectedGame"))
 
-        result := this.app.GuiManager.Menu("MenuGui", menuItems, this)
+        result := this.app.Service("GuiManager").Menu("MenuGui", menuItems, this)
 
         if (result == "EditDetectedGame") {
             this.EditDetectedGame(key)

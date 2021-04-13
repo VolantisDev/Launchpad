@@ -60,7 +60,7 @@ class BackupEntity extends EntityBase {
         defaults["BaseFilename"] := this.Key
         defaults["BackupClass"] := "FileBackup"
         defaults["IsEnabled"] := true
-        defaults["IconSrc"] := this.app.Themes.GetItem().GetIconPath("Backup")
+        defaults["IconSrc"] := this.app.Service("ThemeManager").GetItem().GetIconPath("Backup")
         return defaults
     }
 
@@ -112,7 +112,7 @@ class BackupEntity extends EntityBase {
 
     LaunchEditWindow(mode, owner := "", parent := "") {
         ; TODO: Implement backup edit window
-        ;return this.app.GuiManager.Form("BackupEditor", this, mode, owner, parent)
+        ;return this.app.Service("GuiManager").Form("BackupEditor", this, mode, owner, parent)
         return "Cancel"
     }
 

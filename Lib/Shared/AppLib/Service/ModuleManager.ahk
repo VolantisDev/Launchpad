@@ -20,13 +20,13 @@ class ModuleManager extends ContainerServiceBase {
         for key, module in modules {
             subscribers := module.GetSubscribers()
 
-            eventMgr := this.app.Events
+            eventMgr := this.app.Service("EventManager")
 
             if (subscribers) {
                 for eventName, eventSubscribers in subscribers {
                     if (eventSubscribers) {
                         for index, subscriber in eventSubscribers {
-                            eventMgr.Register(eventName, this.app.IdGen.Generate(), subscriber)
+                            eventMgr.Register(eventName, this.app.Service("IdGenerator").Generate(), subscriber)
                         }
                     }
                 }
@@ -47,6 +47,7 @@ class ModuleManager extends ContainerServiceBase {
         }
 
         this.RegisterSubscribers()
+        return this
     }
 
     GetModuleDirs(config) {

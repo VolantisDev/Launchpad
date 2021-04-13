@@ -127,7 +127,7 @@ class LauncherEntity extends EntityBase {
         if (file && FileExist(file)) {
             launcherVersion := FileGetVersion(this.GetLauncherFile(this.Key))
 
-            if (launcherVersion && !this.app.VersionChecker.VersionIsOutdated(this.app.Version, launcherVersion)) {
+            if (launcherVersion && !this.app.Service("VersionChecker").VersionIsOutdated(this.app.Version, launcherVersion)) {
                 outdated := false
             }
 
@@ -137,7 +137,7 @@ class LauncherEntity extends EntityBase {
             if (!buildInfo["Version"] || !buildInfo["Timestamp"]) {
                 outdated := true
             } else {
-                if (configInfo["Version"] && this.app.VersionChecker.VersionIsOutdated(configInfo["Version"], buildInfo["Version"])) {
+                if (configInfo["Version"] && this.app.Service("VersionChecker").VersionIsOutdated(configInfo["Version"], buildInfo["Version"])) {
                     outdated := true
                 } else if (configInfo["Timestamp"] && DateDiff(configInfo["Timestamp"], buildInfo["Timestamp"], "S") > 0) {
                     outdated := true
@@ -229,7 +229,7 @@ class LauncherEntity extends EntityBase {
 
         while (result == "Simple" || result == "Advanced") {
             form := result == "Advanced" ? "LauncherEditor" : "LauncherEditorSimple"
-            result := this.app.GuiManager.Form(form, this, mode, owner, parent)
+            result := this.app.Service("GuiManager").Form(form, this, mode, owner, parent)
         }
         
         return result

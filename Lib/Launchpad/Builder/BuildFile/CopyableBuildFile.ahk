@@ -56,7 +56,7 @@ class CopyableBuildFile extends BuildFileBase {
         file := FileSelect(1,, this.launcherEntityObj.Key . ": " . this.RequestMessage, this.SelectFilter)
         
         if (file == "") {
-            this.app.Notifications.Warning("No file selected. Skipping build file.")
+            this.app.Service("NotificationService").Warning("No file selected. Skipping build file.")
         }
 
         return file

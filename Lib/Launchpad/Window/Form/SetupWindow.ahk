@@ -7,7 +7,7 @@
 
     Create() {
         super.Create()
-        this.availableThemes := this.app.Themes.GetAvailableThemes(true)
+        this.availableThemes := this.app.Service("ThemeManager").GetAvailableThemes(true)
     }
 
     GetTextDefinition() {
@@ -99,7 +99,7 @@
     OnThemeNameChange(ctl, info) {
         this.guiObj.Submit(false)
         this.app.Config.ThemeName := this.availableThemes[ctl.Value]
-        this.app.Themes.LoadMainTheme()
+        this.app.Service("ThemeManager").LoadMainTheme()
     }
 
     ProcessResult(result, submittedData := "") {

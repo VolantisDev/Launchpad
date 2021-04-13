@@ -4,6 +4,6 @@ class AppComponentServiceBase extends ComponentServiceBase {
     __New(app, components := "", autoLoad := true) {
         InvalidParameterException.CheckTypes("AppComponentServiceBase", "app", app, "AppBase")
         this.app := app
-        super.__New(app.Events, components, autoLoad)
+        super.__New(app.Service("EventManager"), components, autoLoad)
     }
 }

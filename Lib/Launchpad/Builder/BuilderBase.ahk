@@ -11,7 +11,7 @@ class BuilderBase {
         assetsDir := launcherEntityObj.AssetsDir
 
         if (launcherDir == "" or assetsDir == "") {
-            this.app.Notifications.Warning(launcherEntityObj.Key . ": Required directories not set. Skipping build.")
+            this.app.Service("NotificationService").Warning(launcherEntityObj.Key . ": Required directories not set. Skipping build.")
             return false
         }
 

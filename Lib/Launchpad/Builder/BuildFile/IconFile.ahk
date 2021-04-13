@@ -53,7 +53,7 @@ class IconFile extends CopyableBuildFile {
         }
 
         if (iconsCount == 0) {
-            this.app.Notifications.Warning("No icons could be extracted from %exeFile%. Please try another file.")
+            this.app.Service("NotificationService").Warning("No icons could be extracted from %exeFile%. Please try another file.")
             iconFilePath := ""
             this.Cleanup()
         } else {
@@ -61,7 +61,7 @@ class IconFile extends CopyableBuildFile {
                 iconFilePath := FileSelect(, iconsDir, "Select the correct icon from the extracted files", "Icons (*.ico)")
                 
                 if (iconFilePath == "") {
-                    this.app.Notifications.Warning("Canceled icon selection. Please try again.")
+                    this.app.Service("NotificationService").Warning("Canceled icon selection. Please try again.")
                     this.Cleanup()
                 }
             }

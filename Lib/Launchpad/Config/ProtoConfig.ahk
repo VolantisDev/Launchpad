@@ -15,7 +15,7 @@ class ProtoConfig extends FileConfig {
     }
 
     SaveConfig() {
-        this.app.Notifications.Error("Protobuf file saving is not yet implemented.")
+        this.app.Service("NotificationService").Error("Protobuf file saving is not yet implemented.")
         return this
     }
 

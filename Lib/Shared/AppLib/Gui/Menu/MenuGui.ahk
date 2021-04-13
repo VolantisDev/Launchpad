@@ -18,7 +18,7 @@
         }
 
         if (parent) {
-            parent := app.GuiManager.DereferenceGui(parent)
+            parent := app.Service("GuiManager").DereferenceGui(parent)
 
             if (parent.HasBase(MenuGui.Prototype)) {
                 this.parentMenu := parent
@@ -26,7 +26,7 @@
         }
 
         if (!isChild) {
-            app.GuiManager.CloseMenus(windowKey)
+            app.Service("GuiManager").CloseMenus(windowKey)
         }
 
         this.menuItems := menuItems
@@ -131,7 +131,7 @@
 
         if (btn.ChildItems) {
             this.childOpen := true
-            this.result := this.app.GuiManager.Menu("MenuGui", btn.ChildItems, this, btn, "right", true)
+            this.result := this.app.Service("GuiManager").Menu("MenuGui", btn.ChildItems, this, btn, "right", true)
             this.childOpen := false
         }
 
