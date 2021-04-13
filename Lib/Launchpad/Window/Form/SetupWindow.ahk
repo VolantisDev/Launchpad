@@ -53,11 +53,11 @@
     }
 
     AddPlatformCheckboxes() {
-        if (!this.app.Platforms._componentsLoaded) {
-            this.app.Platforms.LoadComponents()
+        if (!this.app.Service("PlatformManager")._componentsLoaded) {
+            this.app.Service("PlatformManager").LoadComponents()
         }
 
-        for key, platform in this.app.Platforms.Entities {
+        for key, platform in this.app.Service("PlatformManager").Entities {
             if (platform.IsInstalled) {
                  ctl := this.Add("BasicControl", "vPlatformToggle" . key, "", platform.DetectGames, "CheckBox", platform.GetDisplayName())
                  ctl.RegisterHandler("Click", "OnPlatformToggle")
@@ -70,8 +70,8 @@
         len := StrLen("PlatformToggle")
         name := SubStr(chk.Name, len + 1)
 
-        if (this.app.Platforms.Entities.Has(name)) {
-            platform := this.app.Platforms.Entities[name]
+        if (this.app.Service("PlatformManager").Entities.Has(name)) {
+            platform := this.app.Service("PlatformManager").Entities[name]
             platform.DetectGames := !!(chk.Value)
             platform.SaveModifiedData()
         }
@@ -104,7 +104,7 @@
 
     ProcessResult(result, submittedData := "") {
         if (result == "Start") {
-            this.app.Platforms.SaveModifiedEntities()
+            this.app.Service("PlatformManager").SaveModifiedEntities()
 
             if (!FileExist(this.app.appDir . "\" . this.app.appName . ".ini")) {
                 FileAppend("", this.app.appDir . "\" . this.app.appName . ".ini")

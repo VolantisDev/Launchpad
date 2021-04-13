@@ -13,7 +13,7 @@ class ErrorDialog extends DialogBox {
         this.notifierObj := app.Service("NotificationService").notifierObj
 
         if (app.HasProp("DataSources")) {
-            this.apiEndpoint := app.DataSources.GetItem("api")
+            this.apiEndpoint := app.Service("DataSourceManager").GetItem("api")
         }
 
         this.formShown := this.submitError

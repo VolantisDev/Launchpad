@@ -135,7 +135,7 @@
     }
 
     LaunchersLoaded() {
-        return (this.app.Launchers != "")
+        return this.app.Services.Exists("LauncherManager")
     }
 
     OpenDestinationDir() {

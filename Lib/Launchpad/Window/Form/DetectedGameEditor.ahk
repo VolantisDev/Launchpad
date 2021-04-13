@@ -15,7 +15,7 @@
 
     Create() {
         super.Create()
-        this.dataSource := this.app.DataSources.GetItem("api")
+        this.dataSource := this.app.Service("DataSourceManager").GetItem("api")
         this.knownPlatforms := this.dataSource.ReadListing("platforms")
         this.knownGames := this.dataSource.ReadListing("game-keys")
         this.launcherTypes := this.dataSource.ReadListing("launcher-types")

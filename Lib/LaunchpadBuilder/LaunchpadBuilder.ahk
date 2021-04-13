@@ -22,7 +22,7 @@ class LaunchpadBuilder extends AppBase {
     LoadServices(config) {
         super.LoadServices(config)
         this.LaunchpadConfig := LaunchpadConfig.new(this, this.appDir . "\" . this.appName . ".ini")
-        this.DataSources := DataSourceManager.new(this.Service("EventManager"))
+        this.Service("DataSourceManager") := DataSourceManager.new(this.Service("EventManager"))
         this.FileHasher := FileHasher.new(this)
         this.GitTagVersionId := GitTagVersionIdentifier.new(this)
     }

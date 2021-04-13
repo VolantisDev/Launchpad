@@ -7,7 +7,7 @@ class LoadLaunchersOp extends BulkOperationBase {
 
     __New(app, launcherConfigObj := "", owner := "") {
         if (launcherConfigObj == "") {
-            launcherConfigObj := app.Launchers.GetConfig()
+            launcherConfigObj := app.Service("LauncherManager").GetConfig()
         }
 
         InvalidParameterException.CheckTypes("EntityBase", "launcherConfigObj", launcherConfigObj, "LauncherConfig")

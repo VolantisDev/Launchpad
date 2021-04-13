@@ -2,39 +2,14 @@
     customTrayMenu := true
     detectGames := false
 
-    Launchers {
-        get => this.Services.Get("LauncherManager")
-        set => this.Services.Set("LauncherManager", value)
-    }
-
-    Platforms {
-        get => this.Services.Get("PlatformManager")
-        set => this.Services.Set("PlatformManager", value)
-    }
-
-    DataSources {
-        get => this.Services.Get("DataSourceManager")
-        set => this.Services.Set("DataSourceManager", value)
-    }
-
-    Builders {
-        get => this.Services.Get("BuilderManager")
-        set => this.Services.Set("BuilderManager", value)
-    }
-
-    Backups {
-        get => this.Services.Get("BackupManager")
-        set => this.Services.Set("BackupManager", value)
-    }
-
     LoadServices(config) {
         super.LoadServices(config)
-        this.Backups := BackupManager.new(this, this.Config.BackupsFile)
-        this.DataSources := DataSourceManager.new(this.Service("EventManager"))
-        this.DataSources.SetItem("api", ApiDataSource.new(this, this.Service("CacheManager").GetItem("api"), this.Config.ApiEndpoint), true)
-        this.Builders := BuilderManager.new(this)
-        this.Launchers := LauncherManager.new(this)
-        this.Platforms := PlatformManager.new(this)
+        this.Services.Set("BackupManager", BackupManager.new(this, this.Config.BackupsFile))
+        this.Services.Set("DataSourceManager", DataSourceManager.new(this.Service("EventManager")))
+        this.Service("DataSourceManager").SetItem("api", ApiDataSource.new(this, this.Service("CacheManager").GetItem("api"), this.Config.ApiEndpoint), true)
+        this.Services.Set("BuilderManager", BuilderManager.new(this))
+        this.Services.Set("LauncherManager", LauncherManager.new(this))
+        this.Services.Set("PlatformManager", PlatformManager.new(this))
     }
 
     GetCaches() {
@@ -59,7 +34,7 @@
         updateAvailable := false
 
         if (this.Version != "{{VERSION}}") {
-            dataSource := this.DataSources.GetItem("api")
+            dataSource := this.Service("DataSourceManager").GetItem("api")
             releaseInfoStr := dataSource.ReadItem("release-info")
 
             if (releaseInfoStr) {
@@ -113,7 +88,7 @@
 
     InitializeApp(config) {
         super.InitializeApp(config)
-        this.Builders.SetItem("ahk", AhkLauncherBuilder.new(this), true)
+        this.Service("BuilderManager").SetItem("ahk", AhkLauncherBuilder.new(this), true)
         this.Service("InstallerManager").SetItem("LaunchpadUpdate", LaunchpadUpdate.new(this.Version, this.State, this.Service("CacheManager").GetItem("file"), this.tmpDir))
         this.Service("InstallerManager").SetItem("Dependencies", DependencyInstaller.new(this.Version, this.State, this.Service("CacheManager").GetItem("file"), [], this.tmpDir))
         this.Service("InstallerManager").SetupInstallers()
@@ -133,14 +108,14 @@
         
         super.RunApp(config)
         
-        this.Platforms.LoadComponents(this.Config.PlatformsFile)
-        this.Launchers.LoadComponents(this.Config.LauncherFile)
-        this.Backups.LoadComponents()
+        this.Service("PlatformManager").LoadComponents(this.Config.PlatformsFile)
+        this.Service("LauncherManager").LoadComponents(this.Config.LauncherFile)
+        this.Service("BackupManager").LoadComponents()
 
         this.OpenApp()
 
         if (this.detectGames) {
-            this.Platforms.DetectGames()
+            this.Service("PlatformManager").DetectGames()
         }
     }
 
@@ -163,7 +138,7 @@
 
     ExitApp() {
         if (this.Config.CleanLaunchersOnExit) {
-            this.Builders.CleanLaunchers()
+            this.Service("BuilderManager").CleanLaunchers()
         }
 
         if (this.Config.FlushCacheOnExit) {

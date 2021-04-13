@@ -186,7 +186,7 @@
         } else if (btn == "OpenLauncherFile") {
             this.app.Config.OpenLauncherFile()
         } else if (btn == "ReloadLauncherFile") {
-            this.app.Launchers.ReloadLauncherFile()
+            this.app.Service("LauncherManager").ReloadLauncherFile()
         }
     }
 
@@ -197,7 +197,7 @@
         } else if (btn == "OpenBackupsFile") {
             this.app.Config.OpenBackupsFile()
         } else if (btn == "ReloadBackupsFile") {
-            this.app.Launchers.ReloadBackupsFile()
+            this.app.Service("LauncherManager").ReloadBackupsFile()
         }
     }
 
@@ -208,7 +208,7 @@
         } else if (btn == "OpenPlatformsFile") {
             this.app.Config.OpenPlatformsFile()
         } else if (btn == "ReloadPlatformsFile") {
-            this.app.Platforms.ReloadPlatformsFile()
+            this.app.Service("PlatformManager").ReloadPlatformsFile()
         }
     }
 
@@ -240,11 +240,11 @@
 
     OnApiEndpointMenuClick(btn) {
         if (btn == "ChangeApiEndpoint") {
-            this.app.DataSources.GetItem("api").ChangeApiEndpoint("", "")
+            this.app.Service("DataSourceManager").GetItem("api").ChangeApiEndpoint("", "")
             this.SetText("ApiEndpoint", this.app.Config.ApiEndpoint, "Bold")
             this.needsRestart := true
         } else if (btn == "OpenApiEndpoint") {
-            this.app.DataSources.GetItem("api").Open()
+            this.app.Service("DataSourceManager").GetItem("api").Open()
         }
     }
 
@@ -261,11 +261,11 @@
 
     OnBackupDirMenuClick(btn) {
         if (btn == "ChangeBackupDir") {
-            this.app.Backups.ChangeBackupDir()
+            this.app.Service("BackupManager").ChangeBackupDir()
             this.SetText("BackupDir", this.app.Config.BackupDir, "Bold")
             this.needsRestart := true
         } else if (btn == "OpenBackupDir") {
-            this.app.Backups.OpenBackupDir()
+            this.app.Service("BackupManager").OpenBackupDir()
         }
     }
 

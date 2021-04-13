@@ -6,8 +6,8 @@
     titleIsMenu := true
 
     __New(app, themeObj, windowKey, owner := "", parent := "") {
-        this.launcherManager := app.Launchers
-        this.platformManager := app.Platforms
+        this.launcherManager := app.Service("LauncherManager")
+        this.platformManager := app.Service("PlatformManager")
         this.lvCount := this.launcherManager.CountEntities()
         this.showStatusIndicator := app.Config.ApiAuthentication
         super.__New(app, themeObj, windowKey, app.appName, "", "")
@@ -41,7 +41,7 @@
         if (result == "EditLauncher") {
             this.EditLauncher(launcherKey)
         } else if (result == "BuildLauncher") {
-            this.app.Builders.BuildLaunchers(Map(launcherKey, launcher), true)
+            this.app.Service("BuilderManager").BuildLaunchers(Map(launcherKey, launcher), true)
             this.UpdateListView()
         } else if (result == "RunLauncher") {
             this.RunLauncher(launcherKey)
@@ -103,9 +103,9 @@
         } else if (result == "FlushCache") {
             this.app.Service("CacheManager").FlushCaches()
         } else if (result == "CleanLaunchers") {
-            this.app.Builders.CleanLaunchers()
+            this.app.Service("BuilderManager").CleanLaunchers()
         } else if (result == "ReloadLaunchers") {
-            this.app.Launchers.LoadComponents(this.app.Config.LauncherFile)
+            this.app.Service("LauncherManager").LoadComponents(this.app.Config.LauncherFile)
             this.UpdateListView()
         } else if (result == "About") {
             this.app.Service("GuiManager").Dialog("AboutWindow")
@@ -284,12 +284,12 @@
         } else if (result == "ImportShortcut") {
             this.ImportShortcut()
         } else if (result == "DetectGames") {
-            this.app.Platforms.DetectGames()
+            this.app.Service("PlatformManager").DetectGames()
         }
     }
 
     OnBuildAllButton(btn, info) {
-        this.app.Builders.BuildLaunchers(this.app.Launchers.Entities, this.app.Config.RebuildExistingLaunchers)
+        this.app.Service("BuilderManager").BuildLaunchers(this.app.Service("LauncherManager").Entities, this.app.Config.RebuildExistingLaunchers)
         this.UpdateListView()
     }
 

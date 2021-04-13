@@ -84,30 +84,30 @@ class FileConfig extends ConfigBase {
     }
 
     BackupConfigFile(configPath) {
-        if (this.ConfigPath && this.app.HasProp("Backups") && this.app.Backups) {
-            if (!this.app.Backups.Entities.Has(this.configKey)) {
+        if (this.ConfigPath && this.app.HasProp("Backups") && this.app.Services.Exists("BackupManager")) {
+            if (!this.app.Service("BackupManager").Entities.Has(this.configKey)) {
                 backupConfig := Map()
                 backupConfig["IsEditable"] := false
                 backupConfig["IconSrc"] := this.app.Service("ThemeManager").GetItem().GetIconPath("Config")
                 backupConfig["Source"] := this.ConfigPath
                 backupConfig["BackupClass"] := "FileBackup"
-                this.app.Backups.CreateBackupEntity(this.configKey, backupConfig)
+                this.app.Service("BackupManager").CreateBackupEntity(this.configKey, backupConfig)
             }
 
-            backup := this.app.Backups.Entities[this.configKey]
+            backup := this.app.Service("BackupManager").Entities[this.configKey]
 
             if (backup.Source != this.ConfigPath) {
                 backup.Source := this.ConfigPath
                 backup.SaveModifiedData()
             }
 
-            this.app.Backups.Entities[this.configKey].CreateBackup()
+            this.app.Service("BackupManager").Entities[this.configKey].CreateBackup()
         }
     }
 
     RestoreConfigFile(configPath, backupNumber := 1) {
-        if (this.ConfigPath && this.app.HasProp(Backups) && this.app.Backups && this.app.Backups.Entities.Has(this.configKey)) {
-            this.app.Backups.Entities[this.configKey].RestoreBackup()
+        if (this.ConfigPath && this.app.HasProp(Backups) && this.app.Services.Exists("BackupManager") && this.app.Service("BackupManager").Entities.Has(this.configKey)) {
+            this.app.Service("BackupManager").Entities[this.configKey].RestoreBackup()
             this.LoadConfig()
         }
     }

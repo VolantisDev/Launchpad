@@ -7,7 +7,7 @@ class LoadBackupsOp extends BulkOperationBase {
 
     __New(app, backupsConfigObj := "", owner := "") {
         if (backupsConfigObj == "") {
-            backupsConfigObj := app.Backups.GetConfig()
+            backupsConfigObj := app.Service("BackupManager").GetConfig()
         }
 
         InvalidParameterException.CheckTypes("LoadBackupsOp", "backupsConfigObj", backupsConfigObj, "BackupsConfig")

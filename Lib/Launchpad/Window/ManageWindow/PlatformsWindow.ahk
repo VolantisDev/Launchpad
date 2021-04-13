@@ -10,7 +10,7 @@ class PlatformsWindow extends ManageWindowBase {
 
         InvalidParameterException.CheckTypes("PlatformsWindow", "platformsFile", platformsFile, "")
         this.platformsFile := platformsFile
-        this.platformManager := app.Platforms
+        this.platformManager := app.Service("PlatformManager")
         this.lvCount := this.platformManager.CountEntities()
         super.__New(app, themeObj, windowKey, "Platforms", owner, parent)
     }
