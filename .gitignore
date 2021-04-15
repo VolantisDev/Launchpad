@@ -11,3 +11,5 @@ Launchpad.build.ini
 /Launchpad-*.zip
 /Launchpad.exe
 /log.txt
+/LaunchpadOverlay/bin
+/LaunchpadOverlay/obj
