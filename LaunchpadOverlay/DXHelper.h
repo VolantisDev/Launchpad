@@ -6,7 +6,7 @@
 class DXHelper
 {
 public:
-    DXHelper(UINT width, UINT height, std::wstring name);
+    DXHelper(std::wstring name);
     virtual ~DXHelper();
 
     virtual void OnInit() = 0;
@@ -19,6 +19,8 @@ public:
     virtual void OnKeyUp(UINT8 /*key*/)     {}
 
     // Accessors.
+    UINT GetX() const               { return m_x; }
+    UINT GetY() const               { return m_y; }
     UINT GetWidth() const           { return m_width; }
     UINT GetHeight() const          { return m_height; }
     const WCHAR* GetTitle() const   { return m_title.c_str(); }
@@ -28,6 +30,8 @@ public:
 protected:
     std::wstring GetAssetFullPath(LPCWSTR assetName);
 
+    void SetDimensions();
+
     void GetHardwareAdapter(
         _In_ IDXGIFactory1* pFactory,
         _Outptr_result_maybenull_ IDXGIAdapter1** ppAdapter,
@@ -36,6 +40,8 @@ protected:
     void SetCustomWindowText(LPCWSTR text);
 
     // Viewport dimensions.
+    UINT m_x;
+    UINT m_y;
     UINT m_width;
     UINT m_height;
     float m_aspectRatio;

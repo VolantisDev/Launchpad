@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "LaunchpadOverlayWindow.h"
 
-LaunchpadOverlayWindow::LaunchpadOverlayWindow(UINT width, UINT height, std::wstring name) :
-    DXHelper(width, height, name),
+LaunchpadOverlayWindow::LaunchpadOverlayWindow(std::wstring name) :
+    DXHelper(name),
     m_frameIndex(0),
     m_rtvDescriptorSize(0)
 {
@@ -193,7 +193,9 @@ void LaunchpadOverlayWindow::PopulateCommandList()
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart(), m_frameIndex, m_rtvDescriptorSize);
 
     // Record commands.
-    const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
+    //const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f }; // Dark blue
+    //const float clearColor[] = { 1.0f, 0.0f, 0.0f, 1.0f }; // Red
+    const float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
     m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 
     // Indicate that the back buffer will now be used to present.

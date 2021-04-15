@@ -2,10 +2,20 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "build-overlay-debug",
+            "command": "msbuild",
+            "type": "process",
+            "args": ["LaunchpadOverlay.sln", "-property:Configuration=Debug"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": "$tsc"
+        },
+        {
             "label": "build-overlay",
             "command": "msbuild",
             "type": "process",
-            "args": ["LaunchpadOverlay.sln"],
+            "args": ["LaunchpadOverlay.sln", "-property:Configuration=Release"],
             "options": {
                 "cwd": "${workspaceFolder}"
             },

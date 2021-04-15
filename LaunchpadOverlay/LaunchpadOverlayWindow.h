@@ -12,7 +12,7 @@ using Microsoft::WRL::ComPtr;
 class LaunchpadOverlayWindow : public DXHelper
 {
 public:
-    LaunchpadOverlayWindow(UINT width, UINT height, std::wstring name);
+    LaunchpadOverlayWindow(std::wstring name);
 
     virtual void OnInit();
     virtual void OnUpdate();

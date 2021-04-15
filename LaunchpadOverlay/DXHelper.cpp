@@ -3,17 +3,17 @@
 
 using namespace Microsoft::WRL;
 
-DXHelper::DXHelper(UINT width, UINT height, std::wstring name) :
-    m_width(width),
-    m_height(height),
+DXHelper::DXHelper(std::wstring name) :
     m_title(name),
     m_useWarpDevice(false)
 {
+    SetDimensions();
+
     WCHAR assetsPath[512];
     GetAssetsPath(assetsPath, _countof(assetsPath));
     m_assetsPath = assetsPath;
 
-    m_aspectRatio = static_cast<float>(width) / static_cast<float>(height);
+    m_aspectRatio = static_cast<float>(m_width) / static_cast<float>(m_height);
 }
 
 DXHelper::~DXHelper()
@@ -24,6 +24,20 @@ DXHelper::~DXHelper()
 std::wstring DXHelper::GetAssetFullPath(LPCWSTR assetName)
 {
     return m_assetsPath + assetName;
+}
+
+void DXHelper::SetDimensions() {
+    HMONITOR hmon = MonitorFromWindow(GetActiveWindow(), MONITOR_DEFAULTTONEAREST);
+    MONITORINFO mi = { sizeof(mi) };
+
+    if (!GetMonitorInfo(hmon, &mi)) {
+        return;
+    }
+
+    m_x = mi.rcMonitor.left;
+    m_y = mi.rcMonitor.top;
+    m_width = mi.rcMonitor.right - mi.rcMonitor.left;
+    m_height = mi.rcMonitor.bottom - mi.rcMonitor.top;
 }
 
 // Helper function for acquiring the first available hardware adapter that supports Direct3D 12.

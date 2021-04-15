@@ -16,7 +16,7 @@
             "name": "Launchpad Overlay Debug",
             "type": "clr",
             "request": "launch",
-            "preLaunchTask": "build-overlay",
+            "preLaunchTask": "build-overlay-debug",
             "program": "${workspaceFolder}/LaunchpadOverlay/bin/x64/Debug/LaunchpadOverlay.exe",
             "args": [],
             "cwd": "${workspaceFolder}/LaunchpadOverlay",

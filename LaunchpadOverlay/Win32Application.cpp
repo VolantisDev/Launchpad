@@ -21,16 +21,22 @@ int Win32Application::Run(DXHelper* pDxHelper, HINSTANCE hInstance, int nCmdShow
     windowClass.lpszClassName = L"LaunchpadOverlayClass";
     RegisterClassEx(&windowClass);
 
-    RECT windowRect = { 0, 0, static_cast<LONG>(pDxHelper->GetWidth()), static_cast<LONG>(pDxHelper->GetHeight()) };
-    AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
+    RECT windowRect = { 
+        static_cast<LONG>(pDxHelper->GetX()), 
+        static_cast<LONG>(pDxHelper->GetY()), 
+        static_cast<LONG>(pDxHelper->GetWidth()), 
+        static_cast<LONG>(pDxHelper->GetHeight()) 
+    };
+
+    AdjustWindowRect(&windowRect, WS_POPUP | WS_VISIBLE, FALSE);
 
     // Create the window and store a handle to it.
     m_hwnd = CreateWindow(
         windowClass.lpszClassName,
         pDxHelper->GetTitle(),
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
+        WS_POPUP | WS_VISIBLE,
+        windowRect.left,
+        windowRect.top,
         windowRect.right - windowRect.left,
         windowRect.bottom - windowRect.top,
         nullptr,        // We have no parent window.
@@ -41,7 +47,12 @@ int Win32Application::Run(DXHelper* pDxHelper, HINSTANCE hInstance, int nCmdShow
     // Initialize the sample. OnInit is defined in each child-implementation of DXSample.
     pDxHelper->OnInit();
 
+    SetWindowLong(m_hwnd, GWL_EXSTYLE, GetWindowLong(m_hwnd, GWL_EXSTYLE) | WS_EX_LAYERED);
+    SetLayeredWindowAttributes(m_hwnd, RGB(255,0,0), 0, LWA_COLORKEY);
+
     ShowWindow(m_hwnd, nCmdShow);
+
+    // SetWindowPos(m_hwnd, HWND_TOP, windowRect.left, windowRect.top, windowRect.right - windowRect.left, windowRect.bottom - windowRect.top, SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 
     // Main sample loop.
     MSG msg = {};

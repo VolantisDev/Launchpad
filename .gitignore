@@ -13,3 +13,4 @@ Launchpad.build.ini
 /log.txt
 /LaunchpadOverlay/bin
 /LaunchpadOverlay/obj
+/.vs
