@@ -19,6 +19,7 @@ int Win32Application::Run(DXHelper* pDxHelper, HINSTANCE hInstance, int nCmdShow
     windowClass.hInstance = hInstance;
     windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
     windowClass.lpszClassName = L"LaunchpadOverlayClass";
+    // windowClass.hbrBackground = CreateSolidBrush(RGB(255, 0, 0));
     RegisterClassEx(&windowClass);
 
     RECT windowRect = { 
@@ -47,10 +48,10 @@ int Win32Application::Run(DXHelper* pDxHelper, HINSTANCE hInstance, int nCmdShow
     // Initialize the sample. OnInit is defined in each child-implementation of DXSample.
     pDxHelper->OnInit();
 
-    SetWindowLong(m_hwnd, GWL_EXSTYLE, GetWindowLong(m_hwnd, GWL_EXSTYLE) | WS_EX_LAYERED);
-    SetLayeredWindowAttributes(m_hwnd, RGB(255,0,0), 0, LWA_COLORKEY);
-
     ShowWindow(m_hwnd, nCmdShow);
+
+    // SetWindowLong(m_hwnd, GWL_EXSTYLE, GetWindowLong(m_hwnd, GWL_EXSTYLE) | WS_EX_LAYERED);
+    // SetLayeredWindowAttributes(m_hwnd, RGB(255,0,0), 100, LWA_ALPHA);
 
     // SetWindowPos(m_hwnd, HWND_TOP, windowRect.left, windowRect.top, windowRect.right - windowRect.left, windowRect.bottom - windowRect.top, SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 
