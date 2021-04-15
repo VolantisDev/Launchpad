@@ -173,7 +173,7 @@ class AppBase {
             throw AppException.new("The shell is disabled, so shell commands cannot currently be run.")
         }
         
-        result := this.Services("Shell").Exec(A_ComSpec . " /C " . command).StdOut.ReadAll()
+        result := this.Service("Shell").Exec(A_ComSpec . " /C " . command).StdOut.ReadAll()
 
         if (trimOutput) {
             result := Trim(result, " `r`n`t")
@@ -184,6 +184,10 @@ class AppBase {
 
     GetCaches() {
         return Map()
+    }
+
+    Service(name) {
+        return this.Services.Get(name)
     }
 
     LoadAppConfig(config) {

@@ -95,10 +95,6 @@
         this.Service("InstallerManager").InstallRequirements()
     }
 
-    Service(name) {
-        return this.Services.Get(name)
-    }
-
     RunApp(config) {
         this.Service("AuthService").SetAuthProvider(LaunchpadApiAuthProvider.new(this, this.State))
 
