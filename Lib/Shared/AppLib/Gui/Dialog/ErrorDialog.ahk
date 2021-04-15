@@ -12,7 +12,7 @@ class ErrorDialog extends DialogBox {
         this.errorObj := errorObj
         this.notifierObj := app.Service("NotificationService").notifierObj
 
-        if (app.HasProp("DataSources")) {
+        if (app.Services.Exists("DataSourceManager")) {
             this.apiEndpoint := app.Service("DataSourceManager").GetItem("api")
         }
 
