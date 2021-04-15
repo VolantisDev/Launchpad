@@ -5,12 +5,24 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "AutoHotKey Debug",
+            "name": "Launchpad Debug",
             "type": "autohotkey",
             "request": "launch",
             "runtime": "${workspaceFolder}/Vendor/AutoHotkey/AutoHotKeyU64.exe",
             "program": "${workspaceFolder}/Launchpad.ahk",
             "env": {"LAUNCHPAD_DEBUG": "1"}
+        },
+        {
+            "name": "Launchpad Overlay Debug",
+            "type": "clr",
+            "request": "launch",
+            "preLaunchTask": "build-overlay",
+            "program": "${workspaceFolder}/LaunchpadOverlay/bin/x64/Debug/LaunchpadOverlay.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/LaunchpadOverlay",
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
         }
     ]
 }
