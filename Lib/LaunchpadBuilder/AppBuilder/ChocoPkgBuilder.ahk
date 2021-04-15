@@ -7,7 +7,7 @@ class ChocoPkgBuilder extends AppBuilderBase {
             throw AppException.new("Installer file doesn't exist, cannot build chocolatey package.")
         }
 
-        hash := this.app.FileHasher.Hash(installer, FileHasher.HASH_TYPE_SHA256)
+        hash := this.app.Service("FileHasher").Hash(installer, FileHasher.HASH_TYPE_SHA256)
 
         if (!hash) {
             throw AppException.new("Failed to create an SHA256 hash of the installer file.")

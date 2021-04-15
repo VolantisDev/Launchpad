@@ -37,7 +37,7 @@
     }
 
     CleanupBuildArtifacts {
-        get => this.GetBooleanValue("CleanupBuildArtifacts", true)
+        get => this.GetBooleanValue("CleanupBuildArtifacts", false)
         set => this.SetBooleanValue("CleanupBuildArtifacts", value)
     }
 

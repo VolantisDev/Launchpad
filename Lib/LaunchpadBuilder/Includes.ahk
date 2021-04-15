@@ -3,6 +3,7 @@
 #Include AppBuilder\AhkExeBuilder.ahk
 #Include AppBuilder\AppBuilderBase.ahk
 #Include AppBuilder\ChocoPkgBuilder.ahk
+#Include AppBuilder\LaunchpadOverlayBuilder.ahk
 #Include AppBuilder\NsisInstallerBuilder.ahk
 #Include BuildDeployer\ApiBuildDeployer.ahk
 #Include BuildDeployer\BuildDeployerBase.ahk

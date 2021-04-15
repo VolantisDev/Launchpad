@@ -26,8 +26,10 @@ class BuildSettingsForm extends FormGuiBase {
         this.AddEdit("Version", this.version, "", 150)
 
         this.AddHeading("Build Options")
-        this.AddCheckBox("Build installer", "BuildInstaller", true, false, "OnCheckbox")
-        this.AddCheckBox("Build chocolatey package", "BuildChocoPkg", true, false, "OnCheckbox")
+        this.AddCheckBox("Build Launchpad Overlay", "BuildLaunchpadOverlay", false, false, "OnCheckbox")
+        this.AddCheckBox("Build Launchpad", "BuildLaunchpad", true, false, "OnCheckbox")
+        this.AddCheckBox("Build installer", "BuildInstaller", false, false, "OnCheckbox")
+        this.AddCheckBox("Build chocolatey package", "BuildChocoPkg", false, false, "OnCheckbox")
 
         this.AddHeading("Deployment Options")
         this.AddCheckBox("Deploy release to GitHub", "DeployToGitHub", false, false, "OnCheckbox")

@@ -1,30 +1,10 @@
 class LaunchpadBuilder extends AppBase {
-    GitTagVersionId {
-        get => this.Services.Get("GitTagVersionIdentifier")
-        set => this.Services.Set("GitTagVersionIdentifier", value)
-    }
-
-    DataSources {
-        get => this.Services.Get("DataSourceManager")
-        set => this.Services.Set("DataSourceManager", value)
-    }
-
-    LaunchpadConfig {
-        get => this.Services.Get("LaunchpadConfig")
-        set => this.Services.Set("LaunchpadConfig", value)
-    }
-
-    FileHasher {
-        get => this.Services.Get("FileHasher")
-        set => this.Services.Set("FileHasher", value)
-    }
-
     LoadServices(config) {
         super.LoadServices(config)
-        this.LaunchpadConfig := LaunchpadConfig.new(this, this.appDir . "\" . this.appName . ".ini")
-        this.Service("DataSourceManager") := DataSourceManager.new(this.Service("EventManager"))
-        this.FileHasher := FileHasher.new(this)
-        this.GitTagVersionId := GitTagVersionIdentifier.new(this)
+        this.Services.Set("LaunchpadConfig", LaunchpadConfig.new(this, this.appDir . "\" . this.appName . ".ini"))
+        this.Services.Set("DataSourceManager", DataSourceManager.new(this.Service("EventManager")))
+        this.Services.Set("FileHasher", FileHasher.new(this))
+        this.Services.Set("GitTagVersionIdentifier", GitTagVersionIdentifier.new(this))
     }
 
     GetCaches() {
@@ -39,7 +19,7 @@ class LaunchpadBuilder extends AppBase {
 
     RunApp(config) {
         super.RunApp(config)
-        version := this.GitTagVersionId.IdentifyVersion()
+        version := this.Service("GitTagVersionIdentifier").IdentifyVersion()
         buildInfo := this.Service("GuiManager").Form("BuildSettingsForm", version)
 
         if (!buildInfo) {
@@ -84,13 +64,20 @@ class LaunchpadBuilder extends AppBase {
 
     GetBuilders(buildInfo) {
         builders := Map()
-        builders["Exe"] := AhkExeBuilder.new(this)
+        
+        if (buildInfo.BuildLaunchpadOverlay) {
+            builders["Launchpad Overlay"] := LaunchpadOverlayBuilder.new(this)
+        }
+        
+        if (buildInfo.BuildLaunchpad) {
+            builders["Exe"] := AhkExeBuilder.new(this)
 
-        if (buildInfo.BuildInstaller) {
-            builders["Installer"] := NsisInstallerBuilder.new(this)
+            if (buildInfo.BuildInstaller) {
+                builders["Installer"] := NsisInstallerBuilder.new(this)
 
-            if (buildInfo.BuildChocoPkg) {
-                builders["Chocolatey Package"] := ChocoPkgBuilder.new(this)
+                if (buildInfo.BuildChocoPkg) {
+                    builders["Chocolatey Package"] := ChocoPkgBuilder.new(this)
+                }
             }
         }
         
