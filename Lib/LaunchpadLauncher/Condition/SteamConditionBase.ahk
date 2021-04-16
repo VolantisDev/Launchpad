@@ -4,7 +4,7 @@ class SteamConditionBase extends ConditionBase {
 
     __New(app, childConditions := "", negate := false) {
         this.app := app
-        this.steamPath := GetSteamPath(app)
+        this.steamPath := this.GetSteamPath(app)
         super.__New(childConditions, negate)
     }
 

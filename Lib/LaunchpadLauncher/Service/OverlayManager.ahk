@@ -60,6 +60,7 @@ class OverlayManager extends AppServiceBase {
     }
 
     ToggleOverlay(*) {
+        hotkeys := "+{Tab}"
         if (this.isShown) {
             Send(hotkeys)
             this.Hide()

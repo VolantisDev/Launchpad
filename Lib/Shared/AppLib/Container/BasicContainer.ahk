@@ -1,1 +1,2 @@
-class BasicContainer extends ContainerBase {}
+class BasicContainer extends ContainerBase {
+}
