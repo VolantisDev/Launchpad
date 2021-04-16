@@ -1,32 +1,25 @@
 class LaunchpadLauncher extends AppBase {
-    Launcher {
-        get => this.Services.Get("Launcher")
-        set => this.Services.Set("Launcher", value)
-    }
-
-    Game {
-        get => this.Services.Get("Game")
-        set => this.Services.Set("Game", value)
-    }
-
     __New(config) {
         config["logPath"] := config["launchpadLauncherConfig"]["LogPath"]
         config["loggingLevel"] := config["launchpadLauncherConfig"]["LoggingLevel"]
         super.__New(config)
     }
 
-    RunApp(config) {
-        super.RunApp(config)
-        this.Launcher.LaunchGame()
-    }
-
     LoadServices(config) {
         super.LoadServices(config)
+        this.Services.Set("Platforms", config["platforms"])
+        this.Services.Set("LauncherConfig", config["launchpadLauncherConfig"])
+        this.Services.Set("OverlayManager", OverlayManager.new(this))
 
         gameClass := config["gameConfig"]["GameClass"]
-        this.Game := %gameClass%.new(this, config["launcherKey"], config["gameConfig"], config["launcherConfig"])
+        this.Services.Set("Game", %gameClass%.new(this, config["launcherKey"], config["gameConfig"], config["launcherConfig"]))
 
         launcherClass := config["launcherConfig"]["LauncherClass"]
-        this.Launcher := %launcherClass%.new(this, config["launcherKey"], config["launcherConfig"])
+        this.Services.Set("Launcher", %launcherClass%.new(this, config["launcherKey"], config["launcherConfig"]))
+    }
+
+    RunApp(config) {
+        super.RunApp(config)
+        this.Service("Launcher").LaunchGame()
     }
 }

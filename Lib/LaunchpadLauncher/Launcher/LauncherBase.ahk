@@ -14,7 +14,7 @@ class LauncherBase {
         InvalidParameterException.CheckTypes("LauncherBase", "app", app, "AppBase", "key", key, "", "config", config, "Map")
         this.app := app
         this.key := key
-        this.game := app.Game
+        this.game := app.Service("Game")
         this.config := config
 
         if (this.config["ShowProgress"]) {
@@ -28,7 +28,7 @@ class LauncherBase {
 
     CreateProgressGui() {
         if (this.progress == "") {
-            this.progress := this.app.Service("GuiManager").OpenWindow("LauncherProgressIndicator", "", this.key, A_ScriptFullPath, "", "", this.CountLaunchSteps())
+            this.progress := this.app.Service("GuiManager").OpenWindow("LauncherProgressIndicator", "", this.key, A_ScriptFullPath)
         }
     }
 

@@ -23,8 +23,8 @@ class LauncherProgressIndicator extends MiniProgressIndicator {
         this.AddGuiProgressIndicator()
 
         this.SetFont("small")
-        this.guiObj.AddText("x" . this.margin . " w" . (this.windowSettings["contentWidth"] - 60) . " vDialogDetailText", this.detailText)
-        this.guiObj.AddText("x" . (this.windowSettings["contentWidth"] - 50) . " yp w50 Right vDialogStatusIndicator", this.currentPosition . " / " . this.rangeStop)
+        this.guiObj.AddText("x" . this.margin . " w" . this.windowSettings["contentWidth"] . " vDialogDetailText", this.detailText)
+        ;this.guiObj.AddText("x" . (this.windowSettings["contentWidth"] - 50) . " yp w50 Right vDialogStatusIndicator", this.currentPosition . " / " . this.rangeStop)
         this.SetFont()
     }
 
