@@ -95,6 +95,26 @@ class LauncherEntity extends EntityBase {
         set => this.SetConfigValue("LoggingLevel", value, false)
     }
 
+    EnableOverlay {
+        get => this.GetConfigValue("EnableOverlay", false)
+        set => this.SetConfigValue("EnableOverlay", value, false)
+    }
+
+    ForceOverlay {
+        get => this.GetConfigValue("ForceOverlay", false)
+        set => this.SetConfigValue("ForceOverlay", value, false)
+    }
+
+    OverlayHotkey {
+        get => this.GetConfigValue("OverlayHotkey", false)
+        set => this.SetConfigValue("OverlayHotkey", value, false)
+    }
+
+    OverlayWait {
+        get => this.GetConfigValue("OverlayWait", false)
+        set => this.SetConfigValue("OverlayWait", value, false)
+    }
+
     IsBuilt {
         get => this.LauncherExists(false)
     }
@@ -306,6 +326,11 @@ class LauncherEntity extends EntityBase {
         defaults["CloseAfter"] := ""
         defaults["LoggingLevel"] := "Warning"
         defaults["LogPath"] := this.app.tmpDir . "\Logs\" . this.Key . ".txt"
+        defaults["EnableOverlay"] := false
+        defaults["ForceOverlay"] := false
+        defaults["OverlayHotkey"] := "Shift+Alt+Tab"
+        defaults["OverlayWait"] := 10
+
         return defaults
     }
 
