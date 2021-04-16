@@ -16,12 +16,17 @@
 #Include AppLib\Cache\CacheBase.ahk
 #Include AppLib\Cache\FileCache.ahk
 #Include AppLib\Cache\ObjectCache.ahk
+#Include AppLib\Condition\ConditionBase.ahk
+#Include AppLib\Condition\FileConditionBase.ahk
+#Include AppLib\Condition\FileContainsCondition.ahk
+#Include AppLib\Condition\FileModifiedAfterCondition.ahk
 #Include AppLib\Config\AppConfig.ahk
 #Include AppLib\Config\BackupsConfig.ahk
 #Include AppLib\Config\ConfigBase.ahk
 #Include AppLib\Config\FileConfig.ahk
 #Include AppLib\Config\IniConfig.ahk
 #Include AppLib\Config\JsonConfig.ahk
+#Include AppLib\Container\BasicContainer.ahk
 #Include AppLib\Container\ContainerBase.ahk
 #Include AppLib\Container\ServiceComponentContainer.ahk
 #Include AppLib\Container\ServiceContainer.ahk
