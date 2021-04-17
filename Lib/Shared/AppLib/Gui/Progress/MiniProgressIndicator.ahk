@@ -17,8 +17,18 @@ class MiniProgressIndicator extends ProgressIndicatorBase {
         this.AddGuiProgressIndicator()
 
         this.SetFont("small")
-        this.guiObj.AddText("x" . this.margin . " w" . (this.windowSettings["contentWidth"] - 60) . " vDialogDetailText", this.detailText)
-        this.guiObj.AddText("x" . (this.windowSettings["contentWidth"] - 50) . " yp w50 Right vDialogStatusIndicator", this.currentPosition . " / " . this.rangeStop)
+        w := this.windowSettings["contentWidth"]
+
+        if (this.hasStatusIndicator) {
+            w -= 60
+        }
+
+        this.guiObj.AddText("x" . this.margin . " w" . w . " vDialogDetailText", this.detailText)
+        
+        if (this.hasStatusIndicator) {
+            this.guiObj.AddText("x" . (this.windowSettings["contentWidth"] - 50) . " yp w50 Right vDialogStatusIndicator", this.currentPosition . " / " . this.rangeStop)
+        }
+        
         this.SetFont()
     }
 

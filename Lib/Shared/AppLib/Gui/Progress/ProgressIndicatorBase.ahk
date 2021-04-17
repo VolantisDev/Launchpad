@@ -6,6 +6,7 @@ class ProgressIndicatorBase extends FormGuiBase {
     detailText := "Initializing..."
     enableDetailText := true
     cancelCallback := ""
+    hasStatusIndicator := false
 
     __New(app, themeObj, windowKey, title, text, owner := "", parent := "", btns := "", rangeStop := "", currentPosition := 0, detailText := true, showInNotificationArea := true) {
         if (rangeStop != "") {
@@ -38,7 +39,9 @@ class ProgressIndicatorBase extends FormGuiBase {
     }
 
     SetProgressIndicator() {
-        this.guiObj["DialogStatusIndicator"].Text := this.currentPosition . " / " . this.rangeStop
+        if (this.hasStatusIndicator) {
+            this.guiObj["DialogStatusIndicator"].Text := this.currentPosition . " / " . this.rangeStop
+        }
     }
 
     SetCancelCallback(callback) {
@@ -89,9 +92,12 @@ class ProgressIndicatorBase extends FormGuiBase {
 
         this.AddGuiProgressIndicator()
 
-        this.SetFont("small")
-        this.guiObj.AddText("x" . this.margin . " w" . this.windowSettings["contentWidth"] . " Right vDialogStatusIndicator", this.currentPosition . " / " . this.rangeStop)
-        this.SetFont()
+        if (this.hasStatusIndicator) {
+            this.SetFont("small")
+            this.guiObj.AddText("x" . this.margin . " w" . this.windowSettings["contentWidth"] . " Right vDialogStatusIndicator", this.currentPosition . " / " . this.rangeStop)
+            this.SetFont()
+        }
+        
 
         if (this.enableDetailText) {
             this.guiObj.AddText("x" . this.margin . " w" . this.windowSettings["contentWidth"] . " vDialogDetailText", this.detailText)

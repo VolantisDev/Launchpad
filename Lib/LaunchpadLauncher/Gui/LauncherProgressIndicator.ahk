@@ -1,5 +1,6 @@
 class LauncherProgressIndicator extends MiniProgressIndicator {
     gif := ""
+    hasStatusIndicator := false
 
     __New(app, themeObj, windowKey, title, gameIcon, owner := "", parent := "", rangeStop := "", currentPosition := 0, showInNotificationArea := true) {
         this.gameTitle := title
