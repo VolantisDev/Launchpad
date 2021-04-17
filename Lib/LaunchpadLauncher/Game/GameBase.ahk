@@ -8,9 +8,15 @@ class GameBase {
     launchTime := ""
     winId := 0
     loadingWinId := 0
+    isOpen := false
     isFinished := false
+    loopSleep := 250
+    isLoadingWindowRunning := false
+    isLoadingWindowFinished := false
 
     __New(app, key, config := "", launcherConfig := "") {
+        this.launchTime := A_Now
+
         if (config == "") {
             config := Map()
         }
@@ -52,7 +58,7 @@ class GameBase {
     }
 
     RunGame(progress := "") {
-        pid := this.GameIsRunning()
+        this.pid := this.GameIsRunning()
         isRunWait := (this.config["GameRunMethod"] == "RunWait")
 
         if (progress != "") {
@@ -62,11 +68,80 @@ class GameBase {
 
         this.Log("Running game...", "Info")
 
-        if (pid == 0 && !this.LoadingWindowIsOpen()) {
-            pid := this.RunGameAction(progress) ; Can change progress text but should not increment
+        launcherConfig := this.app.Service("LauncherConfig")
+
+        if (launcherConfig["EnableOverlay"]) {
+            this.overlayCallback := ObjBindMethod(this, "OverlayCallback")
+            SetTimer(this.overlayCallback, 500)
         }
 
-        result := this.WaitForGame(progress) ; this should always add 3 steps
+        loadingWinId := 0
+
+        if (this.config["GameHasLoadingWindow"]) {
+            loadingWinId := this.LoadingWindowIsOpen()
+        } else {
+            this.isLoadingWindowFinished := true
+        }
+
+        if (this.pid == 0 && !loadingWinId) {
+            this.pid := this.RunGameAction(progress)
+        }
+
+        if (progress != "") {
+            progress.IncrementValue(1, this.config["GameHasLoadingWindow"] ? "Waiting for loading screen..." : "Waiting for game window...")
+        }
+
+        while (!this.isFinished) {
+            if (this.isOpen) {
+                winId := this.GameWindowIsOpen()
+
+                if (!winId) {
+                    this.isFinished := !this.GameIsRunning()
+
+                    if (this.isFinished) {
+                        progress.SetDetailText("Game window closed.")
+                        Sleep(1000)
+                        this.isOpen := false
+                    }
+                }
+            } else {
+                if (this.config["GameHasLoadingWindow"] && !this.isLoadingWindowFinished) {
+                    loadingWinId := this.LoadingWindowIsOpen()
+
+                    if (loadingWinId) {
+                        if (progress != "") {
+                            progress.SetDetailText("Game is loading...")
+                        }
+
+                        ; TODO: Get this timeout value from somewhere
+                        timeoutVal := 60
+                        WinWaitClose("ahk_id " . loadingWinId,, timeoutVal)
+                        loadingWinId := this.LoadingWindowIsOpen()
+
+                        if (!loadingWinId) {
+                            this.isLoadingWindowFinished := true
+                            progress.SetDetailText("Loading window closed.")
+                        }
+                    }
+                }
+
+                if (this.isLoadingWindowFinished) {
+                    winId := this.GameWindowIsOpen()
+
+                    if (winId != 0) {
+                        this.pid := this.GameIsRunning()
+
+                        if (progress != "") {
+                            progress.IncrementValue(1, "Monitoring game...")
+                        }
+
+                        this.isOpen := true
+                    }
+                }
+            }
+
+            Sleep(this.loopSleep)
+        }
 
         this.Log("Finished running game.", "Info")
 
@@ -75,7 +150,41 @@ class GameBase {
         }
         
         this.CleanupAfterRun(progress)
-        return result
+        return true
+    }
+
+    OverlayCallback() {
+        static steamIsOpenCondition := SteamIsOpenCondition.new(this.app)
+        static overlayAttachedCondtion := SteamOverlayAttachedCondition.new(A_Now, this.app)
+
+        launcherConfig := this.app.Service("LauncherConfig")
+
+        if (launcherConfig["ForceOverlay"]) {
+            this.StartOverlay()
+            return
+        }
+
+        if (!steamIsOpenCondition.Evaluate()) {
+            SetTimer(this.overlayCallback, 0)
+            return
+        }
+
+        if (overlayAttachedCondtion.Evaluate()) {
+            SetTimer(this.overlayCallback, 0)
+            return
+        }
+
+        if (DateDiff(A_Now, this.launchTime, "S") >= launcherConfig["OverlayWait"]) {
+            this.StartOverlay()
+            return
+        }
+    }
+
+    StartOverlay() {
+        SetTimer(this.overlayCallback, 0)
+        this.Log("Starting Launchpad Overlay...")
+        launcherConfig := this.app.Service("LauncherConfig")
+        this.app.Service("OverlayManager").Start(launcherConfig["OverlayHotkey"])
     }
 
     CleanupAfterRun(progress := "") {
@@ -84,8 +193,9 @@ class GameBase {
                 progress.SetDetailText("Cleaning up scheduled task.")
             }
 
+            this.Log("Closing overlay if running...")
+            this.app.Service("OverlayManager").Close()
             this.Log("Cleaning up scheduled task(s)...")
-
             this.CleanupScheduledTask()
         }
     }
@@ -145,7 +255,7 @@ class GameBase {
         }
 
         this.loadingWinId := winId
-        return (winId > 0)
+        return winId
     }
 
     RunGameAction(progress := "") {
