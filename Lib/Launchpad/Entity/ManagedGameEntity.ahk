@@ -90,7 +90,9 @@ class ManagedGameEntity extends ManagedEntityBase {
             detectedValues[this.configPrefix . "LoadingWindowProcessType"] := detectedValues[this.configPrefix . "ProcessType"]
         }
 
-        detectedValues[this.configPrefix . "LoadingWindowProcessId"] := detectedValues[exeKey]
+        if (!this.LoadingWindowProcessId) {
+            detectedValues[this.configPrefix . "LoadingWindowProcessId"] := detectedValues[exeKey]
+        }
 
         if (this.ShouldDetectShortcutSrc(detectedValues)) {
             basePath := this.AssetsDir . "\" . this.Key
