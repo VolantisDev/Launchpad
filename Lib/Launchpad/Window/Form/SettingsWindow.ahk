@@ -276,6 +276,11 @@
         this.needsRestart := true
     }
 
+    OnDefaultLauncherThemeChange(ctl, info) {
+        this.guiObj.Submit(false)
+        this.app.Config.DefaultLauncherTheme := this.availableThemes[ctl.Value]
+    }
+
     OnLaunchersViewModeChange(ctl, info) {
         this.guiObj.Submit(false)
         this.app.Config.LaunchersViewMode := this.listViewModes[ctl.Value]
