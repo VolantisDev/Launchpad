@@ -191,19 +191,19 @@ class DetectedGame {
                 }
             }
 
-            if (priorityExes.Length == 1) {
-                mainExe := priorityExes[1]
-            } else if (priorityExes.Length > 1) {
-                containsLikelyMatch := true
-                mainExe := priorityExes[1]
-            }
-
             if (installDirExes.Length == 1) {
                 mainExe := installDirExes[1]
             } else if (installDirExes.Length > 1) {
                 ;containsLikelyMatch := true
                 ;mainExe := installDirExes[1]
                 ; TODO: Decide what to do if there is more than one exe in the main dir
+            }
+
+            if (priorityExes.Length == 1) {
+                mainExe := priorityExes[1]
+            } else if (priorityExes.Length > 1) {
+                containsLikelyMatch := true
+                mainExe := priorityExes[1]
             }
         }
 
