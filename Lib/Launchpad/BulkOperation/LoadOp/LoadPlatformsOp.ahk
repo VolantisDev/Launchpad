@@ -1,4 +1,5 @@
 class LoadPlatformsOp extends BulkOperationBase {
+    useProgress := false
     platformsConfigObj := ""
     progressTitle := "Loading Platforms"
     progressText := "Please wait while your configuration is processed."
