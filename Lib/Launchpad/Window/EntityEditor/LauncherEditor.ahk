@@ -39,6 +39,14 @@ class LauncherEditor extends LauncherEditorBase {
         ctl := this.AddEntityCtl("", "ShowProgress", true, "BasicControl", "CheckBox", "Show Progress Window")
         ctl.ctl.ToolTip := "Whether or not to show a window indicating the current status of the launcher"
 
+        ctl := this.AddEntityCtl("Launchpad Overlay", "EnableOverlay", true, "BasicControl", "CheckBox", "Enable Launchpad Overlay")
+        ctl.ctl.ToolTip := "Enabling this option makes the Steam Overlay work with any application that's otherwise incompatible with it. You must use Borderless Fullscreen instead of true Fullscreen when using this option to allow the Launchpad Overlay to display over the game window. If the Steam Overlay is already detected, then the Launchpad Overlay won't be used."
+        ctl := this.AddEntityCtl("", "ForceOverlay", true, "BasicControl", "CheckBox", "Force the Launchpad Overlay on")
+        ctl.ctl.ToolTip := "Enabling this option along with the Launchpad Overlay means the Launchpad Overlay will always be used, instead of it waiting to see if the Steam Overlay is attached first."
+        ; TODO: Add an option for OverlayHotkey
+        ; TODO: Add an option for OverlayWait
+
+
         tabs.UseTab("Processes", true)
         this.AddEntityCtl("Run Before Game", "RunBefore", true, "EditControl", 3, "", "Run one or more processes before launching the game. Each line should contain a command to run or a full path to a .exe or shortcut file to launch.`n`nEach process will be run as a scheduled task so that it is not owned by the launcher.")
         this.AddEntityCtl("Close Before Game", "CloseBefore", true, "EditControl", 3, "", "Close one or more processes before launching the game. Each line should contain the name of the process to close (usually just the .exe filename).")
