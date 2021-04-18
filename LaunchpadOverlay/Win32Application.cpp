@@ -32,7 +32,8 @@ int Win32Application::Run(DXHelper* pDxHelper, HINSTANCE hInstance, int nCmdShow
     AdjustWindowRect(&windowRect, WS_POPUP | WS_VISIBLE, FALSE);
 
     // Create the window and store a handle to it.
-    m_hwnd = CreateWindow(
+    m_hwnd = CreateWindowEx(
+        WS_EX_TOOLWINDOW,
         windowClass.lpszClassName,
         pDxHelper->GetTitle(),
         WS_POPUP | WS_VISIBLE,
