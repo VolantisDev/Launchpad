@@ -15,6 +15,10 @@ class ConditionBase {
     }
 
     AddChild(condition) {
+        if (Type(this.childConditions) == "String") {
+            this.childConditions := []
+        }
+
         this.childConditions.Push(condition)
     }
 
