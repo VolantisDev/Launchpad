@@ -171,3 +171,4 @@ Any and all contributions are greatly appreciated! Here are some ideas for ways 
 be downloaded from [7-zip.org](www.7-zip.org).
 - Some launch techniques for Battle.net were learned by studying the excellent [BnetLauncher](https://github.com/dafzor/bnetlauncher). Launchpad no longer
 uses any part of BnetLauncher and does not include any of BnetLauncher's code.
+- The Launchpad Overlay feature was learned with the assistance from @lemasato and his very useful [Non-Steam-Overlay-Manager](https://github.com/lemasato/Non-Steam-Overlay-Manager) tool.
