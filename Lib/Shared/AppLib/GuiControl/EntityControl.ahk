@@ -81,7 +81,13 @@ class EntityControl extends GuiControlBase {
 
         if (useDefault) {
             this.entityObj.RevertToDefault(this.fieldName)
-            this.SetText((this.entityObj.Config.Has(this.fieldName) && this.entityObj.Config[this.fieldName] != "") ? this.entityObj.Config[this.fieldName] : this.emptyValue)
+            newVal := this.emptyValue
+
+            if (this.entityObj.Config.Has(this.fieldName) && this.entityObj.Config[this.fieldName]) {
+                newVal := this.entityObj.Config[this.fieldName]
+            }
+
+            this.SetText(newVal)
         } else {
             this.entityObj.UnmergedConfig[this.fieldName] := this.entityObj.Config.Has(this.fieldName) ? this.entityObj.Config[this.fieldName] : ""
         }
