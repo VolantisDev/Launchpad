@@ -101,7 +101,7 @@ class GameBase {
                     }
                 }
             } else {
-                if (this.config["GameHasLoadingWindow"] && !this.isLoadingWindowFinished) {
+                if (!this.isLoadingWindowFinished) {
                     loadingWinId := this.LoadingWindowIsOpen()
 
                     if (loadingWinId) {
@@ -165,16 +165,19 @@ class GameBase {
             }
 
             if (!steamOpenCondition.Evaluate()) {
+                MsgBox("Steam is not open...")
                 SetTimer(this.overlayCallback, 0)
                 return
             }
 
             if (overlayAttachedCondtion.Evaluate()) {
+                MsgBox("Overlay attached...")
                 SetTimer(this.overlayCallback, 0)
                 return
             }
 
             if (DateDiff(A_Now, this.launchTime, "S") >= this.launcherConfig["OverlayWait"]) {
+                MsgBox("Launching overlay!")
                 this.StartOverlay()
                 return
             }
@@ -269,7 +272,7 @@ class GameBase {
     RunGameAction(progress := "") {
         runMethod := this.config["GameRunMethod"]
 
-        this.launchTime := A_NowUTC
+        this.launchTime := A_Now
 
         this.pid := 0
         
