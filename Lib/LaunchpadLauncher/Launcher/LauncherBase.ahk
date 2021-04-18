@@ -3,6 +3,7 @@ class LauncherBase {
     key := ""
     game := ""
     config := ""
+    launcherConfig := ""
     pid := 0
     progress := ""
 
@@ -15,9 +16,10 @@ class LauncherBase {
         this.app := app
         this.key := key
         this.game := app.Service("Game")
+        this.launcherConfig := app.Service("LauncherConfig")
         this.config := config
 
-        if (this.config["ShowProgress"]) {
+        if (this.launcherCOnfig["ShowProgress"]) {
             this.CreateProgressGui()
         }
     }
@@ -43,19 +45,19 @@ class LauncherBase {
             launchSteps++
         }
 
-        if (this.config["CloseBefore"]) {
+        if (this.launcherConfig["CloseBefore"]) {
             launchSteps++
         }
 
-        if (this.config["CloseAfter"]) {
+        if (this.launcherConfig["CloseAfter"]) {
             launchSteps++
         }
 
-        if (this.config["RunBefore"]) {
+        if (this.launcherConfig["RunBefore"]) {
             launchSteps++
         }
 
-        if (this.config["RunAfter"]) {
+        if (this.launcherConfig["RunAfter"]) {
             launchSteps++
         }
 
@@ -63,7 +65,7 @@ class LauncherBase {
     }
 
     Log(message, level := "Debug") {
-        if (this.app.Logger && this.config["LoggingLevel"] != "None") {
+        if (this.app.Logger && this.launcherConfig["LoggingLevel"] != "None") {
             this.app.Logger.Log(this.key . ": " . message, level)
         }
     }
@@ -75,20 +77,20 @@ class LauncherBase {
 
         this.Log("Starting launcher operations.", "Info")
         
-        if (this.config["CloseBefore"]) {
+        if (this.launcherConfig["CloseBefore"]) {
             if (this.progress != "") {
                 this.progress.IncrementValue(1, "Closing processes before run...")
             }
 
-            this.CloseProcesses(this.config["CloseBefore"])
+            this.CloseProcesses(this.launcherConfig["CloseBefore"])
         }
 
-        if (this.config["RunBefore"]) {
+        if (this.launcherConfig["RunBefore"]) {
             if (this.progress != "") {
                 this.progress.IncrementValue(1, "Launching processes before run...")
             }
 
-            this.RunProcesses(this.config["RunBefore"], "Before")
+            this.RunProcesses(this.launcherConfig["RunBefore"], "Before")
         }
 
         if (this.config["LauncherCloseBeforeRun"]) {
@@ -109,20 +111,20 @@ class LauncherBase {
             this.CloseLauncher("AfterRun")
         }
 
-        if (this.config["CloseAfter"]) {
+        if (this.launcherConfig["CloseAfter"]) {
             if (this.progress != "") {
                 this.progress.IncrementValue(1, "Closing processes after run...")
             }
 
-            this.CloseProcesses(this.config["CloseAfter"])
+            this.CloseProcesses(this.launcherConfig["CloseAfter"])
         }
 
-        if (this.config["RunAfter"]) {
+        if (this.launcherConfig["RunAfter"]) {
             if (this.progress != "") {
                 this.progress.IncrementValue(1, "Launching processes after run...")
             }
 
-            this.RunProcesses(this.config["RunAfter"], "After")
+            this.RunProcesses(this.launcherConfig["RunAfter"], "After")
         }
 
         this.Log("Finished all launcher operations.", "Info")
@@ -261,7 +263,7 @@ class LauncherBase {
                     break
                 }
 
-                if (DateDiff(FormatTime(,"yyyyMMddHHmmss"), startTime, "Seconds") >= this.config["WaitTimeout"]) {
+                if (DateDiff(FormatTime(,"yyyyMMddHHmmss"), startTime, "Seconds") >= this.config["LauncherWaitTimeout"]) {
                     break
                 }
 

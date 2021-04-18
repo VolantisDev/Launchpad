@@ -15,22 +15,19 @@ class GameBase {
     isLoadingWindowFinished := false
     overlayStarted := false
 
-    __New(app, key, config := "", launcherConfig := "") {
+    __New(app, key, config := "") {
         this.launchTime := A_Now
 
         if (config == "") {
             config := Map()
         }
 
-        if (launcherConfig == "") {
-            launcherConfig := Map()
-        }
+        this.launcherConfig := app.Service("LauncherConfig")
 
         InvalidParameterException.CheckTypes("GameBase", "app", app, "AppBase", "key", key, "", "config", config, "Map")
         this.app := app
         this.key := key
         this.config := config
-        this.launcherConfig := launcherConfig
         this.exeProcess := this.GetExeProcess()
     }
 
@@ -69,9 +66,7 @@ class GameBase {
 
         this.Log("Running game...", "Info")
 
-        launcherConfig := this.app.Service("LauncherConfig")
-
-        if (launcherConfig["EnableOverlay"]) {
+        if (this.launcherConfig["EnableOverlay"]) {
             this.overlayCallback := ObjBindMethod(this, "OverlayCallback")
             SetTimer(this.overlayCallback, 500)
         }
@@ -150,7 +145,7 @@ class GameBase {
             progress.IncrementValue(1, "Game finished.")
         }
 
-        if (launcherConfig["EnableOverlay"] && this.overlayStarted) {
+        if (this.launcherConfig["EnableOverlay"] && this.overlayStarted) {
             this.StopOverlay()
             this.overlayStarted := false
         }
@@ -163,10 +158,8 @@ class GameBase {
         static steamOpenCondition := SteamIsOpenCondition.new(this.app)
         static overlayAttachedCondtion := SteamOverlayAttachedCondition.new(A_Now, this.app)
 
-        launcherConfig := this.app.Service("LauncherConfig")
-
         if (this.isOpen) {
-            if (launcherConfig["ForceOverlay"]) {
+            if (this.launcherConfig["ForceOverlay"]) {
                 this.StartOverlay()
                 return
             }
@@ -181,7 +174,7 @@ class GameBase {
                 return
             }
 
-            if (DateDiff(A_Now, this.launchTime, "S") >= launcherConfig["OverlayWait"]) {
+            if (DateDiff(A_Now, this.launchTime, "S") >= this.launcherConfig["OverlayWait"]) {
                 this.StartOverlay()
                 return
             }
@@ -191,8 +184,7 @@ class GameBase {
     StartOverlay() {
         SetTimer(this.overlayCallback, 0)
         this.Log("Starting Launchpad Overlay...")
-        launcherConfig := this.app.Service("LauncherConfig")
-        this.app.Service("OverlayManager").Start(launcherConfig["OverlayHotkey"])
+        this.app.Service("OverlayManager").Start(this.launcherConfig["OverlayHotkey"])
         this.overlayStarted := true
     }
 
