@@ -43,8 +43,8 @@ class LauncherEditor extends LauncherEditorBase {
         ctl.ctl.ToolTip := "Enabling this option makes the Steam Overlay work with any application that's otherwise incompatible with it. You must use Borderless Fullscreen instead of true Fullscreen when using this option to allow the Launchpad Overlay to display over the game window. If the Steam Overlay is already detected, then the Launchpad Overlay won't be used."
         ctl := this.AddEntityCtl("", "ForceOverlay", true, "BasicControl", "CheckBox", "Force the Launchpad Overlay on")
         ctl.ctl.ToolTip := "Enabling this option along with the Launchpad Overlay means the Launchpad Overlay will always be used, instead of it waiting to see if the Steam Overlay is attached first."
-        ; TODO: Add an option for OverlayHotkey
-        ; TODO: Add an option for OverlayWait
+        this.AddEntityCtl("Overlay Hotkey", "OverlayHotkey", true, "EditControl", 1, "", "The AHK-compatible hotkey definition that will open and close the Launchpad Overlay")
+        this.AddEntityCtl("Overlay Wait", "OverlayWait", true, "EditControl", 1, "", "How many seconds to wait for the Steam overlay to attach before starting the Launchpad Overlay. If the Steam Overlay attaches within this time, and the Force option is not active, then the Launchpad Overlay will not be used.")
 
 
         tabs.UseTab("Processes", true)
