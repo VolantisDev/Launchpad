@@ -22,4 +22,24 @@ class LaunchpadLauncher extends AppBase {
         super.RunApp(config)
         this.Service("Launcher").LaunchGame()
     }
+
+    RestartApp() {
+        game := this.Service("Game")
+
+        if (game) {
+            game.StopOverlay()
+        }
+
+        super.RestartApp()
+    }
+
+    ExitApp() {
+        game := this.Service("Game")
+
+        if (game) {
+            game.StopOverlay()
+        }
+
+        super.ExitApp()
+    }
 }
