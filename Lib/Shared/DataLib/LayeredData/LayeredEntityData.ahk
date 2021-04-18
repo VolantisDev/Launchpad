@@ -9,10 +9,8 @@ class LayeredEntityData extends LayeredDataBase {
 
         params := []
         params.Push("defaults", defaults)
-        params.Push("parentDefaults", Map())
         params.Push("childDefaults", Map())
         params.Push("ds", Map())
-        params.Push("parent", Map())
         params.Push("auto", Map())
         params.Push("config", config)
 
