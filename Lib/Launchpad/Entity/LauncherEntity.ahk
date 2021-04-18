@@ -126,7 +126,6 @@ class LauncherEntity extends EntityBase {
     __New(app, key, config, requiredConfigKeys := "", parentEntity := "") {
         super.__New(app, key, config, requiredConfigKeys, parentEntity)
         this.children["ManagedLauncher"] := ManagedLauncherEntity.new(app, key, config, "", this)
-        this.SetChildDefaults(this.ManagedLauncher.Config, false)
         this.entityData.SetAutoDetectedDefaults(this.AutoDetectValues())
         this.StoreOriginal(false, true)
     }
