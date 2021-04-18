@@ -107,11 +107,6 @@ class EntityBase {
         this.InitializeRequiredConfigKeys(requiredConfigKeys)
     }
 
-    SetChildDefaults(data, updateStoredData := true) {
-        this.entityData.SetChildDefaults(data)
-        this.StoreOriginal(false, true)
-    }
-
     StoreOriginal(recursive := true, update := false) {
         this.entityData.StoreOriginal(update)
 

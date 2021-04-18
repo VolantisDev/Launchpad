@@ -9,7 +9,6 @@ class LayeredEntityData extends LayeredDataBase {
 
         params := []
         params.Push("defaults", defaults)
-        params.Push("childDefaults", Map())
         params.Push("ds", Map())
         params.Push("auto", Map())
         params.Push("config", config)
@@ -31,10 +30,6 @@ class LayeredEntityData extends LayeredDataBase {
 
     SetParentDefaults(data) {
         this.layers["parentDefaults"] := data
-    }
-
-    SetChildDefaults(data) {
-        this.layers["childDefaults"] := data
     }
 
     SetParentConfig(data) {
