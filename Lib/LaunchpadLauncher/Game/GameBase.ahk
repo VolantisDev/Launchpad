@@ -154,29 +154,31 @@ class GameBase {
     }
 
     OverlayCallback() {
-        static steamIsOpenCondition := SteamIsOpenCondition.new(this.app)
+        static steamOpenCondition := SteamIsOpenCondition.new(this.app)
         static overlayAttachedCondtion := SteamOverlayAttachedCondition.new(A_Now, this.app)
 
         launcherConfig := this.app.Service("LauncherConfig")
 
-        if (launcherConfig["ForceOverlay"]) {
-            this.StartOverlay()
-            return
-        }
+        if (this.isOpen) {
+            if (launcherConfig["ForceOverlay"]) {
+                this.StartOverlay()
+                return
+            }
 
-        if (!steamIsOpenCondition.Evaluate()) {
-            SetTimer(this.overlayCallback, 0)
-            return
-        }
+            if (!steamOpenCondition.Evaluate()) {
+                SetTimer(this.overlayCallback, 0)
+                return
+            }
 
-        if (overlayAttachedCondtion.Evaluate()) {
-            SetTimer(this.overlayCallback, 0)
-            return
-        }
+            if (overlayAttachedCondtion.Evaluate()) {
+                SetTimer(this.overlayCallback, 0)
+                return
+            }
 
-        if (DateDiff(A_Now, this.launchTime, "S") >= launcherConfig["OverlayWait"]) {
-            this.StartOverlay()
-            return
+            if (DateDiff(A_Now, this.launchTime, "S") >= launcherConfig["OverlayWait"]) {
+                this.StartOverlay()
+                return
+            }
         }
     }
 
