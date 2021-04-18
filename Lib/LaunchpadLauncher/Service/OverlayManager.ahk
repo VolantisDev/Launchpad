@@ -27,7 +27,7 @@ class OverlayManager extends AppServiceBase {
         return pid
     }
 
-    Start(overlayHotkey := "Alt+Shift+Tab") {
+    Start(overlayHotkey := "^Tab") {
         pid := this.GetPid()
 
         if (!pid) {
@@ -45,21 +45,7 @@ class OverlayManager extends AppServiceBase {
             }
         }
 
-        keys := StrSplit(overlayHotkey, "+")
-        removeLength := 1
-        initialCombo := keys[1]
-
-        if (keys.Length > 1) {
-            initialCombo .= " & " . keys[2]
-            removeLength += 1
-        }
-
-        keys.RemoveAt(1, removeLength)
-        this.additionalModifiers := keys
-
-        ; TODO: Use dynamic hotkey passed in from config
-        hotkeys := "^Tab"
-        Hotkey(hotkeys, ObjBindMethod(this, "ToggleOverlay"))
+        Hotkey(overlayHotkey, ObjBindMethod(this, "ToggleOverlay"))
     }
 
     ToggleOverlay(*) {

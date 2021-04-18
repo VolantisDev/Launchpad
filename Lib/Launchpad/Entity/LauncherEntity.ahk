@@ -328,7 +328,7 @@ class LauncherEntity extends EntityBase {
         defaults["LogPath"] := this.app.tmpDir . "\Logs\" . this.Key . ".txt"
         defaults["EnableOverlay"] := false
         defaults["ForceOverlay"] := false
-        defaults["OverlayHotkey"] := "Shift+Alt+Tab"
+        defaults["OverlayHotkey"] := "^Tab"
         defaults["OverlayWait"] := 10
 
         return defaults
