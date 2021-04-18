@@ -1,4 +1,4 @@
-class FileModifiedAfterCondition extends ConditionBase {
+class FileModifiedAfterCondition extends FileConditionBase {
     timestamp := ""
     
     __New(timestamp, file, childConditions := "") {
