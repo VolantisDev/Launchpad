@@ -1,9 +1,12 @@
+#WinActivateForce
+
 class OverlayManager extends AppServiceBase {
     exeName := "LaunchpadOverlay.exe"
     pid := 0
     launchTime := ""
     additionalModifiers := []
     isShown := false
+    lastWin := ""
 
     __New(app) {
         this.launchTime := A_Now
@@ -31,8 +34,6 @@ class OverlayManager extends AppServiceBase {
             config := this.app.Service("LauncherConfig")
             resourcesDir := config["ResourcesDir"]
             path := resourcesDir . "\LaunchpadOverlay\" . this.exeName
-
-            MsgBox(path)
 
             if (FileExist(path)) {
                 Run(path, this.app.appDir,, pid)
@@ -64,11 +65,11 @@ class OverlayManager extends AppServiceBase {
     ToggleOverlay(*) {
         hotkeys := "LShift & Tab"
         if (this.isShown) {
-            ;Send(hotkeys)
+            Send(hotkeys)
             this.Hide()
         } else {
             this.Show()
-            ;Send(hotkeys)
+            Send(hotkeys)
         }
     }
 
@@ -77,9 +78,14 @@ class OverlayManager extends AppServiceBase {
             this.Start()
         }
 
+        if (!this.lastWin) {
+            this.lastWin := WinActive()
+        }
+        
         detectHidden := A_DetectHiddenWindows
         DetectHiddenWindows(true)
         WinShow("ahk_pid " . this.pid)
+        WinActivate("ahk_pid " . this.pid)
         DetectHiddenWindows(detectHidden)
         this.isShown := true
     }
@@ -90,6 +96,11 @@ class OverlayManager extends AppServiceBase {
             DetectHiddenWindows(true)
             WinHide("ahk_pid " . this.pid)
             DetectHiddenWindows(detectHidden)
+
+            if (this.lastWin) {
+                WinActivate("ahk_id " . this.lastWin)
+                this.lastWin := ""
+            }
         }
 
         this.isShown := false
@@ -97,7 +108,10 @@ class OverlayManager extends AppServiceBase {
 
     Close() {
         if (this.pid) {
+            detectHidden := A_DetectHiddenWindows
+            DetectHiddenWindows(true)
             WinClose("ahk_pid" . this.pid)
+            DetectHiddenWindows(detectHidden)
             this.pid := 0
             this.isShown := false
         }

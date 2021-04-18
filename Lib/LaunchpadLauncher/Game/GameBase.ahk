@@ -13,6 +13,7 @@ class GameBase {
     loopSleep := 250
     isLoadingWindowRunning := false
     isLoadingWindowFinished := false
+    overlayStarted := false
 
     __New(app, key, config := "", launcherConfig := "") {
         this.launchTime := A_Now
@@ -148,6 +149,11 @@ class GameBase {
         if (progress != "") {
             progress.IncrementValue(1, "Game finished.")
         }
+
+        if (launcherConfig["EnableOverlay"] && this.overlayStarted) {
+            this.StopOverlay()
+            this.overlayStarted := false
+        }
         
         this.CleanupAfterRun(progress)
         return true
@@ -187,6 +193,14 @@ class GameBase {
         this.Log("Starting Launchpad Overlay...")
         launcherConfig := this.app.Service("LauncherConfig")
         this.app.Service("OverlayManager").Start(launcherConfig["OverlayHotkey"])
+        this.overlayStarted := true
+    }
+
+    StopOverlay() {
+        if (this.overlayStarted) {
+            this.Log("Shutting down Launchpad Overlay...")
+            this.app.Service("OverlayManager").Close()
+        }
     }
 
     CleanupAfterRun(progress := "") {
@@ -430,5 +444,10 @@ class GameBase {
     CountRunSteps() {
         steps := 4 ; Run, wait for open, wait for close, cleanup
         return steps
+    }
+
+    __Delete() {
+        this.StopOverlay()
+        super.__Delete()
     }
 }
