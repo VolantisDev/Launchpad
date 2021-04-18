@@ -58,18 +58,15 @@ class OverlayManager extends AppServiceBase {
         this.additionalModifiers := keys
 
         ; TODO: Use dynamic hotkey passed in from config
-        hotkeys := "LShift & Tab"
+        hotkeys := "^Tab"
         Hotkey(hotkeys, ObjBindMethod(this, "ToggleOverlay"))
     }
 
     ToggleOverlay(*) {
-        hotkeys := "LShift & Tab"
         if (this.isShown) {
-            Send(hotkeys)
             this.Hide()
         } else {
             this.Show()
-            Send(hotkeys)
         }
     }
 
@@ -110,7 +107,12 @@ class OverlayManager extends AppServiceBase {
         if (this.pid) {
             detectHidden := A_DetectHiddenWindows
             DetectHiddenWindows(true)
-            WinClose("ahk_pid" . this.pid)
+            try {
+                ProcessClose("LaunchpadOverlay.exe")
+            } catch ex {
+                ; Ignore failure
+            }
+            
             DetectHiddenWindows(detectHidden)
             this.pid := 0
             this.isShown := false
