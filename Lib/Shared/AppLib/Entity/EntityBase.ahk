@@ -100,9 +100,7 @@ class EntityBase {
         this.parentEntity := parentEntity
 
         this.entityData := LayeredEntityData.new(configObj.Clone(), this.InitializeDefaults())
-        this.entityData.SetParentDefaults((parentEntity != "") ? parentEntity.InitializeDefaults() : Map())
         this.entityData.SetDataSourceDefaults(this.AggregateDataSourceDefaults())
-        this.entityData.SetParentConfig((parentEntity != "") ? this.AggregateParentOverrides() : Map())
         this.entityData.SetAutoDetectedDefaults(this.AutoDetectValues())
         this.entityData.StoreOriginal()
         
@@ -130,16 +128,6 @@ class EntityBase {
         }
     }
 
-    AggregateParentOverrides() {
-        parentOverrides := Map()
-
-        if (this.parentEntity) {
-            parentOverrides := this.MergeFromObject(this.parentEntity.AggregateDataSourceDefaults(), this.parentEntity.AggregateParentOverrides()) 
-        }
-
-        return parentOverrides
-    }
-
     UpdateDataSourceDefaults() {
         this.entityData.SetLayer("ds", this.AggregateDataSourceDefaults())
         this.entityData.SetLayer("auto", this.AutoDetectValues())
@@ -160,14 +148,20 @@ class EntityBase {
         return defaults
     }
 
-    AggregateDataSourceDefaults() {
+    AggregateDataSourceDefaults(includeParentData := true, includeChildData := true) {
         dataSources := this.GetAllDataSources()
-        defaults := this.parentEntity != "" ? this.parentEntity.AggregateDataSourceDefaults() : Map()
+        defaults := (this.parentEntity != "" && includeParentData) ? this.parentEntity.AggregateDataSourceDefaults(includeParentData, false) : Map()
 
         this.entityData.SetLayer("ds", defaults)
 
         for index, dataSource in dataSources {
-            defaults := this.MergeFromObject(defaults, this.GetDataSourceDefaults(dataSource), true)
+            defaults := this.MergeFromObject(defaults, this.GetDataSourceDefaults(dataSource), false)
+        }
+
+        if (includeChildData) {
+            for key, child in this.children {
+                defaults := this.MergeFromObject(defaults, child.AggregateDataSourceDefaults(false, includeChildData), false)
+            }
         }
 
         return defaults
