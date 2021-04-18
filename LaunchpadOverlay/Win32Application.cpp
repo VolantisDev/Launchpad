@@ -66,6 +66,10 @@ int Win32Application::Run(DXHelper* pDxHelper, HINSTANCE hInstance, int nCmdShow
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
+
+        if (!IsWindowVisible(m_hwnd)) {
+            Sleep(100);
+        }
     }
 
     pDxHelper->OnDestroy();
