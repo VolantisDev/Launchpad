@@ -42,13 +42,23 @@ class GameAhkFile extends ComposableBuildFile {
         appInfo['launchpadLauncherConfig'] := " . ahkVar.ToString(this.launcherEntityObj.Config) .  "
         appInfo['launcherConfig'] := " . ahkVar.ToString(this.launcherEntityObj.ManagedLauncher.Config) . "
         appInfo['gameConfig'] := " . ahkVar.ToString(this.launcherEntityObj.ManagedLauncher.ManagedGame.Config) . "
-        appInfo['platforms'] := " . ahkVar.ToString(this.app.Service('PlatformManager').configObj.config) . "
+        appInfo['platforms'] := " . ahkVar.ToString(this.GetPlatforms()) . "
         
         LaunchpadLauncher.new(appInfo)
         "
         ), this.FilePath
         
         return this.FilePath
+    }
+
+    GetPlatforms() {
+        platforms := Map()
+
+        for key, platform in this.app.Service("PlatformManager").GetActivePlatforms() {
+            platforms[key] := platform.Config
+        }
+
+        return platforms
     }
 
     ConvertMapToCode(typeConfig) {
