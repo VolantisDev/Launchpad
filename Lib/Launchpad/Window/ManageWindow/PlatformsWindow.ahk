@@ -33,6 +33,10 @@ class PlatformsWindow extends ManageWindowBase {
         return data
     }
 
+    ShouldHighlightRow(key, data) {
+        return false
+    }
+
     GetViewMode() {
         return this.app.Config.PlatformsViewMode
     }

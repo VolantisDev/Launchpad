@@ -1,4 +1,4 @@
-﻿class MainWindow extends ManageWindowBase {
+class MainWindow extends ManageWindowBase {
     listViewColumns := Array("GAME", "PLATFORM", "STATUS", "API STATUS")
     launcherManager := ""
     platformManager := ""
@@ -180,6 +180,10 @@
 
     GetViewMode() {
         return this.app.Config.LaunchersViewMode
+    }
+
+    ShouldHighlightRow(key, data) {
+        return (data.Has(3) && data[3] !== "Ready")
     }
 
     GetListViewImgList(lv, large := false) {

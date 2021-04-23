@@ -5,6 +5,7 @@
     checkboxes := false
     listView := ""
     saveWindowState := true
+    showDetailsPane := false
 
     Controls() {
         super.Controls()
@@ -46,12 +47,20 @@
             opts.Push("Checked")
         }
 
-        this.listView := this.Add("ListViewControl", opts, "", this.listViewColumns, "GetListViewData", "GetListViewImgList", "InitListView")
+        if (this.showDetailsPane) {
+            opts.Push("w" . ((this.windowSettings["contentWidth"] - this.margin)/2))
+        }
+
+        this.listView := this.Add("ListViewControl", opts, "", this.listViewColumns, "GetListViewData", "GetListViewImgList", "InitListView", "ShouldHighlightRow")
         return this.listView
     }
 
     GetListViewData(lv) {
 
+    }
+
+    ShouldHighlightRow(key, data) {
+        return false
     }
 
     GetListViewImgList(lv, large := false) {

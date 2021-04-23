@@ -68,6 +68,10 @@
         return data
     }
 
+    ShouldHighlightRow(key, data) {
+        return false
+    }
+
     GetListViewImgList(lv, large := false) {
         IL := IL_Create(this.detectedGames.Count, 1, large)
         defaultIcon := this.themeObj.GetIconPath("Game")

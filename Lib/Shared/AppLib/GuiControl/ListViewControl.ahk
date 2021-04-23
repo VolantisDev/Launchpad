@@ -3,19 +3,21 @@ class ListViewControl extends GuiControlBase {
     columns := []
     rowData := Map()
     dataCallback := ""
+    highlightRowCallback := ""
     rowOpts := []
     keyCol := 2
     imgListCallback := ""
     imgListS := ""
     imgListL := ""
 
-    CreateControl(columns, dataCallback, imgListCallback := "", initCallback := "") {
+    CreateControl(columns, dataCallback, imgListCallback := "", initCallback := "", highlightRowCallback := "") {
         super.CreateControl(false)
         columns.InsertAt(this.keyCol, "")
 
         this.columns := columns
         this.dataCallback := dataCallback
         this.imgListCallback := imgListCallback
+        this.highlightRowCallback := highlightRowCallback
 
         lvH := 400
 
@@ -104,6 +106,17 @@ class ListViewControl extends GuiControlBase {
         for key, data in this.rowData {
             idx++
             rowOpts := []
+            highlight := false
+
+            if (this.highlightRowCallback) {
+                func := this.highlightRowCallback
+                highlight := this.guiObj.%func%(key, data)
+            }
+
+            if (highlight) {
+                data[1] .= "*"
+                ; TODO: Handle row highlighting
+            }
 
             for index, rowNum in selected {
                 if (idx == rowNum) {
@@ -146,9 +159,15 @@ class ListViewControl extends GuiControlBase {
     }
 
     ResizeColumns() {
-        for index, col in this.columns {
-            val := (index == this.keyCol) ? 0 : "AutoHdr"
-            this.ctl.ModifyCol(index, val)
+        if (this.columns.Length <= 2) {
+            this.ctl.GetPos(,, ctlW)
+            this.ctl.ModifyCol(1, ctlW)
+            this.ctl.ModifyCol(2, 0)
+        } else {
+            for index, col in this.columns {
+                val := (index == this.keyCol) ? 0 : "AutoHdr"
+                this.ctl.ModifyCol(index, val)
+            }
         }
     }
 
