@@ -1,6 +1,6 @@
 class BlizzardGame extends SimpleGame {
     GetRunCmd() {
-        launcherPath := this.launcherConfig["LauncherInstallDir"] . "\" . this.launcherConfig["LauncherExe"]
+        launcherPath := this.app.Service("Launcher").config["LauncherInstallDir"] . "\" . this.app.Service("Launcher").config["LauncherExe"]
         
         if (launcherPath != "") {
             gameKey := this.config["GameLauncherSpecificId"]
@@ -12,7 +12,7 @@ class BlizzardGame extends SimpleGame {
 
     RunGameRun() {
         pid := super.RunGameRun()
-        winTitle := this.launcherConfig["LauncherWindowTitle"]
+        winTitle := this.app.Service("Launcher").config["LauncherWindowTitle"]
 
         if (!WinExist(winTitle)) {
             WinWait(winTitle)
@@ -44,7 +44,7 @@ class BlizzardGame extends SimpleGame {
     }
 
     CleanupAfterRun(progress := "") {
-        winTitle := this.launcherConfig["LauncherWindowTitle"]
+        winTitle := this.app.Service("Launcher").config["LauncherWindowTitle"]
         if (WinExist(winTitle)) {
             WinClose("ahk_id" . WinGetID(winTitle))
         }

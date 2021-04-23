@@ -19,7 +19,7 @@ class LauncherBase {
         this.launcherConfig := app.Service("LauncherConfig")
         this.config := config
 
-        if (this.launcherCOnfig["ShowProgress"]) {
+        if (this.launcherConfig["ShowProgress"]) {
             this.CreateProgressGui()
         }
     }

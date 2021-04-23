@@ -1,6 +1,6 @@
 ﻿class RiotGame extends SimpleGame {
     GetRunCmd() {
-        launcherPath := "`"" . this.launcherConfig["LauncherInstallDir"] . "\" . this.launcherConfig["LauncherExe"] . "`""
+        launcherPath := "`"" . this.app.Service("Launcher").config["LauncherInstallDir"] . "\" . this.app.Service("Launcher").config["LauncherExe"] . "`""
         
         if (launcherPath != "") {
             gameKey := this.config["GameLauncherSpecificId"]
