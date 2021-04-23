@@ -47,7 +47,7 @@ int Win32Application::Run(DXHelper* pDxHelper, HINSTANCE hInstance, int nCmdShow
         pDxHelper);
 
     pDxHelper->OnInit();
-    SetWindowLong(m_hwnd, GWL_STYLE, WS_CHILD | WS_VISIBLE);
+    // SetWindowLong(m_hwnd, GWL_STYLE, WS_CHILD | WS_VISIBLE);
     ShowWindow(m_hwnd, nCmdShow);
 
     // SetWindowLong(m_hwnd, GWL_EXSTYLE, GetWindowLong(m_hwnd, GWL_EXSTYLE) | WS_EX_LAYERED);

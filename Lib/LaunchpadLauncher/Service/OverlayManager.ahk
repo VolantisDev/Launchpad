@@ -3,10 +3,12 @@
 class OverlayManager extends AppServiceBase {
     exeName := "LaunchpadOverlay.exe"
     hwnd := 0
+    tid := 0
     launchTime := ""
     additionalModifiers := []
     isShown := false
     lastWin := ""
+    lastWinTid := 0
 
     __New(app) {
         this.launchTime := A_Now
@@ -36,6 +38,7 @@ class OverlayManager extends AppServiceBase {
             if (FileExist(path)) {
                 Run(path, this.app.appDir,, pid)
                 this.hwnd := WinWait("ahk_pid " . pid)
+                ;this.tid := DllCall("GetWindowThreadProcessId", "UInt", this.hwnd, "UInt", 0)
                 WinHide("ahk_id " . this.hwnd)
             } else {
                 ; TODO Log an error about not being able to launch the overlay
@@ -58,14 +61,13 @@ class OverlayManager extends AppServiceBase {
             this.Start()
         }
 
-        attach := false
-
         activeHwnd := WinExist("A")
 
         if (!this.lastWin || this.lastWin != activeHwnd) {
+            ;this.lastWinTid := DllCall("GetWindowThreadProcessId", "UInt", activeHwnd, "UInt", 0)
             this.lastWin := activeHwnd
-            DllCall("SetParent", "UInt", this.hwnd, "UInt", activeHwnd)
-            attach := true
+            ;DllCall("SetParent", "UInt", this.hwnd, "UInt", activeHwnd)
+            ;DllCall("AttachThreadInput", "UInt", this.tid, "UInt", this.lastWinTid, "Int", true)
         }
         
         detectHidden := A_DetectHiddenWindows
@@ -73,7 +75,8 @@ class OverlayManager extends AppServiceBase {
         WinGetPos(winX, winY, winW, winH, "ahk_id " . activeHwnd)
         WinShow("ahk_id " . this.hwnd)
         WinMove(winX, winY, winW, winH, "ahk_id " . this.hwnd)
-        ;WinActivate("ahk_id " . this.hwnd)
+        ;DllCall("SetFocus", "UInt", this.hwnd)
+        WinActivate("ahk_id " . this.hwnd)
         DetectHiddenWindows(detectHidden)
         this.isShown := true
     }
@@ -83,13 +86,14 @@ class OverlayManager extends AppServiceBase {
             detectHidden := A_DetectHiddenWindows
             DetectHiddenWindows(true)
             WinHide("ahk_id " . this.hwnd)
+            ;DllCall("SetFocus", "UInt", this.lastWin)
+            WinActivate("ahk_id " . this.lastWin)
             DetectHiddenWindows(detectHidden)
-
-            ;if (this.lastWin) {
-                ; WinActivate("ahk_id " . this.lastWin)
-                ; this.lastWin := ""
-            ;}
         }
+
+        ;if (this.lastWinTid) {
+        ;    DllCall("AttachThreadInput", "UInt", this.tid, "UInt", this.lastWinTid, "Int", false)
+        ;}
 
         this.isShown := false
     }
@@ -100,6 +104,10 @@ class OverlayManager extends AppServiceBase {
             DetectHiddenWindows(true)
 
             try {
+                ;if (this.lastWinTid) {
+                ;    DllCall("AttachThreadInput", "UInt", this.tid, "UInt", this.lastWinTid, "Int", false)
+                ;}
+
                 ProcessClose("LaunchpadOverlay.exe")
             } catch ex {
                 ; Ignore failure
