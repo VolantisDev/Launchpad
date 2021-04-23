@@ -33,7 +33,7 @@ int Win32Application::Run(DXHelper* pDxHelper, HINSTANCE hInstance, int nCmdShow
 
     // Create the window and store a handle to it.
     m_hwnd = CreateWindowEx(
-        WS_EX_TOOLWINDOW,
+        WS_EX_TOOLWINDOW | WS_EX_TOPMOST | WS_EX_NOPARENTNOTIFY,
         windowClass.lpszClassName,
         pDxHelper->GetTitle(),
         WS_POPUP | WS_VISIBLE,
@@ -46,14 +46,12 @@ int Win32Application::Run(DXHelper* pDxHelper, HINSTANCE hInstance, int nCmdShow
         hInstance,
         pDxHelper);
 
-    // Initialize the sample. OnInit is defined in each child-implementation of DXSample.
     pDxHelper->OnInit();
-
-    ShowWindow(m_hwnd, nCmdShow);
     SetWindowLong(m_hwnd, GWL_STYLE, WS_CHILD | WS_VISIBLE);
+    ShowWindow(m_hwnd, nCmdShow);
 
     // SetWindowLong(m_hwnd, GWL_EXSTYLE, GetWindowLong(m_hwnd, GWL_EXSTYLE) | WS_EX_LAYERED);
-    // SetLayeredWindowAttributes(m_hwnd, RGB(255,0,0), 100, LWA_ALPHA);
+    // SetLayeredWindowAttributes(m_hwnd, RGB(255,0,0), 255, LWA_ALPHA);
 
     // SetWindowPos(m_hwnd, HWND_TOP, windowRect.left, windowRect.top, windowRect.right - windowRect.left, windowRect.bottom - windowRect.top, SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 
