@@ -4,12 +4,25 @@
     frameShadow := false
     checkboxes := false
     listView := ""
+    lvWidth := 0
     saveWindowState := true
     showDetailsPane := false
 
     Controls() {
         super.Controls()
         this.AddManageList()
+
+        if (this.showDetailsPane) {
+            selected := this.listView.GetSelected("", true)
+            key := ""
+
+            if (selected.Length > 0) {
+                key := selected[1]
+            }
+
+            this.AddDetailsPane(key)
+        }
+
         this.AddBottomControls()
     }
 
@@ -21,7 +34,6 @@
         width := 30
         options := "v" . name . " " . position . " h" . width
         
-
         if (text) {
             width += this.themeObj.CalculateTextWidth(text) + (this.margin*2)
         }
@@ -47,12 +59,23 @@
             opts.Push("Checked")
         }
 
+        this.lvWidth := this.windowSettings["contentWidth"]
+
         if (this.showDetailsPane) {
-            opts.Push("w" . ((this.windowSettings["contentWidth"] - this.margin)/2))
+            this.lvWidth := (this.lvWidth - this.margin) / 2
+            opts.Push("w" . this.lvWidth)
         }
 
         this.listView := this.Add("ListViewControl", opts, "", this.listViewColumns, "GetListViewData", "GetListViewImgList", "InitListView", "ShouldHighlightRow")
         return this.listView
+    }
+
+    AddDetailsPane(key := "") {
+        
+    }
+
+    UpdateDetailsPane(key := "") {
+
     }
 
     GetListViewData(lv) {
@@ -74,6 +97,16 @@
     InitListView(lv) {
         lv.ctl.OnEvent("ContextMenu", "ShowListViewContextMenu")
         lv.ctl.OnEvent("DoubleClick", "OnDoubleClick")
+        lv.ctl.OnEvent("Click", "OnClick")
+        ; TODO: Change Click handler to ItemSelect once I figure out why that isn't working
+    }
+
+    OnClick(LV, rowNum) {
+        key := LV.GetText(rowNum, 2)
+        
+        if (this.showDetailsPane) {
+            this.UpdateDetailsPane(key)
+        }
     }
 
     OnDoubleClick(LV, rowNum) {
