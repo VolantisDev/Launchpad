@@ -6,6 +6,6 @@ class VersionIdentifierBase {
     }
 
     IdentifyVersion(defaultVersion := "") {
-        throw MethodNotImplementedException.new("VersionIdentifierBase", "IdentifyVersion")
+        throw MethodNotImplementedException("VersionIdentifierBase", "IdentifyVersion")
     }
 }

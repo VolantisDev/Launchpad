@@ -6,6 +6,6 @@ class BuildDeployerBase {
     }
 
     Deploy(deployInfo) {
-        throw MethodNotImplementedException.new("BuildDeployerBase", "Deploy")
+        throw MethodNotImplementedException("BuildDeployerBase", "Deploy")
     }
 }

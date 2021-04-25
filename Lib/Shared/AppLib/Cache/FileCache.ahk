@@ -51,7 +51,7 @@ class FileCache extends CacheBase {
 
     CreateCacheDir(path) {
         path := this.GetCachePath(path)
-        SplitPath(path,,cacheDir)
+        SplitPath(path,, &cacheDir)
         DirCreate(cacheDir)
     }
 

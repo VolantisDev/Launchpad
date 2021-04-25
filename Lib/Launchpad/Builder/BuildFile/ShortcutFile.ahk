@@ -20,7 +20,7 @@ class ShortcutFile extends CopyableBuildFile {
         path := super.Locate()
 
         if (path != "") {
-            SplitPath(path,,, fileExt)
+            SplitPath(path,,, &fileExt)
 
             if (fileExt == "exe") {
                 path := this.CreateShortcut(path)
@@ -31,7 +31,7 @@ class ShortcutFile extends CopyableBuildFile {
     }
 
     CreateShortcut(path) {
-        SplitPath(path,, workingDir)
+        SplitPath(path,, &workingDir)
         FileCreateShortcut(path, this.FilePath, workingDir)
         return this.FilePath
     }
@@ -43,8 +43,8 @@ class ShortcutFile extends CopyableBuildFile {
 
     DetermineExtension() {
         if (this.SourcePath != "") {
-            SplitPath(this.SourcePath,,, sourceExt)
-            SplitPath(this.FilePath,, fileDir, fileExt, fileNameNoExt)
+            SplitPath(this.SourcePath,,, &sourceExt)
+            SplitPath(this.FilePath,, &fileDir, &fileExt, &fileNameNoExt)
 
             if (sourceExt != fileExt) {
                 this.FilePath := fileDir . "\" . fileNameNoExt . "." . sourceExt

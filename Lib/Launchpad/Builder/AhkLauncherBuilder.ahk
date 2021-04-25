@@ -2,11 +2,11 @@ class AhkLauncherBuilder extends BuilderBase {
     BuildAction(entityObj, launcherDir, assetsDir) {
         result := false
 
-        gameAhkObj := GameAhkFile.new(entityObj)
+        gameAhkObj := GameAhkFile(entityObj)
         ahkResult := gameAhkObj.Build()
 
         if (ahkResult) {
-            gameExeObj := GameExeFile.new(entityObj)
+            gameExeObj := GameExeFile(entityObj)
             result := gameExeObj.Build()
 
             if (result) {

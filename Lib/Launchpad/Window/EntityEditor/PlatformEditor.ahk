@@ -55,11 +55,11 @@
     OnExePathMenuClick(btn) {
         if (btn == "ChangeExePath") {
             existingVal := this.entityObj.GetConfigValue("ExePath", false)
-            file := FileSelect(1,, this.entityObj.Key . ": Select the .exe that will launch this platform.", "Exe (*.exe)")
+            filePath := FileSelect(1,, this.entityObj.Key . ": Select the .exe that will launch this platform.", "Exe (*.exe)")
 
-            if (file) {
-                this.entityObj.SetConfigValue("ExePath", file, false)
-                this.guiObj["ExePath"].Text := file
+            if (filePath) {
+                this.entityObj.SetConfigValue("ExePath", filePath, false)
+                this.guiObj["ExePath"].Text := filePath
             }
         } else if (btn == "OpenExePath") {
             val := this.entityObj.ExePath
@@ -75,11 +75,11 @@
     OnIconSrcMenuClick(btn) {
         if (btn == "ChangeIconSrc") {
             existingVal := this.entityObj.GetConfigValue("IconSrc", false)
-            file := FileSelect(1,, this.entityObj.Key . ": Select icon or .exe retrieve icon from.", "Icons (*.ico; *.exe)")
+            filePath := FileSelect(1,, this.entityObj.Key . ": Select icon or .exe retrieve icon from.", "Icons (*.ico; *.exe)")
 
-            if (file) {
-                this.entityObj.SetConfigValue("IconSrc", file, false)
-                this.guiObj["IconSrc"].Text := file
+            if (filePath) {
+                this.entityObj.SetConfigValue("IconSrc", filePath, false)
+                this.guiObj["IconSrc"].Text := filePath
             }
         } else if (btn == "ClearIconSrc") {
             if (this.entityObj.UnmergedConfig.Has("IconSrc")) {

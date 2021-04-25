@@ -50,8 +50,8 @@ class MainMenuButtonShape extends ButtonShape {
         hFamily := Gdip_FontFamilyCreate(font)
         hFont := Gdip_FontCreate(hFamily, size, style)
         hFormat := Gdip_StringFormatCreate(formatStyle)
-        CreateRectF(RC, 0, 0, 0, 0)
-        returnRc := Gdip_MeasureString(graphics, text, hFont, hFormat, RC)
+        CreateRectF(&RC, 0, 0, 0, 0)
+        returnRc := Gdip_MeasureString(graphics, text, hFont, hFormat, &RC)
         returnRc := StrSplit(returnRc, "|")
         return returnRc[3]
     }

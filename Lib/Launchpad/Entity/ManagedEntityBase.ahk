@@ -206,7 +206,7 @@ class ManagedEntityBase extends EntityBase {
         detectedValues[this.configPrefix . "InstallDir"] := this.LocateInstallDir() ; This needs to run to expand exes without a dir
 
         if (this.ProcessType == "Exe") {
-            SplitPath(this.Exe, processId)
+            SplitPath(this.Exe, &processId)
         } else if (this.ProcessType == "Title") {
             processId := this.WindowTitle ? this.WindowTitle : this.Key
         }
@@ -324,7 +324,7 @@ class ManagedEntityBase extends EntityBase {
         filePath := ""
 
         if (filePattern != "") {
-            SplitPath(filePattern,,,,, fileDrive)
+            SplitPath(filePattern,,,,, &fileDrive)
             
             if (fileDrive != "") {
                 filePath := filePattern

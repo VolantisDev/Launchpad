@@ -36,7 +36,7 @@
         lowerExt := StrLower(this.shortcutExt)
 
         if (lowerExt == "lnk") {
-            FileGetShortcut(this.shortcutSrc, target, dir, args,, iconSrc, iconNum)
+            FileGetShortcut(this.shortcutSrc, &target, &dir, &args,, &iconSrc, &iconNum)
             runCmd := target
 
             if (args) {
@@ -68,7 +68,7 @@
         selectedFile := FileSelect(33, existingVal, "Select Game Shortcut", "Shortcuts (*.lnk; *.url)")
         
         if (selectedFile) {
-            SplitPath(selectedFile,,,shortcutExt, shortcutName)
+            SplitPath(selectedFile,,, &shortcutExt, &shortcutName)
             this.shortcutSrc := selectedFile
             this.gameKey := shortcutName
             this.shortcutExt := shortcutExt

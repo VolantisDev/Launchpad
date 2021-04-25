@@ -12,6 +12,6 @@ class ArchiveFileBase {
     */
     
     Extract(destinationPath) {
-        throw(MethodNotImplementedException.new("ArchiveFileBase", "Extract"))
+        throw(MethodNotImplementedException("ArchiveFileBase", "Extract"))
     }
 }

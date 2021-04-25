@@ -26,11 +26,11 @@ class BlizzardGame extends SimpleGame {
 
             ; Save original mouse position
             CoordMode("Mouse", "Screen")
-            MouseGetPos(mouseX, mouseY)
+            MouseGetPos(&mouseX, &mouseY)
 
             ; Click the Play button
             CoordMode("Mouse", "Window")
-            WinGetClientPos(,,, winH, winTitle)
+            WinGetClientPos(,,, &winH, winTitle)
             buttonX := 100
             buttonY := winH - 100
             Click(buttonX . " " . buttonY)

@@ -8,6 +8,6 @@ class ComposableBuildFile extends BuildFileBase {
     }
 
     ComposeFile() {
-        throw MethodNotImplementedException.new("ComposableBuildFile", "ComposeFile")
+        throw MethodNotImplementedException("ComposableBuildFile", "ComposeFile")
     }
 }

@@ -1,7 +1,7 @@
 class FileConfig extends ConfigBase {
     configPathValue := ""
 
-    ConfigPath[] {
+    ConfigPath {
         get => this.configPathValue
         set => this.configPathValue := value
     }
@@ -20,7 +20,7 @@ class FileConfig extends ConfigBase {
         configPath := this.configPath
 
         if (configPath == "") {
-            throw OperationFailedException.new("Config file path not provided")
+            throw OperationFailedException("Config file path not provided")
         }
 
         if (FileExist(configPath)) {
@@ -33,14 +33,14 @@ class FileConfig extends ConfigBase {
     }
 
     LoadConfigFile() {
-        throw MethodNotImplementedException.new("FileConfig", "LoadConfigFile")
+        throw MethodNotImplementedException("FileConfig", "LoadConfigFile")
     }
 
     SaveConfig() {
         configPath := this.ConfigPath
 
         if (configPath == "") {
-            throw OperationFailedException.new("Config file path not provided")
+            throw OperationFailedException("Config file path not provided")
         }
 
         backedUp := false
@@ -64,7 +64,7 @@ class FileConfig extends ConfigBase {
     }
 
     SaveConfigFile(configPath) {
-        throw MethodNotImplementedException.new("FileConfig", "SaveConfigFile")
+        throw MethodNotImplementedException("FileConfig", "SaveConfigFile")
     }
 
     BackupConfig() {
@@ -106,7 +106,7 @@ class FileConfig extends ConfigBase {
     }
 
     RestoreConfigFile(configPath, backupNumber := 1) {
-        if (this.ConfigPath && this.app.HasProp(Backups) && this.app.Services.Exists("BackupManager") && this.app.Service("BackupManager").Entities.Has(this.configKey)) {
+        if (this.ConfigPath && this.app.HasProp("Backups") && this.app.Services.Exists("BackupManager") && this.app.Service("BackupManager").Entities.Has(this.configKey)) {
             this.app.Service("BackupManager").Entities[this.configKey].RestoreBackup()
             this.LoadConfig()
         }

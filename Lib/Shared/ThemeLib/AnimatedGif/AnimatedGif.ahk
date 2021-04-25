@@ -13,7 +13,7 @@
 		if (FileName != "") && FileExist(FileName)
 			this.LoadGifFromFile(FileName)
 
-		if RegExMatch(Options, "i)\bBackGround\K\w+\b", c)
+		if RegExMatch(Options, "i)\bBackGround\K\w+\b", &c)
 			this.SetBkColor(c)
 
 		if Link

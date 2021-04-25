@@ -13,7 +13,7 @@ class DownloadableInstallerComponent extends FileInstallerComponentBase {
         downloadUrl := this.GetDownloadUrl()
         
         if (downloadUrl == "") {
-            throw AppException.new("Failed to determine download URL of installer component " . this.stateKey)
+            throw AppException("Failed to determine download URL of installer component " . this.stateKey)
         }
 
         Download(this.GetDownloadUrl(), destPath)

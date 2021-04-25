@@ -28,7 +28,7 @@ class AppException {
             what -= 1
         }
         
-        this.innerException := Exception(message, what, extra)
+        this.innerException := Error(message, what, extra)
     }
 
     GetException() {

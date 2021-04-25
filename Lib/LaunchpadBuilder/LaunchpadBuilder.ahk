@@ -1,10 +1,10 @@
 class LaunchpadBuilder extends AppBase {
     LoadServices(config) {
         super.LoadServices(config)
-        this.Services.Set("LaunchpadConfig", LaunchpadConfig.new(this, this.appDir . "\" . this.appName . ".ini"))
-        this.Services.Set("DataSourceManager", DataSourceManager.new(this.Service("EventManager")))
-        this.Services.Set("FileHasher", FileHasher.new(this))
-        this.Services.Set("GitTagVersionIdentifier", GitTagVersionIdentifier.new(this))
+        this.Services.Set("LaunchpadConfig", LaunchpadConfig(this, this.appDir . "\" . this.appName . ".ini"))
+        this.Services.Set("DataSourceManager", DataSourceManager(this.Service("EventManager")))
+        this.Services.Set("FileHasher", FileHasher(this))
+        this.Services.Set("GitTagVersionIdentifier", GitTagVersionIdentifier(this))
     }
 
     GetCaches() {
@@ -14,7 +14,7 @@ class LaunchpadBuilder extends AppBase {
 
     InitializeApp(config) {
         super.InitializeApp(config)
-        this.Service("AuthService").SetAuthProvider(LaunchpadApiAuthProvider.new(this, this.State))
+        this.Service("AuthService").SetAuthProvider(LaunchpadApiAuthProvider(this, this.State))
     }
 
     RunApp(config) {
@@ -33,15 +33,15 @@ class LaunchpadBuilder extends AppBase {
         version := buildInfo.Version
 
         if (!version) {
-            throw AppException.new("Version not provided.")
+            throw AppException("Version not provided.")
         }
 
         this.Version := version
         this.CreateGitTag(version)
-        success := LaunchpadBuildOp.new(this, this.GetBuilders(buildInfo)).Run()
+        success := LaunchpadBuildOp(this, this.GetBuilders(buildInfo)).Run()
 
         if (!success) {
-            throw AppException.new(this.appName . "build failed. Skipping deploy...")
+            throw AppException(this.appName . "build failed. Skipping deploy...")
         }
 
         if (buildInfo.DeployToGitHub || buildInfo.DeployToApi || buildInfo.DeployToChocolatey) {
@@ -51,10 +51,10 @@ class LaunchpadBuilder extends AppBase {
                 this.ExitApp()
             }
 
-            success := LaunchpadDeployOp.new(this, this.GetDeployers(buildInfo)).Run()
+            success := LaunchpadDeployOp(this, this.GetDeployers(buildInfo)).Run()
 
             if (!success) {
-                throw AppException.new(this.appName . " deployment failed. You might need to handle things manually...")
+                throw AppException(this.appName . " deployment failed. You might need to handle things manually...")
             }
         }
 
@@ -66,17 +66,17 @@ class LaunchpadBuilder extends AppBase {
         builders := Map()
         
         if (buildInfo.BuildLaunchpadOverlay) {
-            builders["Launchpad Overlay"] := LaunchpadOverlayBuilder.new(this)
+            builders["Launchpad Overlay"] := LaunchpadOverlayBuilder(this)
         }
         
         if (buildInfo.BuildLaunchpad) {
-            builders["Exe"] := AhkExeBuilder.new(this)
+            builders["Exe"] := AhkExeBuilder(this)
 
             if (buildInfo.BuildInstaller) {
-                builders["Installer"] := NsisInstallerBuilder.new(this)
+                builders["Installer"] := NsisInstallerBuilder(this)
 
                 if (buildInfo.BuildChocoPkg) {
-                    builders["Chocolatey Package"] := ChocoPkgBuilder.new(this)
+                    builders["Chocolatey Package"] := ChocoPkgBuilder(this)
                 }
             }
         }
@@ -88,15 +88,15 @@ class LaunchpadBuilder extends AppBase {
         deployers := Map()
 
         if (buildInfo.DeployToGitHub) {
-            deployers["GitHub"] := GitHubBuildDeployer.new(this)
+            deployers["GitHub"] := GitHubBuildDeployer(this)
         }
 
         if (buildInfo.DeployToApi) {
-            deployers["Api"] := ApiBuildDeployer.new(this)
+            deployers["Api"] := ApiBuildDeployer(this)
         }
         
         if (buildInfo.DeployToChocolatey) {
-            deployers["Chocolatey"] := ChocoDeployer.new(this)
+            deployers["Chocolatey"] := ChocoDeployer(this)
         }
         
         return deployers

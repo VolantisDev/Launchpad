@@ -125,7 +125,7 @@ class LauncherEntity extends EntityBase {
 
     __New(app, key, config, requiredConfigKeys := "", parentEntity := "") {
         super.__New(app, key, config, requiredConfigKeys, parentEntity)
-        this.children["ManagedLauncher"] := ManagedLauncherEntity.new(app, key, config, "", this)
+        this.children["ManagedLauncher"] := ManagedLauncherEntity(app, key, config, "", this)
         this.entityData.SetAutoDetectedDefaults(this.AutoDetectValues())
         this.StoreOriginal(false, true)
     }
@@ -141,9 +141,9 @@ class LauncherEntity extends EntityBase {
     LauncherIsOutdated() {
         outdated := true
 
-        file := this.GetLauncherFile(this.Key)
+        filePath := this.GetLauncherFile(this.Key)
 
-        if (file && FileExist(file)) {
+        if (filePath && FileExist(filePath)) {
             launcherVersion := FileGetVersion(this.GetLauncherFile(this.Key))
 
             if (launcherVersion && !this.app.Service("VersionChecker").VersionIsOutdated(this.app.Version, launcherVersion)) {

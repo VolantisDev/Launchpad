@@ -131,6 +131,14 @@ and start the latest installer.
 
 You can also click Check for Updates in the main Launchpad menu at any time.
 
+## Note on AHK version of Launchpad
+
+Launchpad is built with the AutoHotKey v2-alpha release. Since this is an alpha release, is it under rapid development and breaking changes occur regularly.
+
+It is for this reason that we recommend using the installer release of Launchpad, which always includes the correct version of AutoHotKey v2 that it's compatible with.
+
+Using the installer, you'll never have to worry about which AHK version to use. If you with to use the AHK version of Launchpad, such as for development purposes, you must have a compatible version of AHK v2 available. The simplest way to do this is to first install the Launchpad installer, which will put a compatible version of AutoHotKey in its "Vendor\AutoHotKey" directory. You can then run the AHK version of Launchpad using this AutoHotKey binary.
+
 ## Note on Portability
 
 Launchpad's configuration files are portable, but the launchers that Launchpad

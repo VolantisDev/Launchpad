@@ -58,10 +58,10 @@ class MainWindow extends ManageWindowBase {
         launcher := this.launcherManager.Entities[launcherKey]
 
         if (launcher && launcher.IsBuilt) {
-            file := launcher.GetLauncherFile(launcherKey, false)
+            filePath := launcher.GetLauncherFile(launcherKey, false)
 
-            if (file) {
-                Run(file,, "Hide")
+            if (filePath) {
+                Run(filePath,, "Hide")
             }
         }
     }

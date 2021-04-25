@@ -3,7 +3,7 @@ class WindowContainer extends ContainerBase {
         window := super.Get(key)
 
         if (!window) {
-            throw WindowNotFoundException.new("Window '" . key . "' does not exist")
+            throw WindowNotFoundException("Window '" . key . "' does not exist")
         }
 
         return window

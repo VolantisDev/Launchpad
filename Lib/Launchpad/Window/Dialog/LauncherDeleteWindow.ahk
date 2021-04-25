@@ -8,10 +8,10 @@
     ProcessResult(result, submittedData := "") {
         if (result == "Delete") {
             if (submittedData.DeleteLauncher and this.entityObj.IsBuilt) {
-                file := this.entityObj.GetLauncherFile(this.entityObj.Key, false)
+                filePath := this.entityObj.GetLauncherFile(this.entityObj.Key, false)
 
-                if (file and FileExist(file)) {
-                    FileDelete(file)
+                if (filePath and FileExist(filePath)) {
+                    FileDelete(filePath)
                 }
             }
 

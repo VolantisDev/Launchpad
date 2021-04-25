@@ -112,7 +112,7 @@ class DetectedGame {
             config["GameLauncherSpecificId"] := this.launcherSpecificId
         }
 
-        entity := LauncherEntity.new(launcherManager.app, this.key, config)
+        entity := LauncherEntity(launcherManager.app, this.key, config)
         launcherManager.AddEntity(this.key, entity)
     }
 
@@ -133,7 +133,7 @@ class DetectedGame {
         }
 
         for index, prefix in this.hyphenPrefixes {
-            if (RegExMatch(key, "i)(" . prefix . ") [^\-]", match)) {
+            if (RegExMatch(key, "i)(" . prefix . ") [^\-]", &match)) {
                 if (match[1]) {
                     key := StrReplace(key, match[1], match[1] . " -")
                 }
@@ -170,7 +170,7 @@ class DetectedGame {
             exclusions := [" Launcher", "CrashHandler"]
             
             for index, possibleExe in possibleExes {
-                SplitPath(possibleExe,, dir,, nameNoExt)
+                SplitPath(possibleExe,, &dir,, &nameNoExt)
 
                 for exclusionIndex, pattern in exclusions {
                     if (InStr(nameNoExt, pattern)) {
@@ -212,7 +212,7 @@ class DetectedGame {
                 mainExe := nonExcludedExes[1]
             } else {
                 for index, possibleExe in nonExcludedExes {
-                    SplitPath(possibleExe,,,, nameNoExt)
+                    SplitPath(possibleExe,,,, &nameNoExt)
                     checkValues := [this.key, StrReplace(this.key, " ", "")]
 
                     for index, val in checkValues {

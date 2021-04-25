@@ -6,8 +6,8 @@ class DSJson extends DSFile {
         obj := Map()
 
         if (content) {
-            data := JsonData.new()
-            obj := data.FromString(content)
+            data := JsonData()
+            obj := data.FromString(&content)
         }
 
         return obj

@@ -12,6 +12,6 @@ class NotifierBase {
     */
 
     Notify(message, title := "", level := "info") {
-        throw MethodNotImplementedException.new("NotifierBase", "Notify")
+        throw MethodNotImplementedException("NotifierBase", "Notify")
     }
 }

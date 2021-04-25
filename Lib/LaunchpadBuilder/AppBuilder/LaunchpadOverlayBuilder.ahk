@@ -5,7 +5,7 @@ class LaunchpadOverlayBuilder extends AppBuilderBase {
         outputExe := this.app.Config.BuildDir . "\LaunchpadOverlay\LaunchpadOverlay.exe"
 
         if (!FileExist(outputExe)) {
-            throw AppException.new("LaunchpadOverlay.exe failed to build.")
+            throw AppException("LaunchpadOverlay.exe failed to build.")
         }
 
         overlayDir := this.app.appDir . "\Resources\LaunchpadOverlay"

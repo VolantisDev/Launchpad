@@ -28,7 +28,7 @@ class InstallerComponentBase {
         this.appState := appState
         this.overwrite := overwrite
 
-        SplitPath(A_ScriptFullPath, scriptFile, scriptDir)
+        SplitPath(A_ScriptFullPath, &scriptFile, &scriptDir)
         this.scriptFile := scriptFile
         this.scriptDir := scriptDir
         this.tmpDir := tmpDir
@@ -42,15 +42,15 @@ class InstallerComponentBase {
     */
 
     ExistsAction() {
-        throw MethodNotImplementedException.new("InstallerComponentBase", "ExistsAction")
+        throw MethodNotImplementedException("InstallerComponentBase", "ExistsAction")
     }
 
     InstallAction() {
-        throw MethodNotImplementedException.new("InstallerComponentBase", "InstallAction")
+        throw MethodNotImplementedException("InstallerComponentBase", "InstallAction")
     }
 
     UninstallAction() {
-        throw MethodNotImplementedException.new("InstallerComponentBase", "UninstallAction")
+        throw MethodNotImplementedException("InstallerComponentBase", "UninstallAction")
     }
 
     /**

@@ -4,7 +4,7 @@ class AddDetectedGamesOp extends BulkOperationBase {
     state := ""
     progressTitle := "Adding Selected Games"
     progressText := "Please wait while Launchpad adds the selected games..."
-    notify := true
+    shouldNotify := true
     successMessage := "Added {n} games."
     failedMessage := "Failed to add {n} games."
 

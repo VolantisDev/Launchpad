@@ -32,7 +32,7 @@ class SteamPlatform extends RegistryLookupGamePlatformBase {
             vdfFile := steamapps . "\libraryfolders.vdf"
 
             if (FileExist(vdfFile)) {
-                data := VdfData.new()
+                data := VdfData()
                 obj := data.FromFile(vdfFile)
 
                 if (IsObject(obj) && obj.Has("LibraryFolders")) {
@@ -59,7 +59,7 @@ class SteamPlatform extends RegistryLookupGamePlatformBase {
 
         for index, dir in libraryDirs {
             Loop Files dir . "\appmanifest_*.acf" {
-                data := VdfData.new()
+                data := VdfData()
                 obj := data.FromFile(A_LoopFileFullPath)
 
                 if (IsObject(obj) && obj.Has("AppState")) {
@@ -71,12 +71,12 @@ class SteamPlatform extends RegistryLookupGamePlatformBase {
                     possibleExes := []
 
                     if (DirExist(installDir)) {
-                        locator := GameExeLocator.new(installDir)
+                        locator := GameExeLocator(installDir)
                         possibleExes := locator.Locate("")
                     }
 
                     mainExe := this.DetermineMainExe(key, possibleExes)
-                    games.Push(DetectedGame.new(key, this, this.launcherType, this.gameType, installDir, mainExe, launcherSpecificId, possibleExes))
+                    games.Push(DetectedGame(key, this, this.launcherType, this.gameType, installDir, mainExe, launcherSpecificId, possibleExes))
                 }
             }
         }

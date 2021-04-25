@@ -38,7 +38,7 @@ class ModuleManager extends ContainerServiceBase {
         moduleDirs := this.GetModuleDirs(config)
         defaultModules := this.app.GetDefaultModules(config)
 
-        op := LoadModulesOp.new(this.app, moduleDirs, defaultModules, this.app.State)
+        op := LoadModulesOp(this.app, moduleDirs, defaultModules, this.app.State)
         op.Run()
         results := op.GetResults()
 

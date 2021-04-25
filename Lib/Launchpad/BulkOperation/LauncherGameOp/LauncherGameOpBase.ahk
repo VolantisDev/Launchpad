@@ -8,7 +8,7 @@ class LauncherGameOpBase extends BulkOperationBase {
     progressText := ""
     successMessage := ""
     failedMessage := ""
-    notify := true
+    shouldNotify := true
     itemSuccessText := "Succeeded."
     itemFailedText := "Failed."
 

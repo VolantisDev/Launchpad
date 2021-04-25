@@ -58,7 +58,7 @@ class PlatformEntity extends EntityBase {
         platformClass := config.Has("PlatformClass") ? config["PlatformClass"] : ""
         
         if (!platformClass) {
-            throw OperationFailedException.new("Platform class could not be determined.")
+            throw OperationFailedException("Platform class could not be determined.")
         }
 
         super.__New(app, key, config, requiredConfigKeys, parentEntity)
@@ -73,7 +73,7 @@ class PlatformEntity extends EntityBase {
             platformClass := this.PlatformClass
         }
 
-        this.platform := %platformClass%.new(this.app, this.InstallDir, this.ExePath, this.InstalledVersion, this.UninstallCmd)
+        this.platform := %platformClass%(this.app, this.InstallDir, this.ExePath, this.InstalledVersion, this.UninstallCmd)
     }
 
     GetDisplayName() {

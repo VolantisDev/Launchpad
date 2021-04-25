@@ -1,6 +1,6 @@
 ; WARNING: This class probably doesn't work yet.
 class CLR {
-    static nullVal := ComObject(1, 0)
+    static nullVal := ComValue(1, 0)
     static emptyArray := ComObjArray(0xC, 0)
 
     static LoadLibrary(assemblyName, appDomain := 0) {
@@ -34,7 +34,7 @@ class CLR {
 
         try {
             
-        } catch er {
+        } catch Error as ex {
             ; Ignore COM errors
         }
         
@@ -65,17 +65,17 @@ class CLR {
         return CLR.CompileAssembly(code, references, "System", "Microsoft.VisualBasic.VBCodeProvider", appDomain, fileName, compilerOptions)
     }
 
-    static StartDomain(ByRef appDomain, baseDirectory := "") {
+    static StartDomain(&appDomain, baseDirectory := "") {
         args := ComObjArray(0xC, 5)
         args[0] := ""
         args[2] := baseDirectory
-        args[4] := ComObject(0xB, false)
+        args[4] := ComValue(0xB, false)
 
         appDomain := CLR.GetDefaultDomain().GetType().InvokeMember_3("CreateDomain", 0x158, CLR.nullVal, CLR.nullVal, args)
         return A_LastError >= 0
     }
 
-    static StopDomain(ByRef appDomain) {
+    static StopDomain(&appDomain) {
         ; ICorRuntimeHost::UnloadDomain
         rtHst := CLR.Start()
         hr := DllCall(NumGet(NumGet(0+rtHst, "Ptr")+20*A_PtrSize, "Ptr"), "Ptr", rtHst, "Ptr", ComObjValue(appDomain))
@@ -102,9 +102,9 @@ class CLR {
         }
 
         result := DllCall("mscoree\CorBindToRuntimeEx", "wstr", version, "Ptr", 0, "UInt", 0
-        , "Ptr", CLR.GUID(CLSID_CorRuntimeHost, "{CB2F6723-AB3A-11D2-9C40-00C04FA30A3E}")
-        , "Ptr", CLR.GUID(IID_ICorRuntimeHost,  "{CB2F6722-AB3A-11D2-9C40-00C04FA30A3E}")
-        , "Ptr*", rtHst)
+        , "Ptr", CLR.GUID(&CLSID_CorRuntimeHost, "{CB2F6723-AB3A-11D2-9C40-00C04FA30A3E}")
+        , "Ptr", CLR.GUID(&IID_ICorRuntimeHost,  "{CB2F6722-AB3A-11D2-9C40-00C04FA30A3E}")
+        , "Ptr*", &rtHst)
 
         if (result) {
             DllCall(NumGet(NumGet(rtHst+0, "Ptr")+10*A_PtrSize, "Ptr"), "Ptr", rtHst)
@@ -120,7 +120,7 @@ class CLR {
             ; ICorRuntimeHost::GetDefaultDomain
             rtHst := CLR.Start()
             p := 0
-            result := DllCall(NumGet(NumGet(rtHst+0, "Ptr")+13*A_PtrSize, "Ptr"), "Ptr", rtHst, "Ptr*", p)
+            result := DllCall(NumGet(NumGet(rtHst+0, "Ptr")+13*A_PtrSize, "Ptr"), "Ptr", rtHst, "Ptr*", &p)
 
             if (result >= 0) {
                 defaultDomain := ComObject(p)
@@ -183,7 +183,7 @@ class CLR {
         return compilerRes[resultKey]
     }
 
-    static GUID(ByRef GUID, sGUID) {
+    static GUID(&GUID, sGUID) {
         GUID := BufferAlloc(16, 0)
         result := DllCall("ole32\CLSIDFromString", "WStr", sGUID, "Ptr", GUID.Ptr)
 

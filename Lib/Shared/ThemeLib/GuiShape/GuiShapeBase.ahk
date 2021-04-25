@@ -1,13 +1,13 @@
 class GuiShapeBase {
     DrawOver(guiControl, guiObj) {
-        MethodNotImplementedException.new("GuiShapeBase", "DrawOver")
+        MethodNotImplementedException("GuiShapeBase", "DrawOver")
     }
 
     DrawOn(guiControl) {
-        MethodNotImplementedException.new("GuiShapeBase", "DrawOn")
+        MethodNotImplementedException("GuiShapeBase", "DrawOn")
     }
 
     SetImage(imgObj) {
-        MethodNotImplementedException.new("GuiShapeBase", "SetImage")
+        MethodNotImplementedException("GuiShapeBase", "SetImage")
     }
 }

@@ -43,25 +43,25 @@ class AppBase {
 
     __New(config := "") {
         this.Startup(config)
-        event := AppRunEvent.new(Events.APP_POST_STARTUP, this, config)
+        event := AppRunEvent(Events.APP_POST_STARTUP, this, config)
         this.Service("EventManager").DispatchEvent(Events.APP_POST_STARTUP, event)
 
-        event := AppRunEvent.new(Events.APP_PRE_LOAD_SERVICES, this, config)
+        event := AppRunEvent(Events.APP_PRE_LOAD_SERVICES, this, config)
         this.Service("EventManager").DispatchEvent(Events.APP_PRE_LOAD_SERVICES, event)
         this.LoadServices(config)
-        event := AppRunEvent.new(Events.APP_POST_LOAD_SERVICES, this, config)
+        event := AppRunEvent(Events.APP_POST_LOAD_SERVICES, this, config)
         this.Service("EventManager").DispatchEvent(Events.APP_POST_LOAD_SERVICES, event)
 
-        event := AppRunEvent.new(Events.APP_PRE_INITIALIZE, this, config)
+        event := AppRunEvent(Events.APP_PRE_INITIALIZE, this, config)
         this.Service("EventManager").DispatchEvent(Events.APP_PRE_INITIALIZE, event)
         this.InitializeApp(config)
-        event := AppRunEvent.new(Events.APP_POST_INITIALIZE, this, config)
+        event := AppRunEvent(Events.APP_POST_INITIALIZE, this, config)
         this.Service("EventManager").DispatchEvent(Events.APP_POST_INITIALIZE, event)
 
-        event := AppRunEvent.new(Events.APP_PRE_RUN, this, config)
+        event := AppRunEvent(Events.APP_PRE_RUN, this, config)
         this.Service("EventManager").DispatchEvent(Events.APP_PRE_RUN, event)
         this.RunApp(config)
-        event := AppRunEvent.new(Events.APP_POST_RUN, this, config)
+        event := AppRunEvent(Events.APP_POST_RUN, this, config)
         this.Service("EventManager").DispatchEvent(Events.APP_POST_RUN, event)
     }
 
@@ -73,8 +73,8 @@ class AppBase {
         }
 
         if (!config.Has("appName") || !config["appName"]) {
-            SplitPath(A_ScriptName,,,, appName)
-            config["appName"] := appName
+            SplitPath(A_ScriptName,,,, &appBaseName)
+            config["appName"] := appBaseName
         }
 
         if (!config.Has("developer")) {
@@ -125,7 +125,7 @@ class AppBase {
                 if (config.Has("shell") && config["shell"]) {
                     shell := config["shell"]
                 } else {
-                    shell := ComObjCreate("WScript.Shell")
+                    shell := ComObject("WScript.Shell")
                 }
 
                 shell.CurrentDirectory := this.appDir
@@ -139,23 +139,23 @@ class AppBase {
         }
 
         if (!services.Has("Debugger") || !services["Debugger"]) {
-            services["Debugger"] := Debugger.new()
+            services["Debugger"] := Debugger()
         }
         
         if (!services.Has("IdGenerator") || !services["IdGenerator"]) {
-            services["IdGenerator"] := UuidGenerator.new()
+            services["IdGenerator"] := UuidGenerator()
         }
 
         if (!services.Has("VersionChecker") || !services["VersionChecker"]) {
-            services["VersionChecker"] := VersionChecker.new()
+            services["VersionChecker"] := VersionChecker()
         }
 
         if (!services.Has("EventManager") || !services["EventManager"]) {
-            services["EventManager"] := EventManager.new()
+            services["EventManager"] := EventManager()
         }
 
-        this.Services := ServiceContainer.new(services)
-        this.Services.Set("ModuleManager", ModuleManager.new(this).LoadModules(config))
+        this.Services := ServiceContainer(services)
+        this.Services.Set("ModuleManager", ModuleManager(this).LoadModules(config))
         this.errorCallback := ObjBindMethod(this, "OnException")
         OnError(this.errorCallback)
     }
@@ -170,7 +170,7 @@ class AppBase {
         output := ""
 
         if (!this.Services.Exists("Shell")) {
-            throw AppException.new("The shell is disabled, so shell commands cannot currently be run.")
+            throw AppException("The shell is disabled, so shell commands cannot currently be run.")
         }
         
         result := this.Service("Shell").Exec(A_ComSpec . " /C " . command).StdOut.ReadAll()
@@ -203,7 +203,7 @@ class AppBase {
             configClass := config["configClass"]
         }
 
-        return %configClass%.new(this, configFile)
+        return %configClass%(this, configFile)
     }
 
     LoadAppState(config) {
@@ -219,7 +219,7 @@ class AppBase {
             stateClass := config["stateClass"]
         }
 
-        return %stateClass%.new(this, stateFile)
+        return %stateClass%(this, stateFile)
     }
 
     OnException(e, mode) {
@@ -235,8 +235,10 @@ class AppBase {
             errorText .= "`nFile: " . e.File . " (Line " . e.Line . ")"
         }
 
-        this.Logger.Error(errorText)
-
+        if (this.Services.Exists("LoggerService")) {
+            this.Logger.Error(errorText)
+        }
+        
         errorText .= "`n"
 
         return this.ShowError("Unhandled Exception", errorText, e, mode != "ExitApp")
@@ -250,7 +252,7 @@ class AppBase {
             } else {
                 this.ShowUnthemedError(title, err.Message, err, "", allowContinue)
             }
-        } catch (ex) {
+        } catch Error as ex {
             this.ShowUnthemedError(title, errorText, err, ex, allowContinue)
         }
 
@@ -349,7 +351,7 @@ class AppBase {
             loggingLevel := config["loggingLevel"]
         }
 
-        this.Services.Set("LoggerService", LoggerService.new(FileLogger.new(logPath, loggingLevel, true)))
+        this.Services.Set("LoggerService", LoggerService(FileLogger(logPath, loggingLevel, true)))
         this.Debugger.SetLogger(this.Logger)
 
         themesDir := this.appDir . "\Resources\Themes"
@@ -376,11 +378,11 @@ class AppBase {
             cacheDir := this.Config.CacheDir
         }
 
-        this.Services.Set("CacheManager", CacheManager.new(this, cacheDir, this.GetCaches()))
-        this.Services.Set("ThemeManager", ThemeManager.new(this, themesDir, resourcesDir, defaultTheme))
-        this.Services.Set("NotificationService", NotificationService.new(this, ToastNotifier.new(this)))
-        this.Services.Set("GuiManager", GuiManager.new(this))
-        this.Services.Set("InstallerManager", InstallerManager.new(this))
+        this.Services.Set("CacheManager", CacheManager(this, cacheDir, this.GetCaches()))
+        this.Services.Set("ThemeManager", ThemeManager(this, themesDir, resourcesDir, defaultTheme))
+        this.Services.Set("NotificationService", NotificationService(this, ToastNotifier(this)))
+        this.Services.Set("GuiManager", GuiManager(this))
+        this.Services.Set("InstallerManager", InstallerManager(this))
     }
 
     __Delete() {
@@ -394,7 +396,7 @@ class AppBase {
     }
 
     ExitApp() {
-        event := AppRunEvent.new(Events.APP_SHUTDOWN, this)
+        event := AppRunEvent(Events.APP_SHUTDOWN, this)
         this.Service("EventManager").DispatchEvent(Events.APP_SHUTDOWN, event)
 
         ExitApp

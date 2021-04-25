@@ -10,7 +10,7 @@ class GameAhkFile extends ComposableBuildFile {
     ComposeFile() {
         global appVersion
         launcherName := this.launcherEntityObj.Key . " - Launchpad"
-        ahkVar := AhkVariable.new()
+        ahkVar := AhkVariable()
 
         FileAppend
         (
@@ -44,7 +44,7 @@ class GameAhkFile extends ComposableBuildFile {
         appInfo['gameConfig'] := " . ahkVar.ToString(this.launcherEntityObj.ManagedLauncher.ManagedGame.Config) . "
         appInfo['platforms'] := " . ahkVar.ToString(this.GetPlatforms()) . "
         
-        LaunchpadLauncher.new(appInfo)
+        LaunchpadLauncher(appInfo)
         "
         ), this.FilePath
         

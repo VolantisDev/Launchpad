@@ -22,7 +22,7 @@ class EntityControl extends GuiControlBase {
         if (showDefaultCheckbox) {
             ctl := this.DefaultCheckbox(entity, fieldName)
             this.defaultCtl := ctl
-            ctl.GetPos(,,checkW)
+            ctl.GetPos(,, &checkW)
             isDisabled := !entity.UnmergedConfig.Has(fieldName)
         }
         

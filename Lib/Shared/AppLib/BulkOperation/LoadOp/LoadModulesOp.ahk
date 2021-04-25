@@ -3,7 +3,7 @@ class LoadModulesOp extends BulkOperationBase {
     defaultModules := ""
     state := ""
     useProgress := false
-    notify := false
+    shouldNotify := false
 
     __New(app, moduleDirs, defaultModules, state, owner := "") {
         if (Type(moduleDirs) == "String") {
@@ -31,10 +31,10 @@ class LoadModulesOp extends BulkOperationBase {
         for key, moduleClass in modules {
             index++
             this.StartItem(index, "Loading " . key . "...")
-            exists := IsSet(moduleClass)
+            exists := IsSet(&moduleClass)
 
             if (exists) {
-                this.results[key] := %moduleClass%.new(this.app)
+                this.results[key] := %moduleClass%(this.app)
             } else {
                 this.results[key] := ""
             }

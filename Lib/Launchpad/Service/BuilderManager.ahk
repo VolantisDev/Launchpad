@@ -17,7 +17,7 @@ class BuilderManager extends AppComponentServiceBase {
         }
 
         builder := this._GetBuilderObject(builder)
-        operation := BuildLaunchersOp.new(this.app, launcherGames, builder, updateExisting, owner)
+        operation := BuildLaunchersOp(this.app, launcherGames, builder, updateExisting, owner)
         return operation.Run()
     }
 
@@ -27,7 +27,7 @@ class BuilderManager extends AppComponentServiceBase {
         }
 
         builder := this._GetBuilderObject(builder)
-        operation := CleanLaunchersOp.new(this.app, launcherGames, builder, owner)
+        operation := CleanLaunchersOp(this.app, launcherGames, builder, owner)
         return operation.Run()
     }
 

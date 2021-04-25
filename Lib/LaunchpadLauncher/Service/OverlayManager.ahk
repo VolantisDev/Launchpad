@@ -72,7 +72,7 @@ class OverlayManager extends AppServiceBase {
         
         detectHidden := A_DetectHiddenWindows
         DetectHiddenWindows(true)
-        WinGetPos(winX, winY, winW, winH, "ahk_id " . activeHwnd)
+        WinGetPos(&winX, &winY, &winW, &winH, "ahk_id " . activeHwnd)
         WinShow("ahk_id " . this.hwnd)
         WinMove(winX, winY, winW, winH, "ahk_id " . this.hwnd)
         ;DllCall("SetFocus", "UInt", this.hwnd)
@@ -109,7 +109,7 @@ class OverlayManager extends AppServiceBase {
                 ;}
 
                 ProcessClose("LaunchpadOverlay.exe")
-            } catch ex {
+            } catch Error as ex {
                 ; Ignore failure
             }
             

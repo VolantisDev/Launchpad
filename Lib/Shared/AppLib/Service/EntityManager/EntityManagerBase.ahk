@@ -3,7 +3,7 @@ class EntityManagerBase extends AppComponentServiceBase {
     _alterEvent := ""
     configObj := ""
 
-    Entities[] {
+    Entities {
         get => this._components
         set => this._components := value
     }

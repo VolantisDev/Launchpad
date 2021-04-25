@@ -10,7 +10,7 @@ class ProtoConfig extends FileConfig {
     }
 
     LoadConfigFile(configPath) {
-        data := ProtobufData.new()
+        data := ProtobufData()
         this.config := data.FromFile(this.configPath, this.primaryConfigKey, this.protoFile)
     }
 

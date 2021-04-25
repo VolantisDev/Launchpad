@@ -7,28 +7,29 @@ class GitHubBuildDeployer extends BuildDeployerBase {
         responseData := request.GetResponseData()
 
         if (!success || !responseData) {
-            throw AppException.new("Failed to post release to GitHub")
+            throw AppException("Failed to post release to GitHub")
         }
 
-        json := JsonData.new()
-        responseObj := json.FromString(responseData)
+        json := JsonData()
+        responseObj := json.FromString(&responseData)
 
         if (!responseObj.Has("upload_url") || !responseObj["upload_url"]) {
-            throw AppException.new("Could not determine release file upload URL")
+            throw AppException("Could not determine release file upload URL")
         }
 
         success := this.UploadInstaller(deployInfo, responseObj["upload_url"])
 
         if (!success) {
-            throw AppException.new("Failed to upload installer file")
+            throw AppException("Failed to upload installer file")
         }
 
         return success
     }
 
     GetHttpReq(url) {
-        request := WinHttpReq.new(url)
-        request.requestHeaders["Authorization"] := "Basic " . this.Base64Encode(this.app.Config.GitHubUsername . ":" . this.app.Config.GitHubToken)
+        request := WinHttpReq(url)
+        var := this.app.Config.GitHubUsername . ":" . this.app.Config.GitHubToken
+        request.requestHeaders["Authorization"] := "Basic " . this.Base64Encode(&var)
     }
 
     UploadInstaller(deployInfo, uploadUrl) {
@@ -56,7 +57,7 @@ class GitHubBuildDeployer extends BuildDeployerBase {
         return postData
     }
 
-    Base64Encode(ByRef data, len := -1, ByRef out := "") {
+    Base64Encode(&data, len := -1, &out := "") {
         bytesPerChar := 2
 
         if (Round(len) <= 0) {

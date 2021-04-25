@@ -99,7 +99,7 @@ class EntityBase {
         this.configObj := configObj
         this.parentEntity := parentEntity
 
-        this.entityData := LayeredEntityData.new(configObj.Clone(), this.InitializeDefaults())
+        this.entityData := LayeredEntityData(configObj.Clone(), this.InitializeDefaults())
         this.entityData.SetDataSourceDefaults(this.AggregateDataSourceDefaults())
         this.entityData.SetAutoDetectedDefaults(this.AutoDetectValues())
         this.entityData.StoreOriginal()
@@ -373,7 +373,7 @@ class EntityBase {
             }
         }
 
-        return DiffResult.new(added, modified, deleted)
+        return DiffResult(added, modified, deleted)
     }
 
     /*
@@ -400,7 +400,7 @@ class EntityBase {
         }
 
         if (fullDiff == "") {
-            fullDiff := DiffResult.new(Map(), Map(), Map())
+            fullDiff := DiffResult(Map(), Map(), Map())
         }
 
         return fullDiff

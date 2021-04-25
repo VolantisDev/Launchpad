@@ -42,7 +42,7 @@ class StateBase {
     */
 
     SaveState(newState := "") {
-        throw(MethodNotImplementedException.new("StateBase", "SaveState"))
+        throw(MethodNotImplementedException("StateBase", "SaveState"))
     }
 
     LoadState() {

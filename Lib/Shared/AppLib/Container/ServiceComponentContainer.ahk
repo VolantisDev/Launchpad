@@ -3,7 +3,7 @@ class ServiceComponentContainer extends ContainerBase {
         serviceObj := super.Get(key)
 
         if (!serviceObj) {
-            throw ServiceNotFoundException.new("Service component '" . key . "' does not exist")
+            throw ServiceNotFoundException("Service component '" . key . "' does not exist")
         }
 
         return serviceObj

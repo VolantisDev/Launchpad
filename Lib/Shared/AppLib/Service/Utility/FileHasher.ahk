@@ -42,7 +42,7 @@ class FileHasher extends ServiceBase {
         f := FileOpen(filePath, "r", "CP0")
 
         if (!IsObject(f)) {
-            throw AppException.new("Could not load file " . filePath . ".")
+            throw AppException("Could not load file " . filePath . ".")
         }
 
         hHash := BufferAlloc(A_PtrSize)
@@ -61,9 +61,9 @@ class FileHasher extends ServiceBase {
 
         hashLenSize := 4
         hashLen := 0
-        DllCall("Advapi32\CryptGetHashParam", "Ptr", hHash, "UInt", FileHasher.HP_HASHSIZE, "UInt*", hashLen, "UInt*", hashLenSize, "UInt", 0)
+        DllCall("Advapi32\CryptGetHashParam", "Ptr", hHash, "UInt", FileHasher.HP_HASHSIZE, "UInt*", &hashLen, "UInt*", &hashLenSize, "UInt", 0)
         pbHash := BufferAlloc(hashLen, 0)
-        DllCall("Advapi32\CryptGetHashParam", "Ptr", hHash, "UInt", FileHasher.HP_HASHVAL, "Ptr", pbHash, "UInt*", hashLen, "UInt", 0)
+        DllCall("Advapi32\CryptGetHashParam", "Ptr", hHash, "UInt", FileHasher.HP_HASHVAL, "Ptr", pbHash, "UInt*", &hashLen, "UInt", 0)
         hashVal := ""
 
         Loop hashLen {

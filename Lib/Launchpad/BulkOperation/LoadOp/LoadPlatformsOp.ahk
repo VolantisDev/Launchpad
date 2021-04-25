@@ -26,7 +26,7 @@ class LoadPlatformsOp extends BulkOperationBase {
         platforms["Riot"] := "RiotPlatform"
         platforms["Steam"] := "SteamPlatform"
 
-        event := DefineComponentsEvent.new(Events.PLATFORMS_DEFINE, platforms)
+        event := DefineComponentsEvent(Events.PLATFORMS_DEFINE, platforms)
         this.app.Service("EventManager").DispatchEvent(Events.PLATFORMS_DEFINE, event)
         platforms := event.components
 
@@ -44,7 +44,7 @@ class LoadPlatformsOp extends BulkOperationBase {
             platformConfig := this.platformsConfigObj.Platforms[key]
             platformConfig["PlatformClass"] := platformClass
             requiredKeys := ""
-            this.results[key] := PlatformEntity.new(this.app, key, platformConfig, requiredKeys)
+            this.results[key] := PlatformEntity(this.app, key, platformConfig, requiredKeys)
             this.FinishItem(key, true, key . ": Loaded successfully.")
         }
     }

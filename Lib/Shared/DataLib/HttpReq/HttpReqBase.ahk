@@ -24,7 +24,7 @@ class HttpReqBase {
     */
 
     Send(method := "GET", data := "") {
-        throw MethodNotImplementedException.new("HttpReqBase", "Send")
+        throw MethodNotImplementedException("HttpReqBase", "Send")
     }
 
     /**

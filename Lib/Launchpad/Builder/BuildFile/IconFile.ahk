@@ -22,7 +22,7 @@ class IconFile extends CopyableBuildFile {
         path := super.Locate()
 
         if (path != "") {
-            SplitPath(path,,, fileExt)
+            SplitPath(path,,, &fileExt)
 
             if (fileExt != "ico") {
                 path := this.ExtractIcon(path)

@@ -22,7 +22,7 @@ class GitHubReleaseInstallerComponent extends DownloadableInstallerComponent {
             cacheKey := "GitHubInstallerComponents/" . this.stateKey . ".json"
 
             if (this.cache.ItemNeedsUpdate(cacheKey)) {
-                req := WinHttpReq.new(this.repositoryUrl)
+                req := WinHttpReq(this.repositoryUrl)
                 returnCode := req.Send()
                 
                 if (returnCode != -1) {
@@ -37,8 +37,9 @@ class GitHubReleaseInstallerComponent extends DownloadableInstallerComponent {
 
                 this.cache.WriteItem(cacheKey, responseBody)
             }
-            data := JsonData.new()
-            this.response := data.FromString(this.cache.ReadItem(cacheKey))
+            data := JsonData()
+            str := this.cache.ReadItem(cacheKey)
+            this.response := data.FromString(&str)
         }
 
         if (this.version == "latest") {

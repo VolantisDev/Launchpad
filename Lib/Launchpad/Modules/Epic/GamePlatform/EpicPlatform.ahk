@@ -27,7 +27,7 @@ class EpicPlatform extends RegistryLookupGamePlatformBase {
 
         if (DirExist(manifestsDir)) {
             Loop Files manifestsDir . "\*.item" {
-                data := JsonData.new()
+                data := JsonData()
                 obj := data.FromFile(A_LoopFileFullPath)
                 isGame := false
 
@@ -46,10 +46,10 @@ class EpicPlatform extends RegistryLookupGamePlatformBase {
                     launcherSpecificId := obj["AppName"]
                     ;exeName := obj["LaunchExecutable"]
                     ;possibleExes := [obj["LaunchExecutable"]]
-                    locator := GameExeLocator.new(installDir)
+                    locator := GameExeLocator(installDir)
                     possibleExes := locator.Locate("")
                     mainExe := this.DetermineMainExe(key, possibleExes)
-                    games.Push(DetectedGame.new(key, this, this.launcherType, this.gameType, installDir, mainExe, launcherSpecificId, possibleExes))
+                    games.Push(DetectedGame(key, this, this.launcherType, this.gameType, installDir, mainExe, launcherSpecificId, possibleExes))
                 }
             }
         }

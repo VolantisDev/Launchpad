@@ -12,7 +12,7 @@ class AuthService extends AppServiceBase {
         authState := this.stateObj.Authentication
 
         if (authState && authState.Count > 0) {
-            authInfoObj := AuthInfo.new()
+            authInfoObj := AuthInfo()
             authInfoObj.Authenticated := true
             
             for key, value in authState {

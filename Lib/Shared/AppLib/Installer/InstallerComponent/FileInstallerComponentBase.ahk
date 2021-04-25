@@ -19,7 +19,7 @@ class FileInstallerComponentBase extends InstallerComponentBase {
     */
 
     InstallFilesAction() {
-        throw MethodNotImplementedException.new("FileInstallerComponentBase", "InstallFilesAction")
+        throw MethodNotImplementedException("FileInstallerComponentBase", "InstallFilesAction")
     }
 
     /**
@@ -43,7 +43,7 @@ class FileInstallerComponentBase extends InstallerComponentBase {
     }
 
     CreateParentDir() {
-        SplitPath(this.destPath,,destDir,,,destDrive)
+        SplitPath(this.destPath,, &destDir,,, &destDrive)
 
         if (destDrive != "" && destDir != "" && !DirExist(destDir)) {
             DirCreate(destDir)
@@ -72,7 +72,7 @@ class FileInstallerComponentBase extends InstallerComponentBase {
         zipFile := this.zipFile
 
         if (FileExist(zipFile)) {
-            archive := ZipArchive7z.new(zipFile)
+            archive := ZipArchive7z(zipFile)
             archive.Extract(destinationPath)
 
             if (deleteZip) {
@@ -88,7 +88,7 @@ class FileInstallerComponentBase extends InstallerComponentBase {
     }
 
     GetAbsolutePath(path) {
-        SplitPath(path,,,,, driveLetter)
+        SplitPath(path,,,,, &driveLetter)
 
         if (driveLetter == "") {
             path := this.scriptDir . "\" . path

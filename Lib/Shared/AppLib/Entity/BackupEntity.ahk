@@ -89,7 +89,7 @@ class BackupEntity extends EntityBase {
             backupClass := this.BackupClass
         }
 
-        this.backup := %backupClass%.new(this.Key, this.Source, this.Config)
+        this.backup := %backupClass%(this.Key, this.Source, this.Config)
     }
 
     SetConfigValue(key, value) {

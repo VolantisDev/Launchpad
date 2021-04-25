@@ -13,7 +13,7 @@ class GuiManager extends ContainerServiceBase {
 
     Dialog(className, params*) {
         dialogId := this.app.Service("IdGenerator").Generate()
-        window := %className%.new(this.app, this.GetTheme(), dialogId, params*)
+        window := %className%(this.app, this.GetTheme(), dialogId, params*)
         this.container.Set(dialogId, window)
         ownerKey := ""
 
@@ -41,7 +41,7 @@ class GuiManager extends ContainerServiceBase {
 
     Menu(className, params*) {
         key := this.app.Service("IdGenerator").Generate()
-        window := %className%.new(this.app, this.GetTheme(), key, params*)
+        window := %className%(this.app, this.GetTheme(), key, params*)
         this.menus[key] := window
         result := window.Show()
 
@@ -68,7 +68,7 @@ class GuiManager extends ContainerServiceBase {
         newMenus := Map()
 
         if (keepMenu) {
-            newMenus.Push(menuToKeep, keepMenu)
+            newMenus.Push(keepMenu)
         }
 
         this.menus := newMenus
@@ -80,7 +80,7 @@ class GuiManager extends ContainerServiceBase {
         }
 
         if (!this.container.Exists(key)) {
-            guiObj := %className%.new(this.app, this.GetTheme(), key, params*)
+            guiObj := %className%(this.app, this.GetTheme(), key, params*)
             guiObj.Show(this.GetWindowState(key))
             this.container.Set(key, guiObj)
         }
@@ -178,7 +178,7 @@ class GuiManager extends ContainerServiceBase {
 
         try {
             window := this.container.Get(key)
-        } catch e {
+        } catch Error as ex {
 
         }
 
@@ -248,7 +248,7 @@ class GuiManager extends ContainerServiceBase {
     }
 
     StoreWindowState(guiObj) {
-        guiObj.guiObj.GetPos(x, y, w, h)
+        guiObj.guiObj.GetPos(&x, &y, &w, &h)
         windowState := Map("x", x, "y", y, "w", w, "h", h)
         this.app.State.StoreWindowState(guiObj.windowKey, windowState)
     }

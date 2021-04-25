@@ -7,7 +7,7 @@ class ThemeInstaller extends InstallerBase {
         if (downloadThemes != "") {
             for key, url in downloadThemes {
                 path := "Resources\Themes\" . key . ".json"
-                components.Push(DownloadableInstallerComponent.new(this.version, url, false, path, appState, cache, key . "Theme", "Themes", false, tmpDir, false))
+                components.Push(DownloadableInstallerComponent(this.version, url, false, path, appState, cache, key . "Theme", "Themes", false, tmpDir, false))
             }
         }
 

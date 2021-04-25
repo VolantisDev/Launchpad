@@ -72,7 +72,7 @@ class ButtonShape extends GuiShapeBase {
     }
 
     DrawOver(guiControl, guiObj) {
-        guiControl.GetPos(x, y, w, h)
+        guiControl.GetPos(&x, &y, &w, &h)
 
         guiControl.Opt("Hidden")
         position := "x" . x . " y" . y . " w" . w . " h" . h
@@ -86,7 +86,7 @@ class ButtonShape extends GuiShapeBase {
     }
 
     DrawOn(guiControl) {
-        guiControl.GetPos(,, w, h)
+        guiControl.GetPos(,, &w, &h)
         SetImage(guiControl.Hwnd, this.Draw(w, h))
         return guiControl
     }

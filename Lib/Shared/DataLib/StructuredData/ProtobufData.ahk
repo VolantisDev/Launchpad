@@ -2,7 +2,7 @@ class ProtobufData extends StructuredDataBase {
 	; TODO: Remove dependency on A_ScriptDir
 	static protoc := A_ScriptDir . "\Vendor\Protoc\bin\protoc.exe"
 
-    FromString(ByRef src, args*) {
+    FromString(&src, args*) {
 		static q := Chr(34)
 		static letters := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 		static numbers := "1234567890"
@@ -24,7 +24,7 @@ class ProtobufData extends StructuredDataBase {
 				
 			if !InStr(next, ch, true) {
 				testArr := StrSplit(SubStr(src, 1, pos), "`n")				
-				ln := testArr.Length
+				line := testArr.Length
 				col := pos - InStr(src, "`n",, -(StrLen(src)-pos+1))
 
 				msg := Format("{}: line {} col {} (char {})"
@@ -37,9 +37,9 @@ class ProtobufData extends StructuredDataBase {
 				: (next == ",]")    ? "Expecting ',' delimiter or array closing ']'"
 				: [ "Expecting value (string, number, true, false, null, map, or array)"
 					, ch := SubStr(src, pos, (SubStr(src, pos)~="[\]\},\s]|$")-1) ][1]
-				, ln, col, pos)
+				, line, col, pos)
 
-				throw Exception(msg, -1, ch)
+				throw Error(msg, -1, ch)
 			}
 			
 			obj := stack[1]
@@ -143,7 +143,7 @@ class ProtobufData extends StructuredDataBase {
 
 	FromFile(filePath, messageType, protoFile, protoPath := "", protoc := "") {
 		if (protoPath == "") {
-			SplitPath(protoFile, protoFile, protoPath)
+			SplitPath(protoFile, &protoFile, &protoPath)
 		}
 
 		if (protoc == "") {
@@ -151,13 +151,13 @@ class ProtobufData extends StructuredDataBase {
 		}
 
 		command := protoc . " --proto_path=`"" . protoPath . "`" --decode=" . messageType . " `"" . protoFile . "`" < `"" . filePath . "`""
-		shell := ComObjCreate("WScript.Shell")
+		shell := ComObject("WScript.Shell")
         exec := Shell.Exec(A_ComSpec . " /C " . command)
 		output := exec.StdOut.ReadAll()
-		return this.FromString(output)
+		return this.FromString(&output)
 	}
 
 	ToString(obj := "", args*) {
-        throw MethodNotImplementedException.new("StructuredDataBase", "ToString")
+        throw MethodNotImplementedException("StructuredDataBase", "ToString")
     }
 }

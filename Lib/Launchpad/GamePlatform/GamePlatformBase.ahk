@@ -154,11 +154,11 @@ class GamePlatformBase {
 
                 key := this.GetLauncherKey(A_LoopFileName)
                 installDir := A_LoopFileFullPath
-                locator := GameExeLocator.new(installDir)
+                locator := GameExeLocator(installDir)
                 possibleExes := locator.Locate("")
                 exeName := this.DetermineMainExe(key, possibleExes)
                 launcherSpecificId := this.GetLauncherSpecificId(key)
-                detectedGameObj := DetectedGame.new(key, this, this.launcherType, this.gameType, installDir, exeName, launcherSpecificId, possibleExes)
+                detectedGameObj := DetectedGame(key, this, this.launcherType, this.gameType, installDir, exeName, launcherSpecificId, possibleExes)
                 
                 if (this.installDir) {
                     detectedGameObj.launcherInstallDir := this.InstallDir
@@ -181,7 +181,7 @@ class GamePlatformBase {
             mainExe := possibleExes[1]
         } else if (possibleExes.Length > 1 && dsData.Has("GameExe")) {
             for index, possibleExe in possibleExes {
-                SplitPath(possibleExe, fileName)
+                SplitPath(possibleExe, &fileName)
 
                 if (dsData["GameExe"] == fileName) {
                     mainExe := possibleExe

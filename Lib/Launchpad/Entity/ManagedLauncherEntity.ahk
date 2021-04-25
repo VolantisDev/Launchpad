@@ -75,7 +75,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
 
     __New(app, key, config, requiredConfigKeys := "", parentEntity := "") {
         super.__New(app, key, config, requiredConfigKeys, parentEntity)
-        this.children["ManagedGame"] := ManagedGameEntity.new(app, key, config, "", this)
+        this.children["ManagedGame"] := ManagedGameEntity(app, key, config, "", this)
     }
 
     InitializeDefaults() {

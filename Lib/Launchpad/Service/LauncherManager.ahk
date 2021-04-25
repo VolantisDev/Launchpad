@@ -3,11 +3,11 @@ class LauncherManager extends EntityManagerBase {
     _alterEvent := "" ;LaunchpadEvents.LAUNCHERS_ALTER
 
     GetLoadOperation() {
-        return LoadLaunchersOp.new(this.app, this.configObj)
+        return LoadLaunchersOp(this.app, this.configObj)
     }
 
     CreateConfigObj(app, configFile) {
-        return LauncherConfig.new(app, configFile, false)
+        return LauncherConfig(app, configFile, false)
     }
 
     GetDefaultConfigPath() {

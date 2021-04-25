@@ -79,7 +79,7 @@ class ExeProcess {
         Loop {
             for result in this.SearchForProcesses("SELECT CommandLine, ExecutablePath FROM Win32_Process WHERE ProcessId = " . pid) {
                 startInfo.FileName := result.ExecutablePath
-                SplitPath(result.ExecutablePath,,workingDir)
+                SplitPath(result.ExecutablePath,, &workingDir)
                 startInfo.WorkingDirectory := workingDir
                 removeChars := StrLen(startInfo.FileName)
                 startInfo.CommandLine := result.CommandLine
@@ -101,7 +101,7 @@ class ExeProcess {
         }
 
         if (!done) {
-            throw OperationFailedException.new("Could not get process start info.")
+            throw OperationFailedException("Could not get process start info.")
         }
 
         return startInfo
@@ -124,7 +124,7 @@ class ExeProcess {
     }
 
     Start(startInfo) {
-        Run(startInfo.CommandLine, startInfo.WorkingDirectory,, pid)
+        Run(startInfo.CommandLine, startInfo.WorkingDirectory,, &pid)
         return this.pid
     }
 

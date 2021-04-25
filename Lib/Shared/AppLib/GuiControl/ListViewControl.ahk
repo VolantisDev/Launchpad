@@ -11,6 +11,7 @@ class ListViewControl extends GuiControlBase {
     imgListL := ""
 
     CreateControl(columns, dataCallback, imgListCallback := "", initCallback := "", highlightRowCallback := "") {
+        global LVM_GETHEADER
         super.CreateControl(false)
         columns.InsertAt(this.keyCol, "")
 
@@ -38,7 +39,6 @@ class ListViewControl extends GuiControlBase {
 
         opts := this.SetDefaultOptions(this.options, defaults)
         this.ctl := this.guiObj.guiObj.AddListView(this.GetOptionsString(opts), this.columns)
-        LVM_GETHEADER := 0x101F
         this.headerHwnd := SendMessage(LVM_GETHEADER, 0, 0,, "ahk_id " . this.ctl.Hwnd) + 0
         this.SubclassControl(this.ctl.Hwnd, ObjBindMethod(this, "OnListViewDraw"))
         this.ctl.ModifyCol(2, 0)
@@ -89,15 +89,15 @@ class ListViewControl extends GuiControlBase {
         this.imgListL := ""
 
         if (this.imgListCallback) {
-            func := this.imgListCallback
-            this.imgListS := this.guiObj.%func%(this, false)
-            this.imgListL := this.guiObj.%func%(this, true)
+            callback := this.imgListCallback
+            this.imgListS := this.guiObj.%callback%(this, false)
+            this.imgListL := this.guiObj.%callback%(this, true)
             this.ctl.SetImageList(this.imgListS, 1)
             this.ctl.SetImageList(this.imgListL, 0)
         }
 
-        func := this.dataCallback
-        this.rowData := this.guiObj.%func%(this)
+        callback := this.dataCallback
+        this.rowData := this.guiObj.%callback%(this)
 
         this.ctl.Delete()
 
@@ -109,8 +109,8 @@ class ListViewControl extends GuiControlBase {
             highlight := false
 
             if (this.highlightRowCallback) {
-                func := this.highlightRowCallback
-                highlight := this.guiObj.%func%(key, data)
+                callback := this.highlightRowCallback
+                highlight := this.guiObj.%callback%(key, data)
             }
 
             if (highlight) {
@@ -160,7 +160,7 @@ class ListViewControl extends GuiControlBase {
 
     ResizeColumns() {
         if (this.columns.Length <= 2) {
-            this.ctl.GetPos(,, ctlW)
+            this.ctl.GetPos(,, &ctlW)
             this.ctl.ModifyCol(1, ctlW)
             this.ctl.ModifyCol(2, 0)
         } else {

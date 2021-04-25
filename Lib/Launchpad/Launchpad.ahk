@@ -4,18 +4,18 @@
 
     LoadServices(config) {
         super.LoadServices(config)
-        this.Services.Set("BackupManager", BackupManager.new(this, this.Config.BackupsFile))
-        this.Services.Set("DataSourceManager", DataSourceManager.new(this.Service("EventManager")))
-        this.Service("DataSourceManager").SetItem("api", ApiDataSource.new(this, this.Service("CacheManager").GetItem("api"), this.Config.ApiEndpoint), true)
-        this.Services.Set("BuilderManager", BuilderManager.new(this))
-        this.Services.Set("LauncherManager", LauncherManager.new(this))
-        this.Services.Set("PlatformManager", PlatformManager.new(this))
+        this.Services.Set("BackupManager", BackupManager(this, this.Config.BackupsFile))
+        this.Services.Set("DataSourceManager", DataSourceManager(this.Service("EventManager")))
+        this.Service("DataSourceManager").SetItem("api", ApiDataSource(this, this.Service("CacheManager").GetItem("api"), this.Config.ApiEndpoint), true)
+        this.Services.Set("BuilderManager", BuilderManager(this))
+        this.Services.Set("LauncherManager", LauncherManager(this))
+        this.Services.Set("PlatformManager", PlatformManager(this))
     }
 
     GetCaches() {
         caches := super.GetCaches()
-        caches["file"] := FileCache.new(this, CacheState.new(this, this.Config.CacheDir . "\File.json"), this.Config.CacheDir . "\File")
-        caches["api"] := FileCache.new(this, CacheState.new(this, this.Config.CacheDir . "\API.json"), this.Config.CacheDir . "\API")
+        caches["file"] := FileCache(this, CacheState(this, this.Config.CacheDir . "\File.json"), this.Config.CacheDir . "\File")
+        caches["api"] := FileCache(this, CacheState(this, this.Config.CacheDir . "\API.json"), this.Config.CacheDir . "\API")
         return caches
     }
 
@@ -38,8 +38,8 @@
             releaseInfoStr := dataSource.ReadItem("release-info")
 
             if (releaseInfoStr) {
-                data := JsonData.new()
-                releaseInfo := data.FromString(releaseInfoStr)
+                data := JsonData()
+                releaseInfo := data.FromString(&releaseInfoStr)
 
                 if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this.Service("VersionChecker").VersionIsOutdated(releaseInfo["data"]["version"], this.Version)) {
                     updateAvailable := true
@@ -88,15 +88,15 @@
 
     InitializeApp(config) {
         super.InitializeApp(config)
-        this.Service("BuilderManager").SetItem("ahk", AhkLauncherBuilder.new(this), true)
-        this.Service("InstallerManager").SetItem("LaunchpadUpdate", LaunchpadUpdate.new(this.Version, this.State, this.Service("CacheManager").GetItem("file"), this.tmpDir))
-        this.Service("InstallerManager").SetItem("Dependencies", DependencyInstaller.new(this.Version, this.State, this.Service("CacheManager").GetItem("file"), [], this.tmpDir))
+        this.Service("BuilderManager").SetItem("ahk", AhkLauncherBuilder(this), true)
+        this.Service("InstallerManager").SetItem("LaunchpadUpdate", LaunchpadUpdate(this.Version, this.State, this.Service("CacheManager").GetItem("file"), this.tmpDir))
+        this.Service("InstallerManager").SetItem("Dependencies", DependencyInstaller(this.Version, this.State, this.Service("CacheManager").GetItem("file"), [], this.tmpDir))
         this.Service("InstallerManager").SetupInstallers()
         this.Service("InstallerManager").InstallRequirements()
     }
 
     RunApp(config) {
-        this.Service("AuthService").SetAuthProvider(LaunchpadApiAuthProvider.new(this, this.State))
+        this.Service("AuthService").SetAuthProvider(LaunchpadApiAuthProvider(this, this.State))
 
         if (this.Config.ApiAutoLogin) {
             this.Service("AuthService").Login()

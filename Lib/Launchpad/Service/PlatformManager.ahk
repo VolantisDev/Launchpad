@@ -3,11 +3,11 @@ class PlatformManager extends EntityManagerBase {
     _alterEvent := LaunchpadEvents.PLATFORMS_ALTER
 
     GetLoadOperation() {
-        return LoadPlatformsOp.new(this.app, this.configObj)
+        return LoadPlatformsOp(this.app, this.configObj)
     }
 
     CreateConfigObj(app, configFile) {
-        return PlatformsConfig.new(app, configFile, false)
+        return PlatformsConfig(app, configFile, false)
     }
 
     GetDefaultConfigPath() {
@@ -56,7 +56,7 @@ class PlatformManager extends EntityManagerBase {
     
     DetectGames() {
         platforms := this.GetGameDetectionPlatforms()
-        op := DetectGamesOp.new(this.app, platforms)
+        op := DetectGamesOp(this.app, platforms)
         op.Run()
 
         allDetectedGames := Map()

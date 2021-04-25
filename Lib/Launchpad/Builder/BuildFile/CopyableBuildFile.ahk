@@ -3,17 +3,17 @@ class CopyableBuildFile extends BuildFileBase {
     requestMessageValue := "Select the file"
     selectFilterValue := "All Files (*.*)"
 
-    SourcePath[] {
+    SourcePath {
         get => this.sourcePathValue
         set => this.sourcePathValue := value
     }
 
-    RequestMessage[] {
+    RequestMessage {
         get => this.requestMessageValue
         set => this.requestMessageValue := value
     }
 
-    SelectFilter[] {
+    SelectFilter {
         get => this.selectFilterValue
         set => this.selectFilterValue := value
     }
@@ -53,13 +53,13 @@ class CopyableBuildFile extends BuildFileBase {
     }
 
     AskForPath() {
-        file := FileSelect(1,, this.launcherEntityObj.Key . ": " . this.RequestMessage, this.SelectFilter)
+        filePath := FileSelect(1,, this.launcherEntityObj.Key . ": " . this.RequestMessage, this.SelectFilter)
         
-        if (file == "") {
+        if (filePath == "") {
             this.app.Service("NotificationService").Warning("No file selected. Skipping build file.")
         }
 
-        return file
+        return filePath
     }
 
     Copy() {

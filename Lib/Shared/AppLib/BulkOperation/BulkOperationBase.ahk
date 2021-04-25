@@ -16,7 +16,7 @@ class BulkOperationBase {
     progressInitialDetailText := "Initializing..."
     progressRangeEnd := 100
     progressInitialValue := 0
-    notify := false
+    shouldNotify := false
     successMessage := "Processed {n} item(s) successfully."
     failedMessage := "There were {n} item(s) that failed."
 
@@ -74,7 +74,7 @@ class BulkOperationBase {
         }
 
         if (!this.status.Has(key)) {
-            this.status[key] := BasicOpStatus.new()
+            this.status[key] := BasicOpStatus()
         }
 
         return this.status[key]
@@ -97,7 +97,7 @@ class BulkOperationBase {
     }
 
     Notify() {
-        if (this.notify && this.app.Services.Exists("NotificationService")) {
+        if (this.shouldNotify && this.app.Services.Exists("NotificationService")) {
             this.app.Service("NotificationService").Info(this.GetResultMessage())
         }
     }
@@ -113,7 +113,7 @@ class BulkOperationBase {
     }
 
     RunAction() {
-        throw MethodNotImplementedException.new("BulkOperationBase", "RunAction")
+        throw MethodNotImplementedException("BulkOperationBase", "RunAction")
     }
 
     StartItem(key, statusText := "") {

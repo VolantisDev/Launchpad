@@ -37,7 +37,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
         prefix := this.entityObj.configPrefix
 
         if (this.entityObj.Config[prefix . "InstallDir"]) {
-            locator := GameExeLocator.new(this.entityObj.Config[prefix . "InstallDir"])
+            locator := GameExeLocator(this.entityObj.Config[prefix . "InstallDir"])
             possibleExes := locator.Locate("")
         }
         
@@ -147,11 +147,11 @@ class ManagedEntityEditorBase extends EntityEditorBase {
                 existingVal := this.entityObj.GetConfigValue(field)
             }
 
-            file := FileSelect(1, existingVal, text, selector)
+            filePath := FileSelect(1, existingVal, text, selector)
 
-            if (file) {
-                this.entityObj.SetConfigValue(field, file)
-                this.guiObj[field].Text := file
+            if (filePath) {
+                this.entityObj.SetConfigValue(field, filePath)
+                this.guiObj[field].Text := filePath
             }
         } else if (btn == "Open" . field) {
             val := this.entityObj.GetConfigValue(field)

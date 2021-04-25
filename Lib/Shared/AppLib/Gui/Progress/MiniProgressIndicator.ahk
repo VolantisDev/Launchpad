@@ -37,7 +37,7 @@ class MiniProgressIndicator extends ProgressIndicatorBase {
         
         ;this.guiObj.AddActiveX("x" . this.margin . " w40 h40", "mshtml:<img src='" . spinner . "' />")
         ;dllPath := this.themeObj.resourcesDir . "\Dependencies\AniGIF.dll"
-        ;this.gif := AnimatedGif.new(this.guiObj, dllPath, "x" . this.margin . " w40 h40", spinner)
+        ;this.gif := AnimatedGif(this.guiObj, dllPath, "x" . this.margin . " w40 h40", spinner)
         ;this.gif.SetBkColor("White")
     }
 

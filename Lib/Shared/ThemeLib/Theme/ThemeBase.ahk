@@ -98,7 +98,7 @@ class ThemeBase {
         symbol := ""
 
         if (symbolClass) {
-            symbol := %symbolClass%.new(config)
+            symbol := %symbolClass%(config)
         }
 
         return symbol
@@ -246,7 +246,7 @@ class ThemeBase {
 
     ExpandPath(value, themeName := "", parentTheme := "") {
         if (value != "") {
-            SplitPath(value,,,,, driveLetter)
+            SplitPath(value,,,,, &driveLetter)
 
             if (driveLetter == "") {
                 themePath := this.themesDir . "\" . this.name . "\" . value
@@ -344,7 +344,7 @@ class ThemeBase {
         themeMap := this.GetThemeMap(themeName)
 
         if (Type(themeMap) != "Map") {
-            InvalidParameterException.new("The provided theme name cannot be resolved to a valid theme.")
+            InvalidParameterException("The provided theme name cannot be resolved to a valid theme.")
         }
 
         this.name := themeMap.Has("name") ? themeMap["name"] : themeName
@@ -357,7 +357,7 @@ class ThemeBase {
     }
 
     GetThemeMap(themeName) {
-        throw MethodNotImplementedException.new("ThemeBase", "GetThemeMap")
+        throw MethodNotImplementedException("ThemeBase", "GetThemeMap")
     }
 
     DrawButton(picObj, content, style := "normal", drawConfig := "") {
@@ -372,20 +372,21 @@ class ThemeBase {
             hoveredStyle := buttonStyle.Has("hovered") ? buttonStyle["hovered"] : buttonStyle["enabled"]
 
             enabledShape := enabledStyle.Has("shape") ? enabledStyle["shape"] : "ButtonShape"
-            states["enabled"] := %enabledShape%.new(this, content, enabledStyle, drawConfig)
+            states["enabled"] := %enabledShape%(this, content, enabledStyle, drawConfig)
             
             disabledShape := disabledStyle.Has("shape") ? disabledStyle["shape"] : "ButtonShape"
-            states["disabled"] := %disabledShape%.new(this, content, disabledStyle, drawConfig)
+            states["disabled"] := %disabledShape%(this, content, disabledStyle, drawConfig)
             
             hoveredShape := hoveredStyle.Has("shape") ? hoveredStyle["shape"] : "ButtonShape"
-            states["hovered"] := %hoveredShape%.new(this, content, hoveredStyle, drawConfig)
+            states["hovered"] := %hoveredShape%(this, content, hoveredStyle, drawConfig)
 
             states["enabled"].DrawOn(picObj)
 
             
 
             this.themedButtons[picObj.Hwnd] := Map("picture", picObj, "content", content, "states", states)
-        } catch ex {
+        } catch Error as ex {
+            MsgBox(ex.Message)
             throw ex
         }
 
@@ -425,7 +426,7 @@ class ThemeBase {
     SetNormalButtonState(btn, ignoreErrors := false) {
         try {
             btn := this.themedButtons[this.hoveredButton]["states"]["enabled"].DrawOn(btn)
-        } catch ex {
+        } catch Error as ex {
             if (!ignoreErrors) {
                 if (this.services.Exists("LoggerService")) {
                     this.services.Get("LoggerService").Error("Failed to change button hover state: " . ex.Message)
@@ -448,7 +449,7 @@ class ThemeBase {
 
         try {
             btn := this.themedButtons[btn.Hwnd]["states"]["hovered"].DrawOn(btn)
-        } catch ex {
+        } catch Error as ex {
             if (!ignoreErrors) {
                 if (this.services.Exists("LoggerService")) {
                     this.services.Get("LoggerService").Error("Failed to change button hover state: " . ex.Message)
@@ -470,7 +471,8 @@ class ThemeBase {
             NumPut("UInt", 1, margins, 4)
             NumPut("UInt", 1, margins, 8)
             NumPut("UInt", 1, margins, 12)
-            DllCall("dwmapi\DwmSetWindowAttribute", "Ptr", hwnd, "UInt", 2, "Int*", 2, "UInt", 4)
+            val := 2
+            DllCall("dwmapi\DwmSetWindowAttribute", "Ptr", hwnd, "UInt", 2, "Int*", &val, "UInt", 4)
             DllCall("dwmapi\DwmExtendFrameIntoClientArea", "Ptr", hwnd, "Ptr", margins)
         }
     }
@@ -496,8 +498,8 @@ class ThemeBase {
         hFamily := Gdip_FontFamilyCreate(font)
         hFont := Gdip_FontCreate(hFamily, size, style)
         hFormat := Gdip_StringFormatCreate(formatStyle)
-        CreateRectF(RC, 0, 0, 0, 0)
-        returnRc := Gdip_MeasureString(graphics, text, hFont, hFormat, RC)
+        CreateRectF(&RC, 0, 0, 0, 0)
+        returnRc := Gdip_MeasureString(graphics, text, hFont, hFormat, &RC)
         returnRc := StrSplit(returnRc, "|")
         return returnRc[3]
     }

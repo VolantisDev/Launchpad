@@ -19,4 +19,4 @@ appInfo["version"] := appVersion
 appInfo["configClass"] := "LaunchpadBuilderConfig"
 appInfo["configFile"] := appDir . "\" . appInfo["appName"] . "build.ini"
 appInfo["BuildClass"] := "Launchpad"
-LaunchpadBuilder.new(appInfo)
+LaunchpadBuilder(appInfo)

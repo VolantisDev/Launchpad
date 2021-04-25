@@ -43,7 +43,7 @@ class FeedbackWindow extends DialogBox {
             body["version"] := appVersion
             body["feedback"] := this.guiObj["Feedback"].Text
 
-            request := WinHttpReq.new(endpoint)
+            request := WinHttpReq(endpoint)
             response := request.Send("POST", body)
             success := !!(response == -1 && request.GetStatusCode() == 200)
 

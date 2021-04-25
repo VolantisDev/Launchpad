@@ -31,7 +31,7 @@ class JwtAuthProvider extends AuthProviderBase {
 
         if (refreshToken) {
             url := this.GetAuthUrl(this.refreshPath)
-            request := WinHttpReq.new(url)
+            request := WinHttpReq(url)
             payload := Map("grant_type", "refresh_token", "refresh_token", refreshToken)
             response := request.Send("POST", payload)
            
@@ -39,7 +39,7 @@ class JwtAuthProvider extends AuthProviderBase {
                 userInfo := this.ExtractAuthInfoFromResponse(request)
             } else {
                 this.refreshToken := ""
-                throw OperationFailedException.new("Login failed")
+                throw OperationFailedException("Login failed")
             }
         }
 
@@ -100,11 +100,11 @@ class JwtAuthProvider extends AuthProviderBase {
         userInfo := Map()
 
         if (responseData) {
-            data := JsonData.new()
-            userInfo := data.FromString(responseData)
+            data := JsonData()
+            userInfo := data.FromString(&responseData)
         }
 
-        return JwtAuthInfo.new(userInfo)
+        return JwtAuthInfo(userInfo)
     }
 
     IsAuthenticationExpired(authInfoObj) {

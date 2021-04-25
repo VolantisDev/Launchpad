@@ -159,7 +159,7 @@ class GuiBase {
     }
 
     Add(ctlClass, options := "", params*) {
-        return %ctlClass%.new(this, options, params*)
+        return %ctlClass%(this, options, params*)
     }
 
     OnCalcSize(wParam, lParam, msg, hwnd) {
@@ -186,7 +186,7 @@ class GuiBase {
         if hwnd != A_ScriptHwnd && hwnd != this.GetHwnd()
             return
         
-        WinGetPos(gX, gY, gW, gH, "ahk_id " . this.guiObj.Hwnd)
+        WinGetPos(&gX, &gY, &gW, &gH, "ahk_id " . this.guiObj.Hwnd)
 
         x := lParam<<48>>48
         y := lParam<<32>>48
@@ -222,7 +222,7 @@ class GuiBase {
         ctlHwnd := ""
         
         if (hwnd) {
-            MouseGetPos(,,,ctlHwnd, 2)
+            MouseGetPos(,,, &ctlHwnd, 2)
         }
 
         if (!hwnd or ctlHwnd == hwnd) {
@@ -369,7 +369,7 @@ class GuiBase {
     }
 
     Create() {      
-        this.guiObj := Gui.New(this.windowOptions, this.GetTitle(this.title), this)
+        this.guiObj := Gui(this.windowOptions, this.GetTitle(this.title), this)
         this.guiObj.BackColor := this.themeObj.GetColor("background")
         this.guiObj.MarginX := this.margin
         this.guiObj.MarginY := this.margin
@@ -416,22 +416,22 @@ class GuiBase {
         newW := width
         newH := height
 
-        MonitorGetWorkArea(, monitorL, monitorT, monitorR, monitorB)
+        MonitorGetWorkArea(, &monitorL, &monitorT, &monitorR, &monitorB)
 
         if (this.positionAtMouseCursor) {    
             CoordMode("Mouse", "Screen")
-            MouseGetPos(windowX, windowY)
+            MouseGetPos(&windowX, &windowY)
             CoordMode("Mouse")
             windowX -= width/2
             windowSize .= " x" . windowX . " y" . windowY
         } else if (this.showInNotificationArea) {
-            this.guiObj.GetPos(,,guiW, guiH)
+            this.guiObj.GetPos(,, &guiW, &guiH)
             windowX := monitorR - this.margin - width
             windowY := monitorB - this.margin - guiH
             windowSize .= " x" . windowX . " y" . windowY
         } else if (this.openAtCtl) {
-            this.openAtCtl.GetPos(ctlX, ctlY, ctlW, ctlH)
-            this.openAtCtl.Gui.GetClientPos(clientX, clientY)
+            this.openAtCtl.GetPos(&ctlX, &ctlY, &ctlW, &ctlH)
+            this.openAtCtl.Gui.GetClientPos(&clientX, &clientY)
             windowX := clientX
             windowY := clientY
 
@@ -474,7 +474,7 @@ class GuiBase {
         }
 
         if (!this.positionAtMouseCursor && this.showInNotificationArea) {
-            this.guiObj.GetPos(,,guiW, guiH)
+            this.guiObj.GetPos(,, &guiW, &guiH)
             windowX := monitorR - this.margin - guiW
             windowY := monitorB - this.margin - guiH
             this.guiObj.Move(windowX, windowY)
@@ -581,12 +581,12 @@ class GuiBase {
     */
 
     AdjustWindowPosition() {
-        this.guiObj.GetPos(guiX, guiY, guiW, guiH)
+        this.guiObj.GetPos(&guiX, &guiY, &guiW, &guiH)
 
         if (this.openWindowWithinScreenBounds) {
             ; Check which monitor the user completed the last action on and use that
             monitorId := MonitorGetPrimary()
-            MonitorGetWorkArea(monitorId, screenL, screenT, screenR, screenB)
+            MonitorGetWorkArea(monitorId, &screenL, &screenT, &screenR, &screenB)
 
             moveGui := false
 
@@ -639,7 +639,9 @@ class GuiBase {
         fx := fy := fw := fh := 0
 
         for (, dim in optionSplit) {
-            if (!RegExMatch(options, "i)" . dim . "\s*\K[\d.-]+", f%dim%)) {
+            if (RegExMatch(options, "i)" . dim . "\s*\K[\d.-]+", &f%dim%)) {
+                f%dim% := f%dim%[]
+            } else {
                 f%dim% := 1
             }
         }
@@ -653,7 +655,7 @@ class GuiBase {
     }
 
     GetControlDimensions(ctlObj) {
-        ctlObj.GetPos(ix, iy, iw, ih)
+        ctlObj.GetPos(&ix, &iy, &iw, &ih)
         return Map("x", ix, "y", iy, "w", iw, "h", ih)
     }
 
@@ -677,16 +679,16 @@ class GuiBase {
                 info["optionSplit"] := StrSplit(RegExReplace(options, "i)[^xywh]"))
                 info := this.ParseDimensions(options, info)
                 info := this.GetParentXY(ctl, options, info)
-                this.guiObj.GetPos(,,guiWidth, guiHeight)
+                this.guiObj.GetPos(,, &guiWidth, &guiHeight)
                 info["gw"] := guiWidth
                 info["gh"] := guiHeight
                 controlInfo[ctl.Hwnd] := info
             } else {
                 info := controlInfo[ctl.Hwnd]
-                this.guiObj.GetPos(,,guiWidth, guiHeight)
+                this.guiObj.GetPos(,, &guiWidth, &guiHeight)
                 dgx := dgw := guiWidth - info["gw"]
                 dgy := dgh := guiHeight - info["gh"]
-                ctl.GetPos(newX, newY, newW, newH)
+                ctl.GetPos(&newX, &newY, &newW, &newH)
 
                 for (i, dim in controlInfo[ctl.Hwnd]["optionSplit"]) {
                     new%dim% := dg%dim% * info["f" . dim] + info[dim]
@@ -705,7 +707,7 @@ class GuiBase {
         if (InStr(options, "t")) {
             hParentWnd := DllCall("GetParent", "Ptr", ctl.Hwnd, "Ptr")
 
-            VarSetStrCapacity(RECT, 16)
+            VarSetStrCapacity(&RECT, 16)
             DllCall("GetWindowRect", "Ptr", hParentWnd, "Ptr", StrPtr(RECT))
             DllCall("MapWindowPoints", "Ptr", 0, "Ptr", DllCall("GetParent", "Ptr", hParentWnd, "Ptr"), "Ptr", StrPtr(RECT), "UInt", 1)
 

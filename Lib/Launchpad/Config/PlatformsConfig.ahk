@@ -3,7 +3,7 @@
     gameDefaults := Map()
     configKey := "PlatformsConfig"
 
-    Platforms[] {
+    Platforms {
         get => this.config["Platforms"]
         set => this.config["Platforms"] := value
     }

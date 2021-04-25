@@ -17,12 +17,12 @@ class JsonConfig extends FileConfig {
     }
 
     LoadConfigFile(configPath) {
-        data := JsonData.new()
+        data := JsonData()
         this.config := data.FromFile(configPath)
     }
 
     SaveConfigFile(configPath) {
-        data := JsonData.new(this.config)
+        data := JsonData(this.config)
         data.ToFile(configPath, "", 4)
     }
 

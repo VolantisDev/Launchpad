@@ -2,7 +2,7 @@ class DetectGamesOp extends BulkOperationBase {
     platforms := ""
     progressTitle := "Detecting Games"
     progressText := "Please wait while your games are detected..."
-    notify := false
+    shouldNotify := false
     successMessage := "Found games from {n} platforms."
     failedMessage := "Failed to detect games from {n} platforms."
 

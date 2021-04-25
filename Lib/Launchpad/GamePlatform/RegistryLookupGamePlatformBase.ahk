@@ -38,7 +38,7 @@ class RegistryLookupGamePlatformBase extends GamePlatformBase {
 
         try {
             value := RegRead(regKey, regVal)
-        } catch ex {
+        } catch Error as ex {
             ; Do nothing
         }
         

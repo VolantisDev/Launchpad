@@ -79,7 +79,7 @@ class ThemeManager extends AppComponentServiceBase {
     }
 
     LoadTheme(key) {
-        this._components[key] := JsonTheme.new(key, this.resourcesDir, this.app.Services, true)
+        this._components[key] := JsonTheme(key, this.resourcesDir, this.app.Services, true)
         return this._components[key]
     }
 

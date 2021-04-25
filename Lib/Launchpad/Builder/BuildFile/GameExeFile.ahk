@@ -12,7 +12,7 @@ class GameExeFile extends ComposableBuildFile {
         ahkPath := this.launcherEntityObj.AssetsDir . "\" . this.launcherEntityObj.Key . ".ahk"
         ahk2ExePath := this.appDir . "\Vendor\AutoHotKey\Compiler\Ahk2Exe.exe"
 
-        SplitPath(ahk2ExePath,,ahk2ExeDir)
+        SplitPath(ahk2ExePath,, &ahk2ExeDir)
         
         pid := RunWait(ahk2ExePath . " /in `"" . ahkPath . "`" /out `"" . this.FilePath . "`" /icon `"" . iconPath . "`"", ahk2ExeDir)
 

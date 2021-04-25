@@ -18,11 +18,11 @@ class BuilderBase {
         DirCreate(launcherDir)
         DirCreate(assetsDir)
 
-        iconObj := IconFile.new(launcherEntityObj)
+        iconObj := IconFile(launcherEntityObj)
         iconResult := iconObj.Build()
         
         if (this.NeedsShortcutFile(launcherEntityObj)) {
-            shortcutObj := ShortcutFile.new(launcherEntityObj)
+            shortcutObj := ShortcutFile(launcherEntityObj)
             shortcutResult := shortcutObj.Build()
         }
 

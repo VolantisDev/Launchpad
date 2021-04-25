@@ -7,7 +7,7 @@ class FileLogger extends LoggerBase {
         this.autoTruncate := autoTruncate
         super.__New(loggingLevel)
         
-        SplitPath(path,, logDir)
+        SplitPath(path,, &logDir)
 
         if (!DirExist(logDir)) {
             DirCreate(logDir)

@@ -276,7 +276,7 @@ class LayeredDataBase {
             }
         }
 
-        return DiffResult.new(added, modified, removed)
+        return DiffResult(added, modified, removed)
     }
 
     DebugData(layer := "") {

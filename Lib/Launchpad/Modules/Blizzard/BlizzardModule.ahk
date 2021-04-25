@@ -11,7 +11,7 @@ class BlizzardModule extends ModuleBase {
     }
 
     LoadServices(event, extra, eventName, hwnd) {
-        event.App.Services.Set("BlizzardProductDb", BlizzardProductDb.new(this.app))
+        event.App.Services.Set("BlizzardProductDb", BlizzardProductDb(this.app))
     }
 
     DefinePlatform(event, extra, eventName, hwnd) {

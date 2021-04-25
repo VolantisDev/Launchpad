@@ -52,7 +52,7 @@ class DataSourceBase {
     }
 
     ReadListing(path) {
-        listingInstance := DSListing.new(path, this)
+        listingInstance := DSListing(path, this)
 
         listing := Map()
 
@@ -64,7 +64,7 @@ class DataSourceBase {
     }
 
     ReadJson(key, path := "") {
-        dsItem := DSJson.new(key, path, this)
+        dsItem := DSJson(key, path, this)
         return dsItem.Read()
     }
 }

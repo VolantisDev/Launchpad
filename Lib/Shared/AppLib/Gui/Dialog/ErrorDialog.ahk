@@ -34,20 +34,20 @@ class ErrorDialog extends DialogBox {
 
     GetFormHeight() {
         if (!this.guiH) {
-            this.guiObj.GetPos(,,, guiH)
+            this.guiObj.GetPos(,,, &guiH)
             this.guiH := guiH
         }
 
         if (!this.formH) {
             formH := 0
 
-            this.guiObj["DetailsDesc"].GetPos(,,, ctlH)
+            this.guiObj["DetailsDesc"].GetPos(,,, &ctlH)
             formH += ctlH + this.margin
-            this.guiObj["ErrorDetails"].GetPos(,,, ctlH)
+            this.guiObj["ErrorDetails"].GetPos(,,, &ctlH)
             formH += ctlH + this.margin
-            this.guiObj["EmailDesc"].GetPos(,,, ctlH)
+            this.guiObj["EmailDesc"].GetPos(,,, &ctlH)
             formH += ctlH + this.margin
-            this.guiObj["Email"].GetPos(,,, ctlH)
+            this.guiObj["Email"].GetPos(,,, &ctlH)
             formH += ctlH + this.margin
 
             this.formH := formH
@@ -122,7 +122,7 @@ class ErrorDialog extends DialogBox {
             body["version"] := appVersion ? appVersion : ""
             body["details"] := this.guiObj["ErrorDetails"].Text
 
-            request := WinHttpReq.new(endpoint)
+            request := WinHttpReq(endpoint)
             response := request.Send("POST", body)
             success := !!(response == -1 && request.GetStatusCode() == 200)
 

@@ -10,6 +10,6 @@ class AuthModule extends ModuleBase {
     }
 
     LoadServices(event, extra, eventName, hwnd) {
-        event.App.Services.Set("AuthService", AuthService.new(this.app, "", this.app.State))
+        event.App.Services.Set("AuthService", AuthService(this.app, "", this.app.State))
     }
 }

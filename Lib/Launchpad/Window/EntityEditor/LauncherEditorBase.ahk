@@ -54,11 +54,11 @@ class LauncherEditorBase extends EntityEditorBase {
     OnIconSrcMenuClick(btn) {
         if (btn == "ChangeIconSrc") {
             existingVal := this.entityObj.GetConfigValue("IconSrc", false)
-            file := FileSelect(1,, this.entityObj.Key . ": Select icon or .exe to extract icon from.", "Icons (*.ico; *.exe)")
+            filePath := FileSelect(1,, this.entityObj.Key . ": Select icon or .exe to extract icon from.", "Icons (*.ico; *.exe)")
 
-            if (file) {
-                this.entityObj.SetConfigValue("IconSrc", file, false)
-                this.guiObj["IconSrc"].Text := file
+            if (filePath) {
+                this.entityObj.SetConfigValue("IconSrc", filePath, false)
+                this.guiObj["IconSrc"].Text := filePath
             }
         } else if (btn == "ClearIconSrc") {
             if (this.entityObj.UnmergedConfig.Has("IconSrc")) {
@@ -71,11 +71,11 @@ class LauncherEditorBase extends EntityEditorBase {
     OnLogPathMenuClick(btn) {
         if (btn == "ChangeLogPath") {
             existingVal := this.entityObj.GetConfigValue("LogPath", false)
-            file := FileSelect(8,, this.entityObj.Key . ": Select or create log file.", "Files (*.*)")
+            filePath := FileSelect(8,, this.entityObj.Key . ": Select or create log file.", "Files (*.*)")
 
-            if (file) {
+            if (filePath) {
                 this.entityObj.SetConfigValue("LogPath", false)
-                this.guiObj["LogPath"].Text := file
+                this.guiObj["LogPath"].Text := filePath
             }
         } else if (btn == "OpenLogPath") {
             if (this.entityObj.LogPath && FileExist(this.entityObj.LogPath)) {

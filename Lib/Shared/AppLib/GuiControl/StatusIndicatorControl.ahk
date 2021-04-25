@@ -24,7 +24,7 @@ class StatusIndicatorControl extends GuiControlBase {
         difference := 0
 
         if (oldW != newW) {
-            this.ctl.GetPos(statusX,, statusW)
+            this.ctl.GetPos(&statusX,, &statusW)
             difference := newW - oldW
             this.ctl.Move(statusX - difference,, statusW + difference)
         }

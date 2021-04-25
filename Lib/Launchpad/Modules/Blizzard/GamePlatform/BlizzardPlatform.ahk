@@ -29,11 +29,11 @@ class BlizzardPlatform extends RegistryLookupGamePlatformBase {
             if (launcherSpecificId != "agent" && launcherSpecificId != "bna" && productData.Has("settings") && productData["settings"].Has("installPath")) {
                 installPath := productData["settings"]["installPath"]
                 installPath := StrReplace(installPath, "/", "\")
-                SplitPath(installPath, key)
-                locator := GameExeLocator.new(installPath)
+                SplitPath(installPath, &key)
+                locator := GameExeLocator(installPath)
                 possibleExes := locator.Locate("")
                 mainExe := this.DetermineMainExe(key, possibleExes)
-                games.Push(DetectedGame.new(key, this, this.launcherType, this.gameType, installPath, mainExe, launcherSpecificId, possibleExes))
+                games.Push(DetectedGame(key, this, this.launcherType, this.gameType, installPath, mainExe, launcherSpecificId, possibleExes))
             }
         }
 

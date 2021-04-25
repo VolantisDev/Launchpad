@@ -1,6 +1,6 @@
 class AhkVariable extends StructuredDataBase {
-    FromString(ByRef src, args*) {
-		throw MethodNotImplementedException.new("AhkVariable", "FromString")
+    FromString(&src, args*) {
+		throw MethodNotImplementedException("AhkVariable", "FromString")
     }
 
     ToString(obj := "", lvl := 1, args*) {

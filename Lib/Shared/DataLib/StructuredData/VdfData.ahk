@@ -1,5 +1,5 @@
 class VdfData extends StructuredDataBase {
-    FromString(ByRef src, args*) {
+    FromString(&src, args*) {
 		static q := Chr(34)
 		static letters := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 		static numbers := "1234567890"
@@ -18,7 +18,7 @@ class VdfData extends StructuredDataBase {
 				
 			if !InStr(next, ch, true) {
 				testArr := StrSplit(SubStr(src, 1, pos), "`n")				
-				ln := testArr.Length
+				line := testArr.Length
 				col := pos - InStr(src, "`n",, -(StrLen(src)-pos+1))
 
 				msg := Format("{}: line {} col {} (char {})"
@@ -30,9 +30,9 @@ class VdfData extends StructuredDataBase {
 				: (next == ",]")    ? "Expecting ',' delimiter or array closing ']'"
 				: [ "Expecting value (string, number, true, false, null, map, or array)"
 					, ch := SubStr(src, pos, (SubStr(src, pos)~="[\]\},\s]|$")-1) ][1]
-				, ln, col, pos)
+				, line, col, pos)
 
-				throw Exception(msg, -1, ch)
+				throw Error(msg, -1, ch)
 			}
 			
 			obj := stack[1]
@@ -113,6 +113,6 @@ class VdfData extends StructuredDataBase {
 	}
 
 	ToString(obj := "", args*) {
-        throw MethodNotImplementedException.new("VdfData", "ToString")
+        throw MethodNotImplementedException("VdfData", "ToString")
     }
 }

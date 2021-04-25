@@ -31,7 +31,7 @@ class ApiDataSource extends DataSourceBase {
     }
 
     GetHttpReq(path, private := false) {
-        request := WinHttpReq.new(this.GetRemoteLocation(path))
+        request := WinHttpReq(this.GetRemoteLocation(path))
 
         if (private) {
             request.requestHeaders["Cache-Control"] := "no-cache"
@@ -90,8 +90,8 @@ class ApiDataSource extends DataSourceBase {
             statusResult := this.ReadItem(path, true)
 
             if (statusResult) {
-                json := JsonData.new()
-                status := json.FromString(statusResult)
+                json := JsonData()
+                status := json.FromString(&statusResult)
             }
         }
 

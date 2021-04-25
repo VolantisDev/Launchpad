@@ -95,7 +95,10 @@ class EventManager extends ServiceBase {
             for index, keys in this._priorities[eventName] {
                 for priorityIndex, key in keys {
                     eventHandler := this._handlers[eventName][key]
-                    %eventHandler%(param1, param2, eventName, hwnd)
+
+                    if (eventHandler) {
+                        this._handlers[eventName][key](param1, param2, eventName, hwnd)
+                    }
                 }
             }
         }

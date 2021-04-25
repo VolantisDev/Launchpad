@@ -10,33 +10,34 @@ class StructuredDataBase {
         this.obj := obj
     }
 
-    FromString(ByRef src, args*) {
-        throw MethodNotImplementedException.new("StructuredDataBase", "FromString")
+    FromString(&src, args*) {
+        throw MethodNotImplementedException("StructuredDataBase", "FromString")
     }
 
     ToString(obj := "", args*) {
-        throw MethodNotImplementedException.new("StructuredDataBase", "ToString")
+        throw MethodNotImplementedException("StructuredDataBase", "ToString")
     }
 
     FromFile(filePath, args*) {
         if (!filePath) {
-            throw FileSystemException.new("File path '" . filePath . "' is invalid.")
+            throw FileSystemException("File path '" . filePath . "' is invalid.")
         }
 
         if (!FileExist(filePath)) {
-            throw FileSystemException.new("File path '" . filePath . "' does not exist.")
+            throw FileSystemException("File path '" . filePath . "' does not exist.")
         }
 
-        return this.FromString(FileRead(filePath), args*)
+        var := FileRead(filePath)
+        return this.FromString(&var, args*)
     }
 
     ToFile(filePath, overwrite := false, args*) {
         if (!filePath) {
-            throw FileSystemException.new("File path '" . filePath . "' is invalid.")
+            throw FileSystemException("File path '" . filePath . "' is invalid.")
         }
 
         if (FileExist(filePath) && !overwrite) {
-            throw FileSystemException.new("File path '" . filePath . "' already exists.")
+            throw FileSystemException("File path '" . filePath . "' already exists.")
         }
 
         if (FileExist(filePath)) {

@@ -25,7 +25,7 @@ class LoadLaunchersOp extends BulkOperationBase {
         for key, config in this.launcherConfigObj.Games {
             this.StartItem(key, key . ": Loading...")
             requiredKeys := ""
-            this.results[key] := LauncherEntity.new(this.app, key, config, requiredKeys)
+            this.results[key] := LauncherEntity(this.app, key, config, requiredKeys)
             this.FinishItem(key, true, key . ": Loaded successfully.")
         }
     }

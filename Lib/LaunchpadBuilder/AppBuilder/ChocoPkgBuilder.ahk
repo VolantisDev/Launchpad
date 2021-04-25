@@ -4,13 +4,13 @@ class ChocoPkgBuilder extends AppBuilderBase {
         installer := distDir . "\" . this.app.appName . "-" . this.app.Version . ".exe"
 
         if (!FileExist(installer)) {
-            throw AppException.new("Installer file doesn't exist, cannot build chocolatey package.")
+            throw AppException("Installer file doesn't exist, cannot build chocolatey package.")
         }
 
         hash := this.app.Service("FileHasher").Hash(installer, FileHasher.HASH_TYPE_SHA256)
 
         if (!hash) {
-            throw AppException.new("Failed to create an SHA256 hash of the installer file.")
+            throw AppException("Failed to create an SHA256 hash of the installer file.")
         }
 
         this.ResetDistDir(distDir)

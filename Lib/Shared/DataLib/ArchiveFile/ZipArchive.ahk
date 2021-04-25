@@ -1,5 +1,5 @@
 class ZipArchive extends ArchiveFileBase {
-    static psh := ComObjCreate("Shell.Application")
+    static psh := ComObject("Shell.Application")
 
     Extract(destinationPath) {
         archiveItems := ZipArchive.psh.Namespace(this.archiveFile).items

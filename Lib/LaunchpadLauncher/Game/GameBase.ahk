@@ -32,7 +32,7 @@ class GameBase {
     }
 
     Log(message, level := "Debug") {
-        if (this.app.Logger && this.launcherConfig["LoggingLevel"] != "None") {
+        if (this.app.Services.Exists("LoggerService") && this.launcherConfig["LoggingLevel"] != "None") {
             this.app.Logger.Log(this.key . ": " . message, level)
         }
     }
@@ -46,10 +46,10 @@ class GameBase {
             exe := ""
 
             if (this.config.Has("GameExe") && this.config["GameExe"] != "") {
-                SplitPath(this.config["GameExe"], exe)
+                SplitPath(this.config["GameExe"], &exe)
             }
 
-            this.exeProcess := ExeProcess.new(exe)
+            this.exeProcess := ExeProcess(exe)
         }
         
         return this.exeProcess
@@ -155,8 +155,8 @@ class GameBase {
     }
 
     OverlayCallback() {
-        static steamOpenCondition := SteamIsOpenCondition.new(this.app)
-        static overlayAttachedCondtion := SteamOverlayAttachedCondition.new(A_Now, this.app)
+        static steamOpenCondition := SteamIsOpenCondition(this.app)
+        static overlayAttachedCondtion := SteamOverlayAttachedCondition(A_Now, this.app)
 
         if (this.isOpen) {
             if (this.launcherConfig["ForceOverlay"]) {
@@ -300,7 +300,7 @@ class GameBase {
         newPid := this.exeProcess.ReplaceProcess(this.launchTime)
 
         if (!newPid) {
-            throw OperationFailedException.new("Could not replace game process.")
+            throw OperationFailedException("Could not replace game process.")
         }
 
         this.pid := newPid

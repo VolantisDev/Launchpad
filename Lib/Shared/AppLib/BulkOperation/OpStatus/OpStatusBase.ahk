@@ -2,8 +2,8 @@ class OpStatusBase {
     started := false
     finished := false
     result := false
-    hasResult := false
-    hasErrors := false
+    hasResultVal := false
+    hasErrorsVal := false
     errors := Array()
 
     /**
@@ -28,7 +28,7 @@ class OpStatusBase {
         }
 
         if (this.errors.Length > 0) {
-            this.hasErrors := true
+            this.hasErrorsVal := true
         }
 
         this.finished := true
@@ -36,7 +36,7 @@ class OpStatusBase {
 
     SetResult(result) {
         result := result
-        this.hasResult := true
+        this.hasResultVal := true
     }
 
     IsFinished() {
@@ -44,11 +44,11 @@ class OpStatusBase {
     }
 
     HasResult() {
-        return this.hasResult
+        return this.hasResultVal
     }
 
     HasErrors() {
-        return this.hasErrors
+        return this.hasErrorsVal
     }
 
     GetResult() {
@@ -61,7 +61,7 @@ class OpStatusBase {
                 this.errors.push(errItem)
             }
         } else if (Type(err) == "String") {
-            this.errors.push(BasicOpError.new(err, code))
+            this.errors.push(BasicOpError(err, code))
         } else {
             this.errors.push(err)
         }

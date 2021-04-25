@@ -46,7 +46,7 @@
 
     OnLButton(hotKey) {
         if (!this.childOpen) {
-            MouseGetPos(,, mouseWindow)
+            MouseGetPos(,, &mouseWindow)
             
             if (this.guiObj && this.guiObj.Hwnd != mouseWindow) {
                 this.canceled := true

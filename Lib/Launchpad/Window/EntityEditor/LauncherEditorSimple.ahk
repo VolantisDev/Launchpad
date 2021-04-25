@@ -25,7 +25,7 @@ class LauncherEditorSimple extends LauncherEditorBase {
         possibleExes := []
 
         if (this.entityObj.Config["GameInstallDir"]) {
-            locator := GameExeLocator.new(this.entityObj.Config["GameInstallDir"])
+            locator := GameExeLocator(this.entityObj.Config["GameInstallDir"])
             possibleExes := locator.Locate("")
         }
         
@@ -69,11 +69,11 @@ class LauncherEditorSimple extends LauncherEditorBase {
                 existingVal := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("InstallDir")
             }
 
-            file := FileSelect(1, existingVal, "Select Game Exe", "Executables (*.exe)")
+            filePath := FileSelect(1, existingVal, "Select Game Exe", "Executables (*.exe)")
 
-            if (file) {
-                this.entityObj.ManagedLauncher.ManagedGame.SetConfigValue("Exe", file)
-                this.guiObj["Exe"].Text := file
+            if (filePath) {
+                this.entityObj.ManagedLauncher.ManagedGame.SetConfigValue("Exe", filePath)
+                this.guiObj["Exe"].Text := filePath
             }
         } else if (btn == "OpenGameExe") {
             val := this.entityObj.ManagedLauncher.ManagedGame.GetConfigValue("Exe")

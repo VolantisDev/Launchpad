@@ -9,24 +9,24 @@ class InstallerManager extends AppComponentServiceBase {
 
         tmpDir := this.app.tmpDir . "\Installers"
         cache := this.app.Service("CacheManager").GetItem("file")
-        this.SetItem("Themes", ThemeInstaller.new(this.app.Version, this.app.State, cache, extraThemes, tmpDir))
+        this.SetItem("Themes", ThemeInstaller(this.app.Version, this.app.State, cache, extraThemes, tmpDir))
     }
 
     InstallRequirements(owner := "") {
         installerKeys := ["Themes", "Dependencies"]
-        op := InstallOp.new(this.app, installerKeys, owner)
+        op := InstallOp(this.app, installerKeys, owner)
         return op.Run()
     }
 
     UpdateApp(owner := "") {
         installerKeys := ["LaunchpadUpdate"]
-        op := UpdateOp.new(this.app, installerKeys, owner)
+        op := UpdateOp(this.app, installerKeys, owner)
         return op.Run()
     }
 
     UpdateDependencies(owner := "") {
         installerKeys := ["Dependencies"]
-        op := UpdateOp.new(this.app, installerKeys, owner)
+        op := UpdateOp(this.app, installerKeys, owner)
         return op.Run()
     }
 }

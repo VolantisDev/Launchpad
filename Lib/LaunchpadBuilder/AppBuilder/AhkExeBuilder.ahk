@@ -46,7 +46,7 @@ class AhkExeBuilder extends AppBuilderBase {
     }
 
     BuildExe(buildDir) {
-        SplitPath(A_AhkPath,, ahkDir)
+        SplitPath(A_AhkPath,, &ahkDir)
 
         if (ahkDir == "") {
             ahkDir := this.app.appDir . "\Vendor\AutoHotKey"
@@ -58,7 +58,7 @@ class AhkExeBuilder extends AppBuilderBase {
             ahk2Exe := FileSelect(3,, "Please select your Ahk2Exe.exe file", "EXE Files (*.exe)")
 
             if (ahk2Exe == "") {
-                throw AppException.new("Could not find Ahk2Exe.exe")
+                throw AppException("Could not find Ahk2Exe.exe")
             }
         }
 

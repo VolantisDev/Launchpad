@@ -26,17 +26,17 @@
         entity := ""
 
         if (result == "Save") {
-            entity := LauncherEntity.new(this.app, this.GetLauncherKey(), this.GetLauncherConfig())
+            entity := LauncherEntity(this.app, this.GetLauncherKey(), this.GetLauncherConfig())
         }
 
         return entity
     }
 
     GetLauncherKey() {
-        throw MethodNotImplementedException.new("LauncherCreateFormBase", "GetLauncherKey")
+        throw MethodNotImplementedException("LauncherCreateFormBase", "GetLauncherKey")
     }
 
     GetLauncherConfig() {
-        throw MethodNotImplementedException.new("LauncherCreateFormBase", "GetLauncherConfig")
+        throw MethodNotImplementedException("LauncherCreateFormBase", "GetLauncherConfig")
     }
 }

@@ -20,4 +20,4 @@ appInfo["developer"] := "Volantis Development"
 appInfo["version"] := appVersion
 appInfo["configClass"] := "LaunchpadConfig"
 appInfo["stateClass"] := "LaunchpadAppState"
-Launchpad.new(appInfo)
+Launchpad(appInfo)

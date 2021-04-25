@@ -24,13 +24,13 @@ class ComponentServiceBase extends ServiceBase {
             components := this._components
 
             if (this._registerEvent) {
-                event := RegisterComponentsEvent.new(this._registerEvent, components)
+                event := RegisterComponentsEvent(this._registerEvent, components)
                 this.eventManagerObj.DispatchEvent(this._registerEvent, event)
                 components := event.Items
             }
 
             if (this._alterEvent) {
-                event := AlterComponentsEvent.new(this._alterEvent, components)
+                event := AlterComponentsEvent(this._alterEvent, components)
                 this.eventManagerObj.DispatchEvent(this._alterEvent, event)
                 components := event.Items
             }

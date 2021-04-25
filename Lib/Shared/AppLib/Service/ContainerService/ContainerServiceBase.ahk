@@ -6,7 +6,7 @@ class ContainerServiceBase extends AppServiceBase {
     alterEvent := ""
 
     __New(app, components := "", autoLoad := true) {
-        this.container := ServiceComponentContainer.new(components)
+        this.container := ServiceComponentContainer(components)
         super.__New(app)
 
         if (autoLoad) {
@@ -17,13 +17,13 @@ class ContainerServiceBase extends AppServiceBase {
     LoadComponents() {
         if (!this.componentsLoaded) {
             if (this.registerEvent) {
-                event := RegisterComponentsEvent.new(this.registerEvent, this.container)
+                event := RegisterComponentsEvent(this.registerEvent, this.container)
                 this.app.Service("EventManager").DispatchEvent(this.registerEvent, event)
                 this.container := event.container
             }
 
             if (this.alterEvent) {
-                event := AlterComponentsEvent.new(this.alterEvent, this.container)
+                event := AlterComponentsEvent(this.alterEvent, this.container)
                 this.app.Service("EventManager").DispatchEvent(this.alterEvent, event)
                 this.container := event.container
             }

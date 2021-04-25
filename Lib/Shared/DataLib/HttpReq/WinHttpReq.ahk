@@ -1,11 +1,11 @@
 class WinHttpReq extends HttpReqBase {
-    static winHttp := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-    static adoStream := ComObjCreate("adodb.stream")
+    static winHttp := ComObject("WinHttp.WinHttpRequest.5.1")
+    static adoStream := ComObject("adodb.stream")
 
     Send(method := "GET", data := "", uploadFile := false) {
         if (IsObject(this.url)) {
             ; Clear cookie
-            return WinHttpReq.winHttp := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+            return WinHttpReq.winHttp := ComObject("WinHttp.WinHttpRequest.5.1")
         }
 
         if (data != "" && method == "GET") {
@@ -25,7 +25,7 @@ class WinHttpReq extends HttpReqBase {
             this.adoStream.LoadFromFile(data)
             data := this.adoStream
         } else if (data && IsObject(data)) {
-            json := JsonData.new()
+            json := JsonData()
             data := json.ToString(data)
         }
 

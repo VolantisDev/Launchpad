@@ -9,13 +9,13 @@ class LaunchpadLauncher extends AppBase {
         super.LoadServices(config)
         this.Services.Set("Platforms", config["platforms"])
         this.Services.Set("LauncherConfig", config["launchpadLauncherConfig"])
-        this.Services.Set("OverlayManager", OverlayManager.new(this))
+        this.Services.Set("OverlayManager", OverlayManager(this))
 
         gameClass := config["gameConfig"]["GameClass"]
-        this.Services.Set("Game", %gameClass%.new(this, config["launcherKey"], config["gameConfig"]))
+        this.Services.Set("Game", %gameClass%(this, config["launcherKey"], config["gameConfig"]))
 
         launcherClass := config["launcherConfig"]["LauncherClass"]
-        this.Services.Set("Launcher", %launcherClass%.new(this, config["launcherKey"], config["launcherConfig"]))
+        this.Services.Set("Launcher", %launcherClass%(this, config["launcherKey"], config["launcherConfig"]))
     }
 
     RunApp(config) {

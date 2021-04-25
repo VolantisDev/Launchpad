@@ -18,7 +18,7 @@ class InstallerBase {
         this.version := version
         this.appState := appState
         this.stateKey := stateKey
-        SplitPath(A_ScriptFullPath, scriptFile, scriptDir)
+        SplitPath(A_ScriptFullPath, &scriptFile, &scriptDir)
         this.scriptFile := scriptFile
         this.scriptDir := scriptDir
 

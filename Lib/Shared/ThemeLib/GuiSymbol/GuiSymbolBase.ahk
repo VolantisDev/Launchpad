@@ -61,12 +61,12 @@ class GuiSymbolBase {
     Draw(graphics, x, y, w, h) {
         try {
             this.DrawSymbol(graphics, x, y, w, h)
-        } catch ex {
+        } catch Error as ex {
             throw ex
         }
     }
 
     DrawSymbol(graphics, x, y, w, h) {
-        MethodNotImplementedException.new("GuiSymbolBase", "DrawOn")
+        MethodNotImplementedException("GuiSymbolBase", "DrawOn")
     }
 }

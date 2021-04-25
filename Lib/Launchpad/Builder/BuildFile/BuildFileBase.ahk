@@ -5,7 +5,7 @@ class BuildFileBase {
     destPathValue := ""
     launcherEntityObj := ""
 
-    FilePath[] {
+    FilePath {
         get => this.destPathValue
         set => this.destPathValue := value
     }
@@ -22,7 +22,7 @@ class BuildFileBase {
     }
 
     Build() {
-        throw MethodNotImplementedException.new("BuildFileBase", "Build")
+        throw MethodNotImplementedException("BuildFileBase", "Build")
     }
 
     Cleanup() {

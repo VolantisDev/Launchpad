@@ -14,11 +14,11 @@ class JsonState extends StateBase {
 
         if (this.filePath) {
             stateToSave := Map("State", this.stateMap)
-            data := JsonData.new(stateToSave)
+            data := JsonData(stateToSave)
             jsonString := data.ToString("", 4)
 
             if (jsonString == "") {
-                throw(OperationFailedException.new("Converting state map to JSON failed", "AppState", stateToSave))
+                throw(OperationFailedException("Converting state map to JSON failed", "AppState", stateToSave))
             }
 
             if (FileExist(this.filePath)) {
@@ -39,8 +39,8 @@ class JsonState extends StateBase {
                 jsonString := Trim(FileRead(this.filePath))
 
                 if (jsonString != "") {
-                    data := JsonData.new()
-                    jsonObj := data.FromString(jsonString)
+                    data := JsonData()
+                    jsonObj := data.FromString(&jsonString)
 
                     if (jsonObj.Has("State")) {
                         newState := jsonObj["State"]

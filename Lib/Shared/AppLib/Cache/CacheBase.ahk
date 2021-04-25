@@ -88,18 +88,18 @@ class CacheBase {
     */
 
     WriteItemAction(reference, content) {
-        throw(MethodNotImplementedException.new("CacheBase", "WriteItemAction"))
+        throw(MethodNotImplementedException("CacheBase", "WriteItemAction"))
     }
 
     ReadItemAction(reference) {
-        throw(MethodNotImplementedException.new("CacheBase", "ReadItemAction"))
+        throw(MethodNotImplementedException("CacheBase", "ReadItemAction"))
     }
 
     RemoveItemAction(reference) {
-        throw(MethodNotImplementedException.new("CacheBase", "RemoveItemAction"))
+        throw(MethodNotImplementedException("CacheBase", "RemoveItemAction"))
     }
 
     FlushCacheAction() {
-        throw(MethodNotImplementedException.new("CacheBase", "FlushCacheAction"))
+        throw(MethodNotImplementedException("CacheBase", "FlushCacheAction"))
     }
 }

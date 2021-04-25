@@ -21,7 +21,7 @@ class IconSelector extends DialogBox {
         listPath := ""
 
         if (this.iconSrc) {
-            SplitPath(this.iconSrc, fileName, iconDir, iconExt)
+            SplitPath(this.iconSrc, &fileName, &iconDir, &iconExt)
 
             if (iconExt == "exe") {
                 this.listPath := this.iconSrc

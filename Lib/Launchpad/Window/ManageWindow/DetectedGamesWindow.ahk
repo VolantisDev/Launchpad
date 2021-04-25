@@ -177,7 +177,7 @@
             games[key] := this.detectedGames[key]
         }
 
-        op := AddDetectedGamesOp.new(this.app, games, this.launcherManager, this.state, "DetectedGamesWindow")
+        op := AddDetectedGamesOp(this.app, games, this.launcherManager, this.state, "DetectedGamesWindow")
         op.Run()
 
         win := this.launcherManager.app.Service("GuiManager").GetWindow("MainWindow")
@@ -187,7 +187,7 @@
 
     EditDetectedGame(key) {
         if (!key) {
-            throw AppException.new("Detected game key could not be determined.")
+            throw AppException("Detected game key could not be determined.")
         }
 
         detectedGameObj := this.detectedGames[key]

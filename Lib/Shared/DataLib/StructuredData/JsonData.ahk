@@ -1,5 +1,5 @@
 class JsonData extends StructuredDataBase {
-    FromString(ByRef src, args*) {
+    FromString(&src, args*) {
         static q := Chr(34)
         key := ""
         is_key := false
@@ -16,7 +16,7 @@ class JsonData extends StructuredDataBase {
             
             if !InStr(next, ch, true) {
 				testArr := StrSplit(SubStr(src, 1, pos), "`n")
-				ln := testArr.Length
+				line := testArr.Length
 				col := pos - InStr(src, "`n",, -(StrLen(src)-pos+1))
 
 				msg := Format("{}: line {} col {} (char {})"
@@ -30,9 +30,9 @@ class JsonData extends StructuredDataBase {
 				: (next == ",]")    ? "Expecting ',' delimiter or array closing ']'"
 				: [ "Expecting JSON value(string, number, [true, false, null], object or array)"
 					, ch := SubStr(src, pos, (SubStr(src, pos)~="[\]\},\s]|$")-1) ][1]
-				, ln, col, pos)
+				, line, col, pos)
 
-				throw OperationFailedException.new(msg, -1, ch)
+				throw OperationFailedException(msg, -1, ch)
 			}
 
             obj := stack[1]
@@ -155,12 +155,12 @@ class JsonData extends StructuredDataBase {
 			
             ; TODO: Make this code more readable
 			if (memType ? (memType != "Object" && memType != "Map" && memType != "Array") : (ObjGetCapacity(obj) == "")) {
-                throw OperationFailedException.new("Object type not supported.", -1, Format("<Object at 0x{:p}>", ObjPtr(obj)))
+                throw OperationFailedException("Object type not supported.", -1, Format("<Object at 0x{:p}>", ObjPtr(obj)))
             }
 			
 			if IsInteger(indent) {
 				if (indent < 0) {
-                    throw OperationFailedException.new("Indent parameter must be a postive integer.", -1, indent)
+                    throw OperationFailedException("Indent parameter must be a postive integer.", -1, indent)
                 }
 					
 				spaces := indent
@@ -184,7 +184,7 @@ class JsonData extends StructuredDataBase {
 
 			for k, v in obj {
 				if (IsObject(k) || (k == "")) {
-                    throw OperationFailedException.new("Invalid object key.", -1, k ? Format("<Object at 0x{:p}>", ObjPtr(obj)) : "<blank>")
+                    throw OperationFailedException("Invalid object key.", -1, k ? Format("<Object at 0x{:p}>", ObjPtr(obj)) : "<blank>")
                 }
 				
 				if (!is_array) {

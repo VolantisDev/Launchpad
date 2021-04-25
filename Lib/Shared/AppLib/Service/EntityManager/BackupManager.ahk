@@ -3,11 +3,11 @@ class BackupManager extends EntityManagerBase {
     _alterEvent := "" ;Events.BACKUPS_ALTER
 
     GetLoadOperation() {
-        return LoadBackupsOp.new(this.app, this.configObj)
+        return LoadBackupsOp(this.app, this.configObj)
     }
 
     CreateConfigObj(app, configFile) {
-        return BackupsConfig.new(app, configFile, false)
+        return BackupsConfig(app, configFile, false)
     }
 
     GetDefaultConfigPath() {
@@ -42,7 +42,7 @@ class BackupManager extends EntityManagerBase {
     }
 
     CreateBackupEntity(key, config) {
-        backup := BackupEntity.new(this.app, key, config)
+        backup := BackupEntity(this.app, key, config)
         this.AddEntity(key, backup)
         return backup
     }
