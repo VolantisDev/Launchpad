@@ -67,8 +67,8 @@ class GameBase {
         this.Log("Running game...", "Info")
 
         if (this.launcherConfig["EnableOverlay"]) {
-            this.overlayCallback := ObjBindMethod(this, "OverlayCallback")
-            SetTimer(this.overlayCallback, 500)
+            this.overlayCallbackObj := ObjBindMethod(this, "OverlayCallback")
+            SetTimer(this.overlayCallbackObj, 500)
         }
 
         loadingWinId := 0
@@ -166,13 +166,13 @@ class GameBase {
 
             if (!steamOpenCondition.Evaluate()) {
                 MsgBox("Steam is not open...")
-                SetTimer(this.overlayCallback, 0)
+                SetTimer(this.overlayCallbackObj, 0)
                 return
             }
 
             if (overlayAttachedCondtion.Evaluate()) {
                 MsgBox("Overlay attached...")
-                SetTimer(this.overlayCallback, 0)
+                SetTimer(this.overlayCallbackObj, 0)
                 return
             }
 
@@ -185,7 +185,7 @@ class GameBase {
     }
 
     StartOverlay() {
-        SetTimer(this.overlayCallback, 0)
+        SetTimer(this.overlayCallbackObj, 0)
         this.Log("Starting Launchpad Overlay...")
         this.app.Service("OverlayManager").Start(this.launcherConfig["OverlayHotkey"])
         this.overlayStarted := true
@@ -324,7 +324,7 @@ class GameBase {
         runCmd := this.config["GameRunMethod"]
         pid := ""
         this.Log("Running task with " . runCmd)
-        %runCmd%(this.GetRunCmd(), this.config["GameWorkingDir"], "Hide", pid)
+        %runCmd%(this.GetRunCmd(), this.config["GameWorkingDir"], "Hide", &pid)
         return pid
     }
 

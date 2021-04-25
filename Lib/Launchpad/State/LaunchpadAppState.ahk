@@ -18,6 +18,29 @@ class LaunchpadAppState extends AppState {
         this.SaveState()
     }
 
+    GetLauncherCreated(launcherKey) {
+        created := ""
+
+        if (this.Launchers.Has(launcherKey) && this.Launchers[launcherKey].Has("Created")) {
+            created := this.Launchers[launcherKey]["Created"]
+        }
+
+        return created
+    }
+
+    SetLauncherCreated(launcherKey, timestamp := "") {
+        if (timestamp == "") {
+            timestamp := FormatTime(,"yyyyMMddHHmmss")
+        }
+
+        if (!this.Launchers.Has(launcherKey)) {
+            this.Launchers[launcherKey] := Map()
+        }
+
+        this.Launchers[launcherKey]["Created"] := timestamp
+        this.SaveState()
+    }
+
     SetLauncherConfigInfo(launcherKey, version := "", timestamp := "") {
         this.SetLauncherInfo(launcherKey, "Config", version, timestamp)
     }

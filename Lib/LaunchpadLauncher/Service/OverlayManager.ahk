@@ -36,7 +36,7 @@ class OverlayManager extends AppServiceBase {
             path := resourcesDir . "\LaunchpadOverlay\" . this.exeName
 
             if (FileExist(path)) {
-                Run(path, this.app.appDir,, pid)
+                Run(path, this.app.appDir,, &pid)
                 this.hwnd := WinWait("ahk_pid " . pid)
                 ;this.tid := DllCall("GetWindowThreadProcessId", "UInt", this.hwnd, "UInt", 0)
                 WinHide("ahk_id " . this.hwnd)

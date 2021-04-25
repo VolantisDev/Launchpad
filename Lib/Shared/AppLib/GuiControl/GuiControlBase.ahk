@@ -7,6 +7,7 @@ class GuiControlBase {
     options := ""
     heading := ""
     changeCallback := ""
+    resizeOpts := ""
 
     __New(guiObj, options := "", heading := "", params*) {
         InvalidParameterException.CheckTypes("GuiControlBase", "guiObj", guiObj, "GuiBase")
@@ -273,6 +274,12 @@ class GuiControlBase {
     }
 
     OnSize(guiObj, minMax, width, height) {
+        if (minMax == -1) {
+            return
+        }
 
+        if (this.resizeOpts) {
+            this.guiObj.AutoXYWH(this.resizeOpts, [this.ctl.Name])
+        }
     }
 }

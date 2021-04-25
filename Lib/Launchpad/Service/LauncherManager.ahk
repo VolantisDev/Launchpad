@@ -20,5 +20,6 @@ class LauncherManager extends EntityManagerBase {
 
     AddEntityToConfig(key, entityObj) {
         this.configObj.Games[key] := entityObj.UnmergedConfig
+        this.app.State.SetLauncherCreated(key)
     }
 }

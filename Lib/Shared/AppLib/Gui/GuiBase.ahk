@@ -262,8 +262,9 @@ class GuiBase {
 
     AddText(text, options := "", font := "normal", fontOptions := "") {
         this.SetFont(font, fontOptions)
-        this.guiObj.AddText(options . " +0x200", text)
+        ctl := this.guiObj.AddText(options . " +0x200", text)
         this.SetFont()
+        return ctl
     }
 
     AddCheckBox(checkboxText, ctlName, checked, inGroupBox := true, callback := "", check3 := false, position := "") {

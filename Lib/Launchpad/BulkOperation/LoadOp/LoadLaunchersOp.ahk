@@ -26,6 +26,13 @@ class LoadLaunchersOp extends BulkOperationBase {
             this.StartItem(key, key . ": Loading...")
             requiredKeys := ""
             this.results[key] := LauncherEntity(this.app, key, config, requiredKeys)
+            
+            created := this.app.State.GetLauncherCreated(key)
+
+            if (!created) {
+                this.app.State.SetLauncherCreated(key)
+            }
+
             this.FinishItem(key, true, key . ": Loaded successfully.")
         }
     }

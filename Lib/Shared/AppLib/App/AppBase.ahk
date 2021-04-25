@@ -403,6 +403,9 @@ class AppBase {
     }
 
     RestartApp() {
+        event := AppRunEvent(Events.APP_SHUTDOWN, this)
+        this.Service("EventManager").DispatchEvent(Events.APP_RESTART, event)
+
         Reload()
     }
 }

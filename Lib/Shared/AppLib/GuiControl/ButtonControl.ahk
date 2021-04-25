@@ -3,7 +3,9 @@ class ButtonControl extends GuiControlBase {
         super.CreateControl(false)
         text := this.heading
 
-        options := this.SetDefaultOptions(this.options.Clone(), ["h25", "w200", "xs", "y+" . this.guiObj.margin, "0xE"])
+        defaultOpts := ["h25", "xs", "y+" . this.guiObj.margin, "0xE"]
+        defaultOpts.Push("w" . this.CalculateWidth(text, drawConfig))
+        options := this.SetDefaultOptions(this.options.Clone(), defaultOpts)
         this.ctl := this.guiObj.guiObj.AddPicture(this.GetOptionsString(options))
 
         if (!handler && this.ctl.Name && HasMethod(this.guiObj, "On" . this.ctl.Name)) {
@@ -16,5 +18,9 @@ class ButtonControl extends GuiControlBase {
 
         this.ctl := this.guiObj.themeObj.DrawButton(this.ctl, text, buttonStyle, drawConfig)
         return this.ctl
+    }
+
+    CalculateWidth(text, drawConfig := "") {
+        return Ceil(this.guiObj.themeObj.CalculateTextWidth(text)) + (this.guiObj.margin*4)
     }
 }

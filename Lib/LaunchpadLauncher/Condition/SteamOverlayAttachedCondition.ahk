@@ -1,10 +1,10 @@
 class SteamOverlayAttachedCondition extends SteamConditionBase {
     __New(launchTime, app, negate := false) {
-        log := this.GetSteamPath(app) . "\GameOverlayUI.exe.log"
+        logObj := this.GetSteamPath(app) . "\GameOverlayUI.exe.log"
 
         children := []
-        children.Push(FileModifiedAfterCondition(launchTime, log))
-        children.Push(FileContainsCondition("GameOverlay process connecting to:", log))
+        children.Push(FileModifiedAfterCondition(launchTime, logObj))
+        children.Push(FileContainsCondition("GameOverlay process connecting to:", logObj))
 
         super.__New(app, children, negate)
     }

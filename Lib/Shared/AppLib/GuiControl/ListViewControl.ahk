@@ -9,8 +9,9 @@ class ListViewControl extends GuiControlBase {
     imgListCallback := ""
     imgListS := ""
     imgListL := ""
+    resizeOpts := "wh"
 
-    CreateControl(columns, dataCallback, imgListCallback := "", initCallback := "", highlightRowCallback := "") {
+    CreateControl(columns, dataCallback, imgListCallback := "", initCallback := "", highlightRowCallback := "", resizeOpts := "") {
         global LVM_GETHEADER
         super.CreateControl(false)
         columns.InsertAt(this.keyCol, "")
@@ -19,6 +20,7 @@ class ListViewControl extends GuiControlBase {
         this.dataCallback := dataCallback
         this.imgListCallback := imgListCallback
         this.highlightRowCallback := highlightRowCallback
+        this.resizeOpts := resizeOpts
 
         lvH := 400
 
@@ -177,8 +179,6 @@ class ListViewControl extends GuiControlBase {
         if (minMax == -1) {
             return
         }
-
-        this.guiObj.AutoXYWH("wh", [this.ctl.Name])
 
         this.ResizeColumns()
     }

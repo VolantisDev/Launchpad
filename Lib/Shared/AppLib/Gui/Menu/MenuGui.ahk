@@ -98,8 +98,6 @@
 
                 this.AddMenuButton(item["label"], item["name"], item["childItems"])
             }
-
-            
         }
     }
 

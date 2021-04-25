@@ -7,11 +7,14 @@
     lvWidth := 0
     saveWindowState := true
     showDetailsPane := false
+    detailsFields := []
 
     Controls() {
         super.Controls()
         this.AddManageList()
 
+        this.listView.ctl.GetPos(, &y,, &h)
+        
         if (this.showDetailsPane) {
             selected := this.listView.GetSelected("", true)
             key := ""
@@ -20,13 +23,13 @@
                 key := selected[1]
             }
 
-            this.AddDetailsPane(key)
+            this.AddDetailsPane(y, key)
         }
-
-        this.AddBottomControls()
+        
+        this.AddBottomControls(y + h + this.margin)
     }
 
-    AddBottomControls() {
+    AddBottomControls(y) {
 
     }
 
@@ -62,11 +65,12 @@
         this.lvWidth := this.windowSettings["contentWidth"]
 
         if (this.showDetailsPane) {
-            this.lvWidth := (this.lvWidth - this.margin) / 2
+            this.lvWidth := 250
             opts.Push("w" . this.lvWidth)
         }
 
         this.listView := this.Add("ListViewControl", opts, "", this.listViewColumns, "GetListViewData", "GetListViewImgList", "InitListView", "ShouldHighlightRow")
+        this.listView.resizeOpts := "h"
         return this.listView
     }
 
@@ -98,13 +102,22 @@
         lv.ctl.OnEvent("ContextMenu", "ShowListViewContextMenu")
         lv.ctl.OnEvent("DoubleClick", "OnDoubleClick")
         lv.ctl.OnEvent("Click", "OnClick")
-        ; TODO: Change Click handler to ItemSelect once I figure out why that isn't working
+        lv.ctl.OnEvent("ItemSelect", "OnItemSelect")
     }
 
     OnClick(LV, rowNum) {
         key := LV.GetText(rowNum, 2)
         
-        if (this.showDetailsPane) {
+        if (this.showDetailsPane && key) {
+            this.UpdateDetailsPane(key)
+        }
+    }
+
+    OnItemSelect(LV, item, selected) {
+        if (!selected) {
+            this.UpdateDetailsPane()
+        } else {
+            key := LV.GetText(item, 2)
             this.UpdateDetailsPane(key)
         }
     }
@@ -126,6 +139,10 @@
 
         if (this.listView) {
             this.listView.OnSize(guiObj, minMax, width, height)
+        }
+
+        if (this.showDetailsPane && this.detailsFields.Length > 0) {
+            this.AutoXYWH("w", this.detailsFields)
         }
     }
 }

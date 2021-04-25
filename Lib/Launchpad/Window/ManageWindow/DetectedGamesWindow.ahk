@@ -16,9 +16,9 @@
         super.__New(app, themeObj, windowKey, "Detected Games", owner, parent)
     }
 
-    AddBottomControls() {
+    AddBottomControls(y) {
         buttonRowOffset := 3
-        position := "x" . this.margin . " y+" . (this.margin + buttonRowOffset) . " w80 h25"
+        position := "x" . this.margin . " y" . (y + buttonRowOffset) . " w80 h25"
         this.Add("ButtonControl", "vCheckAllButton " . position, "Check All", "", "manageText")
         position := "x+" . this.margin . " yp w80 h25"
         this.Add("ButtonControl", "vUncheckAllButton " . position, "Uncheck All", "", "manageText")

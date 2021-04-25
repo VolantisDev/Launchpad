@@ -39,6 +39,24 @@
             "manageButtonText": "{{textInactive}}",
             "manageButtonTextDisabled": "{{textDim}}",
             "manageButtonTextHover": "{{light}}",
+            "detailsButtonBg": "{{background}}",
+            "detailsButtonBgDisabled": "{{buttonBg}}",
+            "detailsButtonBgHover": "{{accentBg}}",
+            "detailsButtonBorder": "{{border}}",
+            "detailsButtonBorderDisabled": "{{buttonBorder}}",
+            "detailsButtonBorderHover": "{{buttonBorder}}",
+            "detailsButtonText": "{{textInactive}}",
+            "detailsButtonTextDisabled": "{{textDim}}",
+            "detailsButtonTextHover": "{{light}}",
+            "detailsButtonPrimaryBg": "{{background}}",
+            "detailsButtonPrimaryBgDisabled": "{{buttonBg}}",
+            "detailsButtonPrimaryBgHover": "{{accentText}}",
+            "detailsButtonPrimaryBorder": "{{border}}",
+            "detailsButtonPrimaryBorderDisabled": "{{buttonBorder}}",
+            "detailsButtonPrimaryBorderHover": "{{buttonBorder}}",
+            "detailsButtonPrimaryText": "{{accentText}}",
+            "detailsButtonPrimaryTextDisabled": "{{textDim}}",
+            "detailsButtonPrimaryTextHover": "{{accentBg}}",
             "menuBg": "{{buttonBg}}",
             "menuBgDisabled": "{{buttonBgDisabled}}",
             "menuBgHover": "{{accentBright}}",
@@ -294,14 +312,78 @@
                     }
                 },
                 "manageText": {
+                    "enabled": {},
+                    "disabled": {},
+                    "hovered": {}
+                },
+                "detailsButton": {
                     "enabled": {
-                        "shape": "ButtonShape"
+                        "bgColor": "{{detailsButtonBg}}",
+                        "textColor": "{{detailsButtonText}}",
+                        "dimColor": "{{textDim}}",
+                        "borderColor": "{{detailsButtonBorder}}",
+                        "borderThickness": 1,
+                        "shape": "ButtonShape",
+                        "strokeWidth": 1,
+                        "textAlign": "Center",
+                        "textUpper": false
                     },
                     "disabled": {
-                        "shape": "ButtonShape"
+                        "bgColor": "{{detailsButtonBgDisabled}}",
+                        "textColor": "{{detailsButtonTextDisabled}}",
+                        "dimColor": "{{textDim}}",
+                        "borderColor": "{{detailsButtonBorderDisabled}}",
+                        "borderThickness": 1,
+                        "shape": "ButtonShape",
+                        "strokeWidth": 1,
+                        "textAlign": "Center",
+                        "textUpper": false
                     },
                     "hovered": {
-                        "shape": "ButtonShape"
+                        "bgColor": "{{detailsButtonBgHover}}",
+                        "textColor": "{{detailsButtonTextHover}}",
+                        "dimColor": "{{textDim}}",
+                        "borderColor": "{{detailsButtonBorderHover}}",
+                        "borderThickness": 1,
+                        "shape": "ButtonShape",
+                        "strokeWidth": 1,
+                        "textAlign": "Center",
+                        "textUpper": false
+                    }
+                },
+                "detailsButtonPrimary": {
+                    "enabled": {
+                        "bgColor": "{{detailsButtonPrimaryBg}}",
+                        "textColor": "{{detailsButtonPrimaryText}}",
+                        "dimColor": "{{textDim}}",
+                        "borderColor": "{{detailsButtonPrimaryBorder}}",
+                        "borderThickness": 1,
+                        "shape": "ButtonShape",
+                        "strokeWidth": 1,
+                        "textAlign": "Center",
+                        "textUpper": false
+                    },
+                    "disabled": {
+                        "bgColor": "{{detailsButtonPrimaryBgDisabled}}",
+                        "textColor": "{{detailsButtonPrimaryTextDisabled}}",
+                        "dimColor": "{{textDim}}",
+                        "borderColor": "{{detailsButtonPrimaryBorderDisabled}}",
+                        "borderThickness": 1,
+                        "shape": "ButtonShape",
+                        "strokeWidth": 1,
+                        "textAlign": "Center",
+                        "textUpper": false
+                    },
+                    "hovered": {
+                        "bgColor": "{{detailsButtonPrimaryBgHover}}",
+                        "textColor": "{{detailsButtonPrimaryTextHover}}",
+                        "dimColor": "{{textDim}}",
+                        "borderColor": "{{detailsButtonPrimaryBorderHover}}",
+                        "borderThickness": 1,
+                        "shape": "ButtonShape",
+                        "strokeWidth": 1,
+                        "textAlign": "Center",
+                        "textUpper": false
                     }
                 },
                 "manage": {

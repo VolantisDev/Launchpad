@@ -15,8 +15,8 @@ class ManageBackupsWindow extends ManageWindowBase {
         super.__New(app, themeObj, windowKey, "Manage Backups", owner, parent)
     }
 
-    AddBottomControls() {
-        position := "x" . this.margin . " y+" . this.margin
+    AddBottomControls(y) {
+        position := "x" . this.margin . " y" . y
         this.AddManageButton("AddButton", position, "add", true)
     }
 

@@ -1,9 +1,10 @@
-class MainWindow extends ManageWindowBase {
-    listViewColumns := Array("GAME", "PLATFORM", "STATUS", "API STATUS")
+﻿class MainWindow extends ManageWindowBase {
+    listViewColumns := Array("GAMES")
     launcherManager := ""
     platformManager := ""
     showStatusIndicator := true
     titleIsMenu := true
+    showDetailsPane := true
 
     __New(app, themeObj, windowKey, owner := "", parent := "") {
         this.launcherManager := app.Service("LauncherManager")
@@ -17,8 +18,8 @@ class MainWindow extends ManageWindowBase {
         return this.title
     }
 
-    AddBottomControls() {
-        position := "x" . this.margin . " y+" . (this.margin)
+    AddBottomControls(y) {
+        position := "x" . this.margin . " y" . y
         this.AddManageButton("AddButton", position, "add", true, "Add a Game")
         actionButtonsW := 110
         actionButtonsX := (this.margin + this.windowSettings["contentWidth"] - actionButtonsW)
@@ -28,29 +29,45 @@ class MainWindow extends ManageWindowBase {
 
     ShowListViewContextMenu(lv, item, isRightClick, X, Y) {
         launcherKey := this.listView.GetRowKey(item)
-        launcher := this.launcherManager.Entities[launcherKey]
 
-        menuItems := []
-        menuItems.Push(Map("label", "Edit", "name", "EditLauncher"))
-        menuItems.Push(Map("label", "Build", "name", "BuildLauncher"))
-        menuItems.Push(Map("label", "Run", "name", "RunLauncher"))
-        menuItems.Push(Map("label", "Delete", "name", "DeleteLauncher"))
+        if (launcherKey) {
+            launcher := this.launcherManager.Entities[launcherKey]
 
-        result := this.app.Service("GuiManager").Menu("MenuGui", menuItems, this)
+            menuItems := []
+            menuItems.Push(Map("label", "Edit", "name", "EditLauncher"))
+            menuItems.Push(Map("label", "Build", "name", "BuildLauncher"))
+            menuItems.Push(Map("label", "Run", "name", "RunLauncher"))
+            menuItems.Push(Map("label", "Delete", "name", "DeleteLauncher"))
 
-        if (result == "EditLauncher") {
-            this.EditLauncher(launcherKey)
-        } else if (result == "BuildLauncher") {
-            this.app.Service("BuilderManager").BuildLaunchers(Map(launcherKey, launcher), true)
-            this.UpdateListView()
-        } else if (result == "RunLauncher") {
-            this.RunLauncher(launcherKey)
-        } else if (result == "DeleteLauncher") {
-            result := this.app.Service("GuiManager").Dialog("LauncherDeleteWindow", launcher, this.app.Services.Get("LauncherManager"), this.windowKey)
+            result := this.app.Service("GuiManager").Menu("MenuGui", menuItems, this)
 
-            if (result == "Delete") {
-                this.guiObj["ListView"].Delete(item)
+            if (result == "EditLauncher") {
+                this.EditLauncher(launcherKey)
+            } else if (result == "BuildLauncher") {
+                this.app.Service("BuilderManager").BuildLaunchers(Map(launcherKey, launcher), true)
+                this.UpdateListView()
+            } else if (result == "RunLauncher") {
+                this.RunLauncher(launcherKey)
+            } else if (result == "DeleteLauncher") {
+                this.DeleteLauncher(launcherKey, item)
             }
+        }
+    }
+
+    DeleteLauncher(launcherKey, rowNum := "") {
+        launcher := this.launcherManager.Entities[launcherKey]
+        result := this.app.Service("GuiManager").Dialog("LauncherDeleteWindow", launcher, this.app.Services.Get("LauncherManager"), this.windowKey)
+
+        if (result == "Delete") {
+            if (rowNum == "") {
+                selected := this.listView.GetSelected()
+
+                if (selected.Length > 0) {
+                    rowNum := selected[1]
+                }
+            }
+
+            this.guiObj["ListView"].Delete(rowNum)
         }
     }
 
@@ -157,6 +174,203 @@ class MainWindow extends ManageWindowBase {
         return this.app.Service("AuthService").IsAuthenticated()
     }
 
+    FormatDate(timestamp) {
+        shortDate := FormatTime(timestamp, "ShortDate")
+        shortTime := FormatTime(timestamp, "Time")
+        return shortDate . " " . shortTime
+    }
+
+    AddDetailsPane(y, key := "") {
+        launcher := ""
+        iconPath := ""
+        displayName := ""
+        status := ""
+        apiStatus := ""
+        created := ""
+        updated := ""
+        built := ""
+
+        if (key) {
+            launcher := this.launcherManager.Entities[key]
+
+            if (launcher) {
+                iconPath := this.GetItemImage(launcher)
+                displayName := launcher.DisplayName
+                status := launcher.GetStatus()
+                apiStatus := launcher.DataSourceItemKey ? "Linked" : "Not linked"
+                created := this.FormatDate(this.app.State.GetLauncherCreated(key))
+                updated := this.FormatDate(this.app.State.GetLauncherInfo("Config")["Timestamp"])
+                built := this.FormatDate(this.app.State.GetLauncherInfo("Build")["Timestamp"])
+            }
+        }
+        
+        paneW := this.windowSettings["contentWidth"] - this.lvWidth - this.margin
+        paneX := this.margin + this.lvWidth + (this.margin*2)
+        imgW := 64
+        opts := "vDetailsIcon x" . paneX . " y" . y . " h" . imgW . " w" . imgW
+
+        if (!key) {
+            opts .= " Hidden"
+        }
+
+        this.guiObj.AddPicture(opts, iconPath)
+        textW := paneW - imgW - this.margin
+        opts := "vDetailsTitle x+" . this.margin . " yp h64 w" . textW
+        
+        if (!key) {
+            opts .= " Hidden"
+        }
+
+        this.AddText(displayName, opts, "large", "Bold")
+        this.detailsFields.Push("DetailsTitle")
+
+        opts := ["x" . paneX, "y+" . (this.margin*2), "vDetailsRunButton", "h25", "w75"]
+        
+        if (!key) {
+            opts.Push("Hidden")
+        }
+        
+        this.Add("ButtonControl", opts, "Run", "vDetailsRunButton", "detailsButton")
+        opts := ["x+" . this.margin, "yp", "h25", "vDetailsBuildButton"]
+        
+        if (!key) {
+            opts.Push("Hidden")
+        }
+
+        this.Add("ButtonControl", opts, "Build", "OnDetailsBuildButton", "detailsButton")
+        opts := ["x+" . this.margin, "yp", "h25", "vDetailsEditButton"]
+        
+        if (!key) {
+            opts.Push("Hidden")
+        }
+
+        this.Add("ButtonControl", opts, "Edit", "OnDetailsEditButton", "detailsButton")
+        opts := ["x+" . this.margin, "yp", "h25", "vDetailsDeleteButton"]
+        
+        if (!key) {
+            opts.Push("Hidden")
+        }
+
+        this.Add("ButtonControl", opts, "Delete", "OnDetailsDeleteButton", "detailsButton")
+
+        this.AddDetailsField("Status", "Status", status, "+" . (this.margin*2))
+        this.AddDetailsField("ApiStatus", "API Status", apiStatus)
+        this.AddDetailsField("Created", "Created", created)
+        this.AddDetailsField("Updated", "Updated", updated)
+        this.AddDetailsField("Built", "Built", built)
+
+        ; TODO: Add some entity details
+    }
+
+    AddDetailsField(fieldName, label, text, y := "") {
+        if (!y) {
+            y := "+" . (this.margin/2)
+        }
+
+        paneX := this.margin + this.lvWidth + (this.margin*2)
+        paneW := this.windowSettings["contentWidth"] - this.lvWidth - this.margin
+        opts := "vDetails" . fieldName . "Label x" . paneX . " y" . y
+        
+        if (!text) {
+            opts .= " Hidden"
+        }
+
+        ctl := this.AddText(label . ": ", opts, "normal", "Bold")
+        ctl.GetPos(,, &w)
+        textX := paneX + this.margin + w
+        ; TODO: Set status text color based on status
+        fieldW := paneW - w
+        opts := "vDetails" . fieldName . "Text x" . textX . " yp w" . fieldW
+
+        if (!text) {
+            opts .= " Hidden"
+        }
+        
+        this.AddText(text, opts)
+        this.detailsFields.Push("Details" . fieldName . "Text")
+    }
+
+    OnDetailsRunButton(btn, info) {
+        selected := this.listView.GetSelected("", true)
+
+        if (selected.Length > 0) {
+            this.RunLauncher(selected[1])
+        }
+    }
+
+    OnDetailsBuildButton(btn, info) {
+        selected := this.listView.GetSelected("", true)
+
+        if (selected.Length > 0) {
+            key := selected[1]
+            launcher := this.launcherManager.Entities[key]
+            this.app.Service("BuilderManager").BuildLaunchers(Map(key, launcher), true)
+            this.UpdateListView()
+        }
+    }
+
+    OnDetailsEditButton(btn, info) {
+        selected := this.listView.GetSelected("", true)
+
+        if (selected.Length > 0) {
+            this.EditLauncher(selected[1])
+        }
+    }
+
+    OnDetailsDeleteButton(btn, info) {
+        selected := this.listView.GetSelected("", true)
+
+        if (selected.Length > 0) {
+            this.DeleteLauncher(selected[1])
+        }
+    }
+
+    UpdateDetailsPane(key := "") {
+        iconPath := ""
+        displayName := ""
+        status := ""
+        apiStatus := ""
+        created := ""
+        updated := ""
+        built := ""
+
+        if (key != "") {
+            launcher := this.launcherManager.Entities[key]
+            iconPath := this.GetItemImage(launcher)
+            displayName := launcher.DisplayName
+            status := launcher.GetStatus()
+            apiStatus := launcher.DataSourceItemKey ? "Linked" : "Not linked"
+            created := this.FormatDate(this.app.State.GetLauncherCreated(key))
+            updated := this.FormatDate(this.app.State.GetLauncherInfo(key, "Config")["Timestamp"])
+            built := this.FormatDate(this.app.State.GetLauncherInfo(key, "Build")["Timestamp"])
+        }
+        
+        this.guiObj["DetailsIcon"].Value := iconPath
+        this.guiObj["DetailsIcon"].Move(,, 64, 64)
+        this.guiObj["DetailsIcon"].Visible := (key != "")
+        this.guiObj["DetailsTitle"].Text := displayName
+        this.guiObj["DetailsTitle"].Visible := (key != "")
+        this.guiObj["DetailsRunButton"].Visible := (key != "")
+        this.guiObj["DetailsBuildButton"].Visible := (key != "")
+        this.guiObj["DetailsEditButton"].Visible := (key != "")
+        this.guiObj["DetailsDeleteButton"].Visible := (key != "")
+        this.guiObj["DetailsStatusLabel"].Visible := (key != "")
+        this.guiObj["DetailsStatusText"].Text := status
+        this.guiObj["DetailsStatusText"].Visible := (key != "")
+        this.guiObj["DetailsApiStatusLabel"].Visible := (key != "")
+        this.guiObj["DetailsApiStatusText"].Text := apiStatus
+        this.guiObj["DetailsApiStatusText"].Visible := (key != "")
+        this.guiObj["DetailsBuiltLabel"].Visible := (key != "")
+        this.guiObj["DetailsBuiltText"].Text := built
+        this.guiObj["DetailsBuiltText"].Visible := (key != "")
+        this.guiObj["DetailsCreatedLabel"].Visible := (key != "")
+        this.guiObj["DetailsCreatedText"].Text := created
+        this.guiObj["DetailsCreatedText"].Visible := (key != "")
+        this.guiObj["DetailsUpdatedLabel"].Visible := (key != "")
+        this.guiObj["DetailsUpdatedText"].Text := updated
+        this.guiObj["DetailsUpdatedText"].Visible := (key != "")
+    }
+
     GetListViewData(lv) {
         data := Map()
 
@@ -172,7 +386,8 @@ class MainWindow extends ManageWindowBase {
                 }
             }
 
-            data[key] := [launcher.DisplayName, platformName, launcher.GetStatus(), apiStatus]
+            ;data[key] := [launcher.DisplayName, platformName, launcher.GetStatus(), apiStatus]
+            data[key] := [launcher.DisplayName]
         }
 
         return data
@@ -183,7 +398,14 @@ class MainWindow extends ManageWindowBase {
     }
 
     ShouldHighlightRow(key, data) {
-        return (data.Has(3) && data[3] !== "Ready")
+        shouldHighlight := false
+
+        if (key) {
+            launcher := this.launcherManager.GetItem(key)
+            shouldHighlight := launcher.GetStatus() != "Ready"
+        }
+        
+        return shouldHighlight
     }
 
     GetListViewImgList(lv, large := false) {
@@ -192,17 +414,7 @@ class MainWindow extends ManageWindowBase {
         iconNum := 1
 
         for key, launcher in this.launcherManager.Entities {
-            iconSrc := launcher.iconSrc
-            
-            assetIcon := launcher.AssetsDir . "\" . key . ".ico"
-            if ((!iconSrc || !FileExist(iconSrc)) && FileExist(assetIcon)) {
-                iconSrc := assetIcon
-            }
-
-            if (!iconSrc || !FileExist(iconSrc)) {
-                iconSrc := defaultIcon
-            }
-
+            iconSrc := this.GetItemImage(launcher)
             newIndex := IL_Add(IL, iconSrc)
 
             if (!newIndex) {
@@ -213,6 +425,22 @@ class MainWindow extends ManageWindowBase {
         }
 
         return IL
+    }
+
+    GetItemImage(launcher) {
+        iconSrc := launcher.iconSrc
+        assetIcon := launcher.AssetsDir . "\" . launcher.Key . ".ico"
+        defaultIcon := this.themeObj.GetIconPath("Game")
+
+        if ((!iconSrc || !FileExist(iconSrc)) && FileExist(assetIcon)) {
+            iconSrc := assetIcon
+        }
+
+        if (!iconSrc || !FileExist(iconSrc)) {
+            iconSrc := defaultIcon
+        }
+
+        return iconSrc
     }
 
     OnDoubleClick(LV, rowNum) {

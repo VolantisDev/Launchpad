@@ -15,8 +15,8 @@ class PlatformsWindow extends ManageWindowBase {
         super.__New(app, themeObj, windowKey, "Platforms", owner, parent)
     }
 
-    AddBottomControls() {
-        position := "x" . this.margin . " y+" . this.margin . " w60 h25"
+    AddBottomControls(y) {
+        position := "x" . this.margin . " y" . y . " w60 h25"
         this.Add("ButtonControl", "vReloadButton ys " . position, "Reload", "", "manageText")
     }
 

@@ -18,6 +18,7 @@ class Events {
     static APP_PRE_RUN := 0x1015
     static APP_POST_RUN := 0x1016
     static APP_SHUTDOWN := 0x1020
+    static APP_RESTART := 0x1025
 
     static CACHES_REGISTER := 0x2010
     static CACHES_ALTER := 0x2015
