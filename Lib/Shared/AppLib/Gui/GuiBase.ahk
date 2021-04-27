@@ -183,8 +183,21 @@ class GuiBase {
 
         static border_size := 6
 
-        if hwnd != A_ScriptHwnd && hwnd != this.GetHwnd()
+        if hwnd != A_ScriptHwnd && hwnd != this.GetHwnd() {
             return
+        }
+
+        guiHwnd := ""
+        
+        try {
+            guiHwnd := this.guiObj.Hwnd
+        } catch Error as ex {
+            guiHwnd := ""
+        }
+
+        if (!guiHwnd) {
+            return
+        }
         
         WinGetPos(&gX, &gY, &gW, &gH, "ahk_id " . this.guiObj.Hwnd)
 
