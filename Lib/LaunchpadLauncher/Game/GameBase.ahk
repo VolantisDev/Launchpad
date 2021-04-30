@@ -165,19 +165,16 @@ class GameBase {
             }
 
             if (!steamOpenCondition.Evaluate()) {
-                MsgBox("Steam is not open...")
                 SetTimer(this.overlayCallbackObj, 0)
                 return
             }
 
             if (overlayAttachedCondtion.Evaluate()) {
-                MsgBox("Overlay attached...")
                 SetTimer(this.overlayCallbackObj, 0)
                 return
             }
 
             if (DateDiff(A_Now, this.launchTime, "S") >= this.launcherConfig["OverlayWait"]) {
-                MsgBox("Launching overlay!")
                 this.StartOverlay()
                 return
             }

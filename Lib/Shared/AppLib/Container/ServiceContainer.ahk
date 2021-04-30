@@ -3,7 +3,6 @@ class ServiceContainer extends ContainerBase {
         serviceObj := super.Get(key)
 
         if (!serviceObj) {
-            MsgBox(key)
             throw ServiceNotFoundException("Service '" . key . "' has not been loaded")
         }
 
