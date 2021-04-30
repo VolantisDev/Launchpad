@@ -224,20 +224,20 @@
         this.AddText(displayName, opts, "large", "Bold")
         this.detailsFields.Push("DetailsTitle")
 
-        opts := ["x" . paneX, "y+" . (this.margin*2), "vDetailsRunButton", "h25", "w75"]
+        opts := ["x" . paneX, "y+" . (this.margin*2), "vDetailsBuildButton", "h25", "w75"]
         
         if (!key) {
             opts.Push("Hidden")
         }
         
-        this.Add("ButtonControl", opts, "Run", "vDetailsRunButton", "detailsButton")
-        opts := ["x+" . this.margin, "yp", "h25", "vDetailsBuildButton"]
+        this.Add("ButtonControl", opts, "Build", "OnDetailsBuildButton", "detailsButton")
+        opts := ["x+" . this.margin, "yp", "h25", "vDetailsRunButton"]
         
         if (!key) {
             opts.Push("Hidden")
         }
 
-        this.Add("ButtonControl", opts, "Build", "OnDetailsBuildButton", "detailsButton")
+        this.Add("ButtonControl", opts, "Run", "OnDetailsRunButton", "detailsButton")
         opts := ["x+" . this.margin, "yp", "h25", "vDetailsEditButton"]
         
         if (!key) {
