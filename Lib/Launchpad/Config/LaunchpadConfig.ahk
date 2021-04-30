@@ -114,11 +114,6 @@
         set => this.SetBooleanValue("OverrideLauncherTheme", value)
     }
 
-    LaunchersViewMode {
-        get => this.GetIniValue("LauncherViewMode") || "Report"
-        set => this.SetIniValue("LauncherViewMode", value)
-    }
-
     BackupsViewMode {
         get => this.GetIniValue("BackupsViewMode") || "Report"
         set => this.SetIniValue("BackupsViewMode", value)

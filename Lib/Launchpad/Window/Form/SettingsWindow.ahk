@@ -23,12 +23,6 @@
 
         tabs.UseTab("Launchers", true)
 
-        this.AddHeading("Launchers View Mode")
-        chosen := this.GetItemIndex(this.listViewModes, this.app.Config.LaunchersViewMode)
-        ctl := this.guiObj.AddDDL("vLaunchersViewMode xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.listViewModes)
-        ctl.OnEvent("Change", "OnLaunchersViewModeChange")
-        ctl.ToolTip := "Select how you would like to view your launchers in the main window."
-
         this.AddHeading("Double-Click Action")
         chosen := this.GetItemIndex(this.doubleClickActions, this.app.Config.LauncherDoubleClickAction)
         ctl := this.guiObj.AddDDL("vLauncherDoubleClickAction xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.doubleClickActions)
@@ -279,12 +273,6 @@
     OnDefaultLauncherThemeChange(ctl, info) {
         this.guiObj.Submit(false)
         this.app.Config.DefaultLauncherTheme := this.availableThemes[ctl.Value]
-    }
-
-    OnLaunchersViewModeChange(ctl, info) {
-        this.guiObj.Submit(false)
-        this.app.Config.LaunchersViewMode := this.listViewModes[ctl.Value]
-        this.needsRestart := true
     }
 
     OnPlatformsViewModeChange(ctl, info) {

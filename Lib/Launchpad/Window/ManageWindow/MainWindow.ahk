@@ -394,7 +394,7 @@
     }
 
     GetViewMode() {
-        return this.app.Config.LaunchersViewMode
+        return "Report"
     }
 
     ShouldHighlightRow(key, data) {
