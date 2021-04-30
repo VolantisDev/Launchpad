@@ -21,7 +21,7 @@ class DependencyInstaller extends InstallerBase {
         ; TODO: Remove dependency on A_ScriptDir
         ahkBins := A_ScriptDir . "\Resources\Dependencies\AHkBins.zip"
         dest := A_ScriptDir . "\Vendor\AutoHotKey\Compiler"
-        ahkBinsComponent := CopyableInstallerComponent(dbVersion, ahkBins, true, dest, appState, "AhkBins", cache, "Dependencies", true, tmpDir, false, "Ahk2Exe.exe")
+        ahkBinsComponent := CopyableInstallerComponent(A_AhkVersion, ahkBins, true, dest, appState, "AhkBins", cache, "Dependencies", true, tmpDir, false, "Ahk2Exe.exe")
         components.Push(ahkBinsComponent)
 
         iconsExtUrl := "https://www.nirsoft.net/utils/iconsext.zip"

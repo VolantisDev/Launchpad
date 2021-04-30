@@ -113,25 +113,46 @@ class InstallerComponentBase {
         return this.appState.GetVersion(this.parentStateKey)
     }
 
+    SanitizeVersionString(version) {
+        version := StrReplace(version, "-", ".")
+        version := StrReplace(version, " ", ".")
+        return version
+    }
+
     VersionIsOutdated(latestVersion, installedVersion) {
         if (latestVersion == "{{VERSION}}" || installedVersion == "{{VERSION}}") {
-            return latestVersion == "{{VERSION}}" && installedVersion == "{{VERSION}}"
+            return latestVersion == installedVersion
         }
 
-        splitLatestVersion := StrSplit(latestVersion, ".")
-        splitInstalledVersion := StrSplit(installedVersion, ".")
+        splitLatestVersion := StrSplit(this.SanitizeVersionString(latestVersion), ".")
+        splitInstalledVersion := StrSplit(this.SanitizeVersionString(installedVersion), ".")
 
-        for (index, numPart in splitInstalledVersion) {
-            latestVersionPart := splitLatestVersion.Has(index) ? splitLatestVersion[index] : 0
+        for (index, numPart in splitLatestVersion) {
+            otherVersionPart := splitInstalledVersion.Has(index) ? splitInstalledVersion[index] : 0
 
-            if (!IsInteger(numPart) or !IsInteger(latestVersionPart)) {
-                if (numPart != latestVersionPart) {
+            currentIsAlpha := false
+            latestIsAlpha := false
+
+            if (SubStr(numPart, 1, 1) == "a" && IsInteger(SubStr(numPart, 2))) {
+                latestIsAlpha := true
+                numPart := SubStr(numPart, 2)
+            }
+
+            if (SubStr(otherVersionPart, 1, 1) == "a" && IsInteger(SubStr(otherVersionPart, 2))) {
+                currentIsAlpha := true
+                otherVersionPart := SubStr(otherVersionPart, 2)
+            }
+
+            if (currentIsAlpha != latestIsAlpha) {
+                return true
+            } else if (!IsInteger(numPart) or !IsInteger(otherVersionPart)) {
+                if (numPart != otherVersionPart) {
                     return true
                 }
-            } else if ((latestVersionPart + 0) > (numPart + 0)) {
-                return true
-            } else if ((latestVersionPart + 0) < (numPart + 0)) {
+            } else if ((otherVersionPart + 0) > (numPart + 0)) {
                 return false
+            } else if ((otherVersionPart + 0) < (numPart + 0)) {
+                return true
             }
         }
 
