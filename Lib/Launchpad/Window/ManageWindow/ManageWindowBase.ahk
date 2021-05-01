@@ -95,7 +95,9 @@
     }
 
     UpdateListView(focusedRow := 0) {
-        this.listView.UpdateListView(focusedRow)
+        key := this.listView.GetSelected("", true, true)
+        this.listView.UpdateListView(true)
+        this.UpdateDetailsPane(key)
     }
 
     InitListView(lv) {

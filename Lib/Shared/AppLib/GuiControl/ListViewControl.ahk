@@ -57,7 +57,7 @@ class ListViewControl extends GuiControlBase {
         return this.ctl
     }
 
-    GetSelected(type := "", getKeys := false) {
+    GetSelected(type := "", getKeys := false, first := false) {
         selected := []
         rowNum := 0
 
@@ -71,6 +71,10 @@ class ListViewControl extends GuiControlBase {
             val := getKeys ? this.GetRowKey(rowNum) : rowNum
 
             selected.Push(val)
+        }
+
+        if (first) {
+            selected := (selected.Length > 0) ? selected[1] : ""
         }
 
         return selected
@@ -103,7 +107,7 @@ class ListViewControl extends GuiControlBase {
 
         this.ctl.Delete()
 
-        idx := 0
+        idx := 1
 
         for key, data in this.rowData {
             idx++
