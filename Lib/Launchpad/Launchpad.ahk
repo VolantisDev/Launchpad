@@ -54,11 +54,13 @@
     }
 
     UpdateIncludes() {
+        ; TODO: Change this to call AutoHotKey.exe with the UpdateIncludes.ahk script then delete the .bat file
         RunWait(this.appDir . "\Scripts\UpdateIncludes.bat", this.appDir . "\Scripts")
         this.RestartApp()
     }
 
     BuildApp() {
+        ; TODO: Change this to call AutoHotKey.exe with the UpdateIncludes.ahk script then delete the .bat file
         Run(this.appDir . "\Scripts\Build.bat", this.appDir . "\Scripts")
     }
 
