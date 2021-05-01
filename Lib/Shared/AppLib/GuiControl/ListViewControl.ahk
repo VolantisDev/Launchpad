@@ -143,7 +143,7 @@ class ListViewControl extends GuiControlBase {
             }
 
             if (this.imgListS) {
-                rowOpts.Push("Icon" . idx)
+                rowOpts.Push("Icon" . idx - 1)
             }
 
             data.InsertAt(this.keyCol, key)
