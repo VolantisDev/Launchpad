@@ -16,7 +16,7 @@ class JwtAuthProvider extends AuthProviderBase {
         }
     }
 
-    Login() {
+    Login(isRetry := false) {
         refreshToken := this.refreshToken
 
         if (!refreshToken) {
@@ -39,7 +39,13 @@ class JwtAuthProvider extends AuthProviderBase {
                 userInfo := this.ExtractAuthInfoFromResponse(request)
             } else {
                 this.refreshToken := ""
-                throw OperationFailedException("Login failed")
+                
+                if (isRetry) {
+                    ; TODO: Log user out instead of throwing an exception
+                    throw OperationFailedException("Login failed.")
+                } else {
+                    return this.Login(true)
+                }
             }
         }
 
