@@ -50,7 +50,8 @@ class WinHttpReq extends HttpReqBase {
         this.statusCode := WinHttpReq.winHttp.Status()
 
         this.returnCode := returnCode
-        return returnCode
+        ; TODO: Determine why returnCode can be -1 or 1 even though statusCode is 200 in both cases
+        return this.statusCode == 200 ? -1 : 1
     }
 
     ProcessHeaders(oHTTP) {

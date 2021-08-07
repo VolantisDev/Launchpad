@@ -13,6 +13,10 @@ class AuthInfo {
         get => this.Get(this.userIdField)
     }
 
+    __New() {
+        
+    }
+
     Get(key) {
         value := ""
 
