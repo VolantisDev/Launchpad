@@ -54,14 +54,23 @@
     }
 
     UpdateIncludes() {
-        ; TODO: Change this to call AutoHotKey.exe with the UpdateIncludes.ahk script then delete the .bat file
-        RunWait(this.appDir . "\Scripts\UpdateIncludes.bat", this.appDir . "\Scripts")
+        this.RunAhkScript(this.appDir . "\Scripts\UpdateIncludes.ahk")
         this.RestartApp()
     }
 
     BuildApp() {
-        ; TODO: Change this to call AutoHotKey.exe with the UpdateIncludes.ahk script then delete the .bat file
-        Run(this.appDir . "\Scripts\Build.bat", this.appDir . "\Scripts")
+        this.RunAhkScript(this.appDir . "\Scripts\Build.ahk")
+    }
+
+    RunAhkScript(scriptPath) {
+        SplitPath(scriptPath, &scriptDir)
+        ahkExe := this.appDir . "\Vendor\AutoHotKey\AutoHotkey" . (A_Is64bitOS ? "64" : "32") . ".exe"
+
+        if (FileExist(ahkExe) && FileExist(scriptPath)) {
+            RunWait(ahkExe . " " . scriptPath, scriptDir)
+        } else {
+            throw AppException("Could not run AHK script")
+        }
     }
 
     SetTrayMenuItems(menuItems) {
