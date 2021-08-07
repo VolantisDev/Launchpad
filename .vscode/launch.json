@@ -8,7 +8,7 @@
             "name": "Launchpad Debug",
             "type": "autohotkey",
             "request": "launch",
-            "runtime": "${workspaceFolder}/Vendor/AutoHotkey/AutoHotKeyU64.exe",
+            "runtime": "${workspaceFolder}/Vendor/AutoHotkey/AutoHotKey64.exe",
             "program": "${workspaceFolder}/Launchpad.ahk",
             "env": {"LAUNCHPAD_DEBUG": "1"}
         },

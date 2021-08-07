@@ -27,7 +27,7 @@ class EntityManagerBase extends AppComponentServiceBase {
         operation := this.GetLoadOperation()
         success := operation.Run()
         this._components := operation.GetResults()
-        super.LoadCopmonents() ; Allow entities to be added to or altered
+        super.LoadComponents() ; Allow entities to be added to or altered
 
         return success
     }

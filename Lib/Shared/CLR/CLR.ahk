@@ -184,7 +184,7 @@ class CLR {
     }
 
     static GUID(&GUID, sGUID) {
-        GUID := BufferAlloc(16, 0)
+        GUID := Buffer(16, 0)
         result := DllCall("ole32\CLSIDFromString", "WStr", sGUID, "Ptr", GUID.Ptr)
 
         return result >= 0 ? GUID.Ptr : ""

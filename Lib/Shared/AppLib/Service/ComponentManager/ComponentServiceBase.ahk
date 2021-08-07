@@ -21,21 +21,21 @@ class ComponentServiceBase extends ServiceBase {
 
     LoadComponents() {
         if (!this._componentsLoaded) {
-            components := this._components
+            components := ServiceComponentContainer(this._components)
 
             if (this._registerEvent) {
                 event := RegisterComponentsEvent(this._registerEvent, components)
                 this.eventManagerObj.DispatchEvent(this._registerEvent, event)
-                components := event.Items
+                components := event.container
             }
 
             if (this._alterEvent) {
                 event := AlterComponentsEvent(this._alterEvent, components)
                 this.eventManagerObj.DispatchEvent(this._alterEvent, event)
-                components := event.Items
+                components := event.container
             }
 
-            this.components := components
+            this.components := components.Items
             this._componentsLoaded := true
         }
     }

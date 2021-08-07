@@ -67,11 +67,11 @@ class GitHubBuildDeployer extends BuildDeployerBase {
         result := ""
         dll := "Crypt32\CryptBinaryToString"
 
-        sizeBuf := BufferAlloc(8, 0)
+        sizeBuf := Buffer(8, 0)
 
         ; if DllCall(dll, "Ptr", StrPtr(data), "UInt", len, "UInt", 0x00000001, "Ptr", 0, "UIntP", sizeBuf.Ptr) {
         ;     size := NumGet(sizeBuf, 0, "UInt")
-        ;     out := BufferAlloc(size *= bytesPerChar, 0)
+        ;     out := Buffer(size *= bytesPerChar, 0)
 
         ; 	if DllCall(dll, "Ptr", StrPtr(data), "UInt", len, "UInt", 0x00000001, "Ptr", out, "UIntP", sizeBuf.Ptr) {
         ;         size := NumGet(sizeBuf, 0, "UInt")

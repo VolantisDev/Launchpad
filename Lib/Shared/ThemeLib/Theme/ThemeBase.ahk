@@ -466,7 +466,7 @@ class ThemeBase {
         DllCall("dwmapi\DwmIsCompositionEnabled", "IntP", isEnabled)
 
         if (isEnabled) {
-            margins := BufferAlloc(16)
+            margins := Buffer(16)
             NumPut("UInt", 1, margins, 0)
             NumPut("UInt", 1, margins, 4)
             NumPut("UInt", 1, margins, 8)

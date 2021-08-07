@@ -31,7 +31,7 @@ class LoadModulesOp extends BulkOperationBase {
         for key, moduleClass in modules {
             index++
             this.StartItem(index, "Loading " . key . "...")
-            exists := IsSet(&moduleClass)
+            exists := IsSet(moduleClass)
 
             if (exists) {
                 this.results[key] := %moduleClass%(this.app)

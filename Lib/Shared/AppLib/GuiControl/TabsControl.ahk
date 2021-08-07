@@ -83,7 +83,7 @@ class TabsControl extends GuiControlBase {
             bgColor := this.guiObj.themeObj.RGB2BGR("0x" . this.guiObj.themeObj.GetColor("background"))
             hdc := NumGet(lParam + 0, OHDC, "Ptr")
 
-            bgRect := BufferAlloc(16, 0)
+            bgRect := Buffer(16, 0)
 
             DllCall("CopyRect", "Ptr", bgRect, "Ptr", lParam + ORect)
 

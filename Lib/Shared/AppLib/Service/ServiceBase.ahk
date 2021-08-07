@@ -1,3 +1,5 @@
 class ServiceBase {
-
+    __New() {
+        
+    }
 }

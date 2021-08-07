@@ -1,6 +1,6 @@
 class UuidGenerator extends IdGeneratorBase {
     Generate() {
-        A := BufferAlloc(16)
+        A := Buffer(16)
         DllCall("rpcrt4\UuidCreate", "Ptr", A) 
         Address := A.Ptr
         h := ""

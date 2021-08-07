@@ -263,7 +263,7 @@ class ListViewControl extends GuiControlBase {
         rectT := NumGet(l + 0, ORect + 4, "Int")
         rectR := NumGet(l + 0, ORect + 8, "Int") - (this.guiObj.margin/2)
         rectB := NumGet(l + 0, ORect + 12, "Int")
-        rect := BufferAlloc(16)
+        rect := Buffer(16)
         NumPut("Int", rectL, "Int", rectT, "Int", rectR, "Int", rectB, rect)
         DllCall("Gdi32.dll\SetBkMode", "Ptr", hdc, "UInt", 0)
         brush := DllCall("CreateSolidBrush", "UInt", bgColor, "Ptr")

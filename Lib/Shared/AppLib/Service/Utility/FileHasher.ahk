@@ -23,7 +23,7 @@ class FileHasher extends ServiceBase {
             hModule := DllCall("LoadLibraryW", "Str", "Advapi32.dll", "Ptr")
         }
 
-        hCryptProv := BufferAlloc(A_PtrSize)
+        hCryptProv := Buffer(A_PtrSize)
         DllCall("Advapi32\CryptAcquireContextW", "Ptr", hCryptProv, "UInt", 0, "UInt", 0, "UInt", FileHasher.PROV_RSA_AES, "UInt", FileHasher.CRYPT_VERIFYCONTEXT)
         this.hCryptProv := hCryptProv
     }
@@ -45,9 +45,9 @@ class FileHasher extends ServiceBase {
             throw AppException("Could not load file " . filePath . ".")
         }
 
-        hHash := BufferAlloc(A_PtrSize)
+        hHash := Buffer(A_PtrSize)
         DllCall("Advapi32\CryptCreateHash", "Ptr", this.hCryptProv, "UInt", hashType, "UInt", 0, "UInt", 0, "Ptr", hHash)
-        read_buf := BufferAlloc(FileHasher.BUFF_SIZE, 0)
+        read_buf := Buffer(FileHasher.BUFF_SIZE, 0)
         hCryptrHashData := DllCall("GetProcAddress", "Ptr", this.hModule, "AStr", "CryptHashData", "Ptr")
 
         while cbCount := f.RawRead(read_buf, FileHasher.BUFF_SIZE) {
@@ -55,14 +55,14 @@ class FileHasher extends ServiceBase {
                 break
             }
 
-            hHash := BufferAlloc(A_PtrSize)
+            hHash := Buffer(A_PtrSize)
             DllCall(hCryptrHashData, "Ptr", hHash, "Ptr", read_buf, "UInt", cbCount, "UInt", 0)
         }
 
         hashLenSize := 4
         hashLen := 0
         DllCall("Advapi32\CryptGetHashParam", "Ptr", hHash, "UInt", FileHasher.HP_HASHSIZE, "UInt*", &hashLen, "UInt*", &hashLenSize, "UInt", 0)
-        pbHash := BufferAlloc(hashLen, 0)
+        pbHash := Buffer(hashLen, 0)
         DllCall("Advapi32\CryptGetHashParam", "Ptr", hHash, "UInt", FileHasher.HP_HASHVAL, "Ptr", pbHash, "UInt*", &hashLen, "UInt", 0)
         hashVal := ""
 
