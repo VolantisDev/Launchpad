@@ -1,7 +1,7 @@
 class LoadBackupsOp extends BulkOperationBase {
     backupsConfigObj := ""
     progressTitle := "Loading Backups"
-    progressText := "Please wait while your configuration is processed."
+    progressText := "Please wait while your backups are processed."
     successMessage := "Loaded {n} backup(s) successfully."
     failedMessage := "{n} backup(s) could not be loaded due to errors."
 
@@ -23,7 +23,7 @@ class LoadBackupsOp extends BulkOperationBase {
         }
 
         for key, config in this.backupsConfigObj.Backups {
-            this.StartItem(key, key . ": Loading...")
+            this.StartItem(key, key)
             requiredKeys := ""
             this.results[key] := BackupEntity(this.app, key, config, requiredKeys)
             this.FinishItem(key, true, key . ": Loaded successfully.")

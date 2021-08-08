@@ -2,7 +2,7 @@ class LoadPlatformsOp extends BulkOperationBase {
     useProgress := false
     platformsConfigObj := ""
     progressTitle := "Loading Platforms"
-    progressText := "Please wait while your configuration is processed."
+    progressText := "Please wait while your platforms are processed..."
     successMessage := "Loaded {n} platform(s) successfully."
     failedMessage := "{n} platform(s) could not be loaded due to errors."
 
@@ -35,7 +35,7 @@ class LoadPlatformsOp extends BulkOperationBase {
         }
 
         for key, platformClass in platforms {
-            this.StartItem(key, key . ": Loading...")
+            this.StartItem(key, key)
 
             if (!this.platformsConfigObj.Platforms.Has(key)) {
                 this.platformsConfigObj.Platforms[key] := Map()

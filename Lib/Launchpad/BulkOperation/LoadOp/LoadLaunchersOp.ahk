@@ -1,7 +1,7 @@
 class LoadLaunchersOp extends BulkOperationBase {
     launcherConfigObj := ""
     progressTitle := "Loading Launchers"
-    progressText := "Please wait while your configuration is processed."
+    progressText := "Please wait while your launchers are processed..."
     successMessage := "Loaded {n} launcher(s) successfully."
     failedMessage := "{n} launcher(s) could not be loaded due to errors."
 
@@ -23,7 +23,7 @@ class LoadLaunchersOp extends BulkOperationBase {
         }
 
         for key, config in this.launcherConfigObj.Games {
-            this.StartItem(key, key . ": Loading...")
+            this.StartItem(key, key)
             requiredKeys := ""
             this.results[key] := LauncherEntity(this.app, key, config, requiredKeys)
             
