@@ -25,7 +25,7 @@ class GitHubReleaseInstallerComponent extends DownloadableInstallerComponent {
                 req := WinHttpReq(this.repositoryUrl)
                 returnCode := req.Send()
                 
-                if (returnCode != -1) {
+                if (req.GetStatusCode() != 200) {
                     return ""
                 }
 

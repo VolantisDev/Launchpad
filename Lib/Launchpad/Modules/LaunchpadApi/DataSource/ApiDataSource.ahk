@@ -64,7 +64,7 @@ class ApiDataSource extends DataSourceBase {
         if (!exists) {
             request := this.SendHttpReq(path, "GET", "", private)
 
-            if (request.GetReturnCode() != -1) {
+            if (request.GetStatusCode() != 200) {
                 return ""
             }
 
