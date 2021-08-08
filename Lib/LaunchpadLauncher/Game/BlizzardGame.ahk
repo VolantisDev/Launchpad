@@ -1,4 +1,8 @@
 class BlizzardGame extends SimpleGame {
+    playButtonXOffset := 100
+    playButtonYOffset := -100
+    playButtonColors := ["0074E0", "148EFF"]
+
     GetRunCmd() {
         launcherPath := this.app.Service("Launcher").config["LauncherInstallDir"] . "\" . this.app.Service("Launcher").config["LauncherExe"]
         
@@ -19,8 +23,13 @@ class BlizzardGame extends SimpleGame {
         }
 
         if (WinExist(winTitle)) {
-            Sleep(1500)
             winTitle := "ahk_id " . WinGetID(winTitle)
+            buttonReady := this.WaitForColor(this.playButtonColors, winTitle, this.playButtonXOffset, this.playButtonYOffset)
+
+            if (!buttonReady) {
+                throw AppException("Play button does not seem to be available. Please check your Battle.net client and try again.")
+            }
+
             WinActivate(winTitle)
             mouseCoordMode := A_CoordModeMouse
 
@@ -31,8 +40,8 @@ class BlizzardGame extends SimpleGame {
             ; Click the Play button
             CoordMode("Mouse", "Window")
             WinGetClientPos(,,, &winH, winTitle)
-            buttonX := 100
-            buttonY := winH - 100
+            buttonX := this.playButtonXOffset
+            buttonY := winH + this.playButtonYOffset
             Click(buttonX . " " . buttonY)
 
             ; Return mouse pointer to original position
