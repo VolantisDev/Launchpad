@@ -54,7 +54,7 @@ class DataSourceBase {
     ReadListing(path) {
         listingInstance := DSListing(path, this)
 
-        listing := Map()
+        listing := []
 
         if (listingInstance.Exists()) {
             listing := listingInstance.Read()
