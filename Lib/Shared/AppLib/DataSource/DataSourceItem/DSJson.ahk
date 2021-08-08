@@ -1,9 +1,11 @@
 class DSJson extends DSFile {
     itemSuffix := ""
+    dataType := "Map"
     
     Read() {
         content := super.Read()
-        obj := Map()
+        dataType := this.dataType
+        obj := %dataType%()
 
         if (content) {
             data := JsonData()
