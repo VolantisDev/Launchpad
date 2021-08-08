@@ -14,6 +14,7 @@ class GameBase {
     isLoadingWindowRunning := false
     isLoadingWindowFinished := false
     overlayStarted := false
+    relaunchWaitSeconds := 1
 
     __New(app, key, config := "") {
         this.launchTime := A_Now
@@ -92,11 +93,10 @@ class GameBase {
                 winId := this.GameWindowIsOpen()
 
                 if (!winId) {
-                    this.isFinished := !this.GameIsRunning()
-
-                    if (this.isFinished) {
+                    if (!this.GameIsRunning() && !this.WaitForGameOpen(this.relaunchWaitSeconds)) {
                         progress.SetDetailText("Game window closed.")
-                        Sleep(1000)
+                        Sleep(500)
+                        this.isFinished := true
                         this.isOpen := false
                     }
                 }
@@ -405,29 +405,37 @@ class GameBase {
         return this.LoadingWindowIsOpen()
     }
 
-    WaitForGameOpen() {
+    WaitForGameOpen(timeout := "") {
         if (this.config["GameProcessType"] == "Title") {
-            WinWait(this.config["GameProcessId"],,, " - Launchpad")
+            WinWait(this.config["GameProcessId"],, timeout, " - Launchpad")
         } else if (this.config["GameProcessType"] == "Class") {
-            WinWait("ahk_class " . this.config["GameProcessId"],,, " - Launchpad")
+            WinWait("ahk_class " . this.config["GameProcessId"],, timeout, " - Launchpad")
         } else { ; Default to Exe
-            WinWait("ahk_exe " . this.config["GameProcessId"],,, " - Launchpad")
+            WinWait("ahk_exe " . this.config["GameProcessId"],, timeout, " - Launchpad")
         }
 
         return this.GameWindowIsOpen()
     }
 
     WaitForGameClose() {
-        if (this.config["GameProcessType"] == "Title") {
-            WinWaitClose(this.config["GameProcessId"],,, " - Launchpad")
-        } else if (this.config["GameProcessType"] == "Class") {
-            WinWaitClose("ahk_class " . this.config["GameProcessId"],,, " - Launchpad")
-        } else { ; Default to Exe
-            WinWaitClose("ahk_exe " . this.config["GameProcessId"],,, " - Launchpad")
-        }
+        closed := false
 
-        if (this.GameIsRunning()) {
-            ProcessWaitClose(this.pid)
+        while (!closed) {
+            if (this.config["GameProcessType"] == "Title") {
+                WinWaitClose(this.config["GameProcessId"],,, " - Launchpad")
+            } else if (this.config["GameProcessType"] == "Class") {
+                WinWaitClose("ahk_class " . this.config["GameProcessId"],,, " - Launchpad")
+            } else { ; Default to Exe
+                WinWaitClose("ahk_exe " . this.config["GameProcessId"],,, " - Launchpad")
+            }
+
+            if (this.GameIsRunning()) {
+                ProcessWaitClose(this.pid)
+            }
+
+            if (!this.WaitForGameOpen(this.relaunchWaitSeconds)) {
+                closed := true
+            }
         }
 
         return !this.GameIsRunning()
