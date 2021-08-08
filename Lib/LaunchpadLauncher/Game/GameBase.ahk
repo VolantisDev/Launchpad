@@ -442,4 +442,48 @@ class GameBase {
         this.StopOverlay()
         super.__Delete()
     }
+
+    WaitForColor(checkColors, winTitle, xOffset, yOffset, sleepTime := 250, timeout := 30) {
+        if (Type(checkColors) != "Array") {
+            checkColors := [checkColors]
+        }
+
+        colorFound := false
+        pixelCoordMode := A_CoordModePixel
+        CoordMode("Pixel", "Window")
+        maxTries := (timeout * 1000) / sleepTime
+        currentTry := 0
+
+        while (!colorFound) {
+            currentTry++
+
+            if (currentTry >= maxTries) {
+                break
+            }
+
+            if (!WinActive(winTitle)) {
+                WinActivate(winTitle)
+            }
+
+            WinGetClientPos(,,, &winH, winTitle)
+            checkX := xOffset
+            checkY := winH + yOffset
+            pixelColor := PixelGetColor(checkX, checkY)
+            rgbColor := SubStr(pixelColor, 3)
+
+            for index, checkColor in checkColors {
+                if (StrUpper(rgbColor) == StrUpper(checkColor)) {
+                    colorFound := true
+                    break
+                }
+            }
+
+            if (!colorFound) {
+                Sleep(sleepTime)
+            }
+        }
+
+        CoordMode("Pixel", pixelCoordMode)
+        return colorFound
+    }
 }
