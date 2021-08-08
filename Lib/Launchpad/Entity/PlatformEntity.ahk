@@ -86,8 +86,8 @@ class PlatformEntity extends EntityBase {
         return name
     }
 
-    SetConfigValue(key, value) {
-        super.SetConfigValue(key, value)
+    SetConfigValue(key, value, usePrefix := true) {
+        super.SetConfigValue(key, value, usePrefix)
         this.CreatePlatform()
     }
 
