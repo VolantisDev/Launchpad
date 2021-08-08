@@ -35,6 +35,10 @@ class SelectControl extends GuiControlBase {
         opts := this.SetDefaultOptions(opts, defaults)
         ctl := this.guiObj.guiObj.Add(this.ctlType, this.GetOptionsString(opts), this.selectOptions)
 
+        if (!ctl) {
+            throw AppException("Could not create select control")
+        }
+
         if (this.ctlType == "ComboBox") {
             ctl.Text := value
         }
