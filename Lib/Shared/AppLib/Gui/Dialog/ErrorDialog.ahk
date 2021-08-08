@@ -124,7 +124,7 @@ class ErrorDialog extends DialogBox {
 
             request := WinHttpReq(endpoint)
             response := request.Send("POST", body)
-            success := !!(response == -1 && request.GetStatusCode() == 200)
+            success := !!(request.GetStatusCode() == 200)
 
             notification := success ? "Successfully sent error to Volantis Development" : "Failed to send error to Volantis Development"
             this.notifierObj.Notify(notification, "Error Sent", success ? "info" : "error")

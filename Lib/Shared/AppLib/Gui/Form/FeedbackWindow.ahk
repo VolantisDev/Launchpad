@@ -45,7 +45,7 @@ class FeedbackWindow extends DialogBox {
 
             request := WinHttpReq(endpoint)
             response := request.Send("POST", body)
-            success := !!(response == -1 && request.GetStatusCode() == 200)
+            success := !!(request.GetStatusCode() == 200)
 
             notification := success ? "Successfully sent feedback to Volantis Development" : "Failed to send feedback to Volantis Development"
             this.notifierObj.Notify(notification, "Feedback Sent", success ? "info" : "error")

@@ -3,7 +3,7 @@ class GitHubBuildDeployer extends BuildDeployerBase {
         ; TODO: Fix GitHub API request to post new release
         request := this.GetHttpReq("https://api.github.com/repos/" . this.app.Config.GitHubRepo . "/releases")
         response := request.Send("POST", this.GetPostData(deployInfo))
-        success := !!(response == -1 && request.GetStatusCode() == 200)
+        success := !!(request.GetStatusCode() == 200)
         responseData := request.GetResponseData()
 
         if (!success || !responseData) {
@@ -41,7 +41,7 @@ class GitHubBuildDeployer extends BuildDeployerBase {
             request.requestHeaders["Content-Length"] := FileGetSize(installer)
             request.requestHeaders["Content-Type"] := "application/vnd.microsoft.portable-executable"
             response := request.Send("POST", installer, true)
-            success := !!(response == -1 && request.GetStatusCode() == 200)
+            success := !!(request.GetStatusCode() == 200)
         }
 
         return success

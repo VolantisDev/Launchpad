@@ -20,7 +20,7 @@ class ApiDataSource extends DataSourceBase {
         if (!exists) {
             request := this.SendHttpReq(path, "HEAD")
             
-            response := (request.GetReturnCode() == -1 && request.GetStatusCode() == 200)
+            response := (request.GetStatusCode() == 200)
 
             if (!response) {
                 this.cache.SetNotFound(path)

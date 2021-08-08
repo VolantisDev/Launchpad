@@ -35,7 +35,7 @@ class JwtAuthProvider extends AuthProviderBase {
             payload := Map("grant_type", "refresh_token", "refresh_token", refreshToken)
             response := request.Send("POST", payload)
            
-            if (response == -1 && request.GetStatusCode() == 200) {
+            if (request.GetStatusCode() == 200) {
                 userInfo := this.ExtractAuthInfoFromResponse(request)
             } else {
                 this.refreshToken := ""
