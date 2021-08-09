@@ -180,7 +180,7 @@
         } else if (btn == "OpenLauncherFile") {
             this.app.Config.OpenLauncherFile()
         } else if (btn == "ReloadLauncherFile") {
-            this.app.Service("LauncherManager").ReloadLauncherFile()
+            this.app.Service("LauncherManager").LoadComponents(this.app.Config.LauncherFile)
         }
     }
 
@@ -191,7 +191,7 @@
         } else if (btn == "OpenBackupsFile") {
             this.app.Config.OpenBackupsFile()
         } else if (btn == "ReloadBackupsFile") {
-            this.app.Service("LauncherManager").ReloadBackupsFile()
+            this.app.Service("LauncherManager").LoadComponents(this.app.Config.BackupsFile)
         }
     }
 
@@ -202,7 +202,7 @@
         } else if (btn == "OpenPlatformsFile") {
             this.app.Config.OpenPlatformsFile()
         } else if (btn == "ReloadPlatformsFile") {
-            this.app.Service("PlatformManager").ReloadPlatformsFile()
+            this.app.Service("PlatformManager").LoadComponents(this.app.Config.PlatformsFile)
         }
     }
 
