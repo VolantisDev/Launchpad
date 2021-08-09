@@ -410,12 +410,10 @@ class ThemeBase {
             } else {
                 result[state] := Map()
             }
-            
-            colorKeys := ["bgColor", "textColor", "borderColor", "dimColor"]
 
-            for index, colorKey in colorKeys {
-                if (result[state].Has(colorKey)) {
-                    result[state][colorKey] := this.DereferenceColor(result[state][colorKey])
+            for key, val in result[state] {
+                if (SubStr(val, 1, 2) == "{{") {
+                    result[state][key] := this.DereferenceColor(val)
                 }
             }
         }
