@@ -15,8 +15,8 @@ var SM_Folder
 VIProductVersion "${VERSION}"
 VIAddVersionKey "ProductName"  "${APP_NAME}"
 VIAddVersionKey "CompanyName"  "${COMP_NAME}"
-VIAddVersionKey "LegalCopyright"  "Ben McClure � 2020"
-VIAddVersionKey "FileDescription"  "Game Launching Multitool"
+VIAddVersionKey "LegalCopyright"  "Ben McClure � 2021"
+VIAddVersionKey "FileDescription"  "Launchpad - Game Launching Multitool"
 VIAddVersionKey "FileVersion"  "${VERSION}"
 
 SetCompressor ZLIB
