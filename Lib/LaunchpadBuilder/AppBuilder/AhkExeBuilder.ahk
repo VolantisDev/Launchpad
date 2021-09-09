@@ -52,7 +52,7 @@ class AhkExeBuilder extends AppBuilderBase {
             ahkDir := this.app.appDir . "\Vendor\AutoHotKey"
         }
 
-        ahkExe := this.appDir . "\Vendor\AutoHotKey\AutoHotkey" . (A_Is64bitOS ? "64" : "32") . ".exe"
+        ahkExe := this.app.appDir . "\Vendor\AutoHotKey\AutoHotkey" . (A_Is64bitOS ? "64" : "32") . ".exe"
         ahk2Exe := ahkDir . "\Compiler\Ahk2Exe.exe"
 
         if (!FileExist(ahk2Exe)) {
