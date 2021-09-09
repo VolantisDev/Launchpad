@@ -2,25 +2,22 @@ class DependencyInstaller extends InstallerBase {
     name := "Dependency Installer"
 
     __New(version, appState, cache, extraComponents := "", tmpDir := "") {
+        ; TODO: Remove dependency on A_ScriptDir
+        installDir := A_ScriptDir
         components := []
-        dbVersion := "1.0.2"
+        cleanupFiles := []
 
         ahkUrl := "https://www.autohotkey.com/download/2.0/AutoHotkey_" . A_AhkVersion . ".zip"
         components.Push(DownloadableInstallerComponent(A_AhkVersion, ahkUrl, true, "Vendor\AutoHotKey", appState, "AutoHotKey", cache, "Dependencies", true, tmpDir, false))
+        
+        ahkDir := installDir . "\Vendor\AutoHotKey"
+        cleanupFiles.Push(ahkDir . "\AutoHotKeyU32.exe")
+        cleanupFiles.Push(ahkDir . "\AutoHotKeyU64.exe")
+        cleanupFiles.Push(ahkDir . "\Compiler\Unicode 32-bit.bin")
+        cleanupFiles.Push(ahkDir . "\Compiler\Unicode 64-bit.bin")
 
-        ;mpressUrl := "https://github.com/bmcclure/launcher-db/releases/download/" . dbVersion . "/mpress.exe"
-        ;mpressPath := "Vendor\AutoHotKey\Compiler\mpress.exe"
-        ;mpressComponent := DownloadableInstallerComponent(dbVersion, mpressUrl, false, mpressPath, appState, "Mpress", cache, "AutoHotKey", true, tmpDir, false)
-        ;components.Push(mpressComponent)
-
-        ;ahk2ExeUrl := "https://github.com/bmcclure/launcher-db/releases/download/" . dbVersion . "/Ahk2Exe.exe"
-        ;ahk2ExePath := "Vendor\AutoHotKey\Compiler\Ahk2Exe.exe"
-        ;ahk2ExeComponent := DownloadableInstallerComponent(dbVersion, ahk2ExeUrl, false, ahk2ExePath, appState, "Ahk2Exe", cache, "AutoHotKey", true, tmpDir, false)
-        ;components.Push(ahk2ExeComponent)
-
-        ; TODO: Remove dependency on A_ScriptDir
-        ahkBins := A_ScriptDir . "\Resources\Dependencies\AHkBins.zip"
-        dest := A_ScriptDir . "\Vendor\AutoHotKey\Compiler"
+        ahkBins := installDir . "\Resources\Dependencies\AHkBins.zip"
+        dest := ahkDir . "\Compiler"
         ahkBinsComponent := CopyableInstallerComponent(A_AhkVersion, ahkBins, true, dest, appState, "AhkBins", cache, "Dependencies", true, tmpDir, false, "Ahk2Exe.exe")
         components.Push(ahkBinsComponent)
 
@@ -38,6 +35,6 @@ class DependencyInstaller extends InstallerBase {
             }
         }
 
-        super.__New(version, appState, "Dependencies", cache, components, tmpDir := "")
+        super.__New(version, appState, "Dependencies", cache, components, tmpDir, cleanupFiles)
     }
 }

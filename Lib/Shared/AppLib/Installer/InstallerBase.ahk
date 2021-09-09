@@ -13,7 +13,7 @@ class InstallerBase {
     tmpDir := ""
     parentComponent := ""
 
-    __New(version, appState, stateKey, cache, components := "", tmpDir := "") {
+    __New(version, appState, stateKey, cache, components := "", tmpDir := "", cleanupFiles := "") {
         this.cache := cache
         this.version := version
         this.appState := appState
@@ -21,6 +21,12 @@ class InstallerBase {
         SplitPath(A_ScriptFullPath, &scriptFile, &scriptDir)
         this.scriptFile := scriptFile
         this.scriptDir := scriptDir
+
+        if (Type(cleanupFiles) != "Array") {
+            cleanupFiles := [cleanupFiles]
+        }
+
+        this.cleanupFiles := cleanupFiles
 
         if (tmpDir == "") {
             tmpDir := A_Temp . "\Launchpad\Installers"
@@ -82,6 +88,12 @@ class InstallerBase {
                 if (!componentSuccess) {
                     success := false
                 }
+            }
+        }
+
+        for index, cleanupFile in this.cleanupFiles {
+            if (FileExist(cleanupFile)) {
+                FileDelete(cleanupFile)
             }
         }
 

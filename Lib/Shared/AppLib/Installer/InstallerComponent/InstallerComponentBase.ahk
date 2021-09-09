@@ -53,6 +53,10 @@ class InstallerComponentBase {
         throw MethodNotImplementedException("InstallerComponentBase", "UninstallAction")
     }
 
+    CleanupPreviousVersionsAction() {
+        return true ; Cleanup is optional
+    }
+
     /**
     * IMPLEMENTED METHODS
     */
@@ -72,10 +76,20 @@ class InstallerComponentBase {
             return true
         }
 
+        this.CleanupPreviousVersionsAction()
         this.InstallAction()
 
         this.appState.SetVersion(this.stateKey, this.version)
         this.appState.SetComponentInstalled(this.stateKey, true)
+        return true
+    }
+
+    CleanupPreviousVersions() {
+        if (this.onlyCompiled && !A_IsCompiled) {
+            return true
+        }
+
+        this.CleanupPreviousVersionsAction()
         return true
     }
 
