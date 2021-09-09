@@ -30,12 +30,12 @@ class BuildSettingsForm extends FormGuiBase {
         this.AddCheckBox("Build AhkBins.zip", "BuildAhkBins", true, false, "OnCheckbox")
         this.AddCheckBox("Build Launchpad.exe", "BuildLaunchpad", true, false, "OnCheckbox")
         this.AddCheckBox("Build installer", "BuildInstaller", false, false, "OnCheckbox")
-        this.AddCheckBox("Build chocolatey package", "BuildChocoPkg", false, false, "OnCheckbox")
+        this.AddCheckBox("Build chocolatey package (Experimental)", "BuildChocoPkg", false, false, "OnCheckbox")
 
         this.AddHeading("Deployment Options")
-        this.AddCheckBox("Deploy release to GitHub", "DeployToGitHub", false, false, "OnCheckbox")
-        this.AddCheckBox("Deploy release to Launchpad.games API", "DeployToApi", false, false, "OnCheckbox")
-        this.AddCheckBox("Deploy chocolatey package", "DeployToChocolatey", false, false, "OnCheckbox")
+        this.AddCheckBox("Deploy release to GitHub (Experimental)", "DeployToGitHub", false, false, "OnCheckbox")
+        this.AddCheckBox("Deploy release to Launchpad.games API (Experimental)", "DeployToApi", false, false, "OnCheckbox")
+        this.AddCheckBox("Deploy chocolatey package (Experimental)", "DeployToChocolatey", false, false, "OnCheckbox")
     }
 
     ProcessResult(result, submittedData := "") {
