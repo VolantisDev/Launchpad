@@ -14,4 +14,8 @@ class ArchiveFileBase {
     Extract(destinationPath) {
         throw(MethodNotImplementedException("ArchiveFileBase", "Extract"))
     }
+
+    Compress(files, dir := "") {
+        throw(MethodNotImplementedException("ArchiveFileBase", "Compress"))
+    }
 }

@@ -1,4 +1,6 @@
 class ChocoPkgBuilder extends AppBuilderBase {
+    name := "Chocolatey Package"
+
     Build(version) {
         distDir := this.app.Config.DistDir
         installer := distDir . "\" . this.app.appName . "-" . this.app.Version . ".exe"

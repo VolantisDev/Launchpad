@@ -1,5 +1,6 @@
 ; Automatically-generated file, do not edit manually.
 #Include LaunchpadBuilder.ahk
+#Include AppBuilder\AhkBinsBuilder.ahk
 #Include AppBuilder\AhkExeBuilder.ahk
 #Include AppBuilder\AppBuilderBase.ahk
 #Include AppBuilder\ChocoPkgBuilder.ahk
@@ -10,7 +11,7 @@
 #Include BuildDeployer\ChocoDeployer.ahk
 #Include BuildDeployer\GitHubBuildDeployer.ahk
 #Include BulkOperation\LaunchpadBuildOp.ahk
-#Include BulkOperation\LaunchpadDeployOp copy.ahk
+#Include BulkOperation\LaunchpadDeployOp.ahk
 #Include Config\LaunchpadBuilderConfig.ahk
 #Include Gui\BuildSettingsForm.ahk
 #Include Gui\ReleaseInfoForm.ahk

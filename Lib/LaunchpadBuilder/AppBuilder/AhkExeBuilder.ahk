@@ -1,4 +1,5 @@
 class AhkExeBuilder extends AppBuilderBase {
+    name := "Exe"
     copyLibs := ["Shared", "LaunchpadLauncher"]
     copyVendorLibs := ["7zip"]
 

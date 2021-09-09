@@ -6,8 +6,8 @@ class LaunchpadBuildOp extends BulkOperationBase {
     builders := ""
 
     __New(app, builders, owner := "") {
-        if (Type(builders) != "Map") {
-            builders := Map("Builder", builders)
+        if (Type(builders) != "Array") {
+            builders := [builders]
         }
 
         this.builders := builders
@@ -16,12 +16,13 @@ class LaunchpadBuildOp extends BulkOperationBase {
 
     RunAction() {
         if (this.useProgress) {
-            this.progress.SetRange(0, this.builders.Count)
+            this.progress.SetRange(0, this.builders.Length)
         }
 
         version := this.app.Version
 
-        for key, builder in this.builders {
+        for index, builder in this.builders {
+            key := builder.name
             this.StartItem(key, key . ": Building...")
             this.results[key] := builder.Build(version)
             this.FinishItem(key, true, key . ": Finished building")

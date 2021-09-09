@@ -38,6 +38,7 @@ class LaunchpadBuilder extends AppBase {
 
         this.Version := version
         this.CreateGitTag(version)
+
         success := LaunchpadBuildOp(this, this.GetBuilders(buildInfo)).Run()
 
         if (!success) {
@@ -63,20 +64,24 @@ class LaunchpadBuilder extends AppBase {
     }
 
     GetBuilders(buildInfo) {
-        builders := Map()
+        builders := []
         
         if (buildInfo.BuildLaunchpadOverlay) {
-            builders["Launchpad Overlay"] := LaunchpadOverlayBuilder(this)
+            builders.Push(LaunchpadOverlayBuilder(this))
+        }
+
+        if (buildInfo.BuildAhkBins) {
+            builders.Push(AhkBinsBuilder(this))
         }
         
         if (buildInfo.BuildLaunchpad) {
-            builders["Exe"] := AhkExeBuilder(this)
+            builders.Push(AhkExeBuilder(this))
 
             if (buildInfo.BuildInstaller) {
-                builders["Installer"] := NsisInstallerBuilder(this)
+                builders.Push(NsisInstallerBuilder(this))
 
                 if (buildInfo.BuildChocoPkg) {
-                    builders["Chocolatey Package"] := ChocoPkgBuilder(this)
+                    builders.Push(ChocoPkgBuilder(this))
                 }
             }
         }

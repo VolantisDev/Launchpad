@@ -1,4 +1,6 @@
 class LaunchpadOverlayBuilder extends AppBuilderBase {
+    name := "Launchpad Overlay"
+
     Build(version) {
         RunWait("msbuild LaunchpadOverlay.sln -property:Configuration=Release", this.app.appDir)
 

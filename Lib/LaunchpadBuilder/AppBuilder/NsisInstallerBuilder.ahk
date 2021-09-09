@@ -1,4 +1,6 @@
 class NsisInstallerBuilder extends AppBuilderBase {
+    name := "Installer"
+
     Build(version) {
         distDir := this.app.Config.DistDir
 

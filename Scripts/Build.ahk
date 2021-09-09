@@ -17,6 +17,6 @@ appInfo["appName"] := "Launchpad"
 appInfo["developer"] := "Volantis Development"
 appInfo["version"] := appVersion
 appInfo["configClass"] := "LaunchpadBuilderConfig"
-appInfo["configFile"] := appDir . "\" . appInfo["appName"] . "build.ini"
+appInfo["configFile"] := appDir . "\" . appInfo["appName"] . ".build.ini"
 appInfo["BuildClass"] := "Launchpad"
 LaunchpadBuilder(appInfo)

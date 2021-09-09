@@ -27,7 +27,8 @@ class BuildSettingsForm extends FormGuiBase {
 
         this.AddHeading("Build Options")
         this.AddCheckBox("Build Launchpad Overlay", "BuildLaunchpadOverlay", false, false, "OnCheckbox")
-        this.AddCheckBox("Build Launchpad", "BuildLaunchpad", true, false, "OnCheckbox")
+        this.AddCheckBox("Build AhkBins.zip", "BuildAhkBins", true, false, "OnCheckbox")
+        this.AddCheckBox("Build Launchpad.exe", "BuildLaunchpad", true, false, "OnCheckbox")
         this.AddCheckBox("Build installer", "BuildInstaller", false, false, "OnCheckbox")
         this.AddCheckBox("Build chocolatey package", "BuildChocoPkg", false, false, "OnCheckbox")
 
