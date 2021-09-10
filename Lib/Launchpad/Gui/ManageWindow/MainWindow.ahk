@@ -234,7 +234,7 @@
         this.AddText(platformName, opts)
         this.detailsFields.Push("DetailsPlatformName")
 
-        imgW := 64
+        imgW := 48
         opts := "vDetailsIcon x" . paneX . " y+" . this.margin . " h" . imgW . " w" . imgW
         if (!key) {
             opts .= " Hidden"
@@ -380,7 +380,7 @@
         }
         
         this.guiObj["DetailsIcon"].Value := iconPath
-        this.guiObj["DetailsIcon"].Move(,, 64, 64)
+        this.guiObj["DetailsIcon"].Move(,, 48, 48)
         this.guiObj["DetailsIcon"].Visible := (key != "")
         this.guiObj["DetailsTitle"].Text := displayName
         this.guiObj["DetailsTitle"].Visible := (key != "")
