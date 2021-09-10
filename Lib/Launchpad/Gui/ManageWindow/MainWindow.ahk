@@ -110,7 +110,6 @@
         menuItems.Push(Map("label", "&Restart", "name", "Reload"))
         menuItems.Push(Map("label", "E&xit", "name", "Exit"))
         
-        
         result := this.app.Service("GuiManager").Menu("MenuGui", menuItems, this, this.guiObj["WindowTitleText"])
 
         if (result == "ManagePlatforms") {
@@ -184,6 +183,8 @@
         launcher := ""
         iconPath := ""
         displayName := ""
+        platformIconPath := ""
+        platformName := ""
         status := ""
         apiStatus := ""
         created := ""
@@ -196,6 +197,16 @@
             if (launcher) {
                 iconPath := this.GetItemImage(launcher)
                 displayName := launcher.DisplayName
+
+                manager := this.app.Service("PlatformManager")
+
+                if (launcher.Platform && manager.HasItem(launcher.Platform)) {
+                    platform := manager.GetItem(launcher.Platform)
+                    platformIconPath := this.GetPlatformImage(platform)
+                    platformName := platform.GetDisplayName()
+                }
+
+                platformIconPath := 
                 status := launcher.GetStatus()
                 apiStatus := launcher.DataSourceItemKey ? "Linked" : "Not linked"
                 created := this.FormatDate(this.app.State.GetLauncherCreated(key))
@@ -205,52 +216,64 @@
         }
         
         paneW := this.windowSettings["contentWidth"] - this.lvWidth - this.margin
-        paneX := this.margin + this.lvWidth + (this.margin*2)
-        imgW := 64
-        opts := "vDetailsIcon x" . paneX . " y" . y . " h" . imgW . " w" . imgW
+        paneX := this.margin + this.lvWidth + (this.margin * 2)
 
-        if (!key) {
+        imgW := 24
+        opts := "vDetailsPlatformIcon x" . paneX . " y" . y . " h" . imgW . " w" . imgW
+        if (!key || !platformIconPath) {
             opts .= " Hidden"
         }
+        this.guiObj.AddPicture(opts, platformIconPath)
+        this.detailsFields.Push("DetailsPlatformIcon")
 
-        this.guiObj.AddPicture(opts, iconPath)
         textW := paneW - imgW - this.margin
-        opts := "vDetailsTitle x+" . this.margin . " yp h64 w" . textW
-        
+        opts := "vDetailsPlatformName x+" . this.margin . " yp h" . imgW . " w" . textW
+        if (!key || !platformName) {
+            opts .= " Hidden"
+        }
+        this.AddText(platformName, opts)
+        this.detailsFields.Push("DetailsPlatformName")
+
+        imgW := 64
+        opts := "vDetailsIcon x" . paneX . " y+" . this.margin . " h" . imgW . " w" . imgW
         if (!key) {
             opts .= " Hidden"
         }
+        this.guiObj.AddPicture(opts, iconPath)
+        this.detailsFields.Push("DetailsIcon")
 
+        textW := paneW - imgW - this.margin
+        opts := "vDetailsTitle x+" . this.margin . " yp h" . imgW . " w" . textW
+        if (!key) {
+            opts .= " Hidden"
+        }
         this.AddText(displayName, opts, "large", "Bold")
         this.detailsFields.Push("DetailsTitle")
 
+        
+
         opts := ["x" . paneX, "y+" . (this.margin*2), "vDetailsBuildButton", "h25", "w75"]
-        
         if (!key) {
             opts.Push("Hidden")
         }
-        
         this.Add("ButtonControl", opts, "Build", "OnDetailsBuildButton", "detailsButton")
+
         opts := ["x+" . this.margin, "yp", "h25", "vDetailsRunButton"]
-        
         if (!key) {
             opts.Push("Hidden")
         }
-
         this.Add("ButtonControl", opts, "Run", "OnDetailsRunButton", "detailsButton")
+
         opts := ["x+" . this.margin, "yp", "h25", "vDetailsEditButton"]
-        
         if (!key) {
             opts.Push("Hidden")
         }
-
         this.Add("ButtonControl", opts, "Edit", "OnDetailsEditButton", "detailsButton")
+
         opts := ["x+" . this.margin, "yp", "h25", "vDetailsDeleteButton"]
-        
         if (!key) {
             opts.Push("Hidden")
         }
-
         this.Add("ButtonControl", opts, "Delete", "OnDetailsDeleteButton", "detailsButton")
 
         this.AddDetailsField("Status", "Status", status, "+" . (this.margin*2))
@@ -328,6 +351,8 @@
     UpdateDetailsPane(key := "") {
         iconPath := ""
         displayName := ""
+        platformIconPath := ""
+        platformName := ""
         status := ""
         apiStatus := ""
         created := ""
@@ -338,6 +363,15 @@
             launcher := this.launcherManager.Entities[key]
             iconPath := this.GetItemImage(launcher)
             displayName := launcher.DisplayName
+
+            manager := this.app.Service("PlatformManager")
+
+            if (launcher.Platform && manager.HasItem(launcher.Platform)) {
+                platform := manager.GetItem(launcher.Platform)
+                platformIconPath := this.GetPlatformImage(platform)
+                platformName := platform.GetDisplayName()
+            }
+
             status := launcher.GetStatus()
             apiStatus := launcher.DataSourceItemKey ? "Linked" : "Not linked"
             created := this.FormatDate(this.app.State.GetLauncherCreated(key))
@@ -350,6 +384,11 @@
         this.guiObj["DetailsIcon"].Visible := (key != "")
         this.guiObj["DetailsTitle"].Text := displayName
         this.guiObj["DetailsTitle"].Visible := (key != "")
+        this.guiObj["DetailsPlatformIcon"].Value := platformIconPath
+        this.guiObj["DetailsPlatformIcon"].Move(,, 24, 24)
+        this.guiObj["DetailsPlatformIcon"].Visible := (key != "" && platformIconPath != "")
+        this.guiObj["DetailsPlatformName"].Text := platformName
+        this.guiObj["DetailsPlatformName"].Visible := (key != "" && platformName != "")
         this.guiObj["DetailsRunButton"].Visible := (key != "")
         this.guiObj["DetailsBuildButton"].Visible := (key != "")
         this.guiObj["DetailsEditButton"].Visible := (key != "")
@@ -428,13 +467,25 @@
     }
 
     GetItemImage(launcher) {
-        iconSrc := launcher.iconSrc
+        iconSrc := launcher.IconSrc
         assetIcon := launcher.AssetsDir . "\" . launcher.Key . ".ico"
         defaultIcon := this.themeObj.GetIconPath("Game")
 
         if ((!iconSrc || !FileExist(iconSrc)) && FileExist(assetIcon)) {
             iconSrc := assetIcon
         }
+
+        if (!iconSrc || !FileExist(iconSrc)) {
+            iconSrc := defaultIcon
+        }
+
+        return iconSrc
+    }
+
+    GetPlatformImage(platform) {
+        iconSrc := platform.IconSrc
+        ; TODO: Find a good default platform icon
+        defaultIcon := ""
 
         if (!iconSrc || !FileExist(iconSrc)) {
             iconSrc := defaultIcon
