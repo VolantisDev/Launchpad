@@ -274,7 +274,9 @@
         }
         this.Add("ButtonControl", opts, "Delete", "OnDetailsDeleteButton", "detailsButton")
 
-        this.AddDetailsField("Status", "Status", status, "+" . (this.margin*2))
+        this.AddDetailsField("Key", "Key", key, "+" . (this.margin*2))
+        this.AddDetailsField("Platform", "Platform", platformName, "", true, platformIconPath)
+        this.AddDetailsField("Status", "Status", status)
         this.AddDetailsField("ApiStatus", "API Status", apiStatus)
         this.AddDetailsField("Created", "Created", created)
         this.AddDetailsField("Updated", "Updated", updated)
@@ -283,30 +285,45 @@
         ; TODO: Add some entity details
     }
 
-    AddDetailsField(fieldName, label, text, y := "") {
+    AddDetailsField(fieldName, label, text, y := "", useIcon := false, icon := "") {
         if (!y) {
             y := "+" . (this.margin/2)
         }
 
+        ctlH := 16
+        imgW := useIcon ? ctlH : 0
+
         paneX := this.margin + this.lvWidth + (this.margin*2)
         paneW := this.windowSettings["contentWidth"] - this.lvWidth - this.margin
-        opts := "vDetails" . fieldName . "Label x" . paneX . " y" . y
-        
-        if (!text) {
+        opts := "vDetails" . fieldName . "Label x" . paneX . " y" . y . " h" . ctlH
+        if (!text && !icon) {
             opts .= " Hidden"
         }
-
         ctl := this.AddText(label . ": ", opts, "normal", "Bold")
         ctl.GetPos(,, &w)
-        textX := paneX + this.margin + w
-        ; TODO: Set status text color based on status
-        fieldW := paneW - w
-        opts := "vDetails" . fieldName . "Text x" . textX . " yp w" . fieldW
 
+        textX := paneX + this.margin + w
+        
+        if (useIcon) {
+            imgH := ctlH
+            opts := "vDetails" . fieldName . "DetailIcon x" . textX . " yp h" . imgW . " w" . imgW
+            if (!icon) {
+                opts .= " Hidden"
+            }
+            this.guiObj.AddPicture(opts, icon)
+            this.detailsFields.Push("Details" . fieldName . "DetailIcon")
+        }
+        
+        fieldW := paneW - w - this.margin
+        if (useIcon) {
+            textX += (this.margin/2) + imgW
+            fieldW -= ((this.margin/2) + imgW)
+        }
+        ; TODO: Set status text color based on status
+        opts := "vDetails" . fieldName . "Text x" . textX . " yp w" . fieldW
         if (!text) {
             opts .= " Hidden"
         }
-        
         this.AddText(text, opts)
         this.detailsFields.Push("Details" . fieldName . "Text")
     }
@@ -391,6 +408,17 @@
         this.guiObj["DetailsBuildButton"].Visible := (key != "")
         this.guiObj["DetailsEditButton"].Visible := (key != "")
         this.guiObj["DetailsDeleteButton"].Visible := (key != "")
+        this.guiObj["DetailsKeyText"].Visible := (key != "")
+        this.guiObj["DetailsKeyText"].Text := key
+        this.guiObj["DetailsKeyText"].Visible := (key != "")
+        this.guiObj["DetailsKeyLabel"].Visible := (key != "")
+        this.guiObj["DetailsPlatformText"].Visible := (key != "")
+        this.guiObj["DetailsPlatformText"].Text := platformName
+        this.guiObj["DetailsPlatformText"].Visible := (key != "")
+        this.guiObj["DetailsPlatformDetailIcon"].Value := platformIconPath
+        this.guiObj["DetailsPlatformDetailIcon"].Move(,, 16, 16)
+        this.guiObj["DetailsPlatformDetailIcon"].Visible := (key != "" && platformIconPath != "")
+        this.guiObj["DetailsPlatformLabel"].Visible := (key != "")
         this.guiObj["DetailsStatusLabel"].Visible := (key != "")
         this.guiObj["DetailsStatusText"].Text := status
         this.guiObj["DetailsStatusText"].Visible := (key != "")
