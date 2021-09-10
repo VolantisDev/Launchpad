@@ -94,8 +94,10 @@ class EntityBase {
 
         InvalidParameterException.CheckEmpty("EntityBase", "key", key)
 
+        sanitizer := StringSanitizer()
+
         this.app := app
-        this.keyVal := key
+        this.keyVal := sanitizer.Process(key)
         this.configObj := configObj
         this.parentEntity := parentEntity
 

@@ -5,7 +5,9 @@ class LayeredEntityData extends LayeredDataBase {
         }
 
         processors := []
+        processors.Push(StringSanitizer())
         processors.Push(PlaceholderExpander(this))
+
 
         params := []
         params.Push("defaults", defaults)

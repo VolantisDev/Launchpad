@@ -33,6 +33,7 @@
 #Include AppLib\Container\WindowContainer.ahk
 #Include AppLib\DataProcessor\DataProcessorBase.ahk
 #Include AppLib\DataProcessor\PlaceholderExpander.ahk
+#Include AppLib\DataProcessor\StringSanitizer.ahk
 #Include AppLib\DataSource\DataSourceBase.ahk
 #Include AppLib\DataSource\DataSourceItem\DataSourceItemBase.ahk
 #Include AppLib\DataSource\DataSourceItem\DSAssetFile.ahk
