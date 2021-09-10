@@ -235,7 +235,7 @@
         this.detailsFields.Push("DetailsPlatformName")
 
         imgW := 48
-        opts := "vDetailsIcon x" . paneX . " y+" . this.margin . " h" . imgW . " w" . imgW
+        opts := "vDetailsIcon x" . paneX . " y+" . (this.margin*2) . " h" . imgW . " w" . imgW
         if (!key) {
             opts .= " Hidden"
         }
@@ -249,8 +249,6 @@
         }
         this.AddText(displayName, opts, "large", "Bold")
         this.detailsFields.Push("DetailsTitle")
-
-        
 
         opts := ["x" . paneX, "y+" . (this.margin*2), "vDetailsBuildButton", "h25", "w75"]
         if (!key) {
