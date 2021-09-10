@@ -43,11 +43,15 @@ class ComponentServiceBase extends ServiceBase {
     GetItem(key) {
         component := ""
 
-        if (this._components.Has(key)) {
+        if (this.HasItem(key)) {
             component := this._components[key]
         }
 
         return component
+    }
+
+    HasItem(key) {
+        return this._components.Has(key)
     }
 
     GetAllItems() {
@@ -60,7 +64,7 @@ class ComponentServiceBase extends ServiceBase {
     }
 
     RemoveItem(key) {
-        if (this._components.Has(key)) {
+        if (this.HasItem(key)) {
             this._components.Delete(key)
         }
 
