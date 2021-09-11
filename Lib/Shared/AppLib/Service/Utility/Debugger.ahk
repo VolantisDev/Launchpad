@@ -6,7 +6,11 @@ class Debugger extends ServiceBase {
     }
 
     SetLogger(logger) {
-        this.logger := logger
+        if (logger is LoggerService) {
+            this.logger := logger
+        } else {
+            throw AppException("Invalid logger provided: " . Type(logger))
+        }
     }
 
     Inspect(var) {
@@ -35,23 +39,28 @@ class Debugger extends ServiceBase {
         if (IsObject(val)) {
             indent := this.GetIndent(level, indentStr)
             output := !innerValue ? indent : ""
-            output .= valType . "{`n"
-
-            if (valType == "Array") {
-                for index, value in val {
-                    output .= indent . indentStr . index . ": " . this.ToString(value, level + 1, indentStr, true) . "`n"
-                }
-            } else if (valType == "Map") {
-                for key, value in val {
-                    output .= indent . indentStr . key . ": " . this.ToString(value, level + 1, indentStr, true) . "`n"
-                }
+            
+            if (level > 2) {
+                output .= valType . "`n"
             } else {
-                for name, value in val.OwnProps() {
-                    output .= indent . indentStr . key . ": " . this.ToString(value, level + 1, indentStr, true) . "`n"
-                }
-            }
+                output .= valType . "{`n"
 
-            output .= indent . "}"
+                if (valType == "Array") {
+                    for index, value in val {
+                        output .= indent . indentStr . index . ": " . this.ToString(value, level + 1, indentStr, true) . "`n"
+                    }
+                } else if (valType == "Map") {
+                    for key, value in val {
+                        output .= indent . indentStr . key . ": " . this.ToString(value, level + 1, indentStr, true) . "`n"
+                    }
+                } else {
+                    for name, value in val.OwnProps() {
+                        output .= indent . indentStr . name . ": " . this.ToString(value, level + 1, indentStr, true) . "`n"
+                    }
+                }
+
+                output .= indent . "}"
+            }
 
             if (!innerValue) {
                 output .= "`n"

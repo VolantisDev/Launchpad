@@ -1,18 +1,11 @@
 class LaunchpadAppStateTest extends TestBase {
-    app := ""
     appState := ""
-    testDir := A_Temp . "\LaunchpadAppStateTest"
+    stateFile := ""
 
     Setup() {
-        if (!DirExist(this.testDir)) {
-            DirCreate(this.testDir)
-        }
-
-        appConfig := Map()
-        this.app := TestApp(appConfig)
-
-        testPath := this.testDir . "\LaunchpadAppStateTest.json"
-        this.appState := LaunchpadAppState(this.app, testPath)
+        super.Setup()
+        ;this.stateFile := this.testDir . "\LaunchpadAppStateTest.json"
+        ;this.appState := LaunchpadAppState(this.testAppInstance, this.stateFile)
     }
 
     Run() {
@@ -21,8 +14,8 @@ class LaunchpadAppStateTest extends TestBase {
     }
 
     Teardown() {
-        this.appState := ""
-        this.app.ExitApp()
-        DirDelete(this.testDir, true)
+        ;FileDelete(this.stateFile)
+        ;this.appState := ""
+        super.Teardown()
     }
 }

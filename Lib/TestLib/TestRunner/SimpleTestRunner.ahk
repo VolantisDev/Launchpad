@@ -1,0 +1,3 @@
+class SimpleTestRunner extends TestRunnerBase {
+
+}

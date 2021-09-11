@@ -19,16 +19,21 @@ class TestRunnerBase {
     }
 
     RunTest(test) {
-        success := test.Run()
-        results[test.GetKey()] := test.GetResults()
+        test.Setup()
+        success := false
+
+        try {
+            success := test.Run()
+        } catch any {
+            success := false
+        }
+        
+        this.results[test.GetKey()] := test.GetResults()
+        test.Teardown()
         return success
     }
 
     GetResults() {
         return this.results
-    }
-
-    PrintResults() {
-        ; TODO: Pretty-print the results of each task within each test
     }
 }
