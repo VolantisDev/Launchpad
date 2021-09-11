@@ -386,12 +386,7 @@ class AppBase {
     }
 
     __Delete() {
-        if (this.Services.Exists("Gdip")) {
-            Gdip_Shutdown(this.Services.Get("Gdip"))
-        }
-
         this.ExitApp()
-
         super.__Delete()
     }
 
@@ -399,12 +394,20 @@ class AppBase {
         event := AppRunEvent(Events.APP_SHUTDOWN, this)
         this.Service("EventManager").DispatchEvent(Events.APP_SHUTDOWN, event)
 
+        if (this.Services.Exists("Gdip")) {
+            Gdip_Shutdown(this.Services.Get("Gdip"))
+        }
+
         ExitApp
     }
 
     RestartApp() {
         event := AppRunEvent(Events.APP_SHUTDOWN, this)
         this.Service("EventManager").DispatchEvent(Events.APP_RESTART, event)
+
+        if (this.Services.Exists("Gdip")) {
+            Gdip_Shutdown(this.Services.Get("Gdip"))
+        }
 
         Reload()
     }
