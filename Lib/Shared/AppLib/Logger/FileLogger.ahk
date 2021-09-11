@@ -6,15 +6,19 @@ class FileLogger extends LoggerBase {
         this.path := path
         this.autoTruncate := autoTruncate
         super.__New(loggingLevel)
-        
-        SplitPath(path,, &logDir)
 
-        if (!DirExist(logDir)) {
-            DirCreate(logDir)
-        }
+        this.EnsureDir()
 
         if (autoTruncate) {
             this.Truncate(autoTruncate)
+        }
+    }
+
+    EnsureDir() {
+        SplitPath(this.path,, &logDir)
+
+        if (!DirExist(logDir)) {
+            DirCreate(logDir)
         }
     }
 
@@ -30,6 +34,7 @@ class FileLogger extends LoggerBase {
 
     Log(message, level := "Info") {
         if super.Log(message, level) {
+            this.EnsureDir()
             FileAppend("[" . FormatTime() . "] - [" . level . "] - " . message . "`n", this.path)
         }
     }
