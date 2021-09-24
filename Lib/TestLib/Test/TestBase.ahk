@@ -3,6 +3,8 @@ class TestBase {
     testDir := ""
     testAppInstance := ""
     requiresTestApp := false
+    testSuccess := true
+    testFinished := false
 
     __New() {
         this.testDir := A_Temp . "\" . this.GetKey()
@@ -32,10 +34,11 @@ class TestBase {
 
     Run() {
         ; Should be implemented
-        return true
+        return this.testSuccess
     }
 
     Teardown() {
+        this.testFinished := true
         this.StopTestApp()
         this.DeleteTestDir()
     }
@@ -74,6 +77,10 @@ class TestBase {
 
     GetResults() {
         return this.results
+    }
+
+    GetSuccessStatus() {
+        return this.testFinished && this.testSuccess
     }
 
     AssertTrue(taskName, value) {
@@ -127,6 +134,11 @@ class TestBase {
     Assertion(taskName, assertionName, condition, data := "") {
         success := !!condition
         this.results[taskName] := Map("success", success, "assertion", assertionName, "data", data)
+
+        if (!success) {
+            this.testSuccess := false
+        }
+
         return success
     }
 }

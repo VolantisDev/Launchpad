@@ -23,7 +23,8 @@ class TestRunnerBase {
         success := false
 
         try {
-            success := test.Run()
+            test.Run()
+            success := test.GetSuccessStatus()
         } catch any {
             success := false
         }
