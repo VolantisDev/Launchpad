@@ -15,7 +15,11 @@ class ContainerBase {
         result := ""
 
         if (this.Items.Has(key)) {
-            result := this.DereferenceValue(this.Items[key])
+            result := this.Items[key]
+
+            if (IsString(result)) {
+                result := this.DereferenceValue(result)
+            }
         }
 
         return result
@@ -39,7 +43,7 @@ class ContainerBase {
         if (SubStr(value, 1, 2) == "{{") {
             key := SubStr(value, 3)
             key := SubStr(key, 1, -2)
-            return this.DereferenceItem(key)
+            return this.DereferenceValue(key)
         } else {
             return value
         }
