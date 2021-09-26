@@ -1,6 +1,42 @@
-class ModuleManager extends ContainerServiceBase {
-    registerEvent := Events.MODULES_REGISTER
-    alterEvent := Events.MODULES_ALTER
+class ModuleManager extends ConfigurableContainerServiceBase {
+    discoverEvent := Events.MODULES_DISCOVER
+    discoverAlterEvent := Events.MODULES_DISCOVER_ALTER
+    loadEvent := Events.MODULE_LOAD
+    loadAlterEvent := Events.MODULE_LOAD_ALTER
+    moduleDirs := []
+
+    __New(app, configPath, moduleDirs := "", defaultModuleInfo := "", defaultModules := "", autoLoad := true) {
+        configObj := ModuleConfig(app, configPath, true)
+        
+        if (moduleDirs) {
+            if (Type(moduleDirs) == "String") {
+                moduleDirs := [moduleDirs]
+            }
+
+            this.moduleDirs := moduleDirs
+        }
+
+        super.__New(app, configObj, configObj.primaryConfigKey, defaultModuleInfo, defaultModules, autoLoad)
+    }
+
+    CreateDiscoverer() {
+        searchDirs := this.GetModuleDirs()
+        filePattern := "*.module.ahk"
+
+        return ClassFileComponentDiscoverer(this, searchDirs, filePattern)
+    }
+
+    CreateLoader(componentInfo) {
+        return ClassComponentLoader(this, componentInfo)
+    }
+
+    LoadComponents() {
+        if (!this.componentsLoaded) {
+            ; TODO: Calculate dependencies and stop if they are not met
+            super.LoadComponents()
+            this.RegisterSubscribers()
+        }
+    }
     
     DispatchEvent(eventName, eventObj, extra := "", hwnd := "") {
         modules := this.GetAll()
@@ -11,7 +47,40 @@ class ModuleManager extends ContainerServiceBase {
     }
 
     CalculateDependencies() {
+        requiredModules := []
 
+        for key, module in this.GetAll() {
+            deps := module.GetDependencies()
+
+            for depIndex, depName in deps {
+                exists := false
+                for reqIndex, reqName in requiredModules {
+                    if (depName == reqName) {
+                        exists := true
+                        break
+                    }
+                }
+
+                if (!exists) {
+                    requiredModules.Push(depName)
+                }
+            }
+        }
+
+        return requiredModules
+    }
+
+    CalculateMissingDependencies() {
+        requiredModules := this.CalculateDependencies()
+        missingModules := []
+
+        for reqIndex, reqName in requiredModules {
+            if (!this.Exists(reqName)) {
+                missingModules.Push(reqName)
+            }
+        }
+
+        return missingModules
     }
 
     RegisterSubscribers() {
@@ -34,33 +103,20 @@ class ModuleManager extends ContainerServiceBase {
         }
     }
 
-    LoadModules(config) {
-        moduleDirs := this.GetModuleDirs(config)
-        defaultModules := this.app.GetDefaultModules(config)
-
-        op := LoadModulesOp(this.app, moduleDirs, defaultModules, this.app.State)
-        op.Run()
-        results := op.GetResults()
-
-        for key, module in results {
-            this.Set(key, module)
-        }
-
-        this.RegisterSubscribers()
-        return this
-    }
-
-    GetModuleDirs(config) {
+    GetModuleDirs() {
         dirs := []
-
         sharedDir := this.app.dataDir . "\Modules"
 
         if (DirExist(sharedDir)) {
             dirs.Push(sharedDir)
         }
 
-        if (config.Has("modulesDir") && config["modulesDir"]) {
-            dirs.Push(config["modulesDir"])
+        if (this.moduleDirs) {
+            for index, moduleDir in this.moduleDirs {
+                if (DirExist(moduleDir)) {
+                    dirs.Push(moduleDir)
+                }
+            }
         }
 
         return dirs

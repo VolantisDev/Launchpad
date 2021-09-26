@@ -1,4 +1,4 @@
-class RegisterComponentsEvent extends EventBase {
+class ComponentEvent extends EventBase {
     container := ""
 
     Items {

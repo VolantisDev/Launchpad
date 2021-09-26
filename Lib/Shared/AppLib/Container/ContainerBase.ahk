@@ -17,7 +17,7 @@ class ContainerBase {
         if (this.Items.Has(key)) {
             result := this.Items[key]
 
-            if (IsString(result)) {
+            if (Type(result) == "String") {
                 result := this.DereferenceValue(result)
             }
         }

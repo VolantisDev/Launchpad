@@ -5,6 +5,13 @@
 #Include AppLib\Authentication\AuthProvider\AuthProviderBase.ahk
 #Include AppLib\Authentication\AuthProvider\JwtAuthProvider.ahk
 #Include AppLib\BulkOperation\BulkOperationBase.ahk
+#Include AppLib\BulkOperation\ComponentDiscoverer\ClassFileComponentDiscoverer.ahk
+#Include AppLib\BulkOperation\ComponentDiscoverer\ComponentDiscovererBase.ahk
+#Include AppLib\BulkOperation\ComponentDiscoverer\ConfigComponentDiscoverer.ahk
+#Include AppLib\BulkOperation\ComponentDiscoverer\FileComponentDiscovererBase.ahk
+#Include AppLib\BulkOperation\ComponentLoader\ClassComponentLoader.ahk
+#Include AppLib\BulkOperation\ComponentLoader\ComponentLoaderBase.ahk
+#Include AppLib\BulkOperation\ComponentLoader\SimpleComponentLoader.ahk
 #Include AppLib\BulkOperation\InstallOp\InstallOp.ahk
 #Include AppLib\BulkOperation\InstallOp\UpdateOp.ahk
 #Include AppLib\BulkOperation\LoadOp\LoadBackupsOp.ahk
@@ -26,6 +33,7 @@
 #Include AppLib\Config\FileConfig.ahk
 #Include AppLib\Config\IniConfig.ahk
 #Include AppLib\Config\JsonConfig.ahk
+#Include AppLib\Config\ModuleConfig.ahk
 #Include AppLib\Container\BasicContainer.ahk
 #Include AppLib\Container\ContainerBase.ahk
 #Include AppLib\Container\ServiceComponentContainer.ahk
@@ -45,8 +53,11 @@
 #Include AppLib\Events\Events.ahk
 #Include AppLib\Events\Event\AlterComponentsEvent.ahk
 #Include AppLib\Events\Event\AppRunEvent.ahk
+#Include AppLib\Events\Event\ComponentEvent.ahk
+#Include AppLib\Events\Event\ComponentInfoEvent.ahk
 #Include AppLib\Events\Event\DefineComponentsEvent.ahk
 #Include AppLib\Events\Event\EventBase.ahk
+#Include AppLib\Events\Event\LoadComponentEvent.ahk
 #Include AppLib\Events\Event\RegisterComponentsEvent.ahk
 #Include AppLib\Exception\AppException.ahk
 #Include AppLib\Exception\FileSystemException.ahk
@@ -108,6 +119,7 @@
 #Include AppLib\Service\ComponentManager\DataSourceManager.ahk
 #Include AppLib\Service\ComponentManager\InstallerManager.ahk
 #Include AppLib\Service\ComponentManager\ThemeManager.ahk
+#Include AppLib\Service\ContainerService\ConfigurableContainerServiceBase.ahk
 #Include AppLib\Service\ContainerService\ContainerServiceBase.ahk
 #Include AppLib\Service\ContainerService\GuiManager.ahk
 #Include AppLib\Service\EntityManager\BackupManager.ahk

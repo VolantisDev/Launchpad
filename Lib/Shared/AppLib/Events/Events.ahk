@@ -26,14 +26,18 @@ class Events {
     static INSTALLERS_REGISTER := 0x2020
     static INSTALLERS_ALTER := 0x2025
 
-    static MODULES_REGISTER := 0x2040
-    static MODULES_ALTER := 0x2045
+    static MODULES_DISCOVER := 0x2040
+    static MODULES_DISCOVER_ALTER := 0x2042
+    static MODULE_LOAD := 0x2045
+    static MODULE_LOAD_ALTER := 0x2047
 
     static THEMES_REGISTER := 0x2050
     static THEMES_ALTER := 0x2055
 
-    static WINDOWS_REGISTER := 0x2060
-    static WINDOWS_ALTER := 0x2065
+    static WINDOWS_DISCOVER := 0x2060
+    static WINDOWS_DISCOVER_ALTER := 0x2062
+    static WINDOW_LOAD := 0x2065
+    static WINDOW_LOAD_ALTER := 0x2067
 
     static BACKUPS_REGISTER := 0x2070
     static BACKUPS_ALTER := 0x2075

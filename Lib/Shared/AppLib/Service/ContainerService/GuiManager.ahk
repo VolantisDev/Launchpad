@@ -1,6 +1,8 @@
 class GuiManager extends ContainerServiceBase {
-    registerEvent := Events.WINDOWS_REGISTER
-    alterEvent := Events.WINDOWS_ALTER
+    discoverEvent := Events.WINDOWS_DISCOVER
+    discoverAlterEvent := Events.WINDOWS_DISCOVER_ALTER
+    loadEvent := Events.WINDOW_LOAD
+    loadAlterEvent := Events.WINDOW_LOAD_ALTER
 
     parents := Map()
     children := Map()

@@ -1,12 +1,20 @@
 class ContainerServiceBase extends AppServiceBase {
     eventManagerObj := ""
     container := ""
+    defaultComponentInfo := ""
+    defaultComponents := ""
     componentsLoaded := false
-    registerEvent := ""
-    alterEvent := ""
+    discoverEvent := ""
+    discoverAlterEvent := ""
+    loadEvent := ""
+    loadAlterEvent := ""
+    loader := ""
+    discoverer := ""
 
-    __New(app, components := "", autoLoad := true) {
-        this.container := ServiceComponentContainer(components)
+    __New(app, defaultComponentInfo := "", defaultComponents := "", autoLoad := true) {
+        this.defaultComponentInfo := defaultComponentInfo
+        this.defaultComponents := defaultComponents
+        this.container := ServiceComponentContainer(defaultComponents)
         super.__New(app)
 
         if (autoLoad) {
@@ -14,26 +22,65 @@ class ContainerServiceBase extends AppServiceBase {
         }
     }
 
+    GetDiscoverer() {
+        if (!this.discoverer) {
+            this.discoverer := this.CreateDiscoverer()
+        }
+
+        return this.discoverer
+    }
+
+    CreateDiscoverer() {
+        return  ""
+    }
+
+    GetLoader(componentInfo) {
+        if (!this.loader) {
+            this.loader := this.CreateLoader(componentInfo)
+        } else {
+            this.loader.componentInfo := componentInfo
+        }
+
+        return this.loader
+    }
+
+    CreateLoader(componentInfo) {
+        return SimpleComponentLoader(this, componentInfo)
+    }
+
     LoadComponents() {
         if (!this.componentsLoaded) {
-            if (this.registerEvent) {
-                event := RegisterComponentsEvent(this.registerEvent, this.container)
-                this.app.Service("EventManager").DispatchEvent(this.registerEvent, event)
-                this.container := event.container
+            componentInfo := this.defaultComponentInfo ? this.defaultComponentInfo : Map()
+
+            discoverer := this.GetDiscoverer()
+
+            if (discoverer) {
+                success := discoverer.Run()
+
+                if (success) {
+                    componentInfo := discoverer.GetResults()
+                }
             }
 
-            if (this.alterEvent) {
-                event := AlterComponentsEvent(this.alterEvent, this.container)
-                this.app.Service("EventManager").DispatchEvent(this.alterEvent, event)
-                this.container := event.container
+            loader := this.GetLoader(componentInfo)
+
+            if (!loader) {
+                throw AppException("Component loader not found")
             }
 
+            success := loader.Run()
+            components := success ? loader.GetResults() : Map()
+            this.container := ServiceComponentContainer(components)
             this.componentsLoaded := true
         }
     }
 
     Get(key) {
         return this.container.Get(key)
+    }
+
+    Exists(key) {
+        return this.container.Exists(key)
     }
 
     GetAll() {
@@ -46,5 +93,9 @@ class ContainerServiceBase extends AppServiceBase {
 
     Remove(key) {
         this.container.Delete(key)
+    }
+
+    GetComponentConfig(key, componentInfo) {
+        return Map()
     }
 }

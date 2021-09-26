@@ -117,6 +117,9 @@ class AppBase {
 
         services := (config.Has("services") && config["services"]) ? config["services"] : Map()
 
+        if (!services.Has("App") || !services["App"]) {
+            services["App"] := this
+        }
 
         if (!services.Has("Shell") || !services["Shell"]) {
              shell := ""
@@ -155,7 +158,12 @@ class AppBase {
         }
 
         this.Services := ServiceContainer(services)
-        this.Services.Set("ModuleManager", ModuleManager(this).LoadModules(config))
+
+        moduleConfigPath := this.dataDir . "\Modules.json"
+        defaultModules := this.GetDefaultModules(config)
+        moduleDirs := config.Has("moduleDirs") ? config["moduleDirs"] : []
+        this.Services.Set("ModuleManager", ModuleManager(this, moduleConfigPath, moduleDirs, defaultModules))
+        
         this.errorCallback := ObjBindMethod(this, "OnException")
         OnError(this.errorCallback)
     }
