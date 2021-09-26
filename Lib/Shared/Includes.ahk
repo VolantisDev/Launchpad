@@ -110,7 +110,6 @@
 #Include AppLib\Service\AuthService.ahk
 #Include AppLib\Service\EventManager.ahk
 #Include AppLib\Service\LoggerService.ahk
-#Include AppLib\Service\ModuleManager.ahk
 #Include AppLib\Service\NotificationService.ahk
 #Include AppLib\Service\ServiceBase.ahk
 #Include AppLib\Service\ComponentManager\AppComponentServiceBase.ahk
@@ -122,6 +121,7 @@
 #Include AppLib\Service\ContainerService\ConfigurableContainerServiceBase.ahk
 #Include AppLib\Service\ContainerService\ContainerServiceBase.ahk
 #Include AppLib\Service\ContainerService\GuiManager.ahk
+#Include AppLib\Service\ContainerService\ModuleManager.ahk
 #Include AppLib\Service\EntityManager\BackupManager.ahk
 #Include AppLib\Service\EntityManager\EntityManagerBase.ahk
 #Include AppLib\Service\Utility\Debugger.ahk
