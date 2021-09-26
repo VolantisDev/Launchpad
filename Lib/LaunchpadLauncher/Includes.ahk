@@ -1,5 +1,5 @@
 ; Automatically-generated file, do not edit manually.
-#Include LaunchpadLauncher.ahk
+#Include App\LaunchpadLauncher.ahk
 #Include Condition\SteamConditionBase.ahk
 #Include Condition\SteamIsOpenCondition.ahk
 #Include Condition\SteamOverlayAttachedCondition.ahk

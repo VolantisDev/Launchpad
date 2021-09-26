@@ -1,5 +1,5 @@
 ; Automatically-generated file, do not edit manually.
-#Include Launchpad.ahk
+#Include App\Launchpad.ahk
 #Include Builder\AhkLauncherBuilder.ahk
 #Include Builder\BuilderBase.ahk
 #Include Builder\BuildFile\BuildFileBase.ahk
