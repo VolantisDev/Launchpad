@@ -10,6 +10,7 @@ class ContainerServiceBase extends AppServiceBase {
     loadAlterEvent := ""
     loader := ""
     discoverer := ""
+    classSuffix := ""
 
     __New(app, defaultComponentInfo := "", defaultComponents := "", autoLoad := true) {
         this.defaultComponentInfo := defaultComponentInfo

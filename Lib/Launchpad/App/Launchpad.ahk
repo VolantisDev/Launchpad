@@ -21,12 +21,12 @@
 
     GetDefaultModules(config) {
         modules := super.GetDefaultModules(config)
-        modules["Bethesda"] := "BethesdaModule"
-        modules["Blizzard"] := "BlizzardModule"
-        modules["Epic"] := "EpicModule"
-        modules["Origin"] := "OriginModule"
-        modules["Riot"] := "RiotModule"
-        modules["Steam"] := "SteamModule"
+        modules["Bethesda"] := "Bethesda"
+        modules["Blizzard"] := "Blizzard"
+        modules["Epic"] := "Epic"
+        modules["Origin"] := "Origin"
+        modules["Riot"] := "Riot"
+        modules["Steam"] := "Steam"
         return modules
     }
 

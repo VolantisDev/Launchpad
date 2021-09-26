@@ -4,6 +4,7 @@ class ModuleManager extends ConfigurableContainerServiceBase {
     loadEvent := Events.MODULE_LOAD
     loadAlterEvent := Events.MODULE_LOAD_ALTER
     moduleDirs := []
+    classSuffix := "Module"
 
     __New(app, configPath, moduleDirs := "", defaultModuleInfo := "", defaultModules := "", autoLoad := true) {
         configObj := ModuleConfig(app, configPath, true)

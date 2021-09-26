@@ -170,7 +170,7 @@ class AppBase {
 
     GetDefaultModules(config) {
         modules := Map()
-        modules["Auth"] := "AuthModule"
+        modules["Auth"] := "Auth"
         return modules
     }
 

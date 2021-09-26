@@ -3,7 +3,8 @@ class ClassComponentLoader extends ComponentLoaderBase {
 
     LoadComponent(key, componentInfo) {
         if (Type(componentInfo) == "String") {
-            componentInfo := Map("class", componentInfo)
+            className := componentInfo . this.componentManager.classSuffix
+            componentInfo := Map("class", className)
         }
 
         className := this.GetComponentClass(key, componentInfo)

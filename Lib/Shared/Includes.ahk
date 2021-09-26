@@ -153,7 +153,7 @@
 #Include DataLib\StructuredData\StructuredDataBase.ahk
 #Include DataLib\StructuredData\VdfData.ahk
 #Include DataLib\StructuredData\Xml.ahk
-#Include Modules\Auth\AuthModule.ahk
+#Include Modules\Auth\Auth.module.ahk
 #Include ThemeLib\LV_Constants.ahk
 #Include ThemeLib\AnimatedGif\AnimatedGif.ahk
 #Include ThemeLib\GuiShape\GuiShapeBase.ahk
