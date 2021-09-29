@@ -1,4 +1,4 @@
-class FileHasher extends AppServiceBase {
+class FileHasher extends ServiceBase {
     static HASH_TYPE_MD2 := 32769
     static HASH_TYPE_MD5 := 32771
     static HASH_TYPE_SHA := 32772
@@ -15,8 +15,8 @@ class FileHasher extends AppServiceBase {
     hModule := ""
     hCryptProv := ""
 
-    __New(app) {
-        super.__New(app)
+    __New() {
+        super.__New()
         this.hModule := DllCall("GetModuleHandleW", "Str", "Advapi32.dll", "Ptr")
 
         if (!this.hModule) {

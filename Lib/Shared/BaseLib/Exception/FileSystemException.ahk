@@ -1,0 +1,3 @@
+class FileSystemException extends ExceptionBase {
+
+}

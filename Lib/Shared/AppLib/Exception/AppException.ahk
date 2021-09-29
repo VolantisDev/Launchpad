@@ -1,37 +1,3 @@
-class AppException {
-    innerException := {Message: "", What: "", Extra: "", File: "", Line: ""}
+class AppException extends ExceptionBase {
 
-    Message {
-        get => this.innerException.Message
-    }
-
-    What {
-        get => this.innerException.What
-    }
-
-    Extra {
-        get => this.innerException.HasProp("Extra") ? this.innerException.Extra : ""
-    }
-
-    File {
-        get => this.innerException.File
-    }
-
-    Line {
-        get => this.innerException.Line
-    }
-
-    __New(message, what := "", extra := "") {
-        if (!what) {
-            what := -2
-        } else if (IsNumber(what)) {
-            what -= 1
-        }
-        
-        this.innerException := Error(message, what, extra)
-    }
-
-    GetException() {
-        return this.innerException
-    }
 }

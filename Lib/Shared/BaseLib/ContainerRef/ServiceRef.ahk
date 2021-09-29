@@ -1,0 +1,3 @@
+class ServiceRef extends ContainerRefBase {
+    
+}

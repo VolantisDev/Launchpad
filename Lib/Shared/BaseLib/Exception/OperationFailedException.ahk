@@ -1,0 +1,3 @@
+class OperationFailedException extends ExceptionBase {
+
+}

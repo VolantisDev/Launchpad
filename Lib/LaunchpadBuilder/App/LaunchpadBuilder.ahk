@@ -3,7 +3,7 @@ class LaunchpadBuilder extends AppBase {
         super.LoadServices(config)
         this.Services.Set("LaunchpadConfig", LaunchpadConfig(this, this.appDir . "\" . this.appName . ".ini"))
         this.Services.Set("DataSourceManager", DataSourceManager(this.Service("EventManager")))
-        this.Services.Set("FileHasher", FileHasher(this))
+        this.Services.Set("FileHasher", FileHasher())
         this.Services.Set("GitTagVersionIdentifier", GitTagVersionIdentifier(this))
     }
 
