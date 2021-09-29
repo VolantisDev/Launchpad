@@ -25,7 +25,7 @@ class ContainerBase {
         return result
     }
 
-    Exists(key) {
+    Has(key) {
         return !!(this.Items.Has(key) && this.Items[key])
     }
 

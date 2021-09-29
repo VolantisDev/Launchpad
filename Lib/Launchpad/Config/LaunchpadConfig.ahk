@@ -130,7 +130,7 @@
     }
 
     LaunchersLoaded() {
-        return this.app.Services.Exists("LauncherManager")
+        return this.app.Services.Has("LauncherManager")
     }
 
     OpenDestinationDir() {

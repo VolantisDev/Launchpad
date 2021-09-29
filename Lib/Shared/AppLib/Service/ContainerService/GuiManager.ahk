@@ -81,17 +81,17 @@ class GuiManager extends ContainerServiceBase {
             className := key
         }
 
-        if (!this.container.Exists(key)) {
+        if (!this.container.Has(key)) {
             guiObj := %className%(this.app, this.GetTheme(), key, params*)
             guiObj.Show(this.GetWindowState(key))
             this.container.Set(key, guiObj)
         }
 
-        return this.container.Exists(key) ? this.container.Get(key) : ""
+        return this.container.Has(key) ? this.container.Get(key) : ""
     }
 
     CloseWindow(key) {
-        if (this.container.Exists(key)) {
+        if (this.container.Has(key)) {
             this.container.Get(key).Close()
             this.container.Delete(key)
         }
@@ -135,7 +135,7 @@ class GuiManager extends ContainerServiceBase {
             parentKey := this.GetWindowKeyFromGui(parentKey)
         }
 
-        if (this.container.Exists(parentKey)) {
+        if (this.container.Has(parentKey)) {
             if (!this.children.Has(parentKey)) {
                 this.children[parentKey] := []
             }
@@ -152,7 +152,7 @@ class GuiManager extends ContainerServiceBase {
     }
 
     LockWindow(key) {
-        if (!this.locked.Has(key) && this.container.Exists(key)) {
+        if (!this.locked.Has(key) && this.container.Has(key)) {
             this.container.Get(key).guiObj.Opt("Disabled")
             this.locked[key] := true
         }
@@ -172,7 +172,7 @@ class GuiManager extends ContainerServiceBase {
     }
 
     WindowExists(key) {
-        return this.container.Exists(key)
+        return this.container.Has(key)
     }
 
     GetWindow(key) {

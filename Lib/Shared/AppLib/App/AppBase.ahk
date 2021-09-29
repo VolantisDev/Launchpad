@@ -177,7 +177,7 @@ class AppBase {
     GetCmdOutput(command, trimOutput := true) {
         output := ""
 
-        if (!this.Services.Exists("Shell")) {
+        if (!this.Services.Has("Shell")) {
             throw AppException("The shell is disabled, so shell commands cannot currently be run.")
         }
         
@@ -243,7 +243,7 @@ class AppBase {
             errorText .= "`nFile: " . e.File . " (Line " . e.Line . ")"
         }
 
-        if (this.Services.Exists("LoggerService")) {
+        if (this.Services.Has("LoggerService")) {
             this.Logger.Error(errorText)
         }
         
@@ -254,7 +254,7 @@ class AppBase {
 
     ShowError(title, errorText, err, allowContinue := true) {
         try {
-            if (this.Services.Exists("GuiManager")) {
+            if (this.Services.Has("GuiManager")) {
                 btns := allowContinue ? "*&Continue|&Reload|&Exit" : "*&Reload|&Exit"
                 this.Service("GuiManager").Dialog("ErrorDialog", err, "Unhandled Exception", errorText, "", "", btns)
             } else {
@@ -402,7 +402,7 @@ class AppBase {
         event := AppRunEvent(Events.APP_SHUTDOWN, this)
         this.Service("EventManager").DispatchEvent(Events.APP_SHUTDOWN, event)
 
-        if (this.Services.Exists("Gdip")) {
+        if (this.Services.Has("Gdip")) {
             Gdip_Shutdown(this.Services.Get("Gdip"))
         }
 
@@ -413,7 +413,7 @@ class AppBase {
         event := AppRunEvent(Events.APP_SHUTDOWN, this)
         this.Service("EventManager").DispatchEvent(Events.APP_RESTART, event)
 
-        if (this.Services.Exists("Gdip")) {
+        if (this.Services.Has("Gdip")) {
             Gdip_Shutdown(this.Services.Get("Gdip"))
         }
 

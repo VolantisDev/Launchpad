@@ -33,7 +33,7 @@ class GameBase {
     }
 
     Log(message, level := "Debug") {
-        if (this.app.Services.Exists("LoggerService") && this.launcherConfig["LoggingLevel"] != "None") {
+        if (this.app.Services.Has("LoggerService") && this.launcherConfig["LoggingLevel"] != "None") {
             this.app.Logger.Log(this.key . ": " . message, level)
         }
     }

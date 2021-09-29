@@ -426,7 +426,7 @@ class ThemeBase {
             btn := this.themedButtons[this.hoveredButton]["states"]["enabled"].DrawOn(btn)
         } catch Error as ex {
             if (!ignoreErrors) {
-                if (this.services.Exists("LoggerService")) {
+                if (this.services.Has("LoggerService")) {
                     this.services.Get("LoggerService").Error("Failed to change button hover state: " . ex.Message)
                 }
             }
@@ -449,7 +449,7 @@ class ThemeBase {
             btn := this.themedButtons[btn.Hwnd]["states"]["hovered"].DrawOn(btn)
         } catch Error as ex {
             if (!ignoreErrors) {
-                if (this.services.Exists("LoggerService")) {
+                if (this.services.Has("LoggerService")) {
                     this.services.Get("LoggerService").Error("Failed to change button hover state: " . ex.Message)
                 }
             }

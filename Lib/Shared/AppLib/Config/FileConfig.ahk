@@ -84,7 +84,7 @@ class FileConfig extends ConfigBase {
     }
 
     BackupConfigFile(configPath) {
-        if (this.ConfigPath && this.app.HasProp("Backups") && this.app.Services.Exists("BackupManager")) {
+        if (this.ConfigPath && this.app.HasProp("Backups") && this.app.Services.Has("BackupManager")) {
             if (!this.app.Service("BackupManager").Entities.Has(this.configKey)) {
                 backupConfig := Map()
                 backupConfig["IsEditable"] := false
@@ -106,7 +106,7 @@ class FileConfig extends ConfigBase {
     }
 
     RestoreConfigFile(configPath, backupNumber := 1) {
-        if (this.ConfigPath && this.app.HasProp("Backups") && this.app.Services.Exists("BackupManager") && this.app.Service("BackupManager").Entities.Has(this.configKey)) {
+        if (this.ConfigPath && this.app.HasProp("Backups") && this.app.Services.Has("BackupManager") && this.app.Service("BackupManager").Entities.Has(this.configKey)) {
             this.app.Service("BackupManager").Entities[this.configKey].RestoreBackup()
             this.LoadConfig()
         }

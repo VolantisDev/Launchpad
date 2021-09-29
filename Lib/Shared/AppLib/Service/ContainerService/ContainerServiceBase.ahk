@@ -81,7 +81,7 @@ class ContainerServiceBase extends AppServiceBase {
     }
 
     Exists(key) {
-        return this.container.Exists(key)
+        return this.container.Has(key)
     }
 
     GetAll() {
