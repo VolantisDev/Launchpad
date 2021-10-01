@@ -79,7 +79,10 @@ class AppBase {
 
     AllocConsole() {
         DllCall("AllocConsole")
-        WinHide("ahk_id " . DllCall("GetConsoleWindow", "ptr"))
+
+        if (WinExist("ahk_id " . DllCall("GetConsoleWindow", "ptr"))) {
+            WinHide()
+        }
     }
 
     Startup(config) {
