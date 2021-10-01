@@ -230,6 +230,7 @@ class ServiceContainer extends ContainerBase {
         }
     }
 
+    ; TODO: Abstract the parameter concept to a more generic base class used for all configuration
     GetParameter(name) {
         tokens := StrSplit(name, ".")
         context := this.Parameters
