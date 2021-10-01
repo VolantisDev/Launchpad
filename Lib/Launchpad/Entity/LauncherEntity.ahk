@@ -311,7 +311,6 @@ class LauncherEntity extends EntityBase {
     }
 
     InitializeDefaults() {
-
         defaults := super.InitializeDefaults()
         defaults.Delete("DataSourceItemKey")
         defaults["DestinationDir"] := this.GetDefaultDestinationDir()

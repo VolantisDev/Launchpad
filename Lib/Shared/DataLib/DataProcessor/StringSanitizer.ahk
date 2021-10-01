@@ -7,7 +7,7 @@ class StringSanitizer extends DataProcessorBase {
         }
     }
 
-    Process(value) {
+    ProcessSingleValue(value) {
         return RegExReplace(value, "[^\000-\377]")
     }
 }

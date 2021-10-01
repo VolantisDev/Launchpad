@@ -95,13 +95,12 @@ class EntityBase {
         InvalidParameterException.CheckEmpty("EntityBase", "key", key)
 
         sanitizer := StringSanitizer()
-
         this.app := app
         this.keyVal := sanitizer.Process(key)
         this.configObj := configObj
         this.parentEntity := parentEntity
-
-        this.entityData := LayeredEntityData(configObj.Clone(), this.InitializeDefaults())
+        defaults := this.InitializeDefaults()
+        this.entityData := LayeredEntityData(configObj.Clone(), defaults)
         this.entityData.SetDataSourceDefaults(this.AggregateDataSourceDefaults())
         this.entityData.SetAutoDetectedDefaults(this.AutoDetectValues())
         this.entityData.StoreOriginal()
@@ -136,13 +135,13 @@ class EntityBase {
 
     ; NOTICE: Object not yet fully loaded. Might not be safe to call this.entityData
     InitializeDefaults() {
-        defaults := Map()
-        defaults["DataSourceKeys"] := ["api"]
-        defaults["DataSourceItemKey"] := ""
-        defaults["DisplayName"] := this.keyVal
-        defaults["AssetsDir"] := this.app.Config.AssetsDir . "\" . this.keyVal
-        defaults["DependenciesDir"] := this.app.appDir . "\Vendor"
-        return defaults
+        return Map(
+            "DataSourceKeys", ["api"],
+            "DataSourceItemKey", "",
+            "DisplayName", this.keyVal,
+            "AssetsDir", this.app.Config.AssetsDir . "\" . this.keyVal,
+            "DependenciesDir", this.app.appDir . "\Vendor"
+        )
     }
 
     AggregateDataSourceDefaults(includeParentData := true, includeChildData := true) {
@@ -187,7 +186,7 @@ class EntityBase {
         itemKey := this.GetDataSourceItemKey()
 
         if (itemKey) {
-            dsData := dataSource.ReadJson(this.GetDataSourceItemKey(), this.GetDataSourceItemPath())
+            dsData := dataSource.ReadJson(itemKey, this.GetDataSourceItemPath())
 
             if (dsData) {
                 this.existsInDataSource := true

@@ -5,7 +5,7 @@ class PlaceholderExpander extends DataProcessorBase {
         this.layeredData := layeredData
     }
 
-    Process(value) {
+    ProcessSingleValue(value) {
         mergedData := this.layeredData.GetMergedData(false)
 
         for key, varVal in mergedData {
