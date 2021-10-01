@@ -57,7 +57,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
 
         ctl := this.AddEntityCtl(prefix . " Type", prefix . "Type", false, "SelectControl", this.entityObj.ListEntityTypes(), "", "You can select from the available entity types if the default doesn't work for your use case.")
         ctl.refreshOnDataChange := true
-        this.AddEntityCtl(prefix . " Executable", prefix . "Exe", true, "ComboBoxControl", this.possibleExes, "The main .exe file, not including any path information.")
+        this.AddEntityCtl(prefix . " Executable", prefix . "Exe", true, "ComboBoxControl", this.possibleExes, "", "The main .exe file, not including any path information.")
         this.AddEntityCtl(prefix . " Window Title", prefix . "WindowTitle", true, "EditControl", 1, "", "The part of the main window's title which identifies it uniquely.")
         this.CustomTabControls()
 
