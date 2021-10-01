@@ -16,21 +16,35 @@ class LaunchpadLauncher extends AppBase {
         if (!services.Has("OverlayManager") || !services["OverlayManager"]) {
             services["OverlayManager"] := Map(
                 "class", "OverlayManager",
-                "arguments", this
+                "arguments", [
+                    this.appDir, 
+                    ParameterRef("launchpad_launcher_config")
+                ]
             )
         }
 
         if (!services.Has("Game") || !services["Game"]) {
             services["Game"] := Map(
                 "class", config["gameConfig"]["GameClass"],
-                "arguments", [AppRef(), config["launcherKey"], config["gameConfig"]]
+                "arguments", [
+                    AppRef(), 
+                    ParameterRef("launcher_key"), 
+                    ParameterRef("game_config")
+                ]
             )
         }
 
         if (!services.Has("Launcher") || !services["Launcher"]) {
             services["Launcher"] := Map(
                 "class", config["launcherConfig"]["LauncherClass"],
-                "arguments", [AppRef(), config["launcherKey"], config["launcherConfig"]]
+                "arguments", [
+                    ParameterRef("launcher_key"),
+                    ServiceRef("GuiManager"),
+                    ServiceRef("Game"),
+                    ParameterRef("launchpad_launcher_config"), 
+                    ParameterRef("launcher_config"),
+                    ServiceRef("Logger")
+                ]
             )
         }
         

@@ -1,6 +1,6 @@
 #WinActivateForce
 
-class OverlayManager extends AppServiceBase {
+class OverlayManager {
     exeName := "LaunchpadOverlay.exe"
     hwnd := 0
     tid := 0
@@ -9,10 +9,13 @@ class OverlayManager extends AppServiceBase {
     isShown := false
     lastWin := ""
     lastWinTid := 0
+    appDir := ""
+    launcherConfig := ""
 
-    __New(app) {
+    __New(appDir, launcherConfig) {
+        this.appDir := appDir
+        this.launcherConfig := launcherConfig
         this.launchTime := A_Now
-        super.__New(app)
     }
 
     IsRunning() {
@@ -31,12 +34,11 @@ class OverlayManager extends AppServiceBase {
         hwnd := this.GetHwnd()
 
         if (!hwnd) {
-            config := this.app.LauncherConfig
-            resourcesDir := config["ResourcesDir"]
+            resourcesDir := this.launcherConfig["ResourcesDir"]
             path := resourcesDir . "\LaunchpadOverlay\" . this.exeName
 
             if (FileExist(path)) {
-                Run(path, this.app.appDir,, &pid)
+                Run(path, this.appDir,, &pid)
                 this.hwnd := WinWait("ahk_pid " . pid)
                 ;this.tid := DllCall("GetWindowThreadProcessId", "UInt", this.hwnd, "UInt", 0)
                 WinHide("ahk_id " . this.hwnd)

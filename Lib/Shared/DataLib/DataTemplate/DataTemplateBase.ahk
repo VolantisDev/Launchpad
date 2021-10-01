@@ -10,6 +10,10 @@ class DataTemplateBase {
         }
     }
 
+    Render() {
+        throw MethodNotImplementedException("StringTemplateBase", "Render")
+    }
+
     GetData() {
         data := Map()
 
@@ -17,11 +21,7 @@ class DataTemplateBase {
             data[key] := this.ProcessTemplateValue(key, value)
         }
 
-        return this.data
-    }
-
-    Render() {
-        throw MethodNotImplementedException("StringTemplateBase", "Render")
+        return data
     }
 
     ProcessTemplateValue(key, value) {

@@ -1,27 +1,26 @@
 class LauncherBase {
-    app := ""
     key := ""
     game := ""
     config := ""
     launcherConfig := ""
+    guiManagerObj := ""
     pid := 0
     progress := ""
+    loggerObj := ""
 
-    __New(app, key, config := "") {
+    __New(key, guiManagerObj, gameObj, launchpadLauncherConfig, config := "", loggerObj := "") {
         if (config == "") {
             config := Map()
         }
 
-        InvalidParameterException.CheckTypes("LauncherBase", "app", app, "AppBase", "key", key, "", "config", config, "Map")
-        this.app := app
-        this.key := key
-        this.game := app.Service("Game")
-        this.launcherConfig := app.LauncherConfig
-        this.config := config
+        InvalidParameterException.CheckTypes("LauncherBase", "key", key, "", "config", config, "Map")
 
-        if (this.launcherConfig["ShowProgress"]) {
-            this.CreateProgressGui()
-        }
+        this.key := key
+        this.game := gameObj
+        this.launcherConfig := launchpadLauncherConfig
+        this.guiManagerObj := guiManagerObj
+        this.loggerObj := loggerObj
+        this.config := config
     }
 
     /**
@@ -30,7 +29,8 @@ class LauncherBase {
 
     CreateProgressGui() {
         if (this.progress == "") {
-            this.progress := this.app.Service("GuiManager").OpenWindow("LauncherProgressIndicator", "", this.key, A_ScriptFullPath)
+            gameIcon := A_IsCompiled ? A_ScriptFullPath : A_IconFile
+            this.progress := this.guiManagerObj.OpenWindow("LauncherProgressIndicator", "", this.key, gameIcon)
         }
     }
 
@@ -65,12 +65,16 @@ class LauncherBase {
     }
 
     Log(message, level := "Debug") {
-        if (this.app.Services.Has("Logger") && this.launcherConfig["LoggingLevel"] != "None") {
-            this.app.Logger.Log(this.key . ": " . message, level)
+        if (this.loggerObj && this.launcherConfig["LoggingLevel"] != "None") {
+            this.loggerObj.Log(this.key . ": " . message, level)
         }
     }
 
     LaunchGame() {
+        if (this.launcherConfig["ShowProgress"] && !this.progress) {
+            this.CreateProgressGui()
+        }
+
         if (this.progress != "") {
             this.progress.SetDetailText("Initializing launcher...")
         }

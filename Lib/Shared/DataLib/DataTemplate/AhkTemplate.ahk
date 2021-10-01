@@ -14,5 +14,7 @@ class AhkTemplate extends StringTemplate {
             token := "{%" . key . "%}"
             output := StrReplace(output, token, this.ahkVar.ToString(value))
         }
+
+        return output
     }
 }

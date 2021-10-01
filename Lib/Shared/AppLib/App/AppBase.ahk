@@ -515,7 +515,7 @@ class AppBase {
         this.Service("EventManager").DispatchEvent(Events.APP_SHUTDOWN, event)
 
         if (this.Services.Has("Gdip")) {
-            Gdip_Shutdown(this.Services.Get("Gdip"))
+            Gdip_Shutdown(this.Services.Get("Gdip").GetHandle())
         }
 
         ExitApp
@@ -526,7 +526,7 @@ class AppBase {
         this.Service("EventManager").DispatchEvent(Events.APP_RESTART, event)
 
         if (this.Services.Has("Gdip")) {
-            Gdip_Shutdown(this.Services.Get("Gdip"))
+            Gdip_Shutdown(this.Services.Get("Gdip").GetHandle())
         }
 
         Reload()
