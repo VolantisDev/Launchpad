@@ -1,0 +1,3 @@
+class ContainerException extends ExceptionBase {
+
+}

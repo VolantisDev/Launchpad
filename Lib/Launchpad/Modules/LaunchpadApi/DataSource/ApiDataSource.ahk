@@ -2,12 +2,11 @@ class ApiDataSource extends DataSourceBase {
     endpointUrl := ""
     app := ""
 
-    __New(app, cache, endpointUrl) {
+    __New(app, cacheManager, cacheName, endpointUrl) {
         this.app := app
-        InvalidParameterException.CheckTypes("ApiDataSource", "endpointUrl", endpointUrl, "")
-        InvalidParameterException.CheckEmpty("ApiDataSource", "cache", cache)
+        InvalidParameterException.CheckTypes("ApiDataSource", "endpointUrl", endpointUrl, "", "cacheManager", cacheManager, "CacheManager")
         this.endpointUrl := endpointUrl
-        super.__New(cache)
+        super.__New(cacheManager, cacheName)
     }
 
     ItemExists(path) {
@@ -37,7 +36,7 @@ class ApiDataSource extends DataSourceBase {
             request.requestHeaders["Cache-Control"] := "no-cache"
 
             if (this.app.Config.ApiAuthentication) {
-                this.app.Service("AuthService").AlterApiRequest(request)
+                this.app.Service("Auth").AlterApiRequest(request)
             }
         }
 
@@ -86,7 +85,7 @@ class ApiDataSource extends DataSourceBase {
 
         status := Map("authenticated", false, "email", "", "photo", "")
 
-        if (this.app.Config.ApiAuthentication && this.app.Service("AuthService").IsAuthenticated()) {
+        if (this.app.Config.ApiAuthentication && this.app.Service("Auth").IsAuthenticated()) {
             statusResult := this.ReadItem(path, true)
 
             if (statusResult) {

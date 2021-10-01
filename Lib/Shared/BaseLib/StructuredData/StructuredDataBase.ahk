@@ -27,7 +27,15 @@ class StructuredDataBase {
             throw FileSystemException("File path '" . filePath . "' does not exist.")
         }
 
-        var := FileRead(filePath)
+        var := ""
+
+        try {
+            var := FileRead(filePath)
+        } catch as er {
+            er.Extra := filePath
+            throw er
+        }
+        
         return this.FromString(&var, args*)
     }
 

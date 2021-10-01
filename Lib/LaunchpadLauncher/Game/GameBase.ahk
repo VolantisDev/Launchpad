@@ -23,8 +23,7 @@ class GameBase {
             config := Map()
         }
 
-        this.launcherConfig := app.Service("LauncherConfig")
-
+        this.launcherConfig := app.LauncherConfig
         InvalidParameterException.CheckTypes("GameBase", "app", app, "AppBase", "key", key, "", "config", config, "Map")
         this.app := app
         this.key := key
@@ -33,7 +32,7 @@ class GameBase {
     }
 
     Log(message, level := "Debug") {
-        if (this.app.Services.Has("LoggerService") && this.launcherConfig["LoggingLevel"] != "None") {
+        if (this.app.Services.Has("Logger") && this.launcherConfig["LoggingLevel"] != "None") {
             this.app.Logger.Log(this.key . ": " . message, level)
         }
     }

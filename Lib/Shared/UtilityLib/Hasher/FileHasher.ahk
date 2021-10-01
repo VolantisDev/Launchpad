@@ -1,4 +1,4 @@
-class FileHasher extends ServiceBase {
+class FileHasher extends HasherBase {
     static HASH_TYPE_MD2 := 32769
     static HASH_TYPE_MD5 := 32771
     static HASH_TYPE_SHA := 32772

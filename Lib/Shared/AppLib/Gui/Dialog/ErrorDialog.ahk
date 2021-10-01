@@ -10,7 +10,7 @@ class ErrorDialog extends DialogBox {
 
     __New(app, themeObj, windowKey, errorObj, title, text := "", owner := "", parent := "", btns := "*&Continue|&Reload|&Exit") {
         this.errorObj := errorObj
-        this.notifierObj := app.Service("NotificationService").notifierObj
+        this.notifierObj := app.Service("Notifier").notifierObj
 
         if (app.Services.Has("DataSourceManager")) {
             this.apiEndpoint := app.Service("DataSourceManager").GetItem("api")

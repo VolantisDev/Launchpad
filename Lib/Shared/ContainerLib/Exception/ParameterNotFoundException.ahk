@@ -1,0 +1,3 @@
+class ParameterNotFoundException extends ExceptionBase {
+
+}

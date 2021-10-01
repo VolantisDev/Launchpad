@@ -19,24 +19,28 @@ class ThemeBase {
     themedButtons := Map()
     buttonMap := Map()
     hoveredButton := ""
-    services := ""
+    loggerObj := ""
+    eventManagerObj := ""
+    idGeneratorObj := ""
 
-    __New(name, resourcesDir, services, autoLoad := false) {
+    __New(name, resourcesDir, eventManagerObj, idGeneratorObj, loggerObj := "", autoLoad := false) {
         this.name := name
         this.resourcesDir := resourcesDir
         this.themesDir := resourcesDir . "\Themes"
-        this.services := services
-        this.themeId := this.services.Get("IdGenerator").Generate()
+        this.loggerObj := loggerObj
+        this.eventManagerObj := eventManagerObj
+        this.idGeneratorObj := idGeneratorObj
+        this.themeId := idGeneratorObj.Generate()
         
         if (autoLoad) {
             this.LoadTheme()
         }
 
-        this.services.Get("EventManager").Register(Events.MOUSE_MOVE, "Theme" . this.themeId, ObjBindMethod(this, "OnMouseMove"))
+        eventManagerObj.Register(Events.MOUSE_MOVE, "Theme" . this.themeId, ObjBindMethod(this, "OnMouseMove"))
     }
 
     __Delete() {
-        this.services.Get("EventManager").Unregister(Events.MOUSE_MOVE, "Theme" . this.themeId)
+        this.eventManagerObj.Unregister(Events.MOUSE_MOVE, "Theme" . this.themeId)
         super.__Delete()
     }
 
@@ -426,8 +430,8 @@ class ThemeBase {
             btn := this.themedButtons[this.hoveredButton]["states"]["enabled"].DrawOn(btn)
         } catch Error as ex {
             if (!ignoreErrors) {
-                if (this.services.Has("LoggerService")) {
-                    this.services.Get("LoggerService").Error("Failed to change button hover state: " . ex.Message)
+                if (this.loggerObj) {
+                    this.loggerObj.Error("Failed to change button hover state: " . ex.Message)
                 }
             }
         }
@@ -449,8 +453,8 @@ class ThemeBase {
             btn := this.themedButtons[btn.Hwnd]["states"]["hovered"].DrawOn(btn)
         } catch Error as ex {
             if (!ignoreErrors) {
-                if (this.services.Has("LoggerService")) {
-                    this.services.Get("LoggerService").Error("Failed to change button hover state: " . ex.Message)
+                if (this.loggerObj) {
+                    this.loggerObj.Error("Failed to change button hover state: " . ex.Message)
                 }
             }
         }

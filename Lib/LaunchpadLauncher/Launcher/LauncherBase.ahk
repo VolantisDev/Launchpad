@@ -16,7 +16,7 @@ class LauncherBase {
         this.app := app
         this.key := key
         this.game := app.Service("Game")
-        this.launcherConfig := app.Service("LauncherConfig")
+        this.launcherConfig := app.LauncherConfig
         this.config := config
 
         if (this.launcherConfig["ShowProgress"]) {
@@ -65,7 +65,7 @@ class LauncherBase {
     }
 
     Log(message, level := "Debug") {
-        if (this.app.Services.Has("LoggerService") && this.launcherConfig["LoggingLevel"] != "None") {
+        if (this.app.Services.Has("Logger") && this.launcherConfig["LoggingLevel"] != "None") {
             this.app.Logger.Log(this.key . ": " . message, level)
         }
     }

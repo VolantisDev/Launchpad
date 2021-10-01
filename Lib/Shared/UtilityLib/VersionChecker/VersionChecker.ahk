@@ -1,4 +1,4 @@
-class VersionChecker extends ServiceBase {
+class VersionChecker {
     VersionIsOutdated(latestVersion, installedVersion) {
         splitLatestVersion := StrSplit(this.FilterVersion(latestVersion), ".")
         splitInstalledVersion := StrSplit(this.FilterVersion(installedVersion), ".")

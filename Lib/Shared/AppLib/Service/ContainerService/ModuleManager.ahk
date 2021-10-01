@@ -1,4 +1,8 @@
 class ModuleManager extends ConfigurableContainerServiceBase {
+    app := ""
+    eventManagerObj := ""
+    idGeneratorObj := ""
+    dataDir := ""
     discoverEvent := Events.MODULES_DISCOVER
     discoverAlterEvent := Events.MODULES_DISCOVER_ALTER
     loadEvent := Events.MODULE_LOAD
@@ -6,7 +10,12 @@ class ModuleManager extends ConfigurableContainerServiceBase {
     moduleDirs := []
     classSuffix := "Module"
 
-    __New(app, configPath, moduleDirs := "", defaultModuleInfo := "", defaultModules := "", autoLoad := true) {
+    __New(app, eventManagerObj, idGeneratorObj, configPath, dataDir, moduleDirs := "", defaultModuleInfo := "", defaultModules := "", autoLoad := true) {
+        this.app := app
+        this.eventManagerObj := eventManagerObj
+        this.idGeneratorObj := idGeneratorObj
+        this.dataDir := dataDir
+
         configObj := ModuleConfig(app, configPath, true)
         
         if (moduleDirs) {
@@ -17,7 +26,7 @@ class ModuleManager extends ConfigurableContainerServiceBase {
             this.moduleDirs := moduleDirs
         }
 
-        super.__New(app, configObj, configObj.primaryConfigKey, defaultModuleInfo, defaultModules, autoLoad)
+        super.__New(configObj, configObj.primaryConfigKey, defaultModuleInfo, defaultModules, autoLoad)
     }
 
     CreateDiscoverer() {
@@ -90,13 +99,13 @@ class ModuleManager extends ConfigurableContainerServiceBase {
         for key, module in modules {
             subscribers := module.GetSubscribers()
 
-            eventMgr := this.app.Service("EventManager")
+            eventMgr := this.eventManagerObj
 
             if (subscribers) {
                 for eventName, eventSubscribers in subscribers {
                     if (eventSubscribers) {
                         for index, subscriber in eventSubscribers {
-                            eventMgr.Register(eventName, this.app.Service("IdGenerator").Generate(), subscriber)
+                            eventMgr.Register(eventName, this.idGeneratorObj.Generate(), subscriber)
                         }
                     }
                 }
@@ -106,7 +115,7 @@ class ModuleManager extends ConfigurableContainerServiceBase {
 
     GetModuleDirs() {
         dirs := []
-        sharedDir := this.app.dataDir . "\Modules"
+        sharedDir := this.dataDir . "\Modules"
 
         if (DirExist(sharedDir)) {
             dirs.Push(sharedDir)

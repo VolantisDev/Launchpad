@@ -13,8 +13,8 @@ class InstallerBase {
     tmpDir := ""
     parentComponent := ""
 
-    __New(version, appState, stateKey, cache, components := "", tmpDir := "", cleanupFiles := "") {
-        this.cache := cache
+    __New(version, appState, stateKey, cacheManager, cacheName, components := "", tmpDir := "", cleanupFiles := "") {
+        this.cache := cacheManager.GetItem(cacheName)
         this.version := version
         this.appState := appState
         this.stateKey := stateKey

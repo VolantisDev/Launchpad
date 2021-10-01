@@ -1,9 +1,11 @@
 class BuilderBase {
     app := ""
+    notifierObj := ""
 
-    __New(app) {
+    __New(app, notifierObj) {
         InvalidParameterException.CheckTypes("BuilderBase", "app", app, "AppBase")
         this.app := app
+        this.notifierObj := notifierObj
     }
 
     Build(launcherEntityObj) {
@@ -11,7 +13,7 @@ class BuilderBase {
         assetsDir := launcherEntityObj.AssetsDir
 
         if (launcherDir == "" or assetsDir == "") {
-            this.app.Service("NotificationService").Warning(launcherEntityObj.Key . ": Required directories not set. Skipping build.")
+            this.notifierObj.Warning(launcherEntityObj.Key . ": Required directories not set. Skipping build.")
             return false
         }
 

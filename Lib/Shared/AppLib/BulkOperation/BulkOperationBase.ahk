@@ -39,7 +39,7 @@ class BulkOperationBase {
             return false
         }
 
-        if (this.app.Services.Has("LoggerService")) {
+        if (this.app.Services.Has("Logger")) {
             this.app.Logger.Debug(Type(this) . ": Starting bulk operation...")
         }
         
@@ -55,7 +55,7 @@ class BulkOperationBase {
     }
 
     LogResults() {
-        if (this.app.Services.Has("LoggerService")) {
+        if (this.app.Services.Has("Logger")) {
             this.app.Logger.Info(Type(this) . " Results: " . this.GetResultMessage())
         }
     }
@@ -97,8 +97,8 @@ class BulkOperationBase {
     }
 
     Notify() {
-        if (this.shouldNotify && this.app.Services.Has("NotificationService")) {
-            this.app.Service("NotificationService").Info(this.GetResultMessage())
+        if (this.shouldNotify && this.app.Services.Has("Notifier")) {
+            this.app.Service("Notifier").Info(this.GetResultMessage())
         }
     }
 

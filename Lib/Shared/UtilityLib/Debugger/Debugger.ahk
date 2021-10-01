@@ -1,4 +1,4 @@
-class Debugger extends ServiceBase {
+class Debugger {
     logger := ""
 
     __New(logger := "") {

@@ -1,17 +1,23 @@
-class ThemeManager extends AppComponentServiceBase {
+class ThemeManager extends ComponentServiceBase {
     _registerEvent := "" ;LaunchpadEvents.LAUNCHERS_REGISTER
     _alterEvent := "" ;LaunchpadEvents.LAUNCHERS_ALTER
     themesDir := ""
     resourcesDir := ""
     defaultTheme := ""
+    configObj := ""
+    loggerObj := ""
+    idGeneratorObj := ""
 
-    __New(app, themesDir, resourcesDir, defaultTheme := "") {
+    __New(eventManagerObj, configObj, idGeneratorObj, loggerObj, themesDir, resourcesDir, defaultTheme := "", autoLoad := true) {
         InvalidParameterException.CheckTypes("ThemeManager", "themesDir", themesDir, "")
         InvalidParameterException.CheckEmpty("ThemeManager", "themesDir", themesDir)
+        this.configObj := configObj
         this.themesDir := themesDir
         this.resourcesDir := resourcesDir
         this.defaultTheme := defaultTheme
-        super.__New(app)
+        this.loggerObj := loggerObj
+        this.idGeneratorObj := idGeneratorObj
+        super.__New(eventManagerObj, "", autoLoad)
     }
 
     LoadMainTheme() {
@@ -19,7 +25,7 @@ class ThemeManager extends AppComponentServiceBase {
     }
 
     GetMainThemeName() {
-        return (this.app.Config.HasProp("ThemeName") && this.app.Config.ThemeName != "") ? this.app.Config.ThemeName : this.defaultTheme
+        return (this.configObj.HasProp("ThemeName") && this.configObj.ThemeName != "") ? this.configObj.ThemeName : this.defaultTheme
     }
 
     LoadComponents() {
@@ -79,7 +85,7 @@ class ThemeManager extends AppComponentServiceBase {
     }
 
     LoadTheme(key) {
-        this._components[key] := JsonTheme(key, this.resourcesDir, this.app.Services, true)
+        this._components[key] := JsonTheme(key, this.resourcesDir, this.eventManagerObj, this.idGeneratorObj, this.loggerObj, true)
         return this._components[key]
     }
 

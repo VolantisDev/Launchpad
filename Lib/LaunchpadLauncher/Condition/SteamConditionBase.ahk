@@ -11,12 +11,10 @@ class SteamConditionBase extends ConditionBase {
     GetSteamPath(app) {
         steamPath := ""
 
-        if (app.Services.Has("Platforms")) {
-            platforms := app.Service("Platforms")
+        platforms := app.Platforms
 
-            if (platforms.Has("Steam") && platforms["Steam"].Has("InstallDir")) {
-                steamPath := platforms["Steam"]["InstallDir"]
-            }
+        if (platforms.Has("Steam") && platforms["Steam"].Has("InstallDir")) {
+            steamPath := platforms["Steam"]["InstallDir"]
         }
 
         return steamPath

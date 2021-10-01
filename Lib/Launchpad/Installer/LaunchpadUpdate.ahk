@@ -2,9 +2,10 @@ class LaunchpadUpdate extends InstallerBase {
     name := "Launchpad Update"
     parentComponent := ""
 
-    __New(appVersion, appState, cache, tmpDir := "") {
+    __New(appVersion, appState, cacheManager, cacheName, tmpDir := "") {
         components := []
+        cache := cacheManager.GetItem(cacheName)
         components.Push(GitHubReleaseInstallerComponent("latest", "VolantisDev/Launchpad", "Launchpad-{{version}}.exe", false, "LaunchpadSetup.exe", appState, "LaunchpadUpdate", cache, this.appName, true, tmpDir, true))
-        super.__New(appState, this.appName, cache, components, tmpDir)
+        super.__New(appVersion, appState, this.appName, cacheManager, cacheName, components, tmpDir)
     }
 }

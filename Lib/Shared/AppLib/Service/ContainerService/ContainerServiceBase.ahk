@@ -1,4 +1,4 @@
-class ContainerServiceBase extends AppServiceBase {
+class ContainerServiceBase {
     eventManagerObj := ""
     container := ""
     defaultComponentInfo := ""
@@ -12,11 +12,10 @@ class ContainerServiceBase extends AppServiceBase {
     discoverer := ""
     classSuffix := ""
 
-    __New(app, defaultComponentInfo := "", defaultComponents := "", autoLoad := true) {
+    __New(defaultComponentInfo := "", defaultComponents := "", autoLoad := true) {
         this.defaultComponentInfo := defaultComponentInfo
         this.defaultComponents := defaultComponents
         this.container := ServiceComponentContainer(defaultComponents)
-        super.__New(app)
 
         if (autoLoad) {
             this.LoadComponents()

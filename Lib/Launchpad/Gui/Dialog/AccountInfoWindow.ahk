@@ -14,7 +14,7 @@
     Controls() {
         super.Controls()
 
-        info := this.app.Service("AuthService").GetStatusInfo()
+        info := this.app.Service("Auth").GetStatusInfo()
 
         if (info) {
             opts := "w" . this.windowSettings["contentWidth"] . " x" . this.margin . " y+" . this.margin
@@ -33,7 +33,7 @@
 
     ProcessResult(result, submittedData := "") {
         if (result == "Logout") {
-            this.app.Service("AuthService").Logout()
+            this.app.Service("Auth").Logout()
         } else if (result == "Save" && submittedData) {
             this.app.Config.PlayerName := submittedData.PlayerName
         }

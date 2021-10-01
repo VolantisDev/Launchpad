@@ -2,11 +2,11 @@ class ConfigurableContainerServiceBase extends ContainerServiceBase {
     configObj := ""
     configKey := ""
 
-    __New(app, configObj, configKey, defaultComponentInfo := "", defaultComponents := "", autoLoad := true) {
+    __New(configObj, configKey, defaultComponentInfo := "", defaultComponents := "", autoLoad := true) {
         this.configObj := configObj
         this.configKey := configKey
 
-        super.__New(app, defaultComponentInfo, defaultComponents, autoLoad)
+        super.__New(defaultComponentInfo, defaultComponents, autoLoad)
     }
 
     GetComponentConfig(key, componentInfo) {

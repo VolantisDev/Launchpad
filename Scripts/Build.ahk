@@ -1,22 +1,25 @@
 ﻿#Warn
-
-DllCall("AllocConsole")
-WinHide("ahk_id " . DllCall("GetConsoleWindow", "ptr"))
-
-appDir := RegExReplace(A_ScriptDir, "\\[^\\]+$")
-appVersion := "{{VERSION}}"
 #Include ..\Lib\Shared\Includes.ahk
 #Include ..\Lib\Launchpad\Includes.ahk
 #Include ..\Lib\LaunchpadBuilder\Includes.ahk
 
-TraySetIcon(appDir . "\Resources\Graphics\Launchpad.ico")
+appDir := RegExReplace(A_ScriptDir, "\\[^\\]+$")
+appVersion := "{{VERSION}}"
 
-appInfo := Map()
-appInfo["appDir"] := appDir
-appInfo["appName"] := "Launchpad"
-appInfo["developer"] := "Volantis Development"
-appInfo["version"] := appVersion
-appInfo["configClass"] := "LaunchpadBuilderConfig"
-appInfo["configFile"] := appDir . "\" . appInfo["appName"] . ".build.ini"
-appInfo["BuildClass"] := "Launchpad"
-LaunchpadBuilder(appInfo)
+LaunchpadBuilder(Map(
+    "appDir", appDir,
+    "appName", "Launchpad",
+    "developer", "Volantis Development",
+    "version", appVersion,
+    "trayIcon", appDir . "\Resources\Graphics\Launchpad.ico",
+    "console", true,
+    "parameters", Map(
+        "config_path", appDir . "\Launchpad.build.ini"
+    ),
+    "coreServices", Map(
+        "Config", Map(
+            "class", "LaunchpadBuilderConfig",
+            "arguments", [AppRef(), ParameterRef("config_path")]
+        )
+    )
+))

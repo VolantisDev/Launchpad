@@ -3,11 +3,11 @@ class DataSourceBase {
     useCache := false
     maxCacheAge := 86400
 
-    __New(cache := "") {
-        if (cache != "") {
-            InvalidParameterException.CheckTypes("DataSourceBase", "cache", cache, "CacheBase")
+    __New(cacheManager := "", cacheName := "") {
+        if (cacheManager != "" && cacheName != "") {
+            InvalidParameterException.CheckTypes("DataSourceBase", "cacheManager", cacheManager, "CacheManager")
             this.useCache := true
-            this.cache := cache
+            this.cache := cacheManager.GetItem(cacheName)
         }
     }
 

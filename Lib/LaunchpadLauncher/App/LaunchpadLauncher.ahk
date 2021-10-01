@@ -1,21 +1,40 @@
 class LaunchpadLauncher extends AppBase {
+    LauncherConfig := Map()
+    Platforms := Map()
+
     __New(config) {
         config["logPath"] := config["launchpadLauncherConfig"]["LogPath"]
         config["loggingLevel"] := config["launchpadLauncherConfig"]["LoggingLevel"]
+        this.LauncherConfig := config["launchpadLauncherConfig"]
+        this.Platforms := config["platforms"]
         super.__New(config)
     }
 
-    LoadServices(config) {
-        super.LoadServices(config)
-        this.Services.Set("Platforms", config["platforms"])
-        this.Services.Set("LauncherConfig", config["launchpadLauncherConfig"])
-        this.Services.Set("OverlayManager", OverlayManager(this))
+    GetServiceDefinitions(config) {
+        services := super.GetServiceDefinitions(config)
 
-        gameClass := config["gameConfig"]["GameClass"]
-        this.Services.Set("Game", %gameClass%(this, config["launcherKey"], config["gameConfig"]))
+        if (!services.Has("OverlayManager") || !services["OverlayManager"]) {
+            services["OverlayManager"] := Map(
+                "class", "OverlayManager",
+                "arguments", this
+            )
+        }
 
-        launcherClass := config["launcherConfig"]["LauncherClass"]
-        this.Services.Set("Launcher", %launcherClass%(this, config["launcherKey"], config["launcherConfig"]))
+        if (!services.Has("Game") || !services["Game"]) {
+            services["Game"] := Map(
+                "class", config["gameConfig"]["GameClass"],
+                "arguments", [AppRef(), config["launcherKey"], config["gameConfig"]]
+            )
+        }
+
+        if (!services.Has("Launcher") || !services["Launcher"]) {
+            services["Launcher"] := Map(
+                "class", config["launcherConfig"]["LauncherClass"],
+                "arguments", [AppRef(), config["launcherKey"], config["launcherConfig"]]
+            )
+        }
+        
+        return services
     }
 
     RunApp(config) {

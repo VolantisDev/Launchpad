@@ -1,20 +1,32 @@
 class GuiManager extends ContainerServiceBase {
+    app := ""
     discoverEvent := Events.WINDOWS_DISCOVER
     discoverAlterEvent := Events.WINDOWS_DISCOVER_ALTER
     loadEvent := Events.WINDOW_LOAD
     loadAlterEvent := Events.WINDOW_LOAD_ALTER
+    themeManagerObj := ""
+    idGeneratorObj := ""
+    stateObj := ""
 
     parents := Map()
     children := Map()
     locked := Map()
     menus := Map()
 
+    __New(app, themeManagerObj, idGeneratorObj, stateObj, defaultComponentInfo := "", defaultComponents := "", autoLoad := true) {
+        this.app := app
+        this.themeManagerObj := themeManagerObj
+        this.idGeneratorObj := idGeneratorObj
+        this.stateObj := stateObj
+        super.__New(defaultComponentInfo, defaultComponents, autoLoad)
+    }
+
     GetTheme() {
-        return this.app.Service("ThemeManager").GetItem()
+        return this.themeManagerObj.GetItem()
     }
 
     Dialog(className, params*) {
-        dialogId := this.app.Service("IdGenerator").Generate()
+        dialogId := this.idGeneratorObj.Generate()
         window := %className%(this.app, this.GetTheme(), dialogId, params*)
         this.container.Set(dialogId, window)
         ownerKey := ""
@@ -42,7 +54,7 @@ class GuiManager extends ContainerServiceBase {
     }
 
     Menu(className, params*) {
-        key := this.app.Service("IdGenerator").Generate()
+        key := this.idGeneratorObj.Generate()
         window := %className%(this.app, this.GetTheme(), key, params*)
         this.menus[key] := window
         result := window.Show()
@@ -252,11 +264,11 @@ class GuiManager extends ContainerServiceBase {
     StoreWindowState(guiObj) {
         guiObj.guiObj.GetPos(&x, &y, &w, &h)
         windowState := Map("x", x, "y", y, "w", w, "h", h)
-        this.app.State.StoreWindowState(guiObj.windowKey, windowState)
+        this.stateObj.StoreWindowState(guiObj.windowKey, windowState)
     }
 
     GetWindowState(windowKey) {
-        return this.app.State.RetrieveWindowState(windowKey)
+        return this.stateObj.RetrieveWindowState(windowKey)
     }
 
     RestoreWindowState(guiObj) {

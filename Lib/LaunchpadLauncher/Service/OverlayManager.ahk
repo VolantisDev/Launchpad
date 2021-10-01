@@ -31,7 +31,7 @@ class OverlayManager extends AppServiceBase {
         hwnd := this.GetHwnd()
 
         if (!hwnd) {
-            config := this.app.Service("LauncherConfig")
+            config := this.app.LauncherConfig
             resourcesDir := config["ResourcesDir"]
             path := resourcesDir . "\LaunchpadOverlay\" . this.exeName
 

@@ -2,14 +2,105 @@
     customTrayMenu := true
     detectGames := false
 
-    LoadServices(config) {
-        super.LoadServices(config)
-        this.Services.Set("BackupManager", BackupManager(this, this.Config.BackupsFile))
-        this.Services.Set("DataSourceManager", DataSourceManager(this.Service("EventManager")))
-        this.Service("DataSourceManager").SetItem("api", ApiDataSource(this, this.Service("CacheManager").GetItem("api"), this.Config.ApiEndpoint), true)
-        this.Services.Set("BuilderManager", BuilderManager(this))
-        this.Services.Set("LauncherManager", LauncherManager(this))
-        this.Services.Set("PlatformManager", PlatformManager(this))
+    GetServiceDefinitions(config) {
+        services := super.GetServiceDefinitions(config)
+
+        if (!services.Has("BackupManager") || !services["BackupManager"]) {
+            services["BackupManager"] := Map(
+                "class", "BackupManager",
+                "arguments", [AppRef(), this.Config.BackupsFile]
+            )
+        }
+
+        if (!services.Has("datasource.api") || !services["datasource.api"]) {
+            services["datasource.api"] := Map(
+                "class", "ApiDataSource",
+                "arguments", [AppRef(), ServiceRef("CacheManager"), "api", this.Config.ApiEndpoint]
+            )
+        }
+
+        if (!services.Has("DataSourceManager") || !services["DataSourceManager"]) {
+            services["DataSourceManager"] := Map(
+                "class", "DataSourceManager",
+                "arguments", [ServiceRef("EventManager")]
+            )
+        }
+
+        if (!services["DataSourceManager"].Has("calls")) {
+            services["DataSourceManager"]["calls"] := []
+        }
+
+        services["DataSourceManager"]["calls"].Push(Map(
+            "method", "SetItem", 
+            "arguments", ["api", ServiceRef("datasource.api"), true]
+        ))
+
+        if (!services.Has("builder.ahk_launcher") || !services["builder.ahk_launcher"]) {
+            services["builder.ahk_launcher"] := Map(
+                "class", "AhkLauncherBuilder",
+                "arguments", [AppRef(), ServiceRef("Notifier")]
+            )
+        }
+
+        if (!services.Has("BuilderManager") || !services["BuilderManager"]) {
+            services["BuilderManager"] := Map(
+                "class", "BuilderManager",
+                "arguments", AppRef(),
+            )
+        }
+
+        if (!services["BuilderManager"].Has("calls")) {
+            services["BuilderManager"]["calls"] := []
+        }
+
+        services["BuilderManager"]["calls"].Push(Map(
+            "method", "SetItem", 
+            "arguments", ["ahk", ServiceRef("builder.ahk_launcher"), true]
+        ))
+
+        if (!services.Has("LauncherManager") || !services["LauncherManager"]) {
+            services["LauncherManager"] := Map(
+                "class", "LauncherManager",
+                "arguments", AppRef()
+            )
+        }
+
+        if (!services.Has("PlatformManager") || !services["PlatformManager"]) {
+            services["PlatformManager"] := Map(
+                "class", "PlatformManager",
+                "arguments", AppRef()
+            )
+        }
+
+        if (!services.Has("installer.launchpad_update") || !services["installer.launchpad_update"]) {
+            services["installer.launchpad_update"] := Map(
+                "class", "LaunchpadUpdate",
+                "arguments", [this.Version, this.State, ServiceRef("CacheManager"), "file", this.tmpDir]
+            )
+        }
+
+        if (!services.Has("installer.dependencies") || !services["installer.dependencies"]) {
+            services["installer.dependencies"] := Map(
+                "class", "DependencyInstaller",
+                "arguments", [this.Version, this.State, ServiceRef("CacheManager"), "file", [], this.tmpDir]
+            )
+        }
+
+        if (!services["InstallerManager"].Has("calls")) {
+            services["InstallerManager"]["calls"] := []
+        }
+
+        services["InstallerManager"]["calls"].Push(Map(
+            "method", "SetItem",
+            "arguments", ["LaunchpadUpdate", ServiceRef("installer.launchpad_update")]
+        ))
+
+        services["InstallerManager"]["calls"].Push(Map(
+            "method", "SetItem",
+            "arguments", ["Dependencies", ServiceRef("installer.dependencies")]
+        ))
+
+        return services
     }
 
     GetCaches() {
@@ -49,7 +140,7 @@
         }
 
         if (!updateAvailable && notify) {
-            this.Service("NotificationService").Info("You're running the latest version of Launchpad. Shiny!")
+            this.Service("Notifier").Info("You're running the latest version of Launchpad. Shiny!")
         }
     }
 
@@ -99,18 +190,13 @@
 
     InitializeApp(config) {
         super.InitializeApp(config)
-        this.Service("BuilderManager").SetItem("ahk", AhkLauncherBuilder(this), true)
-        this.Service("InstallerManager").SetItem("LaunchpadUpdate", LaunchpadUpdate(this.Version, this.State, this.Service("CacheManager").GetItem("file"), this.tmpDir))
-        this.Service("InstallerManager").SetItem("Dependencies", DependencyInstaller(this.Version, this.State, this.Service("CacheManager").GetItem("file"), [], this.tmpDir))
         this.Service("InstallerManager").SetupInstallers()
         this.Service("InstallerManager").InstallRequirements()
     }
 
     RunApp(config) {
-        this.Service("AuthService").SetAuthProvider(LaunchpadApiAuthProvider(this, this.State))
-
         if (this.Config.ApiAutoLogin) {
-            this.Service("AuthService").Login()
+            this.Service("Auth").Login()
         }
         
         super.RunApp(config)

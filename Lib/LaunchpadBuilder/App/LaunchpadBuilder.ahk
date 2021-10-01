@@ -1,10 +1,33 @@
 class LaunchpadBuilder extends AppBase {
-    LoadServices(config) {
-        super.LoadServices(config)
-        this.Services.Set("LaunchpadConfig", LaunchpadConfig(this, this.appDir . "\" . this.appName . ".ini"))
-        this.Services.Set("DataSourceManager", DataSourceManager(this.Service("EventManager")))
-        this.Services.Set("FileHasher", FileHasher())
-        this.Services.Set("GitTagVersionIdentifier", GitTagVersionIdentifier(this))
+    GetServiceDefinitions(config) {
+        services := super.GetServiceDefinitions(config)
+
+        if (!services.Has("LaunchpadConfig") || !services["LaunchpadConfig"]) {
+            services["LaunchpadConfig"] := Map(
+                "class", "LaunchpadConfig",
+                "arguments", [AppRef(), this.appDir . "\" . this.appName . ".ini"]
+            )
+        }
+
+        if (!services.Has("DataSourceManager") || !services["DataSourceManager"]) {
+            services["DataSourceManager"] := Map(
+                "class", "DataSourceManager",
+                "arguments", ServiceRef("EventManager")
+            )
+        }
+
+        if (!services.Has("FileHasher") || !services["FileHasher"]) {
+            services["FileHasher"] := "FileHasher"
+        }
+
+        if (!services.Has("GitTagVersionIdentifier") || !services["GitTagVersionIdentifier"]) {
+            services["GitTagVersionIdentifier"] := Map(
+                "class", "GitTagVersionIdentifier",
+                "arguments", AppRef()
+            )
+        }
+
+        return services
     }
 
     GetCaches() {
@@ -14,7 +37,7 @@ class LaunchpadBuilder extends AppBase {
 
     InitializeApp(config) {
         super.InitializeApp(config)
-        this.Service("AuthService").SetAuthProvider(LaunchpadApiAuthProvider(this, this.State))
+        this.Service("Auth").SetAuthProvider(LaunchpadApiAuthProvider(this, this.State))
     }
 
     RunApp(config) {
@@ -27,7 +50,7 @@ class LaunchpadBuilder extends AppBase {
         }
 
         if (buildInfo.DeployToApi) {
-            this.Service("AuthService").Login()
+            this.Service("Auth").Login()
         }
 
         version := buildInfo.Version

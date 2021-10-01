@@ -1,4 +1,4 @@
-class ComponentServiceBase extends ServiceBase {
+class ComponentServiceBase {
     eventManagerObj := ""
     _components := Map()
     _componentsLoaded := false
@@ -11,8 +11,6 @@ class ComponentServiceBase extends ServiceBase {
         if (components != "") {
             this._components := components
         }
-
-        super.__New()
 
         if (autoLoad) {
             this.LoadComponents()

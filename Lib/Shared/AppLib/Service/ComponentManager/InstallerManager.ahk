@@ -8,8 +8,7 @@ class InstallerManager extends AppComponentServiceBase {
         extraDependencyComponents := []
 
         tmpDir := this.app.tmpDir . "\Installers"
-        cache := this.app.Service("CacheManager").GetItem("file")
-        this.SetItem("Themes", ThemeInstaller(this.app.Version, this.app.State, cache, extraThemes, tmpDir))
+        this.SetItem("Themes", ThemeInstaller(this.app.Version, this.app.State, this.app.Service("CacheManager"), "file", extraThemes, tmpDir))
     }
 
     InstallRequirements(owner := "") {

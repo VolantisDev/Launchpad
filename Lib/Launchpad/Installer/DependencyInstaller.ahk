@@ -1,11 +1,13 @@
 class DependencyInstaller extends InstallerBase {
     name := "Dependency Installer"
 
-    __New(version, appState, cache, extraComponents := "", tmpDir := "") {
+    __New(version, appState, cacheManager, cacheName, extraComponents := "", tmpDir := "") {
         ; TODO: Remove dependency on A_ScriptDir
         installDir := A_ScriptDir
         components := []
         cleanupFiles := []
+
+        cache := cacheManager.GetItem(cacheName)
 
         ahkUrl := "https://www.autohotkey.com/download/2.0/AutoHotkey_" . A_AhkVersion . ".zip"
         components.Push(DownloadableInstallerComponent(A_AhkVersion, ahkUrl, true, "Vendor\AutoHotKey", appState, "AutoHotKey", cache, "Dependencies", true, tmpDir, false))
@@ -35,6 +37,6 @@ class DependencyInstaller extends InstallerBase {
             }
         }
 
-        super.__New(version, appState, "Dependencies", cache, components, tmpDir, cleanupFiles)
+        super.__New(version, appState, "Dependencies", cacheManager, cacheName, components, tmpDir, cleanupFiles)
     }
 }

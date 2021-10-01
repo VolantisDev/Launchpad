@@ -1,4 +1,4 @@
-class EventManager extends ServiceBase {
+class EventManager {
     _handlers := Map()
     _priorities := Map()
     _bindMethod := ""

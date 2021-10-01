@@ -141,13 +141,13 @@
     }
 
     GetStatusInfo() {
-        return this.app.Service("AuthService").GetStatusInfo()
+        return this.app.Service("Auth").GetStatusInfo()
     }
 
     OnStatusIndicatorClick(btn, info) {
         menuItems := []
 
-        if (this.app.Service("AuthService").IsAuthenticated()) {
+        if (this.app.Service("Auth").IsAuthenticated()) {
             menuItems.Push(Map("label", "Account Details", "name", "AccountDetails"))
             menuItems.Push(Map("label", "Logout", "name", "Logout"))
         } else {
@@ -163,14 +163,14 @@
                 this.UpdateStatusIndicator()
             }
         } else if (result == "Logout") {
-            this.app.Service("AuthService").Logout()
+            this.app.Service("Auth").Logout()
         } else if (result == "Login") {
-            this.app.Service("AuthService").Login()
+            this.app.Service("Auth").Login()
         }
     }
 
     StatusWindowIsOnline() {
-        return this.app.Service("AuthService").IsAuthenticated()
+        return this.app.Service("Auth").IsAuthenticated()
     }
 
     FormatDate(timestamp) {
