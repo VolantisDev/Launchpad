@@ -88,6 +88,7 @@
 #Include AppLib\Installer\InstallerComponent\GitHubReleaseInstallerComponent.ahk
 #Include AppLib\Installer\InstallerComponent\InstallerComponentBase.ahk
 #Include AppLib\Module\ModuleBase.ahk
+#Include AppLib\Modules\Auth\Auth.module.ahk
 #Include AppLib\Service\AppServiceBase.ahk
 #Include AppLib\Service\AuthService.ahk
 #Include AppLib\Service\EventManager.ahk
@@ -145,16 +146,15 @@
 #Include ContainerLib\ContainerRef\ServiceRef.ahk
 #Include ContainerLib\Exception\ContainerException.ahk
 #Include ContainerLib\Exception\ParameterNotFoundException.ahk
+#Include DataLib\DiffResult.ahk
 #Include DataLib\DataProcessor\DataProcessorBase.ahk
 #Include DataLib\DataProcessor\PlaceholderExpander.ahk
 #Include DataLib\DataProcessor\StringSanitizer.ahk
 #Include DataLib\DataTemplate\AhkTemplate.ahk
 #Include DataLib\DataTemplate\DataTemplateBase.ahk
 #Include DataLib\DataTemplate\StringTemplate.ahk
-#Include DataLib\Diff\DiffResult.ahk
 #Include DataLib\LayeredData\LayeredDataBase.ahk
 #Include DataLib\LayeredData\LayeredEntityData.ahk
-#Include Modules\Auth\Auth.module.ahk
 #Include ThemeLib\LV_Constants.ahk
 #Include ThemeLib\AnimatedGif\AnimatedGif.ahk
 #Include ThemeLib\GuiShape\GuiShapeBase.ahk
