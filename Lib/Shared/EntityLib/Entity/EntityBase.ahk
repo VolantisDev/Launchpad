@@ -1,15 +1,14 @@
+; TODO: Automatically return properties from the entity data or an exception if they don't exist
 class EntityBase {
-    app := ""
-    configPrefix := ""
     keyVal := ""
-    dataSourcePath := ""
     configObj := ""
-    entityData := ""
     requiredConfigKeysVal := []
-    originalObj := ""
-    children := Map()
+    configPrefix := ""
+    entityData := ""
     parentEntity := ""
-    existsInDataSource := false
+    children := Map()
+    originalObj := ""
+    sanitizeKey := true
 
     /**
     * BASE SETTINGS
@@ -45,21 +44,6 @@ class EntityBase {
         set => this.configObj := value
     }
 
-    ; The data source keys to load defaults from, in order.
-    ; The default datasource is "api" which connects to the default api endpoint (Which can be any HTTP location compatible with Launchpad's API format)
-    DataSourceKeys {
-        get => this.GetConfigValue("DataSourceKeys", false)
-        set => this.SetConfigValue("DataSourceKeys", value, false)
-    }
-
-    ; The key that is used to look up the entity's data from configured external datasources.
-    ; It defaults to the key which is usually sufficient, but it can be overridden by setting this value.
-    ; Addtionally, multiple copies of the same datasource entity can exist by giving them different keys but using the same DataSourceKey
-    DataSourceItemKey {
-        get => this.GetConfigValue("DataSourceItemKey", false)
-        set => this.SetConfigValue("DataSourceItemKey", value, false)
-    }
-
     ; Gets tor sets the configuration keys that are required to have a valid value before this entity is considered valid.
     RequiredConfigKeys {
         get => this.requiredConfigKeysVal
@@ -73,20 +57,12 @@ class EntityBase {
         set => this.SetConfigValue("DisplayName", value, false)
     }
 
-    ; The directory where any required assets for this entity will be saved.
-    AssetsDir {
-        get => this.GetConfigValue("AssetsDir", false)
-        set => this.SetConfigValue("AssetsDir", value, false)
-    }
-
-    ; The directory where dependencies which have been installed for this entity can be accessed
-    DependenciesDir {
-        get => this.GetConfigValue("DependenciesDir", false)
-        set => this.SetConfigValue("DependenciesDir", value, false)
-    }
-
-    __New(app, key, configObj, requiredConfigKeys := "", parentEntity := "") {
-        InvalidParameterException.CheckTypes("EntityBase", "app", app, "AppBase", "key", key, "String", "configObj", configObj, "Map")
+    __New(key, configObj, parentEntity := "", requiredConfigKeys := "") {
+        InvalidParameterException.CheckTypes(
+            "EntityBase", 
+            "key", key, "String", 
+            "configObj", configObj, "Map"
+        )
     
         if (parentEntity != "") {
             InvalidParameterException.CheckTypes("EntityBase", "parentEntity", parentEntity, "EntityBase")
@@ -94,18 +70,46 @@ class EntityBase {
 
         InvalidParameterException.CheckEmpty("EntityBase", "key", key)
 
-        sanitizer := StringSanitizer()
-        this.app := app
-        this.keyVal := sanitizer.Process(key)
+        if (this.sanitizeKey) {
+            ; TODO Load the sanitizer from the container
+            sanitizer := StringSanitizer()
+            key := sanitizer.Process(key)
+        }
+
+        this.keyVal := key
         this.configObj := configObj
         this.parentEntity := parentEntity
-        defaults := this.InitializeDefaults()
-        this.entityData := LayeredEntityData(configObj.Clone(), defaults)
-        this.entityData.SetDataSourceDefaults(this.AggregateDataSourceDefaults())
-        this.entityData.SetAutoDetectedDefaults(this.AutoDetectValues())
-        this.entityData.StoreOriginal()
-        
-        this.InitializeRequiredConfigKeys(requiredConfigKeys)
+        this.entityData := this.createLayeredData()
+
+        this.initializeRequiredConfigKeys(requiredConfigKeys)
+    }
+
+    static CreateEntity(container, key, configObj, parentEntity := "", requiredConfigKeys := "") {
+        className := this.Prototype.__Class
+
+        return %className%(
+            key, 
+            configObj, 
+            parentEntity, 
+            requiredConfigKeys
+        )
+    }
+
+    createLayeredData() {
+        layeredData := LayeredEntityData(this.configObj.Clone(), this.InitializeDefaults(), this.getEntityLayers())
+        this.entityData := layeredData
+        this.populateEntityLayers(layeredData)
+        layeredData.SetAutoDetectedDefaults(this.AutoDetectValues())
+        layeredData.StoreOriginal()
+        return layeredData
+    }
+
+    getEntityLayers() {
+        return []
+    }
+
+    poplateEntityLayers(layeredData) {
+
     }
 
     StoreOriginal(recursive := true, update := false) {
@@ -124,104 +128,18 @@ class EntityBase {
         }
     }
 
-    UpdateDataSourceDefaults() {
-        this.entityData.SetLayer("ds", this.AggregateDataSourceDefaults())
-        this.entityData.SetLayer("auto", this.AutoDetectValues())
-
-        for key, child in this.children {
-            child.UpdateDataSourceDefaults()
-        }
-    }
-
     ; NOTICE: Object not yet fully loaded. Might not be safe to call this.entityData
     InitializeDefaults() {
         return Map(
-            "DataSourceKeys", ["api"],
-            "DataSourceItemKey", "",
             "DisplayName", this.keyVal,
-            "AssetsDir", this.app.Config.AssetsDir . "\" . this.keyVal,
-            "DependenciesDir", this.app.appDir . "\Vendor"
         )
-    }
-
-    AggregateDataSourceDefaults(includeParentData := true, includeChildData := true) {
-        dataSources := this.GetAllDataSources()
-        defaults := (this.parentEntity != "" && includeParentData) ? this.parentEntity.AggregateDataSourceDefaults(includeParentData, false) : Map()
-
-        this.entityData.SetLayer("ds", defaults)
-
-        for index, dataSource in dataSources {
-            defaults := this.MergeFromObject(defaults, this.GetDataSourceDefaults(dataSource), false)
-        }
-
-        if (includeChildData) {
-            for key, child in this.children {
-                defaults := this.MergeFromObject(defaults, child.AggregateDataSourceDefaults(false, includeChildData), false)
-            }
-        }
-
-        return defaults
-    }
-
-    GetAllDataSources() {
-        dataSources := Map()
-
-        if (this.DataSourceKeys != "") {
-            dataSourceKeys := (Type(this.DataSourceKeys) == "Array") ? this.DataSourceKeys : [this.DataSourceKeys]
-
-            for index, dataSourceKey in dataSourceKeys {
-                dataSource := this.app.Service("DataSourceManager").GetItem(dataSourceKey)
-
-                if (dataSource != "") {
-                    dataSources[dataSourceKey] := dataSource
-                }
-            }
-        }
-
-        return dataSources
-    }
-
-    GetDataSourceDefaults(dataSource) {
-        defaults := Map()
-        itemKey := this.GetDataSourceItemKey()
-
-        if (itemKey) {
-            dsData := dataSource.ReadJson(itemKey, this.GetDataSourceItemPath())
-
-            if (dsData) {
-                this.existsInDataSource := true
-
-                if (dsData.Has("data")) {
-                    dsData := dsData["data"]
-                }
-
-                if (dsData.Has("defaults")) {
-                    defaults := this.MergeFromObject(defaults, dsData["defaults"], false)
-                    defaults := this.MergeAdditionalDataSourceDefaults(defaults, dsData)
-                }
-            }
-        }
-
-        return defaults
-    }
-
-    GetDataSourceItemKey() {
-        return this.Key
-    }
-
-    GetDataSourceItemPath() {
-        return this.dataSourcePath
-    }
-
-    MergeAdditionalDataSourceDefaults(defaults, dataSourceData) {
-        return defaults
     }
 
     AutoDetectValues() {
         return Map()
     }
 
-    InitializeRequiredConfigKeys(requiredConfigKeys := "") {
+    initializeRequiredConfigKeys(requiredConfigKeys := "") {
         if (requiredConfigKeys != "") {
             this.AddRequiredConfigKeys(requiredConfigKeys)
         }

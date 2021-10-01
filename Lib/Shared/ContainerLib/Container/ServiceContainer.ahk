@@ -55,57 +55,88 @@ class ServiceContainer extends ContainerBase {
             entry := Map("class", entry)
         }
         
-        if (Type(entry) != "Map") {
-            throw ContainerException(name . " service entry must be a map but it is a " . Type(entry))
-        } else if ((!entry.Has("class") || !entry["class"]) && (!entry.Has("service") || !entry["service"]) && (!entry.Has("com") || !entry["com"])) {
-            throw ContainerException(name . " service entry must contain a 'class', 'service', or 'com' key")
-        } else if (entry.Has("lock")) {
-            throw ContainerException(name . " service contains a circular reference")
-        }
+        this.validateServiceDefinition(name, entry)
 
         service := entry.Has("service") ? entry["service"] : ""
         entry["lock"] := true
 
-        if (!service) {
-            arguments := entry.Has("arguments") ? this.resolveArguments(name, entry["arguments"]) : []
-
-            if (entry.Has("class")) {
-                className := entry["class"]
-
-                if (!IsSet(%className%)) {
-                    throw ContainerException(name . " service class does not exist: " . className)
-                }
-
-                if (!%className%.HasMethod("Call", arguments.Length)) {
-                    throw ContainerException(name . " service is not callable with the supplied arguments")
-                }
-
-                try {
-                    service := %className%(arguments*)
-                } catch as er {
-                    er.Message := name . " service could not be created: " . er.Message
-                    throw er
-                }
-                
-            } else if (entry.Has("com")) {
-                service := ComObject(entry["com"])
-            } else {
-                throw ContainerException(name . " service is of unknown type")
-            }
+        if (entry.Has("service") && entry["service"]) {
+            service := entry["service"]
+        } else if (entry.Has("factory") && entry["factory"]) {
+            service := this.createServiceFromFactory(name, entry)
+        } else if (entry.Has("class") && entry["class"]) {
+            service := this.createServiceFromClass(name, entry)
+        } else if (entry.Has("com") && entry["com"]) {
+            service := this.createServiceFromComObject(name, entry)
+        } else {
+            throw ContainerException(name . " service is of unknown type")
         }
         
         if (!service) {
-            throw ContainerException(name . " service failed to load")
+            throw ContainerException(name . " service failed to load for an unknown reason")
         }
 
-        calls := entry.Has("calls") ? entry["calls"] : []
-        props := entry.Has("props") ? entry["props"] : Map()
+        this.initializeService(service, name, entry)
 
-        if (calls.Length || props.Count) {
-            this.initializeService(service, name, calls, props)
+        return service
+    }
+
+    validateServiceDefinition(name, entry) {
+        if (Type(entry) != "Map") {
+            throw ContainerException(name . " service entry must be a map but it is a " . Type(entry))
+        }
+
+        requiresOneOf := ["class", "service", "factory", "com"]
+        hasRequiredKey := false
+
+        for index, serviceKey in requiresOneOf {
+            if (entry.Has(serviceKey) && entry[serviceKey]) {
+                hasRequiredKey := true
+                break
+            }
+        }
+
+        if (!hasRequiredKey) {
+            throw ContainerException(name . " service entry must contain one of the following keys: class, service, factory, or com")
+        }
+
+        if (entry.Has("lock")) {
+            throw ContainerException(name . " service contains a circular reference")
+        }
+    }
+
+    createServiceFromClass(name, entry) {
+        className := entry["class"]
+        arguments := entry.Has("arguments") ? this.resolveArguments(name, entry["arguments"]) : []
+
+        if (!IsSet(%className%)) {
+            throw ContainerException(name . " service class does not exist: " . className)
+        }
+
+        if (!%className%.HasMethod("Call", arguments.Length)) {
+            throw ContainerException(name . " service is not callable with the supplied arguments")
+        }
+
+        try {
+            service := %className%(arguments*)
+        } catch as er {
+            er.Message := name . " service could not be created: " . er.Message
+            throw er
         }
 
         return service
+    }
+
+    createServiceFromComObject(name, entry) {
+        return ComObject(entry["com"])
+    }
+
+    createServiceFromFactory(name, entry) {
+        factory := entry["factory"]
+
+        if (!HasMethod(factory)) {
+            throw ContainerException(name . " service uses a factory which is uncallable")
+        }
     }
 
     resolveArguments(name, argumentDefinitions) {
@@ -144,8 +175,9 @@ class ServiceContainer extends ContainerBase {
         isObj := IsObject(definition)
 
         if (isObj && (Type(definition) == "AppRef" || definition.HasBase(AppRef))) {
-            appClass := definition.GetName()
-            val := appClass ? %appClass%.Instance : AppBase.Instance
+            val := this.GetApp(definition)
+        } else if (isObj && (Type(definition) == "ContainerRef" || definition.HasBase(ContainerRef))) {
+            val := this
         } else if (isObj && (Type(definition) == "ServiceRef" || definition.HasBase(ServiceRef))) {
             val := this.Get(definition.GetName())
         } else if (isObj && (Type(definition) == "ParameterRef" || definition.HasBase(ParameterRef))) {
@@ -155,7 +187,24 @@ class ServiceContainer extends ContainerBase {
         return val
     }
 
-    initializeService(service, name, callDefinitions, propDefinitions) {
+    GetApp(definition := "") {
+        appName := definition ? definition.GetName() : ""
+        
+        if (!appName) {
+            appName := "AppBAse"
+        }
+
+        if (this.Has(appName)) {
+            return this.Get(appName)
+        } else {
+            return %appName%.Instance
+        }
+    }
+
+    initializeService(service, name, entry) {
+        callDefinitions := entry.Has("calls") ? entry["calls"] : []
+        propDefinitions := entry.Has("props") ? entry["props"] : Map()
+
         if (callDefinitions && callDefinitions.Length) {
             for index, callDefinition in callDefinitions {
                 if (Type(callDefinition) != "Map" || !callDefinition.Has("method")) {

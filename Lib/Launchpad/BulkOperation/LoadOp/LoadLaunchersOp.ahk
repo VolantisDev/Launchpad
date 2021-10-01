@@ -22,14 +22,14 @@ class LoadLaunchersOp extends BulkOperationBase {
             this.progress.SetRange(0, this.launcherConfigObj.Games.Count)
         }
 
+        factory := this.app.Service("EntityFactory")
+
         for key, config in this.launcherConfigObj.Games {
             this.StartItem(key, key)
             requiredKeys := ""
-            this.results[key] := LauncherEntity(this.app, key, config, requiredKeys)
-            
-            created := this.app.State.GetLauncherCreated(key)
+            this.results[key] := factory.CreateEntity("LauncherEntity", key, config, requiredKeys)
 
-            if (!created) {
+            if (!this.app.State.GetLauncherCreated(key)) {
                 this.app.State.SetLauncherCreated(key)
             }
 

@@ -1,4 +1,4 @@
-class BackupEntity extends EntityBase {
+class BackupEntity extends AppEntityBase {
     backup := ""
 
     IsEditable {

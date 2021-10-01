@@ -9,6 +9,7 @@
 
 appVersion := "{{VERSION}}"
 
+; TODO: Instantiate only a ServiceContainer here and let it create the app
 Launchpad(Map(
     "appName", "Launchpad",
     "developer", "Volantis Development",

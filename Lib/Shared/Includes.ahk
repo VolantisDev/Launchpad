@@ -39,8 +39,8 @@
 #Include AppLib\DataSourceItem\DSFile.ahk
 #Include AppLib\DataSourceItem\DSJson.ahk
 #Include AppLib\DataSourceItem\DSListing.ahk
+#Include AppLib\Entity\AppEntityBase.ahk
 #Include AppLib\Entity\BackupEntity.ahk
-#Include AppLib\Entity\EntityBase.ahk
 #Include AppLib\Event\AlterComponentsEvent.ahk
 #Include AppLib\Event\AppRunEvent.ahk
 #Include AppLib\Event\ComponentEvent.ahk
@@ -141,6 +141,7 @@
 #Include ContainerLib\Container\ContainerBase.ahk
 #Include ContainerLib\Container\ServiceContainer.ahk
 #Include ContainerLib\ContainerRef\AppRef.ahk
+#Include ContainerLib\ContainerRef\ContainerRef.ahk
 #Include ContainerLib\ContainerRef\ContainerRefBase.ahk
 #Include ContainerLib\ContainerRef\ParameterRef.ahk
 #Include ContainerLib\ContainerRef\ServiceRef.ahk
@@ -154,7 +155,10 @@
 #Include DataLib\DataTemplate\DataTemplateBase.ahk
 #Include DataLib\DataTemplate\StringTemplate.ahk
 #Include DataLib\LayeredData\LayeredDataBase.ahk
-#Include DataLib\LayeredData\LayeredEntityData.ahk
+#Include EntityLib\Entity\EntityBase.ahk
+#Include EntityLib\Exception\EntityException.ahk
+#Include EntityLib\Factory\EntityFactory.ahk
+#Include EntityLib\LayeredData\LayeredEntityData.ahk
 #Include ThemeLib\LV_Constants.ahk
 #Include ThemeLib\AnimatedGif\AnimatedGif.ahk
 #Include ThemeLib\GuiShape\GuiShapeBase.ahk

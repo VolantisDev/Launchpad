@@ -235,6 +235,7 @@ class AppBase {
         return services
     }
 
+    ; TODO: Rewrite core services as several layers of JSON files that merge together
     GetServiceDefinitions(config) {
         services := (config.Has("services") && config["services"]) ? config["services"] : Map()
 
@@ -346,6 +347,13 @@ class AppBase {
             services["InstallerManager"] := Map(
                 "class", "InstallerManager",
                 "arguments", [AppRef()]
+            )
+        }
+
+        if (!services.Has("EntityFactory") || !services["EntityFactory"]) {
+            services["EntityFactory"] := Map(
+                "class", "EntityFactory",
+                "arguments", [ContainerRef()]
             )
         }
 

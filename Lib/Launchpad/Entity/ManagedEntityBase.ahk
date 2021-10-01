@@ -1,4 +1,4 @@
-class ManagedEntityBase extends EntityBase {
+class ManagedEntityBase extends AppEntityBase {
     defaultType := "Default"
     defaultClass := "Default"
 

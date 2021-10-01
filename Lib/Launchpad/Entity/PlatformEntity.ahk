@@ -1,4 +1,4 @@
-class PlatformEntity extends EntityBase {
+class PlatformEntity extends AppEntityBase {
     platform := ""
     configPrefix := ""
     dataSourcePath := "platforms"

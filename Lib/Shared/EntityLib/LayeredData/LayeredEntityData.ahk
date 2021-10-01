@@ -1,5 +1,5 @@
 class LayeredEntityData extends LayeredDataBase {
-    __New(config, defaults := "") {
+    __New(config, defaults := "", additionalLayers := "") {
         if (defaults == "") {
             defaults := Map()
         }
@@ -9,9 +9,16 @@ class LayeredEntityData extends LayeredDataBase {
         processors.Push(PlaceholderExpander(this))
 
 
-        params := []
-        params.Push("defaults", defaults)
-        params.Push("ds", Map())
+        params := [
+            "defaults", defaults
+        ]
+
+        if (additionalLayers) {
+            for index, layer in additionalLayers {
+                params.Push(layer, Map())
+            }
+        }
+
         params.Push("auto", Map())
         params.Push("config", config)
 
@@ -24,17 +31,5 @@ class LayeredEntityData extends LayeredDataBase {
 
     SetAutoDetectedDefaults(data) {
         this.layers["auto"] := data
-    }
-
-    SetDataSourceDefaults(data) {
-        this.layers["ds"] := data
-    }
-
-    SetParentDefaults(data) {
-        this.layers["parentDefaults"] := data
-    }
-
-    SetParentConfig(data) {
-        this.layers["parent"] := data
     }
 }

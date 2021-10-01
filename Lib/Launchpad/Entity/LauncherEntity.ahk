@@ -1,4 +1,4 @@
-class LauncherEntity extends EntityBase {
+class LauncherEntity extends AppEntityBase {
     dataSourcePath := "games"
     configPrefix := "Launcher"
     additionalManagedLauncherDefaults := Map()

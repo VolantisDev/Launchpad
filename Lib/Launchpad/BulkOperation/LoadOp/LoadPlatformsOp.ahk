@@ -34,6 +34,8 @@ class LoadPlatformsOp extends BulkOperationBase {
             this.progress.SetRange(0, platforms.Count)
         }
 
+        factory := this.app.Service("EntityFactory")
+
         for key, platformClass in platforms {
             this.StartItem(key, key)
 
@@ -44,7 +46,7 @@ class LoadPlatformsOp extends BulkOperationBase {
             platformConfig := this.platformsConfigObj.Platforms[key]
             platformConfig["PlatformClass"] := platformClass
             requiredKeys := ""
-            this.results[key] := PlatformEntity(this.app, key, platformConfig, requiredKeys)
+            this.results[key] := factory.CreateEntity("PlatformEntity", key, platformConfig, requiredKeys)
             this.FinishItem(key, true, key . ": Loaded successfully.")
         }
     }
