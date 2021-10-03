@@ -140,6 +140,7 @@
 #Include BaseLib\StructuredData\Xml.ahk
 #Include ContainerLib\Container\BasicContainer.ahk
 #Include ContainerLib\Container\ContainerBase.ahk
+#Include ContainerLib\Container\ParameterContainer.ahk
 #Include ContainerLib\Container\ServiceContainer.ahk
 #Include ContainerLib\ContainerRef\AppRef.ahk
 #Include ContainerLib\ContainerRef\ContainerRef.ahk
