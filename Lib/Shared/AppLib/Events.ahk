@@ -11,12 +11,11 @@ class Events {
     static MOUSE_RIGHT_UP := 0x205
 
     static APP_POST_STARTUP := 0x1002
+    static APP_SERVICES_LOADED := 0x1003
     static APP_SERVICE_DEFINITIONS := 0x1005
-    static APP_SERVICE_DEFINITIONS_ALTER := 0x1006
     static APP_PRE_INITIALIZE := 0x1010
     static APP_POST_INITIALIZE := 0x1011
     static APP_PRE_RUN := 0x1015
-    static APP_POST_RUN := 0x1016
     static APP_SHUTDOWN := 0x1020
     static APP_RESTART := 0x1025
 

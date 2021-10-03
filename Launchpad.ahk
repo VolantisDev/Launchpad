@@ -9,21 +9,10 @@
 
 appVersion := "{{VERSION}}"
 
-; TODO: Instantiate only a ServiceContainer here and let it create the app
 Launchpad(Map(
     "appName", "Launchpad",
     "developer", "Volantis Development",
     "version", appVersion,
     "trayIcon", "Resources\Graphics\Launchpad.ico",
-    "console", true,
-    "coreServices", Map(
-        "Config", Map(
-            "class", "LaunchpadConfig",
-            "arguments", [AppRef(), ParameterRef("config_path")]
-        ),
-        "State", Map(
-            "class", "LaunchpadAppState",
-            "arguments", [AppRef(), ParameterRef("state_path")]
-        )
-    )
+    "console", true
 ))

@@ -73,9 +73,9 @@ class ManagedLauncherEntity extends ManagedEntityBase {
         set => this.SetConfigValue("PoliteCloseWait", value)
     }
 
-    __New(app, key, config, requiredConfigKeys := "", parentEntity := "") {
-        super.__New(app, key, config, requiredConfigKeys, parentEntity)
-        this.children["ManagedGame"] := ManagedGameEntity(app, key, config, "", this)
+    __New(app, key, config, parentEntity := "", requiredConfigKeys := "") {
+        super.__New(app, key, config, parentEntity, requiredConfigKeys)
+        this.children["ManagedGame"] := ManagedGameEntity(app, key, config, this, "")
     }
 
     InitializeDefaults() {

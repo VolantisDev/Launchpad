@@ -24,30 +24,5 @@ LaunchpadLauncher(Map(
     "launchpadLauncherConfig", launchpadLauncherConfigObj,
     "launcherConfig", launcherConfigObj,
     "gameConfig", gameConfigObj,
-    "platforms", {%platforms%},
-    "parameters", Map(
-        "launcher_key", "{{launcherKey}}",
-        "launchpad_launcher_config", launchpadLauncherConfigObj,
-        "launcher_config", launcherConfigObj,
-        "game_config", gameConfigObj
-    ),
-    "coreServices", Map(
-        "Config", Map(
-            "class", "LaunchpadLauncherConfig",
-            "arguments", [
-                AppRef(), 
-                ParameterRef("launchpad_launcher_config"), 
-                ParameterRef("launcher_config"), 
-                ParameterRef("game_config"), 
-                ParameterRef("config_path")
-            ]
-        ),
-        "State", Map(
-            "class", "LaunchpadLauncherState",
-            "arguments", [
-                AppRef(), 
-                ParameterRef("state_path")
-            ]
-        )
-    )
+    "platforms", {%platforms%}
 ))

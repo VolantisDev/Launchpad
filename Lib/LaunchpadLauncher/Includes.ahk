@@ -1,4 +1,4 @@
-; Automatically-generated file, do not edit manually.
+; Automatically-generated file. Manual edits will be overwritten.
 #Include App\LaunchpadLauncher.ahk
 #Include Condition\SteamConditionBase.ahk
 #Include Condition\SteamIsOpenCondition.ahk
@@ -13,4 +13,3 @@
 #Include Launcher\SimpleLauncher.ahk
 #Include Service\OverlayManager.ahk
 #Include State\LaunchpadLauncherState.ahk
-; End of auto-generated includes.

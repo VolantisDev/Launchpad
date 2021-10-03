@@ -13,13 +13,4 @@ LaunchpadBuilder(Map(
     "version", appVersion,
     "trayIcon", appDir . "\Resources\Graphics\Launchpad.ico",
     "console", true,
-    "parameters", Map(
-        "config_path", appDir . "\Launchpad.build.ini"
-    ),
-    "coreServices", Map(
-        "Config", Map(
-            "class", "LaunchpadBuilderConfig",
-            "arguments", [AppRef(), ParameterRef("config_path")]
-        )
-    )
 ))

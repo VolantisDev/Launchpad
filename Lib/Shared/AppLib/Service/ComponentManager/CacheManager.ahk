@@ -1,11 +1,19 @@
 class CacheManager extends AppComponentServiceBase {
-    _registerEvent := "" ;Events.CACHES_REGISTER
-    _alterEvent := "" ;Events.CACHES_ALTER
+    _registerEvent := Events.CACHES_REGISTER
+    _alterEvent := Events.CACHES_ALTER
     cacheDir := ""
 
     __New(app, cacheDir, components := "") {
-        InvalidParameterException.CheckTypes("CacheManager", "cacheDir", cacheDir, "")
-        InvalidParameterException.CheckEmpty("CacheManager", "cacheDir", cacheDir)
+        InvalidParameterException.CheckTypes(
+            "CacheManager", 
+            "cacheDir", cacheDir, ""
+        )
+
+        InvalidParameterException.CheckEmpty(
+            "CacheManager", 
+            "cacheDir", cacheDir
+        )
+
         this.cacheDir := cacheDir
         super.__New(app, components)
     }
@@ -22,12 +30,8 @@ class CacheManager extends AppComponentServiceBase {
         super.LoadComponents()
     }
 
-    SetCacheDir(cacheDir) {
-        if (this.app.Config.HasProp("CacheDir")) {
-            this.app.Config.CacheDir := cacheDir
-        }
-        
-        this.cacheDir := this.app.Config.CacheDir
+    SetCacheDir(cacheDir) {       
+        this.cacheDir := cacheDir
     }
 
     FlushCaches(notify := true) {
@@ -58,6 +62,7 @@ class CacheManager extends AppComponentServiceBase {
         
         if (newDir != "") {
             cacheDir := newDir
+            this.app.Config.CacheDir := newDir
             this.SetCacheDir(newDir)
             this.FlushCaches()
             this.SetupCaches()

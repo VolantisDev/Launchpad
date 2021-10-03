@@ -48,7 +48,7 @@ class PlatformEntity extends AppEntityBase {
         set => this.SetConfigValue("UninstallCmd", value)
     }
 
-    __New(app, key, config, requiredConfigKeys := "", parentEntity := "") {
+    __New(app, key, config, parentEntity := "", requiredConfigKeys := "") {
         if (requiredConfigKeys == "") {
             requiredConfigKeys := []
         }
@@ -61,7 +61,7 @@ class PlatformEntity extends AppEntityBase {
             throw OperationFailedException("Platform class could not be determined.")
         }
 
-        super.__New(app, key, config, requiredConfigKeys, parentEntity)
+        super.__New(app, key, config, parentEntity, requiredConfigKeys)
 
         if (!this.platform) {
             this.CreatePlatform(platformClass)

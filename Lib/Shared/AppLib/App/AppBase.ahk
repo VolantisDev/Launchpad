@@ -11,6 +11,7 @@ class AppBase {
     customTrayMenu := false
     mainWindowKey := "MainWindow"
     themeReady := false
+    startConfig := ""
 
     static Instance := ""
 
@@ -44,7 +45,7 @@ class AppBase {
         set => this.Services.Set("Debugger", value)
     }
 
-    __New(config := "") {
+    __New(config := "", autoStart := true) {
         AppBase.Instance := this
 
         if (config && config.Has("console") && config["console"]) {
@@ -54,27 +55,12 @@ class AppBase {
         if (config && config.Has("trayIcon") && config["trayIcon"]) {
             TraySetIcon(config["trayIcon"])
         }
-        
-        this.Startup(config)
-        
-        event := AppRunEvent(Events.APP_POST_STARTUP, this, config)
-        this.Service("EventManager").DispatchEvent(Events.APP_POST_STARTUP, event)
 
-        event := AppRunEvent(Events.APP_PRE_INITIALIZE, this, config)
-        this.Service("EventManager").DispatchEvent(Events.APP_PRE_INITIALIZE, event)
+        this.startConfig := config
 
-        this.InitializeApp(config)
-
-        event := AppRunEvent(Events.APP_POST_INITIALIZE, this, config)
-        this.Service("EventManager").DispatchEvent(Events.APP_POST_INITIALIZE, event)
-
-        event := AppRunEvent(Events.APP_PRE_RUN, this, config)
-        this.Service("EventManager").DispatchEvent(Events.APP_PRE_RUN, event)
-
-        this.RunApp(config)
-
-        event := AppRunEvent(Events.APP_POST_RUN, this, config)
-        this.Service("EventManager").DispatchEvent(Events.APP_POST_RUN, event)
+        if (autoStart) {
+            this.Startup(config)
+        }
     }
 
     AllocConsole() {
@@ -85,8 +71,10 @@ class AppBase {
         }
     }
 
-    Startup(config) {
+    Startup(config := "") {
         global appVersion
+
+        config := config ? config : this.startConfig
 
         if (!config) {
             config := Map()
@@ -132,232 +120,253 @@ class AppBase {
             DirCreate(this.dataDir)
         }
 
-        coreServices := this.GetCoreServiceDefinitions(config)
-        parameters := this.GetParameterDefinitions(config)
-        this.Services := ServiceContainer(coreServices, parameters)
+        this.LoadServices(config)
 
-        this.Service("Shell")
-        this.Service("ModuleManager")
+        if (!config.Has("useShell") || config("useShell")) {
+            this.Service("Shell")
+        }
+        
+        OnError(ObjBindMethod(this, "OnException"))
 
-        services := this.GetServiceDefinitions(config)
+        event := AppRunEvent(Events.APP_PRE_INITIALIZE, this, config)
+        this.Service("EventManager").DispatchEvent(Events.APP_PRE_INITIALIZE, event)
 
-        event := ServiceDefinitionsEvent(Events.APP_SERVICE_DEFINITIONS, services, config)
-        this.Service("EventManager").DispatchEvent(Events.APP_SERVICE_DEFINITIONS, event)
-        services := event.Services
+        this.InitializeApp(config)
 
-        event := ServiceDefinitionsEvent(Events.APP_SERVICE_DEFINITIONS_ALTER, services, config)
-        this.Service("EventManager").DispatchEvent(Events.APP_SERVICE_DEFINITIONS_ALTER, event)
-        services := event.Services
+        event := AppRunEvent(Events.APP_POST_INITIALIZE, this, config)
+        this.Service("EventManager").DispatchEvent(Events.APP_POST_INITIALIZE, event)
 
-        this.Services.AddDefinitions(services)
+        event := AppRunEvent(Events.APP_POST_STARTUP, this, config)
+        this.Service("EventManager").DispatchEvent(Events.APP_POST_STARTUP, event)
+
+        event := AppRunEvent(Events.APP_PRE_RUN, this, config)
+        this.Service("EventManager").DispatchEvent(Events.APP_PRE_RUN, event)
+
+        this.RunApp(config)
+    }
+
+    LoadServices(config) {
+        defaultServices := this.GetServiceDefinitions(config)
+        defaultParameters := this.GetParameterDefinitions(config)
+        this.Services := ServiceContainer(SimpleDefinitionLoader(defaultServices, defaultParameters))
+        this.Services.LoadFromMap(config)
+
+        serviceFile := this.Services.GetParameter("service_files.app")
+
+        if (FileExist(serviceFile)) {
+            this.Services.LoadFromJson(serviceFile)
+        }
 
         this.InitializeTheme()
+        this.InitializeModules(config)
 
-        this.errorCallback := ObjBindMethod(this, "OnException")
-        OnError(this.errorCallback)
+        serviceFiles := this.Service("ModuleManager").GetModuleServiceFiles()
+
+        for index, moduleServiceFile in serviceFiles {
+            if (FileExist(serviceFile)) {
+                this.Services.LoadFromJson(moduleServiceFile)
+            }
+        }
+
+        this.Service("EventManager").Register(Events.APP_SERVICES_LOADED, "AppServices", ObjBindMethod(this, "OnServicesLoaded"))
+        this.Service("EventManager").Register(Events.CACHES_REGISTER, "AppCaches", ObjBindMethod(this, "OnRegisterCaches"))
+        this.Service("EventManager").Register(Events.INSTALLERS_REGISTER, "AppInstallers", ObjBindMethod(this, "OnRegisterInstallers"))
+
+        event := ServiceDefinitionsEvent(Events.APP_SERVICE_DEFINITIONS, "", "", config)
+        this.Service("EventManager").DispatchEvent(Events.APP_SERVICE_DEFINITIONS, event)
+
+        if (event.Services.Count || event.Parameters.Count) {
+            this.Services.LoadDefinitions(SimpleDefinitionLoader(event.Services, event.Parameters))
+        }
+
+        serviceFile := this.Services.GetParameter("service_files.user")
+
+        if (FileExist(serviceFile)) {
+            this.Services.LoadFromJson(serviceFile)
+        }
+
+        event := AppRunEvent(Events.APP_SERVICES_LOADED, this, config)
+        this.Service("EventManager").DispatchEvent(Events.APP_SERVICES_LOADED, event)
+    }
+
+    OnServicesLoaded(event, extra, eventName, hwnd) {
+        this.Service("CacheManager")
+        this.Service("InstallerManager").InstallRequirements()
     }
 
     GetParameterDefinitions(config) {
-        parameters := config.Has("parameters") ? config["parameters"] : Map()
+        SplitPath(A_ScriptFullPath,,,, &scriptName)
 
-        if (!parameters.Has("config_path") || !parameters["config_path"]) {
-            parameters["config_path"] := this.appDir . "\" . this.appName . ".ini"
+        resourcesDir := this.appDir . "\Resources"
+
+        if (config.Has("resourcesDir") && config["resourcesDir"]) {
+            resourcesDir := config["resourcesDir"]
         }
 
-        if (!parameters.Has("state_path") || !parameters["state_path"]) {
-            parameters["state_path"] := this.dataDir . "\" . this.appName . "State.json"
+        themeName := ""
+        
+        if (config.Has("themeName") && config["themeName"]) {
+            themeName := config["themeName"]
         }
 
-        return parameters
+        return Map(
+            "caches", Map(),
+            "config_path", this.appDir . "\" . this.appName . ".ini",
+            "state_path", this.dataDir . "\" . this.appName . "State.json",
+            "service_files.app", this.appDir . "\" . scriptName . ".services.json",
+            "service_files.user", this.dataDir . "\" . scriptName . ".services.json",
+            "include_files.modules", this.dataDir . "\ModuleIncludes.ahk",
+            "include_files.module_tests", this.dataDir . "\ModuleIncludes.test.ahk",
+            "cache_dir", this.tmpDir . "\Cache",
+            "logger.path", this.dataDir . "\" . this.appName . "Log.txt",
+            "logger.level", "error",
+            "resources.dir", resourcesDir,
+            "themes.active_theme", themeName,
+            "themes.dir", this.appDir . "\Resources\Themes",
+            "themes.extra_themes", [],
+            "installers.Themes", "installer.themes"
+        )
     }
 
-    /*
-    Core services are required for basic things such as events and modules to work, so they load earlier.
-    */
-    GetCoreServiceDefinitions(config) {
-        services := (config.Has("coreServices") && config["coreServices"]) ? config["coreServices"] : Map()
-
-        if ((!services.Has("Shell") || !services["Shell"]) && (!config.Has("useShell") || config["useShell"])) {
-            shell := Map()
-
-            if (config.Has("shell") && config["shell"]) {
-                shell["service"] := config["shell"]
-            } else {
-                shell["com"] := "WScript.Shell"
-            }
-
-            shell["props"] := Map("CurrentDirectory", this.appDir)
-            services["Shell"] := shell
-        }
-
-        if (!services.Has("Config") || !services["Config"]) {
-            services["Config"] := Map(
+    GetServiceDefinitions(config) {
+        return Map(
+            "Shell", Map(
+                "com", "WScript.Shell",
+                "props", Map("CurrentDirectory", this.appDir)
+            ),
+            "Config", Map(
                 "class", "AppConfig",
                 "arguments", [AppRef(), ParameterRef("config_path")]
-            )
-        }
-
-        if (!services.Has("State") || !services["State"]) {
-            services["State"] := Map(
+            ),
+            "State", Map(
                 "class", "AppState",
                 "arguments", [AppRef(), ParameterRef("state_path")]
-            )
-        }
-
-        if (!services.Has("EventManager") || !services["EventManager"]) {
-            services["EventManager"] := Map(
+            ),
+            "EventManager", Map(
                 "class", "EventManager"
-            )
-        }
-
-        if (!services.Has("IdGenerator") || !services["IdGenerator"]) {
-            services["IdGenerator"] := "UuidGenerator"
-        }
-
-        if (!services.Has("ModuleManager") || !services["ModuleManager"]) {
-            moduleConfigPath := this.dataDir . "\Modules.json"
-            moduleDirs := config.Has("moduleDirs") ? config["moduleDirs"] : []
-
-            services["ModuleManager"] := Map(
+            ),
+            "IdGenerator", "UuidGenerator",
+            "ModuleManager", Map(
                 "class", "ModuleManager", 
                 "arguments", [
                     AppRef(), 
                     ServiceRef("EventManager"), 
                     ServiceRef("IdGenerator"), 
                     this.dataDir . "/Modules.json", 
-                    moduleConfigPath, 
-                    moduleDirs, 
+                    this.dataDir, 
+                    config.Has("moduleDirs") ? config["moduleDirs"] : [], 
                     this.GetDefaultModules(config)
                 ]
-            )
-        }
-
-        return services
-    }
-
-    ; TODO: Rewrite core services as several layers of JSON files that merge together
-    GetServiceDefinitions(config) {
-        services := (config.Has("services") && config["services"]) ? config["services"] : Map()
-
-        if (!services.Has("Gdip") || !services["Gdip"]) {
-            services["Gdip"] := "Gdip"
-        }
-
-        if (!services.Has("Debugger") || !services["Debugger"]) {
-            calls := [
-                Map("method", "SetLogger", "arguments", [ServiceRef("Logger")])
-            ]
-
-            services["Debugger"] := Map(
-                "class", "Debugger", 
-                "calls", calls
-            )
-        }
-
-        if (!services.Has("VersionChecker") || !services["VersionChecker"]) {
-            services["VersionChecker"] := "VersionChecker"
-        }
-
-        if (!services.Has("logger.file") || !services["logger.file"]) {
-            logPath := this.dataDir . "\" . this.appName . "Log.txt"
-
-            if (config.Has("logPath") && config["logPath"]) {
-                logPath := config["logPath"]
-            }
-
-            loggingLevel := this.Config.HasProp("LoggingLevel") ? this.Config.LoggingLevel : "error"
-
-            if (config.Has("loggingLevel") && config["loggingLevel"]) {
-                loggingLevel := config["loggingLevel"]
-            }
-
-            services["logger.file"] := Map(
+            ),
+            "Gdip", "Gdip",
+            "Debugger", Map(
+                "class", "Debugger",
+                "calls", Map(
+                    "method", "SetLogger",
+                    "arguments", ServiceRef("Logger")
+                )
+            ),
+            "VersionChecker", "VersionChecker",
+            "logger.file", Map(
                 "class", "FileLogger", 
-                "arguments", [logPath, loggingLevel, true]
-            )
-        }
-
-        if (!services.Has("Logger") || !services["Logger"]) {
-            services["Logger"] := Map(
-                "class", "LoggerService", 
+                "arguments", [ParameterRef("logger.path"), ParameterRef("logger.level"), true]
+            ),
+            "Logger", Map(
+                "class", "LoggerService",
                 "arguments", [ServiceRef("logger.file")]
-            )
-        }
-
-        if (!services.Has("CacheManager") || !services["CacheManager"]) {
-            cacheDir := this.tmpDir . "\Cache"
-
-            if (this.Config.HasProp("CacheDir") && this.Config.CacheDir) {
-                cacheDir := this.Config.CacheDir
-            }
-
-            services["CacheManager"] := Map(
+            ),
+            "CacheManager", Map(
                 "class", "CacheManager", 
-                "arguments", [AppRef(), cacheDir, this.GetCaches()]
-            )
-        }
-
-        if (!services.Has("ThemeManager") || !services["ThemeManager"]) {
-            themesDir := this.appDir . "\Resources\Themes"
-
-            if (config.Has("themesDir") && config["themesDir"]) {
-                themesDir := config["themesDir"]
-            }
-
-            resourcesDir := this.appDir . "\Resources"
-
-            if (config.Has("resourcesDir") && config["resourcesDir"]) {
-                resourcesDir := config["resourcesDir"]
-            }
-
-            defaultTheme := ""
-            
-            if (config.Has("themeName") && config["themeName"]) {
-                defaultTheme := config["themeName"]
-            }
-
-            services["ThemeManager"] := Map(
+                "arguments", [AppRef(), ParameterRef("cache_dir")]
+            ),
+            "ThemeManager", Map(
                 "class", "ThemeManager",
-                "arguments", [ServiceRef("EventManager"), this.Config, ServiceRef("IdGenerator"), ServiceRef("Logger"), themesDir, resourcesDir, defaultTheme]
-            )
-        }
-
-        if (!services.Has("notifier.toast") || !services["notifier.toast"]) {
-            services["notifier.toast"] := Map(
+                "arguments", [
+                    ServiceRef("EventManager"), 
+                    ServiceRef("Config"), 
+                    ServiceRef("IdGenerator"), 
+                    ServiceRef("Logger"), 
+                    ParameterRef("themes.dir"), 
+                    ParameterRef("resources.dir"), 
+                    ParameterRef("themes.active_theme")
+                ]
+            ),
+            "notifier.toast", Map(
                 "class", "ToastNotifier",
                 "arguments", [AppRef()]
-            )
-        }
-
-        if (!services.Has("Notifier") || !services["Notifier"]) {
-            services["Notifier"] := Map(
+            ),
+            "Notifier", Map(
                 "class", "NotificationService",
                 "arguments", [AppRef(), ServiceRef("notifier.toast")]
-            )
-        }
-
-        if (!services.Has("GuiManager") || !services["GuiManager"]) {
-            services["GuiManager"] := Map(
+            ),
+            "GuiManager", Map(
                 "class", "GuiManager",
-                "arguments", [AppRef(), ServiceRef("ThemeManager"), ServiceRef("IdGenerator"), this.State]
-            )
-        }
-
-        if (!services.Has("InstallerManager") || !services["InstallerManager"]) {
-            services["InstallerManager"] := Map(
+                "arguments", [
+                    AppRef(), 
+                    ServiceRef("ThemeManager"), 
+                    ServiceRef("IdGenerator"), 
+                    ServiceRef("State")
+                ]
+            ),
+            "InstallerManager", Map(
                 "class", "InstallerManager",
                 "arguments", [AppRef()]
-            )
-        }
-
-        if (!services.Has("EntityFactory") || !services["EntityFactory"]) {
-            services["EntityFactory"] := Map(
+            ),
+            "EntityFactory", Map(
                 "class", "EntityFactory",
                 "arguments", [ContainerRef()]
+            ),
+            "installer.themes", Map(
+                "class", "ThemeInstaller",
+                "arguments", [
+                    this.Version,
+                    ServiceRef("State"),
+                    ServiceRef("CacheManager"),
+                    "file",
+                    ParameterRef("themes.extra_themes"),
+                    this.tmpDir . "\Installers"
+                ]
             )
+        )
+    }
+
+    OnRegisterCaches(event, extra, eventName, hwnd) {
+        cacheNames := this.Services.GetParameter("caches")
+
+        for cacheName, serviceName in cacheNames {
+            event.Register(cacheName, this.Service(serviceName))
+        }
+    }
+
+    OnRegisterInstallers(event, extra, eventName, hwnd) {
+        installerNames := this.Services.GetParameter("installers")
+
+        for installerName, serviceName in installerNames {
+            event.Register(installerName, this.Service(serviceName))
+        }
+    }
+
+    InitializeModules(config) {
+        includeFiles := this.Services.GetParameter("include_files")
+        updated := this.Service("ModuleManager").UpdateModuleIncludes(includeFiles["modules"], includeFiles["module_tests"])
+
+        if (updated) {
+            message := A_IsCompiled ?
+                "Your modules have been updated. Currently, you must recompile " this.appName . " yourself for the changes to take effect. Would you like to exit now (highly recommended)?" :
+                "Your modules have been updated, and " this.appName . " must be restarted for the changes to take effect. Would you like to restart now?"
+
+            response := this.app.Service("GuiManager").Dialog("DialogBox", "Module Includes Updated", message)
+        
+            if (response == "Yes") {
+                if (A_IsCompiled) {
+                    this.ExitApp()
+                } else {
+                    this.RestartApp()
+                }
+            }
         }
 
-        return services
+        this.Service("ModuleManager").LoadComponents()
     }
 
     InitializeTheme() {
@@ -370,10 +379,55 @@ class AppBase {
         }
     }
 
-    GetDefaultModules(config) {
-        modules := Map()
-        modules["Auth"] := "Auth"
-        return modules
+    InitializeApp(config) {
+        A_AllowMainWindow := false
+
+        if (this.customTrayMenu) {
+            A_TrayMenu.Delete()
+            this.Service("EventManager").Register(Events.AHK_NOTIFYICON, "TrayClick", ObjBindMethod(this, "OnTrayIconRightClick"), 1)
+        }
+    }
+
+    RunApp(config) {
+        if (this.Config.HasProp("CheckUpdatesOnStart") && this.Config.CheckUpdatesOnStart) {
+            this.CheckForUpdates(false)
+        }
+
+        if (!FileExist(this.Config.ConfigPath)) {
+            this.InitialSetup(config)
+        }
+    }
+
+    OpenApp() {
+        if (this.mainWindowKey) {
+            if (this.Service("GuiManager").WindowExists(this.mainWindowKey)) {
+                WinActivate("ahk_id " . this.Service("GuiManager").GetWindow("MainWindow").GetHwnd())
+            } else {
+                this.Service("GuiManager").OpenWindow(this.mainWindowKey)
+            }
+        }
+    }
+
+    ExitApp() {
+        event := AppRunEvent(Events.APP_SHUTDOWN, this)
+        this.Service("EventManager").DispatchEvent(Events.APP_SHUTDOWN, event)
+
+        if (this.Services.Has("Gdip")) {
+            Gdip_Shutdown(this.Services.Get("Gdip").GetHandle())
+        }
+
+        ExitApp
+    }
+
+    RestartApp() {
+        event := AppRunEvent(Events.APP_SHUTDOWN, this)
+        this.Service("EventManager").DispatchEvent(Events.APP_RESTART, event)
+
+        if (this.Services.Has("Gdip")) {
+            Gdip_Shutdown(this.Services.Get("Gdip").GetHandle())
+        }
+
+        Reload()
     }
 
     GetCmdOutput(command, trimOutput := true) {
@@ -392,8 +446,10 @@ class AppBase {
         return result
     }
 
-    GetCaches() {
-        return Map()
+    GetDefaultModules(config) {
+        modules := Map()
+        modules["Auth"] := "Auth"
+        return modules
     }
 
     Service(name) {
@@ -407,10 +463,17 @@ class AppBase {
 
         errorText := this.appName . " has experienced an unhandled exception. You can find the details below."
         errorText .= "`n`n" . e.Message . extra
-        errorText .= "`n`nOccurred in: " . e.What
         
-        if (e.File) {
-            errorText .= "`nFile: " . e.File . " (Line " . e.Line . ")"
+        if (!A_IsCompiled) {
+            errorText .= "`n`nOccurred in: " . e.What
+        
+            if (e.File) {
+                errorText .= "`nFile: " . e.File . " (Line " . e.Line . ")"
+            }
+
+            if (e.Stack) {
+                errorText .= "`n`nStack trace:`n" . e.Stack
+            }
         }
 
         if (this.Services.Has("Logger")) {
@@ -440,25 +503,6 @@ class AppBase {
     ShowUnthemedError(title, errorText, err, displayErr := "", allowContinue := true) {
         otherErrorInfo := (displayErr && err != displayErr) ? "`n`nThe application could not show the usual error dialog because of another error:`n`n" . displayErr.File . ": " . displayErr.Line . ": " . displayErr.What . ": " . displayErr.Message : ""
         MsgBox(errorText . otherErrorInfo, "Error")
-    }
-
-    InitializeApp(config) {
-        A_AllowMainWindow := false
-
-        if (this.customTrayMenu) {
-            A_TrayMenu.Delete()
-            this.Service("EventManager").Register(Events.AHK_NOTIFYICON, "TrayClick", ObjBindMethod(this, "OnTrayIconRightClick"), 1)
-        }
-    }
-
-    RunApp(config) {
-        if (this.Config.HasProp("CheckUpdatesOnStart") && this.Config.CheckUpdatesOnStart) {
-            this.CheckForUpdates(false)
-        }
-
-        if (!FileExist(this.Config.ConfigPath)) {
-            this.InitialSetup(config)
-        }
     }
     
     OnTrayIconRightClick(wParam, lParam, msg, hwnd) {
@@ -506,40 +550,8 @@ class AppBase {
         return result
     }
 
-    OpenApp() {
-        if (this.mainWindowKey) {
-            if (this.Service("GuiManager").WindowExists(this.mainWindowKey)) {
-                WinActivate("ahk_id " . this.Service("GuiManager").GetWindow("MainWindow").GetHwnd())
-            } else {
-                this.Service("GuiManager").OpenWindow(this.mainWindowKey)
-            }
-        }
-    }
-
     __Delete() {
         this.ExitApp()
         super.__Delete()
-    }
-
-    ExitApp() {
-        event := AppRunEvent(Events.APP_SHUTDOWN, this)
-        this.Service("EventManager").DispatchEvent(Events.APP_SHUTDOWN, event)
-
-        if (this.Services.Has("Gdip")) {
-            Gdip_Shutdown(this.Services.Get("Gdip").GetHandle())
-        }
-
-        ExitApp
-    }
-
-    RestartApp() {
-        event := AppRunEvent(Events.APP_SHUTDOWN, this)
-        this.Service("EventManager").DispatchEvent(Events.APP_RESTART, event)
-
-        if (this.Services.Has("Gdip")) {
-            Gdip_Shutdown(this.Services.Get("Gdip").GetHandle())
-        }
-
-        Reload()
     }
 }

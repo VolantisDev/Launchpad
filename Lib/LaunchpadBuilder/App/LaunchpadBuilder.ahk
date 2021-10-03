@@ -1,43 +1,36 @@
 class LaunchpadBuilder extends AppBase {
+    GetParameterDefinitions(config) {
+        parameters := super.GetParameterDefinitions(config)
+        parameters["config_path"] := this.appDir . "\Launchpad.build.ini"
+        return parameters
+    }
+
     GetServiceDefinitions(config) {
         services := super.GetServiceDefinitions(config)
 
-        if (!services.Has("LaunchpadConfig") || !services["LaunchpadConfig"]) {
-            services["LaunchpadConfig"] := Map(
-                "class", "LaunchpadConfig",
-                "arguments", [AppRef(), this.appDir . "\" . this.appName . ".ini"]
-            )
-        }
+        services["Config"] := Map(
+            "class", "LaunchpadBuilderConfig",
+            "arguments", [AppRef(), ParameterRef("config_path")]
+        )
 
-        if (!services.Has("DataSourceManager") || !services["DataSourceManager"]) {
-            services["DataSourceManager"] := Map(
-                "class", "DataSourceManager",
-                "arguments", ServiceRef("EventManager")
-            )
-        }
+        services["LaunchpadConfig"] := Map(
+            "class", "LaunchpadConfig",
+            "arguments", [AppRef(), this.appDir . "\" . this.appName . ".ini"]
+        )
 
-        if (!services.Has("FileHasher") || !services["FileHasher"]) {
-            services["FileHasher"] := "FileHasher"
-        }
+        services["DataSourceManager"] := Map(
+            "class", "DataSourceManager",
+            "arguments", ServiceRef("EventManager")
+        )
 
-        if (!services.Has("GitTagVersionIdentifier") || !services["GitTagVersionIdentifier"]) {
-            services["GitTagVersionIdentifier"] := Map(
-                "class", "GitTagVersionIdentifier",
-                "arguments", AppRef()
-            )
-        }
+        services["FileHasher"] := "FileHasher"
+
+        services["GitTagVersionIdentifier"] := Map(
+            "class", "GitTagVersionIdentifier",
+            "arguments", AppRef()
+        )
 
         return services
-    }
-
-    GetCaches() {
-        caches := super.GetCaches()
-        return caches
-    }
-
-    InitializeApp(config) {
-        super.InitializeApp(config)
-        this.Service("Auth").SetAuthProvider(LaunchpadApiAuthProvider(this, this.State))
     }
 
     RunApp(config) {

@@ -30,6 +30,9 @@ class ContainerBase {
     }
 
     Set(key, value) {
+        if (Type(this.Items) != "Map") {
+            MsgBox(Type(this))
+        }
         this.Items[key] := value
     }
 

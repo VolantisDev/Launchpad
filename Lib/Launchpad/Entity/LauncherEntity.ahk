@@ -123,9 +123,9 @@ class LauncherEntity extends AppEntityBase {
         get => !this.LauncherExists(false) or this.LauncherIsOutdated() 
     }
 
-    __New(app, key, config, requiredConfigKeys := "", parentEntity := "") {
-        super.__New(app, key, config, requiredConfigKeys, parentEntity)
-        this.children["ManagedLauncher"] := ManagedLauncherEntity(app, key, config, "", this)
+    __New(app, key, config, parentEntity := "", requiredConfigKeys := "") {
+        super.__New(app, key, config, parentEntity, requiredConfigKeys)
+        this.children["ManagedLauncher"] := ManagedLauncherEntity(app, key, config, this, "")
         this.entityData.SetAutoDetectedDefaults(this.AutoDetectValues())
         this.StoreOriginal(false, true)
     }
@@ -133,7 +133,6 @@ class LauncherEntity extends AppEntityBase {
     /**
     * NEW METHODS
     */
-
     LauncherExists(checkSourceFile := false) {
         return (FileExist(this.GetLauncherFile(this.Key, checkSourceFile)) != "")
     }

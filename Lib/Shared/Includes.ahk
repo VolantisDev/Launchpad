@@ -1,4 +1,4 @@
-; Automatically-generated file, do not edit manually.
+; Automatically-generated file. Manual edits will be overwritten.
 #Include AppLib\Events.ahk
 #Include AppLib\App\AppBase.ahk
 #Include AppLib\Authentication\AuthInfo\AuthInfo.ahk
@@ -10,6 +10,7 @@
 #Include AppLib\BulkOperation\ComponentDiscoverer\ComponentDiscovererBase.ahk
 #Include AppLib\BulkOperation\ComponentDiscoverer\ConfigComponentDiscoverer.ahk
 #Include AppLib\BulkOperation\ComponentDiscoverer\FileComponentDiscovererBase.ahk
+#Include AppLib\BulkOperation\ComponentDiscoverer\ModuleDiscoverer.ahk
 #Include AppLib\BulkOperation\ComponentLoader\ClassComponentLoader.ahk
 #Include AppLib\BulkOperation\ComponentLoader\ComponentLoaderBase.ahk
 #Include AppLib\BulkOperation\ComponentLoader\SimpleComponentLoader.ahk
@@ -145,6 +146,12 @@
 #Include ContainerLib\ContainerRef\ContainerRefBase.ahk
 #Include ContainerLib\ContainerRef\ParameterRef.ahk
 #Include ContainerLib\ContainerRef\ServiceRef.ahk
+#Include ContainerLib\DefinitionLoader\DefinitionLoaderBase.ahk
+#Include ContainerLib\DefinitionLoader\JsonDefinitionLoader.ahk
+#Include ContainerLib\DefinitionLoader\MapDefinitionLoader.ahk
+#Include ContainerLib\DefinitionLoader\SimpleDefinitionLoader.ahk
+#Include ContainerLib\DefinitionLoader\StructuredDataDefinitionLoader.ahk
+#Include ContainerLib\DefinitionLoader\StructuredFileDefinitionLoader.ahk
 #Include ContainerLib\Exception\ContainerException.ahk
 #Include ContainerLib\Exception\ParameterNotFoundException.ahk
 #Include DataLib\DiffResult.ahk
@@ -182,6 +189,10 @@
 #Include UtilityLib\Hasher\HasherBase.ahk
 #Include UtilityLib\IdGenerator\IdGeneratorBase.ahk
 #Include UtilityLib\IdGenerator\UuidGenerator.ahk
+#Include UtilityLib\IncludeBuilder\AhkIncludeBuilder.ahk
+#Include UtilityLib\IncludeBuilder\IncludeBuilderBase.ahk
+#Include UtilityLib\IncludeWriter\AhkIncludeWriter.ahk
+#Include UtilityLib\IncludeWriter\IncludeWriterBase.ahk
 #Include UtilityLib\Locator\FileLocator.ahk
 #Include UtilityLib\Locator\LocatorBase.ahk
 #Include UtilityLib\Logger\FileLogger.ahk
@@ -190,4 +201,3 @@
 #Include UtilityLib\Notifier\ToastNotifier.ahk
 #Include UtilityLib\VersionChecker\VersionChecker.ahk
 #Include Vendor\Gdip_All.ahk
-; End of auto-generated includes.

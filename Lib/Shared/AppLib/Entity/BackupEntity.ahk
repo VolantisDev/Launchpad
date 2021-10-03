@@ -41,8 +41,8 @@ class BackupEntity extends AppEntityBase {
         set => this.SetConfigValue("IsEnabled", !!(value))
     }
 
-    __New(app, key, config, requiredConfigKeys := "", parentEntity := "") {
-        super.__New(app, key, config, requiredConfigKeys, parentEntity)
+    __New(app, key, config, parentEntity := "", requiredConfigKeys := "") {
+        super.__New(app, key, config, parentEntity, requiredConfigKeys)
         backupClass := config.Has("BackupClass") ? config["BackupClass"] : "FileBackup"
 
         if (!this.backup) {

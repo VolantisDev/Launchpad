@@ -1,4 +1,4 @@
-; Automatically-generated file, do not edit manually.
+; Automatically-generated file. Manual edits will be overwritten.
 #Include App\TestApp.ahk
 #Include App\TestAppBase.ahk
 #Include ResultViewer\FileResultViewerBase.ahk
@@ -10,4 +10,3 @@
 #Include TestLoader\TestLoaderBase.ahk
 #Include TestRunner\SimpleTestRunner.ahk
 #Include TestRunner\TestRunnerBase.ahk
-; End of auto-generated includes.

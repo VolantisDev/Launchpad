@@ -6,15 +6,18 @@ class ServiceContainer extends ContainerBase {
         get => this.parametersObj
     }
     
-    __New(services := "", parameters := "") {
-        if (parameters) {
-            this.parametersObj := parameters
-        }
+    __New(definitionLoader := "") {
+        super.__New()
 
-        super.__New(services)
+        if (definitionLoader) {
+            this.LoadDefinitions(definitionLoader)
+        }
     }
 
-    AddDefinitions(services := "", parameters := "", replace := false) {
+    LoadDefinitions(definitionLoader, replace := true) {
+        services := definitionLoader.LoadServiceDefinitions()
+        parameters := definitionLoader.LoadParameterDefinitions()
+
         if (services) {
             for serviceName, serviceConfig in services {
                 if (!this.Has(serviceName) || replace) {
@@ -30,10 +33,35 @@ class ServiceContainer extends ContainerBase {
         if (parameters) {
             for paramName, paramConfig in parameters {
                 if (!this.Parameters.Has(paramName) || replace) {
-                    this.Parameters[paramName] := paramConfig
+                    this.SetParameter(paramName, paramConfig)
                 }
             }
         }
+    }
+
+    LoadFromStructuredData(structuredData, servicesKey := "", parametersKey := "") {
+        this.LoadDefinitions(StructuredDataDefinitionLoader(structuredData, "", servicesKey, parametersKey))
+    }
+
+    LoadFromMap(obj, servicesKey := "", parametersKey := "") {
+        if (Type(obj) == "ParameterRef" || obj.HasBase(ParameterRef)) {
+            obj := this.GetParameter(obj.GetName())
+        }
+
+        newObj := Map(
+            "services", obj.Has("services") ? obj["services"] : Map(),
+            "parameters", obj.Has("parameters") ? obj["parameters"] : Map()
+        )
+
+        this.LoadDefinitions(MapDefinitionLoader(newObj, "", servicesKey, parametersKey))
+    }
+
+    LoadFromJson(jsonFile, servicesKey := "", parametersKey := "") {
+        if (Type(jsonFile) == "ParameterRef" || jsonFile.HasBase(ParameterRef)) {
+            jsonFile := this.GetParameter(jsonFile.GetName())
+        }
+
+        this.LoadDefinitions(JsonDefinitionLoader(jsonFile, "", servicesKey, parametersKey))
     }
 
     Get(service) {
@@ -137,6 +165,10 @@ class ServiceContainer extends ContainerBase {
         if (!HasMethod(factory)) {
             throw ContainerException(name . " service uses a factory which is uncallable")
         }
+
+        if (HasMethod(factory)) {
+            return %factory%(this)
+        }
     }
 
     resolveArguments(name, argumentDefinitions) {
@@ -203,6 +235,11 @@ class ServiceContainer extends ContainerBase {
 
     initializeService(service, name, entry) {
         callDefinitions := entry.Has("calls") ? entry["calls"] : []
+
+        if (Type(callDefinitions) == "Map") {
+            callDefinitions := [callDefinitions]
+        }
+
         propDefinitions := entry.Has("props") ? entry["props"] : Map()
 
         if (callDefinitions && callDefinitions.Length) {
@@ -231,7 +268,7 @@ class ServiceContainer extends ContainerBase {
     }
 
     ; TODO: Abstract the parameter concept to a more generic base class used for all configuration
-    GetParameter(name) {
+    GetParameter(name := "") {
         tokens := StrSplit(name, ".")
         context := this.Parameters
 
@@ -244,5 +281,22 @@ class ServiceContainer extends ContainerBase {
         }
 
         return context
+    }
+
+    SetParameter(name, value := "") {
+        tokens := StrSplit(name, ".")
+        context := this.Parameters
+
+        lastToken := tokens.Pop()
+
+        for index, token in tokens {
+            if (!context.Has(token)) {
+                context[token] := Map()
+            }
+
+            context := context[token]
+        }
+
+        context[lastToken] := value
     }
 }

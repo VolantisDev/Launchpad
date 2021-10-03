@@ -150,6 +150,14 @@ class EntityBase {
     }
 
     AddRequiredConfigKeys(configKeys, addPrefix := false) {
+        if (Type(configKeys) == "String" && configKeys) {
+            configKeys := [configKeys]
+        }
+
+        if (Type(configKeys) != "Array") {
+            throw AppException("Provided required config keys is not an array. Received: " . Type(configKeys))
+        }
+
         for index, requiredKey in configKeys {
             if (!this.ConfigKeyIsRequired(requiredKey)) {
                 if (addPrefix) {

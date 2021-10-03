@@ -11,12 +11,12 @@ class CacheState extends JsonState {
         set => this.State["NotFoundItems"] := value
     }
 
-    __New(app, filePath, cacheExpire := "") {
+    __New(app, cacheDir, stateFilename, cacheExpire := "") {
         if (cacheExpire != "") {
             this.cacheExpire := cacheExpire
         }
 
-        super.__New(app, filePath, true)
+        super.__New(app, cacheDir . "\" . stateFilename, true)
     }
 
     Exists(item) {

@@ -36,8 +36,7 @@ class AppEntityBase extends EntityBase {
         set => this.SetConfigValue("DependenciesDir", value, false)
     }
 
-    ; TODO: Swap last two parameters everywhere to match base class
-    __New(app, key, configObj, requiredConfigKeys := "", parentEntity := "") {
+    __New(app, key, configObj, parentEntity := "", requiredConfigKeys := "") {
         InvalidParameterException.CheckTypes("EntityBase", "app", app, "AppBase")
 
         this.app := app

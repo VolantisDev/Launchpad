@@ -624,7 +624,7 @@
             },
             "ErrorDialog": {
                 "settings": "dialog",
-                "contentWidth": 500
+                "contentWidth": 800
             },
             "ManagedGameEditor": {
                 "settings": "editor"

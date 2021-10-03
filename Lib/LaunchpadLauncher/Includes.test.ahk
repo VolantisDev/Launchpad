@@ -1,2 +1,1 @@
-; Automatically-generated testing file, do not edit manually.
-; End of auto-generated test includes.
+; Automatically-generated file. Manual edits will be overwritten.

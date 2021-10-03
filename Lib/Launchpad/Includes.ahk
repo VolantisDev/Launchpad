@@ -1,4 +1,4 @@
-; Automatically-generated file, do not edit manually.
+; Automatically-generated file. Manual edits will be overwritten.
 #Include App\Launchpad.ahk
 #Include Builder\AhkLauncherBuilder.ahk
 #Include Builder\BuilderBase.ahk
@@ -76,4 +76,3 @@
 #Include Service\LauncherManager.ahk
 #Include Service\PlatformManager.ahk
 #Include State\LaunchpadAppState.ahk
-; End of auto-generated includes.

@@ -39,13 +39,12 @@ class ComponentServiceBase {
     }
     
     GetItem(key) {
-        component := ""
-
-        if (this.HasItem(key)) {
-            component := this._components[key]
+        if (!this.HasItem(key)) {
+            serviceName := this.__Class
+            throw AppException(serviceName . " does not contain key " . key)
         }
 
-        return component
+        return this._components[key]
     }
 
     HasItem(key) {

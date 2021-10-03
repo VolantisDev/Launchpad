@@ -1,4 +1,4 @@
-; Automatically-generated file, do not edit manually.
+; Automatically-generated file. Manual edits will be overwritten.
 #Include App\LaunchpadBuilder.ahk
 #Include AppBuilder\AhkBinsBuilder.ahk
 #Include AppBuilder\AhkExeBuilder.ahk
@@ -17,4 +17,3 @@
 #Include Gui\ReleaseInfoForm.ahk
 #Include VersionIdentifier\GitTagVersionIdentifier.ahk
 #Include VersionIdentifier\VersionIdentifierBase.ahk
-; End of auto-generated includes.

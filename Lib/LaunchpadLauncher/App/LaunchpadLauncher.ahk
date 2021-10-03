@@ -10,43 +10,65 @@ class LaunchpadLauncher extends AppBase {
         super.__New(config)
     }
 
+    GetParameterDefinitions(config) {
+        return Map(
+            "launcher_key", config["launcherKey"]
+            "launchpad_launcher_config", config["launchpadLauncherConfig"],
+            "launcher_config", config["launcherConfig"],
+            "game_config", config["gameConfig"]
+        )
+    }
+
     GetServiceDefinitions(config) {
         services := super.GetServiceDefinitions(config)
 
-        if (!services.Has("OverlayManager") || !services["OverlayManager"]) {
-            services["OverlayManager"] := Map(
-                "class", "OverlayManager",
-                "arguments", [
-                    this.appDir, 
-                    ParameterRef("launchpad_launcher_config")
-                ]
-            )
-        }
+        services["Config"] := Map(
+            "class", "LaunchpadLauncherConfig",
+            "arguments", [
+                AppRef(), 
+                ParameterRef("launchpad_launcher_config"), 
+                ParameterRef("launcher_config"), 
+                ParameterRef("game_config"), 
+                ParameterRef("config_path")
+            ]
+        )
 
-        if (!services.Has("Game") || !services["Game"]) {
-            services["Game"] := Map(
-                "class", config["gameConfig"]["GameClass"],
-                "arguments", [
-                    AppRef(), 
-                    ParameterRef("launcher_key"), 
-                    ParameterRef("game_config")
-                ]
-            )
-        }
+        services["State"] := Map(
+            "class", "LaunchpadLauncherState",
+            "arguments", [
+                AppRef(), 
+                ParameterRef("state_path")
+            ]
+        )
 
-        if (!services.Has("Launcher") || !services["Launcher"]) {
-            services["Launcher"] := Map(
-                "class", config["launcherConfig"]["LauncherClass"],
-                "arguments", [
-                    ParameterRef("launcher_key"),
-                    ServiceRef("GuiManager"),
-                    ServiceRef("Game"),
-                    ParameterRef("launchpad_launcher_config"), 
-                    ParameterRef("launcher_config"),
-                    ServiceRef("Logger")
-                ]
-            )
-        }
+        services["OverlayManager"] := Map(
+            "class", "OverlayManager",
+            "arguments", [
+                this.appDir, 
+                ParameterRef("launchpad_launcher_config")
+            ]
+        )
+
+        services["Game"] := Map(
+            "class", config["gameConfig"]["GameClass"],
+            "arguments", [
+                AppRef(), 
+                ParameterRef("launcher_key"), 
+                ParameterRef("game_config")
+            ]
+        )
+
+        services["Launcher"] := Map(
+            "class", config["launcherConfig"]["LauncherClass"],
+            "arguments", [
+                ParameterRef("launcher_key"),
+                ServiceRef("GuiManager"),
+                ServiceRef("Game"),
+                ParameterRef("launchpad_launcher_config"), 
+                ParameterRef("launcher_config"),
+                ServiceRef("Logger")
+            ]
+        )
         
         return services
     }

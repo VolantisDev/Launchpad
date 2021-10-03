@@ -42,6 +42,7 @@ class BackupManager extends EntityManagerBase {
     }
 
     CreateBackupEntity(key, config) {
+        ; TODO: Use the entity factory here
         backup := BackupEntity(this.app, key, config)
         this.AddEntity(key, backup)
         return backup

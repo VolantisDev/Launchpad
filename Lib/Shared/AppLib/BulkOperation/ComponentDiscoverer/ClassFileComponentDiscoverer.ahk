@@ -1,10 +1,17 @@
 class ClassFileComponentDiscoverer extends FileComponentDiscovererBase {
     DiscoverComponent(fileName, filePath) {
         componentName := this.GetComponentName(fileName, filePath)
-        
+       
         if (!this.results.Has(componentName)) {
-            this.results[componentName] := this.GetComponentClass(fileName, filePath)
+            this.results[componentName] := this.PopulateComponentInfo(fileName, filePath)
         }
+    }
+
+    PopulateComponentInfo(fileName, filePath) {
+        return Map(
+            "class", this.GetComponentClassName(fileName, filePath),
+            "file", filePath
+        )
     }
 
     GetComponentName(fileName, filePath) {

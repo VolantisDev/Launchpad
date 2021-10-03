@@ -11,6 +11,8 @@ class ContainerServiceBase {
     loader := ""
     discoverer := ""
     classSuffix := ""
+    componentsDiscovered := false
+    componentInfo := ""
 
     __New(defaultComponentInfo := "", defaultComponents := "", autoLoad := true) {
         this.defaultComponentInfo := defaultComponentInfo
@@ -48,8 +50,8 @@ class ContainerServiceBase {
         return SimpleComponentLoader(this, componentInfo)
     }
 
-    LoadComponents() {
-        if (!this.componentsLoaded) {
+    DiscoverComponents() {
+        if (!this.componentsDiscovered) {
             componentInfo := this.defaultComponentInfo ? this.defaultComponentInfo : Map()
 
             discoverer := this.GetDiscoverer()
@@ -59,9 +61,20 @@ class ContainerServiceBase {
 
                 if (success) {
                     componentInfo := discoverer.GetResults()
+                    this.componentInfo := componentInfo
                 }
             }
 
+            this.componentsDiscovered := true
+        }
+
+        return this.componentInfo
+    }
+
+    LoadComponents() {
+        if (!this.componentsLoaded) {
+            componentInfo := this.DiscoverComponents()
+            
             loader := this.GetLoader(componentInfo)
 
             if (!loader) {

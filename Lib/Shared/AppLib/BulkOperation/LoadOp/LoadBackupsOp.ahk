@@ -27,7 +27,7 @@ class LoadBackupsOp extends BulkOperationBase {
         for key, config in this.backupsConfigObj.Backups {
             this.StartItem(key, key)
             requiredKeys := ""
-            this.results[key] := factory.CreateEntity("BackupEntity", key, config, requiredKeys)
+            this.results[key] := factory.CreateEntity("BackupEntity", key, config, "", requiredKeys)
             this.FinishItem(key, true, key . ": Loaded successfully.")
         }
     }

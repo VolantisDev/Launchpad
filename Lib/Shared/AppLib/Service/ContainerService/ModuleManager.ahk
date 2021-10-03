@@ -10,7 +10,7 @@ class ModuleManager extends ConfigurableContainerServiceBase {
     moduleDirs := []
     classSuffix := "Module"
 
-    __New(app, eventManagerObj, idGeneratorObj, configPath, dataDir, moduleDirs := "", defaultModuleInfo := "", defaultModules := "", autoLoad := true) {
+    __New(app, eventManagerObj, idGeneratorObj, configPath, dataDir, moduleDirs := "", defaultModuleInfo := "", defaultModules := "") {
         this.app := app
         this.eventManagerObj := eventManagerObj
         this.idGeneratorObj := idGeneratorObj
@@ -26,14 +26,14 @@ class ModuleManager extends ConfigurableContainerServiceBase {
             this.moduleDirs := moduleDirs
         }
 
-        super.__New(configObj, configObj.primaryConfigKey, defaultModuleInfo, defaultModules, autoLoad)
+        super.__New(configObj, configObj.primaryConfigKey, defaultModuleInfo, defaultModules, false)
     }
 
     CreateDiscoverer() {
-        searchDirs := this.GetModuleDirs()
-        filePattern := "*.module.ahk"
+        searchDirs := this.GetModuleParentDirs()
+        coreDirs := this.GetCoreModuleDirs()
 
-        return ClassFileComponentDiscoverer(this, searchDirs, filePattern)
+        return ModuleDiscoverer(this, searchDirs, coreDirs)
     }
 
     CreateLoader(componentInfo) {
@@ -113,8 +113,102 @@ class ModuleManager extends ConfigurableContainerServiceBase {
         }
     }
 
-    GetModuleDirs() {
-        dirs := []
+    GetModuleServiceFiles() {
+        modules := this.GetAll()
+
+        serviceFiles := []
+
+        for key, module in modules {
+            moduleFiles := module.GetServiceFiles()
+
+            if (moduleFiles) {
+                if (Type(moduleFiles) == "String") {
+                    moduleFiles := [moduleFiles]
+                }
+
+                for index, serviceFile in moduleFiles {
+                    serviceFiles.Push(serviceFile)
+                }
+            }
+        }
+
+        return serviceFiles
+    }
+
+    UpdateModuleIncludes(outputFile, testsFile := "") {
+        buildTestFiles := (testsFile && !A_IsCompiled)
+        updated := false
+        this.moduleDirs := this.GetModuleDirs(false)
+
+        tmpFile := outputFile . ".tmp"
+        includeBuilder := this.GetModuleIncludeBuilder()
+        includeWriter := this.GetModuleIncludeWriter(tmpFile)
+        includes := includeBuilder.BuildIncludes()
+        updated := includeWriter.WriteIncludes(includes)
+
+        if (buildTestFiles) {
+            testsTmpFile := testsFile . ".tmp"
+            testBuilder := this.GetModuleTestIncludeBuilder()
+            testWriter := this.GetModuleIncludeWriter(testsTmpFile)
+            testIncludes := testBuilder.BuildIncludes()
+            testsUpdated := testWriter.WriteIncludes(testIncludes)
+
+            if (testsUpdated && !updated) {
+                updated := true
+            }
+        }
+
+        return updated
+    }
+
+    GetModuleIncludeBuilder() {
+        return AhkIncludeBuilder(
+            this.GetModuleDirs(),
+            "*.ahk",
+            true,
+            false,
+            ".test.ahk"
+        )
+    }
+
+    GetModuleTestIncludeBuilder() {
+        return AhkIncludeBuilder(
+            this.GetModuleDirs(),
+            "*.test.ahk"
+        )
+    }
+
+    GetModuleIncludeWriter(outputFile) {
+        return AhkIncludeWriter(outputFile)
+    }
+
+    GetModuleDirs(includeCoreModules := true) {
+        moduleDirs := []
+
+        componentInfo := this.DiscoverComponents()
+
+        for key, moduleInfo in componentInfo {
+
+
+            if (moduleInfo && Type(moduleInfo) == "Map" && moduleInfo.Has("file") && moduleInfo["file"]) {
+                SplitPath(moduleInfo["file"], &moduleDir)
+
+                if (DirExist(moduleDir) && (includeCoreModules || !moduleInfo.Has("core") || !moduleInfo["core"])) {
+                    moduleDirs.Push(moduleDir)
+                }
+            }
+        }
+
+        return moduleDirs
+    }
+
+    GetCoreModuleDirs() {
+        return [this.app.appDir . "\Lib\Modules"]
+    }
+
+    GetModuleParentDirs() {
+        dirs := this.GetCoreModuleDirs()
+
         sharedDir := this.dataDir . "\Modules"
 
         if (DirExist(sharedDir)) {

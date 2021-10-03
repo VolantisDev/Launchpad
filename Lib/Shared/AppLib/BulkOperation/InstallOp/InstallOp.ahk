@@ -33,6 +33,11 @@ class InstallOp extends BulkOperationBase {
 
         for index, installerKey in this.installerKeys {
             installer := this.app.Service("InstallerManager").GetItem(installerKey)
+
+            if (!installer) {
+                throw AppException("Installer " . installerKey . " is not present in InstallerManager")
+            }
+            
             count += installer.CountComponents()
         }
 

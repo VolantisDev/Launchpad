@@ -2,112 +2,109 @@
     customTrayMenu := true
     detectGames := false
 
+    GetParameterDefinitions(config) {
+        parameters := super.GetParameterDefinitions(config)
+        parameters["backups_file"] := this.dataDir . "\Backups.json"
+        parameters["cache_dir"] := this.tmpDir . "\Cache"
+        parameters["api_endpoint"] := "https://api.launchpad.games/v1"
+        parameters["caches.file"] := "cache.file"
+        parameters["caches.api"] := "cache.api",
+        parameters["installers.Update"] := "installer.launchpad_update"
+        parameters["installers.Dependencies"] := "installer.dependencies"
+        return parameters
+    }
+
     GetServiceDefinitions(config) {
         services := super.GetServiceDefinitions(config)
 
-        if (!services.Has("BackupManager") || !services["BackupManager"]) {
-            services["BackupManager"] := Map(
-                "class", "BackupManager",
-                "arguments", [AppRef(), this.Config.BackupsFile]
-            )
-        }
+        services["Config"] := Map(
+            "class", "LaunchpadConfig",
+            "arguments", [AppRef(), ParameterRef("config_path")]
+        )
 
-        if (!services.Has("datasource.api") || !services["datasource.api"]) {
-            services["datasource.api"] := Map(
-                "class", "ApiDataSource",
-                "arguments", [AppRef(), ServiceRef("CacheManager"), "api", this.Config.ApiEndpoint]
-            )
-        }
+        services["State"] := Map(
+            "class", "LaunchpadAppState",
+            "arguments", [AppRef(), ParameterRef("state_path")]
+        )
 
-        if (!services.Has("DataSourceManager") || !services["DataSourceManager"]) {
-            services["DataSourceManager"] := Map(
-                "class", "DataSourceManager",
-                "arguments", [ServiceRef("EventManager")]
-            )
-        }
+        services["BackupManager"] := Map(
+            "class", "BackupManager",
+            "arguments", [AppRef(), ParameterRef("backups_file")]
+        )
 
-        if (!services["DataSourceManager"].Has("calls")) {
-            services["DataSourceManager"]["calls"] := []
-        }
+        services["datasource.api"] := Map(
+            "class", "ApiDataSource",
+            "arguments", [AppRef(), ServiceRef("CacheManager"), "api", ParameterRef("api_endpoint")]
+        )
 
-        services["DataSourceManager"]["calls"].Push(Map(
-            "method", "SetItem", 
-            "arguments", ["api", ServiceRef("datasource.api"), true]
-        ))
+        services["DataSourceManager"] := Map(
+            "class", "DataSourceManager",
+            "arguments", [ServiceRef("EventManager")],
+            "calls", [
+                Map(
+                    "method", "SetItem", 
+                    "arguments", ["api", ServiceRef("datasource.api"), true]
+                )
+            ]
+        )
 
-        if (!services.Has("builder.ahk_launcher") || !services["builder.ahk_launcher"]) {
-            services["builder.ahk_launcher"] := Map(
-                "class", "AhkLauncherBuilder",
-                "arguments", [AppRef(), ServiceRef("Notifier")]
-            )
-        }
+        services["builder.ahk_launcher"] := Map(
+            "class", "AhkLauncherBuilder",
+            "arguments", [AppRef(), ServiceRef("Notifier")]
+        )
 
-        if (!services.Has("BuilderManager") || !services["BuilderManager"]) {
-            services["BuilderManager"] := Map(
-                "class", "BuilderManager",
-                "arguments", AppRef(),
-            )
-        }
+        services["BuilderManager"] := Map(
+            "class", "BuilderManager",
+            "arguments", AppRef(),
+            "calls", [
+                Map(
+                    "method", "SetItem", 
+                    "arguments", ["ahk", ServiceRef("builder.ahk_launcher"), true]
+                )
+            ]
+        )
 
-        if (!services["BuilderManager"].Has("calls")) {
-            services["BuilderManager"]["calls"] := []
-        }
+        services["LauncherManager"] := Map(
+            "class", "LauncherManager",
+            "arguments", AppRef()
+        )
 
-        services["BuilderManager"]["calls"].Push(Map(
-            "method", "SetItem", 
-            "arguments", ["ahk", ServiceRef("builder.ahk_launcher"), true]
-        ))
+        services["PlatformManager"] := Map(
+            "class", "PlatformManager",
+            "arguments", AppRef()
+        )
 
-        if (!services.Has("LauncherManager") || !services["LauncherManager"]) {
-            services["LauncherManager"] := Map(
-                "class", "LauncherManager",
-                "arguments", AppRef()
-            )
-        }
+        services["installer.launchpad_update"] := Map(
+            "class", "LaunchpadUpdate",
+            "arguments", [this.Version, ServiceRef("State"), ServiceRef("CacheManager"), "file", this.tmpDir]
+        )
 
-        if (!services.Has("PlatformManager") || !services["PlatformManager"]) {
-            services["PlatformManager"] := Map(
-                "class", "PlatformManager",
-                "arguments", AppRef()
-            )
-        }
+        services["installer.dependencies"] := Map(
+            "class", "DependencyInstaller",
+            "arguments", [this.Version, ServiceRef("State"), ServiceRef("CacheManager"), "file", [], this.tmpDir]
+        )
 
-        if (!services.Has("installer.launchpad_update") || !services["installer.launchpad_update"]) {
-            services["installer.launchpad_update"] := Map(
-                "class", "LaunchpadUpdate",
-                "arguments", [this.Version, this.State, ServiceRef("CacheManager"), "file", this.tmpDir]
-            )
-        }
+        services["cache_state.file"] := Map(
+            "class", "CacheState",
+            "arguments", [AppRef(), ParameterRef("cache_dir"), "File.json"]
+        )
 
-        if (!services.Has("installer.dependencies") || !services["installer.dependencies"]) {
-            services["installer.dependencies"] := Map(
-                "class", "DependencyInstaller",
-                "arguments", [this.Version, this.State, ServiceRef("CacheManager"), "file", [], this.tmpDir]
-            )
-        }
+        services["cache_state.api"] := Map(
+            "class", "CacheState",
+            "arguments", [AppRef(), ParameterRef("cache_dir"), "API.json"]
+        )
 
-        if (!services["InstallerManager"].Has("calls")) {
-            services["InstallerManager"]["calls"] := []
-        }
+        services["cache.file"] := Map(
+            "class", "FileCache",
+            "arguments", [AppRef(), ServiceRef("cache_state.file"), ParameterRef("cache_dir"), "File"]
+        )
 
-        services["InstallerManager"]["calls"].Push(Map(
-            "method", "SetItem",
-            "arguments", ["LaunchpadUpdate", ServiceRef("installer.launchpad_update")]
-        ))
-
-        services["InstallerManager"]["calls"].Push(Map(
-            "method", "SetItem",
-            "arguments", ["Dependencies", ServiceRef("installer.dependencies")]
-        ))
+        services["cache.api"] := Map(
+            "class", "FileCache",
+            "arguments", [AppRef(), ServiceRef("cache_state.api"), ParameterRef("cache_dir"), "API"]
+        )
 
         return services
-    }
-
-    GetCaches() {
-        caches := super.GetCaches()
-        caches["file"] := FileCache(this, CacheState(this, this.Config.CacheDir . "\File.json"), this.Config.CacheDir . "\File")
-        caches["api"] := FileCache(this, CacheState(this, this.Config.CacheDir . "\API.json"), this.Config.CacheDir . "\API")
-        return caches
     }
 
     GetDefaultModules(config) {
@@ -186,12 +183,6 @@
         }
 
         return result
-    }
-
-    InitializeApp(config) {
-        super.InitializeApp(config)
-        this.Service("InstallerManager").SetupInstallers()
-        this.Service("InstallerManager").InstallRequirements()
     }
 
     RunApp(config) {

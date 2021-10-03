@@ -1,3 +1,2 @@
-; Automatically-generated testing file, do not edit manually.
+; Automatically-generated file. Manual edits will be overwritten.
 #Include State\LaunchpadAppState.test.ahk
-; End of auto-generated test includes.

@@ -1,18 +1,27 @@
 class ServiceDefinitionsEvent extends EventBase {
     servicesObj := Map()
+    parametersObj := Map()
     configObj := Map()
 
     Services {
         get => this.servicesObj
     }
 
+    Parameters {
+        get => this.parametersObj
+    }
+
     Config {
         get => this.configObj
     }
 
-    __New(eventName, services := "", config := "") {
+    __New(eventName, services := "", parameters := "", config := "") {
         if (services) {
             this.servicesObj := services
+        }
+
+        if (parameters) {
+            this.parametersObj := parameters
         }
 
         if (config) {
@@ -23,6 +32,22 @@ class ServiceDefinitionsEvent extends EventBase {
     }
 
     DefineService(name, definition) {
-        this.servicesObj[name] := definition
+        this.Services[name] := definition
+    }
+
+    DefineParameter(name, definition) {
+
+    }
+
+    DefineServices(services) {
+        for name, definition in services {
+            this.DefineService(name, definition)
+        }
+    }
+
+    DefineParameters(parameters) {
+        for name, definition in parameters {
+            this.DefineParameter(name, definition)
+        }
     }
 }
