@@ -6,6 +6,8 @@
 #Warn
 #Include Lib\Shared\Includes.ahk
 #Include Lib\Launchpad\Includes.ahk
+; TODO: Allow this path to be changed
+#Include "*i %A_AppData%\Launchpad\ModuleIncludes.ahk"
 
 appVersion := "{{VERSION}}"
 
