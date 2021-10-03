@@ -1,5 +1,10 @@
 #Warn
-#Include ..\Lib\Shared\Includes.ahk
+#Include ..\Lib\Shared\BaseLib\Exception\ExceptionBase.ahk
+#Include ..\Lib\Shared\AppLib\Exception\AppException.ahk
+#Include ..\Lib\Shared\UtilityLib\IncludeBuilder\AhkIncludeBuilder.ahk
+#Include ..\Lib\Shared\UtilityLib\IncludeBuilder\IncludeBuilderBase.ahk
+#Include ..\Lib\Shared\UtilityLib\IncludeWriter\AhkIncludeWriter.ahk
+#Include ..\Lib\Shared\UtilityLib\IncludeWriter\IncludeWriterBase.ahk
 
 appVersion := "{{VERSION}}"
 appDir := RegExReplace(A_ScriptDir, "\\[^\\]+$")
