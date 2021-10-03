@@ -8,9 +8,6 @@
 #Include {{appDir}}\Lib\LaunchpadLauncher\Includes.ahk
 
 appVersion := "{{appVersion}}"
-gameConfigObj := {%gameConfig%}
-launchpadLauncherConfigObj := {%launchpadLauncherConfig%}
-launcherConfigObj := {%launcherConfig%}
 
 LaunchpadLauncher(Map(
     "appName", "{{launcherName}}",
@@ -21,8 +18,8 @@ LaunchpadLauncher(Map(
     "themesDir", "{{themesDir}}",
     "resourcesDir", "{{resourcesDir}}",
     "themeName", "{{themeName}}",
-    "launchpadLauncherConfig", launchpadLauncherConfigObj,
-    "launcherConfig", launcherConfigObj,
-    "gameConfig", gameConfigObj,
+    "launchpadLauncherConfig", {%launchpadLauncherConfig%},
+    "launcherConfig", {%launcherConfig%},
+    "gameConfig", {%gameConfig%},
     "platforms", {%platforms%}
 ))
