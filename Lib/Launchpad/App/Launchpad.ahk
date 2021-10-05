@@ -153,6 +153,11 @@
             "arguments", [AppRef(), ServiceRef("cache_state.api"), ParameterRef("config.cache_dir"), "API"]
         )
 
+        services["LaunchpadIniMigrator"] := Map(
+            "class", "LaunchpadIniMigrator",
+            "arguments", [AppRef(), ServiceRef("GuiManager")]
+        )
+
         return services
     }
 
@@ -235,6 +240,9 @@
     }
 
     RunApp(config) {
+        this.MigrateConfiguration()
+        
+
         if (this.Config["api_auto_login"]) {
             this.Service("Auth").Login()
         }
@@ -249,6 +257,20 @@
 
         if (this.detectGames) {
             this.Service("PlatformManager").DetectGames()
+        }
+    }
+
+    MigrateConfiguration() {
+        configFile := this.Parameter("previous_config_file")
+
+        if (configFile && FileExist(configFile)) {
+            response := this.Service("GuiManager").Dialog("DialogBox", "Migrate settings?", this.appName . " uses a new configuration file format, and has detected that you have a previous configuration file.`n`nWould you like to automatically migrate your settings?`n`nChoose Yes to migrate your previous configuration. Choose no to simply delete it and start from scratch.")
+        
+            if (response == "Yes") {
+                this.Service("LaunchpadIniMigrator").Migrate(configFile, this.Config)
+            } else {
+                FileDelete(configFile)
+            }
         }
     }
 

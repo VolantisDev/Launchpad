@@ -21,7 +21,7 @@
 #Include Config\LauncherConfig.ahk
 #Include Config\LaunchpadConfig.ahk
 #Include Config\PlatformsConfig.ahk
-#Include Config\ProtoConfig.ahk
+#Include ConfigMigrator\LaunchpadIniMigrator.ahk
 #Include DetectedGame\DetectedGame.ahk
 #Include Entity\LauncherEntity.ahk
 #Include Entity\ManagedEntityBase.ahk
