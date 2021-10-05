@@ -74,13 +74,15 @@ class ConfigBase {
         return key
     }
 
-    Get(name) {
-        if (!this.IsAllowed(name)) {
-            throw ConfigException("Parameter " . name . " is not allowed to be accessed by this config object.")
-        }
-        
-        if (!this.Has(name)) {
-            throw ConfigException("Parameter " . this._getContainerKey(name) . " doesn't exist in the service container.")
+    Get(name := "") {
+        if (name) {
+            if (!this.IsAllowed(name)) {
+                throw ConfigException("Parameter " . name . " is not allowed to be accessed by this config object.")
+            }
+            
+            if (!this.Has(name)) {
+                throw ConfigException("Parameter " . this._getContainerKey(name) . " doesn't exist in the service container.")
+            }
         }
 
         return this._getContainerParameter(name)
