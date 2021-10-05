@@ -1,7 +1,7 @@
 class LaunchpadBuilder extends AppBase {
     GetParameterDefinitions(config) {
         parameters := super.GetParameterDefinitions(config)
-        parameters["config_path"] := this.appDir . "\Launchpad.build.ini"
+        parameters["config_path"] := this.appDir . "\Launchpad.build.json"
         parameters["config.api_endpoint"] := "https://api.launchpad.games/v1"
         parameters["config.api_authentication"] := true
         parameters["config.dist_dir"] := this.appDir . "\Dist"
