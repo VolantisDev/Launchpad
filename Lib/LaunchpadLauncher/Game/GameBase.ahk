@@ -23,7 +23,7 @@ class GameBase {
             config := Map()
         }
 
-        this.launcherConfig := app.Parameter("launcher_config")
+        this.launcherConfig := app.Service("Config")
         InvalidParameterException.CheckTypes("GameBase", "app", app, "AppBase", "key", key, "", "config", config, "Map")
         this.app := app
         this.key := key
