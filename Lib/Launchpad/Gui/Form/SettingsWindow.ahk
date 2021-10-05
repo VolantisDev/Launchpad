@@ -270,7 +270,6 @@
         this.needsRestart := true
     }
 
-    ; TODO: Make sure default launcher theme has a blank default value
     OnDefaultLauncherThemeChange(ctl, info) {
         this.guiObj.Submit(false)
         this.app.Config["default_launcher_theme"] := this.availableThemes[ctl.Value]
