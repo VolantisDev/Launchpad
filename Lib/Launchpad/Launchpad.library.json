@@ -1,0 +1,19 @@
+{
+    "name": "Launchpad",
+    "type": "application",
+    "description": "The application library which drives Launchpad, the game launching multitool",
+    "developer": "Volantis Development",
+    "website": "https://volantis.dev",
+    "dependencies": [
+        "Volantis.App",
+        "Volantis.Base",
+        "Volantis.Component",
+        "Volantis.Config",
+        "Volantis.Container",
+        "Volantis.Data",
+        "Volantis.Entity",
+        "Volantis.File",
+        "Volantis.Theme",
+        "Volantis.Utility"
+    ]
+}

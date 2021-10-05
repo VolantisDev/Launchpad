@@ -1,0 +1,14 @@
+{
+    "name": "Volantis.Config",
+    "type": "shared",
+    "description": "Manage configuration in your application based on service parameters",
+    "developer": "Volantis Development",
+    "website": "https://volantis.dev",
+    "dependencies": [
+        "Volantis.Base",
+        "Volantis.Container",
+        "Volantis.Data",
+        "Volantis.File",
+        "Volantis.Utility"
+    ]
+}

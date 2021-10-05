@@ -1,0 +1,15 @@
+{
+    "name": "Volantis.Component",
+    "type": "shared",
+    "description": "Create managers that handle lists of objects in your application",
+    "developer": "Volantis Development",
+    "website": "https://volantis.dev",
+    "dependencies": [
+        "Volantis.Base",
+        "Volantis.Config",
+        "Volantis.Container",
+        "Volantis.Data",
+        "Volantis.File",
+        "Volantis.Utility"
+    ]
+}

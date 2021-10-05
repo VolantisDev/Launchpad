@@ -1,0 +1,11 @@
+{
+    "name": "Volantis.Utility",
+    "type": "shared",
+    "description": "Various utilities that are often helpful in scripts or full applications",
+    "developer": "Volantis Development",
+    "website": "https://volantis.dev",
+    "dependencies": [
+        "Volantis.Base",
+        "Volantis.Utility"
+    ]
+}

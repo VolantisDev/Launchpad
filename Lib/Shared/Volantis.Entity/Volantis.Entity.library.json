@@ -1,0 +1,15 @@
+{
+    "name": "Volantis.Entity",
+    "type": "shared",
+    "description": "Manage entities which contain data fields and can optionally be edited by users",
+    "developer": "Volantis Development",
+    "website": "https://volantis.dev",
+    "dependencies": [
+        "Volantis.Base",
+        "Volantis.Component",
+        "Volantis.Config",
+        "Volantis.Container",
+        "Volantis.Data",
+        "Volantis.Utility"
+    ]
+}

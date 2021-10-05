@@ -1,10 +1,10 @@
 #Warn
-#Include ..\Lib\Shared\BaseLib\Exception\ExceptionBase.ahk
-#Include ..\Lib\Shared\AppLib\Exception\AppException.ahk
-#Include ..\Lib\Shared\UtilityLib\IncludeBuilder\AhkIncludeBuilder.ahk
-#Include ..\Lib\Shared\UtilityLib\IncludeBuilder\IncludeBuilderBase.ahk
-#Include ..\Lib\Shared\UtilityLib\IncludeWriter\AhkIncludeWriter.ahk
-#Include ..\Lib\Shared\UtilityLib\IncludeWriter\IncludeWriterBase.ahk
+#Include ..\Lib\Shared\Volantis.Base\Exception\ExceptionBase.ahk
+#Include ..\Lib\Shared\Volantis.App\Exception\AppException.ahk
+#Include ..\Lib\Shared\Volantis.Utility\IncludeBuilder\AhkIncludeBuilder.ahk
+#Include ..\Lib\Shared\Volantis.Utility\IncludeBuilder\IncludeBuilderBase.ahk
+#Include ..\Lib\Shared\Volantis.Utility\IncludeWriter\AhkIncludeWriter.ahk
+#Include ..\Lib\Shared\Volantis.Utility\IncludeWriter\IncludeWriterBase.ahk
 
 appVersion := "{{VERSION}}"
 appDir := RegExReplace(A_ScriptDir, "\\[^\\]+$")

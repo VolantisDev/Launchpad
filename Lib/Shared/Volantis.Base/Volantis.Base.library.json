@@ -1,0 +1,8 @@
+{
+    "name": "Volantis.Base",
+    "type": "shared",
+    "description": "Common classes used across all (or most) of the other Volantis libraries",
+    "developer": "Volantis Development",
+    "website": "https://volantis.dev",
+    "dependencies": []
+}

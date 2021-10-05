@@ -1,0 +1,12 @@
+{
+    "name": "Volantis.Container",
+    "type": "shared",
+    "description": "Manage services and service parameters throughout your application",
+    "developer": "Volantis Development",
+    "website": "https://volantis.dev",
+    "dependencies": [
+        "Volantis.Base",
+        "Volantis.Data",
+        "Volantis.Utility"
+    ]
+}

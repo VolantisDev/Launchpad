@@ -1,0 +1,11 @@
+{
+    "name": "Volantis.Data",
+    "type": "shared",
+    "description": "Handle things like templates, filtering, data layering, and importing/exporting structured data to various string formats",
+    "developer": "Volantis Development",
+    "website": "https://volantis.dev",
+    "dependencies": [
+        "Volantis.Base",
+        "Volantis.Utility"
+    ]
+}

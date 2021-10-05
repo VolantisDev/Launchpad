@@ -1,0 +1,19 @@
+{
+    "name": "LaunchpadLauncher",
+    "type": "application",
+    "description": "A launcher application that can be configured to launch any game",
+    "developer": "Volantis Development",
+    "website": "https://volantis.dev",
+    "dependencies": [
+        "Volantis.App",
+        "Volantis.Base",
+        "Volantis.Component",
+        "Volantis.Config",
+        "Volantis.Container",
+        "Volantis.Data",
+        "Volantis.Entity",
+        "Volantis.File",
+        "Volantis.Theme",
+        "Volantis.Utility"
+    ]
+}

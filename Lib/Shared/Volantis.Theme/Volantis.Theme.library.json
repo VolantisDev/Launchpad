@@ -1,0 +1,11 @@
+{
+    "name": "Volantis.Theme",
+    "type": "shared",
+    "description": "Draw shapes, manage windows, handle GUI actions, and load reusable theme files",
+    "developer": "Volantis Development",
+    "website": "https://volantis.dev",
+    "dependencies": [
+        "Volantis.Base",
+        "Volantis.Utility"
+    ]
+}

@@ -1,0 +1,19 @@
+{
+    "name": "LaunchpadBuilder",
+    "type": "application",
+    "description": "An application for building and deploying Launchpad Launchers as well as Launchpad itself",
+    "developer": "Volantis Development",
+    "website": "https://volantis.dev",
+    "dependencies": [
+        "Volantis.App",
+        "Volantis.Base",
+        "Volantis.Component",
+        "Volantis.Config",
+        "Volantis.Container",
+        "Volantis.Data",
+        "Volantis.Entity",
+        "Volantis.File",
+        "Volantis.Theme",
+        "Volantis.Utility"
+    ]
+}

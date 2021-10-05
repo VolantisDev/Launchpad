@@ -1,0 +1,12 @@
+{
+    "name": "Volantis.File",
+    "type": "shared",
+    "description": "Various file-related utilities and base classes for use with any application",
+    "developer": "Volantis Development",
+    "website": "https://volantis.dev",
+    "dependencies": [
+        "Volantis.Base",
+        "Volantis.Data",
+        "Volantis.Utility"
+    ]
+}
