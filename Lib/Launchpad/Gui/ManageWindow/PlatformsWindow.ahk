@@ -5,7 +5,7 @@ class PlatformsWindow extends ManageWindowBase {
 
     __New(app, themeObj, windowKey, platformsFile := "", owner := "", parent := "") {
         if (platformsFile == "") {
-            platformsFile := app.Config.PlatformsFile
+            platformsFile := app.Config["platforms_file"]
         }
 
         InvalidParameterException.CheckTypes("PlatformsWindow", "platformsFile", platformsFile, "")
@@ -38,7 +38,7 @@ class PlatformsWindow extends ManageWindowBase {
     }
 
     GetViewMode() {
-        return this.app.Config.PlatformsViewMode
+        return this.app.Config["platforms_view_mode"]
     }
 
     GetListViewImgList(lv, large := false) {

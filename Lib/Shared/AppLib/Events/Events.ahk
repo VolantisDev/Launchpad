@@ -41,10 +41,6 @@ class Events {
     static BACKUPS_REGISTER := 0x2070
     static BACKUPS_ALTER := 0x2075
 
-    static PLATFORMS_REGISTER := 0x2080
-    static PLATFORMS_DEFINE := 0x2081
-    static PLATFORMS_ALTER := 0x2085
-
     static DATASOURCES_REGISTER := 0x3000
     static DATASOURCES_ALTER := 0x3005
 

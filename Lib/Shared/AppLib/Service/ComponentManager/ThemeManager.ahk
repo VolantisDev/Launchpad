@@ -1,6 +1,6 @@
 class ThemeManager extends ComponentServiceBase {
-    _registerEvent := "" ;LaunchpadEvents.LAUNCHERS_REGISTER
-    _alterEvent := "" ;LaunchpadEvents.LAUNCHERS_ALTER
+    _registerEvent := Events.THEMES_REGISTER
+    _alterEvent := Events.THEMES_ALTER
     themesDir := ""
     resourcesDir := ""
     defaultTheme := ""
@@ -25,7 +25,7 @@ class ThemeManager extends ComponentServiceBase {
     }
 
     GetMainThemeName() {
-        return (this.configObj.HasProp("ThemeName") && this.configObj.ThemeName != "") ? this.configObj.ThemeName : this.defaultTheme
+        return (this.configObj.Has("theme_name") && this.configObj["theme_name"] != "") ? this.configObj["theme_name"] : this.defaultTheme
     }
 
     LoadComponents() {

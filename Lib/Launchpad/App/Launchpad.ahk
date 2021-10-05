@@ -1,16 +1,45 @@
 ﻿class Launchpad extends AppBase {
     customTrayMenu := true
     detectGames := false
+    isSetup := false
 
     GetParameterDefinitions(config) {
         parameters := super.GetParameterDefinitions(config)
-        parameters["backups_file"] := this.dataDir . "\Backups.json"
-        parameters["cache_dir"] := this.tmpDir . "\Cache"
-        parameters["api_endpoint"] := "https://api.launchpad.games/v1"
+        parameters["config.player_name"] := ""
+        parameters["config.destination_dir"] := this.dataDir . "\Launchers"
+        parameters["config.launcher_file"] := this.dataDir . "\Launchers.json",
+        parameters["config.platforms_file"] := this.dataDir . "\Platforms.json"
+        parameters["config.assets_dir"] := this.dataDir . "\Launcher Assets"
+        parameters["config.data_source_key"] := "api"
+        parameters["config.builder_key"] := "ahk"
+        parameters["config.api_endpoint"] := "https://api.launchpad.games/v1"
+        parameters["config.api_authentication"] := true
+        parameters["config.api_auto_login"] := false
+        parameters["config.backup_dir"] := this.dataDir . "\Backups"
+        parameters["config.backups_file"] := this.dataDir . "\Backups.json"
+        parameters["config.backups_to_keep"] := 5
+        parameters["config.auto_backup_config_files"] := true
+        parameters["config.rebuild_existing_launchers"] := false
+        parameters["config.create_desktop_shortcuts"] := true
+        parameters["config.clean_launchers_on_build"] := false
+        parameters["config.clean_launchers_on_exit"] := true
+        parameters["config.check_updates_on_start"] := true
+        parameters["config.use_advanced_launcher_editor"] := false
+        parameters["config.default_launcher_theme"] := ""
+        parameters["config.override_launcher_theme"] := false
+        parameters["config.backups_view_mode"] := "Report"
+        parameters["config.platforms_view_mode"] := "Report"
+        parameters["config.launcher_double_click_action"] := "Edit"
+        parameters["launcher_config.games"] := Map()
+        parameters["platforms_config.platforms"] := Map()
+        parameters["backups_config.backups"] := Map()
         parameters["caches.file"] := "cache.file"
         parameters["caches.api"] := "cache.api",
         parameters["installers.Update"] := "installer.launchpad_update"
         parameters["installers.Dependencies"] := "installer.dependencies"
+        parameters["updater"] := "LaunchpadUpdate"
+        parameters["dependency_installer"] := "Dependencies",
+        parameters["previous_config_file"] := A_ScriptDir . "\" . this.appName . ".ini"
         return parameters
     }
 
@@ -19,7 +48,7 @@
 
         services["Config"] := Map(
             "class", "LaunchpadConfig",
-            "arguments", [AppRef(), ParameterRef("config_path")]
+            "arguments", [ServiceRef("config_storage.app_config"), ContainerRef(), ParameterRef("config_key")]
         )
 
         services["State"] := Map(
@@ -27,14 +56,24 @@
             "arguments", [AppRef(), ParameterRef("state_path")]
         )
 
+        services["config_storage.backups"] := Map(
+            "class", "JsonConfigStorage",
+            "arguments", [ParameterRef("config.backups_file"), "Backups"]
+        )
+
+        services["config.backups"] := Map(
+            "class", "PersistentConfig",
+            "arguments", [ServiceRef("config_storage.backups"), ContainerRef(), "backups_config", "backups"]
+        )
+
         services["BackupManager"] := Map(
             "class", "BackupManager",
-            "arguments", [AppRef(), ParameterRef("backups_file")]
+            "arguments", [AppRef(), ServiceRef("config.backups")]
         )
 
         services["datasource.api"] := Map(
             "class", "ApiDataSource",
-            "arguments", [AppRef(), ServiceRef("CacheManager"), "api", ParameterRef("api_endpoint")]
+            "arguments", [AppRef(), ServiceRef("CacheManager"), "api", ParameterRef("config.api_endpoint")]
         )
 
         services["DataSourceManager"] := Map(
@@ -59,19 +98,39 @@
             "calls", [
                 Map(
                     "method", "SetItem", 
-                    "arguments", ["ahk", ServiceRef("builder.ahk_launcher"), true]
+                    "arguments", ["ahk", ServiceRef("builder.ahk_launcher")]
                 )
             ]
         )
 
+        services["config_storage.launchers"] := Map(
+            "class", "JsonConfigStorage",
+            "arguments", [ParameterRef("config.launcher_file"), "Games"]
+        )
+
+        services["config.launchers"] := Map(
+            "class", "LauncherConfig",
+            "arguments", [ServiceRef("config_storage.launchers"), ContainerRef(), "launcher_config", "games"]
+        )
+
         services["LauncherManager"] := Map(
             "class", "LauncherManager",
-            "arguments", AppRef()
+            "arguments", [AppRef(), ServiceRef("config.launchers")]
+        )
+
+        services["config_storage.platforms"] := Map(
+            "class", "JsonConfigStorage",
+            "arguments", [ParameterRef("config.platforms_file"), "Platforms"]
+        )
+
+        services["config.platforms"] := Map(
+            "class", "PlatformsConfig",
+            "arguments", [ServiceRef("config_storage.platforms"), ContainerRef(), "platforms_config", "platforms"]
         )
 
         services["PlatformManager"] := Map(
             "class", "PlatformManager",
-            "arguments", AppRef()
+            "arguments", [AppRef(), ServiceRef("config.platforms")]
         )
 
         services["installer.launchpad_update"] := Map(
@@ -84,24 +143,14 @@
             "arguments", [this.Version, ServiceRef("State"), ServiceRef("CacheManager"), "file", [], this.tmpDir]
         )
 
-        services["cache_state.file"] := Map(
-            "class", "CacheState",
-            "arguments", [AppRef(), ParameterRef("cache_dir"), "File.json"]
-        )
-
         services["cache_state.api"] := Map(
             "class", "CacheState",
-            "arguments", [AppRef(), ParameterRef("cache_dir"), "API.json"]
-        )
-
-        services["cache.file"] := Map(
-            "class", "FileCache",
-            "arguments", [AppRef(), ServiceRef("cache_state.file"), ParameterRef("cache_dir"), "File"]
+            "arguments", [AppRef(), ParameterRef("config.cache_dir"), "API.json"]
         )
 
         services["cache.api"] := Map(
             "class", "FileCache",
-            "arguments", [AppRef(), ServiceRef("cache_state.api"), ParameterRef("cache_dir"), "API"]
+            "arguments", [AppRef(), ServiceRef("cache_state.api"), ParameterRef("config.cache_dir"), "API"]
         )
 
         return services
@@ -186,14 +235,14 @@
     }
 
     RunApp(config) {
-        if (this.Config.ApiAutoLogin) {
+        if (this.Config["api_auto_login"]) {
             this.Service("Auth").Login()
         }
         
         super.RunApp(config)
         
-        this.Service("PlatformManager").LoadComponents(this.Config.PlatformsFile)
-        this.Service("LauncherManager").LoadComponents(this.Config.LauncherFile)
+        this.Service("PlatformManager").LoadComponents()
+        this.Service("LauncherManager").LoadComponents()
         this.Service("BackupManager").LoadComponents()
 
         this.OpenApp()
@@ -204,7 +253,6 @@
     }
 
     InitialSetup(config) {
-        super.InitialSetup(config)
         result := this.Service("GuiManager").Form("SetupWindow")
 
         if (result == "Exit") {
@@ -212,6 +260,9 @@
         } else if (result == "Detect") {
             this.detectGames := true
         }
+
+        this.isSetup := true
+        super.InitialSetup(config)
     }
 
     UpdateStatusIndicators() {
@@ -221,11 +272,11 @@
     }
 
     ExitApp() {
-        if (this.Config.CleanLaunchersOnExit) {
+        if (this.isSetup && this.Config["clean_launchers_on_exit"]) {
             this.Service("BuilderManager").CleanLaunchers()
         }
 
-        if (this.Config.FlushCacheOnExit) {
+        if (this.isSetup && this.Config["flush_cache_on_exit"]) {
             this.Service("CacheManager").FlushCaches(false)
         }
 

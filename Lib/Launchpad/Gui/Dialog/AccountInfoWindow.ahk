@@ -23,7 +23,7 @@
         }
 
         this.AddHeading("Player Name")
-        this.AddEdit("PlayerName", this.app.Config.PlayerName, "", 250)
+        this.AddEdit("PlayerName", this.app.Config["player_name"], "", 250)
         this.guiObj.AddText("w" . this.windowSettings["contentWidth"], "Note: Player name is stored locally and not synced with your online Launchpad account yet.")
 
         position := "Wrap x" . this.margin . " y+" . this.margin
@@ -35,7 +35,7 @@
         if (result == "Logout") {
             this.app.Service("Auth").Logout()
         } else if (result == "Save" && submittedData) {
-            this.app.Config.PlayerName := submittedData.PlayerName
+            this.app.Config["player_name"] := submittedData.PlayerName
         }
 
         return result

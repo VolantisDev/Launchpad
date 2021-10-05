@@ -56,13 +56,13 @@ class CacheManager extends AppComponentServiceBase {
     }
 
     ChangeCacheDir() {
-        cacheDir := this.app.Config.HasProp("CacheDir") ? this.app.Config.CacheDir : this.cacheDir
+        cacheDir := this.app.Config.Has("cache_dir") ? this.app.Config["cache_dir"] : this.cacheDir
         
-        newDir := DirSelect("*" . this.app.Config.CacheDir, 3, "Create or select the folder to save " . this.app.appName . "'s cache files to")
+        newDir := DirSelect("*" . this.app.Config["cache_dir"], 3, "Create or select the folder to save " . this.app.appName . "'s cache files to")
         
         if (newDir != "") {
             cacheDir := newDir
-            this.app.Config.CacheDir := newDir
+            this.app.Config["cache_dir"] := newDir
             this.SetCacheDir(newDir)
             this.FlushCaches()
             this.SetupCaches()

@@ -167,7 +167,7 @@ class LauncherEntity extends AppEntityBase {
     }
 
     GetLauncherFile(key, checkSourceFile := false) {
-        gameDir := checkSourceFile ? this.app.Config.AssetsDir : this.app.Config.DestinationDir
+        gameDir := checkSourceFile ? this.app.Config["assets_dir"] : this.app.Config["destination_dir"]
 
         if (checkSourceFile) {
             gameDir .= "\" . key
@@ -243,7 +243,7 @@ class LauncherEntity extends AppEntityBase {
     }
 
     LaunchEditWindow(mode, owner := "", parent := "") {
-        result := this.app.Config.UseAdvancedLauncherEditor ? "Advanced" : "Simple"
+        result := this.app.Config["use_advanced_launcher_editor"] ? "Advanced" : "Simple"
 
         while (result == "Simple" || result == "Advanced") {
             form := result == "Advanced" ? "LauncherEditor" : "LauncherEditorSimple"
@@ -302,8 +302,12 @@ class LauncherEntity extends AppEntityBase {
             }
         }
 
-        if (this.app.Config.DefaultLauncherTheme && this.app.Config.OverrideLauncherTheme) {
-            detectedValues["ThemeName"] := this.app.Config.DefaultLauncherTheme
+        defaultTheme := this.app.Config["default_launcher_theme"] ? 
+            this.app.Config["default_launcher_theme"] : 
+            this.app.Config["theme_name"]
+
+        if (defaultTheme && this.app.Config["override_launcher_theme"]) {
+            detectedValues["ThemeName"] := defaultTheme
         }
 
         return detectedValues
@@ -313,7 +317,7 @@ class LauncherEntity extends AppEntityBase {
         defaults := super.InitializeDefaults()
         defaults.Delete("DataSourceItemKey")
         defaults["DestinationDir"] := this.GetDefaultDestinationDir()
-        defaults["ThemeName"] := this.app.Config.ThemeName
+        defaults["ThemeName"] := this.app.Config["theme_name"]
         defaults["ResourcesDir"] := this.app.appDir . "\Resources"
         defaults["ThemesDir"] := this.app.appDir . "\Resources\Themes"
         defaults["ShowProgress"] := true
@@ -321,7 +325,7 @@ class LauncherEntity extends AppEntityBase {
         defaults["RunAfter"] := ""
         defaults["CloseBefore"] := ""
         defaults["CloseAfter"] := ""
-        defaults["LoggingLevel"] := "Warning"
+        defaults["LoggingLevel"] := this.app.Config["logging_level"]
         defaults["LogPath"] := this.app.tmpDir . "\Logs\" . this.Key . ".txt"
         defaults["EnableOverlay"] := false
         defaults["ForceOverlay"] := false
@@ -332,6 +336,6 @@ class LauncherEntity extends AppEntityBase {
     }
 
     GetDefaultDestinationDir() {
-        return this.app.Config.DestinationDir
+        return this.app.Config["destination_dir"]
     }
 }

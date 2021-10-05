@@ -55,8 +55,8 @@ class BackupEntity extends AppEntityBase {
         defaults["DataSourceKeys"] := []
         defaults["IsEditable"] := true
         defaults["Source"] := ""
-        defaults["BackupLimit"] := this.app.Config.BackupsToKeep
-        defaults["BackupDir"] := this.app.Config.BackupDir
+        defaults["BackupLimit"] := this.app.Config["backups_to_keep"]
+        defaults["BackupDir"] := this.app.Config["backup_dir"]
         defaults["BaseFilename"] := this.Key
         defaults["BackupClass"] := "FileBackup"
         defaults["IsEnabled"] := true

@@ -5,7 +5,7 @@ class ManageBackupsWindow extends ManageWindowBase {
 
     __New(app, themeObj, windowKey, backupsFile := "", owner := "", parent := "") {
         if (backupsFile == "") {
-            backupsFile := app.Config.BackupsFile
+            backupsFile := app.Config["backups_file"]
         }
 
         InvalidParameterException.CheckTypes("ManageBackupsWindow", "backupsFile", backupsFile, "")
@@ -35,7 +35,7 @@ class ManageBackupsWindow extends ManageWindowBase {
     }
 
     GetViewMode() {
-        return this.app.Config.BackupsViewMode
+        return this.app.Config["backups_view_mode"]
     }
 
     GetListViewImgList(lv, large := false) {

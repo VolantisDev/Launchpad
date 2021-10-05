@@ -1,30 +1,15 @@
-﻿class PlatformsConfig extends JsonConfig {
-    primaryConfigKey := "Platforms"
-    gameDefaults := Map()
-    configKey := "PlatformsConfig"
+﻿class PlatformsConfig extends PersistentConfig {
+    _loadConfigFromStorage() {
+        config := super._loadConfigFromStorage()
 
-    Platforms {
-        get => this.config["Platforms"]
-        set => this.config["Platforms"] := value
-    }
-
-    LoadConfig() {
-        result := super.LoadConfig()
-
-        if (!this.config.Has("Platforms")) {
-            this.config["Platforms"] := Map()
-        }
-
-        for key, config in this.Platforms {
-            if (Type(config) == "String") {
-                this.Platforms[key] := Map("PlatformClass", config)
+        if (config) {
+            for key, configItem in config {
+                if (Type(configItem) == "String") {
+                    config[key] := Map("PlatformClass", configItem)
+                }
             }
         }
 
-        return result
-    }
-
-    SaveConfig() {
-        return super.SaveConfig()
+        return config
     }
 }

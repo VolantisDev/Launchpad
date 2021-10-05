@@ -10,7 +10,7 @@ class LoadBackupsOp extends BulkOperationBase {
             backupsConfigObj := app.Service("BackupManager").GetConfig()
         }
 
-        InvalidParameterException.CheckTypes("LoadBackupsOp", "backupsConfigObj", backupsConfigObj, "BackupsConfig")
+        InvalidParameterException.CheckTypes("LoadBackupsOp", "backupsConfigObj", backupsConfigObj, "ConfigBase")
         this.backupsConfigObj := backupsConfigObj
         super.__New(app, owner)
     }
@@ -19,12 +19,12 @@ class LoadBackupsOp extends BulkOperationBase {
         this.backupsConfigObj.LoadConfig()
 
         if (this.useProgress) {
-            this.progress.SetRange(0, this.backupsConfigObj.Backups.Count)
+            this.progress.SetRange(0, this.backupsConfigObj["backups"].Count)
         }
 
         factory := this.app.Service("EntityFactory")
 
-        for key, config in this.backupsConfigObj.Backups {
+        for key, config in this.backupsConfigObj["backups"] {
             this.StartItem(key, key)
             requiredKeys := ""
             this.results[key] := factory.CreateEntity("BackupEntity", key, config, "", requiredKeys)

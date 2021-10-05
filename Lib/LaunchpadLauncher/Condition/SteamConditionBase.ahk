@@ -11,7 +11,7 @@ class SteamConditionBase extends ConditionBase {
     GetSteamPath(app) {
         steamPath := ""
 
-        platforms := app.Platforms
+        platforms := app.Parameter("platforms")
 
         if (platforms.Has("Steam") && platforms["Steam"].Has("InstallDir")) {
             steamPath := platforms["Steam"]["InstallDir"]

@@ -24,96 +24,96 @@
         tabs.UseTab("Launchers", true)
 
         this.AddHeading("Double-Click Action")
-        chosen := this.GetItemIndex(this.doubleClickActions, this.app.Config.LauncherDoubleClickAction)
-        ctl := this.guiObj.AddDDL("vLauncherDoubleClickAction xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.doubleClickActions)
+        chosen := this.GetItemIndex(this.doubleClickActions, this.app.Config["launcher_double_click_action"])
+        ctl := this.guiObj.AddDDL("vlauncher_double_click_action xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.doubleClickActions)
         ctl.OnEvent("Change", "OnLauncherDoubleClickActionChange")
         ctl.ToolTip := "Select what you would like to happen when double-clicking a launcher in the main list."
 
-        this.AddConfigLocationBlock("Launcher File", "LauncherFile", "Reload")
-        this.AddConfigLocationBlock("Launcher Directory", "DestinationDir")
-        this.AddConfigLocationBlock("Assets Directory", "AssetsDir")
+        this.AddConfigLocationBlock("Launcher File", "launcher_file", "Reload")
+        this.AddConfigLocationBlock("Launcher Directory", "destination_dir")
+        this.AddConfigLocationBlock("Assets Directory", "assets_dir")
 
         this.AddHeading("Launcher Settings")
-        this.AddConfigCheckBox("Create desktop shortcuts for launchers", "CreateDesktopShortcuts")
-        this.AddConfigCheckBox("Rebuild existing launchers when building all launchers", "RebuildExistingLaunchers")
-        this.AddConfigCheckBox("Use advanced launcher editor by default", "UseAdvancedLauncherEditor")
-        this.AddConfigCheckBox("Clean launchers automatically when building", "CleanLaunchersOnBuild")
-        this.AddConfigCheckBox("Clean launchers automatically when exiting Launchpad", "CleanLaunchersOnExit")
+        this.AddConfigCheckBox("Create desktop shortcuts for launchers", "create_desktop_shortcuts")
+        this.AddConfigCheckBox("Rebuild existing launchers when building all launchers", "rebuild_existing_launchers")
+        this.AddConfigCheckBox("Use advanced launcher editor by default", "use_advanced_launcher_editor")
+        this.AddConfigCheckBox("Clean launchers automatically when building", "clean_launchers_on_build")
+        this.AddConfigCheckBox("Clean launchers automatically when exiting Launchpad", "clean_launchers_on_exit")
 
         tabs.UseTab("Platforms", true)
 
         this.Add("ButtonControl", "", "Manage Platforms", "OnManagePlatforms")
 
         this.AddHeading("Platforms View Mode")
-        chosen := this.GetItemIndex(this.listViewModes, this.app.Config.PlatformsViewMode)
-        ctl := this.guiObj.AddDDL("vPlatformsViewMode xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.listViewModes)
+        chosen := this.GetItemIndex(this.listViewModes, this.app.Config["platforms_view_mode"])
+        ctl := this.guiObj.AddDDL("vplatforms_view_mode xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.listViewModes)
         ctl.OnEvent("Change", "OnPlatformsViewModeChange")
         ctl.ToolTip := "Select how you would like to view your platforms in the Platform Manager."
 
-        this.AddConfigLocationBlock("Platforms File", "PlatformsFile", "Reload")
+        this.AddConfigLocationBlock("Platforms File", "platforms_file", "Reload")
 
         tabs.UseTab("Backups")
 
         this.Add("ButtonControl", "", "Manage Backups", "OnManageBackups")
 
         this.AddHeading("Backups View Mode")
-        chosen := this.GetItemIndex(this.listViewModes, this.app.Config.BackupsViewMode)
-        ctl := this.guiObj.AddDDL("vBackupsViewMode xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.listViewModes)
+        chosen := this.GetItemIndex(this.listViewModes, this.app.Config["backups_view_mode"])
+        ctl := this.guiObj.AddDDL("vbackups_view_mode xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.listViewModes)
         ctl.OnEvent("Change", "OnBackupsViewModeChange")
         ctl.ToolTip := "Select how you would like to view your backups in the Backup Manager."
 
-        this.AddConfigLocationBlock("Backup Dir", "BackupDir", "&Manage")
-        this.AddConfigLocationBlock("Backups File", "BackupsFile")
+        this.AddConfigLocationBlock("Backup Dir", "backup_dir", "&Manage")
+        this.AddConfigLocationBlock("Backups File", "backups_file")
 
         this.AddHeading("Backups to Keep")
-        ctl := this.AddEdit("BackupsToKeep", this.app.Config.BackupsToKeep, "y+" . this.margin, 100)
+        ctl := this.AddEdit("backups_to_keep", this.app.Config["backups_to_keep"], "y+" . this.margin, 100)
         ctl.OnEvent("Change", "OnBackupsToKeepChange")
         this.guiObj.AddText("w" . this.windowSettings["contentWidth"] " y+" . this.margin, "Note: This can be overridden for individual backups in the Backup Manager.")
 
         this.AddHeading("Backup Options")
-        this.AddConfigCheckbox("Automatically back up config files", "AutoBackupConfigFiles")
+        this.AddConfigCheckbox("Automatically back up config files", "auto_backup_config_files")
 
         tabs.UseTab("Appearance", true)
 
         this.AddHeading("Launchpad Theme")
-        chosen := this.GetItemIndex(this.availableThemes, this.app.Config.ThemeName)
-        ctl := this.guiObj.AddDDL("vThemeName xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.availableThemes)
+        chosen := this.GetItemIndex(this.availableThemes, this.app.Config["theme_name"])
+        ctl := this.guiObj.AddDDL("vtheme_name xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.availableThemes)
         ctl.OnEvent("Change", "OnThemeNameChange")
         ctl.ToolTip := "Select a theme for Launchpad to use."
 
         this.Add("ButtonControl", "", "Reload Launchpad", "OnReload")
 
         this.AddHeading("Default Launcher Theme")
-        chosen := this.GetItemIndex(this.availableThemes, this.app.Config.DefaultLauncherTheme)
-        ctl := this.guiObj.AddDDL("vDefaultLauncherTheme xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.availableThemes)
+        chosen := this.GetItemIndex(this.availableThemes, this.app.Config["default_launcher_theme"])
+        ctl := this.guiObj.AddDDL("vdefault_launcher_theme xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.availableThemes)
         ctl.OnEvent("Change", "OnDefaultLauncherThemeChange")
         ctl.ToolTip := "Select the theme your launchers will use unless overridden."
 
-        this.AddConfigCheckBox("Override API launcher themes with the default theme", "OverrideLauncherTheme")
+        this.AddConfigCheckBox("Override API launcher themes with the default theme", "override_launcher_theme")
 
         tabs.UseTab("Cache", true)
 
-        this.AddConfigLocationBlock("Cache Dir", "CacheDir", "&Flush")
+        this.AddConfigLocationBlock("Cache Dir", "cache_dir", "&Flush")
 
         this.AddHeading("Cache Settings")
-        this.AddConfigCheckBox("Flush cache on exit (Recommended only for debugging)", "FlushCacheOnExit")
+        this.AddConfigCheckBox("Flush cache on exit (Recommended only for debugging)", "flush_cache_on_exit")
 
         tabs.UseTab("Advanced", true)
 
         this.AddHeading("Updates")
-        this.AddConfigCheckBox("Check for updates on start", "CheckUpdatesOnStart")
+        this.AddConfigCheckBox("Check for updates on start", "check_updates_on_start")
 
         this.AddHeading("Logging Level")
-        chosen := this.GetItemIndex(this.logLevels, this.app.Config.LoggingLevel)
-        ctl := this.guiObj.AddDDL("vLoggingLevel xs y+m Choose" . chosen . " w200 c" . this.themeObj.GetColor("editText"), this.logLevels)
+        chosen := this.GetItemIndex(this.logLevels, this.app.Config["logging_level"])
+        ctl := this.guiObj.AddDDL("vlogging_level xs y+m Choose" . chosen . " w200 c" . this.themeObj.GetColor("editText"), this.logLevels)
         ctl.OnEvent("Change", "OnLoggingLevelChange")
 
-        this.AddConfigLocationBlock("API Endpoint", "ApiEndpoint")
+        this.AddConfigLocationBlock("API Endpoint", "api_endpoint")
 
         this.AddHeading("API Settings")
-        ctl := this.AddConfigCheckBox("Enable API login for enhanced functionality", "ApiAuthentication")
+        ctl := this.AddConfigCheckBox("Enable API login for enhanced functionality", "api_authentication")
         ctl.ctl.NeedsRestart := true
-        ctl := this.AddConfigCheckBox("Automatically initiate API login when needed", "ApiAutoLogin")
+        ctl := this.AddConfigCheckBox("Automatically initiate API login when needed", "api_auto_login")
         ctl.ctl.NeedsRestart := true
 
         tabs.UseTab()
@@ -131,12 +131,12 @@
     }
 
     AddConfigLocationBlock(heading, settingName, extraButton := "", helpText := "") {
-        location := this.app.Config.%settingName% ? this.app.Config.%settingName% : "Not selected"
+        location := this.app.Config[settingName] ? this.app.Config[settingName] : "Not selected"
         return this.Add("LocationBlock", "", heading, location, settingName, extraButton, true, helpText)
     }
 
     AddConfigCheckbox(checkboxText, settingName) {
-        isChecked := this.app.Config.%settingName%
+        isChecked := this.app.Config[settingName]
         opts := ["v" . settingName, "w" . this.windowSettings["contentWidth"], "Checked" . isChecked]
         ctl := this.Add("BasicControl", opts, "", "", "CheckBox", checkboxText)
         ctl.RegisterHandler("Click", "OnSettingsCheckbox")
@@ -146,7 +146,7 @@
     OnSettingsCheckbox(chk, info) {
         this.guiObj.Submit(false)
         ctlName := chk.Name
-        this.app.Config.%ctlName% := chk.Value
+        this.app.Config[ctlName] := chk.Value
 
         if (chk.HasProp("NeedsRestart") && chk.NeedsRestart) {
             this.needsRestart := true
@@ -175,67 +175,67 @@
 
     OnLauncherFileMenuClick(btn) {
         if (btn == "ChangeLauncherFile") {
-            this.app.Config.ChangeLauncherFile()
-            this.SetText("LauncherFile", this.app.Config.LauncherFile, "Bold")
+            this.app.Config["ChangeLauncherFile"]()
+            this.SetText("LauncherFile", this.app.Config["launcher_file"], "Bold")
         } else if (btn == "OpenLauncherFile") {
-            this.app.Config.OpenLauncherFile()
+            this.app.Config["OpenLauncherFile"]()
         } else if (btn == "ReloadLauncherFile") {
-            this.app.Service("LauncherManager").LoadComponents(this.app.Config.LauncherFile)
+            this.app.Service("LauncherManager").LoadComponents(this.app.Config["launcher_file"])
         }
     }
 
     OnBackupsFileMenuClick(btn) {
         if (btn == "ChangeBackupsFile") {
-            this.app.Config.ChangeBackupsFile()
-            this.SetText("BackupsFile", this.app.Config.LauncherFile, "Bold")
+            this.app.Config["ChangeBackupsFile"]()
+            this.SetText("BackupsFile", this.app.Config["backups_file"], "Bold")
         } else if (btn == "OpenBackupsFile") {
-            this.app.Config.OpenBackupsFile()
+            this.app.Config["OpenBackupsFile"]()
         } else if (btn == "ReloadBackupsFile") {
-            this.app.Service("LauncherManager").LoadComponents(this.app.Config.BackupsFile)
+            this.app.Service("LauncherManager").LoadComponents(this.app.Config["backups_file"])
         }
     }
 
     OnPlatformsFileMenuClick(btn) {
         if (btn == "ChangePlatformsFile") {
-            this.app.Config.ChangePlatformsFile()
-            this.SetText("PlatformsFile", this.app.Config.PlatformsFile, "Bold")
+            this.app.Config["ChangePlatformsFile"]()
+            this.SetText("PlatformsFile", this.app.Config["platforms_file"], "Bold")
         } else if (btn == "OpenPlatformsFile") {
-            this.app.Config.OpenPlatformsFile()
+            this.app.Config["OpenPlatformsFile"]()
         } else if (btn == "ReloadPlatformsFile") {
-            this.app.Service("PlatformManager").LoadComponents(this.app.Config.PlatformsFile)
+            this.app.Service("PlatformManager").LoadComponents(this.app.Config["platforms_file"])
         }
     }
 
     OnDestinationDirMenuClick(btn) {
         if (btn == "ChangeDestinationDir") {
-            this.app.Config.ChangeDestinationDir()
-            this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
+            this.app.Config["ChangeDestinationDir"]()
+            this.SetText("DestinationDir", this.app.Config["destination_dir"], "Bold")
             this.needsRestart := true
         } else if (btn == "OpenDestinationDir") {
-            this.app.Config.OpenDestinationDir()
+            this.app.Config["OpenDestinationDir"]()
         }
     }
 
     OnApiTokenChange(ctl, info) {
         this.guiObj.Submit(false)
         this.needsRestart := true
-        this.app.Config.ApiToken := ctl.Text
+        this.app.Config["api_token"] := ctl.Text
     }
 
     OnAssetsDirMenuClick(btn) {
         if (btn == "ChangeAssetsDir") {
-            this.app.Config.ChangeAssetsDir()
-            this.SetText("AssetsDir", this.app.Config.AssetsDir, "Bold")
+            this.app.Config["ChangeAssetsDir"]()
+            this.SetText("AssetsDir", this.app.Config["assets_dir"], "Bold")
             this.needsRestart := true
         } else if (btn == "OpenAssetsDir") {
-            this.app.Config.OpenAssetsDir()
+            this.app.Config["OpenAssetsDir"]()
         }
     }
 
     OnApiEndpointMenuClick(btn) {
         if (btn == "ChangeApiEndpoint") {
             this.app.Service("DataSourceManager").GetItem("api").ChangeApiEndpoint("", "")
-            this.SetText("ApiEndpoint", this.app.Config.ApiEndpoint, "Bold")
+            this.SetText("ApiEndpoint", this.app.Config["api_endpoint"], "Bold")
             this.needsRestart := true
         } else if (btn == "OpenApiEndpoint") {
             this.app.Service("DataSourceManager").GetItem("api").Open()
@@ -245,7 +245,7 @@
     OnCacheDirMenuClick(btn) {
         if (btn == "ChangeCacheDir") {
             this.app.Service("CacheManager").ChangeCacheDir()
-            this.SetText("CacheDir", this.app.Config.CacheDir, "Bold")
+            this.SetText("CacheDir", this.app.Config["cache_dir"], "Bold")
         } else if (btn == "OpenCacheDir") {
             this.app.Service("CacheManager").OpenCacheDir()
         } else if (btn == "FlushCacheDir") {
@@ -256,7 +256,7 @@
     OnBackupDirMenuClick(btn) {
         if (btn == "ChangeBackupDir") {
             this.app.Service("BackupManager").ChangeBackupDir()
-            this.SetText("BackupDir", this.app.Config.BackupDir, "Bold")
+            this.SetText("BackupDir", this.app.Config["backup_dir"], "Bold")
             this.needsRestart := true
         } else if (btn == "OpenBackupDir") {
             this.app.Service("BackupManager").OpenBackupDir()
@@ -265,42 +265,46 @@
 
     OnThemeNameChange(ctl, info) {
         this.guiObj.Submit(false)
-        this.app.Config.ThemeName := this.availableThemes[ctl.Value]
+        this.app.Config["theme_name"] := this.availableThemes[ctl.Value]
         this.app.Service("ThemeManager").LoadMainTheme()
         this.needsRestart := true
     }
 
+    ; TODO: Make sure default launcher theme has a blank default value
     OnDefaultLauncherThemeChange(ctl, info) {
         this.guiObj.Submit(false)
-        this.app.Config.DefaultLauncherTheme := this.availableThemes[ctl.Value]
+        this.app.Config["default_launcher_theme"] := this.availableThemes[ctl.Value]
     }
 
     OnPlatformsViewModeChange(ctl, info) {
         this.guiObj.Submit(false)
-        this.app.Config.PlatformsViewMode := this.listViewModes[ctl.Value]
+        this.app.Config["platforms_view_mode"] := this.listViewModes[ctl.Value]
     }
 
     OnLauncherDoubleClickActionChange(ctl, info) {
         this.guiObj.Submit(false)
-        this.app.Config.LauncherDoubleClickAction := this.doubleClickActions[ctl.Value]
+        this.app.Config["launcher_double_click_action"] := this.doubleClickActions[ctl.Value]
     }
 
     OnBackupsViewModeChange(ctl, info) {
         this.guiObj.Submit(false)
-        this.app.Config.BackupsViewMode := this.listViewModes[ctl.Value]
+        this.app.Config["backups_view_mode"] := this.listViewModes[ctl.Value]
     }
 
     OnLoggingLevelChange(ctl, info) {
         this.guiObj.Submit(false)
-        this.app.Config.LoggingLevel := ctl.Text
+        this.app.Config["logging_level"] := ctl.Text
     }
 
     OnBackupsToKeepChange(ctl, info) {
         this.guiObj.Submit(false)
-        this.app.Config.BackupsToKeep := ctl.Text
+        this.app.Config["backups_to_keep"] := ctl.Text
     }
 
     ProcessResult(result, submittedData := "") {
+        ; TODO: Add temporary storage and a Cancel button to the Settings window
+        this.app.Config.SaveConfig()
+
         if (this.needsRestart) {
             response := this.app.Service("GuiManager").Dialog("DialogBox", "Restart " . this.app.appName . "?", "One or more settings that have been changed require restarting " . this.app.appName . " to fully take effect.`n`nWould you like to restart " . this.app.appName . " now?")
 

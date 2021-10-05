@@ -1,13 +1,8 @@
 class BuilderManager extends AppComponentServiceBase {
-    _registerEvent := "" ;LaunchpadEvents.BUILDERS_REGISTER
-    _alterEvent := "" ;LaunchpadEvents.BUILDERS_ALTER
-    defaultBuilderKey := "ahk"
+    _registerEvent := LaunchpadEvents.BUILDERS_REGISTER
+    _alterEvent := LaunchpadEvents.BUILDERS_ALTER
 
-    SetItem(key, builderObj, makeDefault := false) {
-        if (makeDefault) {
-            this.defaultBuilderKey := key
-        }
-
+    SetItem(key, builderObj) {
         return super.SetItem(key, builderObj)
     }
 
@@ -33,7 +28,7 @@ class BuilderManager extends AppComponentServiceBase {
 
     _GetBuilderObject(builder) {
         if (builder == "") {
-            builder := this.defaultBuilderKey
+            builder := this.app.Config["builder_key"]
         }
 
         if (!IsObject(builder)) {

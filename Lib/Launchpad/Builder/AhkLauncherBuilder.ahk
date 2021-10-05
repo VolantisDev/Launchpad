@@ -10,7 +10,7 @@ class AhkLauncherBuilder extends BuilderBase {
             result := gameExeObj.Build()
 
             if (result) {
-                if (this.app.Config.create_desktop_shortcuts) {
+                if (this.app.Config["create_desktop_shortcuts"]) {
                     this.CreateShortcut(entityObj)
                 }
 
@@ -33,7 +33,7 @@ class AhkLauncherBuilder extends BuilderBase {
     Clean(entityObj) {
         wasCleaned := false
 
-        filePath := this.app.Config.assets_dir . "\" . entityObj.Key . "\" . entityObj.Key . ".ahk"
+        filePath := this.app.Config["assets_dir"] . "\" . entityObj.Key . "\" . entityObj.Key . ".ahk"
 
         if (FileExist(filePath)) {
             FileDelete(filePath)

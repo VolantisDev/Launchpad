@@ -1,5 +1,4 @@
 ; Automatically-generated file. Manual edits will be overwritten.
-#Include AppLib\Events.ahk
 #Include AppLib\App\AppBase.ahk
 #Include AppLib\Authentication\AuthInfo\AuthInfo.ahk
 #Include AppLib\Authentication\AuthInfo\JwtAuthInfo.ahk
@@ -26,12 +25,6 @@
 #Include AppLib\Cache\FileCache.ahk
 #Include AppLib\Cache\ObjectCache.ahk
 #Include AppLib\Config\AppConfig.ahk
-#Include AppLib\Config\BackupsConfig.ahk
-#Include AppLib\Config\ConfigBase.ahk
-#Include AppLib\Config\FileConfig.ahk
-#Include AppLib\Config\IniConfig.ahk
-#Include AppLib\Config\JsonConfig.ahk
-#Include AppLib\Config\ModuleConfig.ahk
 #Include AppLib\Container\ServiceComponentContainer.ahk
 #Include AppLib\Container\WindowContainer.ahk
 #Include AppLib\DataSource\DataSourceBase.ahk
@@ -50,6 +43,7 @@
 #Include AppLib\Event\LoadComponentEvent.ahk
 #Include AppLib\Event\RegisterComponentsEvent.ahk
 #Include AppLib\Event\ServiceDefinitionsEvent.ahk
+#Include AppLib\Events\Events.ahk
 #Include AppLib\Exception\AppException.ahk
 #Include AppLib\Exception\LoginFailedException.ahk
 #Include AppLib\Exception\ServiceNotFoundException.ahk
@@ -138,6 +132,12 @@
 #Include BaseLib\StructuredData\StructuredDataBase.ahk
 #Include BaseLib\StructuredData\VdfData.ahk
 #Include BaseLib\StructuredData\Xml.ahk
+#Include ConfigLib\Config\ConfigBase.ahk
+#Include ConfigLib\Config\PersistentConfig.ahk
+#Include ConfigLib\Config\RuntimeConfig.ahk
+#Include ConfigLib\ConfigStorage\ConfigStorageBase.ahk
+#Include ConfigLib\ConfigStorage\JsonConfigStorage.ahk
+#Include ConfigLib\Exception\ConfigException.ahk
 #Include ContainerLib\Container\BasicContainer.ahk
 #Include ContainerLib\Container\ContainerBase.ahk
 #Include ContainerLib\Container\ParameterContainer.ahk

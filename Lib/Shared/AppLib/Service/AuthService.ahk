@@ -34,7 +34,7 @@ class AuthService extends AppServiceBase {
     }
 
     Login() {
-        if (this.app.Config.ApiAuthentication && this.authProviderObj) {
+        if (this.app.Config["api_authentication"] && this.authProviderObj) {
             authInfoObj := ""
 
             if (!this.IsAuthenticated()) {
@@ -56,7 +56,7 @@ class AuthService extends AppServiceBase {
         email := ""
 
         if (this.IsAuthenticated()) {
-            playerName := this.app.Config.PlayerName
+            playerName := this.app.Config["player_name"]
             email := this.authInfoObj.Get("email")
             
             if (playerName) {
@@ -79,7 +79,7 @@ class AuthService extends AppServiceBase {
     }
 
     Logout() {
-        if (this.app.Config.ApiAuthentication && this.authProviderObj && this.authInfoObj) {
+        if (this.app.Config["api_authentication"] && this.authProviderObj && this.authInfoObj) {
             this.authProviderObj.Logout(this.authInfoObj)
             this.authInfoObj := ""
             this.stateObj.Authentication := Map()
@@ -88,13 +88,13 @@ class AuthService extends AppServiceBase {
     }
 
     IsAuthenticated() {       
-        return this.app.Config.ApiAuthentication && this.authProviderObj && this.authInfoObj && this.authInfoObj.Authenticated
+        return this.app.Config["api_authentication"] && this.authProviderObj && this.authInfoObj && this.authInfoObj.Authenticated
     }
 
     AuthenticationNeedsRefresh() {
         needsRefresh := false
 
-        if (this.app.Config.ApiAuthentication && this.authProviderObj && this.IsAuthenticated()) {
+        if (this.app.Config["api_authentication"] && this.authProviderObj && this.IsAuthenticated()) {
             needsRefresh := this.authProviderObj.NeedsRefresh(this.authInfoObj)
         }
 
@@ -102,7 +102,7 @@ class AuthService extends AppServiceBase {
     }
 
     RefreshAuthentication() {
-        if (this.app.Config.ApiAuthentication && this.authProviderObj && this.IsAuthenticated()) {
+        if (this.app.Config["api_authentication"] && this.authProviderObj && this.IsAuthenticated()) {
             authInfoObj := this.authProviderObj.RefreshAuthentication(this.authInfoObj)
 
             if (authInfoObj) {
@@ -112,7 +112,7 @@ class AuthService extends AppServiceBase {
     }
 
     UpdateAuthState(authInfoObj) {
-        if (this.app.Config.ApiAuthentication && this.authProviderObj && authInfoObj) {
+        if (this.app.Config["api_authentication"] && this.authProviderObj && authInfoObj) {
             this.authInfoObj := authInfoObj
             this.AddUserInfoFromApi(authInfoObj)
             this.stateObj.SetAuthentication(authInfoObj.GetPersistentData())

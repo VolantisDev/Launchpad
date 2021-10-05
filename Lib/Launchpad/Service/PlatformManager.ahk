@@ -6,20 +6,16 @@ class PlatformManager extends EntityManagerBase {
         return LoadPlatformsOp(this.app, this.configObj)
     }
 
-    CreateConfigObj(app, configFile) {
-        return PlatformsConfig(app, configFile, false)
-    }
-
     GetDefaultConfigPath() {
-        return this.app.Config.PlatformsFile
+        return this.app.Config["platforms_file"]
     }
 
     RemoveEntityFromConfig(key) {
-        this.configObj.Platforms.Delete(key)
+        this.configObj["platforms"].Delete(key)
     }
 
     AddEntityToConfig(key, entityObj) {
-        this.configObj.Platforms[key] := entityObj.UnmergedConfig
+        this.configObj["platforms"][key] := entityObj.UnmergedConfig
     }
 
     GetActivePlatforms() {

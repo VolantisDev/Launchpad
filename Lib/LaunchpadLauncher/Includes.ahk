@@ -3,7 +3,6 @@
 #Include Condition\SteamConditionBase.ahk
 #Include Condition\SteamIsOpenCondition.ahk
 #Include Condition\SteamOverlayAttachedCondition.ahk
-#Include Config\LaunchpadLauncherConfig.ahk
 #Include Game\BlizzardGame.ahk
 #Include Game\GameBase.ahk
 #Include Game\RiotGame.ahk

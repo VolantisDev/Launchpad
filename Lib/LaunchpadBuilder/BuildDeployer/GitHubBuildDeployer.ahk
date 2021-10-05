@@ -1,7 +1,7 @@
 class GitHubBuildDeployer extends BuildDeployerBase {
     Deploy(deployInfo) {
         ; TODO: Fix GitHub API request to post new release
-        request := this.GetHttpReq("https://api.github.com/repos/" . this.app.Config.GitHubRepo . "/releases")
+        request := this.GetHttpReq("https://api.github.com/repos/" . this.app.Config["github_repo"] . "/releases")
         response := request.Send("POST", this.GetPostData(deployInfo))
         success := !!(request.GetStatusCode() == 200)
         responseData := request.GetResponseData()
@@ -28,12 +28,12 @@ class GitHubBuildDeployer extends BuildDeployerBase {
 
     GetHttpReq(url) {
         request := WinHttpReq(url)
-        var := this.app.Config.GitHubUsername . ":" . this.app.Config.GitHubToken
+        var := this.app.Config["github_username"] . ":" . this.app.Config["github_token"]
         request.requestHeaders["Authorization"] := "Basic " . this.Base64Encode(&var)
     }
 
     UploadInstaller(deployInfo, uploadUrl) {
-        installer := this.app.Config.DistDir . "\" . this.app.appName . "-" . this.app.Version . ".exe"
+        installer := this.app.Config["dist_dir"] . "\" . this.app.appName . "-" . this.app.Version . ".exe"
         success := false
 
         if (FileExist(installer)) {

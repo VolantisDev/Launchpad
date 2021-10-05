@@ -30,7 +30,7 @@ class ParameterContainer extends ContainerBase {
     }
 
     LoadFromMap(obj, servicesKey := "", parametersKey := "") {
-        if (Type(obj) == "ParameterRef" || obj.HasBase(ParameterRef)) {
+        if (obj.HasBase(ParameterRef.prototype)) {
             obj := this.GetParameter(obj.GetName())
         }
 
@@ -43,7 +43,7 @@ class ParameterContainer extends ContainerBase {
     }
 
     LoadFromJson(jsonFile, servicesKey := "", parametersKey := "") {
-        if (Type(jsonFile) == "ParameterRef" || jsonFile.HasBase(ParameterRef)) {
+        if (jsonFile.HasBase(ParameterRef.prototype)) {
             jsonFile := this.GetParameter(jsonFile.GetName())
         }
 
@@ -74,9 +74,9 @@ class ParameterContainer extends ContainerBase {
 
         if (isObj && (Type(definition) == "AppRef" || definition.HasBase(AppRef))) {
             val := this.GetApp(definition)
-        } else if (isObj && (Type(definition) == "ContainerRef" || definition.HasBase(ContainerRef))) {
+        } else if (isObj && definition.HasBase(ContainerRef.Prototype)) {
             val := this
-        } else if (isObj && (Type(definition) == "ParameterRef" || definition.HasBase(ParameterRef))) {
+        } else if (isObj && definition.HasBase(ParameterRef.Prototype)) {
             val := this.GetParameter(definition.GetName())
         }
 
@@ -104,7 +104,7 @@ class ParameterContainer extends ContainerBase {
 
         for index, token in tokens {
             if (context.Has(token)) {
-                exists := false
+                exists := true
                 break
             }
 
@@ -120,7 +120,7 @@ class ParameterContainer extends ContainerBase {
 
         for index, token in tokens {
             if (!context.Has(token)) {
-                throw ParameterNotFoundException("Parameter not found: " . name)
+                throw ContainerException("Parameter not found: " . name)
             }
 
             context := context[token]
@@ -129,10 +129,33 @@ class ParameterContainer extends ContainerBase {
         return context
     }
 
+    DeleteParameter(name) {
+        if (!name) {
+            throw ContainerException("You must specify a parameter to delete")
+        }
+
+        tokens := StrSplit(name, ".")
+        context := this.Parameters
+        lastToken := tokens.Pop()
+
+        for index, token in tokens {
+            if (!context.Has(token)) {
+                throw ContainerException("Parameter not found: " . name)
+            }
+
+            context := context[token]
+        }
+
+        if (!context || !context.Has(lastToken)) {
+            throw ContainerException("Parameter not found: " . name)
+        }
+
+        context.Delete(lastToken)
+    }
+
     SetParameter(name, value := "") {
         tokens := StrSplit(name, ".")
         context := this.Parameters
-
         lastToken := tokens.Pop()
 
         for index, token in tokens {

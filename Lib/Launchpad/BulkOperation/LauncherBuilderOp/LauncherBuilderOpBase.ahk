@@ -7,7 +7,7 @@ class LauncherBuilderOpBase extends LauncherGameOpBase {
 
     __New(app, launcherEntities := "", builder := "", owner := "") {
         if (builder == "") {
-            builder := app.Config.builder_key
+            builder := app.Config["builder_key"]
         }
 
         if (Type(builder) == "String" && builder != "") {

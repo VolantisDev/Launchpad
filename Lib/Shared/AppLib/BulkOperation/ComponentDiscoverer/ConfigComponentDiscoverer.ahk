@@ -12,7 +12,7 @@ class ConfigComponentDiscoverer extends ComponentDiscovererBase {
     DiscoverComponents() {
         parentKey := this.parentKey
 
-        for componentName, componentConfig in this.configObj.%parentKey% {
+        for componentName, componentConfig in this.configObj[parentKey] {
             this.DiscoverComponent(componentName, componentConfig)
         }
 

@@ -4,7 +4,7 @@ class LaunchpadOverlayBuilder extends AppBuilderBase {
     Build(version) {
         RunWait("msbuild LaunchpadOverlay.sln -property:Configuration=Release", this.app.appDir)
 
-        outputExe := this.app.Config.BuildDir . "\LaunchpadOverlay\LaunchpadOverlay.exe"
+        outputExe := this.app.Config["build_dir"] . "\LaunchpadOverlay\LaunchpadOverlay.exe"
 
         if (!FileExist(outputExe)) {
             throw AppException("LaunchpadOverlay.exe failed to build.")
@@ -18,7 +18,7 @@ class LaunchpadOverlayBuilder extends AppBuilderBase {
 
         DirCreate(overlayDir)
         FileCopy(outputExe, overlayDir . "\LaunchpadOverlay.exe")
-        DirDelete(this.app.Config.BuildDir . "\LaunchpadOverlay", true)
+        DirDelete(this.app.Config["build_dir"] . "\LaunchpadOverlay", true)
         return true
     }
 }

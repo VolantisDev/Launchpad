@@ -1,30 +1,18 @@
-﻿class LauncherConfig extends JsonConfig {
-    primaryConfigKey := "Games"
-    gameDefaults := Map()
-    configKey := "LaunchersConfig"
+﻿class LauncherConfig extends PersistentConfig {
+    _loadConfigFromStorage() {
+        config := super._loadConfigFromStorage()
 
-    Games {
-        get => this.config["Games"]
-        set => this.config["Games"] := value
-    }
-
-    LoadConfig() {
-        result := super.LoadConfig()
-
-        if (!this.config.Has("Games")) {
-            this.config["Games"] := Map()
-        }
-
-        for key, config in this.Games {
-            if (Type(config) == "String") {
-                this.Games[key] := Map("LauncherType", config)
+        for key, configItem in config {
+            if (Type(configItem) == "String") {
+                config[key] := Map("LauncherType", configItem)
             }
         }
 
-        return result
-    }
+        if (config.Has("Games")) {
+            config["games"] := config["Games"]
+            config.Delete("Games")
+        }
 
-    SaveConfig() {
-        return super.SaveConfig()
+        return config
     }
 }

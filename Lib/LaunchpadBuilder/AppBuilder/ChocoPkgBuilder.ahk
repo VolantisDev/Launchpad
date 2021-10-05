@@ -2,7 +2,7 @@ class ChocoPkgBuilder extends AppBuilderBase {
     name := "Chocolatey Package"
 
     Build(version) {
-        distDir := this.app.Config.DistDir
+        distDir := this.app.Config["dist_dir"]
         installer := distDir . "\" . this.app.appName . "-" . this.app.Version . ".exe"
 
         if (!FileExist(installer)) {
@@ -28,8 +28,8 @@ class ChocoPkgBuilder extends AppBuilderBase {
             FileDelete(chocoInstallFIle)
         }
 
-        installerUrl := "https://github.com/" . this.app.Config.GitHubRepo . "/releases/download/" . version . "/" . this.app.appName . "-" . version . ".exe"
-        pkgName := this.app.Config.ChocoPkgName
+        installerUrl := "https://github.com/" . this.app.Config["github_repo"] . "/releases/download/" . version . "/" . this.app.appName . "-" . version . ".exe"
+        pkgName := this.app.Config["choco_pkg_name"]
         FileAppend
         (
         "$packageName = '" . pkgName . "'

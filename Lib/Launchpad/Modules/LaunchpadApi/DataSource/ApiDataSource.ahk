@@ -35,7 +35,7 @@ class ApiDataSource extends DataSourceBase {
         if (private) {
             request.requestHeaders["Cache-Control"] := "no-cache"
 
-            if (this.app.Config.ApiAuthentication) {
+            if (this.app.Config["api_authentication"]) {
                 this.app.Service("Auth").AlterApiRequest(request)
             }
         }
@@ -85,7 +85,7 @@ class ApiDataSource extends DataSourceBase {
 
         status := Map("authenticated", false, "email", "", "photo", "")
 
-        if (this.app.Config.ApiAuthentication && this.app.Service("Auth").IsAuthenticated()) {
+        if (this.app.Config["api_authentication"] && this.app.Service("Auth").IsAuthenticated()) {
             statusResult := this.ReadItem(path, true)
 
             if (statusResult) {
@@ -107,15 +107,15 @@ class ApiDataSource extends DataSourceBase {
 
     ChangeApiEndpoint(existingEndpoint := "", owner := "", parent := "") {
         if (existingEndpoint == "") {
-            existingEndpoint := this.app.Config.ApiEndpoint
+            existingEndpoint := this.app.Config["api_endpoint"]
         }
 
         text := "Enter the base URL of the API endpoint you would like Launchpad to connect to. Leave blank to revert to the default."
         apiEndpointUrl := this.app.Service("GuiManager").Dialog("SingleInputBox", "API Endpoint URL", text, existingEndpoint, owner, parent)
 
         if (apiEndpointUrl != existingEndpoint) {
-            this.app.Config.ApiEndpoint := apiEndpointUrl
-            apiEndpointUrl := this.app.Config.ApiEndpoint
+            this.app.Config["api_endpoint"] := apiEndpointUrl
+            apiEndpointUrl := this.app.Config["api_endpoint"]
 
             if (apiEndpointUrl != existingEndpoint) {
                 this.endpointUrl := apiEndpointUrl

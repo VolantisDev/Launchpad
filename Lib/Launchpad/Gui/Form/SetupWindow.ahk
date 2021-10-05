@@ -28,12 +28,12 @@
 
         this.AddHeading("Theme")
         this.AddDescription(this.app.appName . " has a growing number of themes available to fit in with the platform or aesthetic of your choice. Choose the primary theme for La" . this.app.appName . "unchpad to use below.")
-        chosen := this.GetItemIndex(this.availableThemes, this.app.Config.ThemeName)
-        ctl := this.guiObj.AddDDL("vThemeName xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"), this.availableThemes)
+        chosen := this.GetItemIndex(this.availableThemes, this.app.Config["theme_name"])
+        ctl := this.guiObj.AddDDL("vtheme_name xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"), this.availableThemes)
         ctl.OnEvent("Change", "OnThemeNameChange")
         ctl.ToolTip := "Select a theme for " . this.app.appName . " to use."
 
-        this.AddConfigLocationBlock("Launcher Directory", "DestinationDir", "", this.app.appName . " will create a separate .exe file for every game you configure. You can store these launchers in any folder you wish.")
+        this.AddConfigLocationBlock("Launcher Directory", "destination_dir", "", this.app.appName . " will create a separate .exe file for every game you configure. You can store these launchers in any folder you wish.")
 
         this.AddHeading("Platforms")
         this.AddDescription(this.app.appName . " has detected the following game platforms on your computer. Check the ones you wish " . this.app.appName . " to detect your installed games from.")
@@ -48,7 +48,7 @@
     }
 
     AddConfigLocationBlock(heading, settingName, extraButton := "", helpText := "") {
-        location := this.app.Config.%settingName% ? this.app.Config.%settingName% : "Not selected"
+        location := this.app.Config[settingName] ? this.app.Config[settingName] : "Not selected"
         this.Add("LocationBlock", "", heading, location, settingName, extraButton, true, helpText)
     }
 
@@ -89,21 +89,22 @@
 
     OnDestinationDirMenuClick(btn) {
         if (btn == "ChangeDestinationDir") {
-            this.app.Config.ChangeDestinationDir()
-            this.SetText("DestinationDir", this.app.Config.DestinationDir, "Bold")
+            this.app.Config["ChangeDestinationDir"]()
+            this.SetText("DestinationDir", this.app.Config["destination_dir"], "Bold")
         } else if (btn == "OpenDestinationDir") {
-            this.app.Config.OpenDestinationDir()
+            this.app.Config["OpenDestinationDir"]()
         }
     }
 
     OnThemeNameChange(ctl, info) {
         this.guiObj.Submit(false)
-        this.app.Config.ThemeName := this.availableThemes[ctl.Value]
+        this.app.Config["theme_name"] := this.availableThemes[ctl.Value]
         this.app.Service("ThemeManager").LoadMainTheme()
     }
 
     ProcessResult(result, submittedData := "") {
         if (result == "Start") {
+            this.app.Service("Config").SaveConfig()
             this.app.Service("PlatformManager").SaveModifiedEntities()
 
             if (!FileExist(this.app.appDir . "\" . this.app.appName . ".ini")) {

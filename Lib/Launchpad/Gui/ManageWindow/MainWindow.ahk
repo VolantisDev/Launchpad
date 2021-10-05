@@ -10,7 +10,7 @@
         this.launcherManager := app.Service("LauncherManager")
         this.platformManager := app.Service("PlatformManager")
         this.lvCount := this.launcherManager.CountEntities()
-        this.showStatusIndicator := app.Config.ApiAuthentication
+        this.showStatusIndicator := app.Config["api_authentication"]
         super.__New(app, themeObj, windowKey, app.appName, "", "")
     }
 
@@ -121,7 +121,7 @@
         } else if (result == "CleanLaunchers") {
             this.app.Service("BuilderManager").CleanLaunchers()
         } else if (result == "ReloadLaunchers") {
-            this.app.Service("LauncherManager").LoadComponents(this.app.Config.LauncherFile)
+            this.app.Service("LauncherManager").LoadComponents(this.app.Config["launcher_file"])
             this.UpdateListView()
         } else if (result == "About") {
             this.app.Service("GuiManager").Dialog("AboutWindow")
@@ -523,7 +523,7 @@
     OnDoubleClick(LV, rowNum) {
         key := this.listView.GetRowKey(rowNum)
 
-        if (this.app.Config.LauncherDoubleClickAction == "Run") {
+        if (this.app.Config["launcher_double_click_action"] == "Run") {
             this.RunLauncher(key)
         } else {
             this.EditLauncher(key)
@@ -598,7 +598,7 @@
     }
 
     OnBuildAllButton(btn, info) {
-        this.app.Service("BuilderManager").BuildLaunchers(this.app.Service("LauncherManager").Entities, this.app.Config.RebuildExistingLaunchers)
+        this.app.Service("BuilderManager").BuildLaunchers(this.app.Service("LauncherManager").Entities, this.app.Config["rebuild_existing_launchers"])
         this.UpdateListView()
     }
 

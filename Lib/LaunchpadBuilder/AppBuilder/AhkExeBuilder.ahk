@@ -4,14 +4,14 @@ class AhkExeBuilder extends AppBuilderBase {
     copyVendorLibs := ["7zip"]
 
     Build(version) {
-        buildDir := this.app.Config.BuildDir
+        buildDir := this.app.Config["build_dir"]
         this.ResetBuildDir(buildDir)
         this.CopyLibraries(buildDir)
         this.CopyResources(buildDir)
         this.CopyVendorLibraries(buildDir)
         result := this.BuildExe(buildDir)
 
-        if (this.app.Config.OpenBuildDir) {
+        if (this.app.Config["open_build_dir"]) {
             Run(buildDir)
         }
 
@@ -74,7 +74,7 @@ class AhkExeBuilder extends AppBuilderBase {
         }
 
         FileAppend(scriptContent, buildFile)
-        runResult := RunWait(ahk2Exe . " /in `"" . buildFile . "`" /out `"" . exeFile . "`" /icon `"" . this.app.Config.IconFile . "`" /bin `"" . ahkExe . "`"", this.app.appDir)
+        runResult := RunWait(ahk2Exe . " /in `"" . buildFile . "`" /out `"" . exeFile . "`" /icon `"" . this.app.Config["icon_file"] . "`" /bin `"" . ahkExe . "`"", this.app.appDir)
         FileDelete(buildFile)
 
         return runResult

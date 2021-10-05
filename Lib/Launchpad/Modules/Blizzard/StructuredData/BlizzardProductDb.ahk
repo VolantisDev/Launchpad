@@ -1,23 +1,27 @@
-﻿class BlizzardProductDb extends ProtoConfig {
-    primaryConfigKey := "Database"
-    configKey := "BlizzardProductDb"
+﻿class BlizzardProductDb extends ProtobufData {
+    path := ""
+    loaded := false
 
-    __New(app, autoLoad := true) {
+    __New(autoLoad := false) {
         ; TODO: Remove dependency on A_ScriptDir
-        path := A_AppDataCommon . "\Battle.net\Agent\product.db"
+        this.path := A_AppDataCommon . "\Battle.net\Agent\product.db"
         protoFile := A_ScriptDir . "\Resources\Dependencies\BlizzardProductDb.proto"
-        super.__New(app, path, protoFile, autoLoad)
+        super.__New(protoFile, "", "Database")
+
+        if (autoLoad) {
+            this.FromFile()
+        }
     }
 
     GetProductInstalls() {
         if (!this.loaded) {
-            this.LoadConfig()
+            this.FromFile()
         }
 
         productInstalls := []
 
-        if (this.config.Has("productInstall") && Type(this.config["productInstall"]) == "Array") {
-            productInstalls := this.config["productInstall"]
+        if (this.obj.Has("productInstall") && Type(this.obj["productInstall"]) == "Array") {
+            productInstalls := this.obj["productInstall"]
         }
 
         return productInstalls
@@ -35,5 +39,10 @@
         }
 
         return installPath
+    }
+
+    FromFile() {
+        super.FromFile(this.path)
+        this.loaded := true
     }
 }

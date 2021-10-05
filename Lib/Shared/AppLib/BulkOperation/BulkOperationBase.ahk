@@ -40,7 +40,7 @@ class BulkOperationBase {
         }
 
         if (this.app.Services.Has("Logger")) {
-            this.app.Logger.Debug(Type(this) . ": Starting bulk operation...")
+            this.app.Service("Logger").Debug(Type(this) . ": Starting bulk operation...")
         }
         
         this.running := true
@@ -56,7 +56,7 @@ class BulkOperationBase {
 
     LogResults() {
         if (this.app.Services.Has("Logger")) {
-            this.app.Logger.Info(Type(this) . " Results: " . this.GetResultMessage())
+            this.app.Service("Logger").Info(Type(this) . " Results: " . this.GetResultMessage())
         }
     }
 

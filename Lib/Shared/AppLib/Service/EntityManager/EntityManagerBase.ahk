@@ -8,8 +8,8 @@ class EntityManagerBase extends AppComponentServiceBase {
         set => this._components := value
     }
 
-    __New(app, configFile := "") {
-        this.configObj := this.CreateConfigObj(app, configFile)
+    __New(app, configObj) {
+        this.configObj := configObj
         super.__New(app, "", false)
     }
 
@@ -17,11 +17,11 @@ class EntityManagerBase extends AppComponentServiceBase {
         this._componentsLoaded := false
 
         if (configFile != "") {
-            this.configObj.ConfigPath := configFile
+            this.configObj._storage.storagePath := configFile
         }
 
-        if (this.configObj.ConfigPath == "") {
-            this.configObj.ConfigPath := this.GetDefaultConfigPath()
+        if (this.configObj._storage.storagePath == "") {
+            this.configObj._storage.storagePath := this.GetDefaultConfigPath()
         }
 
         operation := this.GetLoadOperation()
@@ -57,10 +57,6 @@ class EntityManagerBase extends AppComponentServiceBase {
     }
 
     GetLoadOperation() {
-
-    }
-
-    CreateConfigObj(configFile) {
 
     }
 

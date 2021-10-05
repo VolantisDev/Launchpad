@@ -1,6 +1,58 @@
 class ProtobufData extends StructuredDataBase {
+	primaryKey := "Database"
+	protoFile := ""
+	protoPath := ""
+	protocLocal := ""
+
 	; TODO: Remove dependency on A_ScriptDir
 	static protoc := A_ScriptDir . "\Vendor\Protoc\bin\protoc.exe"
+
+	__New(protoFile, protoPath := "", primaryKey := "", obj := "", protoc := "") {
+		if (protoPath == "") {
+			SplitPath(protoFile, &protoFile, &protoPath)
+		}
+
+		this.protoPath := protoPath
+		this.protoFile := protoFile
+
+		if (primaryKey) {
+			this.primaryKey := primaryKey
+		}
+
+		if (!protoc) {
+			protoc := ProtobufData.protoc
+		}
+
+		this.protocLocal := protoc
+
+		super.__New(obj)
+	}
+
+	CountItems() {
+		count := 0
+
+		for key, value in this.obj {
+			count++
+		}
+
+		return count
+	}
+
+	Clone() {
+		newEntity := super.Clone()
+        newEntity.obj := this.obj.Clone()
+        newEntity := this.CloneChildMaps(newEntity)
+	}
+
+	CloneChildMaps(parentMap) {
+        for key, child in parentMap {
+            if (Type(child) == "Map") {
+                parentMap[key] := this.CloneChildMaps(child)
+            }
+        }
+
+        return parentMap
+    }
 
     FromString(&src, args*) {
 		static q := Chr(34)
@@ -126,7 +178,8 @@ class ProtobufData extends StructuredDataBase {
 			}
 		}
 		
-		return returnData
+		this.obj := returnData
+		return this.obj
 	}
 
 	AddOrMergeValue(mapObj, key, val) {
@@ -141,16 +194,12 @@ class ProtobufData extends StructuredDataBase {
 		}
 	}
 
-	FromFile(filePath, messageType, protoFile, protoPath := "", protoc := "") {
-		if (protoPath == "") {
-			SplitPath(protoFile, &protoFile, &protoPath)
+	FromFile(filePath, messageType := "") {
+		if (messageType == "") {
+			messageType := this.primaryKey
 		}
 
-		if (protoc == "") {
-			protoc := ProtobufData.protoc
-		}
-
-		command := protoc . " --proto_path=`"" . protoPath . "`" --decode=" . messageType . " `"" . protoFile . "`" < `"" . filePath . "`""
+		command := this.protocLocal . " --proto_path=`"" . this.protoPath . "`" --decode=" . messageType . " `"" . this.protoFile . "`" < `"" . filePath . "`""
 		shell := ComObject("WScript.Shell")
         exec := Shell.Exec(A_ComSpec . " /C " . command)
 		output := exec.StdOut.ReadAll()
@@ -158,6 +207,6 @@ class ProtobufData extends StructuredDataBase {
 	}
 
 	ToString(obj := "", args*) {
-        throw MethodNotImplementedException("StructuredDataBase", "ToString")
+        throw MethodNotImplementedException("ProtobufData", "ToString")
     }
 }

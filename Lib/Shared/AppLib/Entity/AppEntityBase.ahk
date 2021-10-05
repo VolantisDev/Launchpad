@@ -76,9 +76,9 @@ class AppEntityBase extends EntityBase {
     ; NOTICE: Object not yet fully loaded. Might not be safe to call this.entityData
     InitializeDefaults() {
         defaults := super.InitializeDefaults()
-        defaults["DataSourceKeys"] := ["api"]
+        defaults["DataSourceKeys"] := [this.app.Config["data_source_key"]]
         defaults["DataSourceItemKey"] := ""
-        defaults["AssetsDir"] := this.app.Config.AssetsDir . "\" . this.keyVal
+        defaults["AssetsDir"] := this.app.Config["assets_dir"] . "\" . this.keyVal
         defaults["DependenciesDir"] := this.app.appDir . "\Vendor"
         return defaults
     }

@@ -13,8 +13,8 @@ class ConfigurableContainerServiceBase extends ContainerServiceBase {
         componentConfig := super.GetComponentConfig(key, componentInfo)
         configKey := this.configKey
         
-        if (this.configObj && this.configObj.%configKey% && this.configObj.%configKey%.Has(key)) {
-            for key, val in this.configObj.%configKey%[key] {
+        if (this.configObj && this.configObj[configKey] && this.configObj[configKey].Has(key)) {
+            for key, val in this.configObj[configKey][key] {
                 componentConfig[key] := val
             }
         }

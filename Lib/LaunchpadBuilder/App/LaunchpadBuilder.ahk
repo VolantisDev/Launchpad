@@ -2,16 +2,30 @@ class LaunchpadBuilder extends AppBase {
     GetParameterDefinitions(config) {
         parameters := super.GetParameterDefinitions(config)
         parameters["config_path"] := this.appDir . "\Launchpad.build.ini"
+        parameters["config.api_endpoint"] := "https://api.launchpad.games/v1"
+        parameters["config.api_authentication"] := true
+        parameters["config.dist_dir"] := this.appDir . "\Dist"
+        parameters["config.build_dir"] := this.appDir . "\Build"
+        parameters["config.icon_file"] := this.appDir . "\Resources\Graphics\Launchpad.ico"
+        parameters["config.github_username"] := ""
+        parameters["config.github_token"] := ""
+        parameters["config.github_repo"] := "VolantisDev/Launchpad"
+        parameters["config.cleanup_build_artifacts"] := false
+        parameters["config.makensis"] := "C:\Program Files (x86)\NSIS\makensis.exe"
+        parameters["config.open_build_dir"] := false
+        parameters["config.open_dist_dir"] := true
+        parameters["config.choco_pkg_name"] := this.GetChocoName()
         return parameters
+    }
+
+    GetChocoName() {
+        name := StrLower(this.appName)
+        StrReplace(name, " ", "-")
+        return name
     }
 
     GetServiceDefinitions(config) {
         services := super.GetServiceDefinitions(config)
-
-        services["Config"] := Map(
-            "class", "LaunchpadBuilderConfig",
-            "arguments", [AppRef(), ParameterRef("config_path")]
-        )
 
         services["LaunchpadConfig"] := Map(
             "class", "LaunchpadConfig",
@@ -149,9 +163,9 @@ class LaunchpadBuilder extends AppBase {
     }
 
     CleanupBuild() {
-        if (this.Config.CleanupBuildArtifacts) {
-            if (DirExist(this.Config.BuildDir)) {
-                DirDelete(this.Config.BuildDir, true)
+        if (this.Config["cleanup_build_artifacts"]) {
+            if (DirExist(this.Config["build_dir"])) {
+                DirDelete(this.Config["build_dir"], true)
             }
         }
     }

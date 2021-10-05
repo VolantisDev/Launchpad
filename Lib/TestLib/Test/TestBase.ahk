@@ -11,20 +11,29 @@ class TestBase {
     }
 
     GetTestAppConfig() {
-        testServices := Map()
+        testParameters := Map(
+            "config.flush_cache_on_exit", false,
+            "config.logging_level", "none",
+            "config.module_dirs", [],
+        )
 
-        testAppConfig := Map()
-        testAppConfig["appName"] := "Test App"
-        testAppConfig["developer"] := "Test Developer"
-        testAppConfig["appDir"] := A_ScriptDir
-        testAppConfig["tmpDir"] := this.testDir . "\Temp"
-        testAppConfig["dataDir"] := this.testDir . "\Data"
-        testAppConfig["version"] := "1.0.0"
-        testAppConfig["services"] := testServices
-        testAppConfig["configClass"] := "AppConfig"
-        testAppConfig["stateClass"] := "AppState"
+        testServices := Map(
+            "Config", Map(
+                "class", "RuntimeConfig",
+                "arguments", [ContainerRef(), ParameterRef("config_key")]
+            )
+        )
 
-        return testAppCOnfig
+        return Map(
+            "appName", "Test App",
+            "developer", "Test Developer",
+            "appDir", A_ScriptDir,
+            "tmpDir", this.testDir . "\Temp",
+            "dataDir", this.testDir . "\Data",
+            "version", "1.0.0",
+            "parameters", testParameters,
+            "services", testServices
+        )
     }
 
     Setup() {

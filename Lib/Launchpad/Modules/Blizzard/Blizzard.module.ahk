@@ -6,15 +6,12 @@ class BlizzardModule extends ModuleBase {
     GetSubscribers() {
         subscribers := Map()
         subscribers[Events.APP_SERVICE_DEFINITIONS] := [ObjBindMethod(this, "DefineServices")]
-        subscribers[Events.PLATFORMS_DEFINE] := [ObjBindMethod(this, "DefinePlatform")]
+        subscribers[LaunchpadEvents.PLATFORMS_DEFINE] := [ObjBindMethod(this, "DefinePlatform")]
         return subscribers
     }
 
     DefineServices(event, extra, eventName, hwnd) {
-        event.DefineService("BlizzardProductDb", Map(
-            "class", "BlizzardProductDb",
-            "arguments", this.app
-        ))
+        event.DefineService("BlizzardProductDb", Map("class", "BlizzardProductDb"))
     }
 
     DefinePlatform(event, extra, eventName, hwnd) {

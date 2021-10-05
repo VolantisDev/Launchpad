@@ -12,7 +12,6 @@
 #Include BuildDeployer\GitHubBuildDeployer.ahk
 #Include BulkOperation\LaunchpadBuildOp.ahk
 #Include BulkOperation\LaunchpadDeployOp.ahk
-#Include Config\LaunchpadBuilderConfig.ahk
 #Include Gui\BuildSettingsForm.ahk
 #Include Gui\ReleaseInfoForm.ahk
 #Include VersionIdentifier\GitTagVersionIdentifier.ahk

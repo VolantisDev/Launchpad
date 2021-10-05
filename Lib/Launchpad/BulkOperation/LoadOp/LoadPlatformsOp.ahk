@@ -28,8 +28,8 @@ class LoadPlatformsOp extends BulkOperationBase {
             "Steam", "SteamPlatform"
         )
 
-        event := DefineComponentsEvent(Events.PLATFORMS_DEFINE, platforms)
-        this.app.Service("EventManager").DispatchEvent(Events.PLATFORMS_DEFINE, event)
+        event := DefineComponentsEvent(LaunchpadEvents.PLATFORMS_DEFINE, platforms)
+        this.app.Service("EventManager").DispatchEvent(LaunchpadEvents.PLATFORMS_DEFINE, event)
         platforms := event.components
 
         if (this.useProgress) {
@@ -41,11 +41,11 @@ class LoadPlatformsOp extends BulkOperationBase {
         for key, platformClass in platforms {
             this.StartItem(key, key)
 
-            if (!this.platformsConfigObj.Platforms.Has(key)) {
-                this.platformsConfigObj.Platforms[key] := Map()
+            if (!this.platformsConfigObj["platforms"].Has(key)) {
+                this.platformsConfigObj["platforms"][key] := Map()
             }
 
-            platformConfig := this.platformsConfigObj.Platforms[key]
+            platformConfig := this.platformsConfigObj["platforms"][key]
             platformConfig["PlatformClass"] := platformClass
             requiredKeys := ""
             this.results[key] := factory.CreateEntity("PlatformEntity", key, platformConfig, "", requiredKeys)

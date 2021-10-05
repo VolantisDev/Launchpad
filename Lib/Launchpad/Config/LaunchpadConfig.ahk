@@ -1,151 +1,21 @@
 ﻿class LaunchpadConfig extends AppConfig {
-    PlayerName {
-        get => this.GetIniValue("PlayerName") || ""
-        set => this.SetIniValue("PlayerName", value)
-    }
-
-    DestinationDir {
-        get => this.GetIniValue("DestinationDir") || this.app.dataDir . "\Launchers"
-        set => this.SetIniValue("DestinationDir", value)
-    }
-
-    LauncherFile {
-        get => this.GetIniValue("LauncherFile") || this.app.dataDir . "\Launchers.json"
-        set => this.SetIniValue("LauncherFile", value)
-    }
-
-    PlatformsFile {
-        get => this.GetIniValue("PlatformsFile") || this.app.dataDir . "\Platforms.json"
-        set => this.SetIniValue("PlatformsFile", value)
-    }
-
-    AssetsDir {
-        get => this.GetIniValue("AssetsDir") || this.app.dataDir . "\Launcher Assets"
-        set => this.SetIniValue("AssetsDir", value)
-    }
-
-    DataSourceKey {
-        get => this.GetIniValue("DataSourceKey") || "api"
-        set => this.SetIniValue("DataSourceKey", value)
-    }
-
-    BuilderKey {
-        get => this.GetIniValue("BuilderKey") || "ahk"
-        set => this.SetIniValue("BuilderKey", value)
-    }
-
-    ApiEndpoint {
-        get => this.GetIniValue("ApiEndpoint") || "https://api.launchpad.games/v1"
-        set => this.SetIniValue("ApiEndpoint", value)
-    }
-
-    ApiAuthentication {
-        get => this.GetBooleanValue("ApiAuthentication", true)
-        set => this.SetBooleanValue("ApiAuthentication", value)
-    }
-
-    ApiAutoLogin {
-        get => this.GetBooleanValue("ApiAutoLogin", false)
-        set => this.SetBooleanValue("ApiAutoLogin", value)
-    }
-
-    BackupDir {
-        get => this.GetIniValue("BackupDir") || this.app.dataDir . "\Backups"
-        set => this.SetIniValue("BackupDir", value)
-    }
-
-    BackupsFile {
-        get => this.GetIniValue("BackupsFile") || this.app.dataDir . "\Backups.json"
-        set => this.SetIniValue("BackupsFile", value)
-    }
-
-    BackupsToKeep {
-        get => this.GetIniValue("BackupsToKeep") || 5
-        set => this.SetIniValue("BackupsToKeep", value)
-    }
-
-    AutoBackupConfigFiles {
-        get => this.GetBooleanValue("AutoBackupConfigFiles", true)
-        set => this.SetBooleanValue("AutoBackupConfigFiles", value)
-    }
-
-    RebuildExistingLaunchers {
-        get => this.GetBooleanValue("RebuildExistingLaunchers", true)
-        set => this.SetBooleanValue("RebuildExistingLaunchers", value)
-    }
-
-    CreateDesktopShortcuts {
-        get => this.GetBooleanValue("CreateDesktopShortcuts", false)
-        set => this.SetBooleanValue("CreateDesktopShortcuts", value)
-    }
-
-    CleanLaunchersOnBuild {
-        get => this.GetBooleanValue("CleanLaunchersOnBuild", false)
-        set => this.SetBooleanValue("CleanLaunchersOnBuild", value)
-    }
-
-    RetainIconFilesOnClean {
-        get => this.GetBooleanValue("RetainIconFilesOnClean", true)
-        set => this.SetBooleanValue("RetainIconFilesOnClean", value)
-    }
-
-    CleanLaunchersOnExit {
-        get => this.GetBooleanValue("CleanLaunchersOnExit", true)
-        set => this.SetBooleanValue("CleanLaunchersOnExit", value)
-    }
-
-    CheckUpdatesOnStart {
-        get => this.GetBooleanValue("CheckUpdatesOnStart", true)
-        set => this.SetBooleanValue("CheckUpdatesOnStart", value)
-    }
-
-    UseAdvancedLauncherEditor {
-        get => this.GetBooleanValue("UseAdvancedEditor", false)
-        set => this.SetBooleanValue("UseAdvancedEditor", value)
-    }
-
-    DefaultLauncherTheme {
-        get => this.GetIniValue("DefaultLauncherTheme") || this.ThemeName
-        set => this.SetIniValue("DefaultLauncherTheme", value)
-    }
-
-    OverrideLauncherTheme {
-        get => this.GetBooleanValue("OverrideLauncherTheme", false)
-        set => this.SetBooleanValue("OverrideLauncherTheme", value)
-    }
-
-    BackupsViewMode {
-        get => this.GetIniValue("BackupsViewMode") || "Report"
-        set => this.SetIniValue("BackupsViewMode", value)
-    }
-
-    PlatformsViewMode {
-        get => this.GetIniValue("PlatformsViewMode") || "Report"
-        set => this.SetIniValue("PlatformsViewMode", value)
-    }
-
-    LauncherDoubleClickAction {
-        get => this.GetIniValue("LauncherDoubleClickAction") || "Edit"
-        set => this.SetIniValue("LauncherDoubleClickAction", value)
-    }
-
     LaunchersLoaded() {
         return this.app.Services.Has("LauncherManager")
     }
 
     OpenDestinationDir() {
-        Run(this.DestinationDir)
+        Run(this.destination_dir)
     }
 
     ChangeDestinationDir(existingDir := "") {
         if (existingDir == "") {
-            existingDir := this.DestinationDir
+            existingDir := this.destination_dir
         }
 
         destinationDir := this.SelectDestinationDir(existingDir)
 
         if (destinationDir != "") {
-            this.DestinationDir := destinationDir
+            this.destination_dir := destinationDir
         }
 
         return destinationDir
@@ -162,18 +32,18 @@
     }
 
     OpenLauncherFile() {
-        Run(this.LauncherFile)
+        Run(this.launcher_file)
     }
 
     ChangeLauncherFile(existingFile := "") {
         if (existingFile == "") {
-            existingFile := this.LauncherFile
+            existingFile := this.launcher_file
         }
 
         launcherFile := this.SelectLauncherFile(existingFile)
 
         if (launcherFile != "") {
-            this.LauncherFile := launcherFile
+            this.launcher_file := launcherFile
         }
 
         return launcherFile
@@ -191,18 +61,18 @@
     }
 
     OpenBackupsFile() {
-        Run(this.BackupsFile)
+        Run(this.backups_file)
     }
 
     ChangeBackupsFile(existingFile := "") {
         if (existingFile == "") {
-            existingFile := this.BackupsFile
+            existingFile := this.backups_file
         }
 
         backupsFile := this.SelectBackupsFile(existingFile)
 
         if (backupsFile != "") {
-            this.BackupsFile := backupsFile
+            this.backups_file := backupsFile
         }
 
         return backupsFile
@@ -220,18 +90,18 @@
     }
 
     OpenPlatformsFile() {
-        Run(this.PlatformsFile)
+        Run(this.platforms_file)
     }
 
     ChangePlatformsFile(existingFile := "") {
         if (existingFile == "") {
-            existingFile := this.PlatformsFile
+            existingFile := this.platforms_file
         }
 
         platformsFile := this.SelectPlatformsFile(existingFile)
 
         if (platformsFile != "") {
-            this.PlatformsFile := platformsFile
+            this.platforms_file := platformsFile
         }
 
         return platformsFile
@@ -249,19 +119,19 @@
     }
 
     OpenAssetsDir() {
-        Run(this.AssetsDir)
+        Run(this.assets_dir)
     }
 
     ChangeAssetsDir(existingDir := "") {
         if (existingDir == "") {
-            existingDir := this.AssetsDir
+            existingDir := this.assets_dir
         }
 
         MsgBox(this.app.appName . " sometimes creates and uses other files when building and/or running your launchers. These files are known as Assets, and they are stored in a separate directory for each launcher you create.`n`nOn the following dialog, select the parent directory that " . this.app.appName . " should create launcher assets within.", this.app.appName . " Assets Dir", "OK")
         assetsDir := this.SelectAssetsDir(existingDir)
 
         if (assetsDir != "") {
-            this.app.Config.AssetsDir := assetsDir
+            this.app.Config["assets_dir"] := assetsDir
         }
 
         return assetsDir

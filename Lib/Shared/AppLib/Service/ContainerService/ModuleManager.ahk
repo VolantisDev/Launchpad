@@ -10,13 +10,11 @@ class ModuleManager extends ConfigurableContainerServiceBase {
     moduleDirs := []
     classSuffix := "Module"
 
-    __New(app, eventManagerObj, idGeneratorObj, configPath, dataDir, moduleDirs := "", defaultModuleInfo := "", defaultModules := "") {
+    __New(app, eventManagerObj, idGeneratorObj, configObj, dataDir, moduleDirs := "", defaultModuleInfo := "", defaultModules := "") {
         this.app := app
         this.eventManagerObj := eventManagerObj
         this.idGeneratorObj := idGeneratorObj
         this.dataDir := dataDir
-
-        configObj := ModuleConfig(app, configPath, true)
         
         if (moduleDirs) {
             if (Type(moduleDirs) == "String") {
@@ -26,7 +24,7 @@ class ModuleManager extends ConfigurableContainerServiceBase {
             this.moduleDirs := moduleDirs
         }
 
-        super.__New(configObj, configObj.primaryConfigKey, defaultModuleInfo, defaultModules, false)
+        super.__New(configObj, "modules", defaultModuleInfo, defaultModules, false)
     }
 
     CreateDiscoverer() {

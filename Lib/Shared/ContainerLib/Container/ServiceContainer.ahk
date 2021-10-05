@@ -147,7 +147,7 @@ class ServiceContainer extends ParameterContainer {
         val := definition
         isObj := IsObject(definition)
 
-        if (isObj && (Type(definition) == "ServiceRef" || definition.HasBase(ServiceRef))) {
+        if (isObj && definition.HasBase(ServiceRef.Prototype)) {
             val := this.Get(definition.GetName())
         }
 
@@ -172,7 +172,14 @@ class ServiceContainer extends ParameterContainer {
                 }
 
                 arguments := callDefinition.Has("arguments") ? this.resolveArguments(name, callDefinition["arguments"]) : []
+
+                if (!service.HasMethod(callDefinition["method"], arguments.Length)) {
+                    throw ContainerException(name . " has invalid callback method defined: " . callDefinition["method"])
+                }
+
                 method := service.GetMethod(callDefinition["method"], arguments.Length)
+
+                
 
                 method(service, arguments*)
             }

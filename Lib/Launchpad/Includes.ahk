@@ -60,8 +60,8 @@
 #Include Modules\Bethesda\Bethesda.module.ahk
 #Include Modules\Bethesda\GamePlatform\BethesdaPlatform.ahk
 #Include Modules\Blizzard\Blizzard.module.ahk
-#Include Modules\Blizzard\Config\BlizzardProductDb.ahk
 #Include Modules\Blizzard\GamePlatform\BlizzardPlatform.ahk
+#Include Modules\Blizzard\StructuredData\BlizzardProductDb.ahk
 #Include Modules\Epic\Epic.module.ahk
 #Include Modules\Epic\GamePlatform\EpicPlatform.ahk
 #Include Modules\LaunchpadApi\AuthProvider\LaunchpadApiAuthProvider.ahk

@@ -26,23 +26,11 @@ class AppBase {
     }
 
     Config {
-        get => this.Services.Get("Config")
-        set => this.Services.Set("Config", value)
+        get => this.Service("Config")
     }
 
     State {
-        get => this.Services.Get("State")
-        set => this.Services.Set("State", value)
-    }
-
-    Logger {
-        get => this.Services.Get("Logger")
-        set => this.Services.Set("Logger", value)
-    }
-
-    Debugger {
-        get => this.Services.Get("Debugger")
-        set => this.Services.Set("Debugger", value)
+        get => this.Service("State")
     }
 
     __New(config := "", autoStart := true) {
@@ -63,6 +51,174 @@ class AppBase {
         }
     }
 
+    GetParameterDefinitions(config) {
+        SplitPath(A_ScriptFullPath,,,, &scriptName)
+
+        resourcesDir := this.appDir . "\Resources"
+
+        if (config.Has("resourcesDir") && config["resourcesDir"]) {
+            resourcesDir := config["resourcesDir"]
+        }
+
+        themeName := "Steampad"
+        
+        if (config.Has("themeName") && config["themeName"]) {
+            themeName := config["themeName"]
+        }
+
+        return Map(
+            "config_path", this.appDir . "\" . this.appName . ".json",
+            "config_key", "config",
+            "config.theme_name", themeName,
+            "config.cache_dir", this.tmpDir . "\Cache",
+            "config.flush_cache_on_exit", false,
+            "config.check_updates_on_start", false,
+            "config.logging_level", "error",
+            "config.modules_file", this.dataDir . "\Modules.json",
+            "config.log_path", this.dataDir . "\" . this.appName . "Log.txt",
+            "config.module_dirs", [this.dataDir . "\Modules"],
+            "state_path", this.dataDir . "\" . this.appName . "State.json",
+            "service_files.app", this.appDir . "\" . scriptName . ".services.json",
+            "service_files.user", this.dataDir . "\" . scriptName . ".services.json",
+            "include_files.modules", this.dataDir . "\ModuleIncludes.ahk",
+            "include_files.module_tests", this.dataDir . "\ModuleIncludes.test.ahk",
+            "resources.dir", resourcesDir,
+            "themes.dir", this.appDir . "\Resources\Themes",
+            "themes.extra_themes", [],
+            "installers.Themes", "installer.themes",
+            "updater", "",
+            "caches.file", "cache.file",
+            "module_config.modules", Map(),
+            "dependency_installer", ""
+        )
+    }
+
+    GetServiceDefinitions(config) {
+        return Map(
+            "Shell", Map(
+                "com", "WScript.Shell",
+                "props", Map("CurrentDirectory", this.appDir)
+            ),
+            "config_storage.app_config", Map(
+                "class", "JsonConfigStorage",
+                "arguments", ParameterRef("config_path")
+            ),
+            "Config", Map(
+                "class", "AppConfig",
+                "arguments", [ServiceRef("config_storage.app_config"), ContainerRef(), ParameterRef("config_key")]
+            ),
+            "State", Map(
+                "class", "AppState",
+                "arguments", [AppRef(), ParameterRef("state_path")]
+            ),
+            "EventManager", Map(
+                "class", "EventManager"
+            ),
+            "IdGenerator", "UuidGenerator",
+            "config_storage.modules", Map(
+                "class", "JsonConfigStorage",
+                "arguments", [ParameterRef("config.modules_file"), "Modules"]
+            ),
+            "config.modules", Map(
+                "class", "PersistentConfig",
+                "arguments", [ServiceRef("config_storage.modules"), ContainerRef(), "module_config"]
+            ),
+            "ModuleManager", Map(
+                "class", "ModuleManager", 
+                "arguments", [
+                    AppRef(), 
+                    ServiceRef("EventManager"), 
+                    ServiceRef("IdGenerator"), 
+                    ServiceRef("config.modules"),
+                    this.dataDir, 
+                    ParameterRef("config.module_dirs"), 
+                    this.GetDefaultModules(config)
+                ]
+            ),
+            "Gdip", "Gdip",
+            "Debugger", Map(
+                "class", "Debugger",
+                "calls", Map(
+                    "method", "SetLogger",
+                    "arguments", ServiceRef("Logger")
+                )
+            ),
+            "VersionChecker", "VersionChecker",
+            "logger.file", Map(
+                "class", "FileLogger", 
+                "arguments", [ParameterRef("config.log_path"), ParameterRef("config.logging_level"), true]
+            ),
+            "Logger", Map(
+                "class", "LoggerService",
+                "arguments", [ServiceRef("logger.file")]
+            ),
+            "CacheManager", Map(
+                "class", "CacheManager", 
+                "arguments", [AppRef(), ParameterRef("config.cache_dir")]
+            ),
+            "ThemeManager", Map(
+                "class", "ThemeManager",
+                "arguments", [
+                    ServiceRef("EventManager"), 
+                    ServiceRef("Config"), 
+                    ServiceRef("IdGenerator"), 
+                    ServiceRef("Logger"), 
+                    ParameterRef("themes.dir"), 
+                    ParameterRef("resources.dir"), 
+                    ParameterRef("config.theme_name")
+                ]
+            ),
+            "notifier.toast", Map(
+                "class", "ToastNotifier",
+                "arguments", [AppRef()]
+            ),
+            "Notifier", Map(
+                "class", "NotificationService",
+                "arguments", [AppRef(), ServiceRef("notifier.toast")]
+            ),
+            "GuiManager", Map(
+                "class", "GuiManager",
+                "arguments", [
+                    AppRef(), 
+                    ServiceRef("ThemeManager"), 
+                    ServiceRef("IdGenerator"), 
+                    ServiceRef("State")
+                ]
+            ),
+            "InstallerManager", Map(
+                "class", "InstallerManager",
+                "arguments", [AppRef()]
+            ),
+            "EntityFactory", Map(
+                "class", "EntityFactory",
+                "arguments", [ContainerRef()]
+            ),
+            "installer.themes", Map(
+                "class", "ThemeInstaller",
+                "arguments", [
+                    this.Version,
+                    ServiceRef("State"),
+                    ServiceRef("CacheManager"),
+                    "file",
+                    ParameterRef("themes.extra_themes"),
+                    this.tmpDir . "\Installers"
+                ]
+            ),
+            "cache_state.file", Map(
+                "class", "CacheState",
+                "arguments", [AppRef(), ParameterRef("config.cache_dir"), "File.json"]
+            ),
+            "cache.file", Map(
+                "class", "FileCache",
+                "arguments", [AppRef(), ServiceRef("cache_state.file"), ParameterRef("config.cache_dir"), "File"]
+            )
+        )
+    }
+
+    GetModuleDirs() {
+
+    }
+
     AllocConsole() {
         DllCall("AllocConsole")
 
@@ -72,8 +228,6 @@ class AppBase {
     }
 
     Startup(config := "") {
-        global appVersion
-
         config := config ? config : this.startConfig
 
         if (!config) {
@@ -102,7 +256,7 @@ class AppBase {
         }
 
         if (!config.Has("version")) {
-            config["version"] := appVersion
+            config["version"] := 1.0.0
         }
 
         this.appName := config["appName"]
@@ -157,6 +311,7 @@ class AppBase {
             this.Services.LoadFromJson(serviceFile)
         }
 
+        this.Service("Config")
         this.InitializeTheme()
         this.InitializeModules(config)
 
@@ -192,142 +347,6 @@ class AppBase {
     OnServicesLoaded(event, extra, eventName, hwnd) {
         this.Service("CacheManager")
         this.Service("InstallerManager").InstallRequirements()
-    }
-
-    GetParameterDefinitions(config) {
-        SplitPath(A_ScriptFullPath,,,, &scriptName)
-
-        resourcesDir := this.appDir . "\Resources"
-
-        if (config.Has("resourcesDir") && config["resourcesDir"]) {
-            resourcesDir := config["resourcesDir"]
-        }
-
-        themeName := ""
-        
-        if (config.Has("themeName") && config["themeName"]) {
-            themeName := config["themeName"]
-        }
-
-        return Map(
-            "caches", Map(),
-            "config_path", this.appDir . "\" . this.appName . ".ini",
-            "state_path", this.dataDir . "\" . this.appName . "State.json",
-            "service_files.app", this.appDir . "\" . scriptName . ".services.json",
-            "service_files.user", this.dataDir . "\" . scriptName . ".services.json",
-            "include_files.modules", this.dataDir . "\ModuleIncludes.ahk",
-            "include_files.module_tests", this.dataDir . "\ModuleIncludes.test.ahk",
-            "cache_dir", this.tmpDir . "\Cache",
-            "logger.path", this.dataDir . "\" . this.appName . "Log.txt",
-            "logger.level", "error",
-            "resources.dir", resourcesDir,
-            "themes.active_theme", themeName,
-            "themes.dir", this.appDir . "\Resources\Themes",
-            "themes.extra_themes", [],
-            "installers.Themes", "installer.themes"
-        )
-    }
-
-    GetServiceDefinitions(config) {
-        return Map(
-            "Shell", Map(
-                "com", "WScript.Shell",
-                "props", Map("CurrentDirectory", this.appDir)
-            ),
-            "Config", Map(
-                "class", "AppConfig",
-                "arguments", [AppRef(), ParameterRef("config_path")]
-            ),
-            "State", Map(
-                "class", "AppState",
-                "arguments", [AppRef(), ParameterRef("state_path")]
-            ),
-            "EventManager", Map(
-                "class", "EventManager"
-            ),
-            "IdGenerator", "UuidGenerator",
-            "ModuleManager", Map(
-                "class", "ModuleManager", 
-                "arguments", [
-                    AppRef(), 
-                    ServiceRef("EventManager"), 
-                    ServiceRef("IdGenerator"), 
-                    this.dataDir . "/Modules.json", 
-                    this.dataDir, 
-                    config.Has("moduleDirs") ? config["moduleDirs"] : [], 
-                    this.GetDefaultModules(config)
-                ]
-            ),
-            "Gdip", "Gdip",
-            "Debugger", Map(
-                "class", "Debugger",
-                "calls", Map(
-                    "method", "SetLogger",
-                    "arguments", ServiceRef("Logger")
-                )
-            ),
-            "VersionChecker", "VersionChecker",
-            "logger.file", Map(
-                "class", "FileLogger", 
-                "arguments", [ParameterRef("logger.path"), ParameterRef("logger.level"), true]
-            ),
-            "Logger", Map(
-                "class", "LoggerService",
-                "arguments", [ServiceRef("logger.file")]
-            ),
-            "CacheManager", Map(
-                "class", "CacheManager", 
-                "arguments", [AppRef(), ParameterRef("cache_dir")]
-            ),
-            "ThemeManager", Map(
-                "class", "ThemeManager",
-                "arguments", [
-                    ServiceRef("EventManager"), 
-                    ServiceRef("Config"), 
-                    ServiceRef("IdGenerator"), 
-                    ServiceRef("Logger"), 
-                    ParameterRef("themes.dir"), 
-                    ParameterRef("resources.dir"), 
-                    ParameterRef("themes.active_theme")
-                ]
-            ),
-            "notifier.toast", Map(
-                "class", "ToastNotifier",
-                "arguments", [AppRef()]
-            ),
-            "Notifier", Map(
-                "class", "NotificationService",
-                "arguments", [AppRef(), ServiceRef("notifier.toast")]
-            ),
-            "GuiManager", Map(
-                "class", "GuiManager",
-                "arguments", [
-                    AppRef(), 
-                    ServiceRef("ThemeManager"), 
-                    ServiceRef("IdGenerator"), 
-                    ServiceRef("State")
-                ]
-            ),
-            "InstallerManager", Map(
-                "class", "InstallerManager",
-                "arguments", [AppRef()]
-            ),
-            "EntityFactory", Map(
-                "class", "EntityFactory",
-                "arguments", [ContainerRef()]
-            ),
-            "installer.themes", Map(
-                "class", "ThemeInstaller",
-                "arguments", [
-                    this.Version,
-                    ServiceRef("State"),
-                    ServiceRef("CacheManager"),
-                    "file",
-                    ParameterRef("themes.extra_themes"),
-                    this.tmpDir . "\Installers"
-                ]
-            )
-        )
     }
 
     OnRegisterCaches(event, extra, eventName, hwnd) {
@@ -389,11 +408,11 @@ class AppBase {
     }
 
     RunApp(config) {
-        if (this.Config.HasProp("CheckUpdatesOnStart") && this.Config.CheckUpdatesOnStart) {
+        if (this.Config["check_updates_on_start"]) {
             this.CheckForUpdates(false)
         }
 
-        if (!FileExist(this.Config.ConfigPath)) {
+        if (!FileExist(this.Parameter("config_path"))) {
             this.InitialSetup(config)
         }
     }
@@ -456,6 +475,10 @@ class AppBase {
         return this.Services.Get(name)
     }
 
+    Parameter(name) {
+        return this.Services.GetParameter(name)
+    }
+
     OnException(e, mode) {
         extra := (e.HasProp("Extra") && e.Extra != "") ? "`n`nExtra information:`n" . e.Extra : ""
         occurredIn := e.What ? " in " . e.What : ""
@@ -477,7 +500,7 @@ class AppBase {
         }
 
         if (this.Services.Has("Logger")) {
-            this.Logger.Error(errorText)
+            this.Service("Logger").Error(errorText)
         }
         
         errorText .= "`n"
@@ -515,7 +538,7 @@ class AppBase {
     }
 
     InitialSetup(config) {
-        ; Optional method to override
+        ; Override this to set config values as needed
     }
 
     CheckForUpdates(notify := true) {
