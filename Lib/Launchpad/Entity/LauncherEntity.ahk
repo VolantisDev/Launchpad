@@ -316,21 +316,22 @@ class LauncherEntity extends AppEntityBase {
     InitializeDefaults() {
         defaults := super.InitializeDefaults()
         defaults.Delete("DataSourceItemKey")
-        defaults["DestinationDir"] := this.GetDefaultDestinationDir()
-        defaults["ThemeName"] := this.app.Config["theme_name"]
-        defaults["ResourcesDir"] := this.app.appDir . "\Resources"
-        defaults["ThemesDir"] := this.app.appDir . "\Resources\Themes"
-        defaults["ShowProgress"] := true
-        defaults["RunBefore"] := ""
-        defaults["RunAfter"] := ""
-        defaults["CloseBefore"] := ""
+        
         defaults["CloseAfter"] := ""
-        defaults["LoggingLevel"] := this.app.Config["logging_level"]
-        defaults["LogPath"] := this.app.tmpDir . "\Logs\" . this.Key . ".txt"
+        defaults["CloseBefore"] := ""
+        defaults["DestinationDir"] := this.GetDefaultDestinationDir()
         defaults["EnableOverlay"] := false
         defaults["ForceOverlay"] := false
+        defaults["LoggingLevel"] := this.app.Config["logging_level"]
+        defaults["LogPath"] := this.app.tmpDir . "\Logs\" . this.Key . ".txt"
         defaults["OverlayHotkey"] := "^Tab"
         defaults["OverlayWait"] := 10
+        defaults["ResourcesDir"] := this.app.appDir . "\Resources"
+        defaults["RunAfter"] := ""
+        defaults["RunBefore"] := ""
+        defaults["ShowProgress"] := true
+        defaults["ThemeName"] := this.app.Config["theme_name"]
+        defaults["ThemesDir"] := this.app.appDir . "\Resources\Themes"
 
         return defaults
     }
