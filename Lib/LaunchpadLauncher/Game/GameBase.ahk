@@ -32,7 +32,6 @@ class GameBase {
     }
 
     Log(message, level := "Debug") {
-        Debugger().Inspect(this.launcherConfig)
         if (this.app.Services.Has("Logger") && this.launcherConfig["LoggingLevel"] != "None") {
             this.app.Service("Logger").Log(this.key . ": " . message, level)
         }
