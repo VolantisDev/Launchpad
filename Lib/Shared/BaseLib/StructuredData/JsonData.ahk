@@ -70,10 +70,11 @@ class JsonData extends StructuredDataBase {
                         }
 					}
 
-                    ; TODO: Make this code more readable
-					if (!i ? (pos--, next := "'") : 0) {
-                        continue
-                    }
+					if (!i) {
+						pos--
+						next := "'"
+						continue
+					}
 
 					pos := i
 
@@ -88,10 +89,11 @@ class JsonData extends StructuredDataBase {
 					i := 0
 
 					while i := InStr(val, "\",, i + 1) {
-                        ; TODO: Make this code more readable
-						if ((SubStr(val, i+1, 1) != "u") ? (pos -= StrLen(SubStr(val, i)), next := "\") : 0) {
-                            continue 2
-                        }
+						if (SubStr(val, i+1, 1) != "u") {
+							pos -= StrLen(SubStr(val, i))
+							next := "\"
+							continue 2
+						}
 						
                         ; \uXXXX - JSON unicode escape sequence
 						xxxx := Abs("0x" . SubStr(val, i + 2, 4))
@@ -152,11 +154,10 @@ class JsonData extends StructuredDataBase {
 		if (IsObject(obj)) {
 			memType := Type(obj)
 			is_array := (memType == "Array")
-			
-            ; TODO: Make this code more readable
-			if (memType ? (memType != "Object" && memType != "Map" && memType != "Array") : (ObjGetCapacity(obj) == "")) {
-                throw OperationFailedException("Object type not supported.", -1, Format("<Object at 0x{:p}>", ObjPtr(obj)))
-            }
+
+			if ((memType && memType != "Object" && memType != "Map" && memType != "Array") || (!memType && ObjGetCapacity(obj) == "")) {
+				throw OperationFailedException("Object type not supported.", -1, Format("<Object at 0x{:p}>", ObjPtr(obj)))
+			}
 			
 			if IsInteger(indent) {
 				if (indent < 0) {

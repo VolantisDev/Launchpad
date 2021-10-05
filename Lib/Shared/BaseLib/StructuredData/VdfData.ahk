@@ -66,8 +66,9 @@ class VdfData extends StructuredDataBase {
 						}
 					}
 
-					; TODO: Make this code more readable
-					if (!i ? (pos--, next := "'") : 0) {
+					if (!i) {
+						pos--
+						next := "'"
 						continue
 					}
 
