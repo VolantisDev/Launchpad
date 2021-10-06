@@ -1,6 +1,6 @@
 class ModuleManager extends ConfigurableContainerServiceBase {
     app := ""
-    eventManagerObj := ""
+    eventMgr := ""
     idGeneratorObj := ""
     dataDir := ""
     discoverEvent := Events.MODULES_DISCOVER
@@ -10,9 +10,9 @@ class ModuleManager extends ConfigurableContainerServiceBase {
     moduleDirs := []
     classSuffix := "Module"
 
-    __New(app, eventManagerObj, idGeneratorObj, configObj, dataDir, moduleDirs := "", defaultModuleInfo := "", defaultModules := "") {
+    __New(app, eventMgr, idGeneratorObj, configObj, dataDir, moduleDirs := "", defaultModuleInfo := "", defaultModules := "") {
         this.app := app
-        this.eventManagerObj := eventManagerObj
+        this.eventMgr := eventMgr
         this.idGeneratorObj := idGeneratorObj
         this.dataDir := dataDir
         
@@ -97,7 +97,7 @@ class ModuleManager extends ConfigurableContainerServiceBase {
         for key, module in modules {
             subscribers := module.GetSubscribers()
 
-            eventMgr := this.eventManagerObj
+            eventMgr := this.eventMgr
 
             if (subscribers) {
                 for eventName, eventSubscribers in subscribers {

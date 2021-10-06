@@ -20,15 +20,15 @@ class ThemeBase {
     buttonMap := Map()
     hoveredButton := ""
     loggerObj := ""
-    eventManagerObj := ""
+    eventMgr := ""
     idGeneratorObj := ""
 
-    __New(name, resourcesDir, eventManagerObj, idGeneratorObj, loggerObj := "", autoLoad := false) {
+    __New(name, resourcesDir, eventMgr, idGeneratorObj, loggerObj := "", autoLoad := false) {
         this.name := name
         this.resourcesDir := resourcesDir
         this.themesDir := resourcesDir . "\Themes"
         this.loggerObj := loggerObj
-        this.eventManagerObj := eventManagerObj
+        this.eventMgr := eventMgr
         this.idGeneratorObj := idGeneratorObj
         this.themeId := idGeneratorObj.Generate()
         
@@ -36,11 +36,11 @@ class ThemeBase {
             this.LoadTheme()
         }
 
-        eventManagerObj.Register(Events.MOUSE_MOVE, "Theme" . this.themeId, ObjBindMethod(this, "OnMouseMove"))
+        eventMgr.Register(Events.MOUSE_MOVE, "Theme" . this.themeId, ObjBindMethod(this, "OnMouseMove"))
     }
 
     __Delete() {
-        this.eventManagerObj.Unregister(Events.MOUSE_MOVE, "Theme" . this.themeId)
+        this.eventMgr.Unregister(Events.MOUSE_MOVE, "Theme" . this.themeId)
         super.__Delete()
     }
 

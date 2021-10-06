@@ -1,12 +1,12 @@
 class ComponentServiceBase {
-    eventManagerObj := ""
+    eventMgr := ""
     _components := Map()
     _componentsLoaded := false
     _registerEvent := ""
     _alterEvent := ""
 
-    __New(eventManagerObj, components := "", autoLoad := true) {
-        this.eventManagerObj := eventManagerObj
+    __New(eventMgr, components := "", autoLoad := true) {
+        this.eventMgr := eventMgr
 
         if (components != "") {
             this._components := components
@@ -23,13 +23,13 @@ class ComponentServiceBase {
 
             if (this._registerEvent) {
                 event := RegisterComponentsEvent(this._registerEvent, components)
-                this.eventManagerObj.DispatchEvent(this._registerEvent, event)
+                this.eventMgr.DispatchEvent(this._registerEvent, event)
                 components := event.container
             }
 
             if (this._alterEvent) {
                 event := AlterComponentsEvent(this._alterEvent, components)
-                this.eventManagerObj.DispatchEvent(this._alterEvent, event)
+                this.eventMgr.DispatchEvent(this._alterEvent, event)
                 components := event.container
             }
 

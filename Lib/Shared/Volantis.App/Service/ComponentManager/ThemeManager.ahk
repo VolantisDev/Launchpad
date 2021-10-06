@@ -8,7 +8,7 @@ class ThemeManager extends ComponentServiceBase {
     loggerObj := ""
     idGeneratorObj := ""
 
-    __New(eventManagerObj, configObj, idGeneratorObj, loggerObj, themesDir, resourcesDir, defaultTheme := "", autoLoad := true) {
+    __New(eventMgr, configObj, idGeneratorObj, loggerObj, themesDir, resourcesDir, defaultTheme := "", autoLoad := true) {
         InvalidParameterException.CheckTypes("ThemeManager", "themesDir", themesDir, "")
         InvalidParameterException.CheckEmpty("ThemeManager", "themesDir", themesDir)
         this.configObj := configObj
@@ -17,7 +17,7 @@ class ThemeManager extends ComponentServiceBase {
         this.defaultTheme := defaultTheme
         this.loggerObj := loggerObj
         this.idGeneratorObj := idGeneratorObj
-        super.__New(eventManagerObj, "", autoLoad)
+        super.__New(eventMgr, "", autoLoad)
     }
 
     LoadMainTheme() {
@@ -85,7 +85,7 @@ class ThemeManager extends ComponentServiceBase {
     }
 
     LoadTheme(key) {
-        this._components[key] := JsonTheme(key, this.resourcesDir, this.eventManagerObj, this.idGeneratorObj, this.loggerObj, true)
+        this._components[key] := JsonTheme(key, this.resourcesDir, this.eventMgr, this.idGeneratorObj, this.loggerObj, true)
         return this._components[key]
     }
 

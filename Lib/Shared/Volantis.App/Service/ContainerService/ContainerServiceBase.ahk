@@ -1,5 +1,5 @@
 class ContainerServiceBase {
-    eventManagerObj := ""
+    eventMgr := ""
     container := ""
     defaultComponentInfo := ""
     defaultComponents := ""

@@ -24,7 +24,7 @@ class GuiBase {
     lv := ""
     lvHeaderHwnd := 0
     listViewColumns := []
-    eventManagerObj := ""
+    eventMgr := ""
     mouseMoveCallback := ""
     calcSizeCallback := ""
     activateCallback := ""
