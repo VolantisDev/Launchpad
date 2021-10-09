@@ -1,4 +1,4 @@
-class DataSourceManager extends AppComponentManagerBase {
+class DataSourceManager extends ComponentManagerBase {
     primaryKey := ""
 
     __New(container, eventMgr, notifierObj, primaryKey := "") {
@@ -6,7 +6,7 @@ class DataSourceManager extends AppComponentManagerBase {
             this.primaryKey := primaryKey
         }
 
-        super.__New(container, eventMgr, notifierObj, "datasource.", DataSourceBase)
+        super.__New(container, "datasource.", eventMgr, notifierObj, DataSourceBase)
     }
 
     GetDefaultDataSource() {
