@@ -46,6 +46,8 @@ class FileCache extends CacheBase {
         }
         
         DirCreate(this.cachePath)
+
+        return true
     }
 
     CreateCacheDir(path) {

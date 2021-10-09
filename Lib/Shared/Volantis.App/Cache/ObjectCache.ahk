@@ -25,5 +25,6 @@ class ObjectCache extends CacheBase {
 
     FlushCacheAction() {
         this.cacheObj := Map()
+        return true
     }
 }
