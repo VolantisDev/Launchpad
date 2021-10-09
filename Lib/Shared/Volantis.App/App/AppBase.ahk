@@ -187,6 +187,7 @@ class AppBase {
             "CacheManager", Map(
                 "class", "CacheManager", 
                 "arguments", [
+                    ServiceRef("Config"),
                     ContainerRef(), 
                     ServiceRef("EventManager"), 
                     ServiceRef("Notifier")

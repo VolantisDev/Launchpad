@@ -1,6 +1,9 @@
-class CacheManager extends AppComponentManagerBase {
-    __New(container, eventMgr, notifierObj) {
-        super.__New(container, eventMgr, notifierObj, "cache.", CacheBase)
+class CacheManager extends ComponentManagerBase {
+    config := ""
+
+    __New(config, container, eventMgr, notifierObj) {
+        this.config := config
+        super.__New(container, "cache.", eventMgr, notifierObj, CacheBase)
     }
 
     FlushCaches(notify := true, force := false) {
@@ -13,7 +16,7 @@ class CacheManager extends AppComponentManagerBase {
         }
 
         if (flushed && notify) {
-            this.app.Service("Notifier").Info("Flushed " . flushed . " caches")
+            this.notifierObj.Info("Flushed " . flushed . " caches")
         }
     }
 
@@ -25,26 +28,26 @@ class CacheManager extends AppComponentManagerBase {
         flushed := this[cacheId].FlushCache(force)
 
         if (flushed && notify) {
-            this.app.Service("Notifier").Info("Flushed cache: " . cacheId)
+            this.notifierObj.Info("Flushed cache: " . cacheId)
         }
 
         return flushed
     }
 
     SetCacheDir(cacheDir) {
-        this.app.Config["cache_dir"] := cacheDir
-        this.app.Config.SaveConfig()
+        this.config["cache_dir"] := cacheDir
+        this.config.SaveConfig()
     }
 
     ChangeCacheDir() {
-        cacheDir := this.app.Config.Has("cache_dir") ? this.app.Config["cache_dir"] : ""
+        cacheDir := this.config.Has("cache_dir") ? this.config["cache_dir"] : ""
         
-        newDir := DirSelect("*" . cacheDir, 3, "Create or select the main folder to save " . this.app.appName . "'s cache files to")
+        newDir := DirSelect("*" . cacheDir, 3, "Create or select the main folder to save cache files to")
         
         if (newDir != "") {
             cacheDir := newDir
-            this.app.Config["cache_dir"] := newDir
-            this.app.Config.SaveConfig()
+            this.config["cache_dir"] := newDir
+            this.config.SaveConfig()
             this.FlushCaches()
             this.SetupCaches()
         }
@@ -53,6 +56,6 @@ class CacheManager extends AppComponentManagerBase {
     }
 
     OpenCacheDir() {
-        Run(this.app.Config["cache_dir"])
+        Run(this.config["cache_dir"])
     }
 }

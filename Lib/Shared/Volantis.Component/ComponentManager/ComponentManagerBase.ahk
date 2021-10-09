@@ -2,6 +2,7 @@ class ComponentManagerBase {
     container := ""
     servicePrefix := ""
     eventMgr := ""
+    notifierObj := ""
     definitionLoader := ""
     componentType := "" ; Passed with events
     loaded := false
@@ -15,10 +16,11 @@ class ComponentManagerBase {
         return this.All().__Enum(numberOfVars)
     }
 
-    __New(container, servicePrefix, eventMgr, componentType, definitionLoader := "", autoLoad := true) {
+    __New(container, servicePrefix, eventMgr, notifierObj, componentType, definitionLoader := "", autoLoad := true) {
         this.container := container
         this.servicePrefix := servicePrefix
         this.eventMgr := eventMgr
+        this.notifierObj := notifierObj
 
         if (Type(componentType) == "String" && IsSet(%componentType%) && HasMethod(%componentType%)) {
             componentType := %componentType%
