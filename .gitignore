@@ -3,8 +3,9 @@
 !/Vendor/7zip/*
 !/Vendor/Verpatch
 !/Vendor/Verpatch/*
-Launchpad.ini
-Launchpad.build.ini
+/Launchpad.ini
+/Launchpad.build.ini
+/Launchpad.json
 /Build
 /Dist
 /Launchpad.zip
