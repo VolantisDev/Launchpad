@@ -91,7 +91,6 @@
 #Include Volantis.App\Service\EventManager.ahk
 #Include Volantis.App\Service\LoggerService.ahk
 #Include Volantis.App\Service\NotificationService.ahk
-#Include Volantis.App\Service\ComponentManager\AppComponentManagerBase.ahk
 #Include Volantis.App\Service\ComponentManager\AppComponentServiceBase.ahk
 #Include Volantis.App\Service\ComponentManager\CacheManager.ahk
 #Include Volantis.App\Service\ComponentManager\ComponentServiceBase.ahk
