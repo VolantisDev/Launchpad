@@ -1,6 +1,6 @@
-class InstallerManager extends AppComponentManagerBase {
+class InstallerManager extends ComponentManagerBase {
     __New(container, eventMgr, notifierObj) {
-        super.__New(container, eventMgr, notifierObj, "installer.", InstallerBase)
+        super.__New(container, "installer.", eventMgr, notifierObj, InstallerBase)
     }
 
     RunInstallers(installerType := "", owner := "") {
