@@ -516,7 +516,7 @@ class AppBase {
             } else {
                 this.ShowUnthemedError(title, err.Message, err, "", allowContinue)
             }
-        } catch Error as ex {
+        } catch as ex {
             this.ShowUnthemedError(title, errorText, err, ex, allowContinue)
         }
 

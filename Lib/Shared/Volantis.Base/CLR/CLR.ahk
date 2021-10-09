@@ -34,7 +34,7 @@ class CLR {
 
         try {
             
-        } catch Error as ex {
+        } catch Any {
             ; Ignore COM errors
         }
         

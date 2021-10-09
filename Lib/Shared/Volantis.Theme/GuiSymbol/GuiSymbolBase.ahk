@@ -61,7 +61,7 @@ class GuiSymbolBase {
     Draw(graphics, x, y, w, h) {
         try {
             this.DrawSymbol(graphics, x, y, w, h)
-        } catch Error as ex {
+        } catch as ex {
             throw ex
         }
     }

@@ -192,7 +192,7 @@ class GuiManager extends ContainerServiceBase {
 
         try {
             window := this.container.Get(key)
-        } catch Error as ex {
+        } catch Any {
 
         }
 

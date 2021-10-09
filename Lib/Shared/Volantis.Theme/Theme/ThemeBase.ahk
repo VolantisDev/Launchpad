@@ -389,8 +389,7 @@ class ThemeBase {
             
 
             this.themedButtons[picObj.Hwnd] := Map("picture", picObj, "content", content, "states", states)
-        } catch Error as ex {
-            MsgBox(ex.Message)
+        } catch as ex {
             throw ex
         }
 
@@ -428,7 +427,7 @@ class ThemeBase {
     SetNormalButtonState(btn, ignoreErrors := false) {
         try {
             btn := this.themedButtons[this.hoveredButton]["states"]["enabled"].DrawOn(btn)
-        } catch Error as ex {
+        } catch as ex {
             if (!ignoreErrors) {
                 if (this.loggerObj) {
                     this.loggerObj.Error("Failed to change button hover state: " . ex.Message)
@@ -451,7 +450,7 @@ class ThemeBase {
 
         try {
             btn := this.themedButtons[btn.Hwnd]["states"]["hovered"].DrawOn(btn)
-        } catch Error as ex {
+        } catch as ex {
             if (!ignoreErrors) {
                 if (this.loggerObj) {
                     this.loggerObj.Error("Failed to change button hover state: " . ex.Message)

@@ -191,7 +191,7 @@ class GuiBase {
         
         try {
             guiHwnd := this.guiObj.Hwnd
-        } catch Error as ex {
+        } catch Any {
             guiHwnd := ""
         }
 

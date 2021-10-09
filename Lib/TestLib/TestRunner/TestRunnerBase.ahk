@@ -25,7 +25,7 @@ class TestRunnerBase {
         try {
             test.Run()
             success := test.GetSuccessStatus()
-        } catch any {
+        } catch Any {
             success := false
         }
         

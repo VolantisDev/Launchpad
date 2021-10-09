@@ -111,7 +111,7 @@ class OverlayManager {
                 ;}
 
                 ProcessClose("LaunchpadOverlay.exe")
-            } catch Error as ex {
+            } catch Any {
                 ; Ignore failure
             }
             
