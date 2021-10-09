@@ -1,4 +1,4 @@
-class ThemeManager extends AppComponentManagerBase {
+class ThemeManager extends ComponentManagerBase {
     themesDir := ""
     resourcesDir := ""
     defaultTheme := ""
@@ -10,7 +10,7 @@ class ThemeManager extends AppComponentManagerBase {
 
         eventMgr.Register(ComponentEvents.COMPONENT_DEFINITIONS, "ThemeManagerThemes", ObjBindMethod(this, "DefineServices"))
 
-        super.__New(container, eventMgr, notifierObj, "theme.", ThemeBase, definitionLoader)
+        super.__New(container, "theme.", eventMgr, notifierObj, ThemeBase, definitionLoader)
     }
 
     DefineServices(event, extra, eventName, hwnd) {
