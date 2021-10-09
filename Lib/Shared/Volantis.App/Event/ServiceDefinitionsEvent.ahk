@@ -36,7 +36,7 @@ class ServiceDefinitionsEvent extends EventBase {
     }
 
     DefineParameter(name, definition) {
-
+        this.Parameters[name] := definition
     }
 
     DefineServices(services) {
