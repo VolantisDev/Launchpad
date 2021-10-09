@@ -234,13 +234,22 @@ class AppBase {
                 "class", "NotificationService",
                 "arguments", [AppRef(), ServiceRef("notifier.toast")]
             ),
+            "factory.gui", Map(
+                "class", "GuiFactory",
+                "arguments", [
+                    ContainerRef(),
+                    ServiceRef("ThemeManager"),
+                    ServiceRef("IdGenerator")
+                ]
+            ),
             "GuiManager", Map(
                 "class", "GuiManager",
                 "arguments", [
-                    AppRef(), 
-                    ServiceRef("ThemeManager"), 
-                    ServiceRef("IdGenerator"), 
-                    ServiceRef("State")
+                    ContainerRef(), 
+                    ServiceRef("factory.gui"),
+                    ServiceRef("State"),
+                    ServiceRef("EventManager"),
+                    ServiceRef("Notifier")
                 ]
             ),
             "InstallerManager", Map(
@@ -471,8 +480,8 @@ class AppBase {
 
     OpenApp() {
         if (this.mainWindowKey) {
-            if (this.Service("GuiManager").WindowExists(this.mainWindowKey)) {
-                WinActivate("ahk_id " . this.Service("GuiManager").GetWindow("MainWindow").GetHwnd())
+            if (this.Service("GuiManager").Has(this.mainWindowKey)) {
+                WinActivate("ahk_id " . this.Service("GuiManager")["MainWindow"].GetHwnd())
             } else {
                 this.Service("GuiManager").OpenWindow(this.mainWindowKey)
             }
@@ -582,7 +591,7 @@ class AppBase {
 
     ShowError(title, errorText, err, allowContinue := true) {
         try {
-            if (this.Services.Has("GuiManager") && this.themeReady) {
+            if (this.themeReady) {
                 btns := allowContinue ? "*&Continue|&Reload|&Exit" : "*&Reload|&Exit"
                 this.Service("GuiManager").Dialog("ErrorDialog", err, "Unhandled Exception", errorText, "", "", btns)
             } else {

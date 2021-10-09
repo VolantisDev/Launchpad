@@ -81,7 +81,7 @@ class BulkOperationBase {
     }
 
     ShowProgressWindow() {
-        if (this.useProgress && this.app.Services.Has("GuiManager")) {
+        if (this.useProgress && this.app.themeReady) {
             if (!IsObject(this.progress)) {
                 this.progress := this.app.Service("GuiManager").OpenWindow("BulkOpProgress", "ProgressIndicator", this.progressTitle, this.progressText, this.owner, this.parent, this.allowCancel, this.progressRangeEnd, this.progressInitialValue, this.progressInitialDetailText)
             } else {

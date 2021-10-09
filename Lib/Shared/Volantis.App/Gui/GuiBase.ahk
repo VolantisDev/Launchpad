@@ -7,7 +7,6 @@ class GuiBase {
     themeObj := ""
     owner := ""
     parent := ""
-    windowKey := ""
     windowSettingsKey := ""
     windowSettings := Map()
     windowOptions := ""
@@ -48,11 +47,9 @@ class GuiBase {
     width := ""
     height := ""
     saveWindowState := false
+    isShown := false
 
-    __New(app, themeObj, windowKey, title, owner := "", parent := "", iconSrc := "") {
-        InvalidParameterException.CheckTypes("GuiBase", "app", app, "AppBase", "title", title, "", "themeObj", themeObj, "ThemeBase", "windowKey", windowKey, "")
-        InvalidParameterException.CheckEmpty("GuiBase", "title", title)
-
+    __New(app, themeObj, guiId, title, owner := "", parent := "", iconSrc := "") {
         this.app := app
 
         if (owner) {
@@ -78,7 +75,7 @@ class GuiBase {
             extraOptions["Border"] := true
         }
 
-        if (this.owner != "" && this.app.Service("GuiManager").GetWindowFromGui(this.owner)) {
+        if (this.owner != "" && this.app.Service("GuiManager").GetWindowFromGui(this.owner, true)) {
             extraOptions["Owner" . this.owner.Hwnd] := true
         }
 
@@ -103,8 +100,7 @@ class GuiBase {
         }
 
         this.margin := this.windowSettings["spacing"]["margin"]
-        this.windowKey := windowKey
-        this.guiId := this.app.Service("IdGenerator").Generate()
+        this.guiId := guiId
 
         this.RegisterCallbacks()
         this.Create()
@@ -351,11 +347,6 @@ class GuiBase {
         this.guiObj.SetFont("c" . this.themeObj.GetColor(colorName) . " " . this.themeObj.GetFont(fontPreset) . " " . extraStyles)
     }
 
-    SetWindowKey(windowKey) {
-        this.windowKey := windowKey
-        this.windowSettings := this.themeObj.GetWindowSettings(windowKey)
-    }
-
     GetHwnd() {
         hwnd := 0
 
@@ -369,17 +360,24 @@ class GuiBase {
     }
 
     Show(windowState := "") {
-        this.Start()
-        
-        if (this.showTitlebar) {
-            titleText := this.showTitle ? this.GetTitle(this.title) : ""
-            this.titlebar := this.Add("TitlebarControl", "", titleText, this.titleIsMenu, this.iconSrc)
+        result := this
+
+        if (!this.isShown) {
+            this.Start()
+            
+            if (this.showTitlebar) {
+                titleText := this.showTitle ? this.GetTitle(this.title) : ""
+                this.titlebar := this.Add("TitlebarControl", "", titleText, this.titleIsMenu, this.iconSrc)
+            }
+
+            this.Controls()
+            this.AddButtons()
+
+            result := this.End(windowState)
+            this.isShown := true
         }
-
-        this.Controls()
-        this.AddButtons()
-
-        return this.End(windowState)
+        
+        return result
     }
 
     Create() {      
@@ -401,7 +399,7 @@ class GuiBase {
 
     Start() {
         if (this.owner != "") {
-            this.app.Service("GuiManager").AddToParent(this.windowKey, this.owner)
+            this.app.Service("GuiManager").AddToParent(this.guiId, this.owner)
 	    }
     }
 
@@ -574,7 +572,7 @@ class GuiBase {
         }
 
         if (this.owner) {
-            this.app.Service("GuiManager").ReleaseFromParent(this.windowKey)
+            this.app.Service("GuiManager").ReleaseFromParent(this.guiId)
         }
 
         this.Cleanup()
@@ -586,7 +584,7 @@ class GuiBase {
     }
 
     Cleanup() {
-        this.app.Service("GuiManager").container.Delete(this.windowKey)
+        this.app.Service("GuiManager").UnloadComponent(this.guiId)
         ; Extend to clear any global variables used
     }
 

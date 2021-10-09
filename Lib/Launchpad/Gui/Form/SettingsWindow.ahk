@@ -5,13 +5,13 @@
     doubleClickActions := ["Edit", "Run"]
     needsRestart := false
 
-    __New(app, themeObj, windowKey, owner := "", parent := "") {
+    __New(app, themeObj, guiId, owner := "", parent := "") {
         if (owner == "") {
             owner := "MainWindow"
         }
 
         this.availableThemes := app.Service("ThemeManager").GetAvailableThemes()
-        super.__New(app, themeObj, windowKey, "Settings", "", owner, parent, "*&Done")
+        super.__New(app, themeObj, guiId, "Settings", "", owner, parent, "*&Done")
     }
 
     Controls() {
@@ -311,8 +311,8 @@
             }
         }
 
-        if (this.app.Service("GuiManager").WindowExists("MainWindow")) {
-            this.app.Service("GuiManager").GetWindow("MainWindow").UpdateListView()
+        if (this.app.Service("GuiManager").Has("MainWindow")) {
+            this.app.Service("GuiManager")["MainWindow"].UpdateListView()
         }
 
         return result

@@ -126,8 +126,8 @@ class ThemeBase {
         return (this.fonts.Has(id)) ? this.fonts[id] : this.fonts["normal"]
     }
 
-    GetWindowSettings(windowKey) {
-        windowConfig := (this.windows.Has(windowKey)) ? this.windows[windowKey] : Map("settings", "default")
+    GetWindowSettings(guiId) {
+        windowConfig := (this.windows.Has(guiId)) ? this.windows[guiId] : Map("settings", "default")
 
         if (windowConfig.Has("settings") && windowConfig["settings"] != "") {
             windowConfig := this.MergeProperty(windowConfig, this.LoadWindowSettings(windowConfig["settings"]))
@@ -153,9 +153,9 @@ class ThemeBase {
         return this.DereferenceEnumerable(windowSettings)
     }
 
-    GetWindowOptionsString(windowKey, extraOptions := "") {
+    GetWindowOptionsString(guiId, extraOptions := "") {
         windowOptions := ""
-        windowSettings := this.GetWindowSettings(windowKey)
+        windowSettings := this.GetWindowSettings(guiId)
 
         opts := (windowSettings.Has("options") && windowSettings["options"] != "") ? windowSettings["options"].Clone() : Map()
 

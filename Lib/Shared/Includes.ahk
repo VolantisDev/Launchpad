@@ -95,11 +95,11 @@
 #Include Volantis.App\Service\ComponentManager\CacheManager.ahk
 #Include Volantis.App\Service\ComponentManager\ComponentServiceBase.ahk
 #Include Volantis.App\Service\ComponentManager\DataSourceManager.ahk
+#Include Volantis.App\Service\ComponentManager\GuiManager.ahk
 #Include Volantis.App\Service\ComponentManager\InstallerManager.ahk
 #Include Volantis.App\Service\ComponentManager\ThemeManager.ahk
 #Include Volantis.App\Service\ContainerService\ConfigurableContainerServiceBase.ahk
 #Include Volantis.App\Service\ContainerService\ContainerServiceBase.ahk
-#Include Volantis.App\Service\ContainerService\GuiManager.ahk
 #Include Volantis.App\Service\ContainerService\ModuleManager.ahk
 #Include Volantis.App\Service\EntityManager\BackupManager.ahk
 #Include Volantis.App\Service\EntityManager\EntityManagerBase.ahk
@@ -192,6 +192,7 @@
 #Include Volantis.Query\QueryCondition\IdCondition.ahk
 #Include Volantis.Query\QueryCondition\QueryConditionBase.ahk
 #Include Volantis.Theme\AnimatedGif\AnimatedGif.ahk
+#Include Volantis.Theme\Factory\GuiFactory.ahk
 #Include Volantis.Theme\Factory\ThemeFactory.ahk
 #Include Volantis.Theme\GdiPlus\Gdip.ahk
 #Include Volantis.Theme\GdiPlus\GdiPlusBase.ahk

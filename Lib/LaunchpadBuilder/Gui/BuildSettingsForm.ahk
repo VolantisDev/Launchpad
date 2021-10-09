@@ -1,13 +1,13 @@
 class BuildSettingsForm extends FormGuiBase {
     version := ""
 
-    __New(app, themeObj, windowKey, version := "", owner := "", parent := "") {
+    __New(app, themeObj, guiId, version := "", owner := "", parent := "") {
         if (version == "") {
             version := app.Version
         }
         
         this.version := version
-        super.__New(app, themeObj, windowKey, "Build Settings", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
+        super.__New(app, themeObj, guiId, "Build Settings", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
     }
 
     GetTextDefinition() {

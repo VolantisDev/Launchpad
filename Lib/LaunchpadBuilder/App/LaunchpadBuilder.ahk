@@ -50,7 +50,7 @@ class LaunchpadBuilder extends AppBase {
     RunApp(config) {
         super.RunApp(config)
         version := this.Service("GitTagVersionIdentifier").IdentifyVersion()
-        buildInfo := this.Service("GuiManager").Form("BuildSettingsForm", version)
+        buildInfo := this.Service("GuiManager").Dialog("BuildSettingsForm", version)
 
         if (!buildInfo) {
             this.ExitApp()
@@ -76,7 +76,7 @@ class LaunchpadBuilder extends AppBase {
         }
 
         if (buildInfo.DeployToGitHub || buildInfo.DeployToApi || buildInfo.DeployToChocolatey) {
-            releaseInfo := this.Service("GuiManager").Form("ReleaseInfoForm")
+            releaseInfo := this.Service("GuiManager").Dialog("ReleaseInfoForm")
 
             if (!releaseInfo) {
                 this.ExitApp()

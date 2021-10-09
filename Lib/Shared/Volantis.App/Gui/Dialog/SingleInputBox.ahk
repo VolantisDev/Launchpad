@@ -2,11 +2,11 @@ class SingleInputBox extends DialogBox {
     defaultValue := ""
     isPassword := false
 
-    __New(app, themeObj, windowKey, title, text, defaultValue := "", owner := "", parent := "", isPassword := false) {
+    __New(app, themeObj, guiId, title, text, defaultValue := "", owner := "", parent := "", isPassword := false) {
         InvalidParameterException.CheckTypes("SingleInputBox", "defaultValue", defaultValue, "")
         this.defaultValue := defaultValue
         this.isPassword := isPassword
-        super.__New(app, themeObj, windowKey, title, text, owner, parent, "*&OK|&Cancel")
+        super.__New(app, themeObj, guiId, title, text, owner, parent, "*&OK|&Cancel")
     }
 
     Controls() {

@@ -6,12 +6,12 @@
     titleIsMenu := true
     showDetailsPane := true
 
-    __New(app, themeObj, windowKey, owner := "", parent := "") {
+    __New(app, themeObj, guiId, owner := "", parent := "") {
         this.launcherManager := app.Service("LauncherManager")
         this.platformManager := app.Service("PlatformManager")
         this.lvCount := this.launcherManager.CountEntities()
         this.showStatusIndicator := app.Config["api_authentication"]
-        super.__New(app, themeObj, windowKey, app.appName, "", "")
+        super.__New(app, themeObj, guiId, app.appName, "", "")
     }
 
     GetTitle(title) {
@@ -56,7 +56,7 @@
 
     DeleteLauncher(launcherKey, rowNum := "") {
         launcher := this.launcherManager.Entities[launcherKey]
-        result := this.app.Service("GuiManager").Dialog("LauncherDeleteWindow", launcher, this.app.Services.Get("LauncherManager"), this.windowKey)
+        result := this.app.Service("GuiManager").Dialog("LauncherDeleteWindow", launcher, this.app.Services.Get("LauncherManager"), this.guiId)
 
         if (result == "Delete") {
             if (rowNum == "") {
@@ -130,7 +130,7 @@
         } else if (result == "ProvideFeedback") {
             this.app.ProvideFeedback()
         } else if (result == "Settings") {
-            this.app.Service("GuiManager").Form("SettingsWindow")
+            this.app.Service("GuiManager").Dialog("SettingsWindow")
         } else if (result == "CheckForUpdates") {
             this.app.CheckForUpdates()
         } else if (result == "Reload") {
@@ -157,7 +157,7 @@
         result := this.app.Service("GuiManager").Menu("MenuGui", menuItems, this, btn)
 
         if (result == "AccountDetails") {
-            accountResult := this.app.Service("GuiManager").Dialog("AccountInfoWindow", this.windowKey)
+            accountResult := this.app.Service("GuiManager").Dialog("AccountInfoWindow", this.guiId)
 
             if (accountResult == "OK") {
                 this.UpdateStatusIndicator()
@@ -548,7 +548,7 @@
     }
 
     ImportShortcut() {
-        entity := this.app.Service("GuiManager").Form("ImportShortcutForm", this.windowKey)
+        entity := this.app.Service("GuiManager").Dialog("ImportShortcutForm", this.guiId)
 
         if (entity) {
             this.launcherManager.AddEntity(entity.Key, entity)
@@ -558,7 +558,7 @@
     }
 
     AddLauncher() {
-        entity := this.app.Service("GuiManager").Form("LauncherWizard", this.windowKey)
+        entity := this.app.Service("GuiManager").Dialog("LauncherWizard", this.guiId)
 
         if (entity) {
             this.launcherManager.AddEntity(entity.Key, entity)

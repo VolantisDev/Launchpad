@@ -310,7 +310,7 @@
     }
 
     InitialSetup(config) {
-        result := this.Service("GuiManager").Form("SetupWindow")
+        result := this.Service("GuiManager").Dialog("SetupWindow")
 
         if (result == "Exit") {
             this.ExitApp()
@@ -323,8 +323,8 @@
     }
 
     UpdateStatusIndicators() {
-        if (this.Service("GuiManager").WindowExists("MainWindow")) {
-            this.Service("GuiManager").GetWindow("MainWindow").UpdateStatusIndicator()
+        if (this.Service("GuiManager").Has("MainWindow")) {
+            this.Service("GuiManager")["MainWindow"].UpdateStatusIndicator()
         }
     }
 
@@ -349,12 +349,8 @@
     }
 
     RestartApp() {
-        if (this.Service("GuiManager")) {
-            window := this.Service("GuiManager").GetWindow("MainWindow")
-
-            if (window) {
-                this.Service("GuiManager").StoreWindowState(window)
-            }
+        if (this.Services.Has("GuiManager") && this.Service("GuiManager").Has("MainWindow")) {
+            this.Service("GuiManager").StoreWindowState(this.Service("GuiManager")["MainWindow"])
         }
 
         super.RestartApp()

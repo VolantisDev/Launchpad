@@ -4,8 +4,8 @@
     missingFields := Map()
     dataSource := ""
  
-    __New(app, themeObj, windowKey, owner := "", parent := "") {
-        super.__New(app, themeObj, windowKey, "Login", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
+    __New(app, themeObj, guiId, owner := "", parent := "") {
+        super.__New(app, themeObj, guiId, "Login", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
     }
 
     GetTextDefinition() {

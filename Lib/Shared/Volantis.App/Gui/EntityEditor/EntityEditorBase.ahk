@@ -12,11 +12,11 @@ class EntityEditorBase extends FormGuiBase {
     missingFields := Map()
     dataSource := ""
  
-    __New(app, themeObj, windowKey, entityObj, title, mode := "config", owner := "", parent := "") {
+    __New(app, themeObj, guiId, entityObj, title, mode := "config", owner := "", parent := "") {
         InvalidParameterException.CheckTypes("LauncherEditor", "entityObj", entityObj, "EntityBase", "mode", mode, "")
         this.entityObj := entityObj
         this.mode := mode
-        super.__New(app, themeObj, windowKey, title, this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
+        super.__New(app, themeObj, guiId, title, this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
     }
 
     GetTextDefinition() {

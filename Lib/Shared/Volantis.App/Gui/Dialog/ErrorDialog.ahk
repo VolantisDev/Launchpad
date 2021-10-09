@@ -8,7 +8,7 @@ class ErrorDialog extends DialogBox {
     formH := 0
     guiH := 0
 
-    __New(app, themeObj, windowKey, errorObj, title, text := "", owner := "", parent := "", btns := "*&Continue|&Reload|&Exit") {
+    __New(app, themeObj, guiId, errorObj, title, text := "", owner := "", parent := "", btns := "*&Continue|&Reload|&Exit") {
         this.errorObj := errorObj
         this.notifierObj := app.Service("Notifier").notifierObj
 
@@ -18,7 +18,7 @@ class ErrorDialog extends DialogBox {
 
         this.formShown := this.submitError
         
-        super.__New(app, themeObj, windowKey, title, text, owner, parent, btns)
+        super.__New(app, themeObj, guiId, title, text, owner, parent, btns)
     }
 
     Controls() {

@@ -3,7 +3,7 @@ class ManageBackupsWindow extends ManageWindowBase {
     backupsFile := ""
     backupManager := ""
 
-    __New(app, themeObj, windowKey, backupsFile := "", owner := "", parent := "") {
+    __New(app, themeObj, guiId, backupsFile := "", owner := "", parent := "") {
         if (backupsFile == "") {
             backupsFile := app.Config["backups_file"]
         }
@@ -12,7 +12,7 @@ class ManageBackupsWindow extends ManageWindowBase {
         this.backupsFile := backupsFile
         this.backupManager := app.Service("BackupManager")
         this.lvCount := this.backupManager.CountEntities()
-        super.__New(app, themeObj, windowKey, "Manage Backups", owner, parent)
+        super.__New(app, themeObj, guiId, "Manage Backups", owner, parent)
     }
 
     AddBottomControls(y) {
@@ -87,7 +87,7 @@ class ManageBackupsWindow extends ManageWindowBase {
 
     AddBackup() {
         ; TODO: Implement backup add operation
-        ;entity := this.app.Service("GuiManager").Form("BackupWizard", this.windowKey)
+        ;entity := this.app.Service("GuiManager").Dialog("BackupWizard", this.guiId)
         entity := ""
 
         if (entity != "") {

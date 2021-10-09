@@ -3,12 +3,12 @@ class LauncherBase {
     game := ""
     config := ""
     launcherConfig := ""
-    guiManagerObj := ""
+    guiMgr := ""
     pid := 0
     progress := ""
     loggerObj := ""
 
-    __New(key, guiManagerObj, gameObj, launchpadLauncherConfig, config := "", loggerObj := "") {
+    __New(key, guiMgr, gameObj, launchpadLauncherConfig, config := "", loggerObj := "") {
         if (config == "") {
             config := Map()
         }
@@ -18,7 +18,7 @@ class LauncherBase {
         this.key := key
         this.game := gameObj
         this.launcherConfig := launchpadLauncherConfig
-        this.guiManagerObj := guiManagerObj
+        this.guiMgr := guiMgr
         this.loggerObj := loggerObj
         this.config := config
     }
@@ -30,7 +30,7 @@ class LauncherBase {
     CreateProgressGui() {
         if (this.progress == "") {
             gameIcon := A_IsCompiled ? A_ScriptFullPath : A_IconFile
-            this.progress := this.guiManagerObj.OpenWindow("LauncherProgressIndicator", "", this.key, gameIcon)
+            this.progress := this.guiMgr.OpenWindow("LauncherProgressIndicator", "", this.key, gameIcon)
         }
     }
 

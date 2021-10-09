@@ -12,7 +12,7 @@
     waitForResult := true
     childOpen := false
 
-    __New(app, themeObj, windowKey, menuItems := "", parent := "", openAtCtl := "", openAtCtlSide := "", isChild := false) {
+    __New(app, themeObj, guiId, menuItems := "", parent := "", openAtCtl := "", openAtCtlSide := "", isChild := false) {
         if (menuItems == "") {
             menuItems := []
         }
@@ -26,7 +26,7 @@
         }
 
         if (!isChild) {
-            app.Service("GuiManager").CloseMenus(windowKey)
+            app.Service("GuiManager").CloseMenus(guiId)
         }
 
         this.menuItems := menuItems
@@ -41,7 +41,7 @@
             this.openAtCtlSide := openAtCtlSide
         }
 
-        super.__New(app, themeObj, windowKey, this.menuTitle, "", parent)
+        super.__New(app, themeObj, guiId, this.menuTitle, "", parent)
     }
 
     OnLButton(hotKey) {

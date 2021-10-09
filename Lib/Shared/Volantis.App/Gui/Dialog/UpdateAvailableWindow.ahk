@@ -1,9 +1,9 @@
 ﻿class UpdateAvailableWindow extends FormGuiBase {
     releaseInfo := ""
 
-    __New(app, themeObj, windowKey, releaseInfo, owner := "", parent := "") {
+    __New(app, themeObj, guiId, releaseInfo, owner := "", parent := "") {
         this.releaseInfo := releaseInfo
-        super.__New(app, themeObj, windowKey, "Update Available", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
+        super.__New(app, themeObj, guiId, "Update Available", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
     }
 
     GetTextDefinition() {

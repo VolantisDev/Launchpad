@@ -1,6 +1,6 @@
 ﻿class AccountInfoWindow extends FormGuiBase {
-    __New(app, themeObj, windowKey, owner := "", parent := "") {
-        super.__New(app, themeObj, windowKey, "Account Info", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
+    __New(app, themeObj, guiId, owner := "", parent := "") {
+        super.__New(app, themeObj, guiId, "Account Info", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
     }
 
     GetTextDefinition() {

@@ -3,14 +3,14 @@ class IconSelector extends DialogBox {
     iconItem := ""
     listPath := ""
 
-    __New(app, themeObj, windowKey, title, iconSrc := "", iconItem := "", owner := "", parent := "") {
+    __New(app, themeObj, guiId, title, iconSrc := "", iconItem := "", owner := "", parent := "") {
         InvalidParameterException.CheckTypes("IconSelector", "iconSrc", iconSrc, "")
         this.iconSrc := iconSrc
         this.iconItem := iconItem
         
         this.ParseIconSrc()
 
-        super.__New(app, themeObj, windowKey, title, this.GetTextDefinition(), owner, parent, "*&Select|&Cancel")
+        super.__New(app, themeObj, guiId, title, this.GetTextDefinition(), owner, parent, "*&Select|&Cancel")
     }
 
     GetTextDefinition() {

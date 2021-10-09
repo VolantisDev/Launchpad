@@ -1,12 +1,12 @@
 class ProgressIndicator extends ProgressIndicatorBase {
-    __New(app, themeObj, windowKey, title, text, owner := "", parent := "", allowCancel := false, rangeStop := "", currentPosition := 0, detailText := true, showInNotificationArea := true) {
+    __New(app, themeObj, guiId, title, text, owner := "", parent := "", allowCancel := false, rangeStop := "", currentPosition := 0, detailText := true, showInNotificationArea := true) {
         btns := allowCancel ? "&Cancel" : ""
 
-        if (windowKey == "") {
-            windowKey := "ProgressIndicator"
+        if (guiId == "") {
+            guiId := "ProgressIndicator"
         }
 
-        super.__New(app, themeObj, windowKey, title, text, owner, parent, btns, rangeStop, currentPosition, detailText, showInNotificationArea)
+        super.__New(app, themeObj, guiId, title, text, owner, parent, btns, rangeStop, currentPosition, detailText, showInNotificationArea)
     }
 
     SetRange(start := 0, stop := 100) {

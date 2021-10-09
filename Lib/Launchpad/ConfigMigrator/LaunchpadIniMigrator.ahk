@@ -1,10 +1,10 @@
 class LaunchpadIniMigrator {
     app := ""
-    guiManagerObj := ""
+    guiMgr := ""
 
-    __New(app, guiManagerObj) {
+    __New(app, guiMgr) {
         this.app := app
-        this.guiManagerObj := guiManagerObj
+        this.guiMgr := guiMgr
     }
 
     Migrate(previousFile, configObj) {
@@ -54,7 +54,7 @@ class LaunchpadIniMigrator {
         }
 
         FileDelete(previousFile)
-        this.guiManagerObj.Dialog("DialogBox", "Migration Complete", message, "", "", "*&OK")
+        this.guiMgr.Dialog("DialogBox", "Migration Complete", message, "", "", "*&OK")
         this.app.RestartApp()
     }
 }

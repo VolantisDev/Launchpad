@@ -1,6 +1,6 @@
 class ManagedGameEditor extends ManagedEntityEditorBase {
-    __New(app, themeObj, windowKey, entityObj, mode := "config", owner := "", parent := "") {
-        super.__New(app, themeObj, windowKey, entityObj, "Managed Game Editor", mode, owner, parent)
+    __New(app, themeObj, guiId, entityObj, mode := "config", owner := "", parent := "") {
+        super.__New(app, themeObj, guiId, entityObj, "Managed Game Editor", mode, owner, parent)
     }
 
     ExtraTabControls(tabs) {

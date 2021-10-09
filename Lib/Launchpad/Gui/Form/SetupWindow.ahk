@@ -1,8 +1,8 @@
 ﻿class SetupWindow extends FormGuiBase {
     availableThemes := Map()
 
-    __New(app, themeObj, windowKey, owner := "", parent := "") {
-        super.__New(app, themeObj, windowKey, "Setup", this.GetTextDefinition(), owner, parent, "*&Start|&Exit")
+    __New(app, themeObj, guiId, owner := "", parent := "") {
+        super.__New(app, themeObj, guiId, "Setup", this.GetTextDefinition(), owner, parent, "*&Start|&Exit")
     }
 
     Create() {

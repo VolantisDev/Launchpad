@@ -4,9 +4,9 @@
     shortcutExt := ""
     defaultPlatform := ""
 
-    __New(app, themeObj, windowKey, owner := "", parent := "") {
+    __New(app, themeObj, guiId, owner := "", parent := "") {
         this.AskShortcutSrc()
-        super.__New(app, themeObj, windowKey, "Import Shortcut", owner, parent)
+        super.__New(app, themeObj, guiId, "Import Shortcut", owner, parent)
     }
 
     GetTextDefinition() {

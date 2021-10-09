@@ -3,9 +3,9 @@
     knownPlatforms := ""
     dataSource := ""
 
-    __New(app, themeObj, windowKey, title, owner := "", parent := "") {
+    __New(app, themeObj, guiId, title, owner := "", parent := "") {
         this.dataSource := app.Service("DataSourceManager").GetDefaultDataSource()
-        super.__New(app, themeObj, windowKey, title, this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
+        super.__New(app, themeObj, guiId, title, this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
     }
 
     GetTextDefinition() {

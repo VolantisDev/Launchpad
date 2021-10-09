@@ -1,6 +1,6 @@
 class AboutWindow extends DialogBox {
-    __New(app, themeObj, windowKey, owner := "", parent := "", btns := "*&OK") {   
-        super.__New(app, themeObj, windowKey, "About " . app.appName, "", owner, parent, btns)
+    __New(app, themeObj, guiId, owner := "", parent := "", btns := "*&OK") {   
+        super.__New(app, themeObj, guiId, "About " . app.appName, "", owner, parent, btns)
     }
 
     Controls() {

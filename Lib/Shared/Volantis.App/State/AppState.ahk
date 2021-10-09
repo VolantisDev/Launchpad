@@ -39,16 +39,16 @@ class AppState extends JsonState {
         this.SaveState()
     }
 
-    StoreWindowState(windowKey, windowState) {
-        this.WindowState[windowKey] := windowState
+    StoreWindowState(guiId, windowState) {
+        this.WindowState[guiId] := windowState
         this.SaveState()
     }
 
-    RetrieveWindowState(windowKey) {
+    RetrieveWindowState(guiId) {
         windowState := ""
         
-        if (this.WindowState.Has(windowKey)) {
-            windowState := this.WindowState[windowKey]
+        if (this.WindowState.Has(guiId)) {
+            windowState := this.WindowState[guiId]
         } else {
             windowState := Map()
         }

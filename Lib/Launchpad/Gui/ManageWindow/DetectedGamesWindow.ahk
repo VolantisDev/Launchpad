@@ -6,14 +6,14 @@
     knownGames := ""
     checkboxes := true
 
-    __New(app, themeObj, windowKey, detectedGames, owner := "", parent := "") {
+    __New(app, themeObj, guiId, detectedGames, owner := "", parent := "") {
         this.detectedGames := detectedGames
         this.state := app.State
         this.launcherManager := app.Service("LauncherManager")
         dataSource := app.Service("DataSourceManager").GetDefaultDataSource()
         this.knownGames := dataSource.ReadListing("game-keys")
 
-        super.__New(app, themeObj, windowKey, "Detected Games", owner, parent)
+        super.__New(app, themeObj, guiId, "Detected Games", owner, parent)
     }
 
     AddBottomControls(y) {
@@ -180,8 +180,7 @@
         op := AddDetectedGamesOp(this.app, games, this.launcherManager, this.state, "DetectedGamesWindow")
         op.Run()
 
-        win := this.launcherManager.app.Service("GuiManager").GetWindow("MainWindow")
-        win.UpdateListView()
+        this.launcherManager.app.Service("GuiManager")["MainWindow"].UpdateListView()
         this.Destroy()
     }
 
@@ -192,7 +191,7 @@
 
         detectedGameObj := this.detectedGames[key]
 
-        result := this.app.Service("GuiManager").Form("DetectedGameEditor", detectedGameObj, this.windowKey)
+        result := this.app.Service("GuiManager").Dialog("DetectedGameEditor", detectedGameObj, this.guiId)
 
         if (result == "Save") {
             if (key != detectedGameObj.key) {

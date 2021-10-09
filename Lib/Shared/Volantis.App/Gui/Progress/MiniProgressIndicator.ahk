@@ -1,12 +1,12 @@
 class MiniProgressIndicator extends ProgressIndicatorBase {
     gif := ""
 
-    __New(app, themeObj, windowKey, title, text, owner := "", parent := "", rangeStop := "", currentPosition := 0, showInNotificationArea := true) {
-        if (windowKey == "") {
-            windowKey := "MiniProgressIndicator"
+    __New(app, themeObj, guiId, title, text, owner := "", parent := "", rangeStop := "", currentPosition := 0, showInNotificationArea := true) {
+        if (guiId == "") {
+            guiId := "MiniProgressIndicator"
         }
 
-        super.__New(app, themeObj, windowKey, title, text, owner, parent, "", rangeStop, currentPosition, true, showInNotificationArea)
+        super.__New(app, themeObj, guiId, title, text, owner, parent, "", rangeStop, currentPosition, true, showInNotificationArea)
     }
 
     Controls() {

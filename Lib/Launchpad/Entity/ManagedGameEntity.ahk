@@ -117,6 +117,6 @@ class ManagedGameEntity extends ManagedEntityBase {
     }
 
     LaunchEditWindow(mode, owner := "", parent := "") {
-        return this.app.Service("GuiManager").Form("ManagedGameEditor", this, mode, owner, parent)
+        return this.app.Service("GuiManager").Dialog("ManagedGameEditor", this, mode, owner, parent)
     }
 }

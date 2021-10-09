@@ -24,11 +24,6 @@ class Events {
     static MODULE_LOAD := 0x2045
     static MODULE_LOAD_ALTER := 0x2047
 
-    static WINDOWS_DISCOVER := 0x2060
-    static WINDOWS_DISCOVER_ALTER := 0x2062
-    static WINDOW_LOAD := 0x2065
-    static WINDOW_LOAD_ALTER := 0x2067
-
     static BACKUPS_REGISTER := 0x2070
     static BACKUPS_ALTER := 0x2075
 

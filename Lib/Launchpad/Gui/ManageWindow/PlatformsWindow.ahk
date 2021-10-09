@@ -3,7 +3,7 @@ class PlatformsWindow extends ManageWindowBase {
     platformsFile := ""
     platformManager := ""
 
-    __New(app, themeObj, windowKey, platformsFile := "", owner := "", parent := "") {
+    __New(app, themeObj, guiId, platformsFile := "", owner := "", parent := "") {
         if (platformsFile == "") {
             platformsFile := app.Config["platforms_file"]
         }
@@ -12,7 +12,7 @@ class PlatformsWindow extends ManageWindowBase {
         this.platformsFile := platformsFile
         this.platformManager := app.Service("PlatformManager")
         this.lvCount := this.platformManager.CountEntities()
-        super.__New(app, themeObj, windowKey, "Platforms", owner, parent)
+        super.__New(app, themeObj, guiId, "Platforms", owner, parent)
     }
 
     AddBottomControls(y) {

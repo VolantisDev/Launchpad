@@ -5,10 +5,10 @@ class FormGuiBase extends GuiBase {
     waitForResult := true
     buttonNames := []
 
-    __New(app, themeObj, windowKey, title, text := "", owner := "", parent := "", btns := "*&Submit") {
+    __New(app, themeObj, guiId, title, text := "", owner := "", parent := "", btns := "*&Submit") {
         this.text := text
         this.btns := btns
-        super.__New(app, themeObj, windowKey, title, owner, parent)
+        super.__New(app, themeObj, guiId, title, owner, parent)
     }
 
     /**

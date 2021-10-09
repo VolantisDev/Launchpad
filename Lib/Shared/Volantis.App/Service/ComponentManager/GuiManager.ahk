@@ -1,11 +1,6 @@
-class GuiManager extends ContainerServiceBase {
+class GuiManager extends ComponentManagerBase {
     app := ""
-    discoverEvent := Events.WINDOWS_DISCOVER
-    discoverAlterEvent := Events.WINDOWS_DISCOVER_ALTER
-    loadEvent := Events.WINDOW_LOAD
-    loadAlterEvent := Events.WINDOW_LOAD_ALTER
-    themeManagerObj := ""
-    idGeneratorObj := ""
+    factory := ""
     stateObj := ""
 
     parents := Map()
@@ -13,54 +8,53 @@ class GuiManager extends ContainerServiceBase {
     locked := Map()
     menus := Map()
 
-    __New(app, themeManagerObj, idGeneratorObj, stateObj, defaultComponentInfo := "", defaultComponents := "", autoLoad := true) {
-        this.app := app
-        this.themeManagerObj := themeManagerObj
-        this.idGeneratorObj := idGeneratorObj
+    __New(container, factory, stateObj, eventMgr, notifierObj) {
+        this.app := container.GetApp()
+        this.factory := factory
         this.stateObj := stateObj
-        super.__New(defaultComponentInfo, defaultComponents, autoLoad)
-    }
 
-    GetTheme() {
-        return this.themeManagerObj[""]
+        super.__New(
+            container, 
+            "gui.",
+            eventMgr,
+            notifierObj,
+            GuiBase
+        )
     }
 
     Dialog(className, params*) {
-        dialogId := this.idGeneratorObj.Generate()
-        window := %className%(this.app, this.GetTheme(), dialogId, params*)
-        this.container.Set(dialogId, window)
+        guiId := this.factory.CreateGuiId(className, params*)
+        this[guiId] := this.factory.CreateServiceDefinition(className, guiId, params*)
+        window := this[window.guiId]
+
         ownerKey := ""
 
         if (window.owner) {
-            ownerKey := this.GetWindowKeyFromGui(ownerKey)
+            ownerKey := this.GetWindowKeyFromGui(ownerKey, true)
 
             if (ownerKey) {
-                this.AddToParent(dialogId, ownerKey)
+                this.AddToParent(guiId, ownerKey)
             }
         }
 
         result := window.Show()
 
         if (ownerKey) {
-            this.ReleaseFromParent(dialogId)
+            this.ReleaseFromParent(guiId)
         }
-        
-        this.container.Delete(dialogId)
+
+        this.UnloadComponent(guiId)
         return result
     }
 
-    Form(className, params*) {
-        return this.Dialog(className, params*)
-    }
-
     Menu(className, params*) {
-        key := this.idGeneratorObj.Generate()
-        window := %className%(this.app, this.GetTheme(), key, params*)
-        this.menus[key] := window
-        result := window.Show()
+        guiId := this.factory.CreateGuiId(className, params*)
+        this.menus[guiId] := this.factory.CreateServiceDefinition(className, guiId, params*)
 
-        if (this.menus.Has(key)) {
-            this.menus.Delete(key)
+        result := this.menus[guiId].Show()
+
+        if (this.menus.Has(guiId)) {
+            this.menus.Delete(guiId)
         }
         
         return result
@@ -74,12 +68,12 @@ class GuiManager extends ContainerServiceBase {
         }
 
         for index, window in this.menus {
-            if (window.windowKey != menuToKeepOpen) {
+            if (window.guiId != menuToKeepOpen) {
                 window.Close()
             }
         }
 
-        newMenus := Map()
+        newMenus := []
 
         if (keepMenu) {
             newMenus.Push(keepMenu)
@@ -93,19 +87,21 @@ class GuiManager extends ContainerServiceBase {
             className := key
         }
 
-        if (!this.container.Has(key)) {
-            guiObj := %className%(this.app, this.GetTheme(), key, params*)
-            guiObj.Show(this.GetWindowState(key))
-            this.container.Set(key, guiObj)
+        if (!this.Has(key)) {
+            this[key] := this.factory.CreateServiceDefinition(className, key, params*)
         }
 
-        return this.container.Has(key) ? this.container.Get(key) : ""
+        if (!this.Has(key)) {
+            throw ComponentException("Window " . key . " could not be opened")
+        }
+
+        return this[key].Show(this.GetWindowState(key))
     }
 
     CloseWindow(key) {
-        if (this.container.Has(key)) {
-            this.container.Get(key).Close()
-            this.container.Delete(key)
+        if (this.Has(key)) {
+            this[key].Close()
+            this.UnloadComponent(key)
         }
     }
 
@@ -142,12 +138,12 @@ class GuiManager extends ContainerServiceBase {
         }
     }
 
-    AddToParent(key, parentKey) {
-        if (HasBase(parentKey, Gui.Prototype)) {
+    AddToParent(key, parentKeyOrGuiObj) {
+        if (parentKey.HasBase(Gui.Prototype)) {
             parentKey := this.GetWindowKeyFromGui(parentKey)
         }
 
-        if (this.container.Has(parentKey)) {
+        if (this.Has(parentKey)) {
             if (!this.children.Has(parentKey)) {
                 this.children[parentKey] := []
             }
@@ -164,15 +160,15 @@ class GuiManager extends ContainerServiceBase {
     }
 
     LockWindow(key) {
-        if (!this.locked.Has(key) && this.container.Has(key)) {
-            this.container.Get(key).guiObj.Opt("Disabled")
+        if (!this.locked.Has(key) && this.Has(key)) {
+            this[key].guiObj.Opt("Disabled")
             this.locked[key] := true
         }
     }
 
     UnlockWindow(key, forceActivation := true) {
         if (this.locked.Has(key) && this.locked[key]) {
-            windowGui := this.container.Get(key).guiObj
+            windowGui := this[key].guiObj
             windowGui.Opt("-Disabled")
 
             if (forceActivation) {
@@ -183,79 +179,71 @@ class GuiManager extends ContainerServiceBase {
         }
     }
 
-    WindowExists(key) {
-        return this.container.Has(key)
-    }
+    GetWindowFromHwnd(hwnd, ignoreFailure := false) {
+        windowObj := ""
 
-    GetWindow(key) {
-        window := ""
-
-        try {
-            window := this.container.Get(key)
-        } catch Any {
-
-        }
-
-        return window
-    }
-
-    GetWindowFromHwnd(hwnd) {
-        windowObj := false
-
-        for key, window in this.container.Items {
+        for key, window in this.All() {
             if (window && window.guiObj && window.guiObj.Hwnd == hwnd) {
                 windowObj := window
                 break
             }
         }
 
+        if (!windowObj && !ignoreFailure) {
+            throw ComponentException("Window with Hwnd " . hwnd . " not found")
+        }
+
         return windowObj
     }
 
-    GetWindowFromGui(guiObj) {
-        windowObj := false
+    GetWindowFromGui(guiObj, ignoreFailure := false) {
+        windowObj := ""
 
-        for key, window in this.container.Items {
+        for key, window in this.All() {
             if (window && window.guiObj && window.guiObj == guiObj) {
                 windowObj := window
                 break
             }
         }
 
+        if (!windowObj && !ignoreFailure) {
+            throw ComponentException("Window for provided gui not found")
+        }
+
         return windowObj
     }
 
-    GetWindowKeyFromGui(guiObj) {
-        windowKey := false
+    GetWindowKeyFromGui(guiObj, ignoreFailure := false) {
+        guiId := ""
 
-        for key, window in this.container.Items {
+        for key, window in this.All() {
             if (window && window.guiObj && window.guiObj == guiObj) {
-                windowKey := key
+                guiId := key
                 break
             }
         }
 
-        return windowKey
+        if (!guiId && !ignoreFailure) {
+            throw ComponentException("Window not found from provided GUI object")
+        }
+
+        return guiId
     }
 
     GuiExists(hwnd) {
-        return !!(this.GetWindowFromHwnd(hwnd))
+        return !!(this.GetWindowFromHwnd(hwnd, true))
     }
 
     DereferenceGui(obj) {
-        guiObj := ""
-        objType := Type(obj)
+        guiObj := obj
+        objType := Type(guiObj)
 
-        if (obj.HasBase(Gui.Prototype)) {
-            guiObj := obj
-        } else if (objType == "String") {
-            window := this.GetWindow(obj)
-            
-            if (window) {
-                guiObj := window.guiObj
+        if (!obj.HasBase(Gui.Prototype)) {
+            if (objType == "String" && this.Has(obj)) {
+                guiObj := this[obj].guiObj
+            } else if (obj.HasBase(GuiBase.Prototype)) {
+                guiObj := obj.guiObj
             }
-        } else if (obj.HasBase(GuiBase.Prototype) || obj.HasProp("guiObj")) {
-            guiObj := obj.guiObj
         }
 
         return guiObj
@@ -264,15 +252,15 @@ class GuiManager extends ContainerServiceBase {
     StoreWindowState(guiObj) {
         guiObj.guiObj.GetPos(&x, &y, &w, &h)
         windowState := Map("x", x, "y", y, "w", w, "h", h)
-        this.stateObj.StoreWindowState(guiObj.windowKey, windowState)
+        this.stateObj.StoreWindowState(guiObj.guiId, windowState)
     }
 
-    GetWindowState(windowKey) {
-        return this.stateObj.RetrieveWindowState(windowKey)
+    GetWindowState(guiId) {
+        return this.stateObj.RetrieveWindowState(guiId)
     }
 
     RestoreWindowState(guiObj) {
-        windowState := this.GetWindowState(guiObj.windowKey)
+        windowState := this.GetWindowState(guiObj.guiId)
 
         if (windowState && windowState.Count > 0) {
             x := windowState.Has("x") ? windowState["x"] : ""

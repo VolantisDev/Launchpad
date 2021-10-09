@@ -15,7 +15,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     entityTypeName := ""
     possibleExes := ""
 
-    __New(app, themeObj, windowKey, entityObj, title, mode := "config", owner := "", parent := "") {
+    __New(app, themeObj, guiId, entityObj, title, mode := "config", owner := "", parent := "") {
         if (owner == "") {
             owner := "LauncherEditor"
         }
@@ -28,7 +28,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
             this.regViews.Push("64")
         }
 
-        super.__New(app, themeObj, windowKey, entityObj, title, mode, owner, parent)
+        super.__New(app, themeObj, guiId, entityObj, title, mode, owner, parent)
     }
 
     Create() {

@@ -3,8 +3,8 @@
     exe := ""
     defaultPlatform := ""
 
-    __New(app, themeObj, windowKey, owner := "", parent := "") {
-        super.__New(app, themeObj, windowKey, "Launcher Wizard", owner, parent)
+    __New(app, themeObj, guiId, owner := "", parent := "") {
+        super.__New(app, themeObj, guiId, "Launcher Wizard", owner, parent)
     }
 
     GetTextDefinition() {
