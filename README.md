@@ -1,4 +1,4 @@
-# Launchpad
+# Launchpad - Game Launching Multitool
 
 Manage your game platforms and create beautifully-simple .exe files to launch games from any platform 
 within Steam or other applications.
@@ -64,54 +64,7 @@ a game
 
 ## Screenshots
 
-More information such as usage details is below, but since pictures speak a thousand words, here's some screenshots
-of various parts of Launchpad:
-
-Note: The following screenshots are out of date, but here for historical purposes. New screenshots will be posted soon.
-
-Initial Setup Window:
-
-![setup_window](https://user-images.githubusercontent.com/277977/104859465-91b83d80-58f3-11eb-8cc6-d1e0f7700303.png)
-
-Launcher Manager (Main Window):
-
-![main_window](https://user-images.githubusercontent.com/277977/104806114-147db300-57a3-11eb-90cd-d69bf8ffe39b.png)
-
-Launcher Editor:
-
-![launcher_editor](https://user-images.githubusercontent.com/277977/104805901-66253e00-57a1-11eb-9cb3-7ded6ab56f23.png)
-
-Managed Launcher Editor:
-
-![managed_launcher_editor](https://user-images.githubusercontent.com/277977/104805908-79d0a480-57a1-11eb-9dbc-4c0e2ec2401c.png)
-
-Managed Game Editor:
-
-![managed_game_editor](https://user-images.githubusercontent.com/277977/104805909-7e955880-57a1-11eb-8d58-b8a1ab277a2a.png)
-
-Platforms:
-
-![platforms_window](https://user-images.githubusercontent.com/277977/104806125-23646580-57a3-11eb-9cee-f8d9e0bcd0bf.png)
-
-Platform Editor:
-
-![platform_editor](https://user-images.githubusercontent.com/277977/104805919-9d93ea80-57a1-11eb-9243-dfc4a6399f36.png)
-
-Detected Games:
-
-![detected_games](https://user-images.githubusercontent.com/277977/104805917-979e0980-57a1-11eb-8dfa-ff569cfe833a.png)
-
-Detected Game Editor:
-
-![detected_game](https://user-images.githubusercontent.com/277977/104805930-a8e71600-57a1-11eb-8006-7e8dfa464c95.png)
-
-Settings:
-
-![settings](https://user-images.githubusercontent.com/277977/104805935-ae446080-57a1-11eb-9e27-b85cae96a933.png)
-
-Generated Launcher Files:
-
-![generated_launchers](https://user-images.githubusercontent.com/277977/106828218-c0eede80-6657-11eb-963f-5228b67f3957.png)
+Note: The screenshots section was pitifully outdated and did a disservice to the project. I will make new screenshots soon, but I encourage you to see it for yourself!
 
 ## How To Use
 
