@@ -10,7 +10,7 @@
             owner := "MainWindow"
         }
 
-        this.availableThemes := app.Service("ThemeManager").GetAvailableThemes(true)
+        this.availableThemes := app.Service("ThemeManager").GetAvailableThemes()
         super.__New(app, themeObj, windowKey, "Settings", "", owner, parent, "*&Done")
     }
 
@@ -234,11 +234,11 @@
 
     OnApiEndpointMenuClick(btn) {
         if (btn == "ChangeApiEndpoint") {
-            this.app.Service("DataSourceManager").GetItem("api").ChangeApiEndpoint("", "")
+            this.app.Service("DataSourceManager")["api"].ChangeApiEndpoint("", "")
             this.SetText("ApiEndpoint", this.app.Config["api_endpoint"], "Bold")
             this.needsRestart := true
         } else if (btn == "OpenApiEndpoint") {
-            this.app.Service("DataSourceManager").GetItem("api").Open()
+            this.app.Service("DataSourceManager")["api"].Open()
         }
     }
 
@@ -266,7 +266,6 @@
     OnThemeNameChange(ctl, info) {
         this.guiObj.Submit(false)
         this.app.Config["theme_name"] := this.availableThemes[ctl.Value]
-        this.app.Service("ThemeManager").LoadMainTheme()
         this.needsRestart := true
     }
 

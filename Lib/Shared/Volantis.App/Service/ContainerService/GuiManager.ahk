@@ -22,7 +22,7 @@ class GuiManager extends ContainerServiceBase {
     }
 
     GetTheme() {
-        return this.themeManagerObj.GetItem()
+        return this.themeManagerObj[""]
     }
 
     Dialog(className, params*) {

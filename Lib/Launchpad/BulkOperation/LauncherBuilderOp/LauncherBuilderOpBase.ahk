@@ -11,7 +11,7 @@ class LauncherBuilderOpBase extends LauncherGameOpBase {
         }
 
         if (Type(builder) == "String" && builder != "") {
-            builder := app.Service("BuilderManager").GetItem(builder)
+            builder := app.Service("BuilderManager")[builder]
         }
 
         InvalidParameterException.CheckTypes("LauncherBuilderOpBase", "builder", builder, "BuilderBase")

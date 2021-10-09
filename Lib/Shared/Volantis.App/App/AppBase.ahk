@@ -70,6 +70,7 @@ class AppBase {
             "config_path", this.appDir . "\" . this.appName . ".json",
             "config_key", "config",
             "config.theme_name", themeName,
+            "config.themes_dir", this.appDir . "\Resources\Themes",
             "config.cache_dir", this.tmpDir . "\Cache",
             "config.flush_cache_on_exit", false,
             "config.check_updates_on_start", false,
@@ -83,13 +84,32 @@ class AppBase {
             "include_files.modules", this.dataDir . "\ModuleIncludes.ahk",
             "include_files.module_tests", this.dataDir . "\ModuleIncludes.test.ahk",
             "resources.dir", resourcesDir,
-            "themes.dir", this.appDir . "\Resources\Themes",
             "themes.extra_themes", [],
-            "installers.Themes", "installer.themes",
-            "updater", "",
-            "caches.file", "cache.file",
             "module_config.modules", Map(),
-            "dependency_installer", ""
+            "structured_data.basic", Map(
+                "class", "BasicData",
+                "extensions", []
+            ),
+            "structured_data.ahk", Map(
+                "class", "AhkVariable",
+                "extensions", []
+            ),
+            "structured_data.json", Map(
+                "class", "JsonData",
+                "extensions", [".json"]
+            ),
+            "structured_data.proto", Map(
+                "class", "ProtobufData",
+                "extensions", [".db", ".proto"]
+            ),
+            "structured_data.vdf", Map(
+                "class", "VdfData",
+                "extensions", [".ahk"]
+            ),
+            "structured_data.xml", Map(
+                "class", "Xml",
+                "extensions", [".xml"]
+            )
         )
     }
 
@@ -105,7 +125,11 @@ class AppBase {
             ),
             "Config", Map(
                 "class", "AppConfig",
-                "arguments", [ServiceRef("config_storage.app_config"), ContainerRef(), ParameterRef("config_key")]
+                "arguments", [
+                    ServiceRef("config_storage.app_config"), 
+                    ContainerRef(), 
+                    ParameterRef("config_key")
+                ]
             ),
             "State", Map(
                 "class", "AppState",
@@ -121,7 +145,11 @@ class AppBase {
             ),
             "config.modules", Map(
                 "class", "PersistentConfig",
-                "arguments", [ServiceRef("config_storage.modules"), ContainerRef(), "module_config"]
+                "arguments", [
+                    ServiceRef("config_storage.modules"), 
+                    ContainerRef(), 
+                    "module_config"
+                ]
             ),
             "ModuleManager", Map(
                 "class", "ModuleManager", 
@@ -146,7 +174,11 @@ class AppBase {
             "VersionChecker", "VersionChecker",
             "logger.file", Map(
                 "class", "FileLogger", 
-                "arguments", [ParameterRef("config.log_path"), ParameterRef("config.logging_level"), true]
+                "arguments", [
+                    ParameterRef("config.log_path"), 
+                    ParameterRef("config.logging_level"), 
+                    true
+                ]
             ),
             "Logger", Map(
                 "class", "LoggerService",
@@ -154,18 +186,43 @@ class AppBase {
             ),
             "CacheManager", Map(
                 "class", "CacheManager", 
-                "arguments", [AppRef(), ParameterRef("config.cache_dir")]
+                "arguments", [
+                    ContainerRef(), 
+                    ServiceRef("EventManager"), 
+                    ServiceRef("Notifier")
+                ]
+            ),
+            "ThemeFactory", Map(
+                "class", "ThemeFactory",
+                "arguments", [
+                    ContainerRef(), 
+                    ParameterRef("resources.dir"),
+                    ServiceRef("EventManager"),
+                    ServiceRef("IdGenerator"),
+                    ServiceRef("Logger")
+                ]
+            ),
+            "definition_loader.themes", Map(
+                "class", "DirDefinitionLoader",
+                "arguments", [
+                    ServiceRef("StructuredData"), 
+                    ParameterRef("config.themes_dir"), 
+                    "",
+                    false,
+                    false, 
+                    "",
+                    "theme"
+                ]
             ),
             "ThemeManager", Map(
                 "class", "ThemeManager",
                 "arguments", [
-                    ServiceRef("EventManager"), 
-                    ServiceRef("Config"), 
-                    ServiceRef("IdGenerator"), 
-                    ServiceRef("Logger"), 
-                    ParameterRef("themes.dir"), 
-                    ParameterRef("resources.dir"), 
-                    ParameterRef("config.theme_name")
+                    ContainerRef(),
+                    ServiceRef("EventManager"),
+                    ServiceRef("Notifier"),
+                    ServiceRef("Config"),
+                    ServiceRef("definition_loader.themes"),
+                    "Steampad"
                 ]
             ),
             "notifier.toast", Map(
@@ -187,7 +244,11 @@ class AppBase {
             ),
             "InstallerManager", Map(
                 "class", "InstallerManager",
-                "arguments", [AppRef()]
+                "arguments", [
+                    ContainerRef(),
+                    ServiceRef("EventManager"),
+                    ServiceRef("Notifier")
+                ]
             ),
             "EntityFactory", Map(
                 "class", "EntityFactory",
@@ -206,11 +267,24 @@ class AppBase {
             ),
             "cache_state.file", Map(
                 "class", "CacheState",
-                "arguments", [AppRef(), ParameterRef("config.cache_dir"), "File.json"]
+                "arguments", [
+                    AppRef(), 
+                    ParameterRef("config.cache_dir"), 
+                    "File.json"
+                ]
             ),
             "cache.file", Map(
                 "class", "FileCache",
-                "arguments", [AppRef(), ServiceRef("cache_state.file"), ParameterRef("config.cache_dir"), "File"]
+                "arguments", [
+                    AppRef(), 
+                    ServiceRef("cache_state.file"), 
+                    ParameterRef("config.cache_dir"), 
+                    "File"
+                ]
+            ),
+            "StructuredData", Map(
+                "class", "StructuredDataFactory",
+                "arguments", [ParameterRef("structured_data")]
             )
         )
     }
@@ -303,12 +377,12 @@ class AppBase {
         defaultServices := this.GetServiceDefinitions(config)
         defaultParameters := this.GetParameterDefinitions(config)
         this.Services := ServiceContainer(SimpleDefinitionLoader(defaultServices, defaultParameters))
-        this.Services.LoadFromMap(config)
+        this.Services.LoadDefinitions(MapDefinitionLoader(config))
 
         serviceFile := this.Services.GetParameter("service_files.app")
 
         if (FileExist(serviceFile)) {
-            this.Services.LoadFromJson(serviceFile)
+            this.Services.LoadDefinitions(FileDefinitionLoader(serviceFile))
         }
 
         this.Service("Config")
@@ -319,13 +393,11 @@ class AppBase {
 
         for index, moduleServiceFile in serviceFiles {
             if (FileExist(serviceFile)) {
-                this.Services.LoadFromJson(moduleServiceFile)
+                this.Services.LoadDefinitions(FileDefinitionLoader(moduleServiceFile))
             }
         }
 
         this.Service("EventManager").Register(Events.APP_SERVICES_LOADED, "AppServices", ObjBindMethod(this, "OnServicesLoaded"))
-        this.Service("EventManager").Register(Events.CACHES_REGISTER, "AppCaches", ObjBindMethod(this, "OnRegisterCaches"))
-        this.Service("EventManager").Register(Events.INSTALLERS_REGISTER, "AppInstallers", ObjBindMethod(this, "OnRegisterInstallers"))
 
         event := ServiceDefinitionsEvent(Events.APP_SERVICE_DEFINITIONS, "", "", config)
         this.Service("EventManager").DispatchEvent(Events.APP_SERVICE_DEFINITIONS, event)
@@ -337,7 +409,7 @@ class AppBase {
         serviceFile := this.Services.GetParameter("service_files.user")
 
         if (FileExist(serviceFile)) {
-            this.Services.LoadFromJson(serviceFile)
+            this.Services.LoadDefinitions(FileDefinitionLoader(serviceFile))
         }
 
         event := AppRunEvent(Events.APP_SERVICES_LOADED, this, config)
@@ -346,23 +418,7 @@ class AppBase {
 
     OnServicesLoaded(event, extra, eventName, hwnd) {
         this.Service("CacheManager")
-        this.Service("InstallerManager").InstallRequirements()
-    }
-
-    OnRegisterCaches(event, extra, eventName, hwnd) {
-        cacheNames := this.Services.GetParameter("caches")
-
-        for cacheName, serviceName in cacheNames {
-            event.Register(cacheName, this.Service(serviceName))
-        }
-    }
-
-    OnRegisterInstallers(event, extra, eventName, hwnd) {
-        installerNames := this.Services.GetParameter("installers")
-
-        for installerName, serviceName in installerNames {
-            event.Register(installerName, this.Service(serviceName))
-        }
+        this.Service("InstallerManager").RunInstallers(InstallerBase.INSTALLER_TYPE_REQUIREMENT)
     }
 
     InitializeModules(config) {

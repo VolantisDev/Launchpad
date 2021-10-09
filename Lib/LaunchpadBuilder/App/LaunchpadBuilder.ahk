@@ -34,7 +34,7 @@ class LaunchpadBuilder extends AppBase {
 
         services["DataSourceManager"] := Map(
             "class", "DataSourceManager",
-            "arguments", ServiceRef("EventManager")
+            "arguments", [ContainerRef(), ServiceRef("EventManager"), ServiceRef("Notifier"), "api"]
         )
 
         services["FileHasher"] := "FileHasher"

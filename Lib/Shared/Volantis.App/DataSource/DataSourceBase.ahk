@@ -7,7 +7,7 @@ class DataSourceBase {
         if (cacheManager != "" && cacheName != "") {
             InvalidParameterException.CheckTypes("DataSourceBase", "cacheManager", cacheManager, "CacheManager")
             this.useCache := true
-            this.cache := cacheManager.GetItem(cacheName)
+            this.cache := cacheManager[cacheName]
         }
     }
 

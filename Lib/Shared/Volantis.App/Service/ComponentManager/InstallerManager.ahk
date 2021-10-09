@@ -1,43 +1,19 @@
-class InstallerManager extends AppComponentServiceBase {
-    _registerEvent := Events.INSTALLERS_REGISTER
-    _alterEvent := Events.INSTALLERS_ALTER
-    _eventId := "INSTALLERS"
-
-    SetupInstallers() {
+class InstallerManager extends AppComponentManagerBase {
+    __New(container, eventMgr, notifierObj) {
+        super.__New(container, eventMgr, notifierObj, "installer.", InstallerBase)
     }
 
-    InstallRequirements(owner := "") {
-        installers := this.app.Parameter("installers")
-        updater := this.app.Parameter("updater")
+    RunInstallers(installerType := "", owner := "") {
+        installers := []
 
-        installerNames := []
-        for key, val in installers {
-            if (key != updater) {
-                installerNames.Push(key)
+        ; TODO: Move installerType to the service definition to prevent having to actually load all installers
+        for (name, installer in this.All()) {
+            if (!installerType || installer.installerType == installerType) {
+                installers.Push(name)
             }
         }
 
-        op := InstallOp(this.app, installerNames, owner)
+        op := InstallOp(this.container.GetApp(), installers, owner)
         return op.Run()
-    }
-
-    UpdateApp(owner := "") {
-        updater := this.app.Parameter("updater")
-
-        if (updater) {
-            installerKeys := [updater]
-            op := UpdateOp(this.app, installerKeys, owner)
-            return op.Run()
-        }
-    }
-
-    UpdateDependencies(owner := "") {
-        installer := this.app.Parameter("dependency_installer")
-
-        if (installer) {
-            installerKeys := [installer]
-            op := UpdateOp(this.app, installerKeys, owner)
-            return op.Run()
-        }
     }
 }

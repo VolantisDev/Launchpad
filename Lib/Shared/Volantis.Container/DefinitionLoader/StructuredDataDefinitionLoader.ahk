@@ -20,9 +20,9 @@ class StructuredDataDefinitionLoader extends DefinitionLoaderBase {
         return this.LoadFromStructuredData(structuredData, this.parametersKey)
     }
 
-    LoadFromStructuredData(structuredData, key := "") {
-        if (!structuredData.HasBase(StructuredDataBase)) {
-            throw ContainerException("An subclass of StructuredDataBase must be provided to load services from")
+    LoadFromStructuredData(structuredData, key := "", ignoreFailure := true) {
+        if (!structuredData.HasBase(StructuredDataBase.Prototype)) {
+            throw ContainerException("A subclass of StructuredDataBase must be provided to load services from. Received: " . Type(structuredData))
         }
 
         dataObj := structuredData.Obj
@@ -32,11 +32,15 @@ class StructuredDataDefinitionLoader extends DefinitionLoaderBase {
         }
 
         if (key) {
-            if (!dataObj.Has(key)) {
-                throw ContainerException("Cannot load data from non-existant key " . key)
-            }
+            if (dataObj.Has(key)) {
+                dataObj := dataObj[key]
+            } else {
+                if (!ignoreFailure) {
+                    throw ContainerException("Cannot load data from non-existant key " . key . " in " . Type(this))
+                }
 
-            dataObj := dataObj[key]
+                dataObj := Map()
+            }
         }
 
         return dataObj

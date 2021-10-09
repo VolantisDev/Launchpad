@@ -1,38 +1,42 @@
-class BuilderManager extends AppComponentServiceBase {
-    _registerEvent := LaunchpadEvents.BUILDERS_REGISTER
-    _alterEvent := LaunchpadEvents.BUILDERS_ALTER
+class BuilderManager extends AppComponentManagerBase {
+    launcherMgr := ""
 
-    SetItem(key, builderObj) {
-        return super.SetItem(key, builderObj)
+    __New(launcherMgr, container, eventMgr, notifierObj) {
+        this.launcherMgr := launcherMgr
+        super.__New(container, eventMgr, notifierObj, "builder.", BuilderBase)
     }
 
     BuildLaunchers(launcherGames := "", updateExisting := false, owner := "", builder := "") {
         if (launcherGames == "") {
-            launcherGames := this.app.Service("LauncherManager").Entities
+            launcherGames := this.launcherMgr.Entities
         }
 
         builder := this._GetBuilderObject(builder)
-        operation := BuildLaunchersOp(this.app, launcherGames, builder, updateExisting, owner)
+        operation := BuildLaunchersOp(this.container.GetApp(), launcherGames, builder, updateExisting, owner)
         return operation.Run()
     }
 
     CleanLaunchers(launcherGames := "", owner := "", builder := "") {
         if (launcherGames == "") {
-            launcherGames := this.app.Service("LauncherManager").Entities
+            launcherGames := this.launcherMgr.Entities
         }
 
         builder := this._GetBuilderObject(builder)
-        operation := CleanLaunchersOp(this.app, launcherGames, builder, owner)
+        operation := CleanLaunchersOp(this.container.GetApp(), launcherGames, builder, owner)
         return operation.Run()
     }
 
     _GetBuilderObject(builder) {
         if (builder == "") {
-            builder := this.app.Config["builder_key"]
+            builder := this.container.Get("Config")["builder_key"]
         }
 
         if (!IsObject(builder)) {
-            builder := this.GetItem(builder)
+            if (!this.Has(builder)) {
+                throw ComponentException("Builder " . builder . " does not exist")
+            }
+            
+            builder := this[builder]
         }
 
         return builder

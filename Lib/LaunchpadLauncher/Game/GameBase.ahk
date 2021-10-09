@@ -154,8 +154,10 @@ class GameBase {
     }
 
     OverlayCallback() {
-        static steamOpenCondition := SteamIsOpenCondition(this.app)
-        static overlayAttachedCondtion := SteamOverlayAttachedCondition(A_Now, this.app)
+        static conditions := AndGroup([
+            SteamIsOpenCondition(this.app, true),
+            SteamOverlayAttachedCondition(A_Now, this.app)
+        ])
 
         if (this.isOpen) {
             if (this.launcherConfig["ForceOverlay"]) {
@@ -163,12 +165,7 @@ class GameBase {
                 return
             }
 
-            if (!steamOpenCondition.Evaluate()) {
-                SetTimer(this.overlayCallbackObj, 0)
-                return
-            }
-
-            if (overlayAttachedCondtion.Evaluate()) {
+            if (conditions.Evaluate()) {
                 SetTimer(this.overlayCallbackObj, 0)
                 return
             }

@@ -10,7 +10,7 @@
         this.detectedGames := detectedGames
         this.state := app.State
         this.launcherManager := app.Service("LauncherManager")
-        dataSource := app.Service("DataSourceManager").GetItem()
+        dataSource := app.Service("DataSourceManager").GetDefaultDataSource()
         this.knownGames := dataSource.ReadListing("game-keys")
 
         super.__New(app, themeObj, windowKey, "Detected Games", owner, parent)

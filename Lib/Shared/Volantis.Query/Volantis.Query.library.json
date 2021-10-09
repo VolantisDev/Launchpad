@@ -1,0 +1,11 @@
+{
+    "name": "Volantis.Query",
+    "type": "shared",
+    "description": "Evaluate conditions and condition groups, or use them to query entire datasets",
+    "developer": "Volantis Development",
+    "website": "https://volantis.dev",
+    "dependencies": [
+        "Volantis.Base",
+        "Volantis.Utility"
+    ]
+}

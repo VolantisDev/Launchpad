@@ -22,26 +22,35 @@ class ConditionBase {
         this.childConditions.Push(condition)
     }
 
-    Evaluate() {
-        result := true
+    Evaluate(args*) {
+        matches := this.evaluateChildConditions(args*)
+
+        if (matches) {
+            matches := this.EvaluateCondition(args*)
+        }
+
+        return this.negate ? !matches : matches
+    }
+
+    evaluateChildConditions(args*) {
+        matches := true
 
         if (this.childConditions) {
+            matches := false
+
             for index, condition in this.childConditions {
-                if (!condition.Evaluate()) {
-                    result := false
+                matches := condition.Evaluate()
+
+                if (!matches) {
                     break
                 }
             }
         }
 
-        if (result) {
-            result := this.EvaluateCondition()
-        }
-
-        return this.negate ? !result : result
+        return matches
     }
 
-    EvaluateCondition() {
-        return true
+    EvaluateCondition(args*) {
+        return false
     }
 }

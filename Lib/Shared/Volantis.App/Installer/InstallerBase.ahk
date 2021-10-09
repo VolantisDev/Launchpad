@@ -19,7 +19,7 @@ class InstallerBase {
     static INSTALLER_TYPE_SELF_UPDATE := "self_update"
 
     __New(version, appState, stateKey, cacheManager, cacheName, components := "", tmpDir := "", cleanupFiles := "") {
-        this.cache := cacheManager.GetItem(cacheName)
+        this.cache := cacheManager[cacheName]
         this.version := version
         this.appState := appState
         this.stateKey := stateKey

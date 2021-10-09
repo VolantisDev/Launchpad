@@ -1,0 +1,6 @@
+class ComponentEvents {
+    static COMPONENT_MANAGER_STARTED := 0x2200
+    static COMPONENT_DEFINITIONS := 0x2205
+    static COMPONENT_DEFINITIONS_ALTER := 0x2207
+    static COMPONENTS_LOADED := 0x2210
+}

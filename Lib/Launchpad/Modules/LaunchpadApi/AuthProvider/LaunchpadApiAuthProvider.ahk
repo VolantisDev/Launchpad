@@ -16,7 +16,7 @@ class LaunchpadApiAuthProvider extends JwtAuthProvider {
 
         authEndpointUrl := "https://securetoken.googleapis.com/v1"
         webApiKey := "AIzaSyCbwzOWJjTft77P96dV5VB3dAx9TjdDowQ"
-        super.__New(app.Service("DataSourceManager").GetItem(), authEndpointUrl, webApiKey, persistentData)
+        super.__New(app.Service("DataSourceManager").GetDefaultDataSource(), authEndpointUrl, webApiKey, persistentData)
     }
 
     ShowLoginWindow() {

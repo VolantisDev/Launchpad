@@ -11,7 +11,7 @@
         parameters["config.platforms_file"] := this.dataDir . "\Platforms.json"
         parameters["config.assets_dir"] := this.dataDir . "\Launcher Assets"
         parameters["config.data_source_key"] := "api"
-        parameters["config.builder_key"] := "ahk"
+        parameters["config.builder_key"] := "ahk_launcher"
         parameters["config.api_endpoint"] := "https://api.launchpad.games/v1"
         parameters["config.api_authentication"] := true
         parameters["config.api_auto_login"] := false
@@ -33,13 +33,8 @@
         parameters["launcher_config.games"] := Map()
         parameters["platforms_config.platforms"] := Map()
         parameters["backups_config.backups"] := Map()
-        parameters["caches.file"] := "cache.file"
-        parameters["caches.api"] := "cache.api",
-        parameters["installers.Update"] := "installer.launchpad_update"
-        parameters["installers.Dependencies"] := "installer.dependencies"
-        parameters["updater"] := "LaunchpadUpdate"
-        parameters["dependency_installer"] := "Dependencies",
         parameters["previous_config_file"] := A_ScriptDir . "\" . this.appName . ".ini"
+        parameters["default_datasource"] := "api"
         return parameters
     }
 
@@ -48,7 +43,11 @@
 
         services["Config"] := Map(
             "class", "LaunchpadConfig",
-            "arguments", [ServiceRef("config_storage.app_config"), ContainerRef(), ParameterRef("config_key")]
+            "arguments", [
+                ServiceRef("config_storage.app_config"), 
+                ContainerRef(), 
+                ParameterRef("config_key")
+            ]
         )
 
         services["State"] := Map(
@@ -63,7 +62,12 @@
 
         services["config.backups"] := Map(
             "class", "PersistentConfig",
-            "arguments", [ServiceRef("config_storage.backups"), ContainerRef(), "backups_config", "backups"]
+            "arguments", [
+                ServiceRef("config_storage.backups"), 
+                ContainerRef(), 
+                "backups_config", 
+                "backups"
+            ]
         )
 
         services["BackupManager"] := Map(
@@ -73,17 +77,21 @@
 
         services["datasource.api"] := Map(
             "class", "ApiDataSource",
-            "arguments", [AppRef(), ServiceRef("CacheManager"), "api", ParameterRef("config.api_endpoint")]
+            "arguments", [
+                AppRef(), 
+                ServiceRef("CacheManager"), 
+                "api", 
+                ParameterRef("config.api_endpoint")
+            ]
         )
 
         services["DataSourceManager"] := Map(
             "class", "DataSourceManager",
-            "arguments", [ServiceRef("EventManager")],
-            "calls", [
-                Map(
-                    "method", "SetItem", 
-                    "arguments", ["api", ServiceRef("datasource.api"), true]
-                )
+            "arguments", [
+                ContainerRef(), 
+                ServiceRef("EventManager"), 
+                ServiceRef("Notifier"), 
+                ParameterRef("default_datasource")
             ]
         )
 
@@ -94,12 +102,11 @@
 
         services["BuilderManager"] := Map(
             "class", "BuilderManager",
-            "arguments", AppRef(),
-            "calls", [
-                Map(
-                    "method", "SetItem", 
-                    "arguments", ["ahk", ServiceRef("builder.ahk_launcher")]
-                )
+            "arguments", [
+                ServiceRef("LauncherManager"), 
+                ContainerRef(), 
+                ServiceRef("EventManager"), 
+                ServiceRef("Notifier")
             ]
         )
 
@@ -110,7 +117,12 @@
 
         services["config.launchers"] := Map(
             "class", "LauncherConfig",
-            "arguments", [ServiceRef("config_storage.launchers"), ContainerRef(), "launcher_config", "games"]
+            "arguments", [
+                ServiceRef("config_storage.launchers"), 
+                ContainerRef(), 
+                "launcher_config", 
+                "games"
+            ]
         )
 
         services["LauncherManager"] := Map(
@@ -125,7 +137,12 @@
 
         services["config.platforms"] := Map(
             "class", "PlatformsConfig",
-            "arguments", [ServiceRef("config_storage.platforms"), ContainerRef(), "platforms_config", "platforms"]
+            "arguments", [
+                ServiceRef("config_storage.platforms"), 
+                ContainerRef(), 
+                "platforms_config", 
+                "platforms"
+            ]
         )
 
         services["PlatformManager"] := Map(
@@ -135,12 +152,25 @@
 
         services["installer.launchpad_update"] := Map(
             "class", "LaunchpadUpdate",
-            "arguments", [this.Version, ServiceRef("State"), ServiceRef("CacheManager"), "file", this.tmpDir]
+            "arguments", [
+                this.Version, 
+                ServiceRef("State"), 
+                ServiceRef("CacheManager"), 
+                "file", 
+                this.tmpDir
+            ]
         )
 
         services["installer.dependencies"] := Map(
             "class", "DependencyInstaller",
-            "arguments", [this.Version, ServiceRef("State"), ServiceRef("CacheManager"), "file", [], this.tmpDir]
+            "arguments", [
+                this.Version, 
+                ServiceRef("State"), 
+                ServiceRef("CacheManager"), 
+                "file", 
+                [], 
+                this.tmpDir
+            ]
         )
 
         services["cache_state.api"] := Map(
@@ -150,7 +180,12 @@
 
         services["cache.api"] := Map(
             "class", "FileCache",
-            "arguments", [AppRef(), ServiceRef("cache_state.api"), ParameterRef("config.cache_dir"), "API"]
+            "arguments", [
+                AppRef(), 
+                ServiceRef("cache_state.api"), 
+                ParameterRef("config.cache_dir"), 
+                "API"
+            ]
         )
 
         services["LaunchpadIniMigrator"] := Map(
@@ -176,7 +211,7 @@
         updateAvailable := false
 
         if (this.Version != "{{VERSION}}") {
-            dataSource := this.Service("DataSourceManager").GetItem("api")
+            dataSource := this.Service("DataSourceManager")["api"]
             releaseInfoStr := dataSource.ReadItem("release-info")
 
             if (releaseInfoStr) {

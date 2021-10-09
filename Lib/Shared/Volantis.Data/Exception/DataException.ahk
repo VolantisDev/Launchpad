@@ -1,0 +1,3 @@
+class DataException extends ExceptionBase {
+    
+}

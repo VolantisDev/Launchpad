@@ -1,13 +1,12 @@
 class InstallOp extends BulkOperationBase {
-    installerKeys := ""
+    installers := ""
     progressTitle := "Initializing Launchpad"
     progressText := "Please wait while Launchpad finishes initializing..."
     successMessage := "Finished initializing Launchpad."
     failedMessage := "{n} requirements(s) could not be loaded due to errors."
 
-    __New(app, installerKeys, owner := "") {
-        InvalidParameterException.CheckTypes("InstallOp", "installerKeys", installerKeys, "Array")
-        this.installerKeys := installerKeys
+    __New(app, installers, owner := "") {
+        this.installers := installers
         super.__New(app, owner)
     }
 
@@ -16,10 +15,15 @@ class InstallOp extends BulkOperationBase {
             this.progress.SetRange(0, this.CountInstallerItems())
         }
 
-        for index, installerKey in this.installerKeys {
-            installer := this.app.Service("InstallerManager").GetItem(installerKey)
+        for index, name in this.installers {
+            installer := this.app.Service(name)
+
+            if (!installer.HasBase(InstallerBase.Prototype)) {
+                throw AppException("Provided installer is not valid: " . name)
+            }
+
             this.StartItem(installer.name, installer.name . " running...")
-            this.results[installerKey] := this.RunInstallerAction(installer)
+            this.results[name] := this.RunInstallerAction(installer)
             this.FinishItem(installer.name, true, installer.name . " finished.")
         }
     }
@@ -29,18 +33,6 @@ class InstallOp extends BulkOperationBase {
     }
 
     CountInstallerItems() {
-        count := this.installerKeys.Length
-
-        for index, installerKey in this.installerKeys {
-            installer := this.app.Service("InstallerManager").GetItem(installerKey)
-
-            if (!installer) {
-                throw AppException("Installer " . installerKey . " is not present in InstallerManager")
-            }
-            
-            count += installer.CountComponents()
-        }
-
-        return count
+        return Type(this.installers) == "Array" ? this.installers.Length : this.installers.Count
     }
 }

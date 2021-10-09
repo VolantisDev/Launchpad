@@ -1,13 +1,21 @@
 class SteamIsOpenCondition extends SteamConditionBase {
+    __New(app, negate := false) {
+        this.app := app
+        this.steamPath := this.GetSteamPath(app)
+        super.__New("", negate)
+    }
+
     EvaluateCondition() {
-        if (!super.EvaluateCondition()) {
-            return false
+        matches := false
+
+        if (super.EvaluateCondition()) {
+            matches := (this.steamPath && DirExist(this.steamPath))
         }
 
-        if (!this.steamPath || !DirExist(this.steamPath)) {
-            return false
+        if (matches) {
+            matches := !!(WinExist("ahk_class vguiPopupWindow ahk_exe Steam.exe"))
         }
 
-        return !!(WinExist("ahk_class vguiPopupWindow ahk_exe Steam.exe"))
+        return matches
     }
 }

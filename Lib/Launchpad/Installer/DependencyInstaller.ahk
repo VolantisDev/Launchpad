@@ -8,7 +8,7 @@ class DependencyInstaller extends InstallerBase {
         components := []
         cleanupFiles := []
 
-        cache := cacheManager.GetItem(cacheName)
+        cache := cacheManager[cacheName]
 
         ahkUrl := "https://www.autohotkey.com/download/2.0/AutoHotkey_" . A_AhkVersion . ".zip"
         components.Push(DownloadableInstallerComponent(A_AhkVersion, ahkUrl, true, "Vendor\AutoHotKey", appState, "AutoHotKey", cache, "Dependencies", true, tmpDir, false))

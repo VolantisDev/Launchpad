@@ -1,0 +1,3 @@
+class ComponentException extends ExceptionBase {
+
+}

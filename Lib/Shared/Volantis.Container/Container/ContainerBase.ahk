@@ -1,8 +1,17 @@
 class ContainerBase {
     itemsObj := Map()
 
+    __Item[name] {
+        get => this.Get(name)
+        set => this.Set(name, value)
+    }
+
     Items {
         get => this.itemsObj
+    }
+
+    __Enum(numberOfVars) {
+        return this.Items.__Enum(numberOfVars)
     }
 
     __New(items := "") {
@@ -30,9 +39,6 @@ class ContainerBase {
     }
 
     Set(key, value) {
-        if (Type(this.Items) != "Map") {
-            MsgBox(Type(this))
-        }
         this.Items[key] := value
     }
 

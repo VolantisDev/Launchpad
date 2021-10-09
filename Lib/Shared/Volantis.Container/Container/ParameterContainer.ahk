@@ -13,41 +13,20 @@ class ParameterContainer extends ContainerBase {
         }
     }
 
-    LoadDefinitions(definitionLoader, replace := true) {
+    LoadDefinitions(definitionLoader, replace := true, prefix := "") {
         parameters := definitionLoader.LoadParameterDefinitions()
 
         if (parameters) {
             for paramName, paramConfig in parameters {
+                if (prefix) {
+                    paramName := prefix . paramName
+                }
+
                 if (!this.Parameters.Has(paramName) || replace) {
                     this.SetParameter(paramName, paramConfig)
                 }
             }
         }
-    }
-
-    LoadFromStructuredData(structuredData, servicesKey := "", parametersKey := "") {
-        this.LoadDefinitions(StructuredDataDefinitionLoader(structuredData, "", servicesKey, parametersKey))
-    }
-
-    LoadFromMap(obj, servicesKey := "", parametersKey := "") {
-        if (obj.HasBase(ParameterRef.prototype)) {
-            obj := this.GetParameter(obj.GetName())
-        }
-
-        newObj := Map(
-            "services", obj.Has("services") ? obj["services"] : Map(),
-            "parameters", obj.Has("parameters") ? obj["parameters"] : Map()
-        )
-
-        this.LoadDefinitions(MapDefinitionLoader(newObj, "", servicesKey, parametersKey))
-    }
-
-    LoadFromJson(jsonFile, servicesKey := "", parametersKey := "") {
-        if (jsonFile.HasBase(ParameterRef.prototype)) {
-            jsonFile := this.GetParameter(jsonFile.GetName())
-        }
-
-        this.LoadDefinitions(JsonDefinitionLoader(jsonFile, "", servicesKey, parametersKey))
     }
 
     Get(name) {
@@ -78,9 +57,49 @@ class ParameterContainer extends ContainerBase {
             val := this
         } else if (isObj && definition.HasBase(ParameterRef.Prototype)) {
             val := this.GetParameter(definition.GetName())
+        } else if (Type(definition) == "String" || Type(definition) == "Map" || Type(definition) == "Array") {
+            val := this.ExpandTextReferences(definition)
         }
 
         return val
+    }
+
+    /*
+        Example tokens:
+          - {@App} -> AppRef()
+          - {@Container} -> ContainerRef()
+          - {@Service:EventManager} -> ContainerRef("EventManager")
+    */
+    ExpandTextReferences(data) {
+        if (Type(data) == "Array" || Type(data) == "Map") {
+            for index, value in data {
+                data[index] := this.ExpandTextReferences(value)
+            }
+        } else if (Type(data) == "String") {
+            tokenPattern := "^{@([!:}]+)(:([^:}]+))?(:([^:}]+))?}$"
+            pos := RegExMatch(string, tokenPattern, &matches)
+
+            if (pos) {
+                className := matches[1] . "Ref"
+                args := []
+
+                if (matches.Has(3)) {
+                    args.Push(matches[3])
+                }
+
+                if (matches.Has(5)) {
+                    args.Push(matches[5])
+                }
+
+                if (!HasMethod(%className%)) {
+                    throw ContainerException("Reference type " . className . " does not exist")
+                }
+
+                data := %className%(args*)
+            }
+        }
+
+        return data
     }
 
     GetApp(definition := "") {

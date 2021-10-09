@@ -19,19 +19,10 @@ class Events {
     static APP_SHUTDOWN := 0x1020
     static APP_RESTART := 0x1025
 
-    static CACHES_REGISTER := 0x2010
-    static CACHES_ALTER := 0x2015
-
-    static INSTALLERS_REGISTER := 0x2020
-    static INSTALLERS_ALTER := 0x2025
-
     static MODULES_DISCOVER := 0x2040
     static MODULES_DISCOVER_ALTER := 0x2042
     static MODULE_LOAD := 0x2045
     static MODULE_LOAD_ALTER := 0x2047
-
-    static THEMES_REGISTER := 0x2050
-    static THEMES_ALTER := 0x2055
 
     static WINDOWS_DISCOVER := 0x2060
     static WINDOWS_DISCOVER_ALTER := 0x2062
@@ -40,9 +31,6 @@ class Events {
 
     static BACKUPS_REGISTER := 0x2070
     static BACKUPS_ALTER := 0x2075
-
-    static DATASOURCES_REGISTER := 0x3000
-    static DATASOURCES_ALTER := 0x3005
 
     static AHK_NOTIFYICON := 0x404
 }

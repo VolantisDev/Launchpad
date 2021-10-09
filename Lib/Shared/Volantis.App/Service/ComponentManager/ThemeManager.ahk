@@ -1,95 +1,72 @@
-class ThemeManager extends ComponentServiceBase {
-    _registerEvent := Events.THEMES_REGISTER
-    _alterEvent := Events.THEMES_ALTER
+class ThemeManager extends AppComponentManagerBase {
     themesDir := ""
     resourcesDir := ""
     defaultTheme := ""
     configObj := ""
-    loggerObj := ""
-    idGeneratorObj := ""
 
-    __New(eventMgr, configObj, idGeneratorObj, loggerObj, themesDir, resourcesDir, defaultTheme := "", autoLoad := true) {
-        InvalidParameterException.CheckTypes("ThemeManager", "themesDir", themesDir, "")
-        InvalidParameterException.CheckEmpty("ThemeManager", "themesDir", themesDir)
+    __New(container, eventMgr, notifierObj, configObj, definitionLoader, defaultTheme := "") {
         this.configObj := configObj
-        this.themesDir := themesDir
-        this.resourcesDir := resourcesDir
         this.defaultTheme := defaultTheme
-        this.loggerObj := loggerObj
-        this.idGeneratorObj := idGeneratorObj
-        super.__New(eventMgr, "", autoLoad)
+
+        eventMgr.Register(ComponentEvents.COMPONENT_DEFINITIONS, "ThemeManagerThemes", ObjBindMethod(this, "DefineServices"))
+
+        super.__New(container, eventMgr, notifierObj, "theme.", ThemeBase, definitionLoader)
     }
 
-    LoadMainTheme() {
-        this.LoadTheme(this.GetMainThemeName())
-    }
+    DefineServices(event, extra, eventName, hwnd) {
+        services := event.GetDefinitions()
 
-    GetMainThemeName() {
-        return (this.configObj.Has("theme_name") && this.configObj["theme_name"] != "") ? this.configObj["theme_name"] : this.defaultTheme
-    }
-
-    LoadComponents() {
-        this._componentsLoaded := false
-        themes := Map()
-
-        Loop Files this.themesDir . "\*", "D" {
-            themeName := A_LoopFileName
-
-            if (FileExist(A_LoopFileFullPath . "\" . themeName . ".json")) {
-                themes[themeName] := false
+        for themeKey, themeParameters in event.GetParameters() {
+            if (!services.Has(themeKey)) {
+                services[themeKey] := Map(
+                    "factory", ServiceRef("ThemeFactory", "CreateTheme"),
+                    "arguments", [themeKey]
+                )
             }
         }
 
-        Loop Files this.themesDir . "\*.json" {
-            themeName := SubStr(A_LoopFileName, 1, -5) ; Remove .json
-            themes[themeName] := false
+        event.SetDefinitions(services)
+    }
+
+    GetComponent(themeName := "") {
+        if (themeName == "") {
+            themeName := this.GetCurrentThemeName()
         }
 
-        this._components := themes
-        super.LoadComponents()
+        return super.GetComponent(themeName)
+    }
+
+    GetCurrentThemeName() {
+        return this.configObj["theme_name"] ? this.configObj["theme_name"] : this.defaultTheme
+    }
+
+    GetThemesDir() {
+        return this.configObj["themes_dir"]
     }
 
     SetThemesDir(themesDir) {
-        this.themesDir := themesDir
+        this.configObj["themes_dir"] := themesDir
+        this.configObj.SaveConfig()
         this.LoadComponents()
     }
 
-    GetItem(key := "") {
-        if (key == "") {
-            key := this.GetMainThemeName()
-        }
-
-        if (!this.ThemeIsLoaded(key)) {
-            return this.LoadTheme(key)
-        }
-
-        return super.GetItem(key)
-    }
-
-    GetAvailableThemes(locate := false) {
-        if (locate) {
+    GetAvailableThemes() {
+        if (!this.loaded) {
             this.LoadComponents()
         }
 
+        themeParams := this.container.GetParameter("theme")
+
         themes := []
 
-        for key, val in this._components {
+        for key, themeData in themeParams {
             themes.Push(key)
         }
 
         return themes
     }
 
-    ThemeIsLoaded(key) {
-        return (this._components.Has(key) && this._components[key] != false)
-    }
-
-    LoadTheme(key) {
-        this._components[key] := JsonTheme(key, this.resourcesDir, this.eventMgr, this.idGeneratorObj, this.loggerObj, true)
-        return this._components[key]
-    }
-
     OpenThemeDir() {
-        Run(this.themesDir)
+        Run(this.GetThemesDir())
     }
 }

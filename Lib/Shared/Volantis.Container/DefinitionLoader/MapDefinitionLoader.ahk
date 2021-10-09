@@ -20,21 +20,25 @@ class MapDefinitionLoader extends DefinitionLoaderBase {
         return this.LoadFromMap(dataObj, this.parametersKey)
     }
 
-    LoadFromMap(dataObj, key := "") {
+    LoadFromMap(dataObj, key := "", ignoreFailed := true) {
         if (Type(dataObj) != "Map") {
             throw ContainerException("Services can only be loaded from a Map object")
         }
 
         if (key) {
-            if (!dataObj.Has(key)) {
-                throw ContainerException("Cannot load data from non-existant key " . key)
+            if (dataObj.Has(key)) {
+                dataObj := dataObj[key]
+            } else {
+                dataObj := Map()
+
+                if (!ignoreFailed) {
+                    throw ContainerException("Cannot load data from non-existant key " . key)
+                }
             }
 
             if (Type(dataObj) != "Map") {
                 throw ContainerException("Services key " . key . " is not a valid map")
             }
-
-            dataObj := dataObj[key]
         }
 
         return dataObj

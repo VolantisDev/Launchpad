@@ -23,6 +23,10 @@ class ConfigBase {
         set => this.Set(name, value)
     }
 
+    __Enum(numberOfVars) {
+        return this.container.GetParameter(this.parentKey).__Enum(numberOfVars)
+    }
+
     IsAllowed(key) {
         keyIsAllowed := true
 
@@ -112,7 +116,11 @@ class ConfigBase {
         return this
     }
 
-    LoadConfig() {
+    LoadConfig(reloadConfig := false) {
+        if (this.loaded && !reloadConfig) {
+            return this
+        }
+
         config := this._loadConfigFromStorage()
 
         for key, value in config {

@@ -1,11 +1,15 @@
 class ServiceContainer extends ParameterContainer {
     serviceStore := Map()
  
-    LoadDefinitions(definitionLoader, replace := true) {
+    LoadDefinitions(definitionLoader, replace := true, prefix := "") {
         services := definitionLoader.LoadServiceDefinitions()
 
         if (services) {
             for serviceName, serviceConfig in services {
+                if (prefix) {
+                    serviceName := prefix . serviceName
+                }
+
                 if (!this.Has(serviceName) || replace) {
                     if (this.serviceStore.Has(serviceName)) {
                         this.serviceStore.Delete(serviceName)
@@ -16,10 +20,14 @@ class ServiceContainer extends ParameterContainer {
             }
         }
 
-        super.LoadDefinitions(definitionLoader, replace)
+        super.LoadDefinitions(definitionLoader, replace, prefix)
     }
 
     Get(service) {
+        if (!service) {
+            throw ContainerException("Service name not provided")
+        }
+
         if (!this.Has(service)) {
             throw ServiceNotFoundException("Service not found: " . service)
         }
@@ -29,6 +37,30 @@ class ServiceContainer extends ParameterContainer {
         }
 
         return this.serviceStore[service]
+    }
+
+    Set(name, service) {
+        if (this.serviceStore.Has(service)) {
+            this.serviceStore.Delete(service)
+        }
+
+        super.Set(name, service)
+    }
+
+    Query(servicePrefix := "", resultType := "") {
+        if (resultType == "") {
+            resultType := ContainerQuery.RESULT_TYPE_NAMES
+        }
+
+        return ContainerQuery(this, servicePrefix, resultType)
+    }
+
+    Delete(service) {
+        if (this.serviceStore.Has(service)) {
+            this.serviceStore.Delete(service)
+        }
+
+        super.Delete(service)
     }
 
     createService(name) {
@@ -115,15 +147,31 @@ class ServiceContainer extends ParameterContainer {
     }
 
     createServiceFromFactory(name, entry) {
-        factory := entry["factory"]
+        factory := this.resolveDefinition(entry["factory"])
+
+        if (Type(factory) == "String") {
+            if (this.Has(factory)) {
+                factory := this.Get(factory)
+            } else {
+                throw ContainerException("Factory service " . factory . " does not exist in the container.")
+            }
+        }
+
+        arguments := entry.Has("arguments") ? this.resolveArguments(name, entry["arguments"]) : []
+
+        if (entry.Has("method") && entry["method"]) {
+            if (!HasMethod(factory, entry["method"])) {
+                throw ContainerException(name " service uses factory method " . entry["method"] . " which is uncallable")
+            }
+
+            factory := ObjBindMethod(factory, entry["method"])
+        }
 
         if (!HasMethod(factory)) {
             throw ContainerException(name . " service uses a factory which is uncallable")
         }
 
-        if (HasMethod(factory)) {
-            return %factory%(this)
-        }
+        return factory(arguments*)
     }
 
     resolveArguments(name, argumentDefinitions) {
@@ -148,7 +196,23 @@ class ServiceContainer extends ParameterContainer {
         isObj := IsObject(definition)
 
         if (isObj && definition.HasBase(ServiceRef.Prototype)) {
-            val := this.Get(definition.GetName())
+            serviceName := definition.GetName()
+
+            if (!serviceName) {
+                throw ContainerException("Definition of type " . Type(definition) . " is missing a name")
+            }
+
+            val := this.Get(serviceName)
+
+            method := definition.GetMethod()
+
+            if (method) {
+                if (!HasMethod(val, method)) {
+                    throw ContainerException("Service " . definition.GetName() . " does not have method " . method)
+                }
+
+                val := ObjBindMethod(val, method)
+            }
         }
 
         return super.resolveDefinition(val)
@@ -178,8 +242,6 @@ class ServiceContainer extends ParameterContainer {
                 }
 
                 method := service.GetMethod(callDefinition["method"], arguments.Length)
-
-                
 
                 method(service, arguments*)
             }
