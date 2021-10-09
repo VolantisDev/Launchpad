@@ -1,9 +1,9 @@
-class BuilderManager extends AppComponentManagerBase {
+class BuilderManager extends ComponentManagerBase {
     launcherMgr := ""
 
     __New(launcherMgr, container, eventMgr, notifierObj) {
         this.launcherMgr := launcherMgr
-        super.__New(container, eventMgr, notifierObj, "builder.", BuilderBase)
+        super.__New(container, "builder.", eventMgr, notifierObj, BuilderBase)
     }
 
     BuildLaunchers(launcherGames := "", updateExisting := false, owner := "", builder := "") {
