@@ -1,8 +1,10 @@
 class Debugger {
     logger := ""
+    maxLevels := ""
 
-    __New(logger := "") {
+    __New(logger := "", maxLevels := 2) {
         this.logger := logger
+        this.maxLevels := maxLevels
     }
 
     SetLogger(logger) {
@@ -13,8 +15,19 @@ class Debugger {
         }
     }
 
-    Inspect(var) {
+    Inspect(var, params*) {
         message := this.ToString(var)
+
+        if (params && params.Length) {
+            for index, paramVar in params {
+                paramStr := this.ToString(paramVar)
+
+                if (paramStr) {
+                    message .= "`n`n" . paramStr
+                }
+            }
+        }
+
         if (A_IsCompiled) {
             this.LogMessage(message)
         } else {
@@ -40,7 +53,7 @@ class Debugger {
             indent := this.GetIndent(level, indentStr)
             output := !innerValue ? indent : ""
             
-            if (level > 2) {
+            if (level > this.maxLevels) {
                 output .= valType . "`n"
             } else {
                 output .= valType . "{`n"
@@ -65,8 +78,14 @@ class Debugger {
             if (!innerValue) {
                 output .= "`n"
             }
+        } else if (Type(val) == "String") {
+            output := "`"" . val . "`""
         } else {
-            output := val
+            output := Type(val) . ": " . val
+        }
+
+        if (output == "") {
+            output := "<emptry string>"
         }
 
         return output
