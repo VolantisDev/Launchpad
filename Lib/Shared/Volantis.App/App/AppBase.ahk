@@ -446,13 +446,8 @@ class AppBase {
     }
 
     InitializeTheme() {
-        this.Service("Gdip")
-        guiManagerObj := this.Service("GuiManager")
-        themeManagerObj := this.Service("ThemeManager")
-
-        if (guiManagerObj and themeManagerObj) {
-            this.themeReady := true
-        }
+        this.Service("Gdip", "GuiManager", "ThemeManager")
+        this.themeReady := true
     }
 
     InitializeApp(config) {
@@ -528,7 +523,27 @@ class AppBase {
         return modules
     }
 
-    Service(name) {
+    Service(name, params*) {
+        if (Type(name) == "Array" || (params && params.Length)) {
+            results := Map()
+
+            if (Type(name) != "Array") {
+                name := [name]
+            }
+
+            for index, arrName in name {
+                results[arrName] := this.Service(arrName)
+            }
+
+            if (params && params.Length) {
+                for index, arrName in params {
+                    results[arrName] := this.Service(arrName)
+                }
+            }
+
+            return results
+        }
+
         return this.Services.Get(name)
     }
 
