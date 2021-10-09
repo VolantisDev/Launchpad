@@ -1,6 +1,7 @@
 class LaunchpadUpdate extends InstallerBase {
     name := "Launchpad Update"
     parentComponent := ""
+    installerType := InstallerBase.INSTALLER_TYPE_SELF_UPDATE
 
     __New(appVersion, appState, cacheManager, cacheName, tmpDir := "") {
         components := []

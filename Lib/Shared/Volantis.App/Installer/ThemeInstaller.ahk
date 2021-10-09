@@ -1,5 +1,6 @@
 class ThemeInstaller extends InstallerBase {
     name := "Launchpad Theme Installer"
+    installerType := InstallerBase.INSTALLER_TYPE_REQUIREMENT
 
     __New(appVersion, appState, cacheManager, cacheName, downloadThemes := "", tmpDir := "") {
         components := []

@@ -12,6 +12,11 @@ class InstallerBase {
     scriptDir := ""
     tmpDir := ""
     parentComponent := ""
+    installerType := ""
+    
+    static INSTALLER_TYPE_REQUIREMENT := "requirement"
+    static INSTALLER_TYPE_UPDATE := "update"
+    static INSTALLER_TYPE_SELF_UPDATE := "self_update"
 
     __New(version, appState, stateKey, cacheManager, cacheName, components := "", tmpDir := "", cleanupFiles := "") {
         this.cache := cacheManager.GetItem(cacheName)

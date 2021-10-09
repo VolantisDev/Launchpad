@@ -1,5 +1,6 @@
 class DependencyInstaller extends InstallerBase {
     name := "Dependency Installer"
+    installerType := InstallerBase.INSTALLER_TYPE_REQUIREMENT
 
     __New(version, appState, cacheManager, cacheName, extraComponents := "", tmpDir := "") {
         ; TODO: Remove dependency on A_ScriptDir
