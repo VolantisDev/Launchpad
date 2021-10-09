@@ -46,9 +46,18 @@ class CacheBase {
         }
     }
 
-    FlushCache() {
-        this.FlushCacheAction()
-        this.stateObj.ClearItems()
+    FlushCache(force := false) {
+        flushed := false
+
+        if (force || this.IsCacheOutdated()) {
+            flushed := this.FlushCacheAction(force)
+        }
+
+        if (flushed) {
+            this.stateObj.ClearItems()
+        }
+
+        return flushed
     }
 
     ImportItemFromUrl(reference, url) {
@@ -99,7 +108,7 @@ class CacheBase {
         throw(MethodNotImplementedException("CacheBase", "RemoveItemAction"))
     }
 
-    FlushCacheAction() {
+    FlushCacheAction(force := false) {
         throw(MethodNotImplementedException("CacheBase", "FlushCacheAction"))
     }
 }
