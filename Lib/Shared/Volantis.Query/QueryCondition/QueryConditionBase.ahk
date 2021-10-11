@@ -14,7 +14,7 @@ class QueryConditionBase extends ConditionBase {
     }
 
     getQueryValue(key, data, args*) {
-
+        return ""
     }
 
     EvaluateCondition(key, data, args*) {
