@@ -72,13 +72,22 @@ class ComponentManagerBase {
         event := ComponentDefinitionsEvent(ComponentEvents.COMPONENT_DEFINITIONS_ALTER, this, event.GetDefinitions(), event.GetParameters())
         this.eventMgr.DispatchEvent(ComponentEvents.COMPONENT_DEFINITIONS_ALTER, event)
 
-        loader := SimpleDefinitionLoader(event.GetDefinitions(), event.GetParameters())
+        services := event.GetDefinitions()
+        parameters := event.GetParameters()
+
+        this.ValidateComponentDependencies(services, parameters)
+
+        loader := SimpleDefinitionLoader(services, parameters)
         this.container.LoadDefinitions(loader, true, this.servicePrefix)
 
         this.loaded := true
 
         event := ComponentManagerEvent(ComponentEvents.COMPONENTS_LOADED, this)
         this.eventMgr.DispatchEvent(ComponentEvents.COMPONENTS_LOADED, event)
+    }
+
+    ValidateComponentDependencies(services, parameters) {
+        ; Optional method to throw exceptions in if the loaded definitions do not validate
     }
 
     UnloadComponents(deleteDefinitions := false) {
