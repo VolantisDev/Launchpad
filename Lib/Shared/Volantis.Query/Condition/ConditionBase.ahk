@@ -4,7 +4,7 @@ class ConditionBase {
 
     __New(childConditions := "", negate := false) {
         if (childConditions) {
-            if (Type(childConditions) == "String") {
+            if (Type(childConditions) != "Array") {
                 childConditions := [childConditions]
             }
 
