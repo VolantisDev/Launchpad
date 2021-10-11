@@ -3,7 +3,7 @@ class AuthModule extends ModuleBase {
         return []
     }
 
-    GetSubscribers() {
+    GetEventSubscribers() {
         subscribers := Map()
         subscribers[Events.APP_SERVICE_DEFINITIONS] := [ObjBindMethod(this, "DefineServices")]
         return subscribers

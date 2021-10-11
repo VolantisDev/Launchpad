@@ -3,7 +3,7 @@ class RiotModule extends ModuleBase {
         return []
     }
 
-    GetSubscribers() {
+    GetEventSubscribers() {
         subscribers := Map()
         subscribers[LaunchpadEvents.PLATFORMS_DEFINE] := [ObjBindMethod(this, "DefinePlatform")]
         return subscribers

@@ -40,7 +40,7 @@ class ModuleBase {
         return []
     }
 
-    GetSubscribers() {
+    GetEventSubscribers() {
         return Map()
     }
 }
