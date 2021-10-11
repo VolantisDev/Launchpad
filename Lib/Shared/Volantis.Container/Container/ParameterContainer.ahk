@@ -68,7 +68,8 @@ class ParameterContainer extends ContainerBase {
         Example tokens:
           - {@App} -> AppRef()
           - {@Container} -> ContainerRef()
-          - {@Service:EventManager} -> ContainerRef("EventManager")
+          - {@Service:EventManager} -> ServiceRef("EventManager")
+          - {@Service:EventManager:methodName} -> ServiceRef("EventManager", "methodName")
     */
     ExpandTextReferences(data) {
         if (Type(data) == "Array" || Type(data) == "Map") {
