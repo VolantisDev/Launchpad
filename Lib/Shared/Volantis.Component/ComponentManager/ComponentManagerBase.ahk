@@ -150,7 +150,7 @@ class ComponentManagerBase {
     Names() {
         names := []
 
-        for index, name in this.All(ContainerQuery.RESULT_TYPE_NAMES) {
+        for index, name in this.getAllNames() {
             start := 0
 
             if (this.servicePrefix) {
@@ -161,6 +161,10 @@ class ComponentManagerBase {
         }
 
         return names
+    }
+
+    getAllNames() {
+        return this.All(ContainerQuery.RESULT_TYPE_NAMES)
     }
 
     Query(resultType := "") {
