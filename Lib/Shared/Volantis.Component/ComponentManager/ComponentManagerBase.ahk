@@ -134,7 +134,7 @@ class ComponentManagerBase {
         return ""
     }
 
-    All(resultType := "") {
+    All(resultType := "", returnQuery := false) {
         if (!this.loaded) {
             this.LoadComponents()
         }
@@ -144,9 +144,7 @@ class ComponentManagerBase {
         }
 
         query := this.Query(resultType)
-        results := query.Execute()
-
-        return results
+        return returnQuery ? query : query.Execute()
     }
 
     Names() {
