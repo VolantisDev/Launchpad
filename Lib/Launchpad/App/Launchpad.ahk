@@ -278,7 +278,7 @@
         this.MigrateConfiguration()
         
 
-        if (this.Config["api_auto_login"]) {
+        if (this.Config["api_auto_login"] && this.Services.Has("Auth")) {
             this.Service("Auth").Login()
         }
         

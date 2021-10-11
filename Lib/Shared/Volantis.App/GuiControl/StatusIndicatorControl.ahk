@@ -12,7 +12,10 @@ class StatusIndicatorControl extends GuiControlBase {
 
         options := this.SetDefaultOptions(this.options.Clone(), ["x+" . this.guiObj.margin, "yp", "w" . this.statusIndicatorW, "h26", "vStatusIndicator"])
         
-        this.innerControl := this.guiObj.Add("ButtonControl", options, statusInfo["name"], handler, statusStyle, Map("photo", statusInfo["photo"]))
+        name := statusInfo && statusInfo.Has("name") ? statusInfo["name"] : ""
+        photo := statusInfo && statusInfo.Has("photo") ? statusInfo["photo"] : ""
+
+        this.innerControl := this.guiObj.Add("ButtonControl", options, name, handler, statusStyle, Map("photo", photo))
         this.ctl := this.innerControl.ctl
         return this.ctl
     }
@@ -29,7 +32,10 @@ class StatusIndicatorControl extends GuiControlBase {
             this.ctl.Move(statusX - difference,, statusW + difference)
         }
 
-        this.guiObj.themeObj.DrawButton(this.ctl, statusInfo["name"], statusStyle, Map("photo", statusInfo["photo"]))
+        name := statusInfo && statusInfo.Has("name") ? statusInfo["name"] : ""
+        photo := statusInfo && statusInfo.Has("photo") ? statusInfo["photo"] : ""
+
+        this.guiObj.themeObj.DrawButton(this.ctl, name, statusStyle, Map("photo", photo))
         return difference
     }
 

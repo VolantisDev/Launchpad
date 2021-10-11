@@ -148,17 +148,25 @@
     }
 
     GetStatusInfo() {
-        return this.app.Service("Auth").GetStatusInfo()
+        info := ""
+
+        if (this.app.Services.Has("Auth")) {
+            info := this.app.Service("Auth").GetStatusInfo()
+        }
+
+        return info
     }
 
     OnStatusIndicatorClick(btn, info) {
         menuItems := []
 
-        if (this.app.Service("Auth").IsAuthenticated()) {
-            menuItems.Push(Map("label", "Account Details", "name", "AccountDetails"))
-            menuItems.Push(Map("label", "Logout", "name", "Logout"))
-        } else {
-            menuItems.Push(Map("label", "Login", "name", "Login"))
+        if (this.app.Services.Has("Auth")) {
+            if (this.app.Service("Auth").IsAuthenticated()) {
+                menuItems.Push(Map("label", "Account Details", "name", "AccountDetails"))
+                menuItems.Push(Map("label", "Logout", "name", "Logout"))
+            } else {
+                menuItems.Push(Map("label", "Login", "name", "Login"))
+            }
         }
 
         result := this.app.Service("GuiManager").Menu(menuItems, this, btn)
@@ -174,14 +182,23 @@
                 this.UpdateStatusIndicator()
             }
         } else if (result == "Logout") {
-            this.app.Service("Auth").Logout()
+            if (this.app.Services.Has("Auth")) {
+                this.app.Service("Auth").Logout()
+            }
         } else if (result == "Login") {
-            this.app.Service("Auth").Login()
+            if (this.app.Services.Has("Auth")) {
+                this.app.Service("Auth").Login()
+            }
         }
     }
 
     StatusWindowIsOnline() {
-        return this.app.Service("Auth").IsAuthenticated()
+        isOnline := false
+
+        if (this.app.Services.Has("Auth")) {
+            isOnline := this.app.Service("Auth").IsAuthenticated()
+        }
+        return isOnline
     }
 
     FormatDate(timestamp) {
@@ -452,7 +469,7 @@
             apiStatus := launcher.DataSourceItemKey ? "Linked" : "Not linked"
             platformName := launcher.Platform
 
-            if (platformName) {
+            if (platformName && this.platformManager.HasItem(platformName)) {
                 platformObj := this.platformManager.GetItem(platformName)
 
                 if (platformObj) {

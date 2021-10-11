@@ -35,7 +35,7 @@ class ApiDataSource extends DataSourceBase {
         if (private) {
             request.requestHeaders["Cache-Control"] := "no-cache"
 
-            if (this.app.Config["api_authentication"]) {
+            if (this.app.Config["api_authentication"] && this.app.Services.Has("Api")) {
                 this.app.Service("Auth").AlterApiRequest(request)
             }
         }
