@@ -1,18 +1,18 @@
 class ManageBackupsWindow extends ManageWindowBase {
     listViewColumns := Array("KEY", "COUNT", "TOTAL SIZE")
-    backupsFile := ""
     backupManager := ""
 
-    __New(app, themeObj, guiId, backupsFile := "", owner := "", parent := "") {
-        if (backupsFile == "") {
-            backupsFile := app.Config["backups_file"]
-        }
-
-        InvalidParameterException.CheckTypes("ManageBackupsWindow", "backupsFile", backupsFile, "")
-        this.backupsFile := backupsFile
-        this.backupManager := app.Service("BackupManager")
+    __New(container, themeObj, config) {
+        this.backupManager := container.Get("BackupManager")
         this.lvCount := this.backupManager.CountEntities()
-        super.__New(app, themeObj, guiId, "Manage Backups", owner, parent)
+        super.__New(container, themeObj, config)
+    }
+
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["title"] := "Manage Backups"
+        defaults["backupsFile"] := container.Get("Config")["backups_file"]
+        return defaults
     }
 
     AddBottomControls(y) {
@@ -64,7 +64,7 @@ class ManageBackupsWindow extends ManageWindowBase {
 
     EditBackup(key) {
         backupObj := this.backupManager.Entities[key]
-        diff := backupObj.Edit("config", this.guiObj)
+        diff := backupObj.Edit("config", this.guiId)
 
         if (diff != "" && diff.HasChanges()) {
             this.backupManager.SaveModifiedEntities()
@@ -87,7 +87,7 @@ class ManageBackupsWindow extends ManageWindowBase {
 
     AddBackup() {
         ; TODO: Implement backup add operation
-        ;entity := this.app.Service("GuiManager").Dialog("BackupWizard", this.guiId)
+        ;entity := this.app.Service("GuiManager").Dialog(Map("type", "BackupWizard", "ownerOrParent", this.guiId))
         entity := ""
 
         if (entity != "") {
@@ -117,7 +117,7 @@ class ManageBackupsWindow extends ManageWindowBase {
         menuItems.Push(Map("label", "Restore", "name", "RestoreBackup"))
         menuItems.Push(Map("label", "Delete", "name", "DeleteBackup"))
 
-        result := this.app.Service("GuiManager").Menu("MenuGui", menuItems, this)
+        result := this.app.Service("GuiManager").Menu(menuItems, this)
 
         if (result == "EditBackup") {
             this.EditBackup(key)

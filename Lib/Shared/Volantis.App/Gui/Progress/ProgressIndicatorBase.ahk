@@ -1,37 +1,31 @@
 class ProgressIndicatorBase extends FormGuiBase {
-    rangeStart := 0
-    rangeStop := 100
     currentPosition := 0
-    waitForResult := false
-    detailText := "Initializing..."
-    enableDetailText := true
+    detailText := ""
     cancelCallback := ""
-    hasStatusIndicator := false
 
-    __New(app, themeObj, guiId, title, text, owner := "", parent := "", btns := "", rangeStop := "", currentPosition := 0, detailText := true, showInNotificationArea := true) {
-        if (rangeStop != "") {
-            InvalidParameterException.CheckTypes("ProgressIndicator", "rangeStop", rangeStop, "Integer")
-            this.rangeStop := rangeStop
+    GetDefaultConfig(container, config) {
+        showDetailText := true
+
+        if (config.Has("detailText") && !config["detailText"]) {
+            showDetailText := false
         }
 
-        if (currentPosition != "") {
-            InvalidParameterException.CheckTypes("ProgressIndicator", "currentPosition", currentPosition, "Integer")
-            InvalidParameterException.CheckBetween("ProgressIndicator", "currentPosition", currentPosition, this.rangeStart, this.RangeStop)
-        }
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["waitForResult"] := false
+        defaults["detailText"] := "Initializing..."
+        defaults["showInNotificationArea"] := true
+        defaults["rangeStart"] := 0
+        defaults["rangeStop"] := 100
+        defaults["startingPosition"] := 0
+        defaults["showDetailText"] := !(config.Has("detailText") && !config["detailText"])
+        defaults["showStatusIndicator"] := false
+        defaults["buttons"] := config.Has("allowCancel") && config["allowCancel"] ? "&Cancel" : ""
 
-        this.currentPosition := currentPosition
-        this.enableDetailText := !!(detailText)
-
-        if (Type(detailText) == "String") {
-            this.detailText := detailText
-        }
-        
-        this.showInNotificationArea := !!(showInNotificationArea)
-        super.__New(app, themeObj, guiId, title, text, owner, parent, btns)
+        return defaults
     }
 
     SetDetailText(detailText) {
-        if (this.enableDetailText) {
+        if (this.config["showDetailText"]) {
             this.detailText := detailText
             this.guiObj["DialogDetailText"].Text := detailText
         }
@@ -39,8 +33,8 @@ class ProgressIndicatorBase extends FormGuiBase {
     }
 
     SetProgressIndicator() {
-        if (this.hasStatusIndicator) {
-            this.guiObj["DialogStatusIndicator"].Text := this.currentPosition . " / " . this.rangeStop
+        if (this.config["showStatusIndicator"]) {
+            this.guiObj["DialogStatusIndicator"].Text := this.currentPosition . " / " . this.config["rangeStop"]
         }
     }
 
@@ -49,8 +43,8 @@ class ProgressIndicatorBase extends FormGuiBase {
     }
 
     SetRange(start := 0, stop := 100) {
-        this.rangeStart := start
-        this.rangeStop := stop
+        this.config["rangeStart"] := start
+        this.config["rangeStop"] := stop
     }
 
     SetValue(value, detailText := false) {
@@ -89,17 +83,22 @@ class ProgressIndicatorBase extends FormGuiBase {
 
     Controls() {
         super.Controls()
+        this.currentPosition := this.config["startingPosition"]
 
+        if (this.config["detailText"]) {
+            this.detailText := this.config["detailText"]
+        }
+        
         this.AddGuiProgressIndicator()
 
-        if (this.hasStatusIndicator) {
+        if (this.config["showStatusIndicator"]) {
             this.SetFont("small")
-            this.guiObj.AddText("x" . this.margin . " w" . this.windowSettings["contentWidth"] . " Right vDialogStatusIndicator", this.currentPosition . " / " . this.rangeStop)
+            this.guiObj.AddText("x" . this.margin . " w" . this.windowSettings["contentWidth"] . " Right vDialogStatusIndicator", this.config["startingPosition"] . " / " . this.config["rangeStop"])
             this.SetFont()
         }
         
 
-        if (this.enableDetailText) {
+        if (this.config["showDetailText"]) {
             this.guiObj.AddText("x" . this.margin . " w" . this.windowSettings["contentWidth"] . " vDialogDetailText", this.detailText)
         }
     }

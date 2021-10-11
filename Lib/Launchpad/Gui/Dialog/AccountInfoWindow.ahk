@@ -1,14 +1,9 @@
 ﻿class AccountInfoWindow extends FormGuiBase {
-    __New(app, themeObj, guiId, owner := "", parent := "") {
-        super.__New(app, themeObj, guiId, "Account Info", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
-    }
-
-    GetTextDefinition() {
-        return ""
-    }
-
-    GetButtonsDefinition() {
-        return "*&Save|&Cancel|&Logout"
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["title"] := "Account Info"
+        defaults["buttons"] := "*&Save|&Cancel|&Logout"
+        return defaults
     }
 
     Controls() {

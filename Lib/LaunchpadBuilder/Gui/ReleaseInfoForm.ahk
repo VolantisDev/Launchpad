@@ -1,14 +1,10 @@
 class ReleaseInfoForm extends FormGuiBase {
-    __New(app, themeObj, guiId, owner := "", parent := "") {
-        super.__New(app, themeObj, guiId, "Release Info", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
-    }
-
-    GetTextDefinition() {
-        return "Fill in the information below and click Upload to send the release to your configured source(s). Click Cancel if you do not wish to push the release anywhere at this time."
-    }
-
-    GetButtonsDefinition() {
-        return "*&Upload|&Cancel"
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["title"] := "Release Info"
+        defaults["text"] := "Fill in the information below and click Upload to send the release to your configured source(s). Click Cancel if you do not wish to push the release anywhere at this time."
+        defaults["buttons"] := "*&Upload|&Cancel"
+        return defaults
     }
 
     Controls() {

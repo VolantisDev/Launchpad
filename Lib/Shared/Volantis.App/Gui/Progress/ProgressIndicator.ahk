@@ -1,12 +1,8 @@
 class ProgressIndicator extends ProgressIndicatorBase {
-    __New(app, themeObj, guiId, title, text, owner := "", parent := "", allowCancel := false, rangeStop := "", currentPosition := 0, detailText := true, showInNotificationArea := true) {
-        btns := allowCancel ? "&Cancel" : ""
-
-        if (guiId == "") {
-            guiId := "ProgressIndicator"
-        }
-
-        super.__New(app, themeObj, guiId, title, text, owner, parent, btns, rangeStop, currentPosition, detailText, showInNotificationArea)
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["buttons"] := config.Has("allowCancel") && config["allowCancel"] ? "&Cancel" : ""
+        return defaults
     }
 
     SetRange(start := 0, stop := 100) {
@@ -23,6 +19,6 @@ class ProgressIndicator extends ProgressIndicatorBase {
     }
 
     AddGuiProgressIndicator() {
-        this.guiObj.AddProgress("x" . this.margin . " w" . this.windowSettings["contentWidth"] . " h5 vDialogProgress c" . this.themeObj.GetColor("progressBarFg") . " Background" . this.themeObj.GetColor("progressBarBg") . " Range" . this.rangeStart . "-" . this.rangeStop, this.currentPosition)
+        this.guiObj.AddProgress("x" . this.margin . " w" . this.windowSettings["contentWidth"] . " h5 vDialogProgress c" . this.themeObj.GetColor("progressBarFg") . " Background" . this.themeObj.GetColor("progressBarBg") . " Range" . this.config["rangeStart"] . "-" . this.config["rangeStop"], this.currentPosition)
     }
 }

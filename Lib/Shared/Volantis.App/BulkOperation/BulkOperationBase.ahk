@@ -83,7 +83,24 @@ class BulkOperationBase {
     ShowProgressWindow() {
         if (this.useProgress && this.app.themeReady) {
             if (!IsObject(this.progress)) {
-                this.progress := this.app.Service("GuiManager").OpenWindow("BulkOpProgress", "ProgressIndicator", this.progressTitle, this.progressText, this.owner, this.parent, this.allowCancel, this.progressRangeEnd, this.progressInitialValue, this.progressInitialDetailText)
+                ownerOrParent := this.owner
+
+                if (this.parent) {
+                    ownerOrParent := this.parent
+                }
+
+                this.progress := this.app.Service("GuiManager").OpenWindow(Map(
+                    "type", "ProgressIndicator",
+                    "title", this.progressTitle,
+                    "text", this.progressText,
+                    "ownerOrParent", ownerOrParent,
+                    "child", !!(this.parent),
+                    "allowCancel", this.allowCancel,
+                    "rangeStop", this.progressRangeEnd,
+                    "startingPosition", this.progressInitialValue,
+                    "detailText", this.progressInitialDetailText,
+                    "unique", true
+                ))
             } else {
                 this.progress.Show()
             }

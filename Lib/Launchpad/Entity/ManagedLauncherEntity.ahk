@@ -94,6 +94,19 @@ class ManagedLauncherEntity extends ManagedEntityBase {
     }
 
     LaunchEditWindow(mode, owner := "", parent := "") {
-        return this.app.Service("GuiManager").Dialog("ManagedLauncherEditor", this, mode, owner, parent)
+        ownerOrParent := ""
+
+        if (parent) {
+            ownerOrParent := parent
+        } else if (owner) {
+            ownerOrParent := owner
+        }
+
+        return this.app.Service("GuiManager").Dialog(Map(
+            "type", "ManagedLauncherEditor",
+            "mode", mode,
+            "child", !!(parent),
+            "ownerOrParent", ownerOrParent
+        ), this)
     }
 }

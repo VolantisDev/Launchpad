@@ -1,10 +1,10 @@
 class GuiBase {
+    container := ""
     app := ""
     guiObj := ""
     guiId := ""
-    title := ""
-    iconSrc := ""
     themeObj := ""
+    eventMgr := ""
     owner := ""
     parent := ""
     windowSettingsKey := ""
@@ -14,68 +14,74 @@ class GuiBase {
     buttons := []
     isClosed := false
     activeTooltip := false
-    showTitlebar := true
-    showIcon := true
-    showTitle := true
-    showClose := true
-    showMinimize := true
-    showMaximize := false
     lv := ""
     lvHeaderHwnd := 0
     listViewColumns := []
-    eventMgr := ""
-    mouseMoveCallback := ""
-    calcSizeCallback := ""
-    activateCallback := ""
-    hitTestCallback := ""
     tabsHwnd := ""
     tabNames := []
-    frameShadow := true
-    showStatusIndicator := false
     showOptions := ""
-    titleIsMenu := false
     openAtCtl := ""
-    openAtCtlSide := "bottom" ; bottom or right
-    waitForResult := false
     result := ""
     canceled := false
     statusIndicator := ""
     titlebar := ""
-    positionAtMouseCursor := false
-    openWindowWithinScreenBounds := true
-    showInNotificationArea := false
     width := ""
     height := ""
-    saveWindowState := false
     isShown := false
+    config := ""
 
-    __New(app, themeObj, guiId, title, owner := "", parent := "", iconSrc := "") {
-        this.app := app
+    GetDefaultConfig(container, config) {
+        return Map(
+            "id", Type(this),
+            "titlebar", true,
+            "waitForResult", false,
+            "titleIsMenu", false,
+            "showIcon", true,
+            "showTitle", true,
+            "showClose", true,
+            "showMinimize", true,
+            "showMaximize", false,
+            "title", "",
+            "icon", "",
+            "frameShadow", true,
+            "openAtCtlSide", "bottom", ; Bottom or right
+            "saveWindowState", false,
+            "positionAtMouseCursor", false,
+            "openWindowWithinScreenBounds", true,
+            "showInNotificationArea", false,
+            "showStatusIndicator", false
+        )
+    }
 
-        if (owner) {
-            owner := this.app.Service("GuiManager").DereferenceGui(owner)
-            
-            if (owner) {
-                this.owner := owner
-            }
+    __New(container, themeObj, config) {
+        this.container := container
+        this.app := container.GetApp()
+        this.themeObj := themeObj
+        this.config := this.MergeConfig(config, container)
+
+        if (!this.config.Has("id") || !this.config["id"]) {
+            throw AppException("id key not specified in GUI config")
         }
 
-        if (parent) {
-            parent := this.app.Service("GuiManager").DereferenceGui(parent)
-            
-            if (parent) {
-                this.parent := parent
+        if (this.config.Has("ownerOrParent") && this.config["ownerOrParent"]) {
+            if (this.config.Has("child") && this.config["child"]) {
+                this.parent := container.Get("GuiManager").DereferenceGui(this.config.Has("ownerOrParent"))
+            } else {
+                this.owner := container.Get("GuiManager").DereferenceGui(this.config["ownerOrParent"])
             }
         }
 
         extraOptions := Map()
 
-        if (this.showTitlebar) {
+        if (this.config["titlebar"]) {
             extraOptions["Caption"] := false
             extraOptions["Border"] := true
         }
 
-        if (this.owner != "" && this.app.Service("GuiManager").GetWindowFromGui(this.owner, true)) {
+        if (this.owner != "") {
+            if (Type(this.owner) == "Integer") {
+                MsgBox(this.owner)
+            }
             extraOptions["Owner" . this.owner.Hwnd] := true
         }
 
@@ -83,38 +89,44 @@ class GuiBase {
             this.windowSettingsKey := Type(this)
         }
         
-        this.title := title
-        this.iconSrc := iconSrc
-        this.themeObj := themeObj
         this.windowSettings := themeObj.GetWindowSettings(this.windowSettingsKey)
         this.windowOptions := themeObj.GetWindowOptionsString(this.windowSettingsKey, extraOptions)
 
         options := this.windowSettings["options"]
 
         if (options.Has("Resize") && options["Resize"]) {
-            this.showMaximize := true
+            this.config["showMaximize"] := true
         }
 
         if (this.owner || options.Has("Popup") && options["Popup"]) {
-            this.showMinimize := false
+            this.config["showMinimize"] := false
         }
 
         this.margin := this.windowSettings["spacing"]["margin"]
-        this.guiId := guiId
+        this.guiId := this.config["id"]
 
         this.RegisterCallbacks()
         this.Create()
     }
 
+    MergeConfig(config, container) {
+        winConfig := this.GetDefaultConfig(container, config)
+
+        for key, val in config {
+            winConfig[key] := val
+        }
+
+        return winConfig
+    }
+
     RegisterCallbacks() {
-        this.mouseMoveCallback := ObjBindMethod(this, "OnMouseMove")
-        this.app.Service("EventManager").Register(Events.MOUSE_MOVE, "Gui" . this.guiId, this.mouseMoveCallback)
-        this.calcSizeCallback := ObjBindMethod(this, "OnCalcSize")
-        this.app.Service("EventManager").Register(Events.WM_NCCALCSIZE, "Gui" . this.guiId, this.calcSizeCallback)
-        this.activateCallback := ObjBindMethod(this, "OnActivate")
-        this.app.Service("EventManager").Register(Events.WM_NCACTIVATE, "Gui" . this.guiId, this.activateCallback)
-        this.hitTestCallback := ObjBindMethod(this, "OnHitTest")
-        this.app.Service("EventManager").Register(Events.WM_NCHITTEST, "Gui" . this.guiId, this.hitTestCallback)
+        guiId := "Gui" . this.guiId
+
+        this.app.Service("EventManager")
+            .Register(Events.MOUSE_MOVE, guiId, ObjBindMethod(this, "OnMouseMove"))
+            .Register(Events.WM_NCCALCSIZE, guiId, ObjBindMethod(this, "OnCalcSize"))
+            .Register(Events.WM_NCACTIVATE, guiId, ObjBindMethod(this, "OnActivate"))
+            .Register(Events.WM_NCHITTEST, guiId, ObjBindMethod(this, "OnHitTest"))
     }
 
     OnCheckbox(chk, info) {
@@ -123,10 +135,10 @@ class GuiBase {
 
     __Delete() {
         if (this.app) {
-            this.app.Service("EventManager").Unregister(Events.MOUSE_MOVE, "Gui" . this.guiId, this.mouseMoveCallback)
-            this.app.Service("EventManager").Unregister(Events.WM_NCCALCSIZE, "Gui" . this.guiId, this.calcSizeCallback)
-            this.app.Service("EventManager").Unregister(Events.WM_NCACTIVATE, "Gui" . this.guiId, this.activateCallback)
-            this.app.Service("EventManager").Unregister(Events.WM_NCHITTEST, "Gui" . this.guiId, this.hitTestCallback)
+            this.app.Service("EventManager").Unregister(Events.MOUSE_MOVE, "Gui" . this.guiId)
+            this.app.Service("EventManager").Unregister(Events.WM_NCCALCSIZE, "Gui" . this.guiId)
+            this.app.Service("EventManager").Unregister(Events.WM_NCACTIVATE, "Gui" . this.guiId)
+            this.app.Service("EventManager").Unregister(Events.WM_NCHITTEST, "Gui" . this.guiId)
         }
         
         if (this.activeTooltip) {
@@ -329,7 +341,7 @@ class GuiBase {
     }
 
     UpdateStatusIndicator() {
-        if (this.showStatusIndicator) {
+        if (this.config["showStatusIndicator"]) {
             this.titlebar.statusIndicator.UpdateStatusIndicator(this.GetStatusInfo(), this.StatusWindowIsOnline() ? "status" : "statusOffline")
         }
     }
@@ -365,28 +377,28 @@ class GuiBase {
         if (!this.isShown) {
             this.Start()
             
-            if (this.showTitlebar) {
-                titleText := this.showTitle ? this.GetTitle(this.title) : ""
-                this.titlebar := this.Add("TitlebarControl", "", titleText, this.titleIsMenu, this.iconSrc)
+            if (this.config["titlebar"]) {
+                titleText := this.config["showTitle"] ? this.GetTitle(this.config["title"]) : ""
+                this.titlebar := this.Add("TitlebarControl", "", titleText, this.config["titleIsMenu"], this.config["showIcon"] ? this.config["icon"] : "")
             }
 
             this.Controls()
             this.AddButtons()
 
-            result := this.End(windowState)
             this.isShown := true
+            result := this.End(windowState)
         }
         
         return result
     }
 
     Create() {      
-        this.guiObj := Gui(this.windowOptions, this.GetTitle(this.title), this)
+        this.guiObj := Gui(this.windowOptions, this.GetTitle(this.config["title"]), this)
         this.guiObj.BackColor := this.themeObj.GetColor("background")
         this.guiObj.MarginX := this.margin
         this.guiObj.MarginY := this.margin
 
-        if (this.frameShadow) {
+        if (this.config["frameShadow"]) {
             this.themeObj.SetFrameShadow(this.guiObj.Hwnd)
         }
 
@@ -398,9 +410,6 @@ class GuiBase {
     }
 
     Start() {
-        if (this.owner != "") {
-            this.app.Service("GuiManager").AddToParent(this.guiId, this.owner)
-	    }
     }
 
     Controls() {
@@ -430,13 +439,13 @@ class GuiBase {
 
         MonitorGetWorkArea(, &monitorL, &monitorT, &monitorR, &monitorB)
 
-        if (this.positionAtMouseCursor) {    
+        if (this.config["positionAtMouseCursor"]) {    
             CoordMode("Mouse", "Screen")
             MouseGetPos(&windowX, &windowY)
             CoordMode("Mouse")
             windowX -= width/2
             windowSize .= " x" . windowX . " y" . windowY
-        } else if (this.showInNotificationArea) {
+        } else if (this.config["showInNotificationArea"]) {
             this.guiObj.GetPos(,, &guiW, &guiH)
             windowX := monitorR - this.margin - width
             windowY := monitorB - this.margin - guiH
@@ -447,16 +456,16 @@ class GuiBase {
             windowX := clientX
             windowY := clientY
 
-            if (this.openAtCtlSide == "right") {
+            if (this.config["openAtCtlSide"] == "right") {
                 windowX += ctlX + ctlW
                 windowY += ctlY
-            } else if (this.openAtCtlSide == "bottom") {
+            } else if (this.config["openAtCtlSide"] == "bottom") {
                 windowX += ctlX
                 windowY += ctlY + ctlH
             }
 
             windowSize .= " x" . windowX . " y" . windowY
-        } else if (this.saveWindowState && windowState && windowState.Count) {
+        } else if (this.config["saveWindowState"] && windowState && windowState.Count) {
             if (windowState.Has("x")) {
                 windowSize .= " x" . windowState["x"]
             }
@@ -485,7 +494,7 @@ class GuiBase {
             WinSetTransColor(transColorVal, "ahk_id " . this.guiObj.Hwnd)
         }
 
-        if (!this.positionAtMouseCursor && this.showInNotificationArea) {
+        if (!this.config["positionAtMouseCursor"] && this.config["showInNotificationArea"]) {
             this.guiObj.GetPos(,, &guiW, &guiH)
             windowX := monitorR - this.margin - guiW
             windowY := monitorB - this.margin - guiH
@@ -496,7 +505,7 @@ class GuiBase {
 
         result := this
 
-        if (this.waitForResult) {
+        if (this.config["waitForResult"]) {
             Loop
             {
                 If (this.result || this.canceled) {
@@ -564,10 +573,12 @@ class GuiBase {
         } else {
             this.Destroy()
         }
+
+        this.app.Service("GuiManager").CleanupWindow(this.guiId)
     }
 
     Destroy() {
-        if (!this.isClosed && this.saveWindowState) {
+        if (!this.isClosed && this.config["saveWindowState"]) {
             this.app.Service("GuiManager").StoreWindowState(this)
         }
 
@@ -595,7 +606,7 @@ class GuiBase {
     AdjustWindowPosition() {
         this.guiObj.GetPos(&guiX, &guiY, &guiW, &guiH)
 
-        if (this.openWindowWithinScreenBounds) {
+        if (this.config["openWindowWithinScreenBounds"]) {
             ; Check which monitor the user completed the last action on and use that
             monitorId := MonitorGetPrimary()
             MonitorGetWorkArea(monitorId, &screenL, &screenT, &screenR, &screenB)
@@ -751,7 +762,7 @@ class GuiBase {
     }
 
     OnSize(guiObj, minMax, width, height) {
-        if (this.showTitlebar) {
+        if (this.config["titlebar"]) {
             this.titlebar.OnSize(minMax, width, height)
         }
     }

@@ -6,14 +6,21 @@
     knownGames := ""
     checkboxes := true
 
-    __New(app, themeObj, guiId, detectedGames, owner := "", parent := "") {
+    __New(container, themeObj, config, detectedGames) {
         this.detectedGames := detectedGames
-        this.state := app.State
-        this.launcherManager := app.Service("LauncherManager")
-        dataSource := app.Service("DataSourceManager").GetDefaultDataSource()
-        this.knownGames := dataSource.ReadListing("game-keys")
+        this.state := container.Get("State")
+        this.launcherManager := container.Get("LauncherManager")
+        this.knownGames := container.Get("DataSourceManager")
+            .GetDefaultDataSource()
+            .ReadListing("game-keys")
 
-        super.__New(app, themeObj, guiId, "Detected Games", owner, parent)
+        super.__New(container, themeObj, config)
+    }
+
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["title"] := "Detected Games"
+        return defaults
     }
 
     AddBottomControls(y) {
@@ -191,7 +198,11 @@
 
         detectedGameObj := this.detectedGames[key]
 
-        result := this.app.Service("GuiManager").Dialog("DetectedGameEditor", detectedGameObj, this.guiId)
+        result := this.app.Service("GuiManager").Dialog(Map(
+            "type", "DetectedGameEditor",
+            "ownerOrParent", this.guiId,
+            "child", true
+        ), detectedGameObj)
 
         if (result == "Save") {
             if (key != detectedGameObj.key) {
@@ -220,7 +231,7 @@
         menuItems := []
         menuItems.Push(Map("label", "Edit", "name", "EditDetectedGame"))
 
-        result := this.app.Service("GuiManager").Menu("MenuGui", menuItems, this)
+        result := this.app.Service("GuiManager").Menu(menuItems, this)
 
         if (result == "EditDetectedGame") {
             this.EditDetectedGame(key)

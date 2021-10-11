@@ -1,13 +1,18 @@
 ﻿class ManageWindowBase extends GuiBase {
     listViewColumns := Array()
     lvCount := 0
-    frameShadow := false
     checkboxes := false
     listView := ""
     lvWidth := 0
-    saveWindowState := true
     showDetailsPane := false
     detailsFields := []
+
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["frameShadow"] := false
+        defaults["saveWindowState"] := true
+        return defaults
+    }
 
     Controls() {
         super.Controls()

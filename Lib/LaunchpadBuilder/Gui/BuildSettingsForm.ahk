@@ -1,21 +1,11 @@
 class BuildSettingsForm extends FormGuiBase {
-    version := ""
-
-    __New(app, themeObj, guiId, version := "", owner := "", parent := "") {
-        if (version == "") {
-            version := app.Version
-        }
-        
-        this.version := version
-        super.__New(app, themeObj, guiId, "Build Settings", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
-    }
-
-    GetTextDefinition() {
-        return "Fill in the information below and click Build to start the build process."
-    }
-
-    GetButtonsDefinition() {
-        return "*&Build|&Cancel"
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["title"] := "Build Settings"
+        defaults["text"] := "Fill in the information below and click Build to start the build process."
+        defaults["buttons"] := "*&Build|&Cancel"
+        defaults["version"] := container.GetApp().Version
+        return defaults
     }
 
     Controls() {
@@ -23,7 +13,7 @@ class BuildSettingsForm extends FormGuiBase {
 
         this.AddHeading("Application Version")
         this.guiObj.AddText("y+" (this.margin/2) . " w" . this.windowSettings["contentWidth"], "This is the version that will be built. Entering a new version will create a git tag, and if you later choose to make a GitHub release, the tag will be pushed to the repository.")
-        this.AddEdit("Version", this.version, "", 150)
+        this.AddEdit("Version", this.config["version"], "", 150)
 
         this.AddHeading("Build Options")
         this.AddCheckBox("Build Launchpad Overlay", "BuildLaunchpadOverlay", false, false, "OnCheckbox")

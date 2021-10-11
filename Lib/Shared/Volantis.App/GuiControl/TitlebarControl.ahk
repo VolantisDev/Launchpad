@@ -32,21 +32,21 @@ class TitlebarControl extends GuiControlBase {
         }
 
         buttonsW := 0
-        statusIndicatorW := this.guiObj.showStatusIndicator ? this.initialStatusIndicatorW : 0
+        statusIndicatorW := this.guiObj.config["showStatusIndicator"] ? this.initialStatusIndicatorW : 0
 
-        if (this.guiObj.showStatusIndicator) {
+        if (this.guiObj.config["showStatusIndicator"]) {
             buttonsW += statusIndicatorW + (this.guiObj.margin * 2)
         }
 
-        if (this.guiObj.showMinimize) {
+        if (this.guiObj.config["showMinimize"]) {
             buttonsW += this.titlebarButtonW + this.guiObj.margin
         }
 
-        if (this.guiObj.showMaximize) {
+        if (this.guiObj.config["showMaximize"]) {
             buttonsW += this.titlebarButtonW + this.guiObj.margin
         }
 
-        if (this.guiObj.showCLose) {
+        if (this.guiObj.config["showClose"]) {
             buttonsW += this.titlebarButtonW + this.guiObj.margin
         }
 
@@ -84,7 +84,7 @@ class TitlebarControl extends GuiControlBase {
             this.titleText := this.guiObj.guiObj.AddText(opts, titleText)
         }
 
-        if (this.guiObj.showStatusIndicator) {
+        if (this.guiObj.config["showStatusIndicator"]) {
             opts := "x" . buttonsX . " y" . (this.topMargin - 5) . " w" . statusIndicatorW
             statusStyle := this.guiObj.StatusWindowIsOnline() ? "status" : "statusOffline"
             statusInfo := this.guiObj.GetStatusInfo()
@@ -97,17 +97,17 @@ class TitlebarControl extends GuiControlBase {
 
         handler := this.RegisterCallback("OnTitlebarButtonClick")
 
-        if (this.guiObj.showMinimize) {
+        if (this.guiObj.config["showMinimize"]) {
             this.minBtn := this.AddTitlebarButton("WindowMinButton", "minimize", handler, false, buttonsX)
         }
 
-        if (this.guiObj.showMaximize) {
+        if (this.guiObj.config["showMaximize"]) {
             this.maxBtn := this.AddTitlebarButton("WindowMaxButton", "maximize", handler)
             this.unMaxBtn := this.AddTitlebarButton("WindowUnmaxButton", "unmaximize", handler, true)
             this.unMaxBtn.Visible := false
         }
 
-        if (this.guiObj.showClose) {
+        if (this.guiObj.config["showClose"]) {
             this.closeBtn := this.AddTitlebarButton("WindowCloseButton", "close", handler)
         }
 
@@ -164,7 +164,7 @@ class TitlebarControl extends GuiControlBase {
     }
 
     OnTitlebarDoubleClick(btn, info) {
-        if (this.guiObj.showMaximize) {
+        if (this.guiObj.config["showMaximize"]) {
             winId := "ahk_id " . this.guiObj.GetHwnd()
             minMaxResult := WinGetMinMax(winId)
 
@@ -177,10 +177,10 @@ class TitlebarControl extends GuiControlBase {
     }
 
     OnSize(minMax, width, height) {
-        if (minMax == 1 and this.guiObj.showMaximize) {
+        if (minMax == 1 and this.guiObj.config["showMaximize"]) {
             this.guiObj.guiObj["WindowUnmaxButton"].Visible := true
             this.guiObj.guiObj["WindowMaxButton"].Visible := false
-        } else if (minMax != 1 && this.guiObj.showMaximize) {
+        } else if (minMax != 1 && this.guiObj.config["showMaximize"]) {
             this.guiObj.guiObj["WindowUnmaxButton"].Visible := false
             this.guiObj.guiObj["WindowMaxButton"].Visible := true
         }
@@ -191,19 +191,19 @@ class TitlebarControl extends GuiControlBase {
 
         this.guiObj.AutoXYWH("w", ["WindowTitlebar"])
 
-        if (this.guiObj.showStatusIndicator) {
+        if (this.guiObj.config["showStatusIndicator"]) {
             this.guiObj.AutoXYWH("x*", ["StatusIndicator"])
         }
 
-        if (this.guiObj.showClose) {
+        if (this.guiObj.config["showClose"]) {
             this.guiObj.AutoXYWH("x*", ["WindowCloseButton"])
         }
 
-        if (this.guiObj.showMaximize) {
+        if (this.guiObj.config["showMaximize"]) {
             this.guiObj.AutoXYWH("x*", ["WindowMaxButton", "WindowUnmaxButton"])
         }
 
-        if (this.guiObj.showMinimize) {
+        if (this.guiObj.config["showMaximize"]) {
             this.guiObj.AutoXYWH("x*", ["WindowMinButton"])
         }
     }

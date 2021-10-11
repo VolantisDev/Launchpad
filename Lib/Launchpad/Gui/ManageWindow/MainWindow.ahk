@@ -2,20 +2,27 @@
     listViewColumns := Array("GAMES")
     launcherManager := ""
     platformManager := ""
-    showStatusIndicator := true
-    titleIsMenu := true
     showDetailsPane := true
 
-    __New(app, themeObj, guiId, owner := "", parent := "") {
-        this.launcherManager := app.Service("LauncherManager")
-        this.platformManager := app.Service("PlatformManager")
+    __New(container, themeObj, config) {
+        this.launcherManager := container.Get("LauncherManager")
+        this.platformManager := container.Get("PlatformManager")
         this.lvCount := this.launcherManager.CountEntities()
-        this.showStatusIndicator := app.Config["api_authentication"]
-        super.__New(app, themeObj, guiId, app.appName, "", "")
+        super.__New(container, themeObj, config)
+    }
+
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["ownerOrParent"] := ""
+        defaults["child"] := false
+        defaults["title"] := container.GetApp().appName
+        defaults["titleIsMenu"] := true
+        defaults["showStatusIndicator"] := !!(container.Get("Config").Has("api_authentication") && container.Get("Config")["api_authentication"])
+        return defaults
     }
 
     GetTitle(title) {
-        return this.title
+        return this.config["title"]
     }
 
     AddBottomControls(y) {
@@ -39,7 +46,7 @@
             menuItems.Push(Map("label", "Run", "name", "RunLauncher"))
             menuItems.Push(Map("label", "Delete", "name", "DeleteLauncher"))
 
-            result := this.app.Service("GuiManager").Menu("MenuGui", menuItems, this)
+            result := this.app.Service("GuiManager").Menu(menuItems, this)
 
             if (result == "EditLauncher") {
                 this.EditLauncher(launcherKey)
@@ -56,7 +63,11 @@
 
     DeleteLauncher(launcherKey, rowNum := "") {
         launcher := this.launcherManager.Entities[launcherKey]
-        result := this.app.Service("GuiManager").Dialog("LauncherDeleteWindow", launcher, this.app.Services.Get("LauncherManager"), this.guiId)
+        result := this.app.Service("GuiManager").Dialog(Map(
+            "type", "LauncherDeleteWindow"
+            "ownerOrParent", this.guiId,
+            "child", true,
+        ), launcher, this.app.Services.Get("LauncherManager"))
 
         if (result == "Delete") {
             if (rowNum == "") {
@@ -110,7 +121,7 @@
         menuItems.Push(Map("label", "&Restart", "name", "Reload"))
         menuItems.Push(Map("label", "E&xit", "name", "Exit"))
         
-        result := this.app.Service("GuiManager").Menu("MenuGui", menuItems, this, this.guiObj["WindowTitleText"])
+        result := this.app.Service("GuiManager").Menu(menuItems, this, this.guiObj["WindowTitleText"])
 
         if (result == "ManagePlatforms") {
             this.app.Service("GuiManager").OpenWindow("PlatformsWindow")
@@ -124,13 +135,13 @@
             this.app.Service("LauncherManager").LoadComponents(this.app.Config["launcher_file"])
             this.UpdateListView()
         } else if (result == "About") {
-            this.app.Service("GuiManager").Dialog("AboutWindow")
+            this.app.Service("GuiManager").Dialog(Map("type", "AboutWindow"))
         } else if (result == "OpenWebsite") {
             this.app.OpenWebsite()
         } else if (result == "ProvideFeedback") {
             this.app.ProvideFeedback()
         } else if (result == "Settings") {
-            this.app.Service("GuiManager").Dialog("SettingsWindow")
+            this.app.Service("GuiManager").Dialog(Map("type", "SettingsWindow", "unique", false))
         } else if (result == "CheckForUpdates") {
             this.app.CheckForUpdates()
         } else if (result == "Reload") {
@@ -154,10 +165,14 @@
             menuItems.Push(Map("label", "Login", "name", "Login"))
         }
 
-        result := this.app.Service("GuiManager").Menu("MenuGui", menuItems, this, btn)
+        result := this.app.Service("GuiManager").Menu(menuItems, this, btn)
 
         if (result == "AccountDetails") {
-            accountResult := this.app.Service("GuiManager").Dialog("AccountInfoWindow", this.guiId)
+            accountResult := this.app.Service("GuiManager").Dialog(Map(
+                "type", "AccountInfoWindow",
+                "ownerOrParent", this.guiId,
+                "child", true
+            ))
 
             if (accountResult == "OK") {
                 this.UpdateStatusIndicator()
@@ -532,7 +547,7 @@
 
     EditLauncher(key) {
         entity := this.launcherManager.Entities[key]
-        diff := entity.Edit("config", this.guiObj)
+        diff := entity.Edit("config", this.guiId)
         keyChanged := (entity.Key != key)
 
         if (keyChanged || diff != "" && diff.HasChanges()) {
@@ -548,7 +563,7 @@
     }
 
     ImportShortcut() {
-        entity := this.app.Service("GuiManager").Dialog("ImportShortcutForm", this.guiId)
+        entity := this.app.Service("GuiManager").Dialog(Map("type", "ImportShortcutForm"), this.guiId)
 
         if (entity) {
             this.launcherManager.AddEntity(entity.Key, entity)
@@ -558,7 +573,7 @@
     }
 
     AddLauncher() {
-        entity := this.app.Service("GuiManager").Dialog("LauncherWizard", this.guiId)
+        entity := this.app.Service("GuiManager").Dialog(Map("type", "LauncherWizard"), this.guiId)
 
         if (entity) {
             this.launcherManager.AddEntity(entity.Key, entity)
@@ -586,7 +601,7 @@
         menuItems.Push(Map("label", "&Import Shortcut", "name", "ImportShortcut"))
         menuItems.Push(Map("label", "&Detect Games", "name", "DetectGames"))
 
-        result := this.app.Service("GuiManager").Menu("MenuGui", menuItems, this, btn)
+        result := this.app.Service("GuiManager").Menu(menuItems, this, btn)
 
         if (result == "AddGame") {
             this.AddLauncher()

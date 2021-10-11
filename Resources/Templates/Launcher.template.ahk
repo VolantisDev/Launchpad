@@ -15,11 +15,13 @@ LaunchpadLauncher(Map(
     "version", "{{appVersion}}",
     "console", true,
     "launcherKey", "{{launcherKey}}",
-    "themesDir", "{{themesDir}}",
-    "resourcesDir", "{{resourcesDir}}",
-    "themeName", "{{themeName}}",
     "launchpadLauncherConfig", {%launchpadLauncherConfig%},
     "launcherConfig", {%launcherConfig%},
     "gameConfig", {%gameConfig%},
-    "platforms", {%platforms%}
+    "platforms", {%platforms%},
+    "parameters", Map(
+        "config.theme_name", "{{themeName}}",
+        "config.themes_dir", "{{themesDir}}",
+        "resources.dir", "{{resourcesDir}}"
+    )
 ))

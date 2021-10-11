@@ -21,6 +21,10 @@ class DataSourceManager extends ComponentManagerBase {
         return this[this.primaryKey]
     }
 
+    GetDefaultComponentId() {
+        return this.primaryKey
+    }
+
     GetItem(key := "") {
         if (key == "") {
             key := this.primaryKey

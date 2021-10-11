@@ -28,15 +28,7 @@ class ThemeManager extends ComponentManagerBase {
         event.SetDefinitions(services)
     }
 
-    GetComponent(themeName := "") {
-        if (themeName == "") {
-            themeName := this.GetCurrentThemeName()
-        }
-
-        return super.GetComponent(themeName)
-    }
-
-    GetCurrentThemeName() {
+    GetDefaultComponentId() {
         return this.configObj["theme_name"] ? this.configObj["theme_name"] : this.defaultTheme
     }
 

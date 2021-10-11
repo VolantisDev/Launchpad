@@ -1,6 +1,9 @@
 class AboutWindow extends DialogBox {
-    __New(app, themeObj, guiId, owner := "", parent := "", btns := "*&OK") {   
-        super.__New(app, themeObj, guiId, "About " . app.appName, "", owner, parent, btns)
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["title"] := "About " . container.GetApp().appName
+        defaults["buttons"] := "*&OK"
+        return defaults
     }
 
     Controls() {

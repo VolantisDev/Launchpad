@@ -1,29 +1,34 @@
 class ErrorDialog extends DialogBox {
-    displaySubmissionForm := true
     errorObj := ""
     notifierObj := ""
     apiEndpoint := ""
-    submitError := false
     formShown := false
     formH := 0
     guiH := 0
 
-    __New(app, themeObj, guiId, errorObj, title, text := "", owner := "", parent := "", btns := "*&Continue|&Reload|&Exit") {
+    __New(container, themeObj, config, errorObj) {
         this.errorObj := errorObj
-        this.notifierObj := app.Service("Notifier").notifierObj
+        this.notifierObj := container.Get("Notifier").notifierObj
 
-        if (app.Services.Has("DataSourceManager")) {
-            this.apiEndpoint := app.Service("DataSourceManager")["api"]
+        if (container.Has("DataSourceManager")) {
+            this.apiEndpoint := container.Get("DataSourceManager")["api"]
         }
 
-        this.formShown := this.submitError
+        this.formShown := config.Has("submitError") ? config["submitError"] : false
         
-        super.__New(app, themeObj, guiId, title, text, owner, parent, btns)
+        super.__New(container, themeObj, config)
+    }
+
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["buttons"] := "*&Continue|&Reload|&Exit",
+        defaults["submitError"] := false
+        return defaults
     }
 
     Controls() {
         super.Controls()
-        ctl := this.Add("BasicControl", "vSubmitError", "", this.submitError, "CheckBox", "Submit error to Volantis Development")
+        ctl := this.Add("BasicControl", "vSubmitError", "", this.config["submitError"], "CheckBox", "Submit error to Volantis Development")
         ctl.ctl.OnEvent("Click", "OnSubmitError")
 
         ctl := this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " +0x200 +0x100 vDetailsDesc", "Add as much detail as possible about what you were trying to do:")

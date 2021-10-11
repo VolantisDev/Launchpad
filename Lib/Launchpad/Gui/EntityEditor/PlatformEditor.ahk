@@ -1,10 +1,10 @@
 ﻿class PlatformEditor extends EntityEditorBase {
-    __New(app, themeObj, guiId, entityObj, mode := "config", owner := "", parent := "") {
-        if (owner == "") {
-            owner := "PlatformsWindow"
-        }
-
-        super.__New(app, themeObj, guiId, entityObj, "Platform Editor", mode, owner, parent)
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["ownerOrParent"] := "PlatformsWindow"
+        defaults["child"] := false
+        defaults["title"] := "Platform Editor"
+        return defaults
     }
 
     Controls() {

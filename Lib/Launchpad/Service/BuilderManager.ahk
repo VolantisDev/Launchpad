@@ -26,9 +26,13 @@ class BuilderManager extends ComponentManagerBase {
         return operation.Run()
     }
 
-    _GetBuilderObject(builder) {
+    GetDefaultComponentId() {
+        return this.container.Get("Config")["builder_key"]
+    }
+
+    _GetBuilderObject(builder := "") {
         if (builder == "") {
-            builder := this.container.Get("Config")["builder_key"]
+            builder := this.GetDefaultComponentId()
         }
 
         if (!IsObject(builder)) {

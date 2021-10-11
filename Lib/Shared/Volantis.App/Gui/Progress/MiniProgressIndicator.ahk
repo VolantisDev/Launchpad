@@ -1,17 +1,9 @@
 class MiniProgressIndicator extends ProgressIndicatorBase {
     gif := ""
 
-    __New(app, themeObj, guiId, title, text, owner := "", parent := "", rangeStop := "", currentPosition := 0, showInNotificationArea := true) {
-        if (guiId == "") {
-            guiId := "MiniProgressIndicator"
-        }
-
-        super.__New(app, themeObj, guiId, title, text, owner, parent, "", rangeStop, currentPosition, true, showInNotificationArea)
-    }
-
     Controls() {
-        if (this.text != "") {
-            this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . "", this.text)
+        if (this.config["text"] != "") {
+            this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . "", this.config["text"])
         }
 
         this.AddGuiProgressIndicator()
@@ -19,13 +11,13 @@ class MiniProgressIndicator extends ProgressIndicatorBase {
         this.SetFont("small")
         w := this.windowSettings["contentWidth"]
 
-        if (this.hasStatusIndicator) {
+        if (this.config["showStatusIndicator"]) {
             w -= 60
         }
 
         this.guiObj.AddText("x" . this.margin . " w" . w . " vDialogDetailText", this.detailText)
         
-        if (this.hasStatusIndicator) {
+        if (this.config["showStatusIndicator"]) {
             this.guiObj.AddText("x" . (this.windowSettings["contentWidth"] - 50) . " yp w50 Right vDialogStatusIndicator", this.currentPosition . " / " . this.rangeStop)
         }
         

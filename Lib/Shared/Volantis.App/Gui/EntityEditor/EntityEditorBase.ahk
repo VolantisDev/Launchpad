@@ -8,35 +8,40 @@
 
 class EntityEditorBase extends FormGuiBase {
     entityObj := ""
-    mode := "config" ; Options: config, build
     missingFields := Map()
     dataSource := ""
  
-    __New(app, themeObj, guiId, entityObj, title, mode := "config", owner := "", parent := "") {
-        InvalidParameterException.CheckTypes("LauncherEditor", "entityObj", entityObj, "EntityBase", "mode", mode, "")
+    __New(container, themeObj, config, entityObj) {
         this.entityObj := entityObj
-        this.mode := mode
-        super.__New(app, themeObj, guiId, title, this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
+        super.__New(container, themeObj, config)
     }
 
-    GetTextDefinition() {
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["mode"] := "config" ; config, build
+        defaults["text"] := this.GetTextDefinition(config)
+        defaults["buttons"] := this.GetButtonsDefinition(config)
+        return defaults
+    }
+
+    GetTextDefinition(config) {
         text := ""
 
-        if (this.mode == "config") {
+        if (config["mode"] == "config") {
             text := "The details entered here will be saved to your Launchers file and used for all future builds."
-        } else if (this.mode == "build") {
+        } else if (config["mode"] == "build") {
             text := "The details entered here will be used for this build only."
         }
 
         return text
     }
 
-    GetButtonsDefinition() {
+    GetButtonsDefinition(config) {
         buttonDefs := ""
 
-        if (this.mode == "config") {
+        if (config["mode"] == "config") {
             buttonDefs := "*&Save|&Cancel"
-        } else if (this.mode == "build") {
+        } else if (config["mode"] == "build") {
             buttonDefs := "*&Continue|&Skip"
         }
 

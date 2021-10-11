@@ -1,42 +1,40 @@
 class IconSelector extends DialogBox {
-    iconSrc := ""
-    iconItem := ""
     listPath := ""
 
-    __New(app, themeObj, guiId, title, iconSrc := "", iconItem := "", owner := "", parent := "") {
-        InvalidParameterException.CheckTypes("IconSelector", "iconSrc", iconSrc, "")
-        this.iconSrc := iconSrc
-        this.iconItem := iconItem
-        
-        this.ParseIconSrc()
-
-        super.__New(app, themeObj, guiId, title, this.GetTextDefinition(), owner, parent, "*&Select|&Cancel")
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["iconSrc"] := ""
+        defaults["iconItem"] := ""
+        defaults["text"] := "Select the icon you wish to use. The Location can point to an icon file, a directory, or a .exe file."
+        defaults["buttons"] := "*&Select|&Cancel"
+        return defaults
     }
 
-    GetTextDefinition() {
-        return "Select the icon you wish to use. The Location can point to an icon file, a directory, or a .exe file."
+    __New(container, themeObj, config) {
+        this.ParseIconSrc()
+        super.__New(container, themeObj, config)
     }
 
     ParseIconSrc() {
         listPath := ""
 
-        if (this.iconSrc) {
-            SplitPath(this.iconSrc, &fileName, &iconDir, &iconExt)
+        if (this.config["iconSrc"]) {
+            SplitPath(this.config["iconSrc"], &fileName, &iconDir, &iconExt)
 
             if (iconExt == "exe") {
-                this.listPath := this.iconSrc
+                this.listPath := this.config["iconSrc"]
                 
-                if (!IsInteger(this.iconItem) || this.iconItem <= 0) {
-                    this.iconItem := 1
+                if (!IsInteger(this.config["iconItem"]) || this.config["iconItem"] <= 0) {
+                    this.config["iconItem"] := 1
                 }
             } else if (iconExt == "ico") {
                 this.listPath := iconDir
-                this.iconItem := fileName
+                this.config["iconItem"] := fileName
             } else {
-                this.listPath := this.iconSrc
+                this.listPath := this.config["iconSrc"]
 
-                if (IsInteger(this.iconItem)) {
-                    this.iconItem := ""
+                if (IsInteger(this.config["iconItem"])) {
+                    this.config["iconItem"] := ""
                 }
             }
         }
@@ -52,24 +50,24 @@ class IconSelector extends DialogBox {
     }
 
     ProcessResult(result, submittedData := "") {
-        result := (result == "Select") ? this.iconSrc : ""
+        result := (result == "Select") ? this.config["iconSrc"] : ""
 
-        if (result && IsInteger(this.iconItem)) {
-            result .= ":" . this.iconItem
+        if (result && IsInteger(this.config["iconItem"])) {
+            result .= ":" . this.config["iconItem"]
         }
 
         return super.ProcessResult(result, submittedData)
     }
 
     GetIconSrc() {
-        return this.iconSrc
+        return this.config["iconSrc"]
     }
 
     GetIconNum() {
         iconNum := ""
 
-        if (IsInteger(this.iconItem)) {
-            iconNum := this.iconItem
+        if (IsInteger(this.config["iconItem"])) {
+            iconNum := this.config["iconItem"]
         }
 
         return iconNum

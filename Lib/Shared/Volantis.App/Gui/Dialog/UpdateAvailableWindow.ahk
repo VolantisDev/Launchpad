@@ -1,17 +1,18 @@
-﻿class UpdateAvailableWindow extends FormGuiBase {
+﻿
+class UpdateAvailableWindow extends FormGuiBase {
     releaseInfo := ""
 
-    __New(app, themeObj, guiId, releaseInfo, owner := "", parent := "") {
+    __New(container, themeObj, config, releaseInfo) {
         this.releaseInfo := releaseInfo
-        super.__New(app, themeObj, guiId, "Update Available", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
+        super.__New(container, themeObj, config)
     }
 
-    GetTextDefinition() {
-        return "There is a new version of Launchpad available!"
-    }
-
-    GetButtonsDefinition() {
-        return "*&Update|&Cancel"
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["title"] := "Update Available"
+        defaults["text"] := "There is a new version of " . container.GetApp().appName . " available!"
+        defaults["buttons"] := "*&Update|&Cancel"
+        return defaults
     }
 
     Controls() {

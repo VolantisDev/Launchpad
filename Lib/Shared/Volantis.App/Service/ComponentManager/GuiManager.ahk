@@ -1,5 +1,4 @@
 class GuiManager extends ComponentManagerBase {
-    app := ""
     factory := ""
     stateObj := ""
 
@@ -9,49 +8,123 @@ class GuiManager extends ComponentManagerBase {
     menus := Map()
 
     __New(container, factory, stateObj, eventMgr, notifierObj) {
-        this.app := container.GetApp()
         this.factory := factory
         this.stateObj := stateObj
-
-        super.__New(
-            container, 
-            "gui.",
-            eventMgr,
-            notifierObj,
-            GuiBase
-        )
+        super.__New(container, "gui.", eventMgr, notifierObj, GuiBase)
     }
 
-    Dialog(className, params*) {
-        guiId := this.factory.CreateGuiId(className, params*)
-        this[guiId] := this.factory.CreateServiceDefinition(className, guiId, params*)
-        window := this[window.guiId]
+    GetDefaultComponentId() {
+        return this.container.Get("Config")["main_window"]
+    }
 
-        ownerKey := ""
+    GetWindow(config, params*) {
+        config := this.factory.GetGuiConfig(config, params*)
 
-        if (window.owner) {
-            ownerKey := this.GetWindowKeyFromGui(ownerKey, true)
-
-            if (ownerKey) {
-                this.AddToParent(guiId, ownerKey)
-            }
+        if (!config["id"] || !this.Has(config["id"])) {
+            this.CreateWindow(config, params*)
         }
 
-        result := window.Show()
+        if (config["ownerOrParent"]) {
+            this.AddToParent(config["id"], config["ownerOrParent"])
+        }
 
-        if (ownerKey) {
+        return this[config["id"]]
+    }
+
+    /*
+        config can be just an id if the window is known already, or it should be a full config map if it's custom
+    */
+    OpenWindow(config, params*) {
+        guiId := this.factory.GetGuiId(config, params*)
+        windowState := this.GetWindowState(guiId)
+        return this.GetWindow(config, params*).Show(windowState)
+    }
+
+    CreateWindow(config, params*) {
+        guiId := this.factory.GetGuiId(config, params*)
+        arguments := [config]
+
+        for index, param in params {
+            arguments.Push(param)
+        }
+
+        this[guiId] := Map(
+            "factory", this.factory,
+            "method", "CreateGui",
+            "arguments", arguments
+        )
+
+        return guiId
+    }
+
+    CleanupWindow(guiId, deleteDefinition := true) {
+        if (this.Has(guiId)) {
             this.ReleaseFromParent(guiId)
+            this.CloseChildren(guiId, deleteDefinition)
+            this.UnloadComponent(guiId, deleteDefinition)
+        }
+    }
+
+    Dialog(config, params*) {
+        if (!config) {
+            config := Map("type", "DialogBox")
         }
 
-        this.UnloadComponent(guiId)
+        if (Type(config) == "String") {
+            config := Map("text", config)
+        }
+
+        if (!config.Has("type") || !config["type"]) {
+            config["type"] := "DialogBox"
+        }
+
+        if (!config.Has("unique")) {
+            config["unique"] := true
+        }
+
+        config["id"] := this.factory.GetGuiId(config, params*)
+
+        window := this.GetWindow(config, params*)
+        result := window.Show()
+        this.CleanupWindow(config["id"], true)
         return result
     }
 
-    Menu(className, params*) {
-        guiId := this.factory.CreateGuiId(className, params*)
-        this.menus[guiId] := this.factory.CreateServiceDefinition(className, guiId, params*)
+    /*
+        As a shortcut, config can be the array of menu items.
+        In this case, menuItems can be the parent Gui or Gui ID
+
+        This will resolve to Map("type", "MenuGui", "ownerOrParent", parent, "child", true)
+    */
+    Menu(config, menuItems := "", openAtCtl := "", params*) {
+        if (Type(config) == "Array") {
+            parent := menuItems ? menuItems : ""
+            menuItems := config
+            config := Map(
+                "type", "MenuGui",
+                "ownerOrParent", parent,
+                "child", !!(parent),
+                "unique", true
+            )
+        }
+
+        if (!config) {
+            config := Map("type", "MenuGui")
+        } else if (Type(config) == "String") {
+            config := Map("type", config)
+        } else if (!config.Has("type") || !config["type"]) {
+            config["type"] := "MenuGui"
+        }
+
+        if (!config.Has("unique")) {
+            config["unique"] := true
+        }
+
+        guiId := this.CreateWindow(config, menuItems, openAtCtl, params*)
+        this.menus[guiId] := this[guiId]
 
         result := this.menus[guiId].Show()
+        this.CleanupWindow(guiId, true)
 
         if (this.menus.Has(guiId)) {
             this.menus.Delete(guiId)
@@ -64,7 +137,7 @@ class GuiManager extends ComponentManagerBase {
         keepMenu := ""
 
         if (menuToKeepOpen && this.menus.Has(menuToKeepOpen)) {
-            keepMenu := this.menus[menuToKeepOpen]
+            keepMenu := this.menus[menuToKeepOpen].guiId
         }
 
         for index, window in this.menus {
@@ -73,42 +146,19 @@ class GuiManager extends ComponentManagerBase {
             }
         }
 
-        newMenus := []
+        newMenus := Map()
 
         if (keepMenu) {
-            newMenus.Push(keepMenu)
+            newMenus[menuToKeepOpen] := keepMenu
         }
 
         this.menus := newMenus
     }
 
-    OpenWindow(key, className := "", params*) {
-        if (className == "") {
-            className := key
-        }
-
-        if (!this.Has(key)) {
-            this[key] := this.factory.CreateServiceDefinition(className, key, params*)
-        }
-
-        if (!this.Has(key)) {
-            throw ComponentException("Window " . key . " could not be opened")
-        }
-
-        return this[key].Show(this.GetWindowState(key))
-    }
-
-    CloseWindow(key) {
-        if (this.Has(key)) {
-            this[key].Close()
-            this.UnloadComponent(key)
-        }
-    }
-
-    CloseChildren(key) {
+    CloseChildren(key, deleteDefinitions := false) {
         if (this.children.Has(key)) {
             for index, childKey in this.children[key] {
-                this.CloseWindow(childKey)
+                this.get[childKey].Close()
             }
         }
     }
@@ -138,11 +188,7 @@ class GuiManager extends ComponentManagerBase {
         }
     }
 
-    AddToParent(key, parentKeyOrGuiObj) {
-        if (parentKey.HasBase(Gui.Prototype)) {
-            parentKey := this.GetWindowKeyFromGui(parentKey)
-        }
-
+    AddToParent(key, parentKey) {
         if (this.Has(parentKey)) {
             if (!this.children.Has(parentKey)) {
                 this.children[parentKey] := []
@@ -211,23 +257,6 @@ class GuiManager extends ComponentManagerBase {
         }
 
         return windowObj
-    }
-
-    GetWindowKeyFromGui(guiObj, ignoreFailure := false) {
-        guiId := ""
-
-        for key, window in this.All() {
-            if (window && window.guiObj && window.guiObj == guiObj) {
-                guiId := key
-                break
-            }
-        }
-
-        if (!guiId && !ignoreFailure) {
-            throw ComponentException("Window not found from provided GUI object")
-        }
-
-        return guiId
     }
 
     GuiExists(hwnd) {

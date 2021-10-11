@@ -1,24 +1,32 @@
 ﻿class MenuGui extends GuiBase {
-    positionAtMouseCursor := true
-    showTitlebar := false
     buttonsPerRow := 1
-    menuTitle := "Menu"
     windowSettingsKey := "Menu"
     buttonHeight := 25
     separatorHeight := 5
     menuItems := ""
     showOptions := "NoActivate"
     parentMenu := ""
-    waitForResult := true
     childOpen := false
 
-    __New(app, themeObj, guiId, menuItems := "", parent := "", openAtCtl := "", openAtCtlSide := "", isChild := false) {
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["titlebar"] := false
+        defaults["waitForResult"] := true
+        defaults["menuTitle"] := "Menu"
+        defaults["positionAtMouseCursor"] := !(this.openAtCtl)
+        return defaults
+    }
+
+    __New(container, themeObj, config, menuItems := "", openAtCtl := "") {
         if (menuItems == "") {
             menuItems := []
         }
 
+        parent := config.Has("ownerOrParent") ? config["ownerOrParent"] : ""
+        isChild := config.Has("child") ? config["child"] : false
+
         if (parent) {
-            parent := app.Service("GuiManager").DereferenceGui(parent)
+            parent := container.Get("GuiManager").DereferenceGui(parent)
 
             if (parent.HasBase(MenuGui.Prototype)) {
                 this.parentMenu := parent
@@ -26,7 +34,7 @@
         }
 
         if (!isChild) {
-            app.Service("GuiManager").CloseMenus(guiId)
+            container.Get("GuiManager").CloseMenus(config["id"])
         }
 
         this.menuItems := menuItems
@@ -34,14 +42,9 @@
 
         if (openAtCtl) {
             this.openAtCtl := openAtCtl
-            this.positionAtMouseCursor := false
         }
 
-        if (openAtCtlSide) {
-            this.openAtCtlSide := openAtCtlSide
-        }
-
-        super.__New(app, themeObj, guiId, this.menuTitle, "", parent)
+        super.__New(container, themeObj, config)
     }
 
     OnLButton(hotKey) {
@@ -129,7 +132,11 @@
 
         if (btn.ChildItems) {
             this.childOpen := true
-            this.result := this.app.Service("GuiManager").Menu("MenuGui", btn.ChildItems, this, btn, "right", true)
+            this.result := this.app.Service("GuiManager").Menu(Map(
+                "parent", this,
+                "child", true,
+                "openAtCtlSide", "right"
+            ), btn.ChildItems, btn)
             this.childOpen := false
         }
 

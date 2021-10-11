@@ -5,13 +5,18 @@
     doubleClickActions := ["Edit", "Run"]
     needsRestart := false
 
-    __New(app, themeObj, guiId, owner := "", parent := "") {
-        if (owner == "") {
-            owner := "MainWindow"
-        }
+    __New(container, themeObj, config) {
+        this.availableThemes := container.Get("ThemeManager").GetAvailableThemes()
+        super.__New(container, themeObj, config)
+    }
 
-        this.availableThemes := app.Service("ThemeManager").GetAvailableThemes()
-        super.__New(app, themeObj, guiId, "Settings", "", owner, parent, "*&Done")
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["ownerOrParent"] := "MainWindow"
+        defaults["child"] := false
+        defaults["title"] := "Settings"
+        defaults["buttons"] := "*&Done"
+        return defaults
     }
 
     Controls() {
@@ -304,7 +309,10 @@
         this.app.Config.SaveConfig()
 
         if (this.needsRestart) {
-            response := this.app.Service("GuiManager").Dialog("DialogBox", "Restart " . this.app.appName . "?", "One or more settings that have been changed require restarting " . this.app.appName . " to fully take effect.`n`nWould you like to restart " . this.app.appName . " now?")
+            response := this.app.Service("GuiManager").Dialog(Map(
+                "title", "Restart " . this.app.appName . "?",
+                "text", "One or more settings that have been changed require restarting " . this.app.appName . " to fully take effect.`n`nWould you like to restart " . this.app.appName . " now?"
+            ))
 
             if (response == "Yes") {
                 this.app.RestartApp()

@@ -7,10 +7,17 @@
     launcherTypes := ""
     gameTypes := ""
  
-    __New(app, themeObj, guiId, detectedGameObj, owner := "", parent := "") {
-        InvalidParameterException.CheckTypes("DetectedGameEditor", "detectedGameObj", detectedGameObj, "DetectedGame")
+    __New(container, themeObj, config, detectedGameObj) {
         this.detectedGameObj := detectedGameObj
-        super.__New(app, themeObj, guiId, "Detected Game Editor", this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
+        super.__New(container, themeObj, config)
+    }
+
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["title"] := "Detected Game Editor"
+        defaults["text"] := "These values were detected automatically. You may customize them below. Blanking out a value will cause the entity to use the default (or retain its existing value)."
+        defaults["buttons"] := "*&Save|&Cancel"
+        return defaults
     }
 
     Create() {
@@ -20,14 +27,6 @@
         this.knownGames := this.dataSource.ReadListing("game-keys")
         this.launcherTypes := this.dataSource.ReadListing("launcher-types")
         this.gameTypes := this.dataSource.ReadListing("game-types")
-    }
-
-    GetTextDefinition() {
-        return "These values were detected automatically. You may customize them below. Blanking out a value will cause the entity to use the default (or retain its existing value)."
-    }
-
-    GetButtonsDefinition() {
-        return "*&Save|&Cancel"
     }
 
     GetTitle(title) {

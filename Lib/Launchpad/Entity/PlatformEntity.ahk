@@ -153,6 +153,19 @@ class PlatformEntity extends AppEntityBase {
     }
 
     LaunchEditWindow(mode, owner := "", parent := "") {
-        return this.app.Service("GuiManager").Dialog("PlatformEditor", this, mode, owner, parent)
+        ownerOrParent := ""
+
+        if (parent) {
+            ownerOrParent := parent
+        } else if (owner) {
+            ownerOrParent := owner
+        }
+
+        return this.app.Service("GuiManager").Dialog(Map(
+            "type", "PlatformEditor",
+            "mode", mode,
+            "child", !!(parent),
+            "ownerOrParent", ownerOrParent
+        ), this)
     }
 }

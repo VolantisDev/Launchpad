@@ -1,15 +1,10 @@
 class LauncherProgressIndicator extends MiniProgressIndicator {
     gif := ""
-    hasStatusIndicator := false
 
-    __New(app, themeObj, guiId, title, gameIcon, owner := "", parent := "", rangeStop := "", currentPosition := 0, showInNotificationArea := true) {
-        this.gameTitle := title
-        if (guiId == "") {
-            guiId := "LauncherProgressIndicator"
-        }
-
-        super.__New(app, themeObj, guiId, title, "", owner, parent, rangeStop, currentPosition, showInNotificationArea)
-        this.iconSrc := gameIcon
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["id"] := "LauncherProgressIndicator"
+        return defaults
     }
 
     GetTitle(title) {
@@ -17,8 +12,8 @@ class LauncherProgressIndicator extends MiniProgressIndicator {
     }
 
     Controls() {
-        if (this.text != "") {
-            this.guiObj.AddText("x" . this.margin . " w" . this.windowSettings["contentWidth"] . "", this.text)
+        if (this.config["text"] != "") {
+            this.guiObj.AddText("x" . this.margin . " w" . this.windowSettings["contentWidth"] . "", this.config["text"])
         }
 
         this.AddGuiProgressIndicator()

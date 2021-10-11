@@ -1,14 +1,14 @@
 class FormGuiBase extends GuiBase {
-    text := ""
-    btns := ""
     result := ""
-    waitForResult := true
     buttonNames := []
 
-    __New(app, themeObj, guiId, title, text := "", owner := "", parent := "", btns := "*&Submit") {
-        this.text := text
-        this.btns := btns
-        super.__New(app, themeObj, guiId, title, owner, parent)
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["buttons"] := "*&Submit"
+        defaults["text"] := ""
+        defaults["waitForResult"] := true
+        defaults["unique"] := false
+        return defaults
     }
 
     /**
@@ -18,15 +18,15 @@ class FormGuiBase extends GuiBase {
     Controls() {
         super.Controls()
 
-        if (this.text != "") {
-            this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " Section", this.text)
+        if (this.config["text"] != "") {
+            this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " Section", this.config["text"])
         }
     }
 
     AddButtons() {
         super.AddButtons()
 
-        btns := StrSplit(this.btns, "|")
+        btns := StrSplit(this.config["buttons"], "|")
 
         btnW := 90
         btnH := 28

@@ -1,22 +1,22 @@
 ﻿class SetupWindow extends FormGuiBase {
     availableThemes := Map()
 
-    __New(app, themeObj, guiId, owner := "", parent := "") {
-        super.__New(app, themeObj, guiId, "Setup", this.GetTextDefinition(), owner, parent, "*&Start|&Exit")
-    }
-
-    Create() {
-        super.Create()
-        this.availableThemes := this.app.Service("ThemeManager").GetAvailableThemes()
-    }
-
-    GetTextDefinition() {
-        return "
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["title"] := "Setup"
+        defaults["buttons"] := "*&Start|&Exit"
+        defaults["text"] := "
         (
         Welcome to Launchpad, your game launching multitool!
 
         This setup screen will help get you up and running quickly. You can always change your settings later.
         )"
+        return defaults
+    }
+
+    Create() {
+        super.Create()
+        this.availableThemes := this.app.Service("ThemeManager").GetAvailableThemes()
     }
 
     AddDescription(text) {

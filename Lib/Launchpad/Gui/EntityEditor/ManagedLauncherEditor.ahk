@@ -1,8 +1,10 @@
 class ManagedLauncherEditor extends ManagedEntityEditorBase {
     closeMethods := ["Prompt", "Wait", "Auto", "AutoPolite", "AutoKill"]
 
-    __New(app, themeObj, guiId, entityObj, mode := "config", owner := "", parent := "") {
-        super.__New(app, themeObj, guiId, entityObj, "Managed Launcher Editor", mode, owner, parent)
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["title"] := "Managed Launcher Editor"
+        return defaults
     }
 
     CustomTabControls() {

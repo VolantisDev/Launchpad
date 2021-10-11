@@ -7,7 +7,7 @@ class ComponentManagerBase {
     componentType := "" ; Passed with events
     loaded := false
 
-    __Item[name] {
+    __Item[name := ""] {
         get => this.GetComponent(name)
         set => this.SetComponent(name, value)
     }
@@ -69,21 +69,21 @@ class ComponentManagerBase {
         this.eventMgr.DispatchEvent(ComponentEvents.COMPONENTS_LOADED, event)
     }
 
-    UnloadComponents() {
+    UnloadComponents(deleteDefinitions := false) {
         if (!this.loaded) {
             return
         }
 
         for componentId, component in this.All() {
-            this.UnloadComponent(componentId)
+            this.UnloadComponent(componentId, deleteDefinitions)
         }
 
         this.loaded := false
     }
 
-    UnloadComponent(componentId) {
+    UnloadComponent(componentId, deleteDefinition := false) {
         if (this.Has(componentId)) {
-            this.container.Delete(this.servicePrefix . componentId)
+            this.container.Delete(this.servicePrefix . componentId, deleteDefinition)
         }
     }
 
@@ -97,12 +97,20 @@ class ComponentManagerBase {
         this.container.Set(this.servicePrefix . componentId, serviceDefinition)
     }
 
-    GetComponent(componentId) {
+    GetComponent(componentId := "") {
         if (!this.loaded) {
             this.LoadComponents()
         }
 
+        if (!componentId) {
+            componentId := this.GetDefaultComponentId()
+        }
+
         return this.container.Get(this.servicePrefix . componentId)
+    }
+
+    GetDefaultComponentId() {
+        return ""
     }
 
     All(resultType := "") {
@@ -132,11 +140,17 @@ class ComponentManagerBase {
         return this.container.Query(this.servicePrefix, resultType)
     }
 
-    Has(componentId) {
+    Has(componentId, checkLoaded := false) {
         if (!this.loaded) {
             this.LoadComponents()
         }
 
-        return this.container.Has(this.servicePrefix . componentId)
+        exists := this.container.Has(this.servicePrefix . componentId)
+
+        if (exists && checkLoaded) {
+            exists := this.container.serviceStore.Has(this.servicePrefix . componentId)
+        }
+
+        return exists
     }
 }

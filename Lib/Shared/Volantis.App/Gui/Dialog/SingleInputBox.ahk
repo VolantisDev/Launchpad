@@ -1,17 +1,15 @@
 class SingleInputBox extends DialogBox {
-    defaultValue := ""
-    isPassword := false
-
-    __New(app, themeObj, guiId, title, text, defaultValue := "", owner := "", parent := "", isPassword := false) {
-        InvalidParameterException.CheckTypes("SingleInputBox", "defaultValue", defaultValue, "")
-        this.defaultValue := defaultValue
-        this.isPassword := isPassword
-        super.__New(app, themeObj, guiId, title, text, owner, parent, "*&OK|&Cancel")
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["defaultValue"] := ""
+        defaults["isPassword"] := false,
+        defaults["buttons"] := "*&OK|&Cancel"
+        return defaults
     }
 
     Controls() {
         super.Controls()
-        this.guiObj.AddEdit("x" . this.margin . " w" . this.windowSettings["contentWidth"] . " -VScroll vDialogEdit" . (this.isPassword ? " Password" : "") . " c" . this.themeObj.GetColor("editText"), this.defaultValue)
+        this.guiObj.AddEdit("x" . this.margin . " w" . this.windowSettings["contentWidth"] . " -VScroll vDialogEdit" . (this.config["isPassword"] ? " Password" : "") . " c" . this.themeObj.GetColor("editText"), this.config["defaultValue"])
     }
 
     ProcessResult(result, submittedData := "") {

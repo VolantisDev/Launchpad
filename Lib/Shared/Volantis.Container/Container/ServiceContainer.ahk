@@ -55,12 +55,14 @@ class ServiceContainer extends ParameterContainer {
         return ContainerQuery(this, servicePrefix, resultType)
     }
 
-    Delete(service) {
+    Delete(service, deleteDefinition := true) {
         if (this.serviceStore.Has(service)) {
             this.serviceStore.Delete(service)
         }
 
-        super.Delete(service)
+        if (deleteDefinition) {
+            super.Delete(service)
+        }
     }
 
     createService(name) {

@@ -9,7 +9,6 @@ class AppBase {
     stateObj := ""
     serviceContainerObj := ""
     customTrayMenu := false
-    mainWindowKey := "MainWindow"
     themeReady := false
     startConfig := ""
 
@@ -78,6 +77,7 @@ class AppBase {
             "config.modules_file", this.dataDir . "\Modules.json",
             "config.log_path", this.dataDir . "\" . this.appName . "Log.txt",
             "config.module_dirs", [this.dataDir . "\Modules"],
+            "config.main_window", "MainWindow",
             "state_path", this.dataDir . "\" . this.appName . "State.json",
             "service_files.app", this.appDir . "\" . scriptName . ".services.json",
             "service_files.user", this.dataDir . "\" . scriptName . ".services.json",
@@ -440,7 +440,10 @@ class AppBase {
                 "Your modules have been updated. Currently, you must recompile " this.appName . " yourself for the changes to take effect. Would you like to exit now (highly recommended)?" :
                 "Your modules have been updated, and " this.appName . " must be restarted for the changes to take effect. Would you like to restart now?"
 
-            response := this.app.Service("GuiManager").Dialog("DialogBox", "Module Includes Updated", message)
+            response := this.app.Service("GuiManager").Dialog(Map(
+                "title", "Module Includes Updated",
+                "text", message
+            ))
         
             if (response == "Yes") {
                 if (A_IsCompiled) {
@@ -473,17 +476,22 @@ class AppBase {
             this.CheckForUpdates(false)
         }
 
-        if (!FileExist(this.Parameter("config_path"))) {
+        if (this.Services.HasParameter("config_path") && !FileExist(this.Parameter("config_path"))) {
             this.InitialSetup(config)
         }
     }
 
     OpenApp() {
-        if (this.mainWindowKey) {
-            if (this.Service("GuiManager").Has(this.mainWindowKey)) {
-                WinActivate("ahk_id " . this.Service("GuiManager")["MainWindow"].GetHwnd())
+        mainWin := this.Parameter("config.main_window")
+
+        if (mainWin) {
+            if (this.Service("GuiManager").Has(mainWin)) {
+                WinActivate("ahk_id " . this.Service("GuiManager")[mainWin].GetHwnd())
             } else {
-                this.Service("GuiManager").OpenWindow(this.mainWindowKey)
+                this.Service("GuiManager").OpenWindow(Map(
+                    "type", mainWin,
+                    "title", this.appName
+                ))
             }
         }
     }
@@ -593,7 +601,13 @@ class AppBase {
         try {
             if (this.themeReady) {
                 btns := allowContinue ? "*&Continue|&Reload|&Exit" : "*&Reload|&Exit"
-                this.Service("GuiManager").Dialog("ErrorDialog", err, "Unhandled Exception", errorText, "", "", btns)
+
+                this.Service("GuiManager").Dialog(Map(
+                    "type", "ErrorDialog",
+                    "title", "Unhandled Exception",
+                    "text", errorText,
+                    "buttons", btns
+                ), err)
             } else {
                 this.ShowUnthemedError(title, err.Message, err, "", allowContinue)
             }
@@ -634,7 +648,7 @@ class AppBase {
         menuItems.Push(Map("label", "Restart", "name", "RestartApp"))
         menuItems.Push(Map("label", "Exit", "name", "ExitApp"))
 
-        result := this.Service("GuiManager").Menu("MenuGui", menuItems, this)
+        result := this.Service("GuiManager").Menu(menuItems, this)
         this.HandleTrayMenuClick(result)
     }
 

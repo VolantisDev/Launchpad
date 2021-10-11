@@ -1,6 +1,8 @@
 class ManagedGameEditor extends ManagedEntityEditorBase {
-    __New(app, themeObj, guiId, entityObj, mode := "config", owner := "", parent := "") {
-        super.__New(app, themeObj, guiId, entityObj, "Managed Game Editor", mode, owner, parent)
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["title"] := "Managed Game Editor"
+        return defaults
     }
 
     ExtraTabControls(tabs) {

@@ -1,5 +1,7 @@
 class DialogBox extends FormGuiBase {
-    __New(app, themeObj, guiId, title, text := "", owner := "", parent := "", btns := "*&Yes|&No") {
-        super.__New(app, themeObj, guiId, title, text, owner, parent, btns)
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["buttons"] := "*&Yes|&No"
+        return defaults
     }
 }

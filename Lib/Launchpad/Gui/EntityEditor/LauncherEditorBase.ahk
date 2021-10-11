@@ -14,6 +14,12 @@ class LauncherEditorBase extends EntityEditorBase {
     platforms := ""
     logLevels := ["None", "Error", "Warning", "Info", "Debug"]
 
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["title"] := "Launcher Editor"
+        return defaults
+    }
+
     Controls() {
         super.Controls()
     }
@@ -42,7 +48,7 @@ class LauncherEditorBase extends EntityEditorBase {
     }
 
     EditManagedEntityType(entity, field) {
-        diff := entity.Edit("child", this.guiObj)
+        diff := entity.Edit("child", this.guiId)
 
         if (diff != "" && diff.HasChanges()) {
             if (diff.ValueIsModified(field)) {

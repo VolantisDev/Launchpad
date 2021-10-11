@@ -3,17 +3,16 @@
     knownPlatforms := ""
     dataSource := ""
 
-    __New(app, themeObj, guiId, title, owner := "", parent := "") {
-        this.dataSource := app.Service("DataSourceManager").GetDefaultDataSource()
-        super.__New(app, themeObj, guiId, title, this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
+    __New(container, themeObj, config) {
+        this.dataSource := container.Get("DataSourceManager").GetDefaultDataSource()
+        super.__New(container, themeObj, config)
     }
 
-    GetTextDefinition() {
-        return "Use this form to create a new Launchpad launcher."
-    }
-
-    GetButtonsDefinition() {
-        return "*&Save|&Cancel"
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["text"] := "Use this form to create a new Launchpad launcher."
+        defaults["buttons"] := "*&Save|&Cancel"
+        return defaults
     }
 
     Create() {

@@ -4,13 +4,16 @@
     shortcutExt := ""
     defaultPlatform := ""
 
-    __New(app, themeObj, guiId, owner := "", parent := "") {
+    __New(container, themeObj, config) {
         this.AskShortcutSrc()
-        super.__New(app, themeObj, guiId, "Import Shortcut", owner, parent)
+        super.__New(container, themeObj, config)
     }
 
-    GetTextDefinition() {
-        return "Select an existing shortcut and platform, and Launchpad will create a launcher for your game. You can modify or add the launcher details after it's added."
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["title"] := "Import Shortcut"
+        defaults["text"] := "Select an existing shortcut and platform, and Launchpad will create a launcher for your game. You can modify or add the launcher details after it's added."
+        return defaults
     }
 
     Controls() {

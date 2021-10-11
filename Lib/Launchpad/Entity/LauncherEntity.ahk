@@ -245,9 +245,22 @@ class LauncherEntity extends AppEntityBase {
     LaunchEditWindow(mode, owner := "", parent := "") {
         result := this.app.Config["use_advanced_launcher_editor"] ? "Advanced" : "Simple"
 
+        ownerOrParent := ""
+
+        if (parent) {
+            ownerOrParent := parent
+        } else if (owner) {
+            ownerOrParent := owner
+        }
+
         while (result == "Simple" || result == "Advanced") {
             form := result == "Advanced" ? "LauncherEditor" : "LauncherEditorSimple"
-            result := this.app.Service("GuiManager").Dialog(form, this, mode, owner, parent)
+            result := this.app.Service("GuiManager").Dialog(Map(
+                "type", form,
+                "mode", mode,
+                "child", !!(parent),
+                "ownerOrParent", ownerOrParent
+            ), this)
         }
         
         return result

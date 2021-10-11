@@ -1,18 +1,18 @@
 class PlatformsWindow extends ManageWindowBase {
     listViewColumns := Array("PLATFORM", "ENABLED", "DETECT GAMES", "INSTALLED", "VERSION")
-    platformsFile := ""
     platformManager := ""
 
-    __New(app, themeObj, guiId, platformsFile := "", owner := "", parent := "") {
-        if (platformsFile == "") {
-            platformsFile := app.Config["platforms_file"]
-        }
-
-        InvalidParameterException.CheckTypes("PlatformsWindow", "platformsFile", platformsFile, "")
-        this.platformsFile := platformsFile
-        this.platformManager := app.Service("PlatformManager")
+    __New(container, themeObj, config) {
+        this.platformManager := container.Get("PlatformManager")
         this.lvCount := this.platformManager.CountEntities()
-        super.__New(app, themeObj, guiId, "Platforms", owner, parent)
+        super.__New(container, themeObj, config)
+    }
+
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["title"] := "Platforms"
+        defaults["platformsFile"] := container.Get("Config")["platforms_file"]
+        return defaults
     }
 
     AddBottomControls(y) {
@@ -66,7 +66,7 @@ class PlatformsWindow extends ManageWindowBase {
 
     EditPlatform(key) {
         platformObj := this.platformManager.Entities[key]
-        diff := platformObj.Edit("config", this.guiObj)
+        diff := platformObj.Edit("config", this.guiId)
 
         if (diff != "" && diff.HasChanges()) {
             this.platformManager.SaveModifiedEntities()
@@ -110,7 +110,7 @@ class PlatformsWindow extends ManageWindowBase {
             menuItems.Push(Map("label", "Install", "name", "InstallPlatform"))
         }
 
-        result := this.app.Service("GuiManager").Menu("MenuGui", menuItems, this)
+        result := this.app.Service("GuiManager").Menu(menuItems, this)
 
         if (result == "EditPlatform") {
             this.EditPlatform(key)

@@ -220,7 +220,7 @@
 
                 if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this.Service("VersionChecker").VersionIsOutdated(releaseInfo["data"]["version"], this.Version)) {
                     updateAvailable := true
-                    this.Service("GuiManager").Dialog("UpdateAvailableWindow", releaseInfo)
+                    this.Service("GuiManager").Dialog(Map("type", "UpdateAvailableWindow"), releaseInfo)
                 }
             }
         }
@@ -299,7 +299,10 @@
         configFile := this.Parameter("previous_config_file")
 
         if (configFile && FileExist(configFile)) {
-            response := this.Service("GuiManager").Dialog("DialogBox", "Migrate settings?", this.appName . " uses a new configuration file format, and has detected that you have a previous configuration file.`n`nWould you like to automatically migrate your settings?`n`nChoose Yes to migrate your previous configuration. Choose no to simply delete it and start from scratch.")
+            response := this.Service("GuiManager").Dialog(Map(
+                "title", "Migrate settings?",
+                "text", this.appName . " uses a new configuration file format, and has detected that you have a previous configuration file.`n`nWould you like to automatically migrate your settings?`n`nChoose Yes to migrate your previous configuration. Choose no to simply delete it and start from scratch."
+            ))
         
             if (response == "Yes") {
                 this.Service("LaunchpadIniMigrator").Migrate(configFile, this.Config)
@@ -310,7 +313,7 @@
     }
 
     InitialSetup(config) {
-        result := this.Service("GuiManager").Dialog("SetupWindow")
+        result := this.Service("GuiManager").Dialog(Map("type", "SetupWindow"))
 
         if (result == "Exit") {
             this.ExitApp()
@@ -345,12 +348,16 @@
     }
 
     ProvideFeedback() {
-        this.Service("GuiManager").Dialog("FeedbackWindow")
+        this.Service("GuiManager").Dialog(Map("type", "FeedbackWindow"))
     }
 
     RestartApp() {
-        if (this.Services.Has("GuiManager") && this.Service("GuiManager").Has("MainWindow")) {
-            this.Service("GuiManager").StoreWindowState(this.Service("GuiManager")["MainWindow"])
+        if (this.Services.Has("GuiManager")) {
+            guiMgr := this.Service("GuiManager")
+
+            if (guiMgr.Has("MainWindow")) {
+                guiMgr.StoreWindowState(this.Service("GuiManager")["MainWindow"])
+            }
         }
 
         super.RestartApp()

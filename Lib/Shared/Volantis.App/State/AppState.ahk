@@ -45,15 +45,7 @@ class AppState extends JsonState {
     }
 
     RetrieveWindowState(guiId) {
-        windowState := ""
-        
-        if (this.WindowState.Has(guiId)) {
-            windowState := this.WindowState[guiId]
-        } else {
-            windowState := Map()
-        }
-
-        return windowState
+        return this.WindowState.Has(guiId) ? this.WindowState[guiId] : Map()
     }
 
     SetInstalledComponents(components) {

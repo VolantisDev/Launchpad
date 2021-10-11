@@ -30,7 +30,11 @@ class LauncherBase {
     CreateProgressGui() {
         if (this.progress == "") {
             gameIcon := A_IsCompiled ? A_ScriptFullPath : A_IconFile
-            this.progress := this.guiMgr.OpenWindow("LauncherProgressIndicator", "", this.key, gameIcon)
+            this.progress := this.guiMgr.OpenWindow(Map(
+                "type", "LauncherProgressIndicator",
+                "title", this.key, 
+                "icon", gameIcon
+            ))
         }
     }
 

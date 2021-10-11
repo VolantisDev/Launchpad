@@ -15,11 +15,14 @@ class ManagedEntityEditorBase extends EntityEditorBase {
     entityTypeName := ""
     possibleExes := ""
 
-    __New(app, themeObj, guiId, entityObj, title, mode := "config", owner := "", parent := "") {
-        if (owner == "") {
-            owner := "LauncherEditor"
-        }
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["ownerOrParent"] := "LauncherEditor"
+        defaults["child"] := false
+        return defaults
+    }
 
+    __New(container, themeObj, config, entityObj) {
         if (this.entityTypeName == "") {
             this.entityTypeName := entityObj.configPrefix
         }
@@ -28,7 +31,7 @@ class ManagedEntityEditorBase extends EntityEditorBase {
             this.regViews.Push("64")
         }
 
-        super.__New(app, themeObj, guiId, entityObj, title, mode, owner, parent)
+        super.__New(container, themeObj, config, entityObj)
     }
 
     Create() {

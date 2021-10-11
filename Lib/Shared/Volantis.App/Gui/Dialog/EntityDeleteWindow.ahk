@@ -4,27 +4,22 @@
     missingFields := Map()
     dataSource := ""
  
-    __New(app, themeObj, guiId, entityObj, entityManager, owner := "", parent := "") {
-        InvalidParameterException.CheckTypes("EntityDeleteWindow", "entityObj", entityObj, "EntityBase")
+    __New(container, themeObj, config, entityObj, entityManager) {
         this.entityObj := entityObj
         this.entityManager := entityManager
-        super.__New(app, themeObj, guiId, "Delete " . entityObj.Key, this.GetTextDefinition(), owner, parent, this.GetButtonsDefinition())
+        super.__New(container, themeObj, config)
     }
 
-    GetTextDefinition() {
-        return "This will delete the '" . this.entityObj.Key . "' entity from Launchpad and cannot be undone."
-    }
-
-    GetButtonsDefinition() {
-        return "*&Delete|&Cancel"
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["title"] := "Delete " . this.entityObj.Key
+        defaults["text"] := "This will delete the '" . this.entityObj.Key . "' entity from Launchpad and cannot be undone."
+        defaults["buttons"] := "*&Delete|&Cancel"
+        return defaults
     }
 
     GetTitle(title) {
         return super.GetTitle(this.entityObj.Key . " - " . title)
-    }
-
-    Controls() {
-        super.Controls()
     }
 
     ProcessResult(result, submittedData := "") {

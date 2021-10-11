@@ -54,7 +54,11 @@ class LaunchpadIniMigrator {
         }
 
         FileDelete(previousFile)
-        this.guiMgr.Dialog("DialogBox", "Migration Complete", message, "", "", "*&OK")
+        this.guiMgr.Dialog(Map(
+            "title", "Migration Complete",
+            "text", message,
+            "buttons", "*&OK"
+        ))
         this.app.RestartApp()
     }
 }

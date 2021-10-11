@@ -110,8 +110,22 @@ class ApiDataSource extends DataSourceBase {
             existingEndpoint := this.app.Config["api_endpoint"]
         }
 
-        text := "Enter the base URL of the API endpoint you would like Launchpad to connect to. Leave blank to revert to the default."
-        apiEndpointUrl := this.app.Service("GuiManager").Dialog("SingleInputBox", "API Endpoint URL", text, existingEndpoint, owner, parent)
+        ownerOrParent := ""
+
+        if (parent) {
+            ownerOrParent := parent
+        } else if (owner) {
+            ownerOrParent := owner
+        }
+
+        apiEndpointUrl := this.app.Service("GuiManager").Dialog(Map(
+            "type", "SingleInputBox",
+            "title", "API Endpoint URL",
+            "text", "Enter the base URL of the API endpoint you would like Launchpad to connect to. Leave blank to revert to the default.",
+            "defaultValue", existingEndpoint,
+            "ownerOrParent", ownerOrParent,
+            "child", !!(parent)
+        ))
 
         if (apiEndpointUrl != existingEndpoint) {
             this.app.Config["api_endpoint"] := apiEndpointUrl

@@ -3,12 +3,11 @@
     exe := ""
     defaultPlatform := ""
 
-    __New(app, themeObj, guiId, owner := "", parent := "") {
-        super.__New(app, themeObj, guiId, "Launcher Wizard", owner, parent)
-    }
-
-    GetTextDefinition() {
-        return "To start with, simply choose a game key and a launcher type. You can edit many details later if desired."
+    GetDefaultConfig(container, config) {
+        defaults := super.GetDefaultConfig(container, config)
+        defaults["title"] := "Launcher Wizard"
+        defaults["text"] := "To start with, simply choose a game key and a launcher type. You can edit many details later if desired."
+        return defaults
     }
 
     Controls() {
