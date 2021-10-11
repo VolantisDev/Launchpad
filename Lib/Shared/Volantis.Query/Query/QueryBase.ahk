@@ -13,7 +13,7 @@ class QueryBase {
     }
 
     Condition(condition, field := "", params*) {
-        if (!condition.HasBase(ConditionBase)) {
+        if (!condition.HasBase(ConditionBase.Prototype)) {
             throw QueryException("Provided condition is not of correct type. Provided type was: " . Type(condition))
         }
 
