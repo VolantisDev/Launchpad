@@ -292,8 +292,6 @@
         this.AddDetailsField("Created", "Created", created)
         this.AddDetailsField("Updated", "Updated", updated)
         this.AddDetailsField("Built", "Built", built)
-
-        ; TODO: Add some entity details
     }
 
     AddDetailsField(fieldName, label, text, y := "", useIcon := false, icon := "") {
