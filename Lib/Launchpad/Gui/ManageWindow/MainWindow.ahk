@@ -60,7 +60,7 @@
     DeleteLauncher(launcherKey, rowNum := "") {
         launcher := this.launcherManager.Entities[launcherKey]
         result := this.app.Service("GuiManager").Dialog(Map(
-            "type", "LauncherDeleteWindow"
+            "type", "LauncherDeleteWindow",
             "ownerOrParent", this.guiId,
             "child", true,
         ), launcher, this.app.Services.Get("LauncherManager"))
