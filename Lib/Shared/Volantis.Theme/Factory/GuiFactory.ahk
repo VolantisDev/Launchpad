@@ -93,12 +93,8 @@ class GuiFactory {
 
     GetDefaultGuiConfig() {
         return Map(
-            "type", "",
-            "title", "",
-            "id", "",
             "ownerOrParent", this.defaultOwner,
             "child", false,
-            "icon", "",
             "unique", false ; The GUI ID will be auto-generated if not set
         )
     }
