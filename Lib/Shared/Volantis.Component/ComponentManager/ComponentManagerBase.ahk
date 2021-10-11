@@ -129,7 +129,19 @@ class ComponentManagerBase {
     }
 
     Names() {
-        return this.All(ContainerQuery.RESULT_TYPE_NAMES)
+        names := []
+
+        for index, name in this.All(ContainerQuery.RESULT_TYPE_NAMES) {
+            start := 0
+
+            if (this.servicePrefix) {
+                start := StrLen(this.servicePrefix)+1
+            }
+
+            names.Push(SubStr(name, start))
+        }
+
+        return names
     }
 
     Query(resultType := "") {
