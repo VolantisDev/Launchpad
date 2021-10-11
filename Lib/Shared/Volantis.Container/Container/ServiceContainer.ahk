@@ -49,7 +49,7 @@ class ServiceContainer extends ParameterContainer {
 
     Query(servicePrefix := "", resultType := "") {
         if (resultType == "") {
-            resultType := ContainerQuery.RESULT_TYPE_NAMES
+            resultType := ContainerQuery.RESULT_TYPE_SERVICES
         }
 
         return ContainerQuery(this, servicePrefix, resultType)
