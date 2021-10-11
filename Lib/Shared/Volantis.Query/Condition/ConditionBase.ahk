@@ -39,7 +39,7 @@ class ConditionBase {
             matches := false
 
             for index, condition in this.childConditions {
-                matches := condition.Evaluate()
+                matches := this.evaluateChildCondition(condition, args*)
 
                 if (!matches) {
                     break
@@ -48,6 +48,10 @@ class ConditionBase {
         }
 
         return matches
+    }
+
+    evaluateChildCondition(condition, args*) {
+        return condition.Evaluate(args*)
     }
 
     EvaluateCondition(args*) {
