@@ -10,6 +10,7 @@ class LauncherEditor extends LauncherEditorBase {
     GetDefaultConfig(container, config) {
         defaults := super.GetDefaultConfig(container, config)
         defaults["buttons"] .= "|S&imple"
+        defaults["icon"] := this.entityObj.IconSrc
         return defaults
     }
 
