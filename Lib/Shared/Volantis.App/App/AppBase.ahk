@@ -399,9 +399,7 @@ class AppBase {
         this.InitializeTheme()
         this.InitializeModules(config)
 
-        serviceFiles := this.Service("ModuleManager").GetModuleServiceFiles()
-
-        for index, moduleServiceFile in serviceFiles {
+        for index, moduleServiceFile in this.Service("ModuleManager").GetModuleServiceFiles() {
             if (FileExist(serviceFile)) {
                 this.Services.LoadDefinitions(FileDefinitionLoader(moduleServiceFile))
             }
