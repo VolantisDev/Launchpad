@@ -137,6 +137,7 @@
 #Include Volantis.Container\ContainerRef\ContainerRefBase.ahk
 #Include Volantis.Container\ContainerRef\ParameterRef.ahk
 #Include Volantis.Container\ContainerRef\ServiceRef.ahk
+#Include Volantis.Container\DefinitionLoader\ClassDiscoveryDefinitionLoader.ahk
 #Include Volantis.Container\DefinitionLoader\DefinitionLoaderBase.ahk
 #Include Volantis.Container\DefinitionLoader\DirDefinitionLoader.ahk
 #Include Volantis.Container\DefinitionLoader\FileDefinitionLoader.ahk
