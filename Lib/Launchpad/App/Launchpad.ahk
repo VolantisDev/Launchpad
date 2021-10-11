@@ -337,7 +337,7 @@
         }
 
         if (this.isSetup && this.Config["flush_cache_on_exit"]) {
-            this.Service("CacheManager").FlushCaches(false)
+            this.Service("CacheManager").FlushCaches(false, false)
         }
 
         super.ExitApp()

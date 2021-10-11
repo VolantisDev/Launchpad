@@ -128,7 +128,7 @@
         } else if (result == "ManageBackups") {
             this.app.Service("GuiManager").OpenWindow("ManageBackupsWindow")
         } else if (result == "FlushCache") {
-            this.app.Service("CacheManager").FlushCaches()
+            this.app.Service("CacheManager").FlushCaches(true, true)
         } else if (result == "CleanLaunchers") {
             this.app.Service("BuilderManager").CleanLaunchers()
         } else if (result == "ReloadLaunchers") {

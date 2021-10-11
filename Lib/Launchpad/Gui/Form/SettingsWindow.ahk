@@ -254,7 +254,7 @@
         } else if (btn == "OpenCacheDir") {
             this.app.Service("CacheManager").OpenCacheDir()
         } else if (btn == "FlushCacheDir") {
-            this.app.Service("CacheManager").FlushCaches()
+            this.app.Service("CacheManager").FlushCaches(true, true)
         }
     }
 

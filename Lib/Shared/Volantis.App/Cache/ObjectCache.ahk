@@ -23,7 +23,7 @@ class ObjectCache extends CacheBase {
         this.cacheObj.Delete(key)
     }
 
-    FlushCacheAction() {
+    FlushCacheAction(force := false) {
         this.cacheObj := Map()
         return true
     }

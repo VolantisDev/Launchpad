@@ -40,7 +40,7 @@ class FileCache extends CacheBase {
         }
     }
 
-    FlushCacheAction() {
+    FlushCacheAction(force := false) {
         if (DirExist(this.cachePath)) {
             DirDelete(this.cachePath, true)
         }
