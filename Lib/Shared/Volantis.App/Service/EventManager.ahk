@@ -60,7 +60,7 @@ class EventManager {
     }
 
     Unregister(eventName, key) {
-        if (this._handlers.Has(eventName) && this._handlers[eventName].Has(key)) {
+        if (this.HasSubscriber(eventName, key)) {
             this._handlers[eventName].Delete(key)
             this.RemovePriority(eventName, key)
 
@@ -70,6 +70,10 @@ class EventManager {
         }
 
         return this
+    }
+
+    HasSubscriber(eventName, key) {
+        return this._handlers.Has(eventName) && this._handlers[eventName].Has(key)
     }
 
     StartListener(eventName) {
