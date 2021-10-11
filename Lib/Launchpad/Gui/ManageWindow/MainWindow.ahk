@@ -21,10 +21,6 @@
         return defaults
     }
 
-    GetTitle(title) {
-        return this.config["title"]
-    }
-
     AddBottomControls(y) {
         position := "x" . this.margin . " y" . y
         this.AddManageButton("AddButton", position, "add", true, "Add a Game")

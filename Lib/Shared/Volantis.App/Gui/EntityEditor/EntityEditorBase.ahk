@@ -19,6 +19,7 @@ class EntityEditorBase extends FormGuiBase {
     GetDefaultConfig(container, config) {
         defaults := super.GetDefaultConfig(container, config)
         defaults["mode"] := "config" ; config, build
+        defaults["title"] := container.GetApp().appName
         defaults["text"] := this.GetTextDefinition(config)
         defaults["buttons"] := this.GetButtonsDefinition(config)
         return defaults
@@ -48,8 +49,8 @@ class EntityEditorBase extends FormGuiBase {
         return buttonDefs
     }
 
-    GetTitle(title) {
-        return super.GetTitle(this.entityObj.Key . " - " . title)
+    GetTitle() {
+        return this.entityObj.Key . " - " . super.GetTitle()
     }
 
     Controls() {

@@ -29,8 +29,8 @@
         this.gameTypes := this.dataSource.ReadListing("game-types")
     }
 
-    GetTitle(title) {
-        return super.GetTitle(title . ": " . this.detectedGameObj.key)
+    GetTitle() {
+        return super.GetTitle() . ": " . this.detectedGameObj.key
     }
 
     Controls() {

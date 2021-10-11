@@ -7,8 +7,8 @@ class LauncherProgressIndicator extends MiniProgressIndicator {
         return defaults
     }
 
-    GetTitle(title) {
-        return this.app.appName
+    GetTitle() {
+        return this.app.appName . " - Launchpad"
     }
 
     Controls() {

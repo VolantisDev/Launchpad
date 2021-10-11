@@ -18,8 +18,8 @@
         return defaults
     }
 
-    GetTitle(title) {
-        return super.GetTitle(this.entityObj.Key . " - " . title)
+    GetTitle() {
+        return this.entityObj.Key . " - " . super.GetTitle()
     }
 
     ProcessResult(result, submittedData := "") {

@@ -367,8 +367,8 @@ class GuiBase {
         }
     }
 
-    GetTitle(title) {
-        return title
+    GetTitle() {
+        return this.config["title"]
     }
 
     Show(windowState := "") {
@@ -378,7 +378,7 @@ class GuiBase {
             this.Start()
             
             if (this.config["titlebar"]) {
-                titleText := this.config["showTitle"] ? this.GetTitle(this.config["title"]) : ""
+                titleText := this.config["showTitle"] ? this.GetTitle() : ""
                 this.titlebar := this.Add("TitlebarControl", "", titleText, this.config["titleIsMenu"], this.config["showIcon"] ? this.config["icon"] : "")
             }
 
@@ -393,7 +393,7 @@ class GuiBase {
     }
 
     Create() {      
-        this.guiObj := Gui(this.windowOptions, this.GetTitle(this.config["title"]), this)
+        this.guiObj := Gui(this.windowOptions, this.GetTitle(), this)
         this.guiObj.BackColor := this.themeObj.GetColor("background")
         this.guiObj.MarginX := this.margin
         this.guiObj.MarginY := this.margin
