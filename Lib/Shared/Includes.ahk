@@ -146,6 +146,7 @@
 #Include Volantis.Container\Exception\ContainerException.ahk
 #Include Volantis.Container\Exception\ParameterNotFoundException.ahk
 #Include Volantis.Container\Query\ContainerQuery.ahk
+#Include Volantis.Container\QueryCondition\HasServiceTagsCondition.ahk
 #Include Volantis.Data\DiffResult.ahk
 #Include Volantis.Data\DataProcessor\DataProcessorBase.ahk
 #Include Volantis.Data\DataProcessor\PlaceholderExpander.ahk
@@ -189,6 +190,7 @@
 #Include Volantis.Query\Query\MapQuery.ahk
 #Include Volantis.Query\Query\QueryBase.ahk
 #Include Volantis.Query\QueryCondition\FieldCondition.ahk
+#Include Volantis.Query\QueryCondition\HasFieldCondition.ahk
 #Include Volantis.Query\QueryCondition\IdCondition.ahk
 #Include Volantis.Query\QueryCondition\QueryConditionBase.ahk
 #Include Volantis.Theme\AnimatedGif\AnimatedGif.ahk
