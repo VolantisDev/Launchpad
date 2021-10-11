@@ -3,7 +3,7 @@ class ComponentManagerBase {
     servicePrefix := ""
     eventMgr := ""
     notifierObj := ""
-    definitionLoader := ""
+    definitionLoaders := ""
     componentType := "" ; Passed with events
     loaded := false
 
@@ -16,7 +16,7 @@ class ComponentManagerBase {
         return this.All().__Enum(numberOfVars)
     }
 
-    __New(container, servicePrefix, eventMgr, notifierObj, componentType, definitionLoader := "", autoLoad := true) {
+    __New(container, servicePrefix, eventMgr, notifierObj, componentType, definitionLoaders := "", autoLoad := true) {
         this.container := container
         this.servicePrefix := servicePrefix
         this.eventMgr := eventMgr
@@ -27,7 +27,12 @@ class ComponentManagerBase {
         }
 
         this.componentType := componentType
-        this.definitionLoader := definitionLoader
+
+        if (definitionLoaders && Type(definitionLoaders) != "Array") {
+            definitionLoaders := [definitionLoaders]
+        }
+
+        this.definitionLoaders := definitionLoaders
 
         if (autoLoad) {
             this.LoadComponents()
@@ -49,9 +54,16 @@ class ComponentManagerBase {
         services := Map()
         parameters := Map()
 
-        if (this.definitionLoader) {
-            services := this.definitionLoader.LoadServiceDefinitions()
-            parameters := this.definitionLoader.LoadParameterDefinitions()
+        if (this.definitionLoaders) {
+            for index, loader in this.definitionLoaders {
+                for key, def in loader.LoadServiceDefinitions() {
+                    services[key] := def
+                }
+
+                for key, def in loader.LoadParameterDefinitions() {
+                    parameters[key] := def
+                }
+            }
         }
 
         event := ComponentDefinitionsEvent(ComponentEvents.COMPONENT_DEFINITIONS, this, services, parameters)

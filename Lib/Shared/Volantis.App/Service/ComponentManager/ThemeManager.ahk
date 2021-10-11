@@ -4,13 +4,13 @@ class ThemeManager extends ComponentManagerBase {
     defaultTheme := ""
     configObj := ""
 
-    __New(container, eventMgr, notifierObj, configObj, definitionLoader, defaultTheme := "") {
+    __New(container, eventMgr, notifierObj, configObj, definitionLoaders, defaultTheme := "") {
         this.configObj := configObj
         this.defaultTheme := defaultTheme
 
         eventMgr.Register(ComponentEvents.COMPONENT_DEFINITIONS, "ThemeManagerThemes", ObjBindMethod(this, "DefineServices"))
 
-        super.__New(container, "theme.", eventMgr, notifierObj, ThemeBase, definitionLoader)
+        super.__New(container, "theme.", eventMgr, notifierObj, ThemeBase, definitionLoaders)
     }
 
     DefineServices(event, extra, eventName, hwnd) {
