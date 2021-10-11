@@ -15,7 +15,7 @@ class AuthModule extends ModuleBase {
                 "class", "LaunchpadApiAuthProvider",
                 "arguments", [
                     AppRef(), 
-                    this.app.State
+                    ServiceRef("State")
                 ]
             ),
             "Auth", Map(
@@ -23,7 +23,7 @@ class AuthModule extends ModuleBase {
                 "arguments", [
                     AppRef(), 
                     ServiceRef("auth_provider.launchpad_api"), 
-                    this.app.State
+                    ServiceRef("State")
                 ]
             )
         ))
