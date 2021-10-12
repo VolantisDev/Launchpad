@@ -136,7 +136,7 @@ class ComponentManagerBase {
         return ""
     }
 
-    All(resultType := "", returnQuery := false) {
+    All(resultType := "", returnQuery := false, includeDisabled := false) {
         if (!this.loaded) {
             this.LoadComponents()
         }
@@ -145,7 +145,7 @@ class ComponentManagerBase {
             resultType := ContainerQuery.RESULT_TYPE_SERVICES
         }
 
-        query := this.Query(resultType)
+        query := this.Query(resultType, includeDisabled)
         return returnQuery ? query : query.Execute()
     }
 
@@ -169,12 +169,12 @@ class ComponentManagerBase {
         return this.All(ContainerQuery.RESULT_TYPE_NAMES)
     }
 
-    Query(resultType := "") {
+    Query(resultType := "", includeDisabled := false) {
         if (!this.loaded) {
             this.LoadComponents()
         }
 
-        return this.container.Query(this.servicePrefix, resultType)
+        return this.container.Query(this.servicePrefix, resultType, includeDisabled)
     }
 
     Has(componentId, checkLoaded := false) {

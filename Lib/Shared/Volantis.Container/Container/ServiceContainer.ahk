@@ -55,12 +55,18 @@ class ServiceContainer extends ParameterContainer {
         super.Set(name, service)
     }
 
-    Query(servicePrefix := "", resultType := "") {
+    Query(servicePrefix := "", resultType := "", includeDisabled := false) {
         if (resultType == "") {
             resultType := ContainerQuery.RESULT_TYPE_SERVICES
         }
 
-        return ContainerQuery(this, servicePrefix, resultType)
+        query := ContainerQuery(this, servicePrefix, resultType)
+
+        if (!includeDisabled) {
+            query.Condition(FieldCondition(IsTrueCondition(), "enabled"))
+        }
+
+        return query
     }
 
     Delete(service, deleteDefinition := true) {
