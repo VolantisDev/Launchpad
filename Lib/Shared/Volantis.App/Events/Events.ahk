@@ -19,11 +19,6 @@ class Events {
     static APP_SHUTDOWN := 0x1020
     static APP_RESTART := 0x1025
 
-    static MODULES_DISCOVER := 0x2040
-    static MODULES_DISCOVER_ALTER := 0x2042
-    static MODULE_LOAD := 0x2045
-    static MODULE_LOAD_ALTER := 0x2047
-
     static BACKUPS_REGISTER := 0x2070
     static BACKUPS_ALTER := 0x2075
 

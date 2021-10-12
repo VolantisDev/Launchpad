@@ -1,29 +1,36 @@
 class ModuleBase {
-    moduleName := ""
-    app := ""
+    container := ""
+    moduleInfo := ""
     config := ""
-    moduleFile := ""
-    moduleDir := ""
 
-    __New(app, config := "") {
-        this.app := app
+    __New(container, moduleInfo, config := "") {
+        this.container := container
         this.config := config
 
-        if (config.Has("file")) {
-            this.moduleFile := config["file"]
-            SplitPath(config["file"], &moduleDir)
-            this.moduleDir := moduleDir
+        if (moduleInfo["file"] && (!moduleInfo.Has("dir") || !moduleInfo["dir"])) {
+            SplitPath(moduleInfo["file"], &moduleDir)
+            moduleInfo["dir"] := moduleDir
         }
-        
-        if (!this.moduleName) {
-            this.moduleName := SubStr(Type(this), 1, -7)
+
+        if (!moduleInfo.Has("name") || !moduleInfo["name"]) {
+            moduleName := Type(this)
+            suffix := "Module"
+            len := StrLen(suffix)
+            
+            if (SubStr(moduleName, -len) == suffix) {
+                moduleName := SubStr(moduleName, 1, -len)
+            }
+            
+            moduleInfo["name"] := moduleName
         }
+
+        this.moduleInfo := moduleInfo
     }
 
     GetServiceFiles() {
         serviceFiles := []
 
-        filePath := this.moduleDir . "\" . this.moduleName . ".services.json"
+        filePath := this.moduleInfo["dir"] . "\" . this.moduleInfo["name"] . ".services.json"
 
         if (FileExist(filePath)) {
             serviceFiles.Push(filePath)

@@ -149,19 +149,33 @@ class AppBase {
                 "arguments", [
                     ServiceRef("config_storage.modules"), 
                     ContainerRef(), 
-                    "module_config"
+                    "module_config",
+                    "modules"
+                ]
+            ),
+            "factory.modules", Map(
+                "class", "ModuleFactory",
+                "arguments", [ContainerRef(), ServiceRef("config.modules")]
+            ),
+            "definition_loader.modules", Map(
+                "class", "ModuleDefinitionLoader",
+                "arguments", [
+                    ServiceRef("factory.modules"),
+                    ServiceRef("config.modules"),
+                    ParameterRef("config.module_dirs"),
+                    ParameterRef("config.core_module_dirs"),
+                    this.GetDefaultModules(config)
                 ]
             ),
             "ModuleManager", Map(
                 "class", "ModuleManager", 
                 "arguments", [
-                    AppRef(), 
+                    ContainerRef(), 
                     ServiceRef("EventManager"), 
-                    ServiceRef("IdGenerator"), 
+                    ServiceRef("Notifier"),
+                    ServiceRef("Config"),
                     ServiceRef("config.modules"),
-                    this.dataDir, 
-                    ParameterRef("config.module_dirs"), 
-                    this.GetDefaultModules(config)
+                    ServiceRef("definition_loader.modules")
                 ]
             ),
             "Gdip", "Gdip",
@@ -298,10 +312,6 @@ class AppBase {
                 "arguments", [ParameterRef("structured_data")]
             )
         )
-    }
-
-    GetModuleDirs() {
-
     }
 
     AllocConsole() {
@@ -452,8 +462,6 @@ class AppBase {
                 }
             }
         }
-
-        this.Service("ModuleManager").LoadComponents()
     }
 
     InitializeTheme() {

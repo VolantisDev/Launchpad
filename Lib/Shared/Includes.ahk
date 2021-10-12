@@ -7,14 +7,6 @@
 #Include Volantis.App\Authentication\AuthProvider\AuthProviderBase.ahk
 #Include Volantis.App\Authentication\AuthProvider\JwtAuthProvider.ahk
 #Include Volantis.App\BulkOperation\BulkOperationBase.ahk
-#Include Volantis.App\BulkOperation\ComponentDiscoverer\ClassFileComponentDiscoverer.ahk
-#Include Volantis.App\BulkOperation\ComponentDiscoverer\ComponentDiscovererBase.ahk
-#Include Volantis.App\BulkOperation\ComponentDiscoverer\ConfigComponentDiscoverer.ahk
-#Include Volantis.App\BulkOperation\ComponentDiscoverer\FileComponentDiscovererBase.ahk
-#Include Volantis.App\BulkOperation\ComponentDiscoverer\ModuleDiscoverer.ahk
-#Include Volantis.App\BulkOperation\ComponentLoader\ClassComponentLoader.ahk
-#Include Volantis.App\BulkOperation\ComponentLoader\ComponentLoaderBase.ahk
-#Include Volantis.App\BulkOperation\ComponentLoader\SimpleComponentLoader.ahk
 #Include Volantis.App\BulkOperation\InstallOp\InstallOp.ahk
 #Include Volantis.App\BulkOperation\InstallOp\UpdateOp.ahk
 #Include Volantis.App\BulkOperation\LoadOp\LoadBackupsOp.ahk
@@ -35,6 +27,7 @@
 #Include Volantis.App\DataSourceItem\DSFile.ahk
 #Include Volantis.App\DataSourceItem\DSJson.ahk
 #Include Volantis.App\DataSourceItem\DSListing.ahk
+#Include Volantis.App\DefinitionLoader\ModuleDefinitionLoader.ahk
 #Include Volantis.App\Entity\AppEntityBase.ahk
 #Include Volantis.App\Entity\BackupEntity.ahk
 #Include Volantis.App\Event\AlterComponentsEvent.ahk
@@ -50,6 +43,7 @@
 #Include Volantis.App\Exception\LoginFailedException.ahk
 #Include Volantis.App\Exception\ServiceNotFoundException.ahk
 #Include Volantis.App\Exception\WindowNotFoundException.ahk
+#Include Volantis.App\Factory\ModuleFactory.ahk
 #Include Volantis.App\Gui\GuiBase.ahk
 #Include Volantis.App\Gui\Dialog\DialogBox.ahk
 #Include Volantis.App\Gui\Dialog\EntityDeleteWindow.ahk
@@ -97,10 +91,8 @@
 #Include Volantis.App\Service\ComponentManager\DataSourceManager.ahk
 #Include Volantis.App\Service\ComponentManager\GuiManager.ahk
 #Include Volantis.App\Service\ComponentManager\InstallerManager.ahk
+#Include Volantis.App\Service\ComponentManager\ModuleManager.ahk
 #Include Volantis.App\Service\ComponentManager\ThemeManager.ahk
-#Include Volantis.App\Service\ContainerService\ConfigurableContainerServiceBase.ahk
-#Include Volantis.App\Service\ContainerService\ContainerServiceBase.ahk
-#Include Volantis.App\Service\ContainerService\ModuleManager.ahk
 #Include Volantis.App\Service\EntityManager\BackupManager.ahk
 #Include Volantis.App\Service\EntityManager\EntityManagerBase.ahk
 #Include Volantis.App\State\AppState.ahk

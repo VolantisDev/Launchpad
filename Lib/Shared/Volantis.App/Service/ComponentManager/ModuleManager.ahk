@@ -1,63 +1,68 @@
-class ModuleManager extends ConfigurableContainerServiceBase {
-    app := ""
-    eventMgr := ""
-    idGeneratorObj := ""
-    dataDir := ""
-    discoverEvent := Events.MODULES_DISCOVER
-    discoverAlterEvent := Events.MODULES_DISCOVER_ALTER
-    loadEvent := Events.MODULE_LOAD
-    loadAlterEvent := Events.MODULE_LOAD_ALTER
-    moduleDirs := []
+class ModuleManager extends ComponentManagerBase {
+    configObj := ""
+    moduleConfig := ""
     classSuffix := "Module"
 
-    __New(app, eventMgr, idGeneratorObj, configObj, dataDir, moduleDirs := "", defaultModuleInfo := "", defaultModules := "") {
-        this.app := app
-        this.eventMgr := eventMgr
-        this.idGeneratorObj := idGeneratorObj
-        this.dataDir := dataDir
-        
-        if (moduleDirs) {
-            if (Type(moduleDirs) == "String") {
-                moduleDirs := [moduleDirs]
+    __New(container, eventMgr, notifierObj, configObj, moduleConfig, definitionLoaders := "") {
+        this.configObj := configObj
+        this.moduleConfig := moduleConfig
+
+        super.__New(container, "module.", eventMgr, notifierObj, ModuleBase, definitionLoaders)
+    }
+
+    ValidateComponentDependencies(services, parameters, stage) {
+        if (stage == "after") {
+            dependencies := this.CalculateDependencies()
+            missingDeps := this.CalculateMissingDependencies()
+
+            if (missingDeps.Length) {
+                missing := ""
+
+                for index, dep in missingDeps {
+                    if (missing) {
+                        missing .= ", "
+                    }
+
+                    missing .= dep
+                }
+
+                throw AppException("There are missing module dependencies: " . missing)
             }
-
-            this.moduleDirs := moduleDirs
-        }
-
-        super.__New(configObj, "modules", defaultModuleInfo, defaultModules, false)
-    }
-
-    CreateDiscoverer() {
-        searchDirs := this.GetModuleParentDirs()
-        coreDirs := this.GetCoreModuleDirs()
-
-        return ModuleDiscoverer(this, searchDirs, coreDirs)
-    }
-
-    CreateLoader(componentInfo) {
-        return ClassComponentLoader(this, componentInfo)
-    }
-
-    LoadComponents() {
-        if (!this.componentsLoaded) {
-            ; TODO: Calculate dependencies and stop if they are not met
-            super.LoadComponents()
-            this.RegisterSubscribers()
         }
     }
-    
-    DispatchEvent(eventName, eventObj, extra := "", hwnd := "") {
-        modules := this.GetAll()
 
-        for key, module in modules {
-            module.DispatchEvent(eventName, eventObj, extra, hwnd)
+    All(resultType := "", returnQuery := false, includeDisabled := false) {
+        query := super.All(resultType, true)
+
+        if (!includeDisabled) {
+            query
+                .Condition(HasFieldCondition("enabled"))
+                .Condition(FieldCondition(IsTrueCondition(), "enabled"))
         }
+
+        return returnQuery ? query : query.Execute()
+    }
+
+    getAllNames(includeDisabled := false) {
+        return this.All(ContainerQuery.RESULT_TYPE_NAMES, false, includeDisabled)
+    }
+
+    Query(resultType := "", includeDisabled := false) {
+        query := super.Query(resultType)
+
+        if (!includeDisabled) {
+            query
+                .Condition(HasFieldCondition("enabled"))
+                .Condition(FieldCondition(IsTrueCondition(), "enabled"))
+        }
+
+        return query
     }
 
     CalculateDependencies() {
         requiredModules := []
 
-        for key, module in this.GetAll() {
+        for key, module in this.All() {
             deps := module.GetDependencies()
 
             for depIndex, depName in deps {
@@ -83,7 +88,7 @@ class ModuleManager extends ConfigurableContainerServiceBase {
         missingModules := []
 
         for reqIndex, reqName in requiredModules {
-            if (!this.Exists(reqName)) {
+            if (!this.Has(reqName)) {
                 missingModules.Push(reqName)
             }
         }
@@ -91,28 +96,8 @@ class ModuleManager extends ConfigurableContainerServiceBase {
         return missingModules
     }
 
-    RegisterSubscribers() {
-        modules := this.GetAll()
-
-        for key, module in modules {
-            subscribers := module.GetSubscribers()
-
-            eventMgr := this.eventMgr
-
-            if (subscribers) {
-                for eventName, eventSubscribers in subscribers {
-                    if (eventSubscribers) {
-                        for index, subscriber in eventSubscribers {
-                            eventMgr.Register(eventName, this.idGeneratorObj.Generate(), subscriber)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     GetModuleServiceFiles() {
-        modules := this.GetAll()
+        modules := this.All()
 
         serviceFiles := []
 
@@ -141,8 +126,7 @@ class ModuleManager extends ConfigurableContainerServiceBase {
         tmpFile := outputFile . ".tmp"
         includeBuilder := this.GetModuleIncludeBuilder()
         includeWriter := this.GetModuleIncludeWriter(tmpFile)
-        includes := includeBuilder.BuildIncludes()
-        updated := includeWriter.WriteIncludes(includes)
+        updated := includeWriter.WriteIncludes(includeBuilder.BuildIncludes())
 
         if (buildTestFiles) {
             testsTmpFile := testsFile . ".tmp"
@@ -180,15 +164,13 @@ class ModuleManager extends ConfigurableContainerServiceBase {
         return AhkIncludeWriter(outputFile)
     }
 
-    GetModuleDirs(includeCoreModules := true) {
+    GetModuleDirs(includeCoreModules := true, includeDisabled := false) {
         moduleDirs := []
 
-        componentInfo := this.DiscoverComponents()
+        componentInfo := this.Query(ContainerQuery.RESULT_TYPE_DEFINITIONS, includeDisabled).Execute()
 
         for key, moduleInfo in componentInfo {
-
-
-            if (moduleInfo && Type(moduleInfo) == "Map" && moduleInfo.Has("file") && moduleInfo["file"]) {
+            if (moduleInfo.Has("file") && moduleInfo["file"]) {
                 SplitPath(moduleInfo["file"], &moduleDir)
 
                 if (DirExist(moduleDir) && (includeCoreModules || !moduleInfo.Has("core") || !moduleInfo["core"])) {
@@ -201,7 +183,7 @@ class ModuleManager extends ConfigurableContainerServiceBase {
     }
 
     GetCoreModuleDirs() {
-        return [this.app.appDir . "\Lib\Modules"]
+        return this.configObj["core_module_dirs"]
     }
 
     GetModuleParentDirs() {
@@ -213,8 +195,8 @@ class ModuleManager extends ConfigurableContainerServiceBase {
             dirs.Push(sharedDir)
         }
 
-        if (this.moduleDirs) {
-            for index, moduleDir in this.moduleDirs {
+        if (this.configObj["module_dirs"]) {
+            for index, moduleDir in this.configObj["module_dirs"] {
                 if (DirExist(moduleDir)) {
                     dirs.Push(moduleDir)
                 }
