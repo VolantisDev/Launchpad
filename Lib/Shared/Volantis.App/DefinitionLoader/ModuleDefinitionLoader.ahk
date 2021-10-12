@@ -50,11 +50,10 @@ class ModuleDefinitionLoader extends ClassDiscoveryDefinitionLoader {
 
     ModuleIsEnabled(moduleName, fileName, filePath) {
         isEnabled := this.defaultModules.Has(moduleName)
+        parameters := this.moduleConfig.Has(moduleName) ? this.moduleConfig[moduleName] : Map()
         
-        if (!isEnabled) {
-            parameters := this.moduleConfig.Has(moduleName) ? this.moduleConfig[moduleName] : Map()
-
-            isEnabled := parameters.Has("enabled") && parameters["enabled"]
+        if (parameters.Has("enabled")) {
+            isEnabled := parameters["enabled"]
         }
 
         return isEnabled
