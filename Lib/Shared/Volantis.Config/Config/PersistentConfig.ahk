@@ -21,8 +21,6 @@ class PersistentConfig extends ConfigBase {
     }
 
     _persistConfigToStorage(configMap := "") {
-        Debugger().Inspect("Saving config", configMap)
-
         return this._storage.WriteConfig(configMap, this._overwrite)
     }
 }
