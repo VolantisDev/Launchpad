@@ -30,6 +30,25 @@ class ModuleManager extends ComponentManagerBase {
         }
     }
 
+    LoadComponents(reloadComponents := false) {
+        super.LoadComponents(reloadComponents)
+
+        save := false
+
+        moduleParams := this.container.GetParameter("module")
+
+        for key, config in moduleParams {
+            if (!this.moduleConfig.Has(key)) {
+                this.moduleConfig[key] := config
+                save := true
+            }
+        }
+
+        if (save) {
+            this.moduleConfig.SaveConfig()
+        }
+    }
+
     EnableModule(key) {
         moduleConfig := this.moduleConfig.Has(key) ? this.moduleConfig[key] : Map()
 
