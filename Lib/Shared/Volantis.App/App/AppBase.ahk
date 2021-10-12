@@ -416,6 +416,9 @@ class AppBase {
             }
         }
 
+        ; Register early event subscribers (e.g. modules)
+        this.Service("EventManager").RegisterServiceSubscribers(this.Services)
+
         this.Service("EventManager").Register(Events.APP_SERVICES_LOADED, "AppServices", ObjBindMethod(this, "OnServicesLoaded"))
 
         event := ServiceDefinitionsEvent(Events.APP_SERVICE_DEFINITIONS, "", "", config)
@@ -430,6 +433,9 @@ class AppBase {
         if (FileExist(serviceFile)) {
             this.Services.LoadDefinitions(FileDefinitionLoader(serviceFile))
         }
+
+        ; Register any missing late-loading event subscribers
+        this.Service("EventManager").RegisterServiceSubscribers(this.Services)
 
         event := AppRunEvent(Events.APP_SERVICES_LOADED, this, config)
         this.Service("EventManager").DispatchEvent(Events.APP_SERVICES_LOADED, event)
