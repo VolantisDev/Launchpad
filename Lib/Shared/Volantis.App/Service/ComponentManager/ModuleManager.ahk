@@ -30,6 +30,50 @@ class ModuleManager extends ComponentManagerBase {
         }
     }
 
+    EnableModule(key) {
+        moduleConfig := this.moduleConfig.Has(key) ? this.moduleConfig[key] : Map()
+
+        if (!moduleConfig.Has("enabled") || !moduleConfig["enabled"]) {
+            moduleConfig["enabled"] := true
+            this.moduleConfig[key] := moduleConfig
+            this.moduleConfig.SaveConfig()
+        }
+    }
+
+    DisableModule(key) {
+        moduleConfig := this.moduleConfig.Has(key) ? this.moduleConfig[key] : Map()
+
+        if (!moduleConfig.Has("enabled") || moduleConfig["enabled"]) {
+            moduleConfig["enabled"] := false
+            this.moduleConfig[key] := moduleConfig
+            this.moduleConfig.SaveConfig()
+        }
+    }
+
+    DeleteModule(key) {
+        module := this[key]
+        deleted := false
+
+        if (module.IsCore()) {
+            throw AppException("It is not possible to delete core modules")
+        }
+
+        dir := module.moduleInfo["dir"]
+
+        response := this.container.Get("GuiManager").Dialog(Map(
+            "title", "Delete " . key,
+            "text", "Are you sure you want to delete the module '" . key . "'?`n`nThis will remove the directory " . dir . " and is not reversible. If you want the module back in the future, you will need to install it from scratch.`n`nPress Yes to delete, or No to go back."
+        ))
+
+        if (response == "Yes") {
+            this.UnloadComponent(key, true)
+            DirDelete(dir, true)
+            deleted := true
+        }
+
+        return deleted
+    }
+
     CalculateDependencies() {
         requiredModules := []
 
