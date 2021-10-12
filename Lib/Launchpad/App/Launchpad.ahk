@@ -10,10 +10,10 @@
         parameters["config.launcher_file"] := this.dataDir . "\Launchers.json",
         parameters["config.platforms_file"] := this.dataDir . "\Platforms.json"
         parameters["config.assets_dir"] := this.dataDir . "\Launcher Assets"
-        parameters["config.data_source_key"] := "api"
+        parameters["config.data_source_key"] := ""
         parameters["config.builder_key"] := "ahk_launcher"
-        parameters["config.api_endpoint"] := "https://api.launchpad.games/v1"
-        parameters["config.api_authentication"] := true
+        parameters["config.api_endpoint"] := ""
+        parameters["config.api_authentication"] := false
         parameters["config.api_auto_login"] := false
         parameters["config.backup_dir"] := this.dataDir . "\Backups"
         parameters["config.backups_file"] := this.dataDir . "\Backups.json"
@@ -35,7 +35,6 @@
         parameters["platforms_config"] := Map()
         parameters["backups_config"] := Map()
         parameters["previous_config_file"] := A_ScriptDir . "\" . this.appName . ".ini"
-        parameters["default_datasource"] := "api"
         return parameters
     }
 
@@ -75,23 +74,13 @@
             "arguments", [AppRef(), ServiceRef("config.backups")]
         )
 
-        services["datasource.api"] := Map(
-            "class", "ApiDataSource",
-            "arguments", [
-                AppRef(), 
-                ServiceRef("CacheManager"), 
-                "api", 
-                ParameterRef("config.api_endpoint")
-            ]
-        )
-
         services["DataSourceManager"] := Map(
             "class", "DataSourceManager",
             "arguments", [
                 ContainerRef(), 
                 ServiceRef("EventManager"), 
                 ServiceRef("Notifier"), 
-                ParameterRef("default_datasource")
+                ParameterRef("config.data_source_key")
             ]
         )
 
@@ -171,21 +160,6 @@
             ]
         )
 
-        services["cache_state.api"] := Map(
-            "class", "CacheState",
-            "arguments", [AppRef(), ParameterRef("config.cache_dir"), "API.json"]
-        )
-
-        services["cache.api"] := Map(
-            "class", "FileCache",
-            "arguments", [
-                AppRef(), 
-                ServiceRef("cache_state.api"), 
-                ParameterRef("config.cache_dir"), 
-                "API"
-            ]
-        )
-
         services["LaunchpadIniMigrator"] := Map(
             "class", "LaunchpadIniMigrator",
             "arguments", [AppRef(), ServiceRef("GuiManager")]
@@ -196,6 +170,7 @@
 
     GetDefaultModules(config) {
         modules := super.GetDefaultModules(config)
+        modules["LaunchpadApi"] := "LaunchpadApi"
         modules["Bethesda"] := "Bethesda"
         modules["Blizzard"] := "Blizzard"
         modules["Epic"] := "Epic"

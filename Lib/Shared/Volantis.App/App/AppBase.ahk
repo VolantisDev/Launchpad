@@ -418,6 +418,9 @@ class AppBase {
             }
         }
 
+        ; Reload user config files to ensure they are the active values
+        this.Service("Config").LoadConfig(true)
+
         ; Register early event subscribers (e.g. modules)
         this.Service("EventManager").RegisterServiceSubscribers(this.Services)
 

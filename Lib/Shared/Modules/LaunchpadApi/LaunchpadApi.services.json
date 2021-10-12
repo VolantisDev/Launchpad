@@ -1,0 +1,26 @@
+{
+    "services": {
+        "datasource.api": {
+            "class": "ApiDataSource",
+            "arguments": ["{@App}", "{@Service:CacheManager}", "api", "{@Parameter:config.api_endpoint}"]
+        },
+        "auth_provider.launchpad_api": {
+            "class": "LaunchpadApiAuthProvider",
+            "arguments": ["{@App}", "{@Service:State}"]
+        },
+        "cache_state.api": {
+            "class": "CacheState",
+            "arguments": ["{@App}", "{@Parameter:config.cache_dir}", "API.json"]
+        },
+        "cache.api": {
+            "class": "FileCache",
+            "arguments": ["{@App}", "{@Service:cache_state.api}", "{@Parameter:config.cache_dir}", "API"]
+        }
+    },
+    "parameters": {
+        "config.data_source_key": "api",
+        "config.api_endpoint": "https://api.launchpad.games/v1",
+        "config.api_authentication": true,
+        "config.api_auto_login": false
+    }
+}

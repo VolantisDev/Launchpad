@@ -1,9 +1,5 @@
 {
     "services": {
-        "auth_provider.launchpad_api": {
-            "class": "LaunchpadApiAuthProvider",
-            "arguments": ["{@App}", "{@Service:State}"]
-        },
         "Auth": {
             "class": "AuthService",
             "arguments": ["{@App}", "{@Service:auth_provider.launchpad_api}", "{@Service:State}"]

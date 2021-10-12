@@ -1,5 +1,9 @@
 ; Automatically-generated file. Manual edits will be overwritten.
 #Include Modules\Auth\Auth.module.ahk
+#Include Modules\Auth\Lib\AuthProvider\AuthProviderBase.ahk
+#Include Modules\Auth\Lib\AuthProvider\JwtAuthProvider.ahk
+#Include Modules\Auth\Lib\AuthProvider\AuthInfo\AuthInfo.ahk
+#Include Modules\Auth\Lib\AuthProvider\AuthInfo\JwtAuthInfo.ahk
 #Include Modules\Bethesda\Bethesda.module.ahk
 #Include Modules\Bethesda\GamePlatform\BethesdaPlatform.ahk
 #Include Modules\Blizzard\Blizzard.module.ahk
@@ -7,6 +11,7 @@
 #Include Modules\Blizzard\StructuredData\BlizzardProductDb.ahk
 #Include Modules\Epic\Epic.module.ahk
 #Include Modules\Epic\GamePlatform\EpicPlatform.ahk
+#Include Modules\LaunchpadApi\LaunchpadApi.module.ahk
 #Include Modules\LaunchpadApi\AuthProvider\LaunchpadApiAuthProvider.ahk
 #Include Modules\LaunchpadApi\DataSource\ApiDataSource.ahk
 #Include Modules\Origin\Origin.module.ahk
@@ -18,10 +23,6 @@
 #Include Vendor\Gdip_All.ahk
 #Include Vendor\LV_Constants.ahk
 #Include Volantis.App\App\AppBase.ahk
-#Include Volantis.App\Authentication\AuthInfo\AuthInfo.ahk
-#Include Volantis.App\Authentication\AuthInfo\JwtAuthInfo.ahk
-#Include Volantis.App\Authentication\AuthProvider\AuthProviderBase.ahk
-#Include Volantis.App\Authentication\AuthProvider\JwtAuthProvider.ahk
 #Include Volantis.App\BulkOperation\BulkOperationBase.ahk
 #Include Volantis.App\BulkOperation\InstallOp\InstallOp.ahk
 #Include Volantis.App\BulkOperation\InstallOp\UpdateOp.ahk
