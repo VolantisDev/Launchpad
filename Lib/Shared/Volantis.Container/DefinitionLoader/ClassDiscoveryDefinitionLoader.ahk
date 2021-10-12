@@ -63,7 +63,7 @@ class ClassDiscoveryDefinitionLoader extends DefinitionLoaderBase {
     }
 
     DiscoverParameterDefinitions(fileName, filePath) {
-
+        return Map()
     }
 
     getServiceName(fileName, filePath) {
