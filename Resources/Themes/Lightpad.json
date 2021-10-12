@@ -641,6 +641,15 @@
                     "MinSize": "500x380"
                 }
             },
+            "ManageModulesWindow": {
+                "settings": "default",
+                "contentWidth": 600,
+                "listViewHeight": 400,
+                "options": {
+                    "Resize": true,
+                    "MinSize": "500x380"
+                }
+            },
             "ManageBackupsWindow": {
                 "settings": "default",
                 "contentWidth": 380,
