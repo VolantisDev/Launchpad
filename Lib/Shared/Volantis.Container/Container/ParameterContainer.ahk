@@ -48,17 +48,23 @@ class ParameterContainer extends ContainerBase {
     }
 
     resolveDefinition(definition) {
+        if (Type(definition) == "String" || Type(definition) == "Map" || Type(definition) == "Array") {
+            definition := this.ExpandTextReferences(definition)
+        }
+
         val := definition
         isObj := IsObject(definition)
 
-        if (isObj && (Type(definition) == "AppRef" || definition.HasBase(AppRef))) {
+        if (Type(val) == "String" || Type(val) == "Map" || Type(val) == "Array") {
+            val := this.ExpandTextReferences(definition)
+        }
+
+        if (isObj && (definition.HasBase(AppRef.Prototype))) {
             val := this.GetApp(definition)
         } else if (isObj && definition.HasBase(ContainerRef.Prototype)) {
             val := this
         } else if (isObj && definition.HasBase(ParameterRef.Prototype)) {
             val := this.GetParameter(definition.GetName())
-        } else if (Type(definition) == "String" || Type(definition) == "Map" || Type(definition) == "Array") {
-            val := this.ExpandTextReferences(definition)
         }
 
         return val
@@ -77,18 +83,18 @@ class ParameterContainer extends ContainerBase {
                 data[index] := this.ExpandTextReferences(value)
             }
         } else if (Type(data) == "String") {
-            tokenPattern := "^{@([!:}]+)(:([^:}]+))?(:([^:}]+))?}$"
-            pos := RegExMatch(string, tokenPattern, &matches)
+            tokenPattern := "^{@([^:}]+)(:([^:}]+))?(:([^:}]+))?}$"
+            pos := RegExMatch(data, tokenPattern, &matches)
 
             if (pos) {
                 className := matches[1] . "Ref"
                 args := []
 
-                if (matches.Has(3)) {
+                if (matches.Count >= 3 && matches[3]) {
                     args.Push(matches[3])
                 }
 
-                if (matches.Has(5)) {
+                if (matches.Count >= 5 && matches[5]) {
                     args.Push(matches[5])
                 }
 
@@ -98,6 +104,10 @@ class ParameterContainer extends ContainerBase {
 
                 data := %className%(args*)
             }
+        }
+
+        if (Type(data) == "String" && SubStr(data, 1, 2) == "{@") {
+            MsgBox(data)
         }
 
         return data
