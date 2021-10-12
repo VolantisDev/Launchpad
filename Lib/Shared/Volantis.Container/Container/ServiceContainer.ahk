@@ -198,6 +198,7 @@ class ServiceContainer extends ParameterContainer {
     }
 
     resolveDefinition(definition) {
+        definition := super.resolveDefinition(definition)
         val := definition
         isObj := IsObject(definition)
 
@@ -221,7 +222,7 @@ class ServiceContainer extends ParameterContainer {
             }
         }
 
-        return super.resolveDefinition(val)
+        return val
     }
 
     initializeService(service, name, entry) {
