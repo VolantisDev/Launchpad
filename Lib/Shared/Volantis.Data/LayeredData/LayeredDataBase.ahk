@@ -279,6 +279,7 @@ class LayeredDataBase {
         return DiffResult(added, modified, removed)
     }
 
+    ; TODO: Replace with a call to Debugger's Inspect method
     DebugData(layer := "") {
         layers := (layer == "") ? this.layers : Map(layer, this.layers[layer])
 
