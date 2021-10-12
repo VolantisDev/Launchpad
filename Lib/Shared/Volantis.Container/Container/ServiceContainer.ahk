@@ -15,6 +15,10 @@ class ServiceContainer extends ParameterContainer {
                         this.serviceStore.Delete(serviceName)
                     }
 
+                    if (Type(serviceConfig) == "String") {
+                        serviceConfig := Map("class", serviceConfig)
+                    }
+
                     this.Items[serviceName] := serviceConfig
                 }
             }
