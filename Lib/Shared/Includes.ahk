@@ -78,6 +78,7 @@
 #Include Volantis.App\Installer\InstallerComponent\FileInstallerComponentBase.ahk
 #Include Volantis.App\Installer\InstallerComponent\GitHubReleaseInstallerComponent.ahk
 #Include Volantis.App\Installer\InstallerComponent\InstallerComponentBase.ahk
+#Include Volantis.App\Module\ExternalModuleBase.ahk
 #Include Volantis.App\Module\ModuleBase.ahk
 #Include Volantis.App\Modules\Auth\Auth.module.ahk
 #Include Volantis.App\Service\AppServiceBase.ahk
