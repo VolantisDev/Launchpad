@@ -1,4 +1,4 @@
-class MainWindow extends ManageWindowBase {
+﻿class MainWindow extends ManageWindowBase {
     listViewColumns := Array("GAMES")
     launcherManager := ""
     platformManager := ""
