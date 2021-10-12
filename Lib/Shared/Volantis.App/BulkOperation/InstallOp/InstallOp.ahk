@@ -16,6 +16,7 @@ class InstallOp extends BulkOperationBase {
         }
 
         for index, name in this.installers {
+            name := "installer." . name
             installer := this.app.Service(name)
 
             if (!installer.HasBase(InstallerBase.Prototype)) {
