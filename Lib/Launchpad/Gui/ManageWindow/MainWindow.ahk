@@ -1,4 +1,4 @@
-﻿class MainWindow extends ManageWindowBase {
+class MainWindow extends ManageWindowBase {
     listViewColumns := Array("GAMES")
     launcherManager := ""
     platformManager := ""
@@ -94,6 +94,7 @@
         toolsItems := []
         toolsItems.Push(Map("label", "Manage &Platforms", "name", "ManagePlatforms"))
         toolsItems.Push(Map("label", "Manage &Backups", "name", "ManageBackups"))
+        toolsItems.Push(Map("label", "Manage &Modules", "name", "ManageModules"))
         toolsItems.Push(Map("label", "&Flush Cache", "name", "FlushCache"))
 
         launchersItems := []
@@ -123,6 +124,8 @@
             this.app.Service("GuiManager").OpenWindow("PlatformsWindow")
         } else if (result == "ManageBackups") {
             this.app.Service("GuiManager").OpenWindow("ManageBackupsWindow")
+        } else if (result == "ManageModules") {
+            this.app.Service("GuiManager").OpenWindow("ManageModulesWindow")
         } else if (result == "FlushCache") {
             this.app.Service("CacheManager").FlushCaches(true, true)
         } else if (result == "CleanLaunchers") {
