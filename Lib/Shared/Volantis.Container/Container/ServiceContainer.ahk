@@ -19,6 +19,10 @@ class ServiceContainer extends ParameterContainer {
                         serviceConfig := Map("class", serviceConfig)
                     }
 
+                    if (!serviceConfig.Has("enabled")) {
+                        serviceConfig["enabled"] := true
+                    }
+
                     this.Items[serviceName] := serviceConfig
                 }
             }
