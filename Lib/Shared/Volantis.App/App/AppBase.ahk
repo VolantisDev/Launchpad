@@ -75,6 +75,7 @@ class AppBase {
             "config.check_updates_on_start", false,
             "config.logging_level", "error",
             "config.modules_file", this.dataDir . "\Modules.json",
+            "config.modules_view_mode", "Report",
             "config.log_path", this.dataDir . "\" . this.appName . "Log.txt",
             "config.module_dirs", [this.dataDir . "\Modules"],
             "config.core_module_dirs", [this.appDir . "\Lib\"],
@@ -142,7 +143,7 @@ class AppBase {
             "IdGenerator", "UuidGenerator",
             "config_storage.modules", Map(
                 "class", "JsonConfigStorage",
-                "arguments", [ParameterRef("config.modules_file"), "Modules"]
+                "arguments", [ParameterRef("config.modules_file"), "modules"]
             ),
             "config.modules", Map(
                 "class", "PersistentConfig",
