@@ -14,18 +14,20 @@ class ThemeManager extends ComponentManagerBase {
     }
 
     DefineServices(event, extra, eventName, hwnd) {
-        services := event.GetDefinitions()
+        if (Type(event.ComponentManager) == Type(this)) {
+            services := event.GetDefinitions()
 
-        for themeKey, themeParameters in event.GetParameters() {
-            if (!services.Has(themeKey)) {
-                services[themeKey] := Map(
-                    "factory", ServiceRef("ThemeFactory", "CreateTheme"),
-                    "arguments", [themeKey]
-                )
+            for themeKey, themeParameters in event.GetParameters() {
+                if (!services.Has(themeKey)) {
+                    services[themeKey] := Map(
+                        "factory", ServiceRef("ThemeFactory", "CreateTheme"),
+                        "arguments", [themeKey]
+                    )
+                }
             }
-        }
 
-        event.SetDefinitions(services)
+            event.SetDefinitions(services)
+        }
     }
 
     GetDefaultComponentId() {
