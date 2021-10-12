@@ -1,4 +1,4 @@
-﻿class Launchpad extends AppBase {
+class Launchpad extends AppBase {
     customTrayMenu := true
     detectGames := false
     isSetup := false
@@ -28,7 +28,8 @@
         parameters["config.default_launcher_theme"] := ""
         parameters["config.override_launcher_theme"] := false
         parameters["config.backups_view_mode"] := "Report"
-        parameters["config.platforms_view_mode"] := "Report"
+        parameters["config.platforms_view_mode"] := "Tile"
+        parameters["config.launcher_view_mode"] := "Report"
         parameters["config.launcher_double_click_action"] := "Edit"
         parameters["launcher_config.games"] := Map()
         parameters["platforms_config.platforms"] := Map()
