@@ -35,7 +35,7 @@ class ConditionBase {
     evaluateChildConditions(args*) {
         matches := true
 
-        if (this.childConditions) {
+        if (this.childConditions && this.childConditions.Length) {
             matches := false
 
             for index, condition in this.childConditions {
