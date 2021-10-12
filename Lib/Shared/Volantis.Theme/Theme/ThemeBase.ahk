@@ -79,7 +79,19 @@ class ThemeBase {
     }
 
     GetIconPath(name) {
-        return this.resourcesDir . "\Graphics\Icons\" . this.iconTheme . "\" . name . ".ico"
+        exts := [".ico", ".png", ".jpg", ".bmp"]
+
+        path := ""
+        basePath := this.resourcesDir . "\Graphics\Icons\" . this.iconTheme . "\" . name
+
+        for index, ext in exts {
+            if (FileExist(basePath . ext)) {
+                path := basePath . ext
+                break
+            }
+        }
+
+        return path
     }
 
     GetColor(id) {
