@@ -124,7 +124,10 @@ class ParameterContainer extends ContainerBase {
 
         for index, token in tokens {
             if (context.Has(token)) {
+                context := context[token]
                 exists := true
+            } else {
+                exists := false
                 break
             }
 
