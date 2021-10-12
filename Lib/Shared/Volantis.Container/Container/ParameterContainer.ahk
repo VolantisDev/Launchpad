@@ -117,7 +117,7 @@ class ParameterContainer extends ContainerBase {
         appName := definition ? definition.GetName() : ""
         
         if (!appName) {
-            appName := "AppBAse"
+            appName := "AppBase"
         }
 
         if (this.Has(appName)) {
