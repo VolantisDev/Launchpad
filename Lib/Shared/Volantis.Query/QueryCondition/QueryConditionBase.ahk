@@ -15,7 +15,7 @@ class QueryConditionBase extends ConditionBase {
         if (condition.HasBase(QueryConditionBase.Prototype)) {
             matches := super.evaluateChildCondition(condition, key, data, args*)
         } else {
-            matches := super.evaluateChildCondition([this.getQueryValue(key, data, args*)])
+            matches := super.evaluateChildCondition(condition, this.getQueryValue(key, data, args*))
         }
         
         return matches
