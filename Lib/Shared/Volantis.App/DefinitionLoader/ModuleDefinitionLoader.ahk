@@ -28,7 +28,7 @@ class ModuleDefinitionLoader extends ClassDiscoveryDefinitionLoader {
     }
     
     DiscoverServiceDefinitions(fileName, filePath) {
-        services := super.DiscoverServiceDefinitions(fileName, filePath)
+        services := Map()
         serviceName := this.getServiceName(fileName, filePath)
         className := this.getClassName(fileName, filePath)
         isEnabled := this.ModuleIsEnabled(serviceName, fileName, filePath)
