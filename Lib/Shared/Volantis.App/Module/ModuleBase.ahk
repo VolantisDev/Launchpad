@@ -8,7 +8,7 @@ class ModuleBase {
         this.config := config
 
         if (moduleInfo["file"] && (!moduleInfo.Has("dir") || !moduleInfo["dir"])) {
-            SplitPath(moduleInfo["file"], &moduleDir)
+            SplitPath(moduleInfo["file"],, &moduleDir)
             moduleInfo["dir"] := moduleDir
         }
 
