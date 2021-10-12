@@ -149,10 +149,10 @@ class ComponentManagerBase {
         return returnQuery ? query : query.Execute()
     }
 
-    Names() {
+    Names(includeDisabled := false) {
         names := []
 
-        for index, name in this.getAllNames() {
+        for index, name in this.getAllNames(includeDisabled) {
             start := 0
 
             if (this.servicePrefix) {
@@ -165,8 +165,12 @@ class ComponentManagerBase {
         return names
     }
 
-    getAllNames() {
-        return this.All(ContainerQuery.RESULT_TYPE_NAMES)
+    getAllNames(includeDisabled := false) {
+        return this.All(ContainerQuery.RESULT_TYPE_NAMES, false, includeDisabled)
+    }
+
+    Count(includeDisabled := false) {
+        return this.Names(includeDisabled).Length
     }
 
     Query(resultType := "", includeDisabled := false) {
