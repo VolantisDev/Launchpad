@@ -10,7 +10,6 @@
 #Include Volantis.App\BulkOperation\InstallOp\InstallOp.ahk
 #Include Volantis.App\BulkOperation\InstallOp\UpdateOp.ahk
 #Include Volantis.App\BulkOperation\LoadOp\LoadBackupsOp.ahk
-#Include Volantis.App\BulkOperation\LoadOp\LoadModulesOp.ahk
 #Include Volantis.App\BulkOperation\OpError\BasicOpError.ahk
 #Include Volantis.App\BulkOperation\OpError\OpErrorBase.ahk
 #Include Volantis.App\BulkOperation\OpStatus\BasicOpStatus.ahk
