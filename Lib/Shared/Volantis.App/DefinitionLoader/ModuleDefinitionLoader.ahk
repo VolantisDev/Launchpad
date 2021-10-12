@@ -74,18 +74,17 @@ class ModuleDefinitionLoader extends ClassDiscoveryDefinitionLoader {
 
             if (Type(moduleInfo) == "String") {
                 moduleInfo := Map(
-                    "class", moduleInfo,
                     "enabled", true
                 )
             }
 
             for key, val in moduleInfo {
-                parameters["module." . serviceName . "." . key] := val
+                parameters[serviceName . "." . key] := val
             }
         }
 
         if (!parameters.Count) {
-            parameters["module." . serviceName . ".enabled"] := false
+            parameters[serviceName . ".enabled"] := false
         }
 
         return parameters

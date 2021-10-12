@@ -1,4 +1,4 @@
-class Launchpad extends AppBase {
+﻿class Launchpad extends AppBase {
     customTrayMenu := true
     detectGames := false
     isSetup := false
@@ -31,9 +31,9 @@ class Launchpad extends AppBase {
         parameters["config.platforms_view_mode"] := "Tile"
         parameters["config.launcher_view_mode"] := "Report"
         parameters["config.launcher_double_click_action"] := "Edit"
-        parameters["launcher_config.games"] := Map()
-        parameters["platforms_config.platforms"] := Map()
-        parameters["backups_config.backups"] := Map()
+        parameters["launcher_config"] := Map()
+        parameters["platforms_config"] := Map()
+        parameters["backups_config"] := Map()
         parameters["previous_config_file"] := A_ScriptDir . "\" . this.appName . ".ini"
         parameters["default_datasource"] := "api"
         return parameters
@@ -66,8 +66,7 @@ class Launchpad extends AppBase {
             "arguments", [
                 ServiceRef("config_storage.backups"), 
                 ContainerRef(), 
-                "backups_config", 
-                "backups"
+                "backups_config"
             ]
         )
 
@@ -121,8 +120,7 @@ class Launchpad extends AppBase {
             "arguments", [
                 ServiceRef("config_storage.launchers"), 
                 ContainerRef(), 
-                "launcher_config", 
-                "games"
+                "launcher_config"
             ]
         )
 
@@ -141,8 +139,7 @@ class Launchpad extends AppBase {
             "arguments", [
                 ServiceRef("config_storage.platforms"), 
                 ContainerRef(), 
-                "platforms_config", 
-                "platforms"
+                "platforms_config"
             ]
         )
 

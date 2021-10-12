@@ -87,7 +87,7 @@ class AppBase {
             "include_files.module_tests", this.dataDir . "\ModuleIncludes.test.ahk",
             "resources.dir", resourcesDir,
             "themes.extra_themes", [],
-            "module_config.modules", Map(),
+            "module_config", Map(),
             "structured_data.basic", Map(
                 "class", "BasicData",
                 "extensions", []
@@ -143,15 +143,14 @@ class AppBase {
             "IdGenerator", "UuidGenerator",
             "config_storage.modules", Map(
                 "class", "JsonConfigStorage",
-                "arguments", [ParameterRef("config.modules_file"), "modules"]
+                "arguments", [ParameterRef("config.modules_file"), "Modules"]
             ),
             "config.modules", Map(
                 "class", "PersistentConfig",
                 "arguments", [
                     ServiceRef("config_storage.modules"), 
                     ContainerRef(), 
-                    "module_config",
-                    "modules"
+                    "module_config"
                 ]
             ),
             "factory.modules", Map(

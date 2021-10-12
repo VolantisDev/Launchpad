@@ -4,11 +4,9 @@
 class PersistentConfig extends ConfigBase {
     _storage := ""
     _overwrite := true
-    _persistKey := ""
 
-    __New(configStorage, container, parentKey := "", persistKey := "", autoLoad := true) {
+    __New(configStorage, container, parentKey := "", autoLoad := true) {
         this._storage := configStorage
-        this._persistKey := persistKey
         super.__New(container, parentKey, autoLoad)
     }
 
@@ -19,17 +17,11 @@ class PersistentConfig extends ConfigBase {
             config := Map()
         }
 
-        if (this._persistKey) {
-            config := Map(this._persistKey, config)
-        }
-
         return config
     }
 
     _persistConfigToStorage(configMap := "") {
-        if (configMap && this._persistKey) {
-            configMap := configMap.Has(this._persistKey) ? configMap[this._persistKey] : ""
-        }
+        Debugger().Inspect("Saving config", configMap)
 
         return this._storage.WriteConfig(configMap, this._overwrite)
     }

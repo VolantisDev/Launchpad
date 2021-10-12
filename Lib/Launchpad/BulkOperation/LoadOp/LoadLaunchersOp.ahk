@@ -19,12 +19,12 @@ class LoadLaunchersOp extends BulkOperationBase {
         this.launcherConfigObj.LoadConfig()
 
         if (this.useProgress) {
-            this.progress.SetRange(0, this.launcherConfigObj["games"].Count)
+            this.progress.SetRange(0, this.launcherConfigObj.Count)
         }
 
         factory := this.app.Service("EntityFactory")
 
-        for key, config in this.launcherConfigObj["games"] {
+        for key, config in this.launcherConfigObj {
             this.StartItem(key, key)
             requiredKeys := ""
             this.results[key] := factory.CreateEntity("LauncherEntity", key, config, "", requiredKeys)
