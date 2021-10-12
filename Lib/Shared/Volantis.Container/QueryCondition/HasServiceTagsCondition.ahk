@@ -14,4 +14,8 @@ class HasServiceTagsCondition extends QueryConditionBase {
 
         super.__New(conditions, negate)
     }
+
+    getQueryValue(key, data, args*) {
+        return data.Has(this.field) ? data[this.field] : []
+    }
 }
