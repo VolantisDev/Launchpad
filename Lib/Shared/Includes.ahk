@@ -181,6 +181,7 @@
 #Include Volantis.Query\Condition\FileConditionBase.ahk
 #Include Volantis.Query\Condition\FileContainsCondition.ahk
 #Include Volantis.Query\Condition\FileModifiedAfterCondition.ahk
+#Include Volantis.Query\Condition\IsTrueCondition.ahk
 #Include Volantis.Query\Condition\MatchesCondition.ahk
 #Include Volantis.Query\Condition\RegExCondition.ahk
 #Include Volantis.Query\Condition\StartsWithCondition.ahk
