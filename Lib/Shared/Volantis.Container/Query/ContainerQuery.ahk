@@ -45,4 +45,21 @@ class ContainerQuery extends QueryBase {
             throw ContainerException("Container query has unknown result type " . this.resultType)
         }
     }
+
+    GetResults() {
+        results := super.GetResults()
+
+        if (this.servicePrefix) {
+            newResults := Map()
+
+            for key, val in results {
+                key := SubStr(key, StrLen(this.servicePrefix) + 1)
+                newResults[key] := val
+            }
+            
+            results := newResults
+        }
+
+        return results
+    }
 }
