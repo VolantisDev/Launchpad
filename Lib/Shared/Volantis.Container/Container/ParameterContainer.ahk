@@ -106,10 +106,6 @@ class ParameterContainer extends ContainerBase {
             }
         }
 
-        if (Type(data) == "String" && SubStr(data, 1, 2) == "{@") {
-            MsgBox(data)
-        }
-
         return data
     }
 
