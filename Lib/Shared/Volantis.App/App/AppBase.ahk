@@ -77,6 +77,7 @@ class AppBase {
             "config.modules_file", this.dataDir . "\Modules.json",
             "config.log_path", this.dataDir . "\" . this.appName . "Log.txt",
             "config.module_dirs", [this.dataDir . "\Modules"],
+            "config.core_module_dirs", [this.appDir . "\Lib\"],
             "config.main_window", "MainWindow",
             "state_path", this.dataDir . "\" . this.appName . "State.json",
             "service_files.app", this.appDir . "\" . scriptName . ".services.json",
