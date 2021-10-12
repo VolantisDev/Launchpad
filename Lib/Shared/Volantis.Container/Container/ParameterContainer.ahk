@@ -130,8 +130,6 @@ class ParameterContainer extends ContainerBase {
                 exists := false
                 break
             }
-
-            context := context[token]
         }
 
         return exists
