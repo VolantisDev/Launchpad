@@ -23,7 +23,7 @@ class HtmlResultViewer extends TemplateFileResultViewerBase {
         testStatus := "Successful"
         successful := true
         succeededCount := 0
-        totalCount := testResults.Count
+        totalCount := testResults.Length
 
         for taskName, taskResult in testResults {
             if (taskResult["success"]) {
@@ -46,16 +46,22 @@ class HtmlResultViewer extends TemplateFileResultViewerBase {
 
     RenderTestResults(testResults) {
         output := "<table class='table table-bordered'>`n"
-        output .= "`t<tr><th scope='col'>Task</th><th scope='col'>Assertion</th><th scope='col'>Status</th><th scope='col'>Data</th></tr>`n"
+        output .= "`t<tr><th scope='col'>Method</th><th scope='col'>Task</th><th scope='col'>Assertion</th><th scope='col'>Status</th><th scope='col'>Data</th></tr>`n"
 
         for taskName, taskResult in testResults {
+            if (taskResult.Has("description") && taskResult["description"]) {
+                taskName := taskResult["description"]
+            }
+
             dataOutput := ""
 
-            if (taskResult.Has("data") && taskResult["data"].Count > 0) {
+            if (taskResult.Has("data") && taskResult["data"] && taskResult["data"].Count > 0) {
                 dataOutput .= "<dl>"
+
                 for dataKey, dataValue in taskResult["data"] {
                     dataOutput .= "<dt>" . dataKey . "</dt><dd>" . this.ConvertToString(dataValue) . "</dd>"
                 }
+
                 dataOutput .= "</dl>"
             }
 
@@ -63,6 +69,7 @@ class HtmlResultViewer extends TemplateFileResultViewerBase {
             taskStatus := taskResult["success"] ? "Success" : "Failure"
 
             output .= "`t<tr class='" . className . "'>`n"
+            output .= "`t`t<th scope='row'>" . taskResult["method"] . "</th>`n"
             output .= "`t`t<th scope='row'>" . taskName . "</th>`n"
             output .= "`t`t<td>" . taskResult["assertion"] . "</td>`n"
             output .= "`t`t<td>" . taskStatus . "</td>`n"

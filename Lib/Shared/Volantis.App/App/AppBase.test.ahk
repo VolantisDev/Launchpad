@@ -46,7 +46,7 @@ class AppBaseTest extends TestBase {
     TestAppVersion() {
         success := true
 
-        if (!this.AssertEquals("App version", this.testAppInstance.Version, this.testVersion)) {
+        if (!this.AssertEquals("Version", this.testAppInstance.Version, this.testVersion)) {
             success := false
         }
 
@@ -55,11 +55,11 @@ class AppBaseTest extends TestBase {
     }
 
     TestAppConfig() {
-        return this.AssertEquals("App config class", Type(this.testAppInstance.Config), this.appConfigClass)
+        return this.AssertEquals("Config", Type(this.testAppInstance.Config), this.appConfigClass)
     }
 
     TestAppState() {
-        return this.AssertEquals("App state class", Type(this.testAppInstance.State), this.appStateClass)
+        return this.AssertEquals("State", Type(this.testAppInstance.State), this.appStateClass)
     }
 
     TestAppServices() {

@@ -48,14 +48,14 @@ class DebuggerTest extends TestBase {
         } catch Any {
 
         }
-        this.AssertEquals("SetLogger with LoggerService replaces logger", Type(loggerServiceObj), Type(this.debuggerInstance.logger))
+        this.AssertEquals("SetLogger", Type(loggerServiceObj), Type(this.debuggerInstance.logger))
 
         try {
             this.debuggerInstance.SetLogger(logger)
         } catch Any {
 
         }
-        this.AssertNotEquals("SetLogger with Logger instance does not replace logger", Type(logger), Type(this.debuggerInstance.logger))
+        this.AssertNotEquals("SetLogger", Type(logger), Type(this.debuggerInstance.logger))
 
         try {
             invalidLogger := Map("Not", "a logger")
@@ -64,7 +64,7 @@ class DebuggerTest extends TestBase {
 
         }
 
-        this.AssertNotEquals("SetLogger with invalid parameter does not replace logger", Type(invalidLogger), Type(this.debuggerInstance.logger))
+        this.AssertNotEquals("SetLogger", Type(invalidLogger), Type(this.debuggerInstance.logger))
     }
 
     TestInspect() {
@@ -83,7 +83,7 @@ class DebuggerTest extends TestBase {
     TestToString() {
         val := "Test string"
         str := this.debuggerInstance.ToString(val)
-        return this.AssertEquals("Passing a string to ToString returns the same string", val, str)
+        return this.AssertEquals("ToString", val, str)
     }
 
     TestGetIndent() {
@@ -91,12 +91,12 @@ class DebuggerTest extends TestBase {
         indentStr := "-"
 
         testIndent := this.debuggerInstance.GetIndent(0, indentStr)
-        if (!this.AssertEquals("GetIndent with level 0 returns an empty string", testIndent, "")) {
+        if (!this.AssertEquals("GetIndent", testIndent, "")) {
             success := false
         }
 
         testIndent := this.debuggerInstance.GetIndent(10, indentStr)
-        if (!this.AssertEquals("GetIndent with level 10 returns the correct string", testIndent, "----------")) {
+        if (!this.AssertEquals("GetIndent", testIndent, "----------")) {
             success := false
         }
 
