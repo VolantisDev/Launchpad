@@ -577,7 +577,7 @@
     }
 
     ImportShortcut() {
-        entity := this.app.Service("GuiManager").Dialog(Map("type", "ImportShortcutForm"), this.guiId)
+        entity := this.app.Service("GuiManager").Dialog(Map("type", "ImportShortcutForm", "ownerOrParent", this.guiId))
 
         if (entity) {
             this.launcherManager.AddEntity(entity.Key, entity)
@@ -587,7 +587,7 @@
     }
 
     AddLauncher() {
-        entity := this.app.Service("GuiManager").Dialog(Map("type", "LauncherWizard"), this.guiId)
+        entity := this.app.Service("GuiManager").Dialog(Map("type", "LauncherWizard", "ownerOrParent", this.guiId))
 
         if (entity) {
             this.launcherManager.AddEntity(entity.Key, entity)
