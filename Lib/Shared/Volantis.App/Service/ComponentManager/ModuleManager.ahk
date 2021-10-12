@@ -12,7 +12,6 @@ class ModuleManager extends ComponentManagerBase {
 
     ValidateComponentDependencies(services, parameters, stage) {
         if (stage == "after") {
-            dependencies := this.CalculateDependencies()
             missingDeps := this.CalculateMissingDependencies()
 
             if (missingDeps.Length) {
@@ -29,34 +28,6 @@ class ModuleManager extends ComponentManagerBase {
                 throw AppException("There are missing module dependencies: " . missing)
             }
         }
-    }
-
-    All(resultType := "", returnQuery := false, includeDisabled := false) {
-        query := super.All(resultType, true)
-
-        if (!includeDisabled) {
-            query
-                .Condition(HasFieldCondition("enabled"))
-                .Condition(FieldCondition(IsTrueCondition(), "enabled"))
-        }
-
-        return returnQuery ? query : query.Execute()
-    }
-
-    getAllNames(includeDisabled := false) {
-        return this.All(ContainerQuery.RESULT_TYPE_NAMES, false, includeDisabled)
-    }
-
-    Query(resultType := "", includeDisabled := false) {
-        query := super.Query(resultType)
-
-        if (!includeDisabled) {
-            query
-                .Condition(HasFieldCondition("enabled"))
-                .Condition(FieldCondition(IsTrueCondition(), "enabled"))
-        }
-
-        return query
     }
 
     CalculateDependencies() {
