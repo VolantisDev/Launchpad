@@ -1,4 +1,20 @@
 ; Automatically-generated file. Manual edits will be overwritten.
+#Include Modules\Auth\Auth.module.ahk
+#Include Modules\Bethesda\Bethesda.module.ahk
+#Include Modules\Bethesda\GamePlatform\BethesdaPlatform.ahk
+#Include Modules\Blizzard\Blizzard.module.ahk
+#Include Modules\Blizzard\GamePlatform\BlizzardPlatform.ahk
+#Include Modules\Blizzard\StructuredData\BlizzardProductDb.ahk
+#Include Modules\Epic\Epic.module.ahk
+#Include Modules\Epic\GamePlatform\EpicPlatform.ahk
+#Include Modules\LaunchpadApi\AuthProvider\LaunchpadApiAuthProvider.ahk
+#Include Modules\LaunchpadApi\DataSource\ApiDataSource.ahk
+#Include Modules\Origin\Origin.module.ahk
+#Include Modules\Origin\GamePlatform\OriginPlatform.ahk
+#Include Modules\Riot\Riot.module.ahk
+#Include Modules\Riot\GamePlatform\RiotPlatform.ahk
+#Include Modules\Steam\Steam.module.ahk
+#Include Modules\Steam\GamePlatform\SteamPlatform.ahk
 #Include Vendor\Gdip_All.ahk
 #Include Vendor\LV_Constants.ahk
 #Include Volantis.App\App\AppBase.ahk
@@ -79,7 +95,6 @@
 #Include Volantis.App\Installer\InstallerComponent\InstallerComponentBase.ahk
 #Include Volantis.App\Module\ExternalModuleBase.ahk
 #Include Volantis.App\Module\ModuleBase.ahk
-#Include Volantis.App\Modules\Auth\Auth.module.ahk
 #Include Volantis.App\Service\AppServiceBase.ahk
 #Include Volantis.App\Service\AuthService.ahk
 #Include Volantis.App\Service\EventManager.ahk
