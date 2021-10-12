@@ -402,8 +402,10 @@ class AppBase {
 
         serviceFile := this.Services.GetParameter("service_files.app")
 
+        sdFactory := this.Service("StructuredData")
+
         if (FileExist(serviceFile)) {
-            this.Services.LoadDefinitions(FileDefinitionLoader(serviceFile))
+            this.Services.LoadDefinitions(FileDefinitionLoader(sdFactory, serviceFile))
         }
 
         this.Service("Config")
@@ -411,8 +413,8 @@ class AppBase {
         this.InitializeModules(config)
 
         for index, moduleServiceFile in this.Service("ModuleManager").GetModuleServiceFiles() {
-            if (FileExist(serviceFile)) {
-                this.Services.LoadDefinitions(FileDefinitionLoader(moduleServiceFile))
+            if (FileExist(moduleServiceFile)) {
+                this.Services.LoadDefinitions(FileDefinitionLoader(sdFactory, moduleServiceFile))
             }
         }
 
@@ -431,7 +433,7 @@ class AppBase {
         serviceFile := this.Services.GetParameter("service_files.user")
 
         if (FileExist(serviceFile)) {
-            this.Services.LoadDefinitions(FileDefinitionLoader(serviceFile))
+            this.Services.LoadDefinitions(FileDefinitionLoader(sdFactory, serviceFile))
         }
 
         ; Register any missing late-loading event subscribers
