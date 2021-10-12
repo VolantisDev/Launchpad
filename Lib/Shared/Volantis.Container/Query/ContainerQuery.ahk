@@ -24,7 +24,7 @@ class ContainerQuery extends QueryBase {
 
             for key, definition in definitions {
                 if (SubStr(key, 1, StrLen(this.servicePrefix)) == this.servicePrefix) {
-                    filteredDefinitions[key] := definitions
+                    filteredDefinitions[key] := definition
                 }
             }
 
