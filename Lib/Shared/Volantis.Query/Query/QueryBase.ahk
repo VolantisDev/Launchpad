@@ -27,7 +27,7 @@ class QueryBase {
     }
 
     preprocessCondition(condition, field := "", params*) {
-        if (!condition.HasBase(QueryConditionBase)) {
+        if (!condition.HasBase(QueryConditionBase.Prototype)) {
             if (field) {
                 if (field == "{}") {
                     field := ""
