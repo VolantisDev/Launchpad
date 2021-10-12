@@ -8,11 +8,6 @@
             }
         }
 
-        if (config.Has("Games")) {
-            config["games"] := config["Games"]
-            config.Delete("Games")
-        }
-
         return config
     }
 }

@@ -79,9 +79,6 @@ class GuiBase {
         }
 
         if (this.owner != "") {
-            if (Type(this.owner) == "Integer") {
-                MsgBox(this.owner)
-            }
             extraOptions["Owner" . this.owner.Hwnd] := true
         }
 

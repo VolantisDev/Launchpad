@@ -9,12 +9,20 @@ class QueryConditionBase extends ConditionBase {
         super.__New(conditions, negate)
     }
 
-    evaluateChildConditions(key, data, args*) {
-        super.evaluateChildConditions([this.getQueryValue(key, data, args*)])
+    evaluateChildCondition(condition, key, data, args*) {
+        matches := false
+
+        if (condition.HasBase(QueryConditionBase.Prototype)) {
+            matches := super.evaluateChildCondition(condition, key, data, args*)
+        } else {
+            matches := super.evaluateChildCondition(condition, this.getQueryValue(key, data, args*))
+        }
+        
+        return matches
     }
 
     getQueryValue(key, data, args*) {
-
+        return ""
     }
 
     EvaluateCondition(key, data, args*) {

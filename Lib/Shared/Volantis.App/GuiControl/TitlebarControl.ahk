@@ -87,9 +87,14 @@ class TitlebarControl extends GuiControlBase {
         if (this.guiObj.config["showStatusIndicator"]) {
             opts := "x" . buttonsX . " y" . (this.topMargin - 5) . " w" . statusIndicatorW
             statusStyle := this.guiObj.StatusWindowIsOnline() ? "status" : "statusOffline"
+            initialInfo := Map()
             statusInfo := this.guiObj.GetStatusInfo()
-            initialInfo := statusInfo.Clone()
-            initialInfo["name"] := ""
+
+            if (statusInfo) {
+                initialInfo := statusInfo.Clone()
+                initialInfo["name"] := ""
+            }
+            
             this.statusIndicator := this.guiObj.Add("StatusIndicatorControl", opts, "", initialInfo, "", statusStyle)
             difference := this.statusIndicator.UpdateStatusIndicator(statusInfo, statusStyle)
             buttonsX += this.initialStatusIndicatorW + (this.guiObj.margin * 2)

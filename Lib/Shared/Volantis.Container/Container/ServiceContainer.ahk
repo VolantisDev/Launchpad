@@ -15,6 +15,14 @@ class ServiceContainer extends ParameterContainer {
                         this.serviceStore.Delete(serviceName)
                     }
 
+                    if (Type(serviceConfig) == "String") {
+                        serviceConfig := Map("class", serviceConfig)
+                    }
+
+                    if (!serviceConfig.Has("enabled")) {
+                        serviceConfig["enabled"] := true
+                    }
+
                     this.Items[serviceName] := serviceConfig
                 }
             }
@@ -47,12 +55,18 @@ class ServiceContainer extends ParameterContainer {
         super.Set(name, service)
     }
 
-    Query(servicePrefix := "", resultType := "") {
+    Query(servicePrefix := "", resultType := "", includeDisabled := false) {
         if (resultType == "") {
-            resultType := ContainerQuery.RESULT_TYPE_NAMES
+            resultType := ContainerQuery.RESULT_TYPE_SERVICES
         }
 
-        return ContainerQuery(this, servicePrefix, resultType)
+        query := ContainerQuery(this, servicePrefix, resultType)
+
+        if (!includeDisabled) {
+            query.Condition(FieldCondition(IsTrueCondition(), "enabled"))
+        }
+
+        return query
     }
 
     Delete(service, deleteDefinition := true) {
@@ -194,6 +208,7 @@ class ServiceContainer extends ParameterContainer {
     }
 
     resolveDefinition(definition) {
+        definition := super.resolveDefinition(definition)
         val := definition
         isObj := IsObject(definition)
 
@@ -217,7 +232,7 @@ class ServiceContainer extends ParameterContainer {
             }
         }
 
-        return super.resolveDefinition(val)
+        return val
     }
 
     initializeService(service, name, entry) {

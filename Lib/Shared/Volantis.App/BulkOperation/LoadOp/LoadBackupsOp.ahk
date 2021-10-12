@@ -19,12 +19,12 @@ class LoadBackupsOp extends BulkOperationBase {
         this.backupsConfigObj.LoadConfig()
 
         if (this.useProgress) {
-            this.progress.SetRange(0, this.backupsConfigObj["backups"].Count)
+            this.progress.SetRange(0, this.backupsConfigObj.Count)
         }
 
         factory := this.app.Service("EntityFactory")
 
-        for key, config in this.backupsConfigObj["backups"] {
+        for key, config in this.backupsConfigObj {
             this.StartItem(key, key)
             requiredKeys := ""
             this.results[key] := factory.CreateEntity("BackupEntity", key, config, "", requiredKeys)

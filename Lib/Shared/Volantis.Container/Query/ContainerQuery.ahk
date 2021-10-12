@@ -24,7 +24,7 @@ class ContainerQuery extends QueryBase {
 
             for key, definition in definitions {
                 if (SubStr(key, 1, StrLen(this.servicePrefix)) == this.servicePrefix) {
-                    filteredDefinitions[key] := definitions
+                    filteredDefinitions[key] := definition
                 }
             }
 
@@ -44,5 +44,22 @@ class ContainerQuery extends QueryBase {
         } else {
             throw ContainerException("Container query has unknown result type " . this.resultType)
         }
+    }
+
+    GetResults() {
+        results := super.GetResults()
+
+        if (this.servicePrefix) {
+            newResults := Map()
+
+            for key, val in results {
+                key := SubStr(key, StrLen(this.servicePrefix) + 1)
+                newResults[key] := val
+            }
+            
+            results := newResults
+        }
+
+        return results
     }
 }

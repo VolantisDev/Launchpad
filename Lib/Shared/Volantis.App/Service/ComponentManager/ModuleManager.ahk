@@ -1,63 +1,102 @@
-class ModuleManager extends ConfigurableContainerServiceBase {
-    app := ""
-    eventMgr := ""
-    idGeneratorObj := ""
-    dataDir := ""
-    discoverEvent := Events.MODULES_DISCOVER
-    discoverAlterEvent := Events.MODULES_DISCOVER_ALTER
-    loadEvent := Events.MODULE_LOAD
-    loadAlterEvent := Events.MODULE_LOAD_ALTER
-    moduleDirs := []
+class ModuleManager extends ComponentManagerBase {
+    configObj := ""
+    moduleConfig := ""
     classSuffix := "Module"
 
-    __New(app, eventMgr, idGeneratorObj, configObj, dataDir, moduleDirs := "", defaultModuleInfo := "", defaultModules := "") {
-        this.app := app
-        this.eventMgr := eventMgr
-        this.idGeneratorObj := idGeneratorObj
-        this.dataDir := dataDir
-        
-        if (moduleDirs) {
-            if (Type(moduleDirs) == "String") {
-                moduleDirs := [moduleDirs]
+    __New(container, eventMgr, notifierObj, configObj, moduleConfig, definitionLoaders := "") {
+        this.configObj := configObj
+        this.moduleConfig := moduleConfig
+
+        super.__New(container, "module.", eventMgr, notifierObj, ModuleBase, definitionLoaders)
+    }
+
+    ValidateComponentDependencies(services, parameters, stage) {
+        if (stage == "after") {
+            missingDeps := this.CalculateMissingDependencies()
+
+            if (missingDeps.Length) {
+                missing := ""
+
+                for index, dep in missingDeps {
+                    if (missing) {
+                        missing .= ", "
+                    }
+
+                    missing .= dep
+                }
+
+                throw AppException("There are missing module dependencies: " . missing)
             }
-
-            this.moduleDirs := moduleDirs
-        }
-
-        super.__New(configObj, "modules", defaultModuleInfo, defaultModules, false)
-    }
-
-    CreateDiscoverer() {
-        searchDirs := this.GetModuleParentDirs()
-        coreDirs := this.GetCoreModuleDirs()
-
-        return ModuleDiscoverer(this, searchDirs, coreDirs)
-    }
-
-    CreateLoader(componentInfo) {
-        return ClassComponentLoader(this, componentInfo)
-    }
-
-    LoadComponents() {
-        if (!this.componentsLoaded) {
-            ; TODO: Calculate dependencies and stop if they are not met
-            super.LoadComponents()
-            this.RegisterSubscribers()
         }
     }
-    
-    DispatchEvent(eventName, eventObj, extra := "", hwnd := "") {
-        modules := this.GetAll()
 
-        for key, module in modules {
-            module.DispatchEvent(eventName, eventObj, extra, hwnd)
+    LoadComponents(reloadComponents := false) {
+        super.LoadComponents(reloadComponents)
+
+        save := false
+
+        moduleParams := this.container.GetParameter("module")
+
+        for key, config in moduleParams {
+            if (!this.moduleConfig.Has(key)) {
+                this.moduleConfig[key] := config
+                save := true
+            }
         }
+
+        if (save) {
+            this.moduleConfig.SaveConfig()
+        }
+    }
+
+    EnableModule(key) {
+        moduleConfig := this.moduleConfig.Has(key) ? this.moduleConfig[key] : Map()
+
+        if (!moduleConfig.Has("enabled") || !moduleConfig["enabled"]) {
+            moduleConfig["enabled"] := true
+            this.moduleConfig[key] := moduleConfig
+            this.moduleConfig.SaveConfig()
+        }
+    }
+
+    DisableModule(key) {
+        moduleConfig := this.moduleConfig.Has(key) ? this.moduleConfig[key] : Map()
+
+        if (!moduleConfig.Has("enabled") || moduleConfig["enabled"]) {
+            moduleConfig["enabled"] := false
+            this.moduleConfig[key] := moduleConfig
+            this.moduleConfig.SaveConfig()
+        }
+    }
+
+    DeleteModule(key) {
+        module := this[key]
+        deleted := false
+
+        if (module.IsCore()) {
+            throw AppException("It is not possible to delete core modules")
+        }
+
+        dir := module.moduleInfo["dir"]
+
+        response := this.container.Get("GuiManager").Dialog(Map(
+            "title", "Delete " . key,
+            "text", "Are you sure you want to delete the module '" . key . "'?`n`nThis will remove the directory " . dir . " and is not reversible. If you want the module back in the future, you will need to install it from scratch.`n`nPress Yes to delete, or No to go back."
+        ))
+
+        if (response == "Yes") {
+            this.UnloadComponent(key, true)
+            DirDelete(dir, true)
+            deleted := true
+        }
+
+        return deleted
     }
 
     CalculateDependencies() {
         requiredModules := []
 
-        for key, module in this.GetAll() {
+        for key, module in this.All() {
             deps := module.GetDependencies()
 
             for depIndex, depName in deps {
@@ -83,7 +122,7 @@ class ModuleManager extends ConfigurableContainerServiceBase {
         missingModules := []
 
         for reqIndex, reqName in requiredModules {
-            if (!this.Exists(reqName)) {
+            if (!this.Has(reqName)) {
                 missingModules.Push(reqName)
             }
         }
@@ -91,28 +130,8 @@ class ModuleManager extends ConfigurableContainerServiceBase {
         return missingModules
     }
 
-    RegisterSubscribers() {
-        modules := this.GetAll()
-
-        for key, module in modules {
-            subscribers := module.GetSubscribers()
-
-            eventMgr := this.eventMgr
-
-            if (subscribers) {
-                for eventName, eventSubscribers in subscribers {
-                    if (eventSubscribers) {
-                        for index, subscriber in eventSubscribers {
-                            eventMgr.Register(eventName, this.idGeneratorObj.Generate(), subscriber)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     GetModuleServiceFiles() {
-        modules := this.GetAll()
+        modules := this.All()
 
         serviceFiles := []
 
@@ -141,8 +160,7 @@ class ModuleManager extends ConfigurableContainerServiceBase {
         tmpFile := outputFile . ".tmp"
         includeBuilder := this.GetModuleIncludeBuilder()
         includeWriter := this.GetModuleIncludeWriter(tmpFile)
-        includes := includeBuilder.BuildIncludes()
-        updated := includeWriter.WriteIncludes(includes)
+        updated := includeWriter.WriteIncludes(includeBuilder.BuildIncludes())
 
         if (buildTestFiles) {
             testsTmpFile := testsFile . ".tmp"
@@ -180,15 +198,13 @@ class ModuleManager extends ConfigurableContainerServiceBase {
         return AhkIncludeWriter(outputFile)
     }
 
-    GetModuleDirs(includeCoreModules := true) {
+    GetModuleDirs(includeCoreModules := true, includeDisabled := false) {
         moduleDirs := []
 
-        componentInfo := this.DiscoverComponents()
+        componentInfo := this.Query(ContainerQuery.RESULT_TYPE_DEFINITIONS, includeDisabled).Execute()
 
         for key, moduleInfo in componentInfo {
-
-
-            if (moduleInfo && Type(moduleInfo) == "Map" && moduleInfo.Has("file") && moduleInfo["file"]) {
+            if (moduleInfo.Has("file") && moduleInfo["file"]) {
                 SplitPath(moduleInfo["file"], &moduleDir)
 
                 if (DirExist(moduleDir) && (includeCoreModules || !moduleInfo.Has("core") || !moduleInfo["core"])) {
@@ -201,7 +217,7 @@ class ModuleManager extends ConfigurableContainerServiceBase {
     }
 
     GetCoreModuleDirs() {
-        return [this.app.appDir . "\Lib\Modules"]
+        return this.configObj["core_module_dirs"]
     }
 
     GetModuleParentDirs() {
@@ -213,8 +229,8 @@ class ModuleManager extends ConfigurableContainerServiceBase {
             dirs.Push(sharedDir)
         }
 
-        if (this.moduleDirs) {
-            for index, moduleDir in this.moduleDirs {
+        if (this.configObj["module_dirs"]) {
+            for index, moduleDir in this.configObj["module_dirs"] {
                 if (DirExist(moduleDir)) {
                     dirs.Push(moduleDir)
                 }

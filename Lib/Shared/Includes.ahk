@@ -7,18 +7,9 @@
 #Include Volantis.App\Authentication\AuthProvider\AuthProviderBase.ahk
 #Include Volantis.App\Authentication\AuthProvider\JwtAuthProvider.ahk
 #Include Volantis.App\BulkOperation\BulkOperationBase.ahk
-#Include Volantis.App\BulkOperation\ComponentDiscoverer\ClassFileComponentDiscoverer.ahk
-#Include Volantis.App\BulkOperation\ComponentDiscoverer\ComponentDiscovererBase.ahk
-#Include Volantis.App\BulkOperation\ComponentDiscoverer\ConfigComponentDiscoverer.ahk
-#Include Volantis.App\BulkOperation\ComponentDiscoverer\FileComponentDiscovererBase.ahk
-#Include Volantis.App\BulkOperation\ComponentDiscoverer\ModuleDiscoverer.ahk
-#Include Volantis.App\BulkOperation\ComponentLoader\ClassComponentLoader.ahk
-#Include Volantis.App\BulkOperation\ComponentLoader\ComponentLoaderBase.ahk
-#Include Volantis.App\BulkOperation\ComponentLoader\SimpleComponentLoader.ahk
 #Include Volantis.App\BulkOperation\InstallOp\InstallOp.ahk
 #Include Volantis.App\BulkOperation\InstallOp\UpdateOp.ahk
 #Include Volantis.App\BulkOperation\LoadOp\LoadBackupsOp.ahk
-#Include Volantis.App\BulkOperation\LoadOp\LoadModulesOp.ahk
 #Include Volantis.App\BulkOperation\OpError\BasicOpError.ahk
 #Include Volantis.App\BulkOperation\OpError\OpErrorBase.ahk
 #Include Volantis.App\BulkOperation\OpStatus\BasicOpStatus.ahk
@@ -35,6 +26,7 @@
 #Include Volantis.App\DataSourceItem\DSFile.ahk
 #Include Volantis.App\DataSourceItem\DSJson.ahk
 #Include Volantis.App\DataSourceItem\DSListing.ahk
+#Include Volantis.App\DefinitionLoader\ModuleDefinitionLoader.ahk
 #Include Volantis.App\Entity\AppEntityBase.ahk
 #Include Volantis.App\Entity\BackupEntity.ahk
 #Include Volantis.App\Event\AlterComponentsEvent.ahk
@@ -50,6 +42,7 @@
 #Include Volantis.App\Exception\LoginFailedException.ahk
 #Include Volantis.App\Exception\ServiceNotFoundException.ahk
 #Include Volantis.App\Exception\WindowNotFoundException.ahk
+#Include Volantis.App\Factory\ModuleFactory.ahk
 #Include Volantis.App\Gui\GuiBase.ahk
 #Include Volantis.App\Gui\Dialog\DialogBox.ahk
 #Include Volantis.App\Gui\Dialog\EntityDeleteWindow.ahk
@@ -84,6 +77,7 @@
 #Include Volantis.App\Installer\InstallerComponent\FileInstallerComponentBase.ahk
 #Include Volantis.App\Installer\InstallerComponent\GitHubReleaseInstallerComponent.ahk
 #Include Volantis.App\Installer\InstallerComponent\InstallerComponentBase.ahk
+#Include Volantis.App\Module\ExternalModuleBase.ahk
 #Include Volantis.App\Module\ModuleBase.ahk
 #Include Volantis.App\Modules\Auth\Auth.module.ahk
 #Include Volantis.App\Service\AppServiceBase.ahk
@@ -97,10 +91,8 @@
 #Include Volantis.App\Service\ComponentManager\DataSourceManager.ahk
 #Include Volantis.App\Service\ComponentManager\GuiManager.ahk
 #Include Volantis.App\Service\ComponentManager\InstallerManager.ahk
+#Include Volantis.App\Service\ComponentManager\ModuleManager.ahk
 #Include Volantis.App\Service\ComponentManager\ThemeManager.ahk
-#Include Volantis.App\Service\ContainerService\ConfigurableContainerServiceBase.ahk
-#Include Volantis.App\Service\ContainerService\ContainerServiceBase.ahk
-#Include Volantis.App\Service\ContainerService\ModuleManager.ahk
 #Include Volantis.App\Service\EntityManager\BackupManager.ahk
 #Include Volantis.App\Service\EntityManager\EntityManagerBase.ahk
 #Include Volantis.App\State\AppState.ahk
@@ -137,6 +129,7 @@
 #Include Volantis.Container\ContainerRef\ContainerRefBase.ahk
 #Include Volantis.Container\ContainerRef\ParameterRef.ahk
 #Include Volantis.Container\ContainerRef\ServiceRef.ahk
+#Include Volantis.Container\DefinitionLoader\ClassDiscoveryDefinitionLoader.ahk
 #Include Volantis.Container\DefinitionLoader\DefinitionLoaderBase.ahk
 #Include Volantis.Container\DefinitionLoader\DirDefinitionLoader.ahk
 #Include Volantis.Container\DefinitionLoader\FileDefinitionLoader.ahk
@@ -146,6 +139,7 @@
 #Include Volantis.Container\Exception\ContainerException.ahk
 #Include Volantis.Container\Exception\ParameterNotFoundException.ahk
 #Include Volantis.Container\Query\ContainerQuery.ahk
+#Include Volantis.Container\QueryCondition\HasServiceTagsCondition.ahk
 #Include Volantis.Data\DiffResult.ahk
 #Include Volantis.Data\DataProcessor\DataProcessorBase.ahk
 #Include Volantis.Data\DataProcessor\PlaceholderExpander.ahk
@@ -179,6 +173,7 @@
 #Include Volantis.Query\Condition\FileConditionBase.ahk
 #Include Volantis.Query\Condition\FileContainsCondition.ahk
 #Include Volantis.Query\Condition\FileModifiedAfterCondition.ahk
+#Include Volantis.Query\Condition\IsTrueCondition.ahk
 #Include Volantis.Query\Condition\MatchesCondition.ahk
 #Include Volantis.Query\Condition\RegExCondition.ahk
 #Include Volantis.Query\Condition\StartsWithCondition.ahk
@@ -189,6 +184,7 @@
 #Include Volantis.Query\Query\MapQuery.ahk
 #Include Volantis.Query\Query\QueryBase.ahk
 #Include Volantis.Query\QueryCondition\FieldCondition.ahk
+#Include Volantis.Query\QueryCondition\HasFieldCondition.ahk
 #Include Volantis.Query\QueryCondition\IdCondition.ahk
 #Include Volantis.Query\QueryCondition\QueryConditionBase.ahk
 #Include Volantis.Theme\AnimatedGif\AnimatedGif.ahk

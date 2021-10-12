@@ -4,7 +4,7 @@ class ConditionBase {
 
     __New(childConditions := "", negate := false) {
         if (childConditions) {
-            if (Type(childConditions) == "String") {
+            if (Type(childConditions) != "Array") {
                 childConditions := [childConditions]
             }
 
@@ -35,11 +35,11 @@ class ConditionBase {
     evaluateChildConditions(args*) {
         matches := true
 
-        if (this.childConditions) {
+        if (this.childConditions && this.childConditions.Length) {
             matches := false
 
             for index, condition in this.childConditions {
-                matches := condition.Evaluate()
+                matches := this.evaluateChildCondition(condition, args*)
 
                 if (!matches) {
                     break
@@ -48,6 +48,10 @@ class ConditionBase {
         }
 
         return matches
+    }
+
+    evaluateChildCondition(condition, args*) {
+        return condition.Evaluate(args*)
     }
 
     EvaluateCondition(args*) {

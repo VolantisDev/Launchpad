@@ -9,12 +9,14 @@
     Controls() {
         super.Controls()
 
-        info := this.app.Service("Auth").GetStatusInfo()
+        if (this.app.Services.Has("Auth")) {
+            info := this.app.Service("Auth").GetStatusInfo()
 
-        if (info) {
-            opts := "w" . this.windowSettings["contentWidth"] . " x" . this.margin . " y+" . this.margin
-            this.guiObj.AddPicture("x" . this.margin . " y+" . this.margin, info["photo"])
-            this.guiObj.AddText(opts, "Email: " . info["email"])
+            if (info) {
+                opts := "w" . this.windowSettings["contentWidth"] . " x" . this.margin . " y+" . this.margin
+                this.guiObj.AddPicture("x" . this.margin . " y+" . this.margin, info["photo"])
+                this.guiObj.AddText(opts, "Email: " . info["email"])
+            }
         }
 
         this.AddHeading("Player Name")
@@ -28,7 +30,9 @@
 
     ProcessResult(result, submittedData := "") {
         if (result == "Logout") {
-            this.app.Service("Auth").Logout()
+            if (this.app.Services.Has("Auth")) {
+                this.app.Service("Auth").Logout()
+            }
         } else if (result == "Save" && submittedData) {
             this.app.Config["player_name"] := submittedData.PlayerName
         }

@@ -41,11 +41,11 @@ class LoadPlatformsOp extends BulkOperationBase {
         for key, platformClass in platforms {
             this.StartItem(key, key)
 
-            if (!this.platformsConfigObj["platforms"].Has(key)) {
-                this.platformsConfigObj["platforms"][key] := Map()
+            if (!this.platformsConfigObj.Has(key)) {
+                this.platformsConfigObj[key] := Map()
             }
 
-            platformConfig := this.platformsConfigObj["platforms"][key]
+            platformConfig := this.platformsConfigObj[key]
             platformConfig["PlatformClass"] := platformClass
             requiredKeys := ""
             this.results[key] := factory.CreateEntity("PlatformEntity", key, platformConfig, "", requiredKeys)

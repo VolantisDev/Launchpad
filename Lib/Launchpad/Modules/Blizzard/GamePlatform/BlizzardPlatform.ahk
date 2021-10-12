@@ -19,7 +19,12 @@ class BlizzardPlatform extends RegistryLookupGamePlatformBase {
     }
 
     DetectInstalledGames() {
-        productInstalls := this.app.Services.Get("BlizzardProductDb").GetProductInstalls()
+        productInstalls := []
+
+        if (this.app.Services.Has("BlizzardProductDb")) {
+            productInstalls := this.app.Service("BlizzardProductDb").GetProductInstalls()
+        }
+        
         games := []
 
         for index, productData in productInstalls {

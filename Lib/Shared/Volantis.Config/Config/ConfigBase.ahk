@@ -5,6 +5,15 @@ class ConfigBase {
     loaded := false
     allowedKeys := []
 
+    Count {
+        get => this.Get().Count
+    }
+
+    __Item[name] {
+        get => this.Get(name)
+        set => this.Set(name, value)
+    }
+
     __New(container, parentKey := "", autoLoad := true) {
         this.container := container
         this.parentKey := parentKey
@@ -16,11 +25,6 @@ class ConfigBase {
         if (autoLoad) {
             this.LoadConfig()
         }
-    }
-
-    __Item[name] {
-        get => this.Get(name)
-        set => this.Set(name, value)
     }
 
     __Enum(numberOfVars) {

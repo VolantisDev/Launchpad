@@ -59,7 +59,7 @@ class LaunchpadBuilder extends AppBase {
             this.ExitApp()
         }
 
-        if (buildInfo.DeployToApi) {
+        if (buildInfo.DeployToApi && this.Services.Has("Auth")) {
             this.Service("Auth").Login()
         }
 

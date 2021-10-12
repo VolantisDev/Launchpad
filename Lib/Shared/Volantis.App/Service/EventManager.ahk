@@ -2,9 +2,51 @@ class EventManager {
     _handlers := Map()
     _priorities := Map()
     _bindMethod := ""
+    _registeredServices := Map()
 
     __New() {
         this._bindMethod := ObjBindMethod(this, "HandleEvent")
+    }
+
+    RegisterServiceSubscribers(container, servicePrefix := "") {
+         services := container.Query(servicePrefix)
+            .Condition(HasServiceTagsCondition("event_subscriber"))
+            .Execute()
+        
+        for key, service in services {
+            if (this._registeredServices.Has(key) && this._registeredServices[key]) {
+                ; Ensure the method is idempotent by only registering new services
+                continue
+            }
+
+            subscribers := []
+
+            if (!HasMethod(service, "GetEventSubscribers")) {
+                throw AppException("Service " . key . " is an event subscriber but is lacking a GetEventSubscribers method")
+            }
+
+            subscribers := service.GetEventSubscribers()
+
+            if (subscribers) {
+                for eventName, eventSubscribers in subscribers {
+                    if (eventSubscribers) {
+                        if (Type(eventSubscribers) == "String") {
+                            eventSubscribers := [eventSubscribers]
+                        }
+
+                        for index, subscriber in eventSubscribers {
+                            eventId := key . "-" . eventName . "-" . index
+
+                            if (!this.HasSubscriber(eventName, eventId)) {
+                                this.Register(eventName, eventId, subscriber)
+                            }
+                        }
+                    }
+                }
+            }
+
+            this._registeredServices[key] := true
+        }
     }
 
     Register(eventName, key, eventHandler, priority := 5) {
@@ -60,7 +102,7 @@ class EventManager {
     }
 
     Unregister(eventName, key) {
-        if (this._handlers.Has(eventName) && this._handlers[eventName].Has(key)) {
+        if (this.HasSubscriber(eventName, key)) {
             this._handlers[eventName].Delete(key)
             this.RemovePriority(eventName, key)
 
@@ -70,6 +112,10 @@ class EventManager {
         }
 
         return this
+    }
+
+    HasSubscriber(eventName, key) {
+        return this._handlers.Has(eventName) && this._handlers[eventName].Has(key)
     }
 
     StartListener(eventName) {

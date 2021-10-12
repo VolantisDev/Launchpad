@@ -75,8 +75,10 @@ class AppBase {
             "config.check_updates_on_start", false,
             "config.logging_level", "error",
             "config.modules_file", this.dataDir . "\Modules.json",
+            "config.modules_view_mode", "Report",
             "config.log_path", this.dataDir . "\" . this.appName . "Log.txt",
             "config.module_dirs", [this.dataDir . "\Modules"],
+            "config.core_module_dirs", [this.appDir . "\Lib\"],
             "config.main_window", "MainWindow",
             "state_path", this.dataDir . "\" . this.appName . "State.json",
             "service_files.app", this.appDir . "\" . scriptName . ".services.json",
@@ -85,7 +87,7 @@ class AppBase {
             "include_files.module_tests", this.dataDir . "\ModuleIncludes.test.ahk",
             "resources.dir", resourcesDir,
             "themes.extra_themes", [],
-            "module_config.modules", Map(),
+            "module_config", Map(),
             "structured_data.basic", Map(
                 "class", "BasicData",
                 "extensions", []
@@ -151,16 +153,29 @@ class AppBase {
                     "module_config"
                 ]
             ),
+            "factory.modules", Map(
+                "class", "ModuleFactory",
+                "arguments", [ContainerRef(), ServiceRef("config.modules")]
+            ),
+            "definition_loader.modules", Map(
+                "class", "ModuleDefinitionLoader",
+                "arguments", [
+                    ServiceRef("factory.modules"),
+                    ServiceRef("config.modules"),
+                    ParameterRef("config.module_dirs"),
+                    ParameterRef("config.core_module_dirs"),
+                    this.GetDefaultModules(config)
+                ]
+            ),
             "ModuleManager", Map(
                 "class", "ModuleManager", 
                 "arguments", [
-                    AppRef(), 
+                    ContainerRef(), 
                     ServiceRef("EventManager"), 
-                    ServiceRef("IdGenerator"), 
+                    ServiceRef("Notifier"),
+                    ServiceRef("Config"),
                     ServiceRef("config.modules"),
-                    this.dataDir, 
-                    ParameterRef("config.module_dirs"), 
-                    this.GetDefaultModules(config)
+                    ServiceRef("definition_loader.modules")
                 ]
             ),
             "Gdip", "Gdip",
@@ -299,10 +314,6 @@ class AppBase {
         )
     }
 
-    GetModuleDirs() {
-
-    }
-
     AllocConsole() {
         DllCall("AllocConsole")
 
@@ -391,21 +402,24 @@ class AppBase {
 
         serviceFile := this.Services.GetParameter("service_files.app")
 
+        sdFactory := this.Service("StructuredData")
+
         if (FileExist(serviceFile)) {
-            this.Services.LoadDefinitions(FileDefinitionLoader(serviceFile))
+            this.Services.LoadDefinitions(FileDefinitionLoader(sdFactory, serviceFile))
         }
 
         this.Service("Config")
         this.InitializeTheme()
         this.InitializeModules(config)
 
-        serviceFiles := this.Service("ModuleManager").GetModuleServiceFiles()
-
-        for index, moduleServiceFile in serviceFiles {
-            if (FileExist(serviceFile)) {
-                this.Services.LoadDefinitions(FileDefinitionLoader(moduleServiceFile))
+        for index, moduleServiceFile in this.Service("ModuleManager").GetModuleServiceFiles() {
+            if (FileExist(moduleServiceFile)) {
+                this.Services.LoadDefinitions(FileDefinitionLoader(sdFactory, moduleServiceFile))
             }
         }
+
+        ; Register early event subscribers (e.g. modules)
+        this.Service("EventManager").RegisterServiceSubscribers(this.Services)
 
         this.Service("EventManager").Register(Events.APP_SERVICES_LOADED, "AppServices", ObjBindMethod(this, "OnServicesLoaded"))
 
@@ -419,8 +433,11 @@ class AppBase {
         serviceFile := this.Services.GetParameter("service_files.user")
 
         if (FileExist(serviceFile)) {
-            this.Services.LoadDefinitions(FileDefinitionLoader(serviceFile))
+            this.Services.LoadDefinitions(FileDefinitionLoader(sdFactory, serviceFile))
         }
+
+        ; Register any missing late-loading event subscribers
+        this.Service("EventManager").RegisterServiceSubscribers(this.Services)
 
         event := AppRunEvent(Events.APP_SERVICES_LOADED, this, config)
         this.Service("EventManager").DispatchEvent(Events.APP_SERVICES_LOADED, event)
@@ -453,8 +470,6 @@ class AppBase {
                 }
             }
         }
-
-        this.Service("ModuleManager").LoadComponents()
     }
 
     InitializeTheme() {

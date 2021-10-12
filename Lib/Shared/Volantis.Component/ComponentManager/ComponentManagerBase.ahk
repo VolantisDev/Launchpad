@@ -3,7 +3,7 @@ class ComponentManagerBase {
     servicePrefix := ""
     eventMgr := ""
     notifierObj := ""
-    definitionLoader := ""
+    definitionLoaders := ""
     componentType := "" ; Passed with events
     loaded := false
 
@@ -16,7 +16,7 @@ class ComponentManagerBase {
         return this.All().__Enum(numberOfVars)
     }
 
-    __New(container, servicePrefix, eventMgr, notifierObj, componentType, definitionLoader := "", autoLoad := true) {
+    __New(container, servicePrefix, eventMgr, notifierObj, componentType, definitionLoaders := "", autoLoad := true) {
         this.container := container
         this.servicePrefix := servicePrefix
         this.eventMgr := eventMgr
@@ -27,7 +27,12 @@ class ComponentManagerBase {
         }
 
         this.componentType := componentType
-        this.definitionLoader := definitionLoader
+
+        if (definitionLoaders && Type(definitionLoaders) != "Array") {
+            definitionLoaders := [definitionLoaders]
+        }
+
+        this.definitionLoaders := definitionLoaders
 
         if (autoLoad) {
             this.LoadComponents()
@@ -49,9 +54,16 @@ class ComponentManagerBase {
         services := Map()
         parameters := Map()
 
-        if (this.definitionLoader) {
-            services := this.definitionLoader.LoadServiceDefinitions()
-            parameters := this.definitionLoader.LoadParameterDefinitions()
+        if (this.definitionLoaders) {
+            for index, loader in this.definitionLoaders {
+                for key, def in loader.LoadServiceDefinitions() {
+                    services[key] := def
+                }
+
+                for key, def in loader.LoadParameterDefinitions() {
+                    parameters[key] := def
+                }
+            }
         }
 
         event := ComponentDefinitionsEvent(ComponentEvents.COMPONENT_DEFINITIONS, this, services, parameters)
@@ -60,13 +72,24 @@ class ComponentManagerBase {
         event := ComponentDefinitionsEvent(ComponentEvents.COMPONENT_DEFINITIONS_ALTER, this, event.GetDefinitions(), event.GetParameters())
         this.eventMgr.DispatchEvent(ComponentEvents.COMPONENT_DEFINITIONS_ALTER, event)
 
-        loader := SimpleDefinitionLoader(event.GetDefinitions(), event.GetParameters())
+        services := event.GetDefinitions()
+        parameters := event.GetParameters()
+
+        this.ValidateComponentDependencies(services, parameters, "before")
+
+        loader := SimpleDefinitionLoader(services, parameters)
         this.container.LoadDefinitions(loader, true, this.servicePrefix)
 
         this.loaded := true
 
+        this.ValidateComponentDependencies(services, parameters, "after")
+
         event := ComponentManagerEvent(ComponentEvents.COMPONENTS_LOADED, this)
         this.eventMgr.DispatchEvent(ComponentEvents.COMPONENTS_LOADED, event)
+    }
+
+    ValidateComponentDependencies(services, parameters, stage) {
+        ; Optional method to throw exceptions in if the loaded definitions do not validate
     }
 
     UnloadComponents(deleteDefinitions := false) {
@@ -113,7 +136,7 @@ class ComponentManagerBase {
         return ""
     }
 
-    All(resultType := "") {
+    All(resultType := "", returnQuery := false, includeDisabled := false) {
         if (!this.loaded) {
             this.LoadComponents()
         }
@@ -122,16 +145,14 @@ class ComponentManagerBase {
             resultType := ContainerQuery.RESULT_TYPE_SERVICES
         }
 
-        query := this.Query(resultType)
-        results := query.Execute()
-
-        return results
+        query := this.Query(resultType, includeDisabled)
+        return returnQuery ? query : query.Execute()
     }
 
-    Names() {
+    Names(includeDisabled := false) {
         names := []
 
-        for index, name in this.All(ContainerQuery.RESULT_TYPE_NAMES) {
+        for index, name in this.getAllNames(includeDisabled) {
             start := 0
 
             if (this.servicePrefix) {
@@ -144,12 +165,20 @@ class ComponentManagerBase {
         return names
     }
 
-    Query(resultType := "") {
+    getAllNames(includeDisabled := false) {
+        return this.All(ContainerQuery.RESULT_TYPE_NAMES, false, includeDisabled)
+    }
+
+    Count(includeDisabled := false) {
+        return this.Names(includeDisabled).Length
+    }
+
+    Query(resultType := "", includeDisabled := false) {
         if (!this.loaded) {
             this.LoadComponents()
         }
 
-        return this.container.Query(this.servicePrefix, resultType)
+        return this.container.Query(this.servicePrefix, resultType, includeDisabled)
     }
 
     Has(componentId, checkLoaded := false) {

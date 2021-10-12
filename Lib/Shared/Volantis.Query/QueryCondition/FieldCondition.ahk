@@ -11,7 +11,6 @@ class FieldCondition extends QueryConditionBase {
 
         if (this.field) {
             tokens := StrSplit(this.field, ".")
-            context := map
 
             for index, token in tokens {
                 if (!context.Has(token)) {

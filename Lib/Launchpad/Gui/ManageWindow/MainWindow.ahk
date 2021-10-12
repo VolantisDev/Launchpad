@@ -94,6 +94,7 @@
         toolsItems := []
         toolsItems.Push(Map("label", "Manage &Platforms", "name", "ManagePlatforms"))
         toolsItems.Push(Map("label", "Manage &Backups", "name", "ManageBackups"))
+        toolsItems.Push(Map("label", "Manage &Modules", "name", "ManageModules"))
         toolsItems.Push(Map("label", "&Flush Cache", "name", "FlushCache"))
 
         launchersItems := []
@@ -123,6 +124,8 @@
             this.app.Service("GuiManager").OpenWindow("PlatformsWindow")
         } else if (result == "ManageBackups") {
             this.app.Service("GuiManager").OpenWindow("ManageBackupsWindow")
+        } else if (result == "ManageModules") {
+            this.app.Service("GuiManager").OpenWindow("ManageModulesWindow")
         } else if (result == "FlushCache") {
             this.app.Service("CacheManager").FlushCaches(true, true)
         } else if (result == "CleanLaunchers") {
@@ -148,17 +151,25 @@
     }
 
     GetStatusInfo() {
-        return this.app.Service("Auth").GetStatusInfo()
+        info := ""
+
+        if (this.app.Services.Has("Auth")) {
+            info := this.app.Service("Auth").GetStatusInfo()
+        }
+
+        return info
     }
 
     OnStatusIndicatorClick(btn, info) {
         menuItems := []
 
-        if (this.app.Service("Auth").IsAuthenticated()) {
-            menuItems.Push(Map("label", "Account Details", "name", "AccountDetails"))
-            menuItems.Push(Map("label", "Logout", "name", "Logout"))
-        } else {
-            menuItems.Push(Map("label", "Login", "name", "Login"))
+        if (this.app.Services.Has("Auth")) {
+            if (this.app.Service("Auth").IsAuthenticated()) {
+                menuItems.Push(Map("label", "Account Details", "name", "AccountDetails"))
+                menuItems.Push(Map("label", "Logout", "name", "Logout"))
+            } else {
+                menuItems.Push(Map("label", "Login", "name", "Login"))
+            }
         }
 
         result := this.app.Service("GuiManager").Menu(menuItems, this, btn)
@@ -174,14 +185,23 @@
                 this.UpdateStatusIndicator()
             }
         } else if (result == "Logout") {
-            this.app.Service("Auth").Logout()
+            if (this.app.Services.Has("Auth")) {
+                this.app.Service("Auth").Logout()
+            }
         } else if (result == "Login") {
-            this.app.Service("Auth").Login()
+            if (this.app.Services.Has("Auth")) {
+                this.app.Service("Auth").Login()
+            }
         }
     }
 
     StatusWindowIsOnline() {
-        return this.app.Service("Auth").IsAuthenticated()
+        isOnline := false
+
+        if (this.app.Services.Has("Auth")) {
+            isOnline := this.app.Service("Auth").IsAuthenticated()
+        }
+        return isOnline
     }
 
     FormatDate(timestamp) {
@@ -292,8 +312,6 @@
         this.AddDetailsField("Created", "Created", created)
         this.AddDetailsField("Updated", "Updated", updated)
         this.AddDetailsField("Built", "Built", built)
-
-        ; TODO: Add some entity details
     }
 
     AddDetailsField(fieldName, label, text, y := "", useIcon := false, icon := "") {
@@ -454,7 +472,7 @@
             apiStatus := launcher.DataSourceItemKey ? "Linked" : "Not linked"
             platformName := launcher.Platform
 
-            if (platformName) {
+            if (platformName && this.platformManager.HasItem(platformName)) {
                 platformObj := this.platformManager.GetItem(platformName)
 
                 if (platformObj) {
