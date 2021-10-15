@@ -11,11 +11,11 @@ class PlatformManager extends EntityManagerBase {
     }
 
     RemoveEntityFromConfig(key) {
-        this.configObj["platforms"].Delete(key)
+        this.configObj.Delete(key)
     }
 
     AddEntityToConfig(key, entityObj) {
-        this.configObj["platforms"][key] := entityObj.UnmergedConfig
+        this.configObj[key] := entityObj.UnmergedConfig
     }
 
     GetActivePlatforms() {

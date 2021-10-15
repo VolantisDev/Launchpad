@@ -11,11 +11,11 @@ class BackupManager extends EntityManagerBase {
     }
 
     RemoveEntityFromConfig(key) {
-        this.configObj["backups"].Delete(key)
+        this.configObj.Delete(key)
     }
 
     AddEntityToConfig(key, entityObj) {
-        this.configObj["backups"][key] := entityObj.UnmergedConfig
+        this.configObj[key] := entityObj.UnmergedConfig
         this.configObj.SaveConfig()
     }
 
