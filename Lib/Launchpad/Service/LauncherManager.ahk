@@ -11,11 +11,11 @@ class LauncherManager extends EntityManagerBase {
     }
 
     RemoveEntityFromConfig(key) {
-        this.configObj["games"].Delete(key)
+        this.configObj.Delete(key)
     }
 
     AddEntityToConfig(key, entityObj) {
-        this.configObj["games"][key] := entityObj.UnmergedConfig
+        this.configObj[key] := entityObj.UnmergedConfig
         this.app.State.SetLauncherCreated(key)
     }
 }
