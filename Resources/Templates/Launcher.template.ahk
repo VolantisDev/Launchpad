@@ -22,6 +22,6 @@ LaunchpadLauncher(Map(
     "parameters", Map(
         "config.theme_name", "{{themeName}}",
         "config.themes_dir", "{{themesDir}}",
-        "resources.dir", "{{resourcesDir}}"
+        "resources_dir", "{{resourcesDir}}"
     )
 ))

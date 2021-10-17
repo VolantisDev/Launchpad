@@ -67,6 +67,7 @@ class AppBase {
 
         return Map(
             "config_path", this.appDir . "\" . this.appName . ".json",
+            "resources_dir", "@@{app_dir}\Resources",
             "config_key", "config",
             "config.theme_name", themeName,
             "config.themes_dir", this.appDir . "\Resources\Themes",
@@ -85,7 +86,6 @@ class AppBase {
             "service_files.user", this.dataDir . "\" . scriptName . ".services.json",
             "include_files.modules", this.dataDir . "\ModuleIncludes.ahk",
             "include_files.module_tests", this.dataDir . "\ModuleIncludes.test.ahk",
-            "resources.dir", resourcesDir,
             "themes.extra_themes", [],
             "module_config", Map(),
             "structured_data.basic", Map(
