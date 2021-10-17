@@ -3,15 +3,8 @@
 #Include Modules\Auth\AuthInfo\JwtAuthInfo.ahk
 #Include Modules\Auth\AuthProvider\AuthProviderBase.ahk
 #Include Modules\Auth\AuthProvider\JwtAuthProvider.ahk
-#Include Modules\Bethesda\GamePlatform\BethesdaPlatform.ahk
-#Include Modules\Blizzard\GamePlatform\BlizzardPlatform.ahk
-#Include Modules\Blizzard\StructuredData\BlizzardProductDb.ahk
-#Include Modules\Epic\GamePlatform\EpicPlatform.ahk
 #Include Modules\LaunchpadApi\AuthProvider\LaunchpadApiAuthProvider.ahk
 #Include Modules\LaunchpadApi\DataSource\ApiDataSource.ahk
-#Include Modules\Origin\GamePlatform\OriginPlatform.ahk
-#Include Modules\Riot\GamePlatform\RiotPlatform.ahk
-#Include Modules\Steam\GamePlatform\SteamPlatform.ahk
 #Include Vendor\Gdip_All.ahk
 #Include Vendor\LV_Constants.ahk
 #Include Volantis.App\App\AppBase.ahk

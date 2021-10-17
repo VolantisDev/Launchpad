@@ -58,6 +58,13 @@
 #Include Installer\DependencyInstaller.ahk
 #Include Installer\LaunchpadUpdate.ahk
 #Include Locator\GameExeLocator.ahk
+#Include Modules\Bethesda\GamePlatform\BethesdaPlatform.ahk
+#Include Modules\Blizzard\GamePlatform\BlizzardPlatform.ahk
+#Include Modules\Blizzard\StructuredData\BlizzardProductDb.ahk
+#Include Modules\Epic\GamePlatform\EpicPlatform.ahk
+#Include Modules\Origin\GamePlatform\OriginPlatform.ahk
+#Include Modules\Riot\GamePlatform\RiotPlatform.ahk
+#Include Modules\Steam\GamePlatform\SteamPlatform.ahk
 #Include Service\BuilderManager.ahk
 #Include Service\LauncherManager.ahk
 #Include Service\PlatformManager.ahk
