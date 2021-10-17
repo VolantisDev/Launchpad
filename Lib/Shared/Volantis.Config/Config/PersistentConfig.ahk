@@ -1,7 +1,7 @@
 /*
     Properties are dynamically loaded from the container unless overridden.
 */
-class PersistentConfig extends ConfigBase {
+class PersistentConfig extends ContainerConfigBase {
     _storage := ""
     _overwrite := true
 

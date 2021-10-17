@@ -1,0 +1,39 @@
+{
+    "module": {
+        "name": "Launchpad API",
+        "icon": "",
+        "tags": ["Launchpad", "LaunchpadBuilder"],
+        "description": "Connect with Launchpad.games to sync game details and share your launchers and themes",
+        "author": {
+            "name": "Ben McClure, Volantis Dev",
+            "url": "https://volantisdev.com"
+        },
+        "website": "https://launchpad.games",
+        "version": "{{VERSION}}",
+        "dependencies": ["Auth"]
+    },
+    "services": {
+        "datasource.api": {
+            "class": "ApiDataSource",
+            "arguments": ["@{App}", "@CacheManager", "api", "@@config.api_endpoint"]
+        },
+        "auth_provider.launchpad_api": {
+            "class": "LaunchpadApiAuthProvider",
+            "arguments": ["@{App}", "@State"]
+        },
+        "cache_state.api": {
+            "class": "CacheState",
+            "arguments": ["@{App}", "@@config.cache_dir", "API.json"]
+        },
+        "cache.api": {
+            "class": "FileCache",
+            "arguments": ["@{App}", "@cache_state.api", "@@config.cache_dir", "API"]
+        }
+    },
+    "parameters": {
+        "config.data_source_key": "api",
+        "config.api_endpoint": "https://api.launchpad.games/v1",
+        "config.api_authentication": true,
+        "config.api_auto_login": false
+    }
+}

@@ -48,16 +48,20 @@ class ParameterContainer extends ContainerBase {
     }
 
     resolveDefinition(definition) {
-        if (Type(definition) == "String" || Type(definition) == "Map" || Type(definition) == "Array") {
+        if (Type(definition) == "Map" || Type(definition) == "Array") {
+            for key, val in definition {
+                definition[key] := this.resolveDefinition(val)
+            }
+
+            return definition
+        }
+
+        if (Type(definition) == "String") {
             definition := this.ExpandTextReferences(definition)
         }
 
         val := definition
         isObj := IsObject(definition)
-
-        if (Type(val) == "String" || Type(val) == "Map" || Type(val) == "Array") {
-            val := this.ExpandTextReferences(definition)
-        }
 
         if (isObj && (definition.HasBase(AppRef.Prototype))) {
             val := this.GetApp(definition)
@@ -65,6 +69,10 @@ class ParameterContainer extends ContainerBase {
             val := this
         } else if (isObj && definition.HasBase(ParameterRef.Prototype)) {
             val := this.GetParameter(definition.GetName())
+
+            if (Type(val) == "String" && definition.GetStringTemplate()) {
+                val := StrReplace(definition.GetStringTemplate(), "@@", val)
+            }
         }
 
         return val
@@ -72,10 +80,13 @@ class ParameterContainer extends ContainerBase {
 
     /*
         Example tokens:
-          - {@App} -> AppRef()
-          - {@Container} -> ContainerRef()
-          - {@Service:EventManager} -> ServiceRef("EventManager")
-          - {@Service:EventManager:methodName} -> ServiceRef("EventManager", "methodName")
+          - @EventManager -> ServiceRef("EventManager")
+          - @EventManager:methodName -> ServiceRef("EventManager", "methodName")
+          - @@config.api_endpoint -> ParameterRef("config.api_endpoint")
+          - @{App} -> AppRef()
+          - @{} -> ContainerRef()
+          - @@{app_dir}/config.json -> ParameterRef("app_dir", "@@/config.json")
+          - Name: @@{name} -> ParameterRef("name", "Name: @@")
     */
     ExpandTextReferences(data) {
         if (Type(data) == "Array" || Type(data) == "Map") {
@@ -83,20 +94,45 @@ class ParameterContainer extends ContainerBase {
                 data[index] := this.ExpandTextReferences(value)
             }
         } else if (Type(data) == "String") {
-            tokenPattern := "^{@([^:}]+)(:([^:}]+))?(:([^:}]+))?}$"
-            pos := RegExMatch(data, tokenPattern, &matches)
+            refType := ""
+            args := []
+            pattern := ""
+            template := false
+            argsIndex := 1
 
-            if (pos) {
-                className := matches[1] . "Ref"
-                args := []
+            if (data == "@{}") {
+                pattern := ""
+                refType := "Container"
+            } else if (SubStr(data, 1, 2) == "@{") {
+                pattern := "^@{([^}]+)}$"
+            } else if (InStr(data, "@@{")) {
+                pattern := "^([^@]*)@@{([^}]+)}(.*)$"
+                refType := "Parameter"
+                template := true
+                argsIndex := 2
+            } else if (SubStr(data, 1, 2) == "@@") {
+                pattern := "^@@([^}]+)$"
+                refType := "Parameter"
+            } else if (SubStr(data, 1, 1) == "@") {
+                pattern := "^@(.+)$"
+                refType := "Service"
+            }
 
-                if (matches.Count >= 3 && matches[3]) {
-                    args.Push(matches[3])
+            if (pattern && RegExMatch(data, pattern, &matches)) {
+                args := StrSplit(matches[argsIndex], ":", " `t")
+
+                if (template) {    
+                    args.Push(matches[1] . "@@" . matches[3])
                 }
+            }
 
-                if (matches.Count >= 5 && matches[5]) {
-                    args.Push(matches[5])
-                }
+            if (args.Length && !refType) {
+                refType := args[1]
+                args.RemoveAt(1)
+            }
+
+            if (refType) {
+                className := refType . "Ref"
 
                 if (!HasMethod(%className%)) {
                     throw ContainerException("Reference type " . className . " does not exist")
@@ -153,7 +189,7 @@ class ParameterContainer extends ContainerBase {
             context := context[token]
         }
 
-        return context
+        return this.resolveDefinition(context)
     }
 
     DeleteParameter(name) {

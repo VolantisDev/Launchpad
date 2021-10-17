@@ -35,7 +35,7 @@ class ModuleManager extends ComponentManagerBase {
 
         save := false
 
-        moduleParams := this.container.GetParameter("module")
+        moduleParams := this.container.HasParameter("modules") ? this.container.GetParameter("modules") : Map()
 
         for key, config in moduleParams {
             if (!this.moduleConfig.Has(key)) {
@@ -47,6 +47,10 @@ class ModuleManager extends ComponentManagerBase {
         if (save) {
             this.moduleConfig.SaveConfig()
         }
+    }
+
+    _loadDefinitions(loader) {
+        return this.container.LoadDefinitions(loader, true)
     }
 
     EnableModule(key) {

@@ -1,24 +1,16 @@
 ; Automatically-generated file. Manual edits will be overwritten.
-#Include Modules\Auth\Auth.module.ahk
-#Include Modules\Auth\Lib\AuthProvider\AuthProviderBase.ahk
-#Include Modules\Auth\Lib\AuthProvider\JwtAuthProvider.ahk
-#Include Modules\Auth\Lib\AuthProvider\AuthInfo\AuthInfo.ahk
-#Include Modules\Auth\Lib\AuthProvider\AuthInfo\JwtAuthInfo.ahk
-#Include Modules\Bethesda\Bethesda.module.ahk
+#Include Modules\Auth\AuthInfo\AuthInfo.ahk
+#Include Modules\Auth\AuthInfo\JwtAuthInfo.ahk
+#Include Modules\Auth\AuthProvider\AuthProviderBase.ahk
+#Include Modules\Auth\AuthProvider\JwtAuthProvider.ahk
 #Include Modules\Bethesda\GamePlatform\BethesdaPlatform.ahk
-#Include Modules\Blizzard\Blizzard.module.ahk
 #Include Modules\Blizzard\GamePlatform\BlizzardPlatform.ahk
 #Include Modules\Blizzard\StructuredData\BlizzardProductDb.ahk
-#Include Modules\Epic\Epic.module.ahk
 #Include Modules\Epic\GamePlatform\EpicPlatform.ahk
-#Include Modules\LaunchpadApi\LaunchpadApi.module.ahk
 #Include Modules\LaunchpadApi\AuthProvider\LaunchpadApiAuthProvider.ahk
 #Include Modules\LaunchpadApi\DataSource\ApiDataSource.ahk
-#Include Modules\Origin\Origin.module.ahk
 #Include Modules\Origin\GamePlatform\OriginPlatform.ahk
-#Include Modules\Riot\Riot.module.ahk
 #Include Modules\Riot\GamePlatform\RiotPlatform.ahk
-#Include Modules\Steam\Steam.module.ahk
 #Include Modules\Steam\GamePlatform\SteamPlatform.ahk
 #Include Vendor\Gdip_All.ahk
 #Include Vendor\LV_Constants.ahk
@@ -43,7 +35,6 @@
 #Include Volantis.App\DataSourceItem\DSFile.ahk
 #Include Volantis.App\DataSourceItem\DSJson.ahk
 #Include Volantis.App\DataSourceItem\DSListing.ahk
-#Include Volantis.App\DefinitionLoader\ModuleDefinitionLoader.ahk
 #Include Volantis.App\Entity\AppEntityBase.ahk
 #Include Volantis.App\Entity\BackupEntity.ahk
 #Include Volantis.App\Event\AlterComponentsEvent.ahk
@@ -59,7 +50,6 @@
 #Include Volantis.App\Exception\LoginFailedException.ahk
 #Include Volantis.App\Exception\ServiceNotFoundException.ahk
 #Include Volantis.App\Exception\WindowNotFoundException.ahk
-#Include Volantis.App\Factory\ModuleFactory.ahk
 #Include Volantis.App\Gui\GuiBase.ahk
 #Include Volantis.App\Gui\Dialog\DialogBox.ahk
 #Include Volantis.App\Gui\Dialog\EntityDeleteWindow.ahk
@@ -94,8 +84,6 @@
 #Include Volantis.App\Installer\InstallerComponent\FileInstallerComponentBase.ahk
 #Include Volantis.App\Installer\InstallerComponent\GitHubReleaseInstallerComponent.ahk
 #Include Volantis.App\Installer\InstallerComponent\InstallerComponentBase.ahk
-#Include Volantis.App\Module\ExternalModuleBase.ahk
-#Include Volantis.App\Module\ModuleBase.ahk
 #Include Volantis.App\Service\AppServiceBase.ahk
 #Include Volantis.App\Service\AuthService.ahk
 #Include Volantis.App\Service\EventManager.ahk
@@ -107,7 +95,6 @@
 #Include Volantis.App\Service\ComponentManager\DataSourceManager.ahk
 #Include Volantis.App\Service\ComponentManager\GuiManager.ahk
 #Include Volantis.App\Service\ComponentManager\InstallerManager.ahk
-#Include Volantis.App\Service\ComponentManager\ModuleManager.ahk
 #Include Volantis.App\Service\ComponentManager\ThemeManager.ahk
 #Include Volantis.App\Service\EntityManager\BackupManager.ahk
 #Include Volantis.App\Service\EntityManager\EntityManagerBase.ahk
@@ -117,6 +104,7 @@
 #Include Volantis.App\State\StateBase.ahk
 #Include Volantis.Base\CLR\CLR.ahk
 #Include Volantis.Base\Event\EventBase.ahk
+#Include Volantis.Base\EventSubscriber\EventSubscriberBase.ahk
 #Include Volantis.Base\Exception\ExceptionBase.ahk
 #Include Volantis.Base\Exception\FileSystemException.ahk
 #Include Volantis.Base\Exception\InvalidParameterException.ahk
@@ -130,7 +118,9 @@
 #Include Volantis.Component\Event\ComponentManagerEvent.ahk
 #Include Volantis.Component\Events\ComponentEvents.ahk
 #Include Volantis.Component\Exception\ComponentException.ahk
+#Include Volantis.Config\Config\ChildConfig.ahk
 #Include Volantis.Config\Config\ConfigBase.ahk
+#Include Volantis.Config\Config\ContainerConfigBase.ahk
 #Include Volantis.Config\Config\PersistentConfig.ahk
 #Include Volantis.Config\Config\RuntimeConfig.ahk
 #Include Volantis.Config\ConfigStorage\ConfigStorageBase.ahk
@@ -149,6 +139,7 @@
 #Include Volantis.Container\DefinitionLoader\DefinitionLoaderBase.ahk
 #Include Volantis.Container\DefinitionLoader\DirDefinitionLoader.ahk
 #Include Volantis.Container\DefinitionLoader\FileDefinitionLoader.ahk
+#Include Volantis.Container\DefinitionLoader\FileDiscoveryDefinitionLoaderBase.ahk
 #Include Volantis.Container\DefinitionLoader\MapDefinitionLoader.ahk
 #Include Volantis.Container\DefinitionLoader\SimpleDefinitionLoader.ahk
 #Include Volantis.Container\DefinitionLoader\StructuredDataDefinitionLoader.ahk
@@ -183,6 +174,15 @@
 #Include Volantis.File\Backup\BackupBase.ahk
 #Include Volantis.File\Backup\FileBackup.ahk
 #Include Volantis.File\ExeProcess\ExeProcess.ahk
+#Include Volantis.Module\ComponentManager\ModuleManager.ahk
+#Include Volantis.Module\DefinitionLoader\ModuleDefinitionLoader.ahk
+#Include Volantis.Module\Exception\ModuleException.ahk
+#Include Volantis.Module\Factory\ModuleFactory.ahk
+#Include Volantis.Module\Module\ModuleBase.ahk
+#Include Volantis.Module\Module\SimpleModule.ahk
+#Include Volantis.Module\ModuleInfo\FileModuleInfo.ahk
+#Include Volantis.Module\ModuleInfo\ModuleInfoBase.ahk
+#Include Volantis.Module\ModuleInfo\ParameterModuleInfo.ahk
 #Include Volantis.Query\Condition\ConditionBase.ahk
 #Include Volantis.Query\Condition\ContainsCondition.ahk
 #Include Volantis.Query\Condition\EndsWithCondition.ahk
