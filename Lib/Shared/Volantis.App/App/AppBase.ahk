@@ -362,7 +362,7 @@ class AppBase {
                 throw ModuleException("Module service file " . moduleServiceFile . " not found")
             }
         }
-
+        
         ; Reload user config files to ensure they are the active values
         this.Service("Config").LoadConfig(true)
 
