@@ -79,6 +79,7 @@ class AppBase {
             "include_files.module_tests", "@@{data_dir}\ModuleIncludes.test.ahk",
             "themes.extra_themes", [],
             "module_config", Map(),
+            "modules", Map(),
             "structured_data.basic", Map(
                 "class", "BasicData",
                 "extensions", []
