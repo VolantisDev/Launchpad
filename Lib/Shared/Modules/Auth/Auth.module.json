@@ -1,0 +1,22 @@
+{
+    "module": {
+        "name": "Authentication",
+        "type": "AppModule",
+        "icon": "",
+        "tags": ["Launchpad", "LaunchpadBuilder"],
+        "description": "Authenticate with remote accounts, such as the Launchpad API",
+        "author": {
+            "name": "Ben McClure, Volantis Dev",
+            "url": "https://volantisdev.com"
+        },
+        "website": "https://launchpad.games",
+        "version": "{{VERSION}}",
+        "dependencies": []
+    },
+    "services": {
+        "Auth": {
+            "class": "AuthService",
+            "arguments": ["@{App}", "@auth_provider.launchpad_api", "@State"]
+        }
+    }
+}

@@ -1,6 +1,4 @@
 class ConfigBase {
-    container := ""
-    parentKey := ""
     configKey := ""
     loaded := false
     allowedKeys := []
@@ -14,10 +12,7 @@ class ConfigBase {
         set => this.Set(name, value)
     }
 
-    __New(container, parentKey := "", autoLoad := true) {
-        this.container := container
-        this.parentKey := parentKey
-
+    __New(autoLoad := true) {
         if (this.configKey == "") {
             this.configKey := Type(this)
         }
@@ -28,7 +23,7 @@ class ConfigBase {
     }
 
     __Enum(numberOfVars) {
-        return this.container.GetParameter(this.parentKey).__Enum(numberOfVars)
+        return this.Get().__Enum(numberOfVars)
     }
 
     IsAllowed(key) {
@@ -53,7 +48,11 @@ class ConfigBase {
             return false
         }
 
-        return this.container.HasParameter(this._getContainerKey(key))
+        return this._has(key)
+    }
+
+    _has(key) {
+        return this.Get().Has(key)
     }
 
     Delete(key) {
@@ -62,54 +61,46 @@ class ConfigBase {
         }
 
         if (this.Has(key)) {
-            this.container.DeleteParameter(key)
+            this._delete(key)
         }
+    }
+
+    _delete(key) {
+        this.Get().Delete(key)
     }
 
     Clone() {
         return super.Clone()
     }
 
-    _getContainerKey(key) {
-        if (this.parentKey) {
-            if (key) {
-                key := "." . key
-            }
-
-            key := this.parentKey . key
-        }
-
-        return key
-    }
-
-    Get(name := "") {
-        if (name) {
-            if (!this.IsAllowed(name)) {
-                throw ConfigException("Parameter " . name . " is not allowed to be accessed by this config object.")
+    Get(key := "") {
+        if (key) {
+            if (!this.IsAllowed(key)) {
+                throw ConfigException("Parameter " . key . " is not allowed to be accessed by this config object.")
             }
             
-            if (!this.Has(name)) {
-                throw ConfigException("Parameter " . this._getContainerKey(name) . " doesn't exist in the service container.")
+            if (!this.Has(key)) {
+                throw ConfigException("Config key " . key . " doesn't exist.")
             }
         }
 
-        return this._getContainerParameter(name)
+        return this._get(key)
     }
 
-    _getContainerParameter(key := "") {
-        return this.container.GetParameter(this._getContainerKey(key))
+    _get(key := "") {
+        return ""
     }
 
-    Set(name, value) {
-        if (!this.IsAllowed(name)) {
+    Set(key, value) {
+        if (!this.IsAllowed(key)) {
             throw ConfigException("The provided key is not valid for this configuration object.")
         }
 
-        this._setContainerParameter(name, value)
+        this._set(key, value)
     }
 
-    _setContainerParameter(key, value) {
-        this.container.SetParameter(this._getContainerKey(key), value)
+    _set(key, value) {
+        return ""
     }
 
     SetValues(values) {
@@ -125,14 +116,13 @@ class ConfigBase {
             return this
         }
 
-        config := this._loadConfigFromStorage()
-
-        for key, value in config {
-            this._setContainerParameter(key, value)
-        }
-
+        this._loadConfig(this._loadConfigFromStorage())
         this.loaded := true
         return this
+    }
+
+    _loadConfig(loadedValues) {
+        this.SetValues(loadedValues)
     }
 
     _loadConfigFromStorage() {
@@ -140,7 +130,7 @@ class ConfigBase {
     }
 
     SaveConfig() {
-        configMap := this.parentKey ? this._getContainerParameter() : ""
+        configMap := this.Get()
 
         this._persistConfigToStorage(configMap)
 

@@ -1,0 +1,21 @@
+{
+    "module": {
+        "name": "Blizzard Platform",
+        "icon": "",
+        "tags": ["Launchpad", "LaunchpadLauncher"],
+        "description": "Launch games installed through Blizzard's Battle.net client",
+        "author": {
+            "name": "Ben McClure, Volantis Dev",
+            "url": "https://volantisdev.com"
+        },
+        "website": "https://launchpad.games",
+        "version": "{{VERSION}}",
+        "dependencies": []
+    },
+    "services": {
+        "BlizzardProductDb": "BlizzardProductDb"
+    },
+    "parameters": {
+        "platforms.Blizzard": "BlizzardPlatform"
+    }
+}

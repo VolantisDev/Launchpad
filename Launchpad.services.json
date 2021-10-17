@@ -1,0 +1,113 @@
+{
+    "parameters": {
+        "config.destination_dir": "@@{data_dir}\\Launchers",
+        "config.launcher_file": "@@{data_dir}\\Launchers.json",
+        "config.platforms_file": "@@{data_dir}\\Platforms.json",
+        "config.assets_dir": "@@{data_dir}\\Launcher Assets",
+        "config.backup_dir": "@@{data_dir}\\Backups",
+        "config.backups_file": "@@{data_dir}\\Backups.json",
+        "previous_config_file": "@@{app_dir}\\Launchpad.ini",
+        "config.player_name": "",
+        "config.data_source_key": "",
+        "config.builder_key": "ahk_launcher",
+        "config.api_endpoint": "",
+        "config.api_authentication": false,
+        "config.api_auto_login": false,
+        "config.backups_to_keep": 5,
+        "config.auto_backup_config_files": true,
+        "config.rebuild_existing_launchers": false,
+        "config.create_desktop_shortcuts": true,
+        "config.clean_launchers_on_build": false,
+        "config.clean_launchers_on_exit": true,
+        "config.check_updates_on_start": true,
+        "config.use_advanced_launcher_editor": false,
+        "config.default_launcher_theme": "",
+        "config.override_launcher_theme": false,
+        "config.backups_view_mode": "Report",
+        "config.platforms_view_mode": "Tile",
+        "config.launcher_view_mode": "Report",
+        "config.launcher_double_click_action": "Edit",
+        "modules.Auth": true,
+        "modules.Bethesda": true,
+        "modules.Blizzard": true,
+        "modules.Epic": true,
+        "modules.LaunchpadApi": true,
+        "modules.Origin": true,
+        "modules.Riot": true,
+        "modules.Steam": true,
+        "launcher_config": {},
+        "platforms_config": {},
+        "backups_config": {},
+        "module_config": {}
+    },
+    "services": {
+        "Config": {
+            "class": "LaunchpadConfig",
+            "arguments": ["@config_storage.app_config", "@{}", "@@config_key"]
+        },
+        "State": {
+            "class": "LaunchpadAppState",
+            "arguments": ["@{App}", "@@state_path"]
+        },
+        "config_storage.backups": {
+            "class": "JsonConfigStorage",
+            "arguments": ["@@config.backups_file", "Backups"]
+        },
+        "config.backups": {
+            "class": "PersistentConfig",
+            "arguments": ["@config_storage.backups", "@{}", "backups_config"]
+        },
+        "BackupManager": {
+            "class": "BackupManager",
+            "arguments": ["@{App}", "@config.backups"]
+        },
+        "DataSourceManager": {
+            "class": "DataSourceManager",
+            "arguments": ["@{}", "@EventManager", "@Notifier", "@@config.data_source_key"]
+        },
+        "builder.ahk_launcher": {
+            "class": "AhkLauncherBuilder",
+            "arguments": ["@{App}", "@Notifier"]
+        },
+        "BuilderManager": {
+            "class": "BuilderManager",
+            "arguments": ["@LauncherManager", "@{}", "@EventManager", "@Notifier"]
+        },
+        "config_storage.launchers": {
+            "class": "JsonConfigStorage",
+            "arguments": ["@@config.launcher_file", "Games"]
+        },
+        "config.launchers": {
+            "class": "LauncherConfig",
+            "arguments": ["@config_storage.launchers", "@{}", "launcher_config"]
+        },
+        "LauncherManager": {
+            "class": "LauncherManager",
+            "arguments": ["@{App}", "@config.launchers"]
+        },
+        "config_storage.platforms": {
+            "class": "JsonConfigStorage",
+            "arguments": ["@@config.platforms_file", "Platforms"]
+        },
+        "config.platforms": {
+            "class": "PlatformsConfig",
+            "arguments": ["@config_storage.platforms", "@{}", "platforms_config"]
+        },
+        "PlatformManager": {
+            "class": "PlatformManager",
+            "arguments": ["@{App}", "@config.platforms"]
+        },
+        "installer.launchpad_update": {
+            "class": "LaunchpadUpdate",
+            "arguments": ["@@version", "@State", "@CacheManager", "file", "@@tmp_dir"]
+        },
+        "installer.dependencies": {
+            "class": "DependencyInstaller",
+            "arguments": ["@@version", "@State", "@CacheManager", "file", [], "@@tmp_dir"]
+        },
+        "LaunchpadIniMigrator": {
+            "class": "LaunchpadIniMigrator",
+            "arguments": ["@{App}", "@GuiManager"]
+        }
+    }
+}

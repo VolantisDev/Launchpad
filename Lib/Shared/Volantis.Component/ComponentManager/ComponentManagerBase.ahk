@@ -76,9 +76,7 @@ class ComponentManagerBase {
         parameters := event.GetParameters()
 
         this.ValidateComponentDependencies(services, parameters, "before")
-
-        loader := SimpleDefinitionLoader(services, parameters)
-        this.container.LoadDefinitions(loader, true, this.servicePrefix)
+        this._loadDefinitions(SimpleDefinitionLoader(services, parameters))
 
         this.loaded := true
 
@@ -86,6 +84,10 @@ class ComponentManagerBase {
 
         event := ComponentManagerEvent(ComponentEvents.COMPONENTS_LOADED, this)
         this.eventMgr.DispatchEvent(ComponentEvents.COMPONENTS_LOADED, event)
+    }
+
+    _loadDefinitions(loader) {
+        return this.container.LoadDefinitions(loader, true, this.servicePrefix)
     }
 
     ValidateComponentDependencies(services, parameters, stage) {

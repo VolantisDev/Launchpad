@@ -1,0 +1,18 @@
+{
+    "module": {
+        "name": "Riot Platform",
+        "icon": "",
+        "tags": ["Launchpad", "LaunchpadLauncher"],
+        "description": "Launch games installed through the Riot Client",
+        "author": {
+            "name": "Ben McClure, Volantis Dev",
+            "url": "https://volantisdev.com"
+        },
+        "website": "https://launchpad.games",
+        "version": "{{VERSION}}",
+        "dependencies": []
+    },
+    "parameters": {
+        "platforms.Riot": "RiotPlatform"
+    }
+}

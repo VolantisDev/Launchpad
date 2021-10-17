@@ -51,43 +51,35 @@ class AppBase {
     }
 
     GetParameterDefinitions(config) {
-        SplitPath(A_ScriptFullPath,,,, &scriptName)
-
-        resourcesDir := this.appDir . "\Resources"
-
-        if (config.Has("resourcesDir") && config["resourcesDir"]) {
-            resourcesDir := config["resourcesDir"]
-        }
-
-        themeName := "Steampad"
-        
-        if (config.Has("themeName") && config["themeName"]) {
-            themeName := config["themeName"]
-        }
-
         return Map(
-            "config_path", this.appDir . "\" . this.appName . ".json",
+            "version", this.versionStr,
+            "app_name", this.appName,
+            "app_dir", this.appDir,
+            "data_dir", this.dataDir,
+            "tmp_dir", this.tmpDir,
+            "resources_dir", "@@{app_dir}\Resources",
+            "config_path", "@@{app_dir}\" . this.appName . ".json",
             "config_key", "config",
-            "config.theme_name", themeName,
-            "config.themes_dir", this.appDir . "\Resources\Themes",
-            "config.cache_dir", this.tmpDir . "\Cache",
+            "config.theme_name", "Steampad",
+            "config.themes_dir", "@@{app_dir}\Resources\Themes",
+            "config.cache_dir", "@@{tmp_dir}\Cache",
             "config.flush_cache_on_exit", false,
             "config.check_updates_on_start", false,
             "config.logging_level", "error",
-            "config.modules_file", this.dataDir . "\Modules.json",
+            "config.modules_file", "@@{data_dir}\Modules.json",
             "config.modules_view_mode", "Report",
-            "config.log_path", this.dataDir . "\" . this.appName . "Log.txt",
-            "config.module_dirs", [this.dataDir . "\Modules"],
-            "config.core_module_dirs", [this.appDir . "\Lib\"],
+            "config.log_path", "@@{data_dir}\" . this.appName . "Log.txt",
+            "config.module_dirs", ["@@{data_dir}\Modules"],
+            "config.core_module_dirs", ["@@{app_dir}\Lib\"],
             "config.main_window", "MainWindow",
-            "state_path", this.dataDir . "\" . this.appName . "State.json",
-            "service_files.app", this.appDir . "\" . scriptName . ".services.json",
-            "service_files.user", this.dataDir . "\" . scriptName . ".services.json",
-            "include_files.modules", this.dataDir . "\ModuleIncludes.ahk",
-            "include_files.module_tests", this.dataDir . "\ModuleIncludes.test.ahk",
-            "resources.dir", resourcesDir,
+            "state_path", "@@{data_dir}\" . this.appName . "State.json",
+            "service_files.app", "@@{app_dir}\" . this.appName . ".services.json",
+            "service_files.user", "@@{data_dir}\" . this.appName . ".services.json",
+            "include_files.modules", "@@{data_dir}\ModuleIncludes.ahk",
+            "include_files.module_tests", "@@{data_dir}\ModuleIncludes.test.ahk",
             "themes.extra_themes", [],
             "module_config", Map(),
+            "modules", Map(),
             "structured_data.basic", Map(
                 "class", "BasicData",
                 "extensions", []
@@ -119,23 +111,19 @@ class AppBase {
         return Map(
             "Shell", Map(
                 "com", "WScript.Shell",
-                "props", Map("CurrentDirectory", this.appDir)
+                "props", Map("CurrentDirectory", "@@app_dir")
             ),
             "config_storage.app_config", Map(
                 "class", "JsonConfigStorage",
-                "arguments", ParameterRef("config_path")
+                "arguments", "@@config_path"
             ),
             "Config", Map(
                 "class", "AppConfig",
-                "arguments", [
-                    ServiceRef("config_storage.app_config"), 
-                    ContainerRef(), 
-                    ParameterRef("config_key")
-                ]
+                "arguments", ["@config_storage.app_config", "@{}", "@@config_key"]
             ),
             "State", Map(
                 "class", "AppState",
-                "arguments", [AppRef(), ParameterRef("state_path")]
+                "arguments", ["@{App}", "@@state_path"]
             ),
             "EventManager", Map(
                 "class", "EventManager"
@@ -143,39 +131,35 @@ class AppBase {
             "IdGenerator", "UuidGenerator",
             "config_storage.modules", Map(
                 "class", "JsonConfigStorage",
-                "arguments", [ParameterRef("config.modules_file"), "Modules"]
+                "arguments", ["@@config.modules_file", "Modules"]
             ),
             "config.modules", Map(
                 "class", "PersistentConfig",
-                "arguments", [
-                    ServiceRef("config_storage.modules"), 
-                    ContainerRef(), 
-                    "module_config"
-                ]
+                "arguments", ["@config_storage.modules", "@{}", "module_config"]
             ),
             "factory.modules", Map(
                 "class", "ModuleFactory",
-                "arguments", [ContainerRef(), ServiceRef("config.modules")]
+                "arguments", ["@{}", "@StructuredData", "@config.modules"]
             ),
             "definition_loader.modules", Map(
                 "class", "ModuleDefinitionLoader",
                 "arguments", [
-                    ServiceRef("factory.modules"),
-                    ServiceRef("config.modules"),
-                    ParameterRef("config.module_dirs"),
-                    ParameterRef("config.core_module_dirs"),
-                    this.GetDefaultModules(config)
+                    "@factory.modules",
+                    "@config.modules",
+                    "@@config.module_dirs",
+                    "@@config.core_module_dirs",
+                    "@@modules"
                 ]
             ),
             "ModuleManager", Map(
                 "class", "ModuleManager", 
                 "arguments", [
-                    ContainerRef(), 
-                    ServiceRef("EventManager"), 
-                    ServiceRef("Notifier"),
-                    ServiceRef("Config"),
-                    ServiceRef("config.modules"),
-                    ServiceRef("definition_loader.modules")
+                    "@{}", 
+                    "@EventManager", 
+                    "@Notifier",
+                    "@Config",
+                    "@config.modules",
+                    "@definition_loader.modules"
                 ]
             ),
             "Gdip", "Gdip",
@@ -183,133 +167,93 @@ class AppBase {
                 "class", "Debugger",
                 "calls", Map(
                     "method", "SetLogger",
-                    "arguments", ServiceRef("Logger")
+                    "arguments", "@Logger"
                 )
             ),
             "VersionChecker", "VersionChecker",
             "logger.file", Map(
                 "class", "FileLogger", 
-                "arguments", [
-                    ParameterRef("config.log_path"), 
-                    ParameterRef("config.logging_level"), 
-                    true
-                ]
+                "arguments", ["@@config.log_path", "@@config.logging_level", true]
             ),
             "Logger", Map(
                 "class", "LoggerService",
-                "arguments", [ServiceRef("logger.file")]
+                "arguments", ["@logger.file"]
             ),
             "CacheManager", Map(
                 "class", "CacheManager", 
-                "arguments", [
-                    ServiceRef("Config"),
-                    ContainerRef(), 
-                    ServiceRef("EventManager"), 
-                    ServiceRef("Notifier")
-                ]
+                "arguments", ["@Config", "@{}", "@EventManager", "@Notifier"]
             ),
             "ThemeFactory", Map(
                 "class", "ThemeFactory",
-                "arguments", [
-                    ContainerRef(), 
-                    ParameterRef("resources.dir"),
-                    ServiceRef("EventManager"),
-                    ServiceRef("IdGenerator"),
-                    ServiceRef("Logger")
-                ]
+                "arguments", ["@{}", "@@resources_dir", "@EventManager", "@IdGenerator", "@Logger"]
             ),
             "definition_loader.themes", Map(
                 "class", "DirDefinitionLoader",
-                "arguments", [
-                    ServiceRef("StructuredData"), 
-                    ParameterRef("config.themes_dir"), 
-                    "",
-                    false,
-                    false, 
-                    "",
-                    "theme"
-                ]
+                "arguments", ["@StructuredData", "@@config.themes_dir", "", false, false, "", "theme"]
             ),
             "ThemeManager", Map(
                 "class", "ThemeManager",
                 "arguments", [
-                    ContainerRef(),
-                    ServiceRef("EventManager"),
-                    ServiceRef("Notifier"),
-                    ServiceRef("Config"),
-                    ServiceRef("definition_loader.themes"),
+                    "@{}",
+                    "@EventManager",
+                    "@Notifier",
+                    "@Config",
+                    "@definition_loader.themes",
                     "Steampad"
                 ]
             ),
             "notifier.toast", Map(
                 "class", "ToastNotifier",
-                "arguments", [AppRef()]
+                "arguments", ["@{App}"]
             ),
             "Notifier", Map(
                 "class", "NotificationService",
-                "arguments", [AppRef(), ServiceRef("notifier.toast")]
+                "arguments", ["@{App}", "@notifier.toast"]
             ),
             "factory.gui", Map(
                 "class", "GuiFactory",
-                "arguments", [
-                    ContainerRef(),
-                    ServiceRef("ThemeManager"),
-                    ServiceRef("IdGenerator")
-                ]
+                "arguments", ["@{}", "@ThemeManager", "@IdGenerator"]
             ),
             "GuiManager", Map(
                 "class", "GuiManager",
                 "arguments", [
-                    ContainerRef(), 
-                    ServiceRef("factory.gui"),
-                    ServiceRef("State"),
-                    ServiceRef("EventManager"),
-                    ServiceRef("Notifier")
+                    "@{}", 
+                    "@factory.gui",
+                    "@State",
+                    "@EventManager",
+                    "@Notifier"
                 ]
             ),
             "InstallerManager", Map(
                 "class", "InstallerManager",
-                "arguments", [
-                    ContainerRef(),
-                    ServiceRef("EventManager"),
-                    ServiceRef("Notifier")
-                ]
+                "arguments", ["@{}", "@EventManager", "@Notifier"]
             ),
             "EntityFactory", Map(
                 "class", "EntityFactory",
-                "arguments", [ContainerRef()]
+                "arguments", ["@{}"]
             ),
             "installer.themes", Map(
                 "class", "ThemeInstaller",
                 "arguments", [
-                    this.Version,
-                    ServiceRef("State"),
-                    ServiceRef("CacheManager"),
+                    "@@version",
+                    "@State",
+                    "@CacheManager",
                     "file",
-                    ParameterRef("themes.extra_themes"),
-                    this.tmpDir . "\Installers"
+                    "@@themes.extra_themes",
+                    "@@{tmp_dir}\Installers"
                 ]
             ),
             "cache_state.file", Map(
                 "class", "CacheState",
-                "arguments", [
-                    AppRef(), 
-                    ParameterRef("config.cache_dir"), 
-                    "File.json"
-                ]
+                "arguments", ["@{App}", "@@config.cache_dir", "File.json"]
             ),
             "cache.file", Map(
                 "class", "FileCache",
-                "arguments", [
-                    AppRef(), 
-                    ServiceRef("cache_state.file"), 
-                    ParameterRef("config.cache_dir"), 
-                    "File"
-                ]
+                "arguments", ["@{App}", "@cache_state.file", "@@config.cache_dir", "File"]
             ),
             "StructuredData", Map(
                 "class", "StructuredDataFactory",
-                "arguments", [ParameterRef("structured_data")]
+                "arguments", "@@structured_data"
             )
         )
     }
@@ -395,14 +339,14 @@ class AppBase {
     }
 
     LoadServices(config) {
-        defaultServices := this.GetServiceDefinitions(config)
-        defaultParameters := this.GetParameterDefinitions(config)
-        this.Services := ServiceContainer(SimpleDefinitionLoader(defaultServices, defaultParameters))
+        this.Services := ServiceContainer(SimpleDefinitionLoader(
+            this.GetServiceDefinitions(config), 
+            this.GetParameterDefinitions(config)
+        ))
+        
         this.Services.LoadDefinitions(MapDefinitionLoader(config))
-
-        serviceFile := this.Services.GetParameter("service_files.app")
-
         sdFactory := this.Service("StructuredData")
+        serviceFile := this.Services.GetParameter("service_files.app")
 
         if (FileExist(serviceFile)) {
             this.Services.LoadDefinitions(FileDefinitionLoader(sdFactory, serviceFile))
@@ -415,9 +359,11 @@ class AppBase {
         for index, moduleServiceFile in this.Service("ModuleManager").GetModuleServiceFiles() {
             if (FileExist(moduleServiceFile)) {
                 this.Services.LoadDefinitions(FileDefinitionLoader(sdFactory, moduleServiceFile))
+            } else {
+                throw ModuleException("Module service file " . moduleServiceFile . " not found")
             }
         }
-
+        
         ; Reload user config files to ensure they are the active values
         this.Service("Config").LoadConfig(true)
 
