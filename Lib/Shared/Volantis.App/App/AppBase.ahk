@@ -131,7 +131,7 @@ class AppBase {
             "IdGenerator", "UuidGenerator",
             "config_storage.modules", Map(
                 "class", "JsonConfigStorage",
-                "arguments", ["@@config.modules_file", "Modules"]
+                "arguments", ["@@config.modules_file", "modules"]
             ),
             "config.modules", Map(
                 "class", "PersistentConfig",
