@@ -39,6 +39,10 @@ class ModuleManager extends ComponentManagerBase {
 
         for key, config in moduleParams {
             if (!this.moduleConfig.Has(key)) {
+                if (IsNumber(config)) {
+                    config := Map("enabled", !!config)
+                }
+
                 this.moduleConfig[key] := config
                 save := true
             }
