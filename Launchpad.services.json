@@ -27,7 +27,6 @@
         "config.platforms_view_mode": "Tile",
         "config.launcher_view_mode": "Report",
         "config.launcher_double_click_action": "Edit",
-        "modules.Auth": true,
         "modules.Bethesda": true,
         "modules.Blizzard": true,
         "modules.Epic": true,
