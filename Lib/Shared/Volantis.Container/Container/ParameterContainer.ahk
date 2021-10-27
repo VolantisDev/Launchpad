@@ -165,7 +165,7 @@ class ParameterContainer extends ContainerBase {
         context := this.Parameters
 
         for index, token in tokens {
-            if (context.Has(token)) {
+            if (Type(context) == "Map" && context.Has(token)) {
                 context := context[token]
                 exists := true
             } else {
