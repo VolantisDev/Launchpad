@@ -3,18 +3,6 @@
     detectGames := false
     isSetup := false
 
-    GetDefaultModules(config) {
-        modules := super.GetDefaultModules(config)
-        modules["LaunchpadApi"] := "LaunchpadApi"
-        modules["Bethesda"] := "Bethesda"
-        modules["Blizzard"] := "Blizzard"
-        modules["Epic"] := "Epic"
-        modules["Origin"] := "Origin"
-        modules["Riot"] := "Riot"
-        modules["Steam"] := "Steam"
-        return modules
-    }
-
     CheckForUpdates(notify := true) {
         updateAvailable := false
 

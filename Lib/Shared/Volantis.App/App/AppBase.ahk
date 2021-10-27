@@ -498,12 +498,6 @@ class AppBase {
         return result
     }
 
-    GetDefaultModules(config) {
-        modules := Map()
-        modules["Auth"] := "Auth"
-        return modules
-    }
-
     Service(name, params*) {
         if (Type(name) == "Array" || (params && params.Length)) {
             results := Map()
