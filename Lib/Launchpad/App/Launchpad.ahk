@@ -81,7 +81,7 @@
         super.RunApp(config)
         
         this.Service("PlatformManager").LoadComponents()
-        this.Service("LauncherManager").LoadComponents()
+        this.Service("manager.launcher").LoadComponents()
         this.Service("manager.backup").LoadComponents()
 
         this.OpenApp()

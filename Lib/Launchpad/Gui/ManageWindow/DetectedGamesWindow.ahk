@@ -9,7 +9,7 @@
     __New(container, themeObj, config, detectedGames) {
         this.detectedGames := detectedGames
         this.state := container.Get("State")
-        this.launcherManager := container.Get("LauncherManager")
+        this.launcherManager := container.Get("manager.launcher")
         this.knownGames := container.Get("manager.datasource")
             .GetDefaultDataSource()
             .ReadListing("game-keys")

@@ -5,7 +5,7 @@
     showDetailsPane := true
 
     __New(container, themeObj, config) {
-        this.launcherManager := container.Get("LauncherManager")
+        this.launcherManager := container.Get("manager.launcher")
         this.platformManager := container.Get("PlatformManager")
         this.lvCount := this.launcherManager.CountEntities()
         super.__New(container, themeObj, config)
@@ -63,7 +63,7 @@
             "type", "LauncherDeleteWindow",
             "ownerOrParent", this.guiId,
             "child", true,
-        ), launcher, this.app.Services.Get("LauncherManager"))
+        ), launcher, this.app.Services.Get("manager.launcher"))
 
         if (result == "Delete") {
             if (rowNum == "") {
@@ -131,7 +131,7 @@
         } else if (result == "CleanLaunchers") {
             this.app.Service("manager.builder").CleanLaunchers()
         } else if (result == "ReloadLaunchers") {
-            this.app.Service("LauncherManager").LoadComponents(this.app.Config["launcher_file"])
+            this.app.Service("manager.launcher").LoadComponents(this.app.Config["launcher_file"])
             this.UpdateListView()
         } else if (result == "About") {
             this.app.Service("manager.gui").Dialog(Map("type", "AboutWindow"))
@@ -627,7 +627,7 @@
     }
 
     OnBuildAllButton(btn, info) {
-        this.app.Service("manager.builder").BuildLaunchers(this.app.Service("LauncherManager").Entities, this.app.Config["rebuild_existing_launchers"])
+        this.app.Service("manager.builder").BuildLaunchers(this.app.Service("manager.launcher").Entities, this.app.Config["rebuild_existing_launchers"])
         this.UpdateListView()
     }
 
