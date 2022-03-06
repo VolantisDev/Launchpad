@@ -4,7 +4,7 @@ class ManageModulesWindow extends ManageWindowBase {
     needsRestart := false
 
     __New(container, themeObj, config) {
-        this.moduleManager := container.Get("ModuleManager")
+        this.moduleManager := container.Get("manager.module")
         this.lvCount := this.moduleManager.Count(true)
         super.__New(container, themeObj, config)
     }

@@ -151,7 +151,7 @@ class AppBase {
                     "@@modules"
                 ]
             ),
-            "ModuleManager", Map(
+            "manager.module", Map(
                 "class", "ModuleManager", 
                 "arguments", [
                     "@{}", 
@@ -356,7 +356,7 @@ class AppBase {
         this.InitializeTheme()
         this.InitializeModules(config)
 
-        for index, moduleServiceFile in this.Service("ModuleManager").GetModuleServiceFiles() {
+        for index, moduleServiceFile in this.Service("manager.module").GetModuleServiceFiles() {
             if (FileExist(moduleServiceFile)) {
                 this.Services.LoadDefinitions(FileDefinitionLoader(sdFactory, moduleServiceFile))
             } else {
@@ -399,7 +399,7 @@ class AppBase {
 
     InitializeModules(config) {
         includeFiles := this.Services.GetParameter("include_files")
-        updated := this.Service("ModuleManager").UpdateModuleIncludes(includeFiles["modules"], includeFiles["module_tests"])
+        updated := this.Service("manager.module").UpdateModuleIncludes(includeFiles["modules"], includeFiles["module_tests"])
 
         if (updated) {
             message := A_IsCompiled ?
