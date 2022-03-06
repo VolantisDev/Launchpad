@@ -55,12 +55,12 @@ class ServiceContainer extends ParameterContainer {
         super.Set(name, service)
     }
 
-    Query(servicePrefix := "", resultType := "", includeDisabled := false) {
+    Query(servicePrefix := "", resultType := "", includeDisabled := false, removePrefix := false) {
         if (resultType == "") {
             resultType := ContainerQuery.RESULT_TYPE_SERVICES
         }
 
-        query := ContainerQuery(this, servicePrefix, resultType)
+        query := ContainerQuery(this, servicePrefix, resultType, removePrefix)
 
         if (!includeDisabled) {
             query.Condition(FieldCondition(IsTrueCondition(), "enabled"))
