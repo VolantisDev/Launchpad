@@ -127,7 +127,7 @@
         } else if (result == "ManageModules") {
             this.app.Service("GuiManager").OpenWindow("ManageModulesWindow")
         } else if (result == "FlushCache") {
-            this.app.Service("CacheManager").FlushCaches(true, true)
+            this.app.Service("manager.cache").FlushCaches(true, true)
         } else if (result == "CleanLaunchers") {
             this.app.Service("manager.builder").CleanLaunchers()
         } else if (result == "ReloadLaunchers") {

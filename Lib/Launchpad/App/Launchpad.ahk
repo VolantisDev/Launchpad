@@ -82,7 +82,7 @@
         
         this.Service("PlatformManager").LoadComponents()
         this.Service("LauncherManager").LoadComponents()
-        this.Service("BackupManager").LoadComponents()
+        this.Service("manager.backup").LoadComponents()
 
         this.OpenApp()
 
@@ -129,11 +129,11 @@
 
     ExitApp() {
         if (this.isSetup && this.Config["clean_launchers_on_exit"]) {
-            this.Service("BuilderManager").CleanLaunchers()
+            this.Service("manager.builder").CleanLaunchers()
         }
 
         if (this.isSetup && this.Config["flush_cache_on_exit"]) {
-            this.Service("CacheManager").FlushCaches(false, false)
+            this.Service("manager.cache").FlushCaches(false, false)
         }
 
         super.ExitApp()

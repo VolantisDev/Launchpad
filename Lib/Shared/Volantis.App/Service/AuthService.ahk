@@ -71,7 +71,7 @@ class AuthService extends AppServiceBase {
 
             if (SubStr(imgPath, 1, 4) == "http") {
                 cachePath := "account--profile.jpg"
-                imgPath := this.app.Service("CacheManager")["file"].GetCachedDownload(cachePath, imgPath)
+                imgPath := this.app.Service("manager.cache")["file"].GetCachedDownload(cachePath, imgPath)
             }
         }
 

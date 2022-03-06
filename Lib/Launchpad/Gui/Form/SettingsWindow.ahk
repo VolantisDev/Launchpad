@@ -249,12 +249,12 @@
 
     OnCacheDirMenuClick(btn) {
         if (btn == "ChangeCacheDir") {
-            this.app.Service("CacheManager").ChangeCacheDir()
+            this.app.Service("manager.cache").ChangeCacheDir()
             this.SetText("CacheDir", this.app.Config["cache_dir"], "Bold")
         } else if (btn == "OpenCacheDir") {
-            this.app.Service("CacheManager").OpenCacheDir()
+            this.app.Service("manager.cache").OpenCacheDir()
         } else if (btn == "FlushCacheDir") {
-            this.app.Service("CacheManager").FlushCaches(true, true)
+            this.app.Service("manager.cache").FlushCaches(true, true)
         }
     }
 

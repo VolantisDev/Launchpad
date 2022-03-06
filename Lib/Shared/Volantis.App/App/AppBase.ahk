@@ -179,7 +179,7 @@ class AppBase {
                 "class", "LoggerService",
                 "arguments", ["@logger.file"]
             ),
-            "CacheManager", Map(
+            "manager.cache", Map(
                 "class", "CacheManager", 
                 "arguments", ["@Config", "@{}", "@EventManager", "@Notifier"]
             ),
@@ -393,7 +393,7 @@ class AppBase {
     }
 
     OnServicesLoaded(event, extra, eventName, hwnd) {
-        this.Service("CacheManager")
+        this.Service("manager.cache")
         this.Service("InstallerManager").RunInstallers(InstallerBase.INSTALLER_TYPE_REQUIREMENT)
     }
 
