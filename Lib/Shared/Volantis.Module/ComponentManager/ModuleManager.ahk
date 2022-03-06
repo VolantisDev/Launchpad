@@ -62,17 +62,14 @@ class ModuleManager extends ComponentManagerBase {
     }
 
     Disable(keys) {
-        deps := this.CalculateDependents(keys)
-        return this.Toggle(keys, deps, false)
+        return this.Toggle(keys, this.CalculateDependents(keys), false)
     }
 
     FilterDeps(deps, enabled) {
         newDeps := []
         
         for index, key in deps {
-            isEnabled := this.IsEnabled(key)
-
-            if (enabled != isEnabled) {
+            if (enabled != this.IsEnabled(key)) {
                 newDeps.Push(key)
             }
         }
@@ -243,20 +240,22 @@ class ModuleManager extends ComponentManagerBase {
 
         dependentModules := []
 
-        for index, key in keys {
-            for enabledIndex, enabledKey in this.Names() {
+        for enabledIndex, enabledKey in this.Names() {
+            for index, key in keys {
                 if (enabledKey == key) {
                     continue
                 }
 
                 for depIndex, depKey in this.getDependencies(enabledKey) {
                     if (key == depKey) {
+                        dependentModules.Push(enabledKey)
+
                         dependents := this.getDependents(enabledKey)
 
                         if (dependents.Length) {
                             dependentModules.Push(dependents*)
                         }
-
+                        
                         break
                     }
                 }
