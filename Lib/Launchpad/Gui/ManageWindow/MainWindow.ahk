@@ -47,7 +47,7 @@
             if (result == "EditLauncher") {
                 this.EditLauncher(launcherKey)
             } else if (result == "BuildLauncher") {
-                this.app.Service("BuilderManager").BuildLaunchers(Map(launcherKey, launcher), true)
+                this.app.Service("manager.builder").BuildLaunchers(Map(launcherKey, launcher), true)
                 this.UpdateListView()
             } else if (result == "RunLauncher") {
                 this.RunLauncher(launcherKey)
@@ -129,7 +129,7 @@
         } else if (result == "FlushCache") {
             this.app.Service("CacheManager").FlushCaches(true, true)
         } else if (result == "CleanLaunchers") {
-            this.app.Service("BuilderManager").CleanLaunchers()
+            this.app.Service("manager.builder").CleanLaunchers()
         } else if (result == "ReloadLaunchers") {
             this.app.Service("LauncherManager").LoadComponents(this.app.Config["launcher_file"])
             this.UpdateListView()
@@ -371,7 +371,7 @@
         if (selected.Length > 0) {
             key := selected[1]
             launcher := this.launcherManager.Entities[key]
-            this.app.Service("BuilderManager").BuildLaunchers(Map(key, launcher), true)
+            this.app.Service("manager.builder").BuildLaunchers(Map(key, launcher), true)
             this.UpdateListView()
         }
     }
@@ -627,7 +627,7 @@
     }
 
     OnBuildAllButton(btn, info) {
-        this.app.Service("BuilderManager").BuildLaunchers(this.app.Service("LauncherManager").Entities, this.app.Config["rebuild_existing_launchers"])
+        this.app.Service("manager.builder").BuildLaunchers(this.app.Service("LauncherManager").Entities, this.app.Config["rebuild_existing_launchers"])
         this.UpdateListView()
     }
 
