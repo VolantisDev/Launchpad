@@ -26,7 +26,9 @@ class ManageModulesWindow extends ManageWindowBase {
 
         for name, module in this.moduleManager.All("", false, true) {
             enabledText := module.IsEnabled() ? "Yes" : "No"
-            data[name] := [name, enabledText, module.GetVersion()]
+            ; TODO Define source
+            source := ""
+            data[name] := [name, enabledText, source, module.GetVersion()]
         }
 
         return data
