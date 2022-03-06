@@ -214,7 +214,7 @@ class AppBase {
                 "class", "GuiFactory",
                 "arguments", ["@{}", "@ThemeManager", "@IdGenerator"]
             ),
-            "GuiManager", Map(
+            "manager.gui", Map(
                 "class", "GuiManager",
                 "arguments", [
                     "@{}", 
@@ -406,7 +406,7 @@ class AppBase {
                 "Your modules have been updated. Currently, you must recompile " this.appName . " yourself for the changes to take effect. Would you like to exit now (highly recommended)?" :
                 "Your modules have been updated, and " this.appName . " must be restarted for the changes to take effect. Would you like to restart now?"
 
-            response := this.app.Service("GuiManager").Dialog(Map(
+            response := this.app.Service("manager.gui").Dialog(Map(
                 "title", "Module Includes Updated",
                 "text", message
             ))
@@ -422,7 +422,7 @@ class AppBase {
     }
 
     InitializeTheme() {
-        this.Service("Gdip", "GuiManager", "ThemeManager")
+        this.Service("Gdip", "manager.gui", "ThemeManager")
         this.themeReady := true
     }
 
@@ -449,10 +449,10 @@ class AppBase {
         mainWin := this.Parameter("config.main_window")
 
         if (mainWin) {
-            if (this.Service("GuiManager").Has(mainWin)) {
-                WinActivate("ahk_id " . this.Service("GuiManager")[mainWin].GetHwnd())
+            if (this.Service("manager.gui").Has(mainWin)) {
+                WinActivate("ahk_id " . this.Service("manager.gui")[mainWin].GetHwnd())
             } else {
-                this.Service("GuiManager").OpenWindow(Map(
+                this.Service("manager.gui").OpenWindow(Map(
                     "type", mainWin,
                     "title", this.appName
                 ))
@@ -560,7 +560,7 @@ class AppBase {
             if (this.themeReady) {
                 btns := allowContinue ? "*&Continue|&Reload|&Exit" : "*&Reload|&Exit"
 
-                this.Service("GuiManager").Dialog(Map(
+                this.Service("manager.gui").Dialog(Map(
                     "type", "ErrorDialog",
                     "title", "Unhandled Exception",
                     "text", errorText,
@@ -606,7 +606,7 @@ class AppBase {
         menuItems.Push(Map("label", "Restart", "name", "RestartApp"))
         menuItems.Push(Map("label", "Exit", "name", "ExitApp"))
 
-        result := this.Service("GuiManager").Menu(menuItems, this)
+        result := this.Service("manager.gui").Menu(menuItems, this)
         this.HandleTrayMenuClick(result)
     }
 

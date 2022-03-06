@@ -134,7 +134,7 @@ class ManageModulesWindow extends ManageWindowBase {
             menuItems.Push(Map("label", "Delete", "name", "DeleteModule"))
         }
 
-        result := this.app.Service("GuiManager").Menu(menuItems, this)
+        result := this.app.Service("manager.gui").Menu(menuItems, this)
 
         if (result == "EnableModule") {
             this.EnableModule(key)

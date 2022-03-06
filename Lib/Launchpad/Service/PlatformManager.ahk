@@ -63,6 +63,6 @@ class PlatformManager extends EntityManagerBase {
             }
         }
 
-        this.app.Service("GuiManager").OpenWindow("DetectedGamesWindow", allDetectedGames)
+        this.app.Service("manager.gui").OpenWindow("DetectedGamesWindow", allDetectedGames)
     }
 }

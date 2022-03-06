@@ -128,11 +128,11 @@
     }
 
     OnManageBackups(btn, info) {
-        this.app.Service("GuiManager").OpenWindow("ManageBackupsWindow")
+        this.app.Service("manager.gui").OpenWindow("ManageBackupsWindow")
     }
 
     OnManagePlatforms(btn, info) {
-        this.app.Service("GuiManager").OpenWindow("PlatformsWindow")
+        this.app.Service("manager.gui").OpenWindow("PlatformsWindow")
     }
 
     AddConfigLocationBlock(heading, settingName, extraButton := "", helpText := "") {
@@ -309,7 +309,7 @@
         this.app.Config.SaveConfig()
 
         if (this.needsRestart) {
-            response := this.app.Service("GuiManager").Dialog(Map(
+            response := this.app.Service("manager.gui").Dialog(Map(
                 "title", "Restart " . this.app.appName . "?",
                 "text", "One or more settings that have been changed require restarting " . this.app.appName . " to fully take effect.`n`nWould you like to restart " . this.app.appName . " now?"
             ))
@@ -319,8 +319,8 @@
             }
         }
 
-        if (this.app.Service("GuiManager").Has("MainWindow")) {
-            this.app.Service("GuiManager")["MainWindow"].UpdateListView()
+        if (this.app.Service("manager.gui").Has("MainWindow")) {
+            this.app.Service("manager.gui")["MainWindow"].UpdateListView()
         }
 
         return result

@@ -20,7 +20,7 @@ class LaunchpadApiAuthProvider extends JwtAuthProvider {
     }
 
     ShowLoginWindow() {
-        return this.app.Service("GuiManager").Dialog(Map("type", "LoginWindow"))
+        return this.app.Service("manager.gui").Dialog(Map("type", "LoginWindow"))
     }
 
     ExtractAuthInfoFromResponse(httpReqObj) {

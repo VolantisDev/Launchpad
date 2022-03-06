@@ -255,7 +255,7 @@ class LauncherEntity extends AppEntityBase {
 
         while (result == "Simple" || result == "Advanced") {
             form := result == "Advanced" ? "LauncherEditor" : "LauncherEditorSimple"
-            result := this.app.Service("GuiManager").Dialog(Map(
+            result := this.app.Service("manager.gui").Dialog(Map(
                 "type", form,
                 "mode", mode,
                 "child", !!(parent),

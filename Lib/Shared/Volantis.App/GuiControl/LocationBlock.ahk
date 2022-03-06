@@ -44,7 +44,7 @@ class LocationBlock extends GuiControlBase {
     }
 
     OnLocationOptions(btn, info) {
-        result := this.app.Service("GuiManager").Menu(Map(
+        result := this.app.Service("manager.gui").Menu(Map(
             "parent", this.guiObj,
             "Child", true
         ), btn.MenuItems, btn)

@@ -51,7 +51,7 @@ class LaunchpadLauncher extends AppBase {
             "class", config["launcherConfig"]["LauncherClass"],
             "arguments", [
                 ParameterRef("launcher_key"),
-                ServiceRef("GuiManager"),
+                ServiceRef("manager.gui"),
                 ServiceRef("Game"),
                 ParameterRef("config"), 
                 ParameterRef("launcher_config"),

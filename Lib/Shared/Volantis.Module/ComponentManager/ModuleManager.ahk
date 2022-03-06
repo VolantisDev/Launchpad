@@ -90,12 +90,12 @@ class ModuleManager extends ComponentManagerBase {
 
             if (enableConfirmationDialog) {
                 if (enabled) {
-                    response := this.container["GuiManager"].Dialog(Map(
+                    response := this.container["manager.gui"].Dialog(Map(
                         "title", "Enable Required Modules",
                         "text", "The following additional required module(s) will also be enabled:`n`n" . moduleList . "`n`nContinue?"
                     ))
                 } else {
-                    response := this.container["GuiManager"].Dialog(Map(
+                    response := this.container["manager.gui"].Dialog(Map(
                         "title", "Disable Dependent Modules",
                         "text", "The following dependent module(s) will also be disabled:`n`n" . moduleList . "`n`nContinue?"
                     ))
@@ -170,7 +170,7 @@ class ModuleManager extends ComponentManagerBase {
 
         dir := module.moduleInfo["dir"]
 
-        response := this.container.Get("GuiManager").Dialog(Map(
+        response := this.container.Get("manager.gui").Dialog(Map(
             "title", "Delete " . key,
             "text", "Are you sure you want to delete the module '" . key . "'?`n`nThis will remove the directory " . dir . " and is not reversible. If you want the module back in the future, you will need to install it from scratch.`n`nPress Yes to delete, or No to go back."
         ))

@@ -87,7 +87,7 @@ class ManageBackupsWindow extends ManageWindowBase {
 
     AddBackup() {
         ; TODO: Implement backup add operation
-        ;entity := this.app.Service("GuiManager").Dialog(Map("type", "BackupWizard", "ownerOrParent", this.guiId))
+        ;entity := this.app.Service("manager.gui").Dialog(Map("type", "BackupWizard", "ownerOrParent", this.guiId))
         entity := ""
 
         if (entity != "") {
@@ -117,7 +117,7 @@ class ManageBackupsWindow extends ManageWindowBase {
         menuItems.Push(Map("label", "Restore", "name", "RestoreBackup"))
         menuItems.Push(Map("label", "Delete", "name", "DeleteBackup"))
 
-        result := this.app.Service("GuiManager").Menu(menuItems, this)
+        result := this.app.Service("manager.gui").Menu(menuItems, this)
 
         if (result == "EditBackup") {
             this.EditBackup(key)

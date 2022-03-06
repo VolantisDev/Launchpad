@@ -65,9 +65,9 @@ class GuiBase {
 
         if (this.config.Has("ownerOrParent") && this.config["ownerOrParent"]) {
             if (this.config.Has("child") && this.config["child"]) {
-                this.parent := container.Get("GuiManager").DereferenceGui(this.config.Has("ownerOrParent"))
+                this.parent := container.Get("manager.gui").DereferenceGui(this.config.Has("ownerOrParent"))
             } else {
-                this.owner := container.Get("GuiManager").DereferenceGui(this.config["ownerOrParent"])
+                this.owner := container.Get("manager.gui").DereferenceGui(this.config["ownerOrParent"])
             }
         }
 
@@ -565,22 +565,22 @@ class GuiBase {
         }
 
         if (!this.isClosed && WinExist("ahk_id " . this.guiObj.Hwnd)) {
-            this.app.Service("GuiManager").StoreWindowState(this)
+            this.app.Service("manager.gui").StoreWindowState(this)
             WinClose("ahk_id " . this.guiObj.Hwnd)
         } else {
             this.Destroy()
         }
 
-        this.app.Service("GuiManager").CleanupWindow(this.guiId)
+        this.app.Service("manager.gui").CleanupWindow(this.guiId)
     }
 
     Destroy() {
         if (!this.isClosed && this.config["saveWindowState"]) {
-            this.app.Service("GuiManager").StoreWindowState(this)
+            this.app.Service("manager.gui").StoreWindowState(this)
         }
 
         if (this.owner) {
-            this.app.Service("GuiManager").ReleaseFromParent(this.guiId)
+            this.app.Service("manager.gui").ReleaseFromParent(this.guiId)
         }
 
         this.Cleanup()
@@ -592,7 +592,7 @@ class GuiBase {
     }
 
     Cleanup() {
-        this.app.Service("GuiManager").UnloadComponent(this.guiId)
+        this.app.Service("manager.gui").UnloadComponent(this.guiId)
         ; Extend to clear any global variables used
     }
 

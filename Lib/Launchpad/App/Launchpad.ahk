@@ -16,7 +16,7 @@
 
                 if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this.Service("VersionChecker").VersionIsOutdated(releaseInfo["data"]["version"], this.Version)) {
                     updateAvailable := true
-                    this.Service("GuiManager").Dialog(Map("type", "UpdateAvailableWindow"), releaseInfo)
+                    this.Service("manager.gui").Dialog(Map("type", "UpdateAvailableWindow"), releaseInfo)
                 }
             }
         }
@@ -95,7 +95,7 @@
         configFile := this.Parameter("previous_config_file")
 
         if (configFile && FileExist(configFile)) {
-            response := this.Service("GuiManager").Dialog(Map(
+            response := this.Service("manager.gui").Dialog(Map(
                 "title", "Migrate settings?",
                 "text", this.appName . " uses a new configuration file format, and has detected that you have a previous configuration file.`n`nWould you like to automatically migrate your settings?`n`nChoose Yes to migrate your previous configuration. Choose no to simply delete it and start from scratch."
             ))
@@ -109,7 +109,7 @@
     }
 
     InitialSetup(config) {
-        result := this.Service("GuiManager").Dialog(Map("type", "SetupWindow"))
+        result := this.Service("manager.gui").Dialog(Map("type", "SetupWindow"))
 
         if (result == "Exit") {
             this.ExitApp()
@@ -122,8 +122,8 @@
     }
 
     UpdateStatusIndicators() {
-        if (this.Service("GuiManager").Has("MainWindow")) {
-            this.Service("GuiManager")["MainWindow"].UpdateStatusIndicator()
+        if (this.Service("manager.gui").Has("MainWindow")) {
+            this.Service("manager.gui")["MainWindow"].UpdateStatusIndicator()
         }
     }
 
@@ -144,15 +144,15 @@
     }
 
     ProvideFeedback() {
-        this.Service("GuiManager").Dialog(Map("type", "FeedbackWindow"))
+        this.Service("manager.gui").Dialog(Map("type", "FeedbackWindow"))
     }
 
     RestartApp() {
-        if (this.Services.Has("GuiManager")) {
-            guiMgr := this.Service("GuiManager")
+        if (this.Services.Has("manager.gui")) {
+            guiMgr := this.Service("manager.gui")
 
             if (guiMgr.Has("MainWindow")) {
-                guiMgr.StoreWindowState(this.Service("GuiManager")["MainWindow"])
+                guiMgr.StoreWindowState(this.Service("manager.gui")["MainWindow"])
             }
         }
 
