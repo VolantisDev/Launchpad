@@ -180,14 +180,14 @@ class GameBase {
     StartOverlay() {
         SetTimer(this.overlayCallbackObj, 0)
         this.Log("Starting Launchpad Overlay...")
-        this.app.Service("OverlayManager").Start(this.launcherConfig["OverlayHotkey"])
+        this.app.Service("manager.overlay").Start(this.launcherConfig["OverlayHotkey"])
         this.overlayStarted := true
     }
 
     StopOverlay() {
         if (this.overlayStarted) {
             this.Log("Shutting down Launchpad Overlay...")
-            this.app.Service("OverlayManager").Close()
+            this.app.Service("manager.overlay").Close()
         }
     }
 
@@ -198,7 +198,7 @@ class GameBase {
             }
 
             this.Log("Closing overlay if running...")
-            this.app.Service("OverlayManager").Close()
+            this.app.Service("manager.overlay").Close()
             this.Log("Cleaning up scheduled task(s)...")
             this.CleanupScheduledTask()
         }

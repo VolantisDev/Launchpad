@@ -30,7 +30,7 @@ class LaunchpadLauncher extends AppBase {
             "arguments", [AppRef(), ParameterRef("state_path")]
         )
 
-        services["OverlayManager"] := Map(
+        services["manager.overlay"] := Map(
             "class", "OverlayManager",
             "arguments", [
                 this.appDir, 

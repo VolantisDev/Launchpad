@@ -56,21 +56,21 @@
             "class": "PersistentConfig",
             "arguments": ["@config_storage.backups", "@{}", "backups_config"]
         },
-        "BackupManager": {
+        "manager.backup": {
             "class": "BackupManager",
             "arguments": ["@{App}", "@config.backups"]
         },
-        "DataSourceManager": {
+        "manager.datasource": {
             "class": "DataSourceManager",
-            "arguments": ["@{}", "@EventManager", "@Notifier", "@@config.data_source_key"]
+            "arguments": ["@{}", "@manager.event", "@Notifier", "@@config.data_source_key"]
         },
         "builder.ahk_launcher": {
             "class": "AhkLauncherBuilder",
             "arguments": ["@{App}", "@Notifier"]
         },
-        "BuilderManager": {
+        "manager.builder": {
             "class": "BuilderManager",
-            "arguments": ["@LauncherManager", "@{}", "@EventManager", "@Notifier"]
+            "arguments": ["@manager.launcher", "@{}", "@manager.event", "@Notifier"]
         },
         "config_storage.launchers": {
             "class": "JsonConfigStorage",
@@ -80,7 +80,7 @@
             "class": "LauncherConfig",
             "arguments": ["@config_storage.launchers", "@{}", "launcher_config"]
         },
-        "LauncherManager": {
+        "manager.launcher": {
             "class": "LauncherManager",
             "arguments": ["@{App}", "@config.launchers"]
         },
@@ -92,21 +92,21 @@
             "class": "PlatformsConfig",
             "arguments": ["@config_storage.platforms", "@{}", "platforms_config"]
         },
-        "PlatformManager": {
+        "manager.platform": {
             "class": "PlatformManager",
             "arguments": ["@{App}", "@config.platforms"]
         },
         "installer.launchpad_update": {
             "class": "LaunchpadUpdate",
-            "arguments": ["@@version", "@State", "@CacheManager", "file", "@@tmp_dir"]
+            "arguments": ["@@version", "@State", "@manager.cache", "file", "@@tmp_dir"]
         },
         "installer.dependencies": {
             "class": "DependencyInstaller",
-            "arguments": ["@@version", "@State", "@CacheManager", "file", [], "@@tmp_dir"]
+            "arguments": ["@@version", "@State", "@manager.cache", "file", [], "@@tmp_dir"]
         },
         "LaunchpadIniMigrator": {
             "class": "LaunchpadIniMigrator",
-            "arguments": ["@{App}", "@GuiManager"]
+            "arguments": ["@{App}", "@manager.gui"]
         }
     }
 }

@@ -15,7 +15,7 @@
     "services": {
         "datasource.api": {
             "class": "ApiDataSource",
-            "arguments": ["@{App}", "@CacheManager", "api", "@@config.api_endpoint"]
+            "arguments": ["@{App}", "@manager.cache", "api", "@@config.api_endpoint"]
         },
         "auth_provider.launchpad_api": {
             "class": "LaunchpadApiAuthProvider",

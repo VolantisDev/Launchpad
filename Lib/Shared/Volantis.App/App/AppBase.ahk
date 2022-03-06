@@ -155,7 +155,7 @@ class AppBase {
                 "class", "ModuleManager", 
                 "arguments", [
                     "@{}", 
-                    "@EventManager", 
+                    "@manager.event", 
                     "@Notifier",
                     "@Config",
                     "@config.modules",
@@ -181,11 +181,11 @@ class AppBase {
             ),
             "manager.cache", Map(
                 "class", "CacheManager", 
-                "arguments", ["@Config", "@{}", "@EventManager", "@Notifier"]
+                "arguments", ["@Config", "@{}", "@manager.event", "@Notifier"]
             ),
             "ThemeFactory", Map(
                 "class", "ThemeFactory",
-                "arguments", ["@{}", "@@resources_dir", "@EventManager", "@IdGenerator", "@Logger"]
+                "arguments", ["@{}", "@@resources_dir", "@manager.event", "@IdGenerator", "@Logger"]
             ),
             "definition_loader.themes", Map(
                 "class", "DirDefinitionLoader",
@@ -195,7 +195,7 @@ class AppBase {
                 "class", "ThemeManager",
                 "arguments", [
                     "@{}",
-                    "@EventManager",
+                    "@manager.event",
                     "@Notifier",
                     "@Config",
                     "@definition_loader.themes",
@@ -212,7 +212,7 @@ class AppBase {
             ),
             "factory.gui", Map(
                 "class", "GuiFactory",
-                "arguments", ["@{}", "@ThemeManager", "@IdGenerator"]
+                "arguments", ["@{}", "@manager.theme", "@IdGenerator"]
             ),
             "manager.gui", Map(
                 "class", "GuiManager",
@@ -220,13 +220,13 @@ class AppBase {
                     "@{}", 
                     "@factory.gui",
                     "@State",
-                    "@EventManager",
+                    "@manager.event",
                     "@Notifier"
                 ]
             ),
             "manager.installer", Map(
                 "class", "InstallerManager",
-                "arguments", ["@{}", "@EventManager", "@Notifier"]
+                "arguments", ["@{}", "@manager.event", "@Notifier"]
             ),
             "EntityFactory", Map(
                 "class", "EntityFactory",
@@ -237,7 +237,7 @@ class AppBase {
                 "arguments", [
                     "@@version",
                     "@State",
-                    "@CacheManager",
+                    "@manager.cache",
                     "file",
                     "@@themes.extra_themes",
                     "@@{tmp_dir}\Installers"
