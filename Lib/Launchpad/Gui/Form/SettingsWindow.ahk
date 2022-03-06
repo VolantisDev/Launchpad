@@ -239,11 +239,11 @@
 
     OnApiEndpointMenuClick(btn) {
         if (btn == "ChangeApiEndpoint") {
-            this.app.Service("DataSourceManager")["api"].ChangeApiEndpoint("", "")
+            this.app.Service("manager.datasource")["api"].ChangeApiEndpoint("", "")
             this.SetText("ApiEndpoint", this.app.Config["api_endpoint"], "Bold")
             this.needsRestart := true
         } else if (btn == "OpenApiEndpoint") {
-            this.app.Service("DataSourceManager")["api"].Open()
+            this.app.Service("manager.datasource")["api"].Open()
         }
     }
 

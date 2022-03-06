@@ -63,6 +63,6 @@ class EntityEditorBase extends FormGuiBase {
 
     Create() {
         super.Create()
-        this.dataSource := this.app.Service("DataSourceManager")["api"]
+        this.dataSource := this.app.Service("manager.datasource")["api"]
     }
 }
