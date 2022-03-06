@@ -30,7 +30,7 @@ class LauncherEditorBase extends EntityEditorBase {
         this.platforms := this.dataSource.ReadListing("platforms")
         this.launcherTypes := this.dataSource.ReadListing("launcher-types")
         this.gameTypes := this.dataSource.ReadListing("game-types")
-        this.knownThemes := this.app.Service("ThemeManager").GetAvailableThemes()
+        this.knownThemes := this.app.Service("manager.theme").GetAvailableThemes()
     }
 
     OnKeyChange(ctlObj, info) {

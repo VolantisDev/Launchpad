@@ -6,7 +6,7 @@
     needsRestart := false
 
     __New(container, themeObj, config) {
-        this.availableThemes := container.Get("ThemeManager").GetAvailableThemes()
+        this.availableThemes := container.Get("manager.theme").GetAvailableThemes()
         super.__New(container, themeObj, config)
     }
 

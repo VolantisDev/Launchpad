@@ -191,7 +191,7 @@ class AppBase {
                 "class", "DirDefinitionLoader",
                 "arguments", ["@StructuredData", "@@config.themes_dir", "", false, false, "", "theme"]
             ),
-            "ThemeManager", Map(
+            "manager.theme", Map(
                 "class", "ThemeManager",
                 "arguments", [
                     "@{}",
@@ -422,7 +422,7 @@ class AppBase {
     }
 
     InitializeTheme() {
-        this.Service("Gdip", "manager.gui", "ThemeManager")
+        this.Service("Gdip", "manager.gui", "manager.theme")
         this.themeReady := true
     }
 

@@ -16,7 +16,7 @@
 
     Create() {
         super.Create()
-        this.availableThemes := this.app.Service("ThemeManager").GetAvailableThemes()
+        this.availableThemes := this.app.Service("manager.theme").GetAvailableThemes()
     }
 
     AddDescription(text) {

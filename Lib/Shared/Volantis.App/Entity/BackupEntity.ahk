@@ -60,7 +60,7 @@ class BackupEntity extends AppEntityBase {
         defaults["BaseFilename"] := this.Key
         defaults["BackupClass"] := "FileBackup"
         defaults["IsEnabled"] := true
-        defaults["IconSrc"] := this.app.Service("ThemeManager")[].GetIconPath("Backup")
+        defaults["IconSrc"] := this.app.Service("manager.theme")[].GetIconPath("Backup")
         return defaults
     }
 
