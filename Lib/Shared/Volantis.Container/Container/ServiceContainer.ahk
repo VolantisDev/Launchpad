@@ -63,7 +63,7 @@ class ServiceContainer extends ParameterContainer {
         query := ContainerQuery(this, servicePrefix, resultType, removePrefix)
 
         if (!includeDisabled) {
-            query.Condition(FieldCondition(IsTrueCondition(), "enabled"))
+            query.Condition(FieldCondition(IsTrueCondition(), "enabled", false, true, true))
         }
 
         return query
