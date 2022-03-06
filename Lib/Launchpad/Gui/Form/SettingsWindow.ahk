@@ -260,11 +260,11 @@
 
     OnBackupDirMenuClick(btn) {
         if (btn == "ChangeBackupDir") {
-            this.app.Service("BackupManager").ChangeBackupDir()
+            this.app.Service("manager.backup").ChangeBackupDir()
             this.SetText("BackupDir", this.app.Config["backup_dir"], "Bold")
             this.needsRestart := true
         } else if (btn == "OpenBackupDir") {
-            this.app.Service("BackupManager").OpenBackupDir()
+            this.app.Service("manager.backup").OpenBackupDir()
         }
     }
 

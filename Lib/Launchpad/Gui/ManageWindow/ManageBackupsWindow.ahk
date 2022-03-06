@@ -3,7 +3,7 @@ class ManageBackupsWindow extends ManageWindowBase {
     backupManager := ""
 
     __New(container, themeObj, config) {
-        this.backupManager := container.Get("BackupManager")
+        this.backupManager := container.Get("manager.backup")
         this.lvCount := this.backupManager.CountEntities()
         super.__New(container, themeObj, config)
     }
