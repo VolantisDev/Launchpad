@@ -7,7 +7,7 @@
         updateAvailable := false
 
         if (this.Version != "{{VERSION}}") {
-            dataSource := this.Service("DataSourceManager")["api"]
+            dataSource := this.Service("manager.datasource")["api"]
             releaseInfoStr := dataSource.ReadItem("release-info")
 
             if (releaseInfoStr) {
