@@ -158,7 +158,7 @@ class InstallerBase {
         splitLatestVersion := StrSplit(latestVersion, ".")
         splitInstalledVersion := StrSplit(installedVersion, ".")
 
-        for (index, numPart in splitInstalledVersion) {
+        for index, numPart in splitInstalledVersion {
             latestVersionPart := splitLatestVersion.Has(index) ? splitLatestVersion[index] : 0
 
             if (!IsInteger(numPart) or !IsInteger(latestVersionPart)) {

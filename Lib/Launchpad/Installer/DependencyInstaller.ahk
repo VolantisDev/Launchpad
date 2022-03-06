@@ -33,7 +33,7 @@ class DependencyInstaller extends InstallerBase {
         components.Push(GitHubReleaseInstallerComponent("v" . protobufVersion, "protocolbuffers/protobuf", protocAssetName, true, "Vendor\Protoc", appState, "Protoc", cache, "Dependencies", true, tmpDir, false, true))
 
         if (extraComponents != "") {
-            for (index, component in extraComponents) {
+            for index, component in extraComponents {
                 components.Push(component)
             }
         }

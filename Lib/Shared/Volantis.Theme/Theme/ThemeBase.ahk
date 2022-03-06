@@ -232,7 +232,7 @@ class ThemeBase {
     }
 
     DereferenceValue(value, valueMap, endRecursion := false) {
-        for (key, val in valueMap) {
+        for key, val in valueMap {
             if (value == "{{" . key . "}}") {
                 value := StrReplace(value, "{{" . key . "}}", this.DereferenceValue(val, valueMap))
             }

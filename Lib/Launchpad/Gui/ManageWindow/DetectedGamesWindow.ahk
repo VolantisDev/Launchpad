@@ -111,7 +111,7 @@
     GameIsKnown(detectedGameObj) {
         known := false
 
-        for (index, key in this.knownGames) {
+        for index, key in this.knownGames {
             if (key == detectedGameObj.key) {
                 known := true
                 break

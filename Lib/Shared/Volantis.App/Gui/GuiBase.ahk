@@ -658,7 +658,7 @@ class GuiBase {
         optionSplit := StrSplit(RegExReplace(options, "i)[^xywh]"))
         fx := fy := fw := fh := 0
 
-        for (, dim in optionSplit) {
+        for , dim in optionSplit {
             if (RegExMatch(options, "i)" . dim . "\s*\K[\d.-]+", &f%dim%)) {
                 f%dim% := f%dim%[]
             } else {
@@ -688,7 +688,7 @@ class GuiBase {
             return 
         }
 
-        for (, ctl in controls) {
+        for , ctl in controls {
             if (!IsObject(ctl)) {
                 ctl := this.guiObj[ctl]
             }
@@ -710,7 +710,7 @@ class GuiBase {
                 dgy := dgh := guiHeight - info["gh"]
                 ctl.GetPos(&newX, &newY, &newW, &newH)
 
-                for (i, dim in controlInfo[ctl.Hwnd]["optionSplit"]) {
+                for i, dim in controlInfo[ctl.Hwnd]["optionSplit"] {
                     new%dim% := dg%dim% * info["f" . dim] + info[dim]
                 }
 
