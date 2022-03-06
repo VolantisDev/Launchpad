@@ -57,22 +57,108 @@ class ModuleManager extends ComponentManagerBase {
         return this.container.LoadDefinitions(loader, true)
     }
 
-    EnableModule(key) {
-        moduleConfig := this.moduleConfig.Has(key) ? this.moduleConfig[key] : Map()
+    Enable(keys) {
+        return this.Toggle(keys, this.CalculateDependencies(keys), true)
+    }
 
-        if (!moduleConfig.Has("enabled") || !moduleConfig["enabled"]) {
-            moduleConfig["enabled"] := true
-            this.moduleConfig[key] := moduleConfig
-            this.moduleConfig.SaveConfig()
+    Disable(keys) {
+        deps := this.CalculateDependents(keys)
+        return this.Toggle(keys, deps, false)
+    }
+
+    FilterDeps(deps, enabled) {
+        newDeps := []
+        
+        for index, key in deps {
+            isEnabled := this.IsEnabled(key)
+
+            if (enabled != isEnabled) {
+                newDeps.Push(key)
+            }
+        }
+
+        return newDeps
+    }
+
+    Toggle(keys, deps, enabled := true, enableConfirmationDialog := true) {
+        keys := Type(keys) == "Array" ? keys.Clone() : [keys]
+        shouldToggle := true
+
+        deps := this.FilterDeps(deps, enabled)
+
+        if (deps.Length) {
+            shouldToggle := false
+            moduleList := this.ListModules(deps)
+            response := enableConfirmationDialog ? "No" : "Yes"
+
+            if (enableConfirmationDialog) {
+                if (enabled) {
+                    response := this.container["GuiManager"].Dialog(Map(
+                        "title", "Enable Required Modules",
+                        "text", "The following additional required module(s) will also be enabled:`n`n" . moduleList . "`n`nContinue?"
+                    ))
+                } else {
+                    response := this.container["GuiManager"].Dialog(Map(
+                        "title", "Disable Dependent Modules",
+                        "text", "The following dependent module(s) will also be disabled:`n`n" . moduleList . "`n`nContinue?"
+                    ))
+                }
+            }
+
+            if (response == "Yes") {
+                keys.Push(deps*)
+                shouldToggle := true
+            }
+        }
+
+        if (shouldToggle) {
+            save := false
+
+            for index, key in keys {
+                isEnabled := this.IsEnabled(key)
+
+                if (enabled != isEnabled) {
+                    this.SetEnabled(key, enabled, false)
+                    save := true
+                }
+            }
+
+            if (save) {
+                this.moduleConfig.SaveConfig()
+            }
         }
     }
 
-    DisableModule(key) {
+    ListModules(modules) {
+        moduleList := ""
+
+        for index, key in modules {
+            if (moduleList) {
+                moduleList .= ", "
+            }
+
+            moduleList .= key
+        }
+
+        return moduleList
+    }
+
+    IsEnabled(key) {
         moduleConfig := this.moduleConfig.Has(key) ? this.moduleConfig[key] : Map()
 
-        if (!moduleConfig.Has("enabled") || moduleConfig["enabled"]) {
+        if (!moduleConfig.Has("enabled") || !moduleConfig["enabled"]) {
             moduleConfig["enabled"] := false
-            this.moduleConfig[key] := moduleConfig
+        }
+
+        return moduleConfig["enabled"]
+    }
+
+    SetEnabled(key, enabled := true, save := true) {
+        moduleConfig := this.moduleConfig.Has(key) ? this.moduleConfig[key] : Map()
+        moduleConfig["enabled"] := enabled
+        this.moduleConfig[key] := moduleConfig
+
+        if (save) {
             this.moduleConfig.SaveConfig()
         }
     }
@@ -101,14 +187,21 @@ class ModuleManager extends ComponentManagerBase {
         return deleted
     }
 
-    CalculateDependencies() {
+    CalculateDependencies(keys := "") {
+        if (keys) {
+            if (Type(keys) != "Array") {
+                keys := [keys]
+            }
+        } else {
+            keys := this.Names() ; All enabled modules
+        }
+
         requiredModules := []
 
-        for key, module in this.All() {
-            deps := module.GetDependencies()
-
-            for depIndex, depName in deps {
+        for index, key in keys {
+            for depIndex, depName in this.getDependencies(key) {
                 exists := false
+
                 for reqIndex, reqName in requiredModules {
                     if (depName == reqName) {
                         exists := true
@@ -125,8 +218,74 @@ class ModuleManager extends ComponentManagerBase {
         return requiredModules
     }
 
-    CalculateMissingDependencies() {
-        requiredModules := this.CalculateDependencies()
+    getDependencies(key) {
+        deps := this[key].GetDependencies()
+
+        for index, dep in deps {
+            depDeps := this.getDependencies(dep)
+
+            if (depDeps.Length) {
+                deps.Push(depDeps*)
+            }
+        }
+
+        return deps
+    }
+
+    CalculateDependents(keys := "") {
+        if (keys) {
+            if (Type(keys) != "Array") {
+                keys := [keys]
+            }
+        } else {
+            keys := this.Names() ; All enabled modules
+        }
+
+        dependentModules := []
+
+        for index, key in keys {
+            for enabledIndex, enabledKey in this.Names() {
+                if (enabledKey == key) {
+                    continue
+                }
+
+                for depIndex, depKey in this.getDependencies(enabledKey) {
+                    if (key == depKey) {
+                        dependents := this.getDependents(enabledKey)
+
+                        if (dependents.Length) {
+                            dependentModules.Push(dependents*)
+                        }
+
+                        break
+                    }
+                }
+            }
+        }
+
+        return dependentModules
+    }
+
+    getDependents(key) {
+        dependents := []
+
+        for index, enabledKey in this.Names() {
+            for depIndex, depKey in this[enabledKey].GetDependencies() {
+                if (depKey == key) {
+                    dependents.Push(enabledKey, this.getDependents(enabledKey)*)
+                    break
+                }
+            }
+        }
+
+        return dependents
+    }
+
+    CalculateMissingDependencies(requiredModules := "") {
+        if (!requiredModules) {
+            requiredModules := this.CalculateDependencies()
+        }
+
         missingModules := []
 
         for reqIndex, reqName in requiredModules {

@@ -65,13 +65,13 @@ class ManageModulesWindow extends ManageWindowBase {
     }
 
     EnableModule(key) {
-        this.moduleManager.EnableModule(key)
+        this.moduleManager.Enable(key)
         this.needsRestart := true
         this.UpdateListView()
     }
 
     DisableModule(key) {
-        this.moduleManager.DisableModule(key)
+        this.moduleManager.Disable(key)
         this.needsRestart := true
         this.UpdateListView()
     }
