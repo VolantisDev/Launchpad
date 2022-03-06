@@ -224,7 +224,7 @@ class AppBase {
                     "@Notifier"
                 ]
             ),
-            "InstallerManager", Map(
+            "manager.installer", Map(
                 "class", "InstallerManager",
                 "arguments", ["@{}", "@EventManager", "@Notifier"]
             ),
@@ -394,7 +394,7 @@ class AppBase {
 
     OnServicesLoaded(event, extra, eventName, hwnd) {
         this.Service("manager.cache")
-        this.Service("InstallerManager").RunInstallers(InstallerBase.INSTALLER_TYPE_REQUIREMENT)
+        this.Service("manager.installer").RunInstallers(InstallerBase.INSTALLER_TYPE_REQUIREMENT)
     }
 
     InitializeModules(config) {
