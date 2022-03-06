@@ -80,8 +80,8 @@ class ParameterContainer extends ContainerBase {
 
     /*
         Example tokens:
-          - @EventManager -> ServiceRef("EventManager")
-          - @EventManager:methodName -> ServiceRef("EventManager", "methodName")
+          - @manager.event -> ServiceRef("manager.event")
+          - @manager.event:methodName -> ServiceRef("manager.event", "methodName")
           - @@config.api_endpoint -> ParameterRef("config.api_endpoint")
           - @{App} -> AppRef()
           - @{} -> ContainerRef()

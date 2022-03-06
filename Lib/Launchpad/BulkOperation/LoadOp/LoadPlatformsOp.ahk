@@ -29,7 +29,7 @@ class LoadPlatformsOp extends BulkOperationBase {
         )
 
         event := DefineComponentsEvent(LaunchpadEvents.PLATFORMS_DEFINE, platforms)
-        this.app.Service("EventManager").DispatchEvent(LaunchpadEvents.PLATFORMS_DEFINE, event)
+        this.app.Service("manager.event").DispatchEvent(LaunchpadEvents.PLATFORMS_DEFINE, event)
         platforms := event.components
 
         if (this.useProgress) {

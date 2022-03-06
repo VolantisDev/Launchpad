@@ -125,7 +125,7 @@ class AppBase {
                 "class", "AppState",
                 "arguments", ["@{App}", "@@state_path"]
             ),
-            "EventManager", Map(
+            "manager.event", Map(
                 "class", "EventManager"
             ),
             "IdGenerator", "UuidGenerator",
@@ -322,18 +322,18 @@ class AppBase {
         OnError(ObjBindMethod(this, "OnException"))
 
         event := AppRunEvent(Events.APP_PRE_INITIALIZE, this, config)
-        this.Service("EventManager").DispatchEvent(Events.APP_PRE_INITIALIZE, event)
+        this.Service("manager.event").DispatchEvent(Events.APP_PRE_INITIALIZE, event)
 
         this.InitializeApp(config)
 
         event := AppRunEvent(Events.APP_POST_INITIALIZE, this, config)
-        this.Service("EventManager").DispatchEvent(Events.APP_POST_INITIALIZE, event)
+        this.Service("manager.event").DispatchEvent(Events.APP_POST_INITIALIZE, event)
 
         event := AppRunEvent(Events.APP_POST_STARTUP, this, config)
-        this.Service("EventManager").DispatchEvent(Events.APP_POST_STARTUP, event)
+        this.Service("manager.event").DispatchEvent(Events.APP_POST_STARTUP, event)
 
         event := AppRunEvent(Events.APP_PRE_RUN, this, config)
-        this.Service("EventManager").DispatchEvent(Events.APP_PRE_RUN, event)
+        this.Service("manager.event").DispatchEvent(Events.APP_PRE_RUN, event)
 
         this.RunApp(config)
     }
@@ -368,12 +368,12 @@ class AppBase {
         this.Service("Config").LoadConfig(true)
 
         ; Register early event subscribers (e.g. modules)
-        this.Service("EventManager").RegisterServiceSubscribers(this.Services)
+        this.Service("manager.event").RegisterServiceSubscribers(this.Services)
 
-        this.Service("EventManager").Register(Events.APP_SERVICES_LOADED, "AppServices", ObjBindMethod(this, "OnServicesLoaded"))
+        this.Service("manager.event").Register(Events.APP_SERVICES_LOADED, "AppServices", ObjBindMethod(this, "OnServicesLoaded"))
 
         event := ServiceDefinitionsEvent(Events.APP_SERVICE_DEFINITIONS, "", "", config)
-        this.Service("EventManager").DispatchEvent(Events.APP_SERVICE_DEFINITIONS, event)
+        this.Service("manager.event").DispatchEvent(Events.APP_SERVICE_DEFINITIONS, event)
 
         if (event.Services.Count || event.Parameters.Count) {
             this.Services.LoadDefinitions(SimpleDefinitionLoader(event.Services, event.Parameters))
@@ -386,10 +386,10 @@ class AppBase {
         }
 
         ; Register any missing late-loading event subscribers
-        this.Service("EventManager").RegisterServiceSubscribers(this.Services)
+        this.Service("manager.event").RegisterServiceSubscribers(this.Services)
 
         event := AppRunEvent(Events.APP_SERVICES_LOADED, this, config)
-        this.Service("EventManager").DispatchEvent(Events.APP_SERVICES_LOADED, event)
+        this.Service("manager.event").DispatchEvent(Events.APP_SERVICES_LOADED, event)
     }
 
     OnServicesLoaded(event, extra, eventName, hwnd) {
@@ -431,7 +431,7 @@ class AppBase {
 
         if (this.customTrayMenu) {
             A_TrayMenu.Delete()
-            this.Service("EventManager").Register(Events.AHK_NOTIFYICON, "TrayClick", ObjBindMethod(this, "OnTrayIconRightClick"), 1)
+            this.Service("manager.event").Register(Events.AHK_NOTIFYICON, "TrayClick", ObjBindMethod(this, "OnTrayIconRightClick"), 1)
         }
     }
 
@@ -462,7 +462,7 @@ class AppBase {
 
     ExitApp() {
         event := AppRunEvent(Events.APP_SHUTDOWN, this)
-        this.Service("EventManager").DispatchEvent(Events.APP_SHUTDOWN, event)
+        this.Service("manager.event").DispatchEvent(Events.APP_SHUTDOWN, event)
 
         if (this.Services.Has("Gdip")) {
             Gdip_Shutdown(this.Services.Get("Gdip").GetHandle())
@@ -473,7 +473,7 @@ class AppBase {
 
     RestartApp() {
         event := AppRunEvent(Events.APP_SHUTDOWN, this)
-        this.Service("EventManager").DispatchEvent(Events.APP_RESTART, event)
+        this.Service("manager.event").DispatchEvent(Events.APP_RESTART, event)
 
         if (this.Services.Has("Gdip")) {
             Gdip_Shutdown(this.Services.Get("Gdip").GetHandle())

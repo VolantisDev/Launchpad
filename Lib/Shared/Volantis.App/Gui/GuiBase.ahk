@@ -119,7 +119,7 @@ class GuiBase {
     RegisterCallbacks() {
         guiId := "Gui" . this.guiId
 
-        this.app.Service("EventManager")
+        this.app.Service("manager.event")
             .Register(Events.MOUSE_MOVE, guiId, ObjBindMethod(this, "OnMouseMove"))
             .Register(Events.WM_NCCALCSIZE, guiId, ObjBindMethod(this, "OnCalcSize"))
             .Register(Events.WM_NCACTIVATE, guiId, ObjBindMethod(this, "OnActivate"))
@@ -132,10 +132,10 @@ class GuiBase {
 
     __Delete() {
         if (this.app) {
-            this.app.Service("EventManager").Unregister(Events.MOUSE_MOVE, "Gui" . this.guiId)
-            this.app.Service("EventManager").Unregister(Events.WM_NCCALCSIZE, "Gui" . this.guiId)
-            this.app.Service("EventManager").Unregister(Events.WM_NCACTIVATE, "Gui" . this.guiId)
-            this.app.Service("EventManager").Unregister(Events.WM_NCHITTEST, "Gui" . this.guiId)
+            this.app.Service("manager.event").Unregister(Events.MOUSE_MOVE, "Gui" . this.guiId)
+            this.app.Service("manager.event").Unregister(Events.WM_NCCALCSIZE, "Gui" . this.guiId)
+            this.app.Service("manager.event").Unregister(Events.WM_NCACTIVATE, "Gui" . this.guiId)
+            this.app.Service("manager.event").Unregister(Events.WM_NCHITTEST, "Gui" . this.guiId)
         }
         
         if (this.activeTooltip) {
