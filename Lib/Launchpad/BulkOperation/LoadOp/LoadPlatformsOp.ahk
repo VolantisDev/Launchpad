@@ -8,7 +8,7 @@ class LoadPlatformsOp extends BulkOperationBase {
 
     __New(app, platformsConfigObj := "", owner := "") {
         if (platformsConfigObj == "") {
-            platformsConfigObj := app.Service("PlatformManager").GetConfig()
+            platformsConfigObj := app.Service("manager.platform").GetConfig()
         }
 
         InvalidParameterException.CheckTypes("LoadPlatformsOp", "platformsConfigObj", platformsConfigObj, "PlatformsConfig")

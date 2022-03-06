@@ -207,7 +207,7 @@
         } else if (btn == "OpenPlatformsFile") {
             this.app.Config["OpenPlatformsFile"]()
         } else if (btn == "ReloadPlatformsFile") {
-            this.app.Service("PlatformManager").LoadComponents(this.app.Config["platforms_file"])
+            this.app.Service("manager.platform").LoadComponents(this.app.Config["platforms_file"])
         }
     }
 

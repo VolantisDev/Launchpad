@@ -25,7 +25,7 @@
     GetLauncherConfig() {
         platformKey := Trim(this.guiObj["Platform"].Text)
         config := Map("Platform", platformKey, "GameInstallDir", this.installDir, "GameExe", this.exe)
-        platform := this.app.Service("PlatformManager").GetItem(platformKey)
+        platform := this.app.Service("manager.platform").GetItem(platformKey)
         
         if (platform) {
             config["LauncherType"] := platform.platform.launcherType

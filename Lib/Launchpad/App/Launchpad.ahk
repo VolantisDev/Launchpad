@@ -80,14 +80,14 @@
         
         super.RunApp(config)
         
-        this.Service("PlatformManager").LoadComponents()
+        this.Service("manager.platform").LoadComponents()
         this.Service("manager.launcher").LoadComponents()
         this.Service("manager.backup").LoadComponents()
 
         this.OpenApp()
 
         if (this.detectGames) {
-            this.Service("PlatformManager").DetectGames()
+            this.Service("manager.platform").DetectGames()
         }
     }
 

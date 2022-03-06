@@ -3,7 +3,7 @@ class PlatformsWindow extends ManageWindowBase {
     platformManager := ""
 
     __New(container, themeObj, config) {
-        this.platformManager := container.Get("PlatformManager")
+        this.platformManager := container.Get("manager.platform")
         this.lvCount := this.platformManager.CountEntities()
         super.__New(container, themeObj, config)
     }

@@ -6,7 +6,7 @@
 
     __New(container, themeObj, config) {
         this.launcherManager := container.Get("manager.launcher")
-        this.platformManager := container.Get("PlatformManager")
+        this.platformManager := container.Get("manager.platform")
         this.lvCount := this.launcherManager.CountEntities()
         super.__New(container, themeObj, config)
     }
@@ -229,7 +229,7 @@
                 iconPath := this.GetItemImage(launcher)
                 displayName := launcher.DisplayName
 
-                manager := this.app.Service("PlatformManager")
+                manager := this.app.Service("manager.platform")
 
                 if (launcher.Platform && manager.HasItem(launcher.Platform)) {
                     platform := manager.GetItem(launcher.Platform)
@@ -408,7 +408,7 @@
             iconPath := this.GetItemImage(launcher)
             displayName := launcher.DisplayName
 
-            manager := this.app.Service("PlatformManager")
+            manager := this.app.Service("manager.platform")
 
             if (launcher.Platform && manager.HasItem(launcher.Platform)) {
                 platform := manager.GetItem(launcher.Platform)
@@ -622,7 +622,7 @@
         } else if (result == "ImportShortcut") {
             this.ImportShortcut()
         } else if (result == "DetectGames") {
-            this.app.Service("PlatformManager").DetectGames()
+            this.app.Service("manager.platform").DetectGames()
         }
     }
 
