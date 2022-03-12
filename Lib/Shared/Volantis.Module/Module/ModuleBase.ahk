@@ -33,7 +33,7 @@ class ModuleBase {
 
     GetServiceFiles() {
         serviceFiles := []
-        base := this.moduleInfo["dir"] . "\" . this.moduleInfo["name"]
+        base := this.moduleInfo["dir"] . "\" . this.key
 
         possiblePaths := [
             base . ".module.json",
