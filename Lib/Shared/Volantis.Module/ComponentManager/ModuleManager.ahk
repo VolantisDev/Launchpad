@@ -371,7 +371,7 @@ class ModuleManager extends ComponentManagerBase {
 
         for key, moduleInfo in componentInfo {
             if (moduleInfo.Has("file") && moduleInfo["file"]) {
-                SplitPath(moduleInfo["file"], &moduleDir)
+                SplitPath(moduleInfo["file"],, &moduleDir)
 
                 if (DirExist(moduleDir) && (includeCoreModules || !moduleInfo.Has("core") || !moduleInfo["core"])) {
                     moduleDirs.Push(moduleDir)
