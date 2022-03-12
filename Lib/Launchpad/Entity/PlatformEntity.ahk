@@ -161,7 +161,7 @@ class PlatformEntity extends AppEntityBase {
             ownerOrParent := owner
         }
 
-        return this.app.Service("GuiManager").Dialog(Map(
+        return this.app.Service("manager.gui").Dialog(Map(
             "type", "PlatformEditor",
             "mode", mode,
             "child", !!(parent),

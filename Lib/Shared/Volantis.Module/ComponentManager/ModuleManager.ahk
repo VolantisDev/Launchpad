@@ -39,6 +39,10 @@ class ModuleManager extends ComponentManagerBase {
 
         for key, config in moduleParams {
             if (!this.moduleConfig.Has(key)) {
+                if (IsNumber(config)) {
+                    config := Map("enabled", !!config)
+                }
+
                 this.moduleConfig[key] := config
                 save := true
             }
@@ -53,22 +57,105 @@ class ModuleManager extends ComponentManagerBase {
         return this.container.LoadDefinitions(loader, true)
     }
 
-    EnableModule(key) {
-        moduleConfig := this.moduleConfig.Has(key) ? this.moduleConfig[key] : Map()
+    Enable(keys) {
+        return this.Toggle(keys, this.CalculateDependencies(keys), true)
+    }
 
-        if (!moduleConfig.Has("enabled") || !moduleConfig["enabled"]) {
-            moduleConfig["enabled"] := true
-            this.moduleConfig[key] := moduleConfig
-            this.moduleConfig.SaveConfig()
+    Disable(keys) {
+        return this.Toggle(keys, this.CalculateDependents(keys), false)
+    }
+
+    FilterDeps(deps, enabled) {
+        newDeps := []
+        
+        for index, key in deps {
+            if (enabled != this.IsEnabled(key)) {
+                newDeps.Push(key)
+            }
+        }
+
+        return newDeps
+    }
+
+    Toggle(keys, deps, enabled := true, enableConfirmationDialog := true) {
+        keys := Type(keys) == "Array" ? keys.Clone() : [keys]
+        shouldToggle := true
+
+        deps := this.FilterDeps(deps, enabled)
+
+        if (deps.Length) {
+            shouldToggle := false
+            moduleList := this.ListModules(deps)
+            response := enableConfirmationDialog ? "No" : "Yes"
+
+            if (enableConfirmationDialog) {
+                if (enabled) {
+                    response := this.container["manager.gui"].Dialog(Map(
+                        "title", "Enable Required Modules",
+                        "text", "The following additional required module(s) will also be enabled:`n`n" . moduleList . "`n`nContinue?"
+                    ))
+                } else {
+                    response := this.container["manager.gui"].Dialog(Map(
+                        "title", "Disable Dependent Modules",
+                        "text", "The following dependent module(s) will also be disabled:`n`n" . moduleList . "`n`nContinue?"
+                    ))
+                }
+            }
+
+            if (response == "Yes") {
+                keys.Push(deps*)
+                shouldToggle := true
+            }
+        }
+
+        if (shouldToggle) {
+            save := false
+
+            for index, key in keys {
+                isEnabled := this.IsEnabled(key)
+
+                if (enabled != isEnabled) {
+                    this.SetEnabled(key, enabled, false)
+                    save := true
+                }
+            }
+
+            if (save) {
+                this.moduleConfig.SaveConfig()
+            }
         }
     }
 
-    DisableModule(key) {
+    ListModules(modules) {
+        moduleList := ""
+
+        for index, key in modules {
+            if (moduleList) {
+                moduleList .= ", "
+            }
+
+            moduleList .= key
+        }
+
+        return moduleList
+    }
+
+    IsEnabled(key) {
         moduleConfig := this.moduleConfig.Has(key) ? this.moduleConfig[key] : Map()
 
-        if (!moduleConfig.Has("enabled") || moduleConfig["enabled"]) {
+        if (!moduleConfig.Has("enabled") || !moduleConfig["enabled"]) {
             moduleConfig["enabled"] := false
-            this.moduleConfig[key] := moduleConfig
+        }
+
+        return moduleConfig["enabled"]
+    }
+
+    SetEnabled(key, enabled := true, save := true) {
+        moduleConfig := this.moduleConfig.Has(key) ? this.moduleConfig[key] : Map()
+        moduleConfig["enabled"] := enabled
+        this.moduleConfig[key] := moduleConfig
+
+        if (save) {
             this.moduleConfig.SaveConfig()
         }
     }
@@ -83,7 +170,7 @@ class ModuleManager extends ComponentManagerBase {
 
         dir := module.moduleInfo["dir"]
 
-        response := this.container.Get("GuiManager").Dialog(Map(
+        response := this.container.Get("manager.gui").Dialog(Map(
             "title", "Delete " . key,
             "text", "Are you sure you want to delete the module '" . key . "'?`n`nThis will remove the directory " . dir . " and is not reversible. If you want the module back in the future, you will need to install it from scratch.`n`nPress Yes to delete, or No to go back."
         ))
@@ -97,14 +184,21 @@ class ModuleManager extends ComponentManagerBase {
         return deleted
     }
 
-    CalculateDependencies() {
+    CalculateDependencies(keys := "") {
+        if (keys) {
+            if (Type(keys) != "Array") {
+                keys := [keys]
+            }
+        } else {
+            keys := this.Names() ; All enabled modules
+        }
+
         requiredModules := []
 
-        for key, module in this.All() {
-            deps := module.GetDependencies()
-
-            for depIndex, depName in deps {
+        for index, key in keys {
+            for depIndex, depName in this.getDependencies(key) {
                 exists := false
+
                 for reqIndex, reqName in requiredModules {
                     if (depName == reqName) {
                         exists := true
@@ -121,8 +215,76 @@ class ModuleManager extends ComponentManagerBase {
         return requiredModules
     }
 
-    CalculateMissingDependencies() {
-        requiredModules := this.CalculateDependencies()
+    getDependencies(key) {
+        deps := this[key].GetDependencies()
+
+        for index, dep in deps {
+            depDeps := this.getDependencies(dep)
+
+            if (depDeps.Length) {
+                deps.Push(depDeps*)
+            }
+        }
+
+        return deps
+    }
+
+    CalculateDependents(keys := "") {
+        if (keys) {
+            if (Type(keys) != "Array") {
+                keys := [keys]
+            }
+        } else {
+            keys := this.Names() ; All enabled modules
+        }
+
+        dependentModules := []
+
+        for enabledIndex, enabledKey in this.Names() {
+            for index, key in keys {
+                if (enabledKey == key) {
+                    continue
+                }
+
+                for depIndex, depKey in this.getDependencies(enabledKey) {
+                    if (key == depKey) {
+                        dependentModules.Push(enabledKey)
+
+                        dependents := this.getDependents(enabledKey)
+
+                        if (dependents.Length) {
+                            dependentModules.Push(dependents*)
+                        }
+                        
+                        break
+                    }
+                }
+            }
+        }
+
+        return dependentModules
+    }
+
+    getDependents(key) {
+        dependents := []
+
+        for index, enabledKey in this.Names() {
+            for depIndex, depKey in this[enabledKey].GetDependencies() {
+                if (depKey == key) {
+                    dependents.Push(enabledKey, this.getDependents(enabledKey)*)
+                    break
+                }
+            }
+        }
+
+        return dependents
+    }
+
+    CalculateMissingDependencies(requiredModules := "") {
+        if (!requiredModules) {
+            requiredModules := this.CalculateDependencies()
+        }
+
         missingModules := []
 
         for reqIndex, reqName in requiredModules {
@@ -209,7 +371,7 @@ class ModuleManager extends ComponentManagerBase {
 
         for key, moduleInfo in componentInfo {
             if (moduleInfo.Has("file") && moduleInfo["file"]) {
-                SplitPath(moduleInfo["file"], &moduleDir)
+                SplitPath(moduleInfo["file"],, &moduleDir)
 
                 if (DirExist(moduleDir) && (includeCoreModules || !moduleInfo.Has("core") || !moduleInfo["core"])) {
                     moduleDirs.Push(moduleDir)

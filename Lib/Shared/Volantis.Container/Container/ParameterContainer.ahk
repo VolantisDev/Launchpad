@@ -80,8 +80,8 @@ class ParameterContainer extends ContainerBase {
 
     /*
         Example tokens:
-          - @EventManager -> ServiceRef("EventManager")
-          - @EventManager:methodName -> ServiceRef("EventManager", "methodName")
+          - @manager.event -> ServiceRef("manager.event")
+          - @manager.event:methodName -> ServiceRef("manager.event", "methodName")
           - @@config.api_endpoint -> ParameterRef("config.api_endpoint")
           - @{App} -> AppRef()
           - @{} -> ContainerRef()
@@ -165,7 +165,7 @@ class ParameterContainer extends ContainerBase {
         context := this.Parameters
 
         for index, token in tokens {
-            if (context.Has(token)) {
+            if (Type(context) == "Map" && context.Has(token)) {
                 context := context[token]
                 exists := true
             } else {

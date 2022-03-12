@@ -7,7 +7,7 @@ class InstallerManager extends ComponentManagerBase {
         installers := []
 
         ; TODO: Move installerType to the service definition to prevent having to actually load all installers
-        for (name, installer in this.All()) {
+        for name, installer in this.All() {
             if (!installerType || installer.installerType == installerType) {
                 installers.Push(name)
             }

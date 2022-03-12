@@ -71,7 +71,7 @@ class AuthService extends AppServiceBase {
 
             if (SubStr(imgPath, 1, 4) == "http") {
                 cachePath := "account--profile.jpg"
-                imgPath := this.app.Service("CacheManager")["file"].GetCachedDownload(cachePath, imgPath)
+                imgPath := this.app.Service("manager.cache")["file"].GetCachedDownload(cachePath, imgPath)
             }
         }
 
@@ -120,7 +120,7 @@ class AuthService extends AppServiceBase {
     }
 
     AddUserInfoFromApi(authInfoObj) {
-        dataSource := this.app.Service("DataSourceManager")["api"]
+        dataSource := this.app.Service("manager.datasource")["api"]
 
         if (dataSource) {
             apiStatus := dataSource.GetStatus()

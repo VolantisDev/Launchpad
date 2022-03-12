@@ -118,7 +118,7 @@ class ApiDataSource extends DataSourceBase {
             ownerOrParent := owner
         }
 
-        apiEndpointUrl := this.app.Service("GuiManager").Dialog(Map(
+        apiEndpointUrl := this.app.Service("manager.gui").Dialog(Map(
             "type", "SingleInputBox",
             "title", "API Endpoint URL",
             "text", "Enter the base URL of the API endpoint you would like Launchpad to connect to. Leave blank to revert to the default.",

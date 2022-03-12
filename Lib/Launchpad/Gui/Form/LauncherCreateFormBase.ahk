@@ -4,7 +4,7 @@
     dataSource := ""
 
     __New(container, themeObj, config) {
-        this.dataSource := container.Get("DataSourceManager").GetDefaultDataSource()
+        this.dataSource := container.Get("manager.datasource").GetDefaultDataSource()
         super.__New(container, themeObj, config)
     }
 

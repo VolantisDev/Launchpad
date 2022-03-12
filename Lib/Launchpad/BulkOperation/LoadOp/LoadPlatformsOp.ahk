@@ -8,7 +8,7 @@ class LoadPlatformsOp extends BulkOperationBase {
 
     __New(app, platformsConfigObj := "", owner := "") {
         if (platformsConfigObj == "") {
-            platformsConfigObj := app.Service("PlatformManager").GetConfig()
+            platformsConfigObj := app.Service("manager.platform").GetConfig()
         }
 
         InvalidParameterException.CheckTypes("LoadPlatformsOp", "platformsConfigObj", platformsConfigObj, "PlatformsConfig")
@@ -29,7 +29,7 @@ class LoadPlatformsOp extends BulkOperationBase {
         )
 
         event := DefineComponentsEvent(LaunchpadEvents.PLATFORMS_DEFINE, platforms)
-        this.app.Service("EventManager").DispatchEvent(LaunchpadEvents.PLATFORMS_DEFINE, event)
+        this.app.Service("manager.event").DispatchEvent(LaunchpadEvents.PLATFORMS_DEFINE, event)
         platforms := event.components
 
         if (this.useProgress) {

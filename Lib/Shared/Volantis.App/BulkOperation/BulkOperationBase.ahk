@@ -89,7 +89,7 @@ class BulkOperationBase {
                     ownerOrParent := this.parent
                 }
 
-                this.progress := this.app.Service("GuiManager").OpenWindow(Map(
+                this.progress := this.app.Service("manager.gui").OpenWindow(Map(
                     "type", "ProgressIndicator",
                     "title", this.progressTitle,
                     "text", this.progressText,

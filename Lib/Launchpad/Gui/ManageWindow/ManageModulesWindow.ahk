@@ -4,7 +4,7 @@ class ManageModulesWindow extends ManageWindowBase {
     needsRestart := false
 
     __New(container, themeObj, config) {
-        this.moduleManager := container.Get("ModuleManager")
+        this.moduleManager := container.Get("manager.module")
         this.lvCount := this.moduleManager.Count(true)
         super.__New(container, themeObj, config)
     }
@@ -26,7 +26,9 @@ class ManageModulesWindow extends ManageWindowBase {
 
         for name, module in this.moduleManager.All("", false, true) {
             enabledText := module.IsEnabled() ? "Yes" : "No"
-            data[name] := [name, enabledText, module.GetVersion()]
+            ; TODO Define source
+            source := ""
+            data[name] := [name, enabledText, source, module.GetVersion()]
         }
 
         return data
@@ -65,13 +67,13 @@ class ManageModulesWindow extends ManageWindowBase {
     }
 
     EnableModule(key) {
-        this.moduleManager.EnableModule(key)
+        this.moduleManager.Enable(key)
         this.needsRestart := true
         this.UpdateListView()
     }
 
     DisableModule(key) {
-        this.moduleManager.DisableModule(key)
+        this.moduleManager.Disable(key)
         this.needsRestart := true
         this.UpdateListView()
     }
@@ -132,7 +134,7 @@ class ManageModulesWindow extends ManageWindowBase {
             menuItems.Push(Map("label", "Delete", "name", "DeleteModule"))
         }
 
-        result := this.app.Service("GuiManager").Menu(menuItems, this)
+        result := this.app.Service("manager.gui").Menu(menuItems, this)
 
         if (result == "EnableModule") {
             this.EnableModule(key)

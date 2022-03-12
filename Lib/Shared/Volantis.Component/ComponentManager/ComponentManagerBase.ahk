@@ -118,8 +118,17 @@ class ComponentManagerBase {
         }
     }
 
+    normalizeComponentId(componentId) {
+        if (this.servicePrefix && InStr(componentId, this.servicePrefix) != 1) {
+            componentId := this.servicePrefix . componentId
+        }
+
+        return componentId
+    }
+
     SetComponent(componentId, serviceDefinition) {
-        this.container.Set(this.servicePrefix . componentId, serviceDefinition)
+        componentId := this.normalizeComponentId(componentId)
+        this.container.Set(componentId, serviceDefinition)
     }
 
     GetComponent(componentId := "") {
@@ -131,7 +140,9 @@ class ComponentManagerBase {
             componentId := this.GetDefaultComponentId()
         }
 
-        return this.container.Get(this.servicePrefix . componentId)
+        componentId := this.normalizeComponentId(componentId)
+
+        return this.container.Get(componentId)
     }
 
     GetDefaultComponentId() {
@@ -151,23 +162,7 @@ class ComponentManagerBase {
         return returnQuery ? query : query.Execute()
     }
 
-    Names(includeDisabled := false) {
-        names := []
-
-        for index, name in this.getAllNames(includeDisabled) {
-            start := 0
-
-            if (this.servicePrefix) {
-                start := StrLen(this.servicePrefix)+1
-            }
-
-            names.Push(SubStr(name, start))
-        }
-
-        return names
-    }
-
-    getAllNames(includeDisabled := false) {
+    Names(includeDisabled := false, removePrefix := true) {
         return this.All(ContainerQuery.RESULT_TYPE_NAMES, false, includeDisabled)
     }
 
@@ -180,7 +175,7 @@ class ComponentManagerBase {
             this.LoadComponents()
         }
 
-        return this.container.Query(this.servicePrefix, resultType, includeDisabled)
+        return this.container.Query(this.servicePrefix, resultType, includeDisabled, true)
     }
 
     Has(componentId, checkLoaded := false) {
@@ -188,10 +183,12 @@ class ComponentManagerBase {
             this.LoadComponents()
         }
 
-        exists := this.container.Has(this.servicePrefix . componentId)
+        componentId := this.normalizeComponentId(componentId)
+
+        exists := this.container.Has(componentId)
 
         if (exists && checkLoaded) {
-            exists := this.container.serviceStore.Has(this.servicePrefix . componentId)
+            exists := this.container.serviceStore.Has(componentId)
         }
 
         return exists

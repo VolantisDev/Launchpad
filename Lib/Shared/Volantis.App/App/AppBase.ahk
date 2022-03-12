@@ -79,7 +79,7 @@ class AppBase {
             "include_files.module_tests", "@@{data_dir}\ModuleIncludes.test.ahk",
             "themes.extra_themes", [],
             "module_config", Map(),
-            "modules", Map(),
+            "modules.Auth", true,
             "structured_data.basic", Map(
                 "class", "BasicData",
                 "extensions", []
@@ -125,7 +125,7 @@ class AppBase {
                 "class", "AppState",
                 "arguments", ["@{App}", "@@state_path"]
             ),
-            "EventManager", Map(
+            "manager.event", Map(
                 "class", "EventManager"
             ),
             "IdGenerator", "UuidGenerator",
@@ -151,11 +151,11 @@ class AppBase {
                     "@@modules"
                 ]
             ),
-            "ModuleManager", Map(
+            "manager.module", Map(
                 "class", "ModuleManager", 
                 "arguments", [
                     "@{}", 
-                    "@EventManager", 
+                    "@manager.event", 
                     "@Notifier",
                     "@Config",
                     "@config.modules",
@@ -179,23 +179,23 @@ class AppBase {
                 "class", "LoggerService",
                 "arguments", ["@logger.file"]
             ),
-            "CacheManager", Map(
+            "manager.cache", Map(
                 "class", "CacheManager", 
-                "arguments", ["@Config", "@{}", "@EventManager", "@Notifier"]
+                "arguments", ["@Config", "@{}", "@manager.event", "@Notifier"]
             ),
             "ThemeFactory", Map(
                 "class", "ThemeFactory",
-                "arguments", ["@{}", "@@resources_dir", "@EventManager", "@IdGenerator", "@Logger"]
+                "arguments", ["@{}", "@@resources_dir", "@manager.event", "@IdGenerator", "@Logger"]
             ),
             "definition_loader.themes", Map(
                 "class", "DirDefinitionLoader",
                 "arguments", ["@StructuredData", "@@config.themes_dir", "", false, false, "", "theme"]
             ),
-            "ThemeManager", Map(
+            "manager.theme", Map(
                 "class", "ThemeManager",
                 "arguments", [
                     "@{}",
-                    "@EventManager",
+                    "@manager.event",
                     "@Notifier",
                     "@Config",
                     "@definition_loader.themes",
@@ -212,21 +212,21 @@ class AppBase {
             ),
             "factory.gui", Map(
                 "class", "GuiFactory",
-                "arguments", ["@{}", "@ThemeManager", "@IdGenerator"]
+                "arguments", ["@{}", "@manager.theme", "@IdGenerator"]
             ),
-            "GuiManager", Map(
+            "manager.gui", Map(
                 "class", "GuiManager",
                 "arguments", [
                     "@{}", 
                     "@factory.gui",
                     "@State",
-                    "@EventManager",
+                    "@manager.event",
                     "@Notifier"
                 ]
             ),
-            "InstallerManager", Map(
+            "manager.installer", Map(
                 "class", "InstallerManager",
-                "arguments", ["@{}", "@EventManager", "@Notifier"]
+                "arguments", ["@{}", "@manager.event", "@Notifier"]
             ),
             "EntityFactory", Map(
                 "class", "EntityFactory",
@@ -237,7 +237,7 @@ class AppBase {
                 "arguments", [
                     "@@version",
                     "@State",
-                    "@CacheManager",
+                    "@manager.cache",
                     "file",
                     "@@themes.extra_themes",
                     "@@{tmp_dir}\Installers"
@@ -322,18 +322,18 @@ class AppBase {
         OnError(ObjBindMethod(this, "OnException"))
 
         event := AppRunEvent(Events.APP_PRE_INITIALIZE, this, config)
-        this.Service("EventManager").DispatchEvent(Events.APP_PRE_INITIALIZE, event)
+        this.Service("manager.event").DispatchEvent(Events.APP_PRE_INITIALIZE, event)
 
         this.InitializeApp(config)
 
         event := AppRunEvent(Events.APP_POST_INITIALIZE, this, config)
-        this.Service("EventManager").DispatchEvent(Events.APP_POST_INITIALIZE, event)
+        this.Service("manager.event").DispatchEvent(Events.APP_POST_INITIALIZE, event)
 
         event := AppRunEvent(Events.APP_POST_STARTUP, this, config)
-        this.Service("EventManager").DispatchEvent(Events.APP_POST_STARTUP, event)
+        this.Service("manager.event").DispatchEvent(Events.APP_POST_STARTUP, event)
 
         event := AppRunEvent(Events.APP_PRE_RUN, this, config)
-        this.Service("EventManager").DispatchEvent(Events.APP_PRE_RUN, event)
+        this.Service("manager.event").DispatchEvent(Events.APP_PRE_RUN, event)
 
         this.RunApp(config)
     }
@@ -356,7 +356,7 @@ class AppBase {
         this.InitializeTheme()
         this.InitializeModules(config)
 
-        for index, moduleServiceFile in this.Service("ModuleManager").GetModuleServiceFiles() {
+        for index, moduleServiceFile in this.Service("manager.module").GetModuleServiceFiles() {
             if (FileExist(moduleServiceFile)) {
                 this.Services.LoadDefinitions(FileDefinitionLoader(sdFactory, moduleServiceFile))
             } else {
@@ -368,12 +368,12 @@ class AppBase {
         this.Service("Config").LoadConfig(true)
 
         ; Register early event subscribers (e.g. modules)
-        this.Service("EventManager").RegisterServiceSubscribers(this.Services)
+        this.Service("manager.event").RegisterServiceSubscribers(this.Services)
 
-        this.Service("EventManager").Register(Events.APP_SERVICES_LOADED, "AppServices", ObjBindMethod(this, "OnServicesLoaded"))
+        this.Service("manager.event").Register(Events.APP_SERVICES_LOADED, "AppServices", ObjBindMethod(this, "OnServicesLoaded"))
 
         event := ServiceDefinitionsEvent(Events.APP_SERVICE_DEFINITIONS, "", "", config)
-        this.Service("EventManager").DispatchEvent(Events.APP_SERVICE_DEFINITIONS, event)
+        this.Service("manager.event").DispatchEvent(Events.APP_SERVICE_DEFINITIONS, event)
 
         if (event.Services.Count || event.Parameters.Count) {
             this.Services.LoadDefinitions(SimpleDefinitionLoader(event.Services, event.Parameters))
@@ -386,27 +386,27 @@ class AppBase {
         }
 
         ; Register any missing late-loading event subscribers
-        this.Service("EventManager").RegisterServiceSubscribers(this.Services)
+        this.Service("manager.event").RegisterServiceSubscribers(this.Services)
 
         event := AppRunEvent(Events.APP_SERVICES_LOADED, this, config)
-        this.Service("EventManager").DispatchEvent(Events.APP_SERVICES_LOADED, event)
+        this.Service("manager.event").DispatchEvent(Events.APP_SERVICES_LOADED, event)
     }
 
     OnServicesLoaded(event, extra, eventName, hwnd) {
-        this.Service("CacheManager")
-        this.Service("InstallerManager").RunInstallers(InstallerBase.INSTALLER_TYPE_REQUIREMENT)
+        this.Service("manager.cache")
+        this.Service("manager.installer").RunInstallers(InstallerBase.INSTALLER_TYPE_REQUIREMENT)
     }
 
     InitializeModules(config) {
         includeFiles := this.Services.GetParameter("include_files")
-        updated := this.Service("ModuleManager").UpdateModuleIncludes(includeFiles["modules"], includeFiles["module_tests"])
+        updated := this.Service("manager.module").UpdateModuleIncludes(includeFiles["modules"], includeFiles["module_tests"])
 
         if (updated) {
             message := A_IsCompiled ?
                 "Your modules have been updated. Currently, you must recompile " this.appName . " yourself for the changes to take effect. Would you like to exit now (highly recommended)?" :
                 "Your modules have been updated, and " this.appName . " must be restarted for the changes to take effect. Would you like to restart now?"
 
-            response := this.app.Service("GuiManager").Dialog(Map(
+            response := this.app.Service("manager.gui").Dialog(Map(
                 "title", "Module Includes Updated",
                 "text", message
             ))
@@ -422,7 +422,7 @@ class AppBase {
     }
 
     InitializeTheme() {
-        this.Service("Gdip", "GuiManager", "ThemeManager")
+        this.Service("Gdip", "manager.gui", "manager.theme")
         this.themeReady := true
     }
 
@@ -431,7 +431,7 @@ class AppBase {
 
         if (this.customTrayMenu) {
             A_TrayMenu.Delete()
-            this.Service("EventManager").Register(Events.AHK_NOTIFYICON, "TrayClick", ObjBindMethod(this, "OnTrayIconRightClick"), 1)
+            this.Service("manager.event").Register(Events.AHK_NOTIFYICON, "TrayClick", ObjBindMethod(this, "OnTrayIconRightClick"), 1)
         }
     }
 
@@ -449,10 +449,10 @@ class AppBase {
         mainWin := this.Parameter("config.main_window")
 
         if (mainWin) {
-            if (this.Service("GuiManager").Has(mainWin)) {
-                WinActivate("ahk_id " . this.Service("GuiManager")[mainWin].GetHwnd())
+            if (this.Service("manager.gui").Has(mainWin)) {
+                WinActivate("ahk_id " . this.Service("manager.gui")[mainWin].GetHwnd())
             } else {
-                this.Service("GuiManager").OpenWindow(Map(
+                this.Service("manager.gui").OpenWindow(Map(
                     "type", mainWin,
                     "title", this.appName
                 ))
@@ -462,7 +462,7 @@ class AppBase {
 
     ExitApp() {
         event := AppRunEvent(Events.APP_SHUTDOWN, this)
-        this.Service("EventManager").DispatchEvent(Events.APP_SHUTDOWN, event)
+        this.Service("manager.event").DispatchEvent(Events.APP_SHUTDOWN, event)
 
         if (this.Services.Has("Gdip")) {
             Gdip_Shutdown(this.Services.Get("Gdip").GetHandle())
@@ -473,7 +473,7 @@ class AppBase {
 
     RestartApp() {
         event := AppRunEvent(Events.APP_SHUTDOWN, this)
-        this.Service("EventManager").DispatchEvent(Events.APP_RESTART, event)
+        this.Service("manager.event").DispatchEvent(Events.APP_RESTART, event)
 
         if (this.Services.Has("Gdip")) {
             Gdip_Shutdown(this.Services.Get("Gdip").GetHandle())
@@ -496,12 +496,6 @@ class AppBase {
         }
 
         return result
-    }
-
-    GetDefaultModules(config) {
-        modules := Map()
-        modules["Auth"] := "Auth"
-        return modules
     }
 
     Service(name, params*) {
@@ -566,7 +560,7 @@ class AppBase {
             if (this.themeReady) {
                 btns := allowContinue ? "*&Continue|&Reload|&Exit" : "*&Reload|&Exit"
 
-                this.Service("GuiManager").Dialog(Map(
+                this.Service("manager.gui").Dialog(Map(
                     "type", "ErrorDialog",
                     "title", "Unhandled Exception",
                     "text", errorText,
@@ -612,7 +606,7 @@ class AppBase {
         menuItems.Push(Map("label", "Restart", "name", "RestartApp"))
         menuItems.Push(Map("label", "Exit", "name", "ExitApp"))
 
-        result := this.Service("GuiManager").Menu(menuItems, this)
+        result := this.Service("manager.gui").Menu(menuItems, this)
         this.HandleTrayMenuClick(result)
     }
 

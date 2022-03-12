@@ -6,7 +6,7 @@
     needsRestart := false
 
     __New(container, themeObj, config) {
-        this.availableThemes := container.Get("ThemeManager").GetAvailableThemes()
+        this.availableThemes := container.Get("manager.theme").GetAvailableThemes()
         super.__New(container, themeObj, config)
     }
 
@@ -128,11 +128,11 @@
     }
 
     OnManageBackups(btn, info) {
-        this.app.Service("GuiManager").OpenWindow("ManageBackupsWindow")
+        this.app.Service("manager.gui").OpenWindow("ManageBackupsWindow")
     }
 
     OnManagePlatforms(btn, info) {
-        this.app.Service("GuiManager").OpenWindow("PlatformsWindow")
+        this.app.Service("manager.gui").OpenWindow("PlatformsWindow")
     }
 
     AddConfigLocationBlock(heading, settingName, extraButton := "", helpText := "") {
@@ -185,7 +185,7 @@
         } else if (btn == "OpenLauncherFile") {
             this.app.Config["OpenLauncherFile"]()
         } else if (btn == "ReloadLauncherFile") {
-            this.app.Service("LauncherManager").LoadComponents(this.app.Config["launcher_file"])
+            this.app.Service("manager.launcher").LoadComponents(this.app.Config["launcher_file"])
         }
     }
 
@@ -196,7 +196,7 @@
         } else if (btn == "OpenBackupsFile") {
             this.app.Config["OpenBackupsFile"]()
         } else if (btn == "ReloadBackupsFile") {
-            this.app.Service("LauncherManager").LoadComponents(this.app.Config["backups_file"])
+            this.app.Service("manager.launcher").LoadComponents(this.app.Config["backups_file"])
         }
     }
 
@@ -207,7 +207,7 @@
         } else if (btn == "OpenPlatformsFile") {
             this.app.Config["OpenPlatformsFile"]()
         } else if (btn == "ReloadPlatformsFile") {
-            this.app.Service("PlatformManager").LoadComponents(this.app.Config["platforms_file"])
+            this.app.Service("manager.platform").LoadComponents(this.app.Config["platforms_file"])
         }
     }
 
@@ -239,32 +239,32 @@
 
     OnApiEndpointMenuClick(btn) {
         if (btn == "ChangeApiEndpoint") {
-            this.app.Service("DataSourceManager")["api"].ChangeApiEndpoint("", "")
+            this.app.Service("manager.datasource")["api"].ChangeApiEndpoint("", "")
             this.SetText("ApiEndpoint", this.app.Config["api_endpoint"], "Bold")
             this.needsRestart := true
         } else if (btn == "OpenApiEndpoint") {
-            this.app.Service("DataSourceManager")["api"].Open()
+            this.app.Service("manager.datasource")["api"].Open()
         }
     }
 
     OnCacheDirMenuClick(btn) {
         if (btn == "ChangeCacheDir") {
-            this.app.Service("CacheManager").ChangeCacheDir()
+            this.app.Service("manager.cache").ChangeCacheDir()
             this.SetText("CacheDir", this.app.Config["cache_dir"], "Bold")
         } else if (btn == "OpenCacheDir") {
-            this.app.Service("CacheManager").OpenCacheDir()
+            this.app.Service("manager.cache").OpenCacheDir()
         } else if (btn == "FlushCacheDir") {
-            this.app.Service("CacheManager").FlushCaches(true, true)
+            this.app.Service("manager.cache").FlushCaches(true, true)
         }
     }
 
     OnBackupDirMenuClick(btn) {
         if (btn == "ChangeBackupDir") {
-            this.app.Service("BackupManager").ChangeBackupDir()
+            this.app.Service("manager.backup").ChangeBackupDir()
             this.SetText("BackupDir", this.app.Config["backup_dir"], "Bold")
             this.needsRestart := true
         } else if (btn == "OpenBackupDir") {
-            this.app.Service("BackupManager").OpenBackupDir()
+            this.app.Service("manager.backup").OpenBackupDir()
         }
     }
 
@@ -309,7 +309,7 @@
         this.app.Config.SaveConfig()
 
         if (this.needsRestart) {
-            response := this.app.Service("GuiManager").Dialog(Map(
+            response := this.app.Service("manager.gui").Dialog(Map(
                 "title", "Restart " . this.app.appName . "?",
                 "text", "One or more settings that have been changed require restarting " . this.app.appName . " to fully take effect.`n`nWould you like to restart " . this.app.appName . " now?"
             ))
@@ -319,8 +319,8 @@
             }
         }
 
-        if (this.app.Service("GuiManager").Has("MainWindow")) {
-            this.app.Service("GuiManager")["MainWindow"].UpdateListView()
+        if (this.app.Service("manager.gui").Has("MainWindow")) {
+            this.app.Service("manager.gui")["MainWindow"].UpdateListView()
         }
 
         return result

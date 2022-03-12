@@ -3,7 +3,7 @@ class VersionChecker {
         splitLatestVersion := StrSplit(this.FilterVersion(latestVersion), ".")
         splitInstalledVersion := StrSplit(this.FilterVersion(installedVersion), ".")
 
-        for (index, numPart in splitInstalledVersion) {
+        for index, numPart in splitInstalledVersion {
             latestVersionPart := splitLatestVersion.Has(index) ? splitLatestVersion[index] : 0
 
             if ((latestVersionPart + 0) > (numPart + 0)) {

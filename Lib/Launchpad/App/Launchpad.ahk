@@ -3,23 +3,11 @@
     detectGames := false
     isSetup := false
 
-    GetDefaultModules(config) {
-        modules := super.GetDefaultModules(config)
-        modules["LaunchpadApi"] := "LaunchpadApi"
-        modules["Bethesda"] := "Bethesda"
-        modules["Blizzard"] := "Blizzard"
-        modules["Epic"] := "Epic"
-        modules["Origin"] := "Origin"
-        modules["Riot"] := "Riot"
-        modules["Steam"] := "Steam"
-        return modules
-    }
-
     CheckForUpdates(notify := true) {
         updateAvailable := false
 
         if (this.Version != "{{VERSION}}") {
-            dataSource := this.Service("DataSourceManager")["api"]
+            dataSource := this.Service("manager.datasource")["api"]
             releaseInfoStr := dataSource.ReadItem("release-info")
 
             if (releaseInfoStr) {
@@ -28,7 +16,7 @@
 
                 if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this.Service("VersionChecker").VersionIsOutdated(releaseInfo["data"]["version"], this.Version)) {
                     updateAvailable := true
-                    this.Service("GuiManager").Dialog(Map("type", "UpdateAvailableWindow"), releaseInfo)
+                    this.Service("manager.gui").Dialog(Map("type", "UpdateAvailableWindow"), releaseInfo)
                 }
             }
         }
@@ -92,14 +80,14 @@
         
         super.RunApp(config)
         
-        this.Service("PlatformManager").LoadComponents()
-        this.Service("LauncherManager").LoadComponents()
-        this.Service("BackupManager").LoadComponents()
+        this.Service("manager.platform").LoadComponents()
+        this.Service("manager.launcher").LoadComponents()
+        this.Service("manager.backup").LoadComponents()
 
         this.OpenApp()
 
         if (this.detectGames) {
-            this.Service("PlatformManager").DetectGames()
+            this.Service("manager.platform").DetectGames()
         }
     }
 
@@ -107,7 +95,7 @@
         configFile := this.Parameter("previous_config_file")
 
         if (configFile && FileExist(configFile)) {
-            response := this.Service("GuiManager").Dialog(Map(
+            response := this.Service("manager.gui").Dialog(Map(
                 "title", "Migrate settings?",
                 "text", this.appName . " uses a new configuration file format, and has detected that you have a previous configuration file.`n`nWould you like to automatically migrate your settings?`n`nChoose Yes to migrate your previous configuration. Choose no to simply delete it and start from scratch."
             ))
@@ -121,7 +109,7 @@
     }
 
     InitialSetup(config) {
-        result := this.Service("GuiManager").Dialog(Map("type", "SetupWindow"))
+        result := this.Service("manager.gui").Dialog(Map("type", "SetupWindow"))
 
         if (result == "Exit") {
             this.ExitApp()
@@ -134,18 +122,18 @@
     }
 
     UpdateStatusIndicators() {
-        if (this.Service("GuiManager").Has("MainWindow")) {
-            this.Service("GuiManager")["MainWindow"].UpdateStatusIndicator()
+        if (this.Service("manager.gui").Has("MainWindow")) {
+            this.Service("manager.gui")["MainWindow"].UpdateStatusIndicator()
         }
     }
 
     ExitApp() {
         if (this.isSetup && this.Config["clean_launchers_on_exit"]) {
-            this.Service("BuilderManager").CleanLaunchers()
+            this.Service("manager.builder").CleanLaunchers()
         }
 
         if (this.isSetup && this.Config["flush_cache_on_exit"]) {
-            this.Service("CacheManager").FlushCaches(false, false)
+            this.Service("manager.cache").FlushCaches(false, false)
         }
 
         super.ExitApp()
@@ -156,15 +144,15 @@
     }
 
     ProvideFeedback() {
-        this.Service("GuiManager").Dialog(Map("type", "FeedbackWindow"))
+        this.Service("manager.gui").Dialog(Map("type", "FeedbackWindow"))
     }
 
     RestartApp() {
-        if (this.Services.Has("GuiManager")) {
-            guiMgr := this.Service("GuiManager")
+        if (this.Services.Has("manager.gui")) {
+            guiMgr := this.Service("manager.gui")
 
             if (guiMgr.Has("MainWindow")) {
-                guiMgr.StoreWindowState(this.Service("GuiManager")["MainWindow"])
+                guiMgr.StoreWindowState(this.Service("manager.gui")["MainWindow"])
             }
         }
 

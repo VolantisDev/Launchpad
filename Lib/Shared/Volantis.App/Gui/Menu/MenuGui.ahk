@@ -26,7 +26,7 @@
         isChild := config.Has("child") ? config["child"] : false
 
         if (parent) {
-            parent := container.Get("GuiManager").DereferenceGui(parent)
+            parent := container.Get("manager.gui").DereferenceGui(parent)
 
             if (parent.HasBase(MenuGui.Prototype)) {
                 this.parentMenu := parent
@@ -34,7 +34,7 @@
         }
 
         if (!isChild) {
-            container.Get("GuiManager").CloseMenus(config["id"])
+            container.Get("manager.gui").CloseMenus(config["id"])
         }
 
         this.menuItems := menuItems
@@ -132,7 +132,7 @@
 
         if (btn.ChildItems) {
             this.childOpen := true
-            this.result := this.app.Service("GuiManager").Menu(Map(
+            this.result := this.app.Service("manager.gui").Menu(Map(
                 "parent", this,
                 "child", true,
                 "openAtCtlSide", "right"

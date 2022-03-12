@@ -10,8 +10,12 @@ class ErrorDialog extends DialogBox {
         this.errorObj := errorObj
         this.notifierObj := container.Get("Notifier").notifierObj
 
-        if (container.Has("DataSourceManager")) {
-            this.apiEndpoint := container.Get("DataSourceManager")["api"]
+        if (container.Has("manager.datasource")) {
+            dsManager := container.Get("manager.datasource")
+
+            if (dsManager.Has("api")) {
+                this.apiEndpoint := container.Get("manager.datasource")["api"]
+            }
         }
 
         this.formShown := config.Has("submitError") ? config["submitError"] : false

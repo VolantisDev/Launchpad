@@ -109,8 +109,8 @@ class AppEntityBase extends EntityBase {
             dataSourceKeys := (Type(this.DataSourceKeys) == "Array") ? this.DataSourceKeys : [this.DataSourceKeys]
 
             for index, dataSourceKey in dataSourceKeys {
-                if (this.app.Service("DataSourceManager").Has(dataSourceKey)) {
-                    dataSource := this.app.Service("DataSourceManager")[dataSourceKey]
+                if (this.app.Service("manager.datasource").Has(dataSourceKey)) {
+                    dataSource := this.app.Service("manager.datasource")[dataSourceKey]
 
                     if (dataSource != "") {
                         dataSources[dataSourceKey] := dataSource

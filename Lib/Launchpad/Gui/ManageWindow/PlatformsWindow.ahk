@@ -3,7 +3,7 @@ class PlatformsWindow extends ManageWindowBase {
     platformManager := ""
 
     __New(container, themeObj, config) {
-        this.platformManager := container.Get("PlatformManager")
+        this.platformManager := container.Get("manager.platform")
         this.lvCount := this.platformManager.CountEntities()
         super.__New(container, themeObj, config)
     }
@@ -110,7 +110,7 @@ class PlatformsWindow extends ManageWindowBase {
             menuItems.Push(Map("label", "Install", "name", "InstallPlatform"))
         }
 
-        result := this.app.Service("GuiManager").Menu(menuItems, this)
+        result := this.app.Service("manager.gui").Menu(menuItems, this)
 
         if (result == "EditPlatform") {
             this.EditPlatform(key)

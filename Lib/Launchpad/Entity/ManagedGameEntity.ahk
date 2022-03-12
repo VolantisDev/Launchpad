@@ -125,7 +125,7 @@ class ManagedGameEntity extends ManagedEntityBase {
             ownerOrParent := owner
         }
 
-        return this.app.Service("GuiManager").Dialog(Map(
+        return this.app.Service("manager.gui").Dialog(Map(
             "type", "ManagedGameEditor",
             "mode", mode,
             "child", !!(parent),

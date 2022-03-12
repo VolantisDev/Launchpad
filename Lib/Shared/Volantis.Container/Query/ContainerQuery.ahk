@@ -1,19 +1,25 @@
 class ContainerQuery extends QueryBase {
     container := ""
     servicePrefix := ""
+    removePrefix := false
 
     static RESULT_TYPE_NAMES := "names"
     static RESULT_TYPE_DEFINITIONS := "definitions"
     static RESULT_TYPE_SERVICES := "services"
 
-    __New(container, servicePrefix := "", resultType := "names") {
+    __New(container, servicePrefix := "", resultType := "names", removePrefix := false) {
         this.container := container
         this.servicePrefix := servicePrefix
+        this.removePrefix := removePrefix
         super.__New(resultType)
     }
 
     initializeResults() {
-        this.results := (this.resultType == ContainerQuery.RESULT_TYPE_NAMES) ? [] : Map()
+        if (this.resultType == ContainerQuery.RESULT_TYPE_NAMES) {
+            this.results := []
+        } else {
+            this.results := Map()
+        }
     }
 
     getStorageDefinitions() {
@@ -35,31 +41,20 @@ class ContainerQuery extends QueryBase {
     }
 
     addResult(itemKey, itemDefinition) {
+        fullItemKey := itemKey
+
+        if (this.servicePrefix && this.removePrefix) {
+            itemKey := SubStr(itemKey, StrLen(this.servicePrefix) + 1)
+        }
+
         if (this.resultType == ContainerQuery.RESULT_TYPE_NAMES) {
             this.results.Push(itemKey)
         } else if (this.resultType == ContainerQuery.RESULT_TYPE_DEFINITIONS) {
             this.results[itemKey] := itemDefinition
         } else if (this.resultType == ContainerQuery.RESULT_TYPE_SERVICES) {
-            this.results[itemKey] := this.container.Get(itemKey)
+            this.results[itemKey] := this.container.Get(fullItemKey)
         } else {
             throw ContainerException("Container query has unknown result type " . this.resultType)
         }
-    }
-
-    GetResults() {
-        results := super.GetResults()
-
-        if (this.servicePrefix) {
-            newResults := Map()
-
-            for key, val in results {
-                key := SubStr(key, StrLen(this.servicePrefix) + 1)
-                newResults[key] := val
-            }
-            
-            results := newResults
-        }
-
-        return results
     }
 }

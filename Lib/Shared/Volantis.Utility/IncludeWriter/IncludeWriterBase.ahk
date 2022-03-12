@@ -10,10 +10,11 @@ class IncludeWriterBase {
     /*
         Write to this.tmpPath in your implementation, and then call
         this super method which will compare the files and move the
-        tmp file into the regular outputPath
+        tmp file into the regular outputPath or delete it if identical
     */
     WriteIncludes(includes) {
         if (!FileExist(this.outputPath) && !includes.Length) {
+            FileDelete(this.tmpPath)
             return false
         }
 

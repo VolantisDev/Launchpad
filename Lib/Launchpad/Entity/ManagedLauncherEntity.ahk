@@ -102,7 +102,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             ownerOrParent := owner
         }
 
-        return this.app.Service("GuiManager").Dialog(Map(
+        return this.app.Service("manager.gui").Dialog(Map(
             "type", "ManagedLauncherEditor",
             "mode", mode,
             "child", !!(parent),

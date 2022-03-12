@@ -172,7 +172,7 @@ class GamePlatformBase {
     }
 
     DetermineMainExe(key, possibleExes) {
-        dataSource := this.app.Service("DataSourceManager").GetDefaultDataSource()
+        dataSource := this.app.Service("manager.datasource").GetDefaultDataSource()
         dsData := this.GetDataSourceDefaults(dataSource, key)
 
         mainExe := ""

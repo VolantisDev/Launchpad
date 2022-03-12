@@ -2,7 +2,7 @@ class ApiBuildDeployer extends BuildDeployerBase {
     Deploy(deployInfo) {
         apiUrl := "https://api.launchpad.games/v1/release-info"
         
-        this.app.Service("GuiManager").Dialog(Map(
+        this.app.Service("manager.gui").Dialog(Map(
             "title", "Not Yet Available",
             "text", "Release info pushing is not yet available. Please update release info manually."
         ))

@@ -1,6 +1,7 @@
 class ParameterModuleInfo extends ModuleInfoBase {
     container := ""
     parameterKey := ""
+    parametersLoaded := false
 
     __New(container, key) {
         this.container := container
@@ -15,18 +16,23 @@ class ParameterModuleInfo extends ModuleInfoBase {
     }
 
     GetParameters() {
-        parameters := ""
+        parameters := this.container.HasParameter(this.parameterKey) ? this.container.GetParameter(this.parameterKey) : Map()
 
-        if (this.container.HasParameter(this.parameterKey)) {
-            parameters := this.container.GetParameter(this.parameterKey)
-        } else {
-            parameters := this.LoadParameters()
+        if (Type(parameters) != "Map") {
+            parameters := Map("enabled", !!parameters)
+        }
+
+        if (!this.parametersLoaded) {
+            for key, val in this.LoadParameters() {
+                parameters[key] := val
+            }
         }
 
         return parameters
     }
 
     LoadParameters() {
+        this.parametersLoaded := true
         return Map()
     }
 }

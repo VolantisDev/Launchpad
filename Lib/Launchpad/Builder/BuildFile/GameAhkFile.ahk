@@ -35,7 +35,7 @@ class GameAhkFile extends ComposableBuildFile {
     GetPlatforms() {
         platforms := Map()
 
-        for key, platform in this.app.Service("PlatformManager").GetActivePlatforms() {
+        for key, platform in this.app.Service("manager.platform").GetActivePlatforms() {
             platforms[key] := platform.Config
         }
 
