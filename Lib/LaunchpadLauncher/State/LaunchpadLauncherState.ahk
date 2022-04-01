@@ -1,6 +1,6 @@
 class LaunchpadLauncherState extends AppState {
     __New(app, state := "") {
-        if (Type(state) != "Map") {
+        if (!HasBase(state, Map.Prototype)) {
             state := ""
         }
 

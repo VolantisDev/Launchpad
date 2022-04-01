@@ -6,7 +6,7 @@ class IncludeBuilderBase {
     excludeExtensions := []
     
     __New(basePaths, filePattern := "", recursive := true, removeBase := false, excludeExtensions := "") {
-        if (Type(basePaths) != "Array") {
+        if (!HasBase(basePaths, Array.Prototype)) {
             basePaths := [basePaths]
         }
         
@@ -20,7 +20,7 @@ class IncludeBuilderBase {
         this.removeBase := removeBase
 
         if (excludeExtensions) {
-            if (Type(excludeExtensions) != "Array") {
+            if (!HasBase(excludeExtensions, Array.Prototype)) {
                 excludeExtensions := [excludeExtensions]
             }
 

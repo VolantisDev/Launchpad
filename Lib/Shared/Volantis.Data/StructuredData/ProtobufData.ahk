@@ -46,7 +46,7 @@ class ProtobufData extends StructuredDataBase {
 
 	CloneChildMaps(parentMap) {
         for key, child in parentMap {
-            if (Type(child) == "Map") {
+            if (HasBase(child, Map.Prototype)) {
                 parentMap[key] := this.CloneChildMaps(child)
             }
         }
@@ -95,7 +95,7 @@ class ProtobufData extends StructuredDataBase {
 			}
 			
 			obj := stack[1]
-			is_array := (Type(obj) == "Array") ? 1 : 0
+			is_array := HasBase(obj, Array.Prototype)
 			
 			if (ch == "{") { ; start new map
 				val := Map()
@@ -184,7 +184,7 @@ class ProtobufData extends StructuredDataBase {
 
 	AddOrMergeValue(mapObj, key, val) {
 		if (mapObj.Has(key)) {
-			if (Type(mapObj[key]) != "Array") {
+			if (!HasBase(mapObj[key], Array.Prototype)) {
 				mapObj[key] := [mapObj[key]]
 			}
 

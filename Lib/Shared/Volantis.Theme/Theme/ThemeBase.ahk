@@ -221,7 +221,7 @@ class ThemeBase {
 
     DereferenceEnumerable(enum) {
         for key, val in enum {
-            if (Type(val) == "Map" || Type(val) == "Array") {
+            if (HasBase(val, Map.Prototype) || HasBase(val, Array.Prototype)) {
                 enum[key] := this.DereferenceEnumerable(val)
             } else {
                 enum[key] := this.DereferenceValue(val, enum)
@@ -242,7 +242,7 @@ class ThemeBase {
     }
 
     ExpandPaths(themeMap := "") {
-        if (Type(themeMap) == "Map" && themeMap.Count == 0) {
+        if (HasBase(themeMap, Map.Prototype) && themeMap.Count == 0) {
             themeMap := ""
         }
 
@@ -289,7 +289,7 @@ class ThemeBase {
             if (themeMap.Has("parentTheme") && themeMap["parentTheme"] != "") {
                 parentMap := this.GetThemeMap(themeMap["parentTheme"])
 
-                if (Type(parentMap) == "Map") {
+                if (HasBase(parentMap, Map.Prototype)) {
                     this.LoadValuesIntoTheme(parentMap)
                 }
             }
@@ -310,9 +310,9 @@ class ThemeBase {
     }
 
     MergeProperty(existingValue, newValue, overwriteMapKeys := false) {
-        if (Type(existingValue) == "Map" && Type(newValue) == "Map") {
+        if (HasBase(existingValue, Map.Prototype) && HasBase(newValue, Map.Prototype)) {
             newValue := this.MergeMap(existingValue.Clone(), newValue, overwriteMapKeys)
-        } else if (Type(existingValue) == "Array" && Type(newValue) == "Array") {
+        } else if (HasBase(existingValue, Array.Prototype) && HasBase(newValue, Array.Prototype)) {
             newValue := this.MergeArray(existingValue.Clone(), newValue, overwriteMapKeys)
         }
 
@@ -359,7 +359,7 @@ class ThemeBase {
 
         themeMap := this.GetThemeMap(themeName)
 
-        if (Type(themeMap) != "Map") {
+        if (!HasBase(themeMap, Map.Prototype)) {
             InvalidParameterException("The provided theme name cannot be resolved to a valid theme.")
         }
 

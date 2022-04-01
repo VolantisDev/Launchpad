@@ -8,7 +8,7 @@ class ParameterModuleInfo extends ModuleInfoBase {
         this.parameterKey := "modules." . key
         moduleInfo := this.GetParameters()
 
-        if (Type(moduleInfo) != "Map") {
+        if (!HasBase(moduleInfo, Map.Prototype)) {
             moduleInfo := Map("enabled", moduleInfo)
         }
 
@@ -18,7 +18,7 @@ class ParameterModuleInfo extends ModuleInfoBase {
     GetParameters() {
         parameters := this.container.HasParameter(this.parameterKey) ? this.container.GetParameter(this.parameterKey) : Map()
 
-        if (Type(parameters) != "Map") {
+        if (!HasBase(parameters, Map.Prototype)) {
             parameters := Map("enabled", !!parameters)
         }
 

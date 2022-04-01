@@ -4,7 +4,7 @@ class ConditionBase {
 
     __New(childConditions := "", negate := false) {
         if (childConditions) {
-            if (Type(childConditions) != "Array") {
+            if (!HasBase(childConditions, Array.Prototype)) {
                 childConditions := [childConditions]
             }
 

@@ -36,7 +36,7 @@ class VdfData extends StructuredDataBase {
 			}
 			
 			obj := stack[1]
-			is_array := (Type(obj) == "Array")
+			is_array := HasBase(obj, Array.Prototype)
 			
 			if (ch == "{") {
 				val := Map()

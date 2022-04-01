@@ -27,7 +27,7 @@ class InstallerBase {
         this.scriptFile := scriptFile
         this.scriptDir := scriptDir
 
-        if (Type(cleanupFiles) != "Array") {
+        if (!HasBase(cleanupFiles, Array.Prototype)) {
             cleanupFiles := [cleanupFiles]
         }
 
@@ -49,7 +49,7 @@ class InstallerBase {
     */
 
     AddComponents(components) {
-        if (Type(components) != "Array") {
+        if (!HasBase(components, Array.Prototype)) {
             components := [components]
         }
 

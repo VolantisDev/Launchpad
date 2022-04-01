@@ -46,7 +46,6 @@ class Debugger {
     }
     
     ToString(val, level := 0, indentStr := "`t", innerValue := false) {
-        valType := Type(val)
         output := ""
 
         if (IsObject(val)) {
@@ -54,15 +53,15 @@ class Debugger {
             output := !innerValue ? indent : ""
             
             if (level > this.maxLevels) {
-                output .= valType . "`n"
+                output .= Type(val) . "`n"
             } else {
-                output .= valType . "{`n"
+                output .= Type(val) . "{`n"
 
-                if (valType == "Array") {
+                if (HasBase(val, Array.Prototype)) {
                     for index, value in val {
                         output .= indent . indentStr . index . ": " . this.ToString(value, level + 1, indentStr, true) . "`n"
                     }
-                } else if (valType == "Map") {
+                } else if (HasBase(val, Map.Prototype)) {
                     for key, value in val {
                         output .= indent . indentStr . key . ": " . this.ToString(value, level + 1, indentStr, true) . "`n"
                     }

@@ -87,7 +87,7 @@ class LaunchpadAppState extends AppState {
             value := this.Launchers[launcherKey][infoKey]
         }
 
-        if (Type(value) != "Map") {
+        if (!HasBase(value, Map.Prototype)) {
             value := Map()
         }
 

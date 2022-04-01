@@ -35,7 +35,7 @@ class InvalidParameterException extends ExceptionBase {
 
                 if (!validType) {
                     if (paramType != "String" && paramType != "Integer" && paramType != "Float") {
-                        validType := paramVal.HasBase(%reqType%.Prototype)
+                        validType := HasBase(paramVal, %reqType%.Prototype)
                     }
                 }
 

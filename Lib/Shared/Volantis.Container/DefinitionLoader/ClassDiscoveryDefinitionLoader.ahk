@@ -8,7 +8,7 @@ class ClassDiscoveryDefinitionLoader extends DefinitionLoaderBase {
 
 
     __New(searchDirs, fileSuffix := "", classSuffix := "", recursive := false) {
-        if (Type(searchDirs) != "Array") {
+        if (!HasBase(searchDirs, Array.Prototype)) {
             searchDirs := [searchDirs]
         }
         

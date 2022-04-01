@@ -12,9 +12,9 @@ class AhkVariable extends StructuredDataBase {
     }
 
 	ConvertValueToCode(value) {
-        if (Type(value) == "Map") {
+        if (HasBase(value, Map.Prototype)) {
             value := this.ConvertMapToCode(value)
-        } else if (Type(value) == "Array") {
+        } else if (HasBase(value, Array.Prototype)) {
             value := this.ConvertArrayToCode(value)
         } else if (IsObject(value)) {
             value := this.ConvertObjectToCode(value)

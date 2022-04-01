@@ -3,7 +3,7 @@ class TestRunnerBase {
     results := Map()
 
     __New(tests) {
-        if (Type(tests) != "Array") {
+        if (!HasBase(tests, Array.Prototype)) {
             tests := [tests]
         }
 

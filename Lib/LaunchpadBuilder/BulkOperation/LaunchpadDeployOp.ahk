@@ -6,7 +6,7 @@ class LaunchpadDeployOp extends BulkOperationBase {
     deployers := ""
 
     __New(app, deployers, owner := "") {
-        if (Type(deployers) != "Map") {
+        if (!HasBase(deployers, Map.Prototype)) {
             deployers := Map("Deployer", deployers)
         }
 

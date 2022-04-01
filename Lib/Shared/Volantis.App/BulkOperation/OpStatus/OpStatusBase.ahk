@@ -56,7 +56,7 @@ class OpStatusBase {
     }
 
     AddError(err, code := "") {
-        if (Type(err) == "Array") {
+        if (HasBase(err, Array.Prototype)) {
             for index, errItem in err {
                 this.errors.push(errItem)
             }
