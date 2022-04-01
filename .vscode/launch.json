@@ -13,6 +13,14 @@
             "env": {"LAUNCHPAD_DEBUG": "1"}
         },
         {
+            "name": "Launchpad Test Debug",
+            "type": "autohotkey",
+            "request": "launch",
+            "runtime": "${workspaceFolder}/Vendor/AutoHotkey/AutoHotKey64.exe",
+            "program": "${workspaceFolder}/LaunchpadTest.ahk",
+            "env": {"LAUNCHPAD_DEBUG": "1"}
+        },
+        {
             "name": "Launchpad Overlay Debug",
             "type": "clr",
             "request": "launch",
