@@ -1,0 +1,3 @@
+class DirExistsCondition extends DirConditionBase {
+
+}
