@@ -236,7 +236,7 @@ class EntityBase {
         }
 
         if (recurse) {
-            for index, entityObj in this.GetReferencedEntities() {
+            for index, entityObj in this.GetReferencedEntities(true) {
                 entityObj.LoadEntity(reload, recurse)
             }
         }
@@ -251,7 +251,7 @@ class EntityBase {
         this.populateEntityLayers(this.GetData())
 
         if (recurse) {
-            for index, entityObj in this.GetReferencedEntities() {
+            for index, entityObj in this.GetReferencedEntities(true) {
                 entityObj.RefreshEntityData(recurse)
             }
         }
@@ -274,7 +274,7 @@ class EntityBase {
         this.CreateSnapshot("original")
 
         if (recurse) {
-            for index, entityObj in this.GetReferencedEntities() {
+            for index, entityObj in this.GetReferencedEntities(true) {
                 entityObj.SaveEntity(recurse)
             }
         }
