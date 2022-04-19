@@ -27,20 +27,31 @@ class FormGuiBase extends GuiBase {
         super.AddButtons()
 
         btns := StrSplit(this.config["buttons"], "|")
-
         btnW := 90
         btnH := 28
         btnsW := (btnW * btns.Length) + (this.margin * (btns.Length - 1))
         btnsStart := this.margin + this.windowSettings["contentWidth"] - btnsW
 
         loop btns.Length {
-            position := (A_Index == 1) ? "x" . btnsStart " " : "x+m yp "
-            ;defaultOption := InStr(btns[A_Index], "*") ? "Default " : " "
-            defaultOption := " "
             btnText := RegExReplace(btns[A_Index], "\*")
             btnName := "Button" . StrReplace(btnText, " ", "")
+            btnName := StrReplace(btnName, "&", "")
+            btnName := StrReplace(btnName, "*", "")
+
             this.buttonNames.Push(btnName)
-            this.Add("ButtonControl", position . defaultOption . "w" . btnW . " h" . btnH . " v" . btnName, btnText, "OnFormGuiButton", "dialog")
+
+            opts := [
+                A_Index == 1 ? "x" . btnsStart : "x+" . this.margin,
+                "w" . btnW,
+                "h" . btnH,
+                "v" . btnName
+            ]
+
+            if (A_Index > 1) {
+                opts.Push("yp")
+            }
+
+            this.Add("ButtonControl", opts, btnText, "OnFormGuiButton", "dialog")
         }
     }
 
