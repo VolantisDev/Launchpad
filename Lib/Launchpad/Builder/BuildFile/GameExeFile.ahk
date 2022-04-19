@@ -1,15 +1,15 @@
 class GameExeFile extends ComposableBuildFile {
     __New(launcherEntityObj, destPath := "") {
         if (destPath == "") {
-            destPath := launcherEntityObj.DestinationDir . "\" . launcherEntityObj.Key . ".exe"
+            destPath := launcherEntityObj["DestinationDir"] . "\" . launcherEntityObj.Id . ".exe"
         }
 
         super.__New(launcherEntityObj, destPath)
     }
 
     ComposeFile() {
-        iconPath := this.launcherEntityObj.AssetsDir . "\" . this.launcherEntityObj.Key . ".ico"
-        ahkPath := this.launcherEntityObj.AssetsDir . "\" . this.launcherEntityObj.Key . ".ahk"
+        iconPath := this.launcherEntityObj["AssetsDir"] . "\" . this.launcherEntityObj.Id . ".ico"
+        ahkPath := this.launcherEntityObj["AssetsDir"] . "\" . this.launcherEntityObj.Id . ".ahk"
         ahkExe := this.appDir . "\Vendor\AutoHotKey\AutoHotkey" . (A_Is64bitOS ? "64" : "32") . ".exe"
         ahk2ExePath := this.appDir . "\Vendor\AutoHotKey\Compiler\Ahk2Exe.exe"
 

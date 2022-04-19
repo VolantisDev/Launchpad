@@ -13,7 +13,7 @@ class ValidateLaunchersOp extends LauncherGameOpBase {
 
     ProcessLauncherGame(launcherEntityObj) {
         if (this.useProgress) {
-            this.progress.SetDetailText("Validating " . launcherEntityObj.Key . "...")
+            this.progress.SetDetailText("Validating " . launcherEntityObj.Id . "...")
         }
 
         result := launcherEntityObj.Validate()
@@ -29,7 +29,7 @@ class ValidateLaunchersOp extends LauncherGameOpBase {
         message := !result["success"] ? "Validateion failed." : "Validation successful."
         
         if (this.useProgress) {
-            this.progress.SetDetailText(launcherEntityObj.Key . ": " . message)
+            this.progress.SetDetailText(launcherEntityObj.Id . ": " . message)
         }
 
         return result["success"]

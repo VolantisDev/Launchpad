@@ -12,20 +12,20 @@
 
     Controls() {
         super.Controls()
-        this.Add("ComboBoxControl", "vKey", "Key", "", this.knownGames, "", "Select an existing game from the API, or enter a custom game key to create your own. If choosing an existing game, most advanced values can be loaded from the API.")
+        this.Add("ComboBoxControl", "vId", "Id", "", this.knownGames, "", "Select an existing game from the API, or enter a custom game key to create your own. If choosing an existing game, most advanced values can be loaded from the API.")
         this.Add("SelectControl", "vPlatform", "Platform", this.defaultPlatform, this.knownPlatforms, "", "Select the platform that this game is run through.")
         this.Add("LocationBlock", "vInstallDir", "Install Dir", this.installDir, "InstallDir", "", true, "Select the directory the game is installed in")
         this.Add("LocationBlock", "vGameExe", "Game Exe", this.exe, "Exe", "", true, "Select the game's main .exe file")
     }
 
     GetLauncherKey() {
-        return this.guiObj["Key"].Text
+        return this.guiObj["Id"].Text
     }
 
     GetLauncherConfig() {
         platformKey := Trim(this.guiObj["Platform"].Text)
         config := Map("Platform", platformKey, "GameInstallDir", this.installDir, "GameExe", this.exe)
-        platform := this.app.Service("manager.platform").GetItem(platformKey)
+        platform := this.app.Service("entity_manager.platform")[platformKey]
         
         if (platform) {
             config["LauncherType"] := platform.platform.launcherType

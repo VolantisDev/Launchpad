@@ -6,7 +6,7 @@ class CleanLaunchersOp extends LauncherBuilderOpBase {
 
     ProcessLauncherGame(launcherEntityObj) {
         if (this.useProgress) {
-            this.progress.SetDetailText(launcherEntityObj.Key . ": Cleaning launcher...")
+            this.progress.SetDetailText(launcherEntityObj.Id . ": Cleaning launcher...")
         }
 
         cleaned := this.builder.Clean(launcherEntityObj)
@@ -14,7 +14,7 @@ class CleanLaunchersOp extends LauncherBuilderOpBase {
         message := cleaned ? "Cleaned successfully." : "Cleaning not required."
 
         if (this.useProgress) {
-            this.progress.SetDetailText(launcherEntityObj.Key . ": " . message)
+            this.progress.SetDetailText(launcherEntityObj.Id . ": " . message)
         }
 
         return true

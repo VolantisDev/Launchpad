@@ -3,15 +3,15 @@ class PlatformsWindow extends ManageWindowBase {
     platformManager := ""
 
     __New(container, themeObj, config) {
-        this.platformManager := container.Get("manager.platform")
-        this.lvCount := this.platformManager.CountEntities()
+        this.platformManager := container.Get("entity_manager.platform")
+        this.lvCount := this.platformManager.Count(true)
         super.__New(container, themeObj, config)
     }
 
     GetDefaultConfig(container, config) {
         defaults := super.GetDefaultConfig(container, config)
         defaults["title"] := "Platforms"
-        defaults["platformsFile"] := container.Get("Config")["platforms_file"]
+        defaults["platformsFile"] := container.Get("config.app")["platforms_file"]
         return defaults
     }
 
@@ -23,11 +23,11 @@ class PlatformsWindow extends ManageWindowBase {
     GetListViewData(lv) {
         data := Map()
 
-        for key, platform in this.platformManager.Entities {
-            enabledText := platform.IsEnabled ? "Yes" : "No"
-            detectGamesText := platform.DetectGames ? "Yes" : "No"
-            installedText := platform.IsInstalled ? "Yes" : "No"
-            data[key] := [platform.GetDisplayName(), enabledText, detectGamesText, installedText, platform.InstalledVersion]
+        for key, platform in this.platformManager {
+            enabledText := platform["IsEnabled"] ? "Yes" : "No"
+            detectGamesText := platform["DetectGames"] ? "Yes" : "No"
+            installedText := platform["IsInstalled"] ? "Yes" : "No"
+            data[key] := [platform.GetName(), enabledText, detectGamesText, installedText, platform["InstalledVersion"]]
         }
 
         return data
@@ -42,12 +42,12 @@ class PlatformsWindow extends ManageWindowBase {
     }
 
     GetListViewImgList(lv, large := false) {
-        IL := IL_Create(this.platformManager.CountEntities(), 1, large)
+        IL := IL_Create(this.platformManager.Count(true), 1, large)
         defaultIcon := this.themeObj.GetIconPath("Platform")
         iconNum := 1
 
-        for key, platform in this.platformManager.Entities {
-            iconSrc := platform.IconSrc
+        for key, platform in this.platformManager {
+            iconSrc := platform["IconSrc"]
 
             if (!iconSrc or !FileExist(iconSrc)) {
                 iconSrc := defaultIcon
@@ -65,11 +65,11 @@ class PlatformsWindow extends ManageWindowBase {
     }
 
     EditPlatform(key) {
-        platformObj := this.platformManager.Entities[key]
+        platformObj := this.platformManager[key]
         diff := platformObj.Edit("config", this.guiId)
 
         if (diff != "" && diff.HasChanges()) {
-            this.platformManager.SaveModifiedEntities()
+            platformObj.SaveEntity()
             this.UpdateListView()
         }
     }
@@ -91,18 +91,18 @@ class PlatformsWindow extends ManageWindowBase {
 
     ShowListViewContextMenu(lv, item, isRightClick, X, Y) {
         key := this.listView.GetRowKey(item)
-        platform := this.platformManager.Entities[key]
+        platform := this.platformManager[key]
 
         menuItems := []
         menuItems.Push(Map("label", "Edit", "name", "EditPlatform"))
 
-        if (platform.IsEnabled) {
+        if (platform["IsEnabled"]) {
             menuItems.Push(Map("label", "Disable", "name", "DisablePlatform"))
         } else {
             menuItems.Push(Map("label", "Enable", "name", "EnablePlatform"))
         }
 
-        if (platform.IsInstalled) {
+        if (platform["IsInstalled"]) {
             menuItems.Push(Map("label", "Run", "name", "RunPlatform"))
             menuItems.Push(Map("label", "Update", "name", "UpdatePlatform"))
             menuItems.Push(Map("label", "Uninstall", "name", "UninstallPlatform"))
@@ -115,14 +115,12 @@ class PlatformsWindow extends ManageWindowBase {
         if (result == "EditPlatform") {
             this.EditPlatform(key)
         } else if (result == "DisablePlatform") {
-            platform.IsEnabled := false
-            platform.SaveModifiedData()
-            this.platformManager.SaveModifiedEntities()
+            platform["IsEnabled"] := false
+            platform.SaveEntity()
             this.UpdateListView()
         } else if (result == "EnablePlatform") {
-            platform.IsEnabled := true
-            platform.SaveModifiedData()
-            this.platformManager.SaveModifiedEntities()
+            platform["IsEnabled"] := true
+            platform.SaveEntity()
             this.UpdateListView()
         } else if (result == "RunPlatform") {
             platform.Run()
