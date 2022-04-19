@@ -1,53 +1,42 @@
 class PlatformManager extends EntityManagerBase {
-    _registerEvent := LaunchpadEvents.PLATFORMS_REGISTER
-    _alterEvent := LaunchpadEvents.PLATFORMS_ALTER
+    guiManagerObj := ""
 
-    GetLoadOperation() {
-        return LoadPlatformsOp(this.app, this.configObj)
+    __New(container, entityTypeId, guiManagerObj, eventMgr, notifierObj, storageObj, factoryObj, componentType, definitionLoaders := "", autoLoad := false) {
+        this.guiManagerObj := guiManagerObj
+        super.__New(container, entityTypeId, eventMgr, notifierObj, storageObj, factoryObj, componentType, definitionLoaders, autoLoad)
     }
 
-    GetDefaultConfigPath() {
-        return this.app.Config["platforms_file"]
-    }
+    static Create(entityTypeId, definition, container) {
+        className := this.Prototype.__Class
+        manager := container.Get("manager.entity_type")
 
-    RemoveEntityFromConfig(key) {
-        this.configObj.Delete(key)
-    }
-
-    AddEntityToConfig(key, entityObj) {
-        this.configObj[key] := entityObj.UnmergedConfig
+        return %className%(
+            container,
+            entityTypeId,
+            container.Get("manager.gui"),
+            container.Get(definition["event_manager"]),
+            container.Get(definition["notifier"]),
+            manager.GetStorage(entityTypeId),
+            manager.GetFactory(entityTypeId),
+            definition["entity_class"],
+            manager.GetDefinitionLoader(entityTypeId)
+        )
     }
 
     GetActivePlatforms() {
-        platforms := Map()
-
-        if (!this._componentsLoaded) {
-            this.LoadComponents()
-        }
-
-        for key, platform in this.Entities {
-            if (platform.IsEnabled && platform.IsInstalled) {
-                platforms[key] := platform
-            }
-        }
-
-        return platforms
+        return this._getActiveQuery().Execute()
     }
 
     GetGameDetectionPlatforms() {
-        platforms := Map()
+        return this._getActiveQuery()
+            .Condition(IsTrueCondition(), "DetectGames")
+            .Execute()
+    }
 
-        if (!this._componentsLoaded) {
-            this.LoadComponents()
-        }
-
-        for key, platform in this.Entities {
-            if (platform.IsEnabled && platform.IsInstalled && platform.DetectGames) {
-                platforms[key] := platform
-            }
-        }
-
-        return platforms
+    _getActiveQuery() {
+        return this.EntityQuery()
+            .Condition(IsTrueCondition(), "IsEnabled")
+            .Condition(IsTrueCondition(), "IsInstalled")
     }
     
     DetectGames() {
@@ -63,6 +52,6 @@ class PlatformManager extends EntityManagerBase {
             }
         }
 
-        this.app.Service("manager.gui").OpenWindow("DetectedGamesWindow", allDetectedGames)
+        this.guiManagerObj.OpenWindow("DetectedGamesWindow", allDetectedGames)
     }
 }
