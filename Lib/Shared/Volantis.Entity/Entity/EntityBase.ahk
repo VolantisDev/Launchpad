@@ -1,379 +1,424 @@
-; TODO: Automatically return properties from the entity data or an exception if they don't exist
 class EntityBase {
-    keyVal := ""
-    configObj := ""
-    requiredConfigKeysVal := []
-    configPrefix := ""
-    entityData := ""
-    parentEntity := ""
-    children := Map()
-    originalObj := ""
-    sanitizeKey := true
+    idVal := ""
+    entityTypeIdVal := ""
+    parentEntityObj := ""
+    container := ""
+    eventMgr := ""
+    dataObj := ""
+    storageObj := ""
+    idSanitizer := ""
+    sanitizeId := true
+    loaded := false
+    merger := ""
+    cloner := ""
 
-    /**
-    * BASE SETTINGS
-    * 
-    * These are the main pieces of data that is interacted with and that all of the other settings are pulled from.
-    */
-
-    ; The ID used to refer to the entity, typically the entity's name, but it should only contain characters valid in a filename.
-    ; It will be used for the name of directories and most files related to the entity.
-    ; 
-    ; If this key matches the DataSourceKey, then a shortcut can be used such that 
-    Key {
-        get => this.keyVal
-        set => this.keyVal := value
+    Id {
+        get => this.GetId()
+        set => this.SetId(value)
     }
 
-    ; Configuration that has often been merged with defaults from external sources.
-    ; This is the object that most of the other values in this class come from, but it can contain custom items too.
-    Config {
-        get => this.entityData.GetMergedData()
+    EntityTypeId {
+        get => this.entityTypeIdVal
     }
 
-    ; The unmodified original configuration from the entity.
-    ; When editing the entity, this is where the raw updated configuration is stored before it's actually saved.
-    UnmergedConfig {
-        get => this.entityData.GetLayer("config")
-        set => this.entityData.SetLayer("config", value)
-    }
-    
-    ; The object that was originally passed in. This is left unmodified until modified values are actually "saved" at which point they will be copied back into this object.
-    ConfigObject {
-        get => this.configObj
-        set => this.configObj := value
+    EntityType {
+        get => this.GetEntityType()
     }
 
-    ; Gets tor sets the configuration keys that are required to have a valid value before this entity is considered valid.
-    RequiredConfigKeys {
-        get => this.requiredConfigKeysVal
-        set => this.requiredConfigKeysVal := value
+    FieldData {
+        Get => this.GetData().GetMergedData()
     }
 
-    ; Wherever the entity's name is displayed, this value will be used.
-    ; It defaults to the key if it is not set, which is usually sufficient.
-    DisplayName {
-        get => this.GetConfigValue("DisplayName", false)
-        set => this.SetConfigValue("DisplayName", value, false)
+    Name {
+        get => this.GetValue("name")
+        set => this.SetValue("name", value)
     }
 
-    __New(key, configObj, parentEntity := "", requiredConfigKeys := "") {
-        InvalidParameterException.CheckTypes(
-            "EntityBase", 
-            "key", key, "String", 
-            "configObj", configObj, "Map"
-        )
-    
-        if (parentEntity != "") {
-            InvalidParameterException.CheckTypes("EntityBase", "parentEntity", parentEntity, "EntityBase")
+    UnmergedFieldData {
+        get => this.GetData().GetLayer("config")
+        set => this.GetData().SetLayer("config", value)
+    }
+
+    ParentEntity {
+        get => this.GetParentEntity()
+        set => this.SetParentEntity(value)
+    }
+
+    __Item[key := ""] {
+        get => this.GetValue(key)
+        set => this.SetValue(key, value)
+    }
+
+    __Enum(numberOfVars) {
+        return this.GetAllValues().__Enum(numberOfVars)
+    }
+
+    __New(id, entityTypeId, container, eventMgr, storageObj, idSanitizer := "", autoLoad := true, parentEntity := "") {
+        this.idSanitizer := idSanitizer
+        
+        if (this.sanitizeId && this.idSanitizer) {
+            idVal := this.idSanitizer.Process(id)
         }
 
-        InvalidParameterException.CheckEmpty("EntityBase", "key", key)
+        this.idVal := id
+        this.entityTypeIdVal := entityTypeId
+        this.container := container
+        this.eventMgr := eventMgr
+        this.storageObj := storageObj
+        this.merger := container.Get("merger.list")
+        this.cloner := container.Get("cloner.list")
 
-        if (this.sanitizeKey) {
-            ; TODO Load the sanitizer from the container
-            sanitizer := StringSanitizer()
-            key := sanitizer.Process(key)
+        if (!parentEntity) {
+            parentEntity := this.DiscoverParentEntity(container, eventMgr, id, storageObj, idSanitizer)
         }
 
-        this.keyVal := key
-        this.configObj := configObj
-        this.parentEntity := parentEntity
-        this.entityData := this.createLayeredData()
+        if (parentEntity) {
+            this.SetParentEntity(parentEntity)
+        }
 
-        this.initializeRequiredConfigKeys(requiredConfigKeys)
+        this.dataObj := this._createEntityData()
+
+        this.SetupEntity()
+
+        if (this.storageObj.HasData(this) && autoLoad) {
+            this.LoadEntity(false, true)
+        }
     }
 
-    static CreateEntity(container, key, configObj, parentEntity := "", requiredConfigKeys := "") {
+    static Create(container, eventMgr, id, entityTypeId, storageObj, idSanitizer, parentEntity := "") {
         className := this.Prototype.__Class
 
         return %className%(
-            key, 
-            configObj, 
-            parentEntity, 
-            requiredConfigKeys
+            id,
+            entityTypeId,
+            container,
+            eventMgr,
+            storageObj,
+            idSanitizer,
+            parentEntity
         )
     }
 
-    createLayeredData() {
-        layeredData := LayeredEntityData(this.configObj.Clone(), this.InitializeDefaults(), this.getEntityLayers())
-        this.entityData := layeredData
-        this.populateEntityLayers(layeredData)
-        layeredData.SetAutoDetectedDefaults(this.AutoDetectValues())
-        layeredData.StoreOriginal()
-        return layeredData
+    DiscoverParentEntity(container, eventMgr, id, storageObj, idSanitizer) {
+        return ""
+    }
+
+    GetParentEntity() {
+        return this.parentEntityObj
+    }
+
+    SetParentEntity(parentEntity) {
+        this.parentEntityObj := parentEntity
+    }
+
+    SetupEntity() {
+        event := EntityEvent(EntityEvents.ENTITY_PREPARE, this.entityTypeId, this)
+        this.eventMgr.DispatchEvent(event)
+    }
+
+    GetAllValues(raw := false) {
+        return this.GetData().GetMergedData(!raw)
+    }
+
+    GetEntityTypeId() {
+        return this.entityTypeId
+    }
+
+    GetEntityType() {
+        return this.container.Get("manager.entity_type")[this.EntityTypeId]
+    }
+
+    _createEntityData() {
+        return LayeredEntityData(Map(), this.InitializeDefaults(), this.getEntityLayers())
+    }
+
+    InitializeDefaults() {
+        return Map(
+            "name", this.Id
+        )
     }
 
     getEntityLayers() {
-        return []
+        layers := []
+
+        event := EntityLayersEvent(EntityEvents.ENTITY_CUSTOM_DATA_LAYERS, this.entityTypeId, this, layers)
+        this.eventMgr.DispatchEvent(event)
+
+        event := EntityLayersEvent(EntityEvents.ENTITY_CUSTOM_DATA_LAYERS_ALTER, this.entityTypeId, this, event.Layers)
+        this.eventMgr.DispatchEvent(event)
+
+        return event.Layers
     }
 
-    poplateEntityLayers(layeredData) {
+    populateEntityLayers(layeredData) {
+        layeredData.SetLayer("auto", this.AutoDetectValues())
 
+        event := EntityDataEvent(EntityEvents.ENTITY_CUSTOM_DATA_POPULATE, this.entityTypeId, this, layeredData)
+        this.eventMgr.DispatchEvent(event)
+
+        event := EntityDataEvent(EntityEvents.ENTITY_CUSTOM_DATA_ALTER, this.entityTypeId, this, layeredData)
+        this.eventMgr.DispatchEvent(event)
     }
 
-    StoreOriginal(recursive := true, update := false) {
-        this.entityData.StoreOriginal(update)
+    GetData() {
+        return this.dataObj
+    }
 
-        for index, child in this.children {
-            child.StoreOriginal(recursive, update)
+    GetValue(key) {
+        if (key == "id") {
+            return this.GetId()
+        }
+
+        return this.GetData().GetValue(key)
+    }
+
+    SetValue(key, value) {
+        if (key == "id") {
+            this.SetId(value)
+        } else {
+            this.GetData().SetValue(key, value)
         }
     }
 
-    RestoreFromOriginal(recursive := true) {
-        this.entityData.RestoreFromOriginal()
+    GetId() {
+        return this.idVal
+    }
 
-        for index, child in this.children {
-            child.RestoreFromOriginal(recursive)
+    SetId(newId) {
+        throw EntityException("Setting the ID is not supported by this entity.")
+    }
+
+    HasId(negate := false) {
+        hasId := !!(this.GetId())
+
+        return negate ? !hasId : hasId
+    }
+
+    Has(key, allowEmpty := true) {
+        return this.GetData().HasValue(key, "", allowEmpty)
+    }
+
+    DeleteValue(key) {
+        return this.GetData().DeleteValue(key, "config")
+    }
+
+    GetRawValues(process := true) {
+        return this.GetData().GetMergedData(process)
+    }
+
+    CreateSnapshot(name) {
+        this.GetData().CreateSnapshot(name)
+        return this
+    }
+
+    RestoreSnapshot(name) {
+        this.GetData().RestoreSnapshot(name)
+        return this
+    }
+
+    GetStorageId() {
+        return this.Id
+    }
+
+    LoadEntity(reload := false, recurse := false) {
+        loaded := false
+
+        if (!this.loaded || reload) {
+            if (this.storageObj.HasData(this.GetStorageId())) {
+                this.GetData().SetLayer("config", this.storageObj.LoadData(this.GetStorageId()))
+            }
+            
+            this.RefreshEntityData(false)
+            this.CreateSnapshot("original")
+        
+            this.loaded := true
+            loaded := true
+        }
+
+        if (recurse) {
+            for index, entityObj in this.GetReferencedEntities() {
+                entityObj.LoadEntity(reload, recurse)
+            }
+        }
+
+        if (loaded) {
+            event := EntityEvent(EntityEvents.ENTITY_LOADED, this.entityTypeId, this)
+            this.eventMgr.DispatchEvent(event)
         }
     }
 
-    ; NOTICE: Object not yet fully loaded. Might not be safe to call this.entityData
-    InitializeDefaults() {
-        return Map(
-            "DisplayName", this.keyVal,
-        )
+    RefreshEntityData(recurse := true) {
+        this.populateEntityLayers(this.GetData())
+
+        if (recurse) {
+            for index, entityObj in this.GetReferencedEntities() {
+                entityObj.RefreshEntityData(recurse)
+            }
+        }
+
+        event := EntityRefreshEvent(EntityEvents.ENTITY_REFRESH, this.entityTypeId, this, recurse)
+        this.eventMgr.DispatchEvent(event)
     }
 
     AutoDetectValues() {
         return Map()
     }
 
-    initializeRequiredConfigKeys(requiredConfigKeys := "") {
-        if (requiredConfigKeys != "") {
-            this.AddRequiredConfigKeys(requiredConfigKeys)
-        }
+    SaveEntity(recurse := true) {
+        alreadyExists := this.storageObj.HasData(this)
 
-        if (this.Config.Has("RequiredConfigKeys")) {
-            this.AddRequiredConfigKeys(this.Config["RequiredConfigKeys"])
-        }
-    }
-
-    AddRequiredConfigKeys(configKeys, addPrefix := false) {
-        if (Type(configKeys) == "String" && configKeys) {
-            configKeys := [configKeys]
-        }
-
-        if (Type(configKeys) != "Array") {
-            throw AppException("Provided required config keys is not an array. Received: " . Type(configKeys))
-        }
-
-        for index, requiredKey in configKeys {
-            if (!this.ConfigKeyIsRequired(requiredKey)) {
-                if (addPrefix) {
-                    requiredKey := this.configPrefix . requiredKey
-                }
-
-                this.requiredConfigKeysVal.push(requiredKey)
-            }
-        }
-    }
-
-    ConfigKeyIsRequired(key, addPrefix := false) {
-        isRequired := false
-
-        if (addPrefix) {
-            key := this.configPrefix . key
-        }
-
-        for index, requiredKey in this.requiredConfigKeysVal {
-            if (key == requiredKey) {
-                isRequired := true
-                break
-            }
-        }
-
-        return isRequired
-    }
-
-    MergeFromObject(mainObject, defaults, overwriteKeys := false) {
-        for key, value in defaults {
-            if (overwriteKeys or !mainObject.Has(key)) {
-                if (value == "true" or value == "false") {
-                    mainObject[key] := (value == "true")
-                } else {
-                    mainObject[key] := value
-                }
-            }
-        }
-
-        return mainObject
-    }
-
-    GetConfigValue(key, usePrefix := true, processValue := true) {
-        if (usePrefix) {
-            key := this.configPrefix . key
-        }
+        event := EntityEvent(EntityEvents.ENTITY_PRESAVE, this.entityTypeId, this)
+        this.eventMgr.DispatchEvent(event)
         
-        return this.entityData.GetValue(key, processValue)
-    }
+        this.storageObj.SaveData(this.GetStorageId(), this.GetData().GetLayer("config"))
+        this.CreateSnapshot("original")
 
-    SetConfigValue(key, value, usePrefix := true) {
-        if (usePrefix) {
-            key := this.configPrefix . key
+        if (recurse) {
+            for index, entityObj in this.GetReferencedEntities() {
+                entityObj.SaveEntity(recurse)
+            }
         }
 
-        this.entityData.SetValue(key, value, "config")
-        return this
-    }
-
-    HasConfigValue(key, usePrefix := true, allowEmpty := true) {
-        if (usePrefix) {
-            key := this.configPrefix . key
+        if (alreadyExists) {
+            event := EntityEvent(EntityEvents.ENTITY_UPDATED, this.entityTypeId, this)
+            this.eventMgr.DispatchEvent(event)
+        } else {
+            event := EntityEvent(EntityEvents.ENTITY_CREATED, this.entityTypeId, this)
+            this.eventMgr.DispatchEvent(event)
         }
-
-        return this.entityData.HasValue(key, "", allowEmpty)
     }
 
-    DeleteConfigValue(key, usePrefix := true) {
-        if (usePrefix) {
-            key := this.configPrefix . key
+    RestoreEntity(snapshot := "original") {
+        if (this.GetData().HasSnapshot(snapshot)) {
+            this.GetData().RestoreSnapshot(snapshot)
+
+            event := EntityEvent(EntityEvents.ENTITY_RESTORED, this.entityTypeId, this)
+            this.eventMgr.DispatchEvent(event)
         }
-
-        this.entityData.DeleteValue(key, "config")
-        return this
     }
 
-    /**
-    * ENTITY ACTIONS
-    */
+    DeleteEntity() {
+        if (this.storageObj.HasData(this.GetStorageId())) {
+            event := EntityEvent(EntityEvents.ENTITY_PREDELETE, this.entityTypeId, this)
+            this.eventMgr.DispatchEvent(event)
+
+            this.storageObj.DeleteData(this.GetStorageId())
+
+            event := EntityEvent(EntityEvents.ENTITY_DELETED, this.entityTypeId, this)
+            this.eventMgr.DispatchEvent(event)
+        }
+    }
 
     Validate() {
-        validateResult := Map("success", true, "invalidKeys", Array())
+        validateResult := Map("success", true, "invalidKeys", [])
 
-        for index, requiredKey in this.RequiredConfigKeys {
-            if (!this.entityData.HasValue(requiredKey, "", false)){
-                validateResult["success"] := false
-                validateResult["invalidKeys"].push(requiredKey)
-            }
-        }
+        event := EntityValidateEvent(EntityEvents.ENTITY_VALIDATE, this.entityTypeId, this, validateResult)
+        this.eventMgr.DispatchEvent(event)
+        
+        return event.ValidateResult
+    }
 
-        for key, child in this.children {
-            childValidateResult := child.Validate()
+    IsModified(recurse := false) {
+        changes := this.DiffChanges(recurse)
 
-            if (!childValidateResult["success"]) {
-                validateResult["success"] := false
-
-                for index, invalidKey in childValidateResult["invalidKeys"] {
-                    validateResult["invalidKeys"].Push(invalidKey)
-                }
-            }
-        }
-
-        return validateResult
+        return !!(changes.GetAdded().Count || changes.GetModified().Count || changes.GetDeleted().Count)
     }
 
     DiffChanges(recursive := true) {
-        diff := this.entityData.DiffChanges("config")
+        diff := this.GetData().DiffChanges("original", "config")
 
-        if (!recursive) {
-            return diff
-        }
+        if (recursive) {
+            diffs := [diff]
 
-        added := Map()
-        modified := Map()
-        deleted := Map()
-
-        diffs := [diff]
-
-        for index, child in this.children {
-            diffs.Push(child.DiffChanges(recursive))
-        }
-
-        for index, diff in diffs {
-            for key, item in diff.GetAdded() {
-                if (!added.Has(key) && !modified.Has(key) && !deleted.Has(key)) {
-                    added[key] := item
-                }
+            for index, referencedEntity in this.GetReferencedEntities(true) {
+                diffs.Push(referencedEntity.DiffChanges(recursive))
             }
 
-            for key, item in diff.GetModified() {
-                if (!added.Has(key) && !modified.Has(key) && !deleted.Has(key)) {
-                    modified[key] := item
-                }
-            }
-
-            for key, item in diff.GetDeleted() {
-                if (!added.Has(key) && !modified.Has(key) && !deleted.Has(key)) {
-                    deleted[key] := item
-                }
-            }
+            diff := DiffResult.Combine(diffs)
         }
 
-        return DiffResult(added, modified, deleted)
+        return diff
     }
 
-    /*
-        Default modes:
-            - config - saves changes
-            - validate - diffs without saving
-            - child - similar to config but doesn't save
-    */
+    GetReferencedEntities(onlyChildren := false) {
+        return []
+    }
+
     Edit(mode := "config", owner := "") {
-        this.StoreOriginal()
+        this.LoadEntity()
         editMode := mode == "child" ? "config" : mode
         result := this.LaunchEditWindow(editMode, owner)
         fullDiff := ""
 
         if (result == "Cancel" || result == "Skip") {
-            this.RestoreFromOriginal()
+            this.RestoreEntity()
         } else {
             fullDiff := this.DiffChanges(true)
 
             if (mode == "config" && fullDiff.HasChanges()) {
-                this.SaveModifiedData()
-                this.StoreOriginal(true, true)
+                this.SaveEntity()
             }
         }
 
-        if (fullDiff == "") {
+        if (!fullDiff) {
             fullDiff := DiffResult(Map(), Map(), Map())
         }
 
         return fullDiff
     }
 
-    LaunchEditWindow(mode, owner) {
-        return "Cancel"
-    }
+    LaunchEditWindow(mode, ownerOrParent := "") {
+        result := "Cancel"
 
-    SaveModifiedData() {
-        diff := this.DiffChanges(false)
+        while (mode) {
+            result := this.app.Service("manager.gui").Dialog(Map(
+                "type", "SimpleEntityEditor",
+                "mode", mode,
+                "child", !!(ownerOrParent),
+                "ownerOrParent", ownerOrParent
+            ), this)
 
-        if (diff != "" && diff.HasChanges()) {
-            for key, val in diff.GetAdded() {
-                this.configObj[key] := val
-            }
+            reloadPrefix := "mode:"
 
-            for key, val in diff.GetModified() {
-                this.configObj[key] := val
-            }
-
-            for key, val in diff.GetDeleted() {
-                if (this.configObj.Has(key)) {
-                    this.configObj.Delete(key)
-                }
+            if (result == "Simple") {
+                mode := "simple"
+            } else if (result == "Advanced") {
+                mode := "config"
+            } else if (result && InStr(result, reloadPrefix) == 1) {
+                mode := SubStr(result, StrLen(reloadPrefix) + 1)
+            } else {
+                mode := ""
             }
         }
 
-        for key, child in this.children {
-            child.SaveModifiedData()
-        }
+        return result
     }
 
-    RevertToDefault(field) {
-        this.entityData.DeleteValue(field, "config")
+    RevertToDefault(key) {
+        this.GetData().DeleteValue(key, "config")
     }
 
-    GetAssetPath(filePath) {
-        return this.AssetsDir . "\" . filePath
-    }
+    GetEditorButtons(mode) {
+        buttonDefs := ""
 
-    DereferenceKey(key, map) {
-        if (map.Has(key) && Type(map[key]) == "String") {
-            key := this.DereferenceKey(map[key], map)
+        if (mode == "config") {
+            buttonDefs := "*&Save|&Cancel"
+        } else if (mode == "build") {
+            buttonDefs := "*&Continue|&Skip"
         }
 
-        return key
+        return buttonDefs
+    }
+
+    GetEditorDescription(mode) {
+        text := ""
+
+        if (mode == "config") {
+            text := "The details entered here will be saved and used for all future builds."
+        } else if (mode == "build") {
+            text := "The details entered here will be used for this build only."
+        }
+
+        return text
     }
 }
