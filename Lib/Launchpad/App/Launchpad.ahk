@@ -6,15 +6,15 @@
     CheckForUpdates(notify := true) {
         updateAvailable := false
 
-        if (this.Version != "{{VERSION}}") {
-            dataSource := this.Service("manager.datasource")["api"]
+        if (this.Version != "{{VERSION}}" && this.Service("manager.datasource").GetDefaultDataSource()) {
+            dataSource := this.Service("manager.datasource").GetDefaultDataSource()
             releaseInfoStr := dataSource.ReadItem("release-info")
 
             if (releaseInfoStr) {
                 data := JsonData()
                 releaseInfo := data.FromString(&releaseInfoStr)
 
-                if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this.Service("VersionChecker").VersionIsOutdated(releaseInfo["data"]["version"], this.Version)) {
+                if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this.Service("version_checker").VersionIsOutdated(releaseInfo["data"]["version"], this.Version)) {
                     updateAvailable := true
                     this.Service("manager.gui").Dialog(Map("type", "UpdateAvailableWindow"), releaseInfo)
                 }
@@ -22,13 +22,46 @@
         }
 
         if (!updateAvailable && notify) {
-            this.Service("Notifier").Info("You're running the latest version of Launchpad. Shiny!")
+            this.Service("notifier").Info("You're running the latest version of Launchpad. Shiny!")
         }
     }
 
     UpdateIncludes() {
         this.RunAhkScript(this.appDir . "\Scripts\UpdateIncludes.ahk")
         this.RestartApp()
+    }
+
+    InitializeApp(config) {
+        eventMgr := this.Service("manager.event")
+        eventMgr.Register(EntityEvents.ENTITY_CREATED, "LaunchpadEntityCreated", ObjBindMethod(this, "OnEntityCreated"))
+        eventMgr.Register(EntityEvents.ENTITY_UPDATED, "LaunchpadEntityUpdated", ObjBindMethod(this, "OnEntityUpdated"))
+        eventMgr.Register(EntityEvents.ENTITY_DELETED, "LaunchpadEntityDeleted", ObjBindMethod(this, "OnEntityDeleted"))
+        eventMgr.Register(EntityEvents.ENTITY_LOADED, "LaunchpadEntityLoaded", ObjBindMethod(this, "OnEntityLoaded"))
+        super.InitializeApp(config)
+    }
+
+    OnEntityCreated(event, extra, eventName, hwnd) {
+        if (event.EntityTypeId == "launcher") {
+            this.State.SetLauncherCreated(event.Entity.Id)
+        }
+    }
+
+    OnEntityUpdated(event, extra, eventName, hwnd) {
+        if (event.EntityTypeId == "launcher" && !this.State.GetLauncherCreated(event.Entity.Id)) {
+            this.State.SetLauncherCreated(event.Entity.Id)
+        }
+    }
+
+    OnEntityDeleted(event, extra, eventName, hwnd) {
+        if (event.EntityTypeId == "launcher") {
+            this.State.DeleteLauncherInfo(event.Entity.Id)
+        }
+    }
+
+    OnEntityLoaded(event, extra, eventName, hwnd) {
+        if (event.EntityTypeId == "launcher" && !this.State.GetLauncherCreated(event.Entity.Id)) {
+            this.State.SetLauncherCreated(event.Entity.Id)
+        }
     }
 
     BuildApp() {
@@ -70,9 +103,12 @@
         return result
     }
 
+    OnServicesLoaded(event, extra, eventName, hwnd) {
+        super.OnServicesLoaded(event, extra, eventName, hwnd)
+    }
+
     RunApp(config) {
         this.MigrateConfiguration()
-        
 
         if (this.Config["api_auto_login"] && this.Services.Has("Auth")) {
             this.Service("Auth").Login()
@@ -80,14 +116,14 @@
         
         super.RunApp(config)
         
-        this.Service("manager.platform").LoadComponents()
-        this.Service("manager.launcher").LoadComponents()
-        this.Service("manager.backup").LoadComponents()
+        this.Service("entity_manager.platform").LoadComponents()
+        this.Service("entity_manager.launcher").LoadComponents()
+        this.Service("entity_manager.backup").LoadComponents()
 
         this.OpenApp()
 
         if (this.detectGames) {
-            this.Service("manager.platform").DetectGames()
+            this.Service("entity_manager.platform").DetectGames()
         }
     }
 
@@ -101,7 +137,7 @@
             ))
         
             if (response == "Yes") {
-                this.Service("LaunchpadIniMigrator").Migrate(configFile, this.Config)
+                this.Service("ini_migrator").Migrate(configFile, this.Config)
             } else {
                 FileDelete(configFile)
             }
