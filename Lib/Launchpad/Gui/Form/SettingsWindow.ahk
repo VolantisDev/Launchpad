@@ -1,6 +1,5 @@
 ﻿class SettingsWindow extends FormGuiBase {
     availableThemes := Map()
-    logLevels := ["None", "Error", "Warning", "Info", "Debug"]
     listViewModes := ["Report", "Tile", "List"]
     doubleClickActions := ["Edit", "Run"]
     needsRestart := false
@@ -109,8 +108,8 @@
         this.AddConfigCheckBox("Check for updates on start", "check_updates_on_start")
 
         this.AddHeading("Logging Level")
-        chosen := this.GetItemIndex(this.logLevels, this.app.Config["logging_level"])
-        ctl := this.guiObj.AddDDL("vlogging_level xs y+m Choose" . chosen . " w200 c" . this.themeObj.GetColor("editText"), this.logLevels)
+        chosen := this.GetItemIndex(this.container.Get("logger").GetLogLevels(), this.app.Config["logging_level"])
+        ctl := this.guiObj.AddDDL("vlogging_level xs y+m Choose" . chosen . " w200 c" . this.themeObj.GetColor("editText"), this.container.Get("logger").GetLogLevels())
         ctl.OnEvent("Change", "OnLoggingLevelChange")
 
         this.AddConfigLocationBlock("API Endpoint", "api_endpoint")
@@ -185,7 +184,7 @@
         } else if (btn == "OpenLauncherFile") {
             this.app.Config["OpenLauncherFile"]()
         } else if (btn == "ReloadLauncherFile") {
-            this.app.Service("manager.launcher").LoadComponents(this.app.Config["launcher_file"])
+            this.app.Service("entity_manager.launcher").LoadComponents(true)
         }
     }
 
@@ -196,7 +195,7 @@
         } else if (btn == "OpenBackupsFile") {
             this.app.Config["OpenBackupsFile"]()
         } else if (btn == "ReloadBackupsFile") {
-            this.app.Service("manager.launcher").LoadComponents(this.app.Config["backups_file"])
+            this.app.Service("entity_manager.backup").LoadComponents(true)
         }
     }
 
@@ -207,7 +206,7 @@
         } else if (btn == "OpenPlatformsFile") {
             this.app.Config["OpenPlatformsFile"]()
         } else if (btn == "ReloadPlatformsFile") {
-            this.app.Service("manager.platform").LoadComponents(this.app.Config["platforms_file"])
+            this.app.Service("entity_manager.platform").LoadComponents(true)
         }
     }
 
@@ -239,11 +238,11 @@
 
     OnApiEndpointMenuClick(btn) {
         if (btn == "ChangeApiEndpoint") {
-            this.app.Service("manager.datasource")["api"].ChangeApiEndpoint("", "")
+            this.app.Service("manager.datasource").GetDefaultDataSource().ChangeApiEndpoint("", "")
             this.SetText("ApiEndpoint", this.app.Config["api_endpoint"], "Bold")
             this.needsRestart := true
         } else if (btn == "OpenApiEndpoint") {
-            this.app.Service("manager.datasource")["api"].Open()
+            this.app.Service("manager.datasource").GetDefaultDataSource().Open()
         }
     }
 
@@ -260,11 +259,11 @@
 
     OnBackupDirMenuClick(btn) {
         if (btn == "ChangeBackupDir") {
-            this.app.Service("manager.backup").ChangeBackupDir()
+            this.app.Service("entity_manager.backup").ChangeBackupDir()
             this.SetText("BackupDir", this.app.Config["backup_dir"], "Bold")
             this.needsRestart := true
         } else if (btn == "OpenBackupDir") {
-            this.app.Service("manager.backup").OpenBackupDir()
+            this.app.Service("entity_manager.backup").OpenBackupDir()
         }
     }
 
