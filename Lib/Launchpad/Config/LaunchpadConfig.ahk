@@ -1,8 +1,4 @@
 ﻿class LaunchpadConfig extends AppConfig {
-    LaunchersLoaded() {
-        return this.app.Services.Has("manager.launcher")
-    }
-
     OpenDestinationDir() {
         Run(this.destination_dir)
     }
