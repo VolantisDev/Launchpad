@@ -1,0 +1,2 @@
+class LocalDataSource extends DataSourceBase {
+}
