@@ -78,9 +78,9 @@ class InstallerComponentBase {
 
         this.CleanupPreviousVersionsAction()
         this.InstallAction()
-
         this.appState.SetVersion(this.stateKey, this.version)
         this.appState.SetComponentInstalled(this.stateKey, true)
+
         return true
     }
 
@@ -141,9 +141,8 @@ class InstallerComponentBase {
         splitLatestVersion := StrSplit(this.SanitizeVersionString(latestVersion), ".")
         splitInstalledVersion := StrSplit(this.SanitizeVersionString(installedVersion), ".")
 
-        for (index, numPart in splitLatestVersion) {
+        for index, numPart in splitLatestVersion {
             otherVersionPart := splitInstalledVersion.Has(index) ? splitInstalledVersion[index] : 0
-
             currentIsAlpha := false
             latestIsAlpha := false
 

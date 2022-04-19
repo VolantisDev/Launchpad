@@ -33,7 +33,7 @@ class JwtAuthInfo extends AuthInfo {
             added["authToken"] := true
         }
         
-        for (key, value in userInfo) {
+        for key, value in userInfo {
             if (!added.Has(key) || !added[key]) {
                 this.Set(key, value)
             }
