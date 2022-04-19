@@ -13,6 +13,6 @@
         "dependencies": []
     },
     "parameters": {
-        "platforms.Bethesda": "BethesdaPlatform"
+        "platforms.Bethesda.PlatformClass": "BethesdaPlatform"
     }
 }

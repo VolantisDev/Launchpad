@@ -16,6 +16,6 @@
         "BlizzardProductDb": "BlizzardProductDb"
     },
     "parameters": {
-        "platforms.Blizzard": "BlizzardPlatform"
+        "platforms.Blizzard.PlatformClass": "BlizzardPlatform"
     }
 }
