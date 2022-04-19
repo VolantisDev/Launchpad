@@ -3,84 +3,92 @@ class PlatformEntity extends AppEntityBase {
     configPrefix := ""
     dataSourcePath := "platforms"
 
-    PlatformClass {
-        get => this.GetConfigValue("PlatformClass")
-        set => this.SetConfigValue("PlatformClass", value)
-    }
-    
-    IsEnabled {
-        get => this.GetConfigValue("IsEnabled")
-        set => this.SetConfigValue("IsEnabled", !!(value))
-    }
-
-    IsInstalled {
-        get => this.GetConfigValue("IsInstalled")
-        set => this.SetConfigValue("IsInstalled", !!(value))
-    }
-
-    DetectGames {
-        get => this.GetConfigValue("DetectGames")
-        set => this.SetConfigValue("DetectGames", !!(value))
-    }
-
-    InstalledVersion {
-        get => this.GetConfigValue("InstalledVersion")
-        set => this.SetConfigValue("InstalledVersion", value)
-    }
-
-    InstallDir {
-        get => this.GetConfigValue("InstallDir")
-        set => this.SetConfigValue("InstallDir", value)
-    }
-
-    ExePath {
-        get => this.GetConfigValue("ExePath")
-        set => this.SetConfigValue("ExePath", value)
-    }
-
-    IconSrc {
-        get => this.GetConfigValue("IconSrc")
-        set => this.SetConfigValue("IconSrc", value)
-    }
-
-    UninstallCmd {
-        get => this.GetConfigValue("UninstallCmd")
-        set => this.SetConfigValue("UninstallCmd", value)
-    }
-
-    __New(app, key, config, parentEntity := "", requiredConfigKeys := "") {
-        if (requiredConfigKeys == "") {
-            requiredConfigKeys := []
-        }
-
-        requiredConfigKeys.Push("PlatformClass")
-
-        platformClass := config.Has("PlatformClass") ? config["PlatformClass"] : ""
-        
-        if (!platformClass) {
-            throw OperationFailedException("Platform class could not be determined.")
-        }
-
-        super.__New(app, key, config, parentEntity, requiredConfigKeys)
+    SetupEntity() {
+        super.SetupEntity()
 
         if (!this.platform) {
-            this.CreatePlatform(platformClass)
+            this.CreatePlatform()
         }
+    }
+
+    BaseFieldDefinitions() {
+        definitions := super.BaseFieldDefinitions()
+
+        definitions["PlatformClass"] := Map(
+            "type", "class_name",
+            "description", "The class name that will be instantiated to manage this platform.",
+            "required", true,
+            "formField", false,
+            "editable", false,
+            "default", "BasicPlatform"
+        )
+
+        definitions["IsEnabled"] := Map(
+            "type", "boolean",
+            "description", "Include this platform in operations which affect all platforms.",
+            "default", true
+        )
+
+        definitions["IsInstalled"] := Map(
+            "type", "boolean",
+            "description", "Indicates whether this platform is currently installed.",
+            "editable", false,
+            "default", false
+        )
+
+        definitions["DetectGames"] := Map(
+            "type", "boolean",
+            "description", "Whether or not to include this platform when detecting installed games.",
+            "default", false,
+        )
+
+        definitions["InstalledVersion"] := Map(
+            "description", "The version of the platform that is currently detected on your machine.",
+            "editable", false
+        )
+
+        definitions["InstallDir"] := Map(
+            "type", "directory",
+            "description", "The directory this platform is installed to.",
+        )
+
+        definitions["ExePath"] := Map(
+            "type", "file",
+            "fileMask", "*.exe",
+            "description", "The path to this platform's primary executable file.",
+        )
+
+        definitions["IconSrc"] := Map(
+            "type", "icon_file",
+            "description", "The path to this platform's icon (.ico or .exe).",
+        )
+
+        definitions["UninstallCmd"] := Map(
+            "description", "The command that will be run if you choose to uninstall this platform.",
+            "formField", false,
+            "editable", false
+        )
+
+        return definitions
     }
 
     CreatePlatform(platformClass := "") {
         if (platformClass == "") {
-            platformClass := this.PlatformClass
+            platformClass := this["PlatformClass"]
         }
 
-        this.platform := %platformClass%(this.app, this.InstallDir, this.ExePath, this.InstalledVersion, this.UninstallCmd)
+        if (platformClass) {
+            this.platform := %platformClass%(this.app, this["InstallDir"], this["ExePath"], this["InstalledVersion"], this["UninstallCmd"])
+        } else {
+            throw EntityException("Cannot determine platform class.")
+        }
     }
 
-    GetDisplayName() {
+    GetName() {
         name := ""
 
-        if (this.platform and this.platform.displayName) {
-            name := this.platform.displayName
+        if (this.platform and this.platform.Name) {
+            name := this.platform.Name
         }
 
         return name
@@ -136,36 +144,5 @@ class PlatformEntity extends AppEntityBase {
         detectedValues["IconSrc"] := detectedValues["ExePath"]
         detectedValues["UninstallCmd"] := this.platform.GetUninstallCmd()
         return detectedValues
-    }
-
-    InitializeDefaults() {
-        defaults := super.InitializeDefaults()
-        defaults["PlatformClass"] := ""
-        defaults["IsEnabled"] := true
-        defaults["DetectGames"] := false
-        defaults["IsInstalled"] := false
-        defaults["InstalledVersion"] := ""
-        defaults["InstallDir"] := ""
-        defaults["ExePath"] := ""
-        defaults["IconSrc"] := ""
-        defaults["UninstallCmd"] := ""
-        return defaults
-    }
-
-    LaunchEditWindow(mode, owner := "", parent := "") {
-        ownerOrParent := ""
-
-        if (parent) {
-            ownerOrParent := parent
-        } else if (owner) {
-            ownerOrParent := owner
-        }
-
-        return this.app.Service("manager.gui").Dialog(Map(
-            "type", "PlatformEditor",
-            "mode", mode,
-            "child", !!(parent),
-            "ownerOrParent", ownerOrParent
-        ), this)
     }
 }

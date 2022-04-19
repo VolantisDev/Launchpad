@@ -3,159 +3,334 @@ class LauncherEntity extends AppEntityBase {
     configPrefix := "Launcher"
     additionalManagedLauncherDefaults := Map()
 
-    /**
-    * Entity references
-    */
-
-    ManagedLauncher {
-        get => this.children["ManagedLauncher"]
-        set => this.children["ManagedLauncher"] := value
-    }
-
-    /**
-    * CONFIGURATION PROPERTIES
-    */
-
-    ; The game's platform
-    Platform {
-        get => this.GetConfigValue("Platform", false)
-        set => this.SetConfigValue("Platform", value, false)
-    }
-
-    ; The directory where the entity build artifact(s) will be saved.
-    DestinationDir {
-        get => this.GetConfigValue("DestinationDir", false)
-        set => this.SetConfigValue("DestinationDir", value, false)
-    }
-
-    ; The icon file that the launcher will use. This can be one of several types of values:
-    ; - The filename of an existing icon in the AssetsDir
-    ; - The path of another icon file on the system, which will be copied to the AssetsDir if it doesn't already exist
-    ; - The path of an .exe file on the system where the icon will be extracted from and saved to the assets directory if it doesn't already exist
-    ; - "" (empty string) - Auto detection. See below.
-    ; 
-    ; Auto detection rules if IconSrc is not set:
-    ; 1. Look for [Key].ico in the assets directory
-    ; 2. If GameExe is an absolute path, use GameExe's path as the IconSrc
-    ; 3. If GameExe is a filename, search for that filename in GameDirs and use its path as the IconSrc if found
-    ; 3. Prompt for an icon during validation if the path is still not set
-    IconSrc {
-        get => this.GetConfigValue("IconSrc", false)
-        set => this.SetConfigValue("IconSrc", value, false)
-    }
-
-    ; The name of the theme to render GUI windows in the launcher with.
-    ThemeName {
-        get => this.GetConfigValue("ThemeName", false)
-        set => this.SetConfigValue("ThemeName", value, false)
-    }
-
-    ThemesDir {
-        get => this.GetConfigValue("ThemesDir", false)
-        set => this.SetConfigValue("ThemesDir", value, false)
-    }
-
-    ResourcesDir {
-        get => this.GetConfigValue("ResourcesDir", false)
-        set => this.SetConfigValue("ResourcesDir", value, false)
-    }
-
-    ShowProgress {
-        get => this.GetConfigValue("ShowProgress", false)
-        set => this.SetConfigValue("ShowProgress", value, false)
-    }
-
-    RunBefore {
-        get => this.GetConfigValue("RunBefore", false)
-        set => this.SetConfigValue("RunBefore", value, false)
-    }
-
-    CloseBefore {
-        get => this.GetConfigValue("CloseBefore", false)
-        set => this.SetConfigValue("CloseBefore", value, false)
-    }
-
-    RunAfter {
-        get => this.GetConfigValue("RunAfter", false)
-        set => this.SetConfigValue("RunAfter", value, false)
-    }
-
-    CloseAfter {
-        get => this.GetConfigValue("CloseAfter", false)
-        set => this.SetConfigValue("CloseAfter", value, false)
-    }
-
-    LogPath {
-        get => this.GetConfigValue("LogPath", false)
-        set => this.SetConfigValue("LogPath", value, false)
-    }
-
-    LoggingLevel {
-        get => this.GetConfigValue("LoggingLevel", false)
-        set => this.SetConfigValue("LoggingLevel", value, false)
-    }
-
-    EnableOverlay {
-        get => this.GetConfigValue("EnableOverlay", false)
-        set => this.SetConfigValue("EnableOverlay", value, false)
-    }
-
-    ForceOverlay {
-        get => this.GetConfigValue("ForceOverlay", false)
-        set => this.SetConfigValue("ForceOverlay", value, false)
-    }
-
-    OverlayHotkey {
-        get => this.GetConfigValue("OverlayHotkey", false)
-        set => this.SetConfigValue("OverlayHotkey", value, false)
-    }
-
-    OverlayWait {
-        get => this.GetConfigValue("OverlayWait", false)
-        set => this.SetConfigValue("OverlayWait", value, false)
-    }
-
     IsBuilt {
         get => this.LauncherExists(false)
     }
 
     IsOutdated {
-        get => !this.LauncherExists(false) or this.LauncherIsOutdated() 
+        get => !this.LauncherExists(false) or this.LauncherIsOutdated()
     }
 
-    __New(app, key, config, parentEntity := "", requiredConfigKeys := "") {
-        super.__New(app, key, config, parentEntity, requiredConfigKeys)
-        this.children["ManagedLauncher"] := ManagedLauncherEntity(app, key, config, this, "")
-        this.entityData.SetAutoDetectedDefaults(this.AutoDetectValues())
-        this.StoreOriginal(false, true)
+    GetDefaultFieldGroups() {
+        groups := super.GetDefaultFieldGroups()
+
+        groups["ui"] := Map(
+            "name", "UI",
+            "weight", 50
+        )
+
+        groups["overlay"] := Map(
+            "name", "Overlay",
+            "weight", 60
+        )
+
+        groups["tasks"] := Map(
+            "name", "Tasks",
+            "weight", 80
+        )
+
+        return groups
+    }
+
+    BaseFieldDefinitions() {
+        definitions := super.BaseFieldDefinitions()
+
+        if (definitions.Has("id")) {
+            definitions["id"]["formField"] := false
+
+            if (!definitions["id"].Has("modes")) {
+                definitions["id"]["modes"] := Map()
+            }
+
+            definitions["id"]["modes"]["wizard"] := Map(
+                "formField", true,
+                "widget", "combo",
+                "selectOptionsCallback", ObjBindMethod(this, "ListKnownGames"),
+                "description", "Select an existing game from the API, or enter a custom game key to create your own."
+            )
+        }
+
+        if (definitions.Has("name")) {
+            definitions["name"]["description"] := "You can change the display name of the game if it differs from the key."
+            definitions["name"]["help"] := "The launcher filename will still be created using the key."
+        }
+
+        if (definitions.Has("DataSourceItemKey")) {
+            definitions["DataSourceItemKey"]["default"] := ""
+            definitions["DataSourceItemKey"]["description"] := "The key to use when looking this item up in its datasource(s)."
+            definitions["DataSourceItemKey"]["help"] := "By default, this is the same as the main key."
+        }
+
+        definitions["Platform"] := Map(
+            "type", "entity_reference",
+            "entityType", "platform",
+            "required", true,
+            "weight", -50,
+            "refreshDataOnChange", true,
+            "showDefaultCheckbox", false
+        )
+
+        definitions["ManagedLauncher"] := Map(
+            "type", "entity_reference",
+            "required", true,
+            "entityType", "managed_launcher",
+            "child", true,
+            "weight", -25,
+            "widget", "entity_select",
+            "selectButton", true,
+            "selectConditions", FieldCondition(MatchesCondition(this.Id), "id"),
+            "description", "This tells " . this.app.appName . " how to interact with any launcher your game might require.",
+            "help", "If your game's launcher isn't listed, or your game doesn't have a launcher, start with Default.",
+            "refreshDataOnChange", true,
+            "modes", Map(
+                "simple", Map(
+                    "entityFormMode", "simple"
+                )
+            ),
+            "default", this.idVal,
+            "showDefaultCheckbox", false
+        )
+
+        definitions["ManagedGame"] := Map(
+            "type", "entity_reference",
+            "required", true,
+            "entityType", "managed_game",
+            "child", true,
+            "weight", -20,
+            "widget", "entity_select",
+            "selectButton", true,
+            "selectConditions", FieldCondition(MatchesCondition(this.Id), "id"),
+            "refreshDataOnChange", true,
+            "description", "This tells " . this.app.appName . " how to launch your game.",
+            "help", "Most games can use 'default', but launchers can support different game types.",
+            "modes", Map(
+                "simple", Map(
+                    "entityFormMode", "simple"
+                )
+            ),
+            "default", this.idVal,
+            "showDefaultCheckbox", false
+        )
+
+        definitions["DestinationDir"] := Map(
+            "type", "directory",
+            "required", true,
+            "default", this.GetDefaultDestinationDir(),
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
+        )
+
+        ; The icon file that the launcher will use. This can be one of several types of values:
+        ; - The filename of an existing icon in the AssetsDir
+        ; - The path of another icon file on the system, which will be copied to the AssetsDir if it doesn't already exist
+        ; - The path of an .exe file on the system where the icon will be extracted from and saved to the assets directory if it doesn't already exist
+        ; - "" (empty string) - Auto detection. See below.
+        ; 
+        ; Auto detection rules if IconSrc is not set:
+        ; 1. Look for [Key].ico in the assets directory
+        ; 2. If GameExe is an absolute path, use GameExe's path as the IconSrc
+        ; 3. If GameExe is a filename, search for that filename in GameDirs and use its path as the IconSrc if found
+        ; 3. Prompt for an icon during validation if the path is still not set
+        definitions["IconSrc"] := Map(
+            "type", "icon_file",
+            "description", "The path to this an icon (.ico or .exe).",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
+        )
+
+        definitions["Theme"] := Map(
+            "type", "service_reference",
+            "servicePrefix", "theme.",
+            "default", this.app.Config["theme_name"],
+            "required", true,
+            "group", "ui",
+            "modes", Map(
+                "simple", Map("formField", false)
+            ),
+            "description", "The theme to use if/when the launcher shows GUI windows."
+        )
+
+        definitions["ThemesDir"] := Map(
+            "type", "directory",
+            "required", true,
+            "mustExist", true,
+            "formField", false,
+            "default", this.app.appDir . "\Resources\Themes",
+            "group", "ui",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
+        )
+
+        definitions["ResourcesDir"] := Map(
+            "type", "directory",
+            "required", true,
+            "mustExist", true,
+            "formField", false,
+            "default", this.app.appDir . "\Resources",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
+        )
+
+        definitions["ShowProgress"] := Map(
+            "type", "boolean",
+            "required", false,
+            "default", true,
+            "group", "ui",
+            "modes", Map(
+                "simple", Map("group", "general")
+            ),
+            "tooltip", "Whether or not to show a window indicating the current status of the launcher"
+        )
+
+        definitions["RunBefore"] := Map(
+            "type", "entity_reference",
+            "entityType", "task",
+            "multiple", true,
+            "group", "tasks",
+            "modes", Map(
+                "simple", Map("formField", false)
+            ),
+            "description", "Run one or more processes before launching the game.",
+            "help", "Each line should contain a command to run or a full path to a .exe or shortcut file to launch.`n`nEach process will be run as a scheduled task so that it is not owned by the launcher."
+        )
+
+        definitions["CloseBefore"] := Map(
+            "type", "entity_reference",
+            "entityType", "task",
+            "multiple", true,
+            "group", "tasks",
+            "modes", Map(
+                "simple", Map("formField", false)
+            ),
+            "description", "Close one or more processes before launching the game.",
+            "help", "Each line should contain the name of the process to close (usually just the .exe filename)."
+        )
+
+        definitions["RunAfter"] := Map(
+            "type", "entity_reference",
+            "entityType", "task",
+            "multiple", true,
+            "group", "tasks",
+            "modes", Map(
+                "simple", Map("formField", false)
+            ),
+            "description", "Run one or more processes after closing the game.",
+            "help", "Each line should contain a command to run or a full path to a .exe or shortcut file to launch.`n`nEach process will be run as a scheduled task so that it is not owned by the launcher."
+        )
+
+        definitions["CloseAfter"] := Map(
+            "type", "entity_reference",
+            "entityType", "task",
+            "multiple", true,
+            "group", "tasks",
+            "modes", Map(
+                "simple", Map("formField", false)
+            ),
+            "description", "Close one or more processes after closing the game.",
+            "help", "Each line should contain the name of the process to close (usually just the .exe filename)."
+        )
+
+        definitions["LogPath"] := Map(
+            "type", "file",
+            "default", this.app.tmpDir . "\Logs\" . this.Id . ".txt",
+            "group", "advanced",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
+        )
+
+        definitions["LoggingLevel"] := Map(
+            "widget", "select",
+            "selectOptionsCallback", ObjBindMethod(this.container.Get("logger"), "GetLogLevels"),
+            "default", this.app.Config["logging_level"],
+            "group", "advanced",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
+        )
+
+        definitions["EnableOverlay"] := Map(
+            "type", "boolean",
+            "default", false,
+            "group", "overlay",
+            "modes", Map(
+                "simple", Map("group", "general")
+            ),
+            "help", "Enabling this option makes the Steam Overlay work with any application that's otherwise incompatible with it. You must use Borderless Fullscreen instead of true Fullscreen when using this option to allow the Launchpad Overlay to display over the game window. If the Steam Overlay is already detected, then the Launchpad Overlay won't be used."
+        )
+
+        definitions["ForceOverlay"] := Map(
+            "type", "boolean",
+            "default", false,
+            "group", "overlay",
+            "modes", Map(
+                "simple", Map("formField", false)
+            ),
+            "help", "Enabling this option along with the Launchpad Overlay means the Launchpad Overlay will always be used, instead of it waiting to see if the Steam Overlay is attached first."
+        )
+
+        definitions["OverlayHotkey"] := Map(
+            "type", "hotkey",
+            "default", "^Tab",
+            "group", "overlay",
+            "modes", Map(
+                "simple", Map("formField", false)
+            ),
+            "description", "The AHK-compatible hotkey definition that will open and close the Launchpad Overlay"
+        )
+
+        definitions["OverlayWait"] := Map(
+            "type", "time_offset",
+            "timeUnits", "s",
+            "default", 10,
+            "group", "overlay",
+            "modes", Map(
+                "simple", Map("formField", false)
+            ),
+            "description", "How many seconds to wait for the Steam overlay to attach before starting the Launchpad Overlay.",
+            "help", "If the Steam Overlay attaches within this time, and the Force option is not active, then the Launchpad Overlay will not be used."
+        )
+
+        return definitions
     }
 
     /**
     * NEW METHODS
     */
     LauncherExists(checkSourceFile := false) {
-        return (FileExist(this.GetLauncherFile(this.Key, checkSourceFile)) != "")
+        return (FileExist(this.GetLauncherFile(this.Id, checkSourceFile)) != "")
+    }
+
+    ListKnownGames() {
+        return this.container
+            .Get("manager.datasource")
+            .GetDefaultDataSource()
+            .ReadListing("game-keys")
     }
 
     LauncherIsOutdated() {
         outdated := true
 
-        filePath := this.GetLauncherFile(this.Key)
+        filePath := this.GetLauncherFile(this.Id)
 
         if (filePath && FileExist(filePath)) {
-            launcherVersion := FileGetVersion(this.GetLauncherFile(this.Key))
+            launcherVersion := FileGetVersion(this.GetLauncherFile(this.Id))
 
-            if (launcherVersion && !this.app.Service("VersionChecker").VersionIsOutdated(this.app.Version, launcherVersion)) {
+            if (launcherVersion && !this.app.Service("version_checker").VersionIsOutdated(this.app.Version, launcherVersion)) {
                 outdated := false
             }
 
-            configInfo := this.app.State.GetLauncherInfo(this.Key, "Config")
-            buildInfo := this.app.State.GetLauncherInfo(this.Key, "Build")
+            configInfo := this.app.State.GetLauncherInfo(this.Id, "Config")
+            buildInfo := this.app.State.GetLauncherInfo(this.Id, "Build")
 
             if (!buildInfo["Version"] || !buildInfo["Timestamp"]) {
                 outdated := true
             } else {
-                if (configInfo["Version"] && this.app.Service("VersionChecker").VersionIsOutdated(configInfo["Version"], buildInfo["Version"])) {
+                if (configInfo["Version"] && this.app.Service("version_checker").VersionIsOutdated(configInfo["Version"], buildInfo["Version"])) {
                     outdated := true
                 } else if (configInfo["Timestamp"] && DateDiff(configInfo["Timestamp"], buildInfo["Timestamp"], "S") > 0) {
                     outdated := true
@@ -194,7 +369,7 @@ class LauncherEntity extends AppEntityBase {
     Validate() {
         validateResult := super.Validate()
 
-        if (this.IconSrc == "" && !this.IconFileExists()) {
+        if (this["IconSrc"] == "" && !this.IconFileExists()) {
             validateResult["success"] := false
             validateREsult["invalidFields"].push("IconSrc")
         }
@@ -206,76 +381,52 @@ class LauncherEntity extends AppEntityBase {
 
     SaveModifiedData() {
         super.SaveModifiedData()
-        this.app.State.SetLauncherConfigInfo(this.Key)
+        this.app.State.SetLauncherConfigInfo(this.Id)
     }
 
     GetDataSourceItemKey() {
-        if (!this.DataSourceItemKey) {
+        if (!this["DataSourceItemKey"]) {
             dataSources := this.GetAllDataSources()
 
             for index, dataSource in dataSources {
-                platform := this.Platform ? this.Platform : "None"
-                apiPath := "lookup/" this.Key
+                platform := this["Platform"] ? this["Platform"]["id"] : ""
+                apiPath := "lookup/" this.Id
 
-                if (this.platform) {
-                    apiPath .= "/" . this.Platform
+                if (platform) {
+                    apiPath .= "/" . platform
                 }
                 
                 dsData := dataSource.ReadJson(apiPath)
 
                 if (dsData != "" && dsData.Has("id") && dsData["id"]) {
-                    this.DataSourceItemKey := dsData["id"]
+                    this["DataSourceItemKey"] := dsData["id"]
                     break
                 }
             }
         }
 
-        if (this.DataSourceItemKey) {
-            return this.DataSourceItemKey
+        if (this["DataSourceItemKey"]) {
+            return this["DataSourceItemKey"]
         } else {
             return ""
         }
     }
 
     IconFileExists() {
-        iconSrc := this.IconSrc != "" ? this.IconSrc : this.GetAssetPath(this.Key . ".ico")
+        iconSrc := this["IconSrc"] != "" ? this["IconSrc"] : this.GetAssetPath(this.Id . ".ico")
         return FileExist(iconSrc)
-    }
-
-    LaunchEditWindow(mode, owner := "", parent := "") {
-        result := this.app.Config["use_advanced_launcher_editor"] ? "Advanced" : "Simple"
-
-        ownerOrParent := ""
-
-        if (parent) {
-            ownerOrParent := parent
-        } else if (owner) {
-            ownerOrParent := owner
-        }
-
-        while (result == "Simple" || result == "Advanced") {
-            form := result == "Advanced" ? "LauncherEditor" : "LauncherEditorSimple"
-            result := this.app.Service("manager.gui").Dialog(Map(
-                "type", form,
-                "mode", mode,
-                "child", !!(parent),
-                "ownerOrParent", ownerOrParent
-            ), this)
-        }
-        
-        return result
     }
 
     MergeAdditionalDataSourceDefaults(defaults, dataSourceData) {
         launcherType := this.DetectLauncherType(defaults, dataSourceData)
 
         checkType := (launcherType == "") ? "Default" : launcherType
-        if (dataSourceData.Has("Launchers") && dataSourceData["Launchers"].Has(checkType) && Type(dataSourceData["Launchers"][checkType]) == "Map") {
-            this.additionalManagedLauncherDefaults := this.MergeFromObject(this.additionalManagedLauncherDefaults, dataSourceData["Launchers"][checkType], false)
-            defaults := this.MergeFromObject(defaults, dataSourceData["Launchers"][checkType], true)
+        if (dataSourceData.Has("Launchers") && dataSourceData["Launchers"].Has(checkType) && HasBase(dataSourceData["Launchers"][checkType], Map.Prototype)) {
+            this.additionalManagedLauncherDefaults := this.merger.Merge(dataSourceData["Launchers"][checkType], this.additionalManagedLauncherDefaults)
+            defaults := this.merger.Merge(defaults, dataSourceData["Launchers"][checkType])
         }
 
-        defaults["LauncherType"] := launcherType
+        defaults["ManagedLauncher"] := launcherType
         
         return defaults
     }
@@ -283,8 +434,8 @@ class LauncherEntity extends AppEntityBase {
     DetectLauncherType(defaults, dataSourceData := "") {
         launcherType := ""
 
-        if (this.UnmergedConfig.Has("LauncherType")) {
-            launcherType := this.UnmergedConfig["LauncherType"]
+        if (this.UnmergedFieldData.Has("LauncherType")) {
+            launcherType := this.UnmergedFieldData["LauncherType"]
         } else if (defaults.Has("LauncherType")) {
             launcherType := defaults["LauncherType"]
         }
@@ -294,22 +445,30 @@ class LauncherEntity extends AppEntityBase {
         }
 
         if (dataSourceData != "" && dataSourceData.Has("Launchers")) {
-            launcherType := this.DereferenceKey(launcherType, dataSourceData["Launchers"])
+            launcherType := this._dereferenceKey(launcherType, dataSourceData["Launchers"])
         }
 
         return launcherType
+    }
+
+    _dereferenceKey(key, map) {
+        if (map.Has(key) && Type(map[key]) == "String") {
+            key := this._dereferenceKey(map[key], map)
+        }
+
+        return key
     }
 
     AutoDetectValues() {
         detectedValues := super.AutoDetectValues()
         
         if (!detectedValues.Has("IconSrc")) {
-            checkPath := this.AssetsDir . "\" . this.Key . ".ico"
+            checkPath := this["AssetsDir"] . "\" . this.Id . ".ico"
             
             if (FileExist(checkPath)) {
                 detectedValues["IconSrc"] := checkPath
-            } else if (this.children.Has("ManagedLauncher") && this.ManagedLauncher.ManagedGame.GetConfigValue("Exe") != "") {
-                detectedValues["IconSrc"] := this.ManagedLauncher.ManagedGame.LocateExe()
+            } else if (this.children.Has("ManagedLauncher") && this["ManagedGame"].GetConfigValue("Exe") != "") {
+                detectedValues["IconSrc"] := this["ManagedGame"].LocateExe()
             } else {
                 detectedValues["IconSrc"] := this.app.appDir . "\Resources\Graphics\Game.ico"
             }
@@ -320,36 +479,20 @@ class LauncherEntity extends AppEntityBase {
             this.app.Config["theme_name"]
 
         if (defaultTheme && this.app.Config["override_launcher_theme"]) {
-            detectedValues["ThemeName"] := defaultTheme
+            detectedValues["Theme"] := defaultTheme
         }
 
         return detectedValues
     }
 
-    InitializeDefaults() {
-        defaults := super.InitializeDefaults()
-        defaults.Delete("DataSourceItemKey")
-        
-        defaults["CloseAfter"] := ""
-        defaults["CloseBefore"] := ""
-        defaults["DestinationDir"] := this.GetDefaultDestinationDir()
-        defaults["EnableOverlay"] := false
-        defaults["ForceOverlay"] := false
-        defaults["LoggingLevel"] := this.app.Config["logging_level"]
-        defaults["LogPath"] := this.app.tmpDir . "\Logs\" . this.Key . ".txt"
-        defaults["OverlayHotkey"] := "^Tab"
-        defaults["OverlayWait"] := 10
-        defaults["ResourcesDir"] := this.app.appDir . "\Resources"
-        defaults["RunAfter"] := ""
-        defaults["RunBefore"] := ""
-        defaults["ShowProgress"] := true
-        defaults["ThemeName"] := this.app.Config["theme_name"]
-        defaults["ThemesDir"] := this.app.appDir . "\Resources\Themes"
-
-        return defaults
-    }
-
     GetDefaultDestinationDir() {
         return this.app.Config["destination_dir"]
+    }
+
+    GetEditorButtons(mode) {
+        buttons := super.GetEditorButtons(mode)
+        buttons .= mode == "simple" ? "|&Advanced" : "|S&imple"
+
+        return buttons
     }
 }
