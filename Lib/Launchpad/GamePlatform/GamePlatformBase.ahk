@@ -10,6 +10,12 @@ class GamePlatformBase {
     launcherType := "Default"
     gameType := "Default"
     displayName := ""
+    merger := ""
+
+    Name {
+        get => this.displayName
+        set => this.displayName := value
+    }
 
     __New(app, installDir := "", exePath := "", installedVersion := "", uninstallCmd := "", libraryDirs := "") {
         this.app := app
@@ -17,6 +23,7 @@ class GamePlatformBase {
         this.exePath := exePath
         this.installedVersion := installedVersion
         this.uninstallCmd := ""
+        this.merger := ListMerger(true)
 
         if (libraryDirs != "") {
             if (Type(libraryDirs) == "String") {
@@ -80,7 +87,7 @@ class GamePlatformBase {
     }
 
     NeedsUpdate() {
-        return this.app.Service("VersionChecker").VersionIsOutdated(this.GetLatestVersion(), this.GetInstalledVersion())
+        return this.app.Service("version_checker").VersionIsOutdated(this.GetLatestVersion(), this.GetInstalledVersion())
     }
 
     GetInstalledVersion() {
@@ -161,7 +168,7 @@ class GamePlatformBase {
                 detectedGameObj := DetectedGame(key, this, this.launcherType, this.gameType, installDir, exeName, launcherSpecificId, possibleExes)
                 
                 if (this.installDir) {
-                    detectedGameObj.launcherInstallDir := this.InstallDir
+                    detectedGameObj.launcherInstallDir := this["InstallDir"]
                 }
                 
                 games.Push(detectedGameObj)
@@ -198,23 +205,9 @@ class GamePlatformBase {
         dsData := dataSource.ReadJson(key, "Games")
 
         if (dsData != "" && dsData.Has("data") && dsData["data"].Has("defaults")) {
-            defaults := this.MergeFromObject(defaults, dsData["data"]["defaults"], false)
+            defaults := this.merger.Merge(dsData["data"]["defaults"], defaults)
         }
 
         return defaults
-    }
-
-    MergeFromObject(mainObject, defaults, overwriteKeys := false) {
-        for key, value in defaults {
-            if (overwriteKeys or !mainObject.Has(key)) {
-                if (value == "true" or value == "false") {
-                    mainObject[key] := (value == "true")
-                } else {
-                    mainObject[key] := value
-                }
-            }
-        }
-
-        return mainObject
     }
 }
