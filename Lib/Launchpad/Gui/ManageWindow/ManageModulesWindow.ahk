@@ -12,7 +12,7 @@ class ManageModulesWindow extends ManageWindowBase {
     GetDefaultConfig(container, config) {
         defaults := super.GetDefaultConfig(container, config)
         defaults["title"] := "Manage Modules"
-        defaults["modules_file"] := container.Get("Config")["modules_file"]
+        defaults["modules_file"] := container.Get("config.app")["modules_file"]
         return defaults
     }
 

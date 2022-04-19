@@ -8,13 +8,13 @@ class ErrorDialog extends DialogBox {
 
     __New(container, themeObj, config, errorObj) {
         this.errorObj := errorObj
-        this.notifierObj := container.Get("Notifier").notifierObj
+        this.notifierObj := container.Get("notifier").notifierObj
 
         if (container.Has("manager.datasource")) {
             dsManager := container.Get("manager.datasource")
 
-            if (dsManager.Has("api")) {
-                this.apiEndpoint := container.Get("manager.datasource")["api"]
+            if (dsManager.GetDefaultDataSource()) {
+                this.apiEndpoint := container.Get("manager.datasource").GetDefaultDataSource()
             }
         }
 

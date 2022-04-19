@@ -3,6 +3,7 @@ class LaunchpadBuilder extends AppBase {
         parameters := super.GetParameterDefinitions(config)
         parameters["config_path"] := this.appDir . "\Launchpad.build.json"
         parameters["config.api_endpoint"] := "https://api.launchpad.games/v1"
+        parameters["config.data_source_key"] := ""
         parameters["config.api_authentication"] := true
         parameters["config.dist_dir"] := this.appDir . "\Dist"
         parameters["config.build_dir"] := this.appDir . "\Build"
@@ -34,7 +35,7 @@ class LaunchpadBuilder extends AppBase {
 
         services["manager.datasource"] := Map(
             "class", "DataSourceManager",
-            "arguments", [ContainerRef(), ServiceRef("manager.event"), ServiceRef("Notifier"), "api"]
+            "arguments", [ContainerRef(), ServiceRef("manager.event"), ServiceRef("notifier"), ParameterRef("config.data_source_key")]
         )
 
         services["FileHasher"] := "FileHasher"

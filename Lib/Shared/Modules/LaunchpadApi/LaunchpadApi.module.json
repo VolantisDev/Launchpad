@@ -19,7 +19,7 @@
         },
         "auth_provider.launchpad_api": {
             "class": "LaunchpadApiAuthProvider",
-            "arguments": ["@{App}", "@State"]
+            "arguments": ["@{App}", "@state.app"]
         },
         "cache_state.api": {
             "class": "CacheState",

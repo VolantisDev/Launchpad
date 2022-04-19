@@ -1,4 +1,5 @@
 class LauncherGameOpBase extends BulkOperationBase {
+    launcherManager := ""
     launcherEntities := ""
     verb := "processing"
     verbProper := "Processing"
@@ -13,8 +14,10 @@ class LauncherGameOpBase extends BulkOperationBase {
     itemFailedText := "Failed."
 
     __New(app, launcherEntities := "", owner := "") {
+        this.launcherManager := app.Service("entity_manager.launcher")
+        
         if (launcherEntities == "") {
-            launcherEntities := app.Service("manager.launcher").Entities
+            launcherEntities := this.launcherManager.All()
         }
 
         InvalidParameterException.CheckTypes("LauncherGameOpBase", "launcherEntities", launcherEntities, "Map")
@@ -60,12 +63,12 @@ class LauncherGameOpBase extends BulkOperationBase {
 
     VerifyRequirements() {
         if (this.app.Config["destination_dir"] == "") {
-            this.app.Service("Notifier").Error("Launcher directory is not set.")
+            this.app.Service("notifier").Error("Launcher directory is not set.")
             return false
         }
         
         if (this.app.Config["assets_dir"] == "") {
-            this.app.Service("Notifier").Error("Assets directory is not set.")
+            this.app.Service("notifier").Error("Assets directory is not set.")
             return false
         }
 

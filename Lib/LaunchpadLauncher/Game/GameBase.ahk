@@ -23,7 +23,7 @@ class GameBase {
             config := Map()
         }
 
-        this.launcherConfig := app.Service("Config")
+        this.launcherConfig := app.Service("config.app")
         InvalidParameterException.CheckTypes("GameBase", "app", app, "AppBase", "key", key, "", "config", config, "Map")
         this.app := app
         this.key := key
@@ -32,8 +32,8 @@ class GameBase {
     }
 
     Log(message, level := "Debug") {
-        if (this.app.Services.Has("Logger") && this.launcherConfig["LoggingLevel"] != "None") {
-            this.app.Service("Logger").Log(this.key . ": " . message, level)
+        if (this.app.Services.Has("logger") && this.launcherConfig["LoggingLevel"] != "None") {
+            this.app.Service("logger").Log(this.key . ": " . message, level)
         }
     }
 
@@ -448,7 +448,7 @@ class GameBase {
     }
 
     WaitForColor(checkColors, winTitle, xOffset, yOffset, sleepTime := 250, timeout := 30) {
-        if (Type(checkColors) != "Array") {
+        if (!HasBase(checkColors, Array.Prototype)) {
             checkColors := [checkColors]
         }
 

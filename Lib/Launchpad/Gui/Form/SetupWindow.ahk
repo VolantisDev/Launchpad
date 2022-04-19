@@ -53,14 +53,13 @@
     }
 
     AddPlatformCheckboxes() {
-        if (!this.app.Service("manager.platform")._componentsLoaded) {
-            this.app.Service("manager.platform").LoadComponents()
-        }
+        platformMgr := this.app.Service("entity_manager.platform")
+        platformMgr.LoadComponents(false)
 
-        for key, platform in this.app.Service("manager.platform").Entities {
-            if (platform.IsInstalled) {
-                 ctl := this.Add("BasicControl", "vPlatformToggle" . key, "", platform.DetectGames, "CheckBox", platform.GetDisplayName())
-                 ctl.RegisterHandler("Click", "OnPlatformToggle")
+        for key, platform in platformMgr {
+            if (platform["IsInstalled"]) {
+                ctl := this.Add("BasicControl", "vPlatformToggle" . key, "", platform["DetectGames"], "CheckBox", platform.GetName())
+                ctl.RegisterHandler("Click", "OnPlatformToggle")
             }
         }
     }
@@ -69,10 +68,11 @@
         this.guiObj.Submit(false)
         len := StrLen("PlatformToggle")
         name := SubStr(chk.Name, len + 1)
+        platformMgr := this.app.Service("entity_manager.platform")
 
-        if (this.app.Service("manager.platform").Entities.Has(name)) {
-            platform := this.app.Service("manager.platform").Entities[name]
-            platform.DetectGames := !!(chk.Value)
+        if (platformMgr.Entities.Has(name)) {
+            platform := platformMgr[name]
+            platform["DetectGames"] := !!(chk.Value)
             platform.SaveModifiedData()
         }
     }
@@ -103,12 +103,8 @@
 
     ProcessResult(result, submittedData := "") {
         if (result == "Start") {
-            this.app.Service("Config").SaveConfig()
-            this.app.Service("manager.platform").SaveModifiedEntities()
-
-            if (!FileExist(this.app.appDir . "\" . this.app.appName . ".ini")) {
-                FileAppend("", this.app.appDir . "\" . this.app.appName . ".ini")
-            }
+            this.app.Service("config.app").SaveConfig()
+            this.app.Service("entity_manager.platform").SaveModifiedEntities()
 
             if (submittedData.DetectGames) {
                 result := "Detect"

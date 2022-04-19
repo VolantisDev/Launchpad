@@ -18,7 +18,7 @@ class TestBase {
         )
 
         testServices := Map(
-            "Config", Map(
+            "config.app", Map(
                 "class", "RuntimeConfig",
                 "arguments", [ContainerRef(), ParameterRef("config_key")]
             )

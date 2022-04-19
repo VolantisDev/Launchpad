@@ -3,15 +3,15 @@ class ManageBackupsWindow extends ManageWindowBase {
     backupManager := ""
 
     __New(container, themeObj, config) {
-        this.backupManager := container.Get("manager.backup")
-        this.lvCount := this.backupManager.CountEntities()
+        this.backupManager := container.Get("entity_manager.backup")
+        this.lvCount := this.backupManager.Count(true)
         super.__New(container, themeObj, config)
     }
 
     GetDefaultConfig(container, config) {
         defaults := super.GetDefaultConfig(container, config)
         defaults["title"] := "Manage Backups"
-        defaults["backupsFile"] := container.Get("Config")["backups_file"]
+        defaults["backupsFile"] := container.Get("config.app")["backups_file"]
         return defaults
     }
 
@@ -23,8 +23,8 @@ class ManageBackupsWindow extends ManageWindowBase {
     GetListViewData(lv) {
         data := Map()
 
-        for key, backup in this.backupManager.Entities {
-            data[key] := [backup.Key, backup.GetBackupCount(), backup.GetTotalSize()]
+        for key, backup in this.backupManager {
+            data[key] := [backup.Id, backup.GetBackupCount(), backup.GetTotalSize()]
         }
 
         return data
@@ -39,12 +39,12 @@ class ManageBackupsWindow extends ManageWindowBase {
     }
 
     GetListViewImgList(lv, large := false) {
-        IL := IL_Create(this.backupManager.CountEntities(), 1, large)
+        IL := IL_Create(this.backupManager.Count(true), 1, large)
         defaultIcon := this.themeObj.GetIconPath("Backup")
         iconNum := 1
 
-        for key, backup in this.backupManager.Entities {
-            iconSrc := backup.IconSrc
+        for key, backup in this.backupManager {
+            iconSrc := backup["IconSrc"]
 
             if (!iconSrc or !FileExist(iconSrc)) {
                 iconSrc := defaultIcon
@@ -63,11 +63,11 @@ class ManageBackupsWindow extends ManageWindowBase {
     }
 
     EditBackup(key) {
-        backupObj := this.backupManager.Entities[key]
+        backupObj := this.backupManager[key]
         diff := backupObj.Edit("config", this.guiId)
 
         if (diff != "" && diff.HasChanges()) {
-            this.backupManager.SaveModifiedEntities()
+            backupObj.SaveEntity()
             this.UpdateListView()
         }
     }
@@ -87,14 +87,6 @@ class ManageBackupsWindow extends ManageWindowBase {
 
     AddBackup() {
         ; TODO: Implement backup add operation
-        ;entity := this.app.Service("manager.gui").Dialog(Map("type", "BackupWizard", "ownerOrParent", this.guiId))
-        entity := ""
-
-        if (entity != "") {
-            this.backupManager.AddEntity(entity.Key, entity)
-            this.backupManager.SaveModifiedEntities()
-            this.UpdateListView()
-        }
     }
 
     OnSize(guiObj, minMax, width, height) {
@@ -109,7 +101,7 @@ class ManageBackupsWindow extends ManageWindowBase {
 
     ShowListViewContextMenu(lv, item, isRightClick, X, Y) {
         key := this.listView.GetRowKey(item)
-        backup := this.backupManager.Entities[key]
+        backup := this.backupManager[key]
 
         menuItems := []
         menuItems.Push(Map("label", "Edit", "name", "EditBackup"))
