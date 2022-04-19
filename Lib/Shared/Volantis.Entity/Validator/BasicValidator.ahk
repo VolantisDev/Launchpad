@@ -1,0 +1,3 @@
+class BasicValidator extends ValidatorBase {
+    
+}
