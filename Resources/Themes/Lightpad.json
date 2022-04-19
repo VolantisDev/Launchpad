@@ -619,18 +619,12 @@
                     "Caption": false
                 }
             },
-            "LauncherEditor": {
+            "SimpleEntityEditor": {
                 "settings": "editor"
             },
             "ErrorDialog": {
                 "settings": "dialog",
                 "contentWidth": 800
-            },
-            "ManagedGameEditor": {
-                "settings": "editor"
-            },
-            "ManagedLauncherEditor": {
-                "settings": "editor"
             },
             "MainWindow": {
                 "settings": "default",
