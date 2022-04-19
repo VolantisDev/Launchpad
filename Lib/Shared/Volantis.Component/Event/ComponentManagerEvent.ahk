@@ -3,5 +3,7 @@ class ComponentManagerEvent extends EventBase {
 
     __New(eventName, componentManager) {
         this.ComponentManager := componentManager
+
+        super.__New(eventName)
     }
 }
