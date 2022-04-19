@@ -19,6 +19,7 @@ class LayeredDataBase {
     layerPriority := []
     processors := []
     original := ""
+    snapshots := Map()
 
     __New(processors, params*) {
         if (processors != "") {
@@ -34,17 +35,26 @@ class LayeredDataBase {
 
     LoadValues() {
         ; Optional hook for subclasses to load data into one or more layers
+        return this
     }
 
     SetLayers(params*) {
-        nextParam := 1
+        if (HasBase(params[1], Map.Prototype)) {
+            for layerName, layerData in params[1] {
+                this.SetLayer(layerName, layerData)
+            }
+        } else {
+            nextParam := 1
 
-        while (params.Has(nextParam)) {
-            layerName := params[nextParam]
-            layerData := params[nextParam + 1]
-            this.SetLayer(layerName, layerData)
-            nextParam := nextParam + 2
+            while (params.Has(nextParam)) {
+                layerName := params[nextParam]
+                layerData := params[nextParam + 1]
+                this.SetLayer(layerName, layerData)
+                nextParam := nextParam + 2
+            }
         }
+
+        return this
     }
 
     SetLayer(layerName, data, layerPriority := "") {
@@ -58,10 +68,46 @@ class LayeredDataBase {
                 this.layerPriority.InsertAt(layerPriority, layerName)
             }
         }
+
+        return this
     }
 
     GetLayer(layerName) {
         return this.layers.Has(layerName) ? this.layers[layerName] : Map()
+    }
+
+    CreateSnapshot(snapshotName, layers := "") {
+        this.snapshots[snapshotName] := this.CloneLayers(layers)
+
+        return this.snapshots[snapshotName]
+    }
+
+    HasSnapshot(snapshotName) {
+        return this.snapshots.Has(snapshotName)
+    }
+
+    GetSnapshot(snapshotName) {
+        snapshot := ""
+
+        if (this.snapshots.Has(snapshotName)) {
+            snapshot := this.snapshots[snapshotName]
+        } else {
+            throw AppException("Snapshot name " . snapshotName . " does not exist.")
+        }
+
+        return snapshot
+    }
+
+    RestoreSnapshot(snapshotName) {
+        snapshot := this.GetSnapshot(snapshotName)
+
+        if (snapshot) {
+            this.SetLayers(snapshot)
+        } else {
+            throw AppException("Cannot restore empty snapshot " . snapshotName)
+        }
+
+        return this
     }
 
     DeleteLayer(layerName) {
@@ -85,22 +131,25 @@ class LayeredDataBase {
         layer: The layer to retrieve data from. The default if empty is all layers (with 
         the topmost layer that has a value winning out)
     */
-    GetValue(key, processValue := true, layer := "") {
-        value := ""
+    GetValue(key, processValue := true, layer := "", defaultValue := "") {
+        value := defaultValue
+        hasValue := false
 
         if (layer != "") {
             if (this.layers.Has(layer) && this.layers[layer].Has(key)) {
                 value := this.layers[layer][key]
+                hasValue := true
             }
         } else {
             for index, layerName in this.layerPriority {
                 if (this.layers[layerName].Has(key)) {
                     value := this.layers[layerName][key]
+                    hasValue := true
                 }
             }
         }
 
-        if (processValue) {
+        if (processValue && hasValue) {
             value := this.ApplyProcessors(value)
         }
 
@@ -201,20 +250,6 @@ class LayeredDataBase {
         return data
     }
 
-    StoreOriginal(update := false) {
-        if (this.original == "" || update) {
-            this.original := this.CloneLayers()
-        }
-        
-        return this.original
-    }
-
-    RestoreFromOriginal() {
-        if (this.original != "") {
-            this.layers := this.CloneLayers(this.original)
-        }
-    }
-
     CloneLayers(layers := "") {
         if (layers == "") {
             layers := this.layers
@@ -238,26 +273,31 @@ class LayeredDataBase {
     /**
         Diffs changes between the requested layer or all layers merged (default if blank)
     */
-    DiffChanges(layer := "") {
+    DiffChanges(snapshotName, layer := "") {
+        if (!this.HasSnapshot(snapshotName)) {
+            throw AppException("Snapshot " . snapshotName . " does not exist")
+        }
+
         currentData := (layer == "") ? this.GetMergedData(false) : this.layers[layer]
+        snapshotData := this.GetSnapshot(snapshotName)
         originalData := Map()
         
         added := Map()
         modified := Map()
         removed := Map()
 
-        if (this.original != "") {
+        if (snapshotData != "") {
             if (layer == "") {
-                for key, data in this.original {
+                for key, data in snapshotData {
                     originalData := this.MergeData(originalData, data, true)
                 }
-            } else if this.original.Has(layer) {
-                originalData := this.original[layer]
+            } else if snapshotData.Has(layer) {
+                originalData := snapshotData[layer]
             }
         }
 
         if (originalData.Count == 0) {
-             added := this.CloneData(currentData)
+            added := this.CloneData(currentData)
         } else {
             for key, value in currentData {
                 if (originalData.Has(key)) {
@@ -307,7 +347,7 @@ class LayeredDataBase {
     DebugValue(val, indent := "`t") {
         output := val
 
-        if (Type(val) == "Array") {
+        if (HasBase(val, Array.Prototype)) {
             output := indent . "Array {`n"
 
             for index, value in val {
@@ -315,7 +355,7 @@ class LayeredDataBase {
             }
 
             output .= indent . "}`n"
-        } else if (Type(val) == "Map") {
+        } else if (HasBase(val, Map.Prototype)) {
             output := indent . "Map {`n"
 
             for key, value in val {
