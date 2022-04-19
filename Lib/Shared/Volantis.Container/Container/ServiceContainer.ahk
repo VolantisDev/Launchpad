@@ -1,5 +1,36 @@
 class ServiceContainer extends ParameterContainer {
     serviceStore := Map()
+    parametersObj := ""
+
+    /**
+     * Extend Has method to support service namespaces
+     */
+    Has(key) {
+        return super.Has(key) || !!this.GetNamespace(key)
+    }
+
+    /**
+     * Check if a namespace service is defined and return the name of the most specific one
+     */
+    GetNamespace(key) {
+        services := this.Query("", ContainerQuery.RESULT_TYPE_DEFINITIONS)
+            .Condition(NamespaceMatchesCondition(key))
+            .Execute()
+        
+        namespaceService := ""
+        matchingNamespace := ""
+
+        for serviceName, serviceDefinition in services {
+            serviceNs := serviceDefinition["namespace"] 
+
+            if (!matchingNamespace || StrLen(matchingNamespace) <= StrLen(serviceNs)) {
+                namespaceService := serviceName
+                matchingNamespace := serviceNs
+            }
+        }
+
+        return namespaceService
+    }
  
     LoadDefinitions(definitionLoader, replace := true, prefix := "") {
         services := definitionLoader.LoadServiceDefinitions()
@@ -80,7 +111,7 @@ class ServiceContainer extends ParameterContainer {
     }
 
     createService(name) {
-        entry := this.Items[name]
+        entry := this.Items.Has(name) ? this.Items[name] : this.GetNamespace(name)
 
         if (Type(entry) == "String" && entry) {
             entry := Map("class", entry)
@@ -113,7 +144,7 @@ class ServiceContainer extends ParameterContainer {
     }
 
     validateServiceDefinition(name, entry) {
-        if (Type(entry) != "Map") {
+        if (!HasBase(entry, Map.Prototype)) {
             throw ContainerException(name . " service entry must be a map but it is a " . Type(entry))
         }
 
@@ -193,7 +224,7 @@ class ServiceContainer extends ParameterContainer {
     resolveArguments(name, argumentDefinitions) {
         arguments := []
 
-        if (argumentDefinitions && Type(argumentDefinitions) != "Array") {
+        if (argumentDefinitions && !HasBase(argumentDefinitions, Array.Prototype)) {
             argumentDefinitions := [argumentDefinitions]
         }
 
@@ -207,38 +238,10 @@ class ServiceContainer extends ParameterContainer {
         return arguments
     }
 
-    resolveDefinition(definition) {
-        definition := super.resolveDefinition(definition)
-        val := definition
-        isObj := IsObject(definition)
-
-        if (isObj && definition.HasBase(ServiceRef.Prototype)) {
-            serviceName := definition.GetName()
-
-            if (!serviceName) {
-                throw ContainerException("Definition of type " . Type(definition) . " is missing a name")
-            }
-
-            val := this.Get(serviceName)
-
-            method := definition.GetMethod()
-
-            if (method) {
-                if (!HasMethod(val, method)) {
-                    throw ContainerException("Service " . definition.GetName() . " does not have method " . method)
-                }
-
-                val := ObjBindMethod(val, method)
-            }
-        }
-
-        return val
-    }
-
     initializeService(service, name, entry) {
         callDefinitions := entry.Has("calls") ? entry["calls"] : []
 
-        if (Type(callDefinitions) == "Map") {
+        if (HasBase(callDefinitions, Map.Prototype)) {
             callDefinitions := [callDefinitions]
         }
 
@@ -246,7 +249,7 @@ class ServiceContainer extends ParameterContainer {
 
         if (callDefinitions && callDefinitions.Length) {
             for index, callDefinition in callDefinitions {
-                if (Type(callDefinition) != "Map" || !callDefinition.Has("method")) {
+                if (!HasBase(callDefinition, Map.Prototype) || !callDefinition.Has("method")) {
                     throw ContainerException(name . " service calls must be arrays containing a 'method' key")
                 } else if (!service.HasMethod(callDefinition["method"])) {
                     throw ContainerException(name " service asks for call to uncallable method: " . callDefinition["method"])
@@ -266,7 +269,6 @@ class ServiceContainer extends ParameterContainer {
         
         if (propDefinitions && propDefinitions.Count) {
             props := this.resolveProperties(propDefinitions)
-            entry := this.Items[name]
 
             for propName, propValue in props {
                 service.%propName% := propValue
