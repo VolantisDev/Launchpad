@@ -1,46 +1,6 @@
 class BackupEntity extends AppEntityBase {
     backup := ""
 
-    IsEditable {
-        get => this.GetConfigValue("IsEditable")
-        set => this.SetConfigValue("IsEditable", !!(value))
-    }
-
-    IconSrc {
-        get => this.GetConfigValue("IconSrc")
-        set => this.SetConfigValue("IconSrc", value)
-    }
-
-    Source {
-        get => this.GetConfigValue("Source")
-        set => this.SetConfigValue("Source", value)
-    }
-
-    BackupLimit {
-        get => this.GetConfigValue("BackupLimit")
-        set => this.SetConfigValue("BackupLimit", value)
-    }
-
-    BackupDir {
-        get => this.GetConfigValue("BackupDir")
-        set => this.SetConfigValue("BackupDir", value)
-    }
-
-    BaseFilename {
-        get => this.GetConfigValue("BaseFilename")
-        set => this.SetConfigValue("BaseFilename", value)
-    }
-
-    BackupClass {
-        get => this.GetConfigValue("BackupClass")
-        set => this.SetConfigValue("BackupClass", value)
-    }
-    
-    IsEnabled {
-        get => this.GetConfigValue("IsEnabled")
-        set => this.SetConfigValue("IsEnabled", !!(value))
-    }
-
     __New(app, key, config, parentEntity := "", requiredConfigKeys := "") {
         super.__New(app, key, config, parentEntity, requiredConfigKeys)
         backupClass := config.Has("BackupClass") ? config["BackupClass"] : "FileBackup"
@@ -50,18 +10,57 @@ class BackupEntity extends AppEntityBase {
         }
     }
 
-    InitializeDefaults() {
-        defaults := super.InitializeDefaults()
-        defaults["DataSourceKeys"] := []
-        defaults["IsEditable"] := true
-        defaults["Source"] := ""
-        defaults["BackupLimit"] := this.app.Config["backups_to_keep"]
-        defaults["BackupDir"] := this.app.Config["backup_dir"]
-        defaults["BaseFilename"] := this.Key
-        defaults["BackupClass"] := "FileBackup"
-        defaults["IsEnabled"] := true
-        defaults["IconSrc"] := this.app.Service("manager.theme")[].GetIconPath("Backup")
-        return defaults
+    BaseFieldDefinitions() {
+        definitions := super.BaseFieldDefinitions()
+
+        if (definitions.Has("DataSourceKeys")) {
+            definitions["DataSourceKeys"]["default"] := []
+        }
+
+        definitions["IsEditable"] := Map(
+            "type", "boolean",
+            "default", true
+        )
+
+        definitions["IconSrc"] := Map(
+            "type", "icon_file",
+            "description", "The path to this an icon (.ico or .exe).",
+            "default", this.app.Service("manager.theme")[].GetIconPath("Backup")
+        )
+
+        definitions["Source"] := Map(
+            "default", ""
+        )
+
+        definitions["BackupLimit"] := Map(
+            "type", "number",
+            "numberType", "Integer",
+            "min", 0,
+            "max", 100,
+            "default", this.app.Config["backups_to_keep"]
+        )
+
+        definitions["BackupDir"] := Map(
+            "type", "directory",
+            "required", true,
+            "default", this.app.Config["backup_dir"]
+        )
+
+        definitions["BaseFilename"] := Map(
+            "default", this.Id
+        )
+
+        definitions["BackupClass"] := Map(
+            "default", "FileBackup"
+        )
+
+        definitions["IsEnabled"] := Map(
+            "type", "boolean",
+            "required", false,
+            "default", true
+        )
+
+        return definitions
     }
 
     GetBackupCount() {
@@ -86,10 +85,10 @@ class BackupEntity extends AppEntityBase {
 
     CreateBackupObject(backupClass := "") {
         if (backupClass == "") {
-            backupClass := this.BackupClass
+            backupClass := this["BackupClass"]
         }
 
-        this.backup := %backupClass%(this.Key, this.Source, this.Config)
+        this.backup := %backupClass%(this.Id, this["Source"], this.FieldData)
     }
 
     SetConfigValue(key, value) {
@@ -108,11 +107,6 @@ class BackupEntity extends AppEntityBase {
 
     GetBackupObject() {
         return this.backup
-    }
-
-    LaunchEditWindow(mode, owner := "", parent := "") {
-        ; TODO: Implement backup edit window
-        return "Cancel"
     }
 
     CreateBackup() {
