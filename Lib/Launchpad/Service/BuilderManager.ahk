@@ -8,7 +8,7 @@ class BuilderManager extends ComponentManagerBase {
 
     BuildLaunchers(launcherGames := "", updateExisting := false, owner := "", builder := "") {
         if (launcherGames == "") {
-            launcherGames := this.launcherMgr.Entities
+            launcherGames := this.launcherMgr.All()
         }
 
         builder := this._GetBuilderObject(builder)
@@ -18,7 +18,7 @@ class BuilderManager extends ComponentManagerBase {
 
     CleanLaunchers(launcherGames := "", owner := "", builder := "") {
         if (launcherGames == "") {
-            launcherGames := this.launcherMgr.Entities
+            launcherGames := this.launcherMgr.All()
         }
 
         builder := this._GetBuilderObject(builder)
@@ -27,7 +27,7 @@ class BuilderManager extends ComponentManagerBase {
     }
 
     GetDefaultComponentId() {
-        return this.container.Get("Config")["builder_key"]
+        return this.container.Get("config.app")["builder_key"]
     }
 
     _GetBuilderObject(builder := "") {
