@@ -25,11 +25,11 @@ class AppBase {
     }
 
     Config {
-        get => this.Service("Config")
+        get => this.Service("config.app")
     }
 
     State {
-        get => this.Service("State")
+        get => this.Service("state.app")
     }
 
     __New(config := "", autoStart := true) {
@@ -60,6 +60,8 @@ class AppBase {
             "resources_dir", "@@{app_dir}\Resources",
             "config_path", "@@{app_dir}\" . this.appName . ".json",
             "config_key", "config",
+            "config.backup_dir", "@@{data_dir}\\Backups",
+            "config.backups_file", "@@{data_dir}\Backups.json",
             "config.theme_name", "Steampad",
             "config.themes_dir", "@@{app_dir}\Resources\Themes",
             "config.cache_dir", "@@{tmp_dir}\Cache",
@@ -103,43 +105,86 @@ class AppBase {
             "structured_data.xml", Map(
                 "class", "Xml",
                 "extensions", [".xml"]
-            )
+            ),
+            "entity_type.backup", Map(
+                "entity_class", "BackupEntity",
+                "entity_manager_class", "BackupManager",
+                "storage_config_storage_parent_key", "Backups",
+                "storage_config_path_parameter", "config.backups_file"
+            ),
+            "entity_field_type.boolean", "BooleanEntityField",
+            "entity_field_type.class_name", "ClassNameEntityField",
+            "entity_field_type.directory", "DirEntityField",
+            "entity_field_type.entity_reference", "EntityReferenceField",
+            "entity_field_type.file", "FileEntityField",
+            "entity_field_type.hotkey", "HotkeyEntityField",
+            "entity_field_type.icon_file", "IconFileEntityField",
+            "entity_field_type.id", "IdEntityField",
+            "entity_field_type.number", "NumberEntityField",
+            "entity_field_type.service_reference", "ServiceReferenceField",
+            "entity_field_type.string", "StringEntityField",
+            "entity_field_type.time_offset", "TimeOffsetEntityField",
+            "entity_field_type.url", "UrlEntityField",
+            "entity_field_widget_type.checkbox", "CheckboxEntityFieldWidget",
+            "entity_field_widget_type.combo", "ComboBoxEntityFieldWidget",
+            "entity_field_widget_type.directory", "DirectoryEntityFieldWidget",
+            "entity_field_widget_type.entity_form", "EntityFormEntityFieldWidget",
+            "entity_field_widget_type.entity_select", "EntitySelectEntityFieldWidget",
+            "entity_field_widget_type.file", "FileEntityFieldWidget",
+            "entity_field_widget_type.hotkey", "HotkeyEntityFieldWidget",
+            "entity_field_widget_type.number", "NumberEntityFieldWidget",
+            "entity_field_widget_type.select", "SelectEntityFieldWidget",
+            "entity_field_widget_type.text", "TextEntityFieldWidget",
+            "entity_field_widget_type.time_offset", "TimeOffsetEntityFieldWidget",
+            "entity_field_widget_type.url", "UrlEntityFieldWidget"
         )
     }
 
     GetServiceDefinitions(config) {
         return Map(
-            "Shell", Map(
-                "com", "WScript.Shell",
-                "props", Map("CurrentDirectory", "@@app_dir")
+            "cache.file", Map(
+                "class", "FileCache",
+                "arguments", [
+                    "@{App}", 
+                    "@cache_state.file", 
+                    "@@config.cache_dir", 
+                    "File"
+                ]
             ),
-            "config_storage.app_config", Map(
-                "class", "JsonConfigStorage",
-                "arguments", "@@config_path"
+            "cache_state.file", Map(
+                "class", "CacheState",
+                "arguments", ["@{App}", "@@config.cache_dir", "File.json"]
             ),
-            "Config", Map(
+            "cloner.list", Map(
+                "class", "ListCloner",
+                "arguments", [true]
+            ),
+            "config.app", Map(
                 "class", "AppConfig",
                 "arguments", ["@config_storage.app_config", "@{}", "@@config_key"]
-            ),
-            "State", Map(
-                "class", "AppState",
-                "arguments", ["@{App}", "@@state_path"]
-            ),
-            "manager.event", Map(
-                "class", "EventManager"
-            ),
-            "IdGenerator", "UuidGenerator",
-            "config_storage.modules", Map(
-                "class", "JsonConfigStorage",
-                "arguments", ["@@config.modules_file", "modules"]
             ),
             "config.modules", Map(
                 "class", "PersistentConfig",
                 "arguments", ["@config_storage.modules", "@{}", "module_config"]
             ),
-            "factory.modules", Map(
-                "class", "ModuleFactory",
-                "arguments", ["@{}", "@StructuredData", "@config.modules"]
+            "config_storage.app_config", Map(
+                "class", "JsonConfigStorage",
+                "arguments", "@@config_path"
+            ),
+            "config_storage.modules", Map(
+                "class", "JsonConfigStorage",
+                "arguments", ["@@config.modules_file", "modules"]
+            ),
+            "debugger", Map(
+                "class", "Debugger",
+                "calls", Map(
+                    "method", "SetLogger",
+                    "arguments", "@logger"
+                )
+            ),
+            "definition_loader.entity_type", Map(
+                "class", "ParameterEntityTypeDefinitionLoader",
+                "arguments", ["@{}", "entity_type", "@factory.entity_type"]
             ),
             "definition_loader.modules", Map(
                 "class", "ModuleDefinitionLoader",
@@ -151,110 +196,154 @@ class AppBase {
                     "@@modules"
                 ]
             ),
-            "manager.module", Map(
-                "class", "ModuleManager", 
-                "arguments", [
-                    "@{}", 
-                    "@manager.event", 
-                    "@Notifier",
-                    "@Config",
-                    "@config.modules",
-                    "@definition_loader.modules"
-                ]
-            ),
-            "Gdip", "Gdip",
-            "Debugger", Map(
-                "class", "Debugger",
-                "calls", Map(
-                    "method", "SetLogger",
-                    "arguments", "@Logger"
-                )
-            ),
-            "VersionChecker", "VersionChecker",
-            "logger.file", Map(
-                "class", "FileLogger", 
-                "arguments", ["@@config.log_path", "@@config.logging_level", true]
-            ),
-            "Logger", Map(
-                "class", "LoggerService",
-                "arguments", ["@logger.file"]
-            ),
-            "manager.cache", Map(
-                "class", "CacheManager", 
-                "arguments", ["@Config", "@{}", "@manager.event", "@Notifier"]
-            ),
-            "ThemeFactory", Map(
-                "class", "ThemeFactory",
-                "arguments", ["@{}", "@@resources_dir", "@manager.event", "@IdGenerator", "@Logger"]
-            ),
             "definition_loader.themes", Map(
                 "class", "DirDefinitionLoader",
-                "arguments", ["@StructuredData", "@@config.themes_dir", "", false, false, "", "theme"]
-            ),
-            "manager.theme", Map(
-                "class", "ThemeManager",
                 "arguments", [
-                    "@{}",
-                    "@manager.event",
-                    "@Notifier",
-                    "@Config",
-                    "@definition_loader.themes",
-                    "Steampad"
+                    "@factory.structured_data", 
+                    "@@config.themes_dir", 
+                    "", 
+                    false, 
+                    false, 
+                    "", 
+                    "theme"
                 ]
             ),
-            "notifier.toast", Map(
-                "class", "ToastNotifier",
-                "arguments", ["@{App}"]
+            "factory.entity_field_widget", Map(
+                "class", "EntityFieldWidgetFactory",
+                "arguments", ["@{}"]
             ),
-            "Notifier", Map(
-                "class", "NotificationService",
-                "arguments", ["@{App}", "@notifier.toast"]
+            "factory.entity_type", Map(
+                "class", "EntityTypeFactory",
+                "arguments", ["@{}", "@manager.event", "@id_sanitizer"]
             ),
             "factory.gui", Map(
                 "class", "GuiFactory",
-                "arguments", ["@{}", "@manager.theme", "@IdGenerator"]
+                "arguments", ["@{}", "@manager.theme", "@id_generator"]
             ),
-            "manager.gui", Map(
-                "class", "GuiManager",
+            "factory.modules", Map(
+                "class", "ModuleFactory",
+                "arguments", ["@{}", "@factory.structured_data", "@config.modules"]
+            ),
+            "factory.structured_data", Map(
+                "class", "StructuredDataFactory",
+                "arguments", "@@structured_data"
+            ),
+            "factory.theme", Map(
+                "class", "ThemeFactory",
                 "arguments", [
                     "@{}", 
-                    "@factory.gui",
-                    "@State",
-                    "@manager.event",
-                    "@Notifier"
+                    "@@resources_dir", 
+                    "@manager.event", 
+                    "@id_generator", 
+                    "@logger"
                 ]
             ),
-            "manager.installer", Map(
-                "class", "InstallerManager",
-                "arguments", ["@{}", "@manager.event", "@Notifier"]
-            ),
-            "EntityFactory", Map(
-                "class", "EntityFactory",
-                "arguments", ["@{}"]
+            "gdip", "Gdip",
+            "id_generator", "UuidGenerator",
+            "id_sanitizer", Map(
+                "class", "StringSanitizer"
             ),
             "installer.themes", Map(
                 "class", "ThemeInstaller",
                 "arguments", [
                     "@@version",
-                    "@State",
+                    "@state.app",
                     "@manager.cache",
                     "file",
                     "@@themes.extra_themes",
                     "@@{tmp_dir}\Installers"
                 ]
             ),
-            "cache_state.file", Map(
-                "class", "CacheState",
-                "arguments", ["@{App}", "@@config.cache_dir", "File.json"]
+            "logger", Map(
+                "class", "LoggerService",
+                "arguments", ["@logger.file"]
             ),
-            "cache.file", Map(
-                "class", "FileCache",
-                "arguments", ["@{App}", "@cache_state.file", "@@config.cache_dir", "File"]
+            "logger.file", Map(
+                "class", "FileLogger", 
+                "arguments", [
+                    "@@config.log_path", 
+                    "@@config.logging_level", 
+                    true
+                ]
             ),
-            "StructuredData", Map(
-                "class", "StructuredDataFactory",
-                "arguments", "@@structured_data"
-            )
+            "manager.cache", Map(
+                "class", "CacheManager", 
+                "arguments", [
+                    "@config.app", 
+                    "@{}", 
+                    "@manager.event", 
+                    "@notifier"
+                ]
+            ),
+            "manager.entity_type", Map(
+                "class", "EntityTypeManager",
+                "arguments", [
+                    "@{}", 
+                    "@manager.event", 
+                    "@notifier", 
+                    "@definition_loader.entity_type"
+                ]
+            ),
+            "manager.event", Map(
+                "class", "EventManager"
+            ),
+            "manager.gui", Map(
+                "class", "GuiManager",
+                "arguments", [
+                    "@{}", 
+                    "@factory.gui",
+                    "@state.app",
+                    "@manager.event",
+                    "@notifier"
+                ]
+            ),
+            "manager.installer", Map(
+                "class", "InstallerManager",
+                "arguments", ["@{}", "@manager.event", "@notifier"]
+            ),
+            "manager.module", Map(
+                "class", "ModuleManager", 
+                "arguments", [
+                    "@{}", 
+                    "@manager.event", 
+                    "@notifier",
+                    "@config.app",
+                    "@config.modules",
+                    "@definition_loader.modules"
+                ]
+            ),
+            "manager.theme", Map(
+                "class", "ThemeManager",
+                "arguments", [
+                    "@{}",
+                    "@manager.event",
+                    "@notifier",
+                    "@config.app",
+                    "@definition_loader.themes",
+                    "Steampad"
+                ]
+            ),
+            "merger.list", Map(
+                "class", "ListMerger",
+                "arguments", [true]
+            ),
+            "notifier", Map(
+                "class", "NotificationService",
+                "arguments", ["@{App}", "@notifier.toast"]
+            ),
+            "notifier.toast", Map(
+                "class", "ToastNotifier",
+                "arguments", ["@{App}"]
+            ),
+            "shell", Map(
+                "com", "WScript.Shell",
+                "props", Map("CurrentDirectory", "@@app_dir")
+            ),
+            "state.app", Map(
+                "class", "AppState",
+                "arguments", ["@{App}", "@@state_path"]
+            ),
+            "version_checker", "VersionChecker"
         )
     }
 
@@ -316,24 +405,24 @@ class AppBase {
         this.LoadServices(config)
 
         if (!config.Has("useShell") || config("useShell")) {
-            this.Service("Shell")
+            this.Service("shell")
         }
         
         OnError(ObjBindMethod(this, "OnException"))
 
         event := AppRunEvent(Events.APP_PRE_INITIALIZE, this, config)
-        this.Service("manager.event").DispatchEvent(Events.APP_PRE_INITIALIZE, event)
+        this.Service("manager.event").DispatchEvent(event)
 
         this.InitializeApp(config)
 
         event := AppRunEvent(Events.APP_POST_INITIALIZE, this, config)
-        this.Service("manager.event").DispatchEvent(Events.APP_POST_INITIALIZE, event)
+        this.Service("manager.event").DispatchEvent(event)
 
         event := AppRunEvent(Events.APP_POST_STARTUP, this, config)
-        this.Service("manager.event").DispatchEvent(Events.APP_POST_STARTUP, event)
+        this.Service("manager.event").DispatchEvent(event)
 
         event := AppRunEvent(Events.APP_PRE_RUN, this, config)
-        this.Service("manager.event").DispatchEvent(Events.APP_PRE_RUN, event)
+        this.Service("manager.event").DispatchEvent(event)
 
         this.RunApp(config)
     }
@@ -345,14 +434,14 @@ class AppBase {
         ))
         
         this.Services.LoadDefinitions(MapDefinitionLoader(config))
-        sdFactory := this.Service("StructuredData")
+        sdFactory := this.Service("factory.structured_data")
         serviceFile := this.Services.GetParameter("service_files.app")
 
         if (FileExist(serviceFile)) {
             this.Services.LoadDefinitions(FileDefinitionLoader(sdFactory, serviceFile))
         }
 
-        this.Service("Config")
+        this.Service("config.app")
         this.InitializeTheme()
         this.InitializeModules(config)
 
@@ -365,7 +454,7 @@ class AppBase {
         }
         
         ; Reload user config files to ensure they are the active values
-        this.Service("Config").LoadConfig(true)
+        this.Service("config.app").LoadConfig(true)
 
         ; Register early event subscribers (e.g. modules)
         this.Service("manager.event").RegisterServiceSubscribers(this.Services)
@@ -373,7 +462,7 @@ class AppBase {
         this.Service("manager.event").Register(Events.APP_SERVICES_LOADED, "AppServices", ObjBindMethod(this, "OnServicesLoaded"))
 
         event := ServiceDefinitionsEvent(Events.APP_SERVICE_DEFINITIONS, "", "", config)
-        this.Service("manager.event").DispatchEvent(Events.APP_SERVICE_DEFINITIONS, event)
+        this.Service("manager.event").DispatchEvent(event)
 
         if (event.Services.Count || event.Parameters.Count) {
             this.Services.LoadDefinitions(SimpleDefinitionLoader(event.Services, event.Parameters))
@@ -389,11 +478,12 @@ class AppBase {
         this.Service("manager.event").RegisterServiceSubscribers(this.Services)
 
         event := AppRunEvent(Events.APP_SERVICES_LOADED, this, config)
-        this.Service("manager.event").DispatchEvent(Events.APP_SERVICES_LOADED, event)
+        this.Service("manager.event").DispatchEvent(event)
     }
 
     OnServicesLoaded(event, extra, eventName, hwnd) {
         this.Service("manager.cache")
+        this.Service("manager.entity_type").All()
         this.Service("manager.installer").RunInstallers(InstallerBase.INSTALLER_TYPE_REQUIREMENT)
     }
 
@@ -422,7 +512,7 @@ class AppBase {
     }
 
     InitializeTheme() {
-        this.Service("Gdip", "manager.gui", "manager.theme")
+        this.Service("gdip", "manager.gui", "manager.theme")
         this.themeReady := true
     }
 
@@ -462,21 +552,21 @@ class AppBase {
 
     ExitApp() {
         event := AppRunEvent(Events.APP_SHUTDOWN, this)
-        this.Service("manager.event").DispatchEvent(Events.APP_SHUTDOWN, event)
+        this.Service("manager.event").DispatchEvent(event)
 
-        if (this.Services.Has("Gdip")) {
-            Gdip_Shutdown(this.Services.Get("Gdip").GetHandle())
+        if (this.Services.Has("gdip")) {
+            Gdip_Shutdown(this.Services["gdip"].GetHandle())
         }
 
         ExitApp
     }
 
     RestartApp() {
-        event := AppRunEvent(Events.APP_SHUTDOWN, this)
-        this.Service("manager.event").DispatchEvent(Events.APP_RESTART, event)
+        event := AppRunEvent(Events.APP_RESTART, this)
+        this.Service("manager.event").DispatchEvent(event)
 
-        if (this.Services.Has("Gdip")) {
-            Gdip_Shutdown(this.Services.Get("Gdip").GetHandle())
+        if (this.Services.Has("gdip")) {
+            Gdip_Shutdown(this.Services["gdip"].GetHandle())
         }
 
         Reload()
@@ -485,11 +575,11 @@ class AppBase {
     GetCmdOutput(command, trimOutput := true) {
         output := ""
 
-        if (!this.Services.Has("Shell")) {
+        if (!this.Services.Has("shell")) {
             throw AppException("The shell is disabled, so shell commands cannot currently be run.")
         }
         
-        result := this.Service("Shell").Exec(A_ComSpec . " /C " . command).StdOut.ReadAll()
+        result := this.Service("shell").Exec(A_ComSpec . " /C " . command).StdOut.ReadAll()
 
         if (trimOutput) {
             result := Trim(result, " `r`n`t")
@@ -499,10 +589,12 @@ class AppBase {
     }
 
     Service(name, params*) {
-        if (Type(name) == "Array" || (params && params.Length)) {
+        nameIsArray := HasBase(name, Array.Prototype)
+
+        if (nameIsArray || (params && params.Length)) {
             results := Map()
 
-            if (Type(name) != "Array") {
+            if (!nameIsArray) {
                 name := [name]
             }
 
@@ -546,8 +638,8 @@ class AppBase {
             }
         }
 
-        if (this.Services.Has("Logger")) {
-            this.Service("Logger").Error(errorText)
+        if (this.Services.Has("logger")) {
+            this.Service("logger").Error(errorText)
         }
         
         errorText .= "`n"
