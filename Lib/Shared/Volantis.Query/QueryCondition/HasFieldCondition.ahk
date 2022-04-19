@@ -2,9 +2,9 @@ class HasFieldCondition extends QueryConditionBase {
     field := ""
     fieldType := ""
 
-    __New(field, fieldType := "", negate := false) {
+    __New(field, fieldTypeId := "", negate := false) {
         this.field := field
-        this.fieldType := fieldType
+        this.fieldTypeId := fieldTypeId
         super.__New([], negate)
     }
 
@@ -18,19 +18,20 @@ class HasFieldCondition extends QueryConditionBase {
         return hasField
     }
 
-    FieldTypeMatches(fieldType, data) {
+    FieldTypeMatches(fieldTypeId, data) {
         fieldTypeMatches := false
 
-        if (Type(fieldType) == "String") {
-            fieldTypeMatches := Type(data) == fieldType
+        if (Type(fieldTypeId) == "String") {
+            fieldTypeMatches := Type(data) == fieldTypeId
 
-            if (!fieldTypeMatches && HasMethod(%fieldType%)) {
-                fieldType := %fieldType%
+            
+            if (!fieldTypeMatches && HasMethod(%fieldTypeId%)) {
+                fieldTypeId := %fieldTypeId%
             }
         }
 
-        if (!fieldTypeMatches && Type(fieldType) == "String") {
-            fieldTypeMatches := data.HasBase(fieldType.Prototype)
+        if (!fieldTypeMatches && Type(fieldTypeId) == "String") {
+            fieldTypeMatches := data.HasBase(%fieldTypeId%.Prototype)
         }
 
         return fieldTypeMatches
