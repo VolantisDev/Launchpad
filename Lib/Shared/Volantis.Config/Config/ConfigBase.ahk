@@ -26,6 +26,16 @@ class ConfigBase {
         return this.Get().__Enum(numberOfVars)
     }
 
+    Keys() {
+        keys := []
+
+        for key, value in this {
+            keys.Push(key)
+        }
+
+        return keys
+    }
+
     IsAllowed(key) {
         keyIsAllowed := true
 
@@ -69,11 +79,11 @@ class ConfigBase {
         this.Get().Delete(key)
     }
 
-    Clone() {
-        return super.Clone()
-    }
-
     Get(key := "") {
+        if (!this.loaded) {
+            this.LoadConfig()
+        }
+
         if (key) {
             if (!this.IsAllowed(key)) {
                 throw ConfigException("Parameter " . key . " is not allowed to be accessed by this config object.")
