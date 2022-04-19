@@ -1,20 +1,19 @@
 class LocationBlock extends GuiControlBase {
     btnCtl := ""
 
-    CreateControl(location, fieldName, extraButton := "", showOpen := true, helpText := "", btnOptions := "") {
+    CreateControl(location, fieldName, extraButton := "", showOpen := true, helpText := "", btnOptions := "", btnCallback := "") {
         super.CreateControl()
 
-        textOptions := this.options.Clone()
-        w := this.GetOption(textOptions, "w")
+        textOptions := this.parameters["options"].Clone()
+        w := this.parameters.GetOption("w")
 
         if (w) {
             w := SubStr(w, 2)
             w -= (20 + (this.guiObj.margin / 2))
-            this.SetOption(textOptions, "w", w)
+            this.parameters.SetOption("w", w, textOptions)
         }
         
-        textOptions := this.SetDefaultOptions(textOptions, "v" . fieldName . " h22 c" . (this.guiObj.themeObj.GetColor("textLink")) . " y+" . (this.guiObj.margin/2) . " w" . (this.guiObj.windowSettings["contentWidth"]-20-(this.guiObj.margin/2)))
-        ctl := this.AddText(location, textOptions)
+        ctl := this.AddText(location, this.parameters.SetDefaultOptions(textOptions, "v" . fieldName . " h22 c" . (this.guiObj.themeObj.GetColor("textLink")) . " y+" . (this.guiObj.margin/2) . " w" . (this.guiObj.windowSettings["contentWidth"]-20-(this.guiObj.margin/2))))
         this.ctl := ctl
 
         if (helpText) {
@@ -33,11 +32,20 @@ class LocationBlock extends GuiControlBase {
         }
 
         callback := this.RegisterCallback("OnLocationOptions")
-        btnOptions := this.SetDefaultOptions(btnOptions, "v" . fieldName . "Options w20 h20 x+" . (this.guiObj.margin/2) . " yp")
-        btn := this.guiObj.Add("ButtonControl", this.GetOptionsString(btnOptions), "arrowDown", callback, "symbol")
+        
+        opts := this.parameters.GetOptionsString(btnOptions, [
+            "v" . fieldName . "Options",
+            "w20",
+            "h20",
+            "x+" . (this.guiObj.margin/2),
+            "yp"
+        ], false, false)
+
+        btn := this.guiObj.Add("ButtonControl", opts, "arrowDown", callback, "symbol")
+
         btn.ctl.MenuItems := menuItems
         btn.ctl.ToolTip := "Change options"
-        btn.ctl.Callback := "On" . fieldName . "MenuClick"
+        btn.ctl.Callback := btnCallback ? btnCallback : "On" . fieldName . "MenuClick"
         this.btnCtl := btn
 
         return ctl
@@ -46,12 +54,17 @@ class LocationBlock extends GuiControlBase {
     OnLocationOptions(btn, info) {
         result := this.app.Service("manager.gui").Menu(Map(
             "parent", this.guiObj,
-            "Child", true
+            "child", true
         ), btn.MenuItems, btn)
 
         if (result) {
             callback := btn.Callback
-            this.guiObj.%callback%(result)
+
+            if (HasMethod(callback)) {
+                callback(result)
+            } else {
+                this.guiObj.%callback%(result)
+            }
         }
     }
 

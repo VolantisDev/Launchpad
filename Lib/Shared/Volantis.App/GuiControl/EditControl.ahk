@@ -17,8 +17,7 @@ class EditControl extends GuiControlBase {
             defaults.Push("r" . this.rows)
         }
 
-        opts := this.SetDefaultOptions(this.options, defaults)
-        this.ctl := this.guiObj.guiObj.Add("Edit", this.GetOptionsString(opts), value)
+        this.ctl := this.guiObj.guiObj.Add("Edit", this.parameters.GetOptionsString(this.parameters["options"], defaults), value)
 
         if (helpText) {
             this.ctl.ToolTip := helpText
