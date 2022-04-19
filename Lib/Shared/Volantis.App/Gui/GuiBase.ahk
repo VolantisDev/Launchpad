@@ -29,6 +29,7 @@ class GuiBase {
     height := ""
     isShown := false
     config := ""
+    merger := ""
 
     GetDefaultConfig(container, config) {
         return Map(
@@ -57,6 +58,7 @@ class GuiBase {
         this.container := container
         this.app := container.GetApp()
         this.themeObj := themeObj
+        this.merger := container.Get("merger.list")
         this.config := this.MergeConfig(config, container)
 
         if (!this.config.Has("id") || !this.config["id"]) {
