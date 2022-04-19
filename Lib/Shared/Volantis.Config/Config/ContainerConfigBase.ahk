@@ -44,4 +44,15 @@ class ContainerConfigBase extends ConfigBase {
     _setContainerParameter(key, value) {
         this.container.SetParameter(this._getContainerKey(key), value)
     }
+
+    _loadConfig(loadedValues) {
+        this._initializeParentParameter()
+        super._loadConfig(loadedValues)
+    }
+
+    _initializeParentParameter() {
+        if (!this._has("")) {
+            this._set("", Map())
+        }
+    }
 }
