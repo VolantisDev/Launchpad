@@ -6,6 +6,7 @@ class ComponentManagerBase {
     definitionLoaders := ""
     componentType := "" ; Passed with events
     loaded := false
+    addPrefixToDefinitions := true
 
     __Item[name := ""] {
         get => this.GetComponent(name)
@@ -16,11 +17,12 @@ class ComponentManagerBase {
         return this.All().__Enum(numberOfVars)
     }
 
-    __New(container, servicePrefix, eventMgr, notifierObj, componentType, definitionLoaders := "", autoLoad := true) {
+    __New(container, servicePrefix, eventMgr, notifierObj, componentType, definitionLoaders := "", autoLoad := true, addPrefixToDefinitions := true) {
         this.container := container
         this.servicePrefix := servicePrefix
         this.eventMgr := eventMgr
         this.notifierObj := notifierObj
+        this.addPrefixToDefinitions := addPrefixToDefinitions
 
         if (Type(componentType) == "String" && IsSet(%componentType%) && HasMethod(%componentType%)) {
             componentType := %componentType%
@@ -28,7 +30,7 @@ class ComponentManagerBase {
 
         this.componentType := componentType
 
-        if (definitionLoaders && Type(definitionLoaders) != "Array") {
+        if (definitionLoaders && !HasBase(definitionLoaders, Array.Prototype)) {
             definitionLoaders := [definitionLoaders]
         }
 
@@ -39,7 +41,8 @@ class ComponentManagerBase {
         }
 
         event := ComponentManagerEvent(ComponentEvents.COMPONENT_MANAGER_STARTED, this)
-        this.eventMgr.DispatchEvent(ComponentEvents.COMPONENT_MANAGER_STARTED, event)
+
+        this.eventMgr.DispatchEvent(event)
     }
 
     GetComponentType() {
@@ -67,10 +70,10 @@ class ComponentManagerBase {
         }
 
         event := ComponentDefinitionsEvent(ComponentEvents.COMPONENT_DEFINITIONS, this, services, parameters)
-        this.eventMgr.DispatchEvent(ComponentEvents.COMPONENT_DEFINITIONS, event)
+        this.eventMgr.DispatchEvent(event)
 
         event := ComponentDefinitionsEvent(ComponentEvents.COMPONENT_DEFINITIONS_ALTER, this, event.GetDefinitions(), event.GetParameters())
-        this.eventMgr.DispatchEvent(ComponentEvents.COMPONENT_DEFINITIONS_ALTER, event)
+        this.eventMgr.DispatchEvent(event)
 
         services := event.GetDefinitions()
         parameters := event.GetParameters()
@@ -83,11 +86,12 @@ class ComponentManagerBase {
         this.ValidateComponentDependencies(services, parameters, "after")
 
         event := ComponentManagerEvent(ComponentEvents.COMPONENTS_LOADED, this)
-        this.eventMgr.DispatchEvent(ComponentEvents.COMPONENTS_LOADED, event)
+        this.eventMgr.DispatchEvent(event)
     }
 
     _loadDefinitions(loader) {
-        return this.container.LoadDefinitions(loader, true, this.servicePrefix)
+        prefix := this.addPrefixToDefinitions ? this.servicePrefix : ""
+        return this.container.LoadDefinitions(loader, true, prefix)
     }
 
     ValidateComponentDependencies(services, parameters, stage) {
