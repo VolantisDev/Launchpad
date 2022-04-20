@@ -78,7 +78,7 @@ class Debugger {
                 output .= "`n"
             }
         } else if (Type(val) == "String") {
-            output := "`"" . val . "`""
+            output := "`"" . Trim(val, "`"") . "`""
         } else {
             output := Type(val) . ": " . val
         }
