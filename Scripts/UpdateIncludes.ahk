@@ -12,16 +12,14 @@ appDir := RegExReplace(A_ScriptDir, "\\[^\\]+$")
 GenerateIncludeFile(libDir) {
     global appDir
 
-    
-
     filePath := libDir . "\Includes.ahk"
     testsPath := libDir . "\Includes.test.ahk"
 
-    includeBuilder := AhkIncludeBuilder(libDir, "", true, true, [".test.ahk", filePath])
+    includeBuilder := AhkIncludeBuilder(libDir, "", true, true, [".test.ahk", filePath, testsPath])
     includeWriter := AhkIncludeWriter(filePath)
     updated := includeWriter.WriteIncludes(includeBuilder.BuildIncludes())
 
-    testBuilder := AhkIncludeBuilder(libDir, "*.test.ahk", true, true, [testsPath])
+    testBuilder := AhkIncludeBuilder(libDir, "*.test.ahk", true, true, [filePath, testsPath])
     testWriter := AhkIncludeWriter(testsPath)
     testsUpdated := testWriter.WriteIncludes(testBuilder.BuildIncludes())
 

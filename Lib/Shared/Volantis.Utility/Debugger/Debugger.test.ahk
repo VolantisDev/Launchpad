@@ -2,42 +2,19 @@ class DebuggerTest extends TestBase {
     debuggerInstance := ""
 
     Setup() {
-        super.Setup()
+        ; super.Setup()
         this.debuggerInstance := Debugger()
     }
 
-    Run() {
-        success := super.Run()
-
-        if (!this.TestSetLogger()) {
-            success := false
-        }
-
-        if (!this.TestInspect()) {
-            success := false
-        }
-
-        if (!this.TestShowMessage()) {
-            succes := false
-        }
-
-        if (!this.TestLogMessage()) {
-            success := false
-        }
-
-        if (!this.TestToString()) {
-            success := false
-        }
-
-        if (!this.TestGetIndent()) {
-            success := false
-        }
-
-        return success
+    RunTestSteps() {
+        this.TestSetLogger()
+        this.TestToString()
+        this.TestGetIndent()
     }
 
     TestSetLogger() {
-        success := false
+        this.TestMethod := "SetLogger"
+
         this.debuggerInstance.logger := ""
         logPath := this.testDir . "\Data\log.txt"
         logger := FileLogger(logPath)
@@ -46,64 +23,80 @@ class DebuggerTest extends TestBase {
         try {
             this.debuggerInstance.SetLogger(loggerServiceObj)
         } catch Any {
-
         }
-        this.AssertEquals("SetLogger", Type(loggerServiceObj), Type(this.debuggerInstance.logger))
+
+        this.AssertEquals(
+            Type(loggerServiceObj), 
+            Type(this.debuggerInstance.logger),
+            "LoggerService replaces logger"
+        )
 
         try {
             this.debuggerInstance.SetLogger(logger)
         } catch Any {
-
         }
-        this.AssertNotEquals("SetLogger", Type(logger), Type(this.debuggerInstance.logger))
+
+        this.AssertNotEquals(
+            Type(logger), 
+            Type(this.debuggerInstance.logger),
+            "Logger does not replace logger"
+        )
 
         try {
             invalidLogger := Map("Not", "a logger")
             this.debuggerInstance.SetLogger(invalidLogger)
         } catch any {
-
         }
 
-        this.AssertNotEquals("SetLogger", Type(invalidLogger), Type(this.debuggerInstance.logger))
-    }
+        this.AssertNotEquals(
+            Type(invalidLogger),
+            Type(this.debuggerInstance.logger),
+            "Invalid parameter does not replace logger",
+        )
 
-    TestInspect() {
-        return true
-    }
-
-    TestShowMessage() {
-        return true
-    }
-
-    TestLogMessage() {
-        ; TODO: Test logging with a mock somehow
-        return true
+        this.TestMethod := ""
     }
 
     TestToString() {
-        val := "Test string"
-        str := this.debuggerInstance.ToString(val)
-        return this.AssertEquals("ToString", val, str)
+        this.TestMethod := "ToString"
+
+        this.AssertEquals(
+            "`"Test string`"", 
+            this.debuggerInstance.ToString("Test string"),
+            "Passing a string wraps it in quotes"
+        )
+
+        testString := "Test string"
+
+        this.AssertEquals(
+            "`"Test string`"", 
+            this.debuggerInstance.ToString("`"Test string`""),
+            "Passing a quoted string returns the same string"
+        )
+
+        this.TestMethod := ""
     }
 
     TestGetIndent() {
-        success := true
+        this.TestMethod := "GetIndent"
         indentStr := "-"
 
-        testIndent := this.debuggerInstance.GetIndent(0, indentStr)
-        if (!this.AssertEquals("GetIndent", testIndent, "")) {
-            success := false
-        }
+        this.AssertEquals(
+            this.debuggerInstance.GetIndent(0, indentStr),
+            "",
+            "Level 0 returns an empty string"
+        )
 
-        testIndent := this.debuggerInstance.GetIndent(10, indentStr)
-        if (!this.AssertEquals("GetIndent", testIndent, "----------")) {
-            success := false
-        }
+        this.AssertEquals(
+            this.debuggerInstance.GetIndent(10, indentStr), 
+            "----------",
+            "Level 10 returns the correct string"
+        )
 
-        return success
+        this.TestMethod := ""
     }
 
     Teardown() {
-        super.Teardown()
+        ;super.Teardown()
     }
 }

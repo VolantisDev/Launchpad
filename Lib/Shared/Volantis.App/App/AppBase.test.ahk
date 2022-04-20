@@ -12,72 +12,29 @@ class AppBaseTest extends TestBase {
         return testAppConfig
     }
 
-    Run() {
-        success := true
-
-        if (!this.TestAppVersion()) {
-            success := false
-        }
-
-        if (!this.TestAppConfig()) {
-            success := false
-        }
-
-        if (!this.TestAppState()) {
-            success := false
-        }
-
-        if (!this.TestAppServices()) {
-            success := false
-        }
-
-        if (!this.TestAppLogger()) {
-            success := false
-        }
-
-        if (!this.TestAppDebugger()) {
-            success := false
-        }
-        
-        ; TODO: Add more AppBase tests
-        return true
+    RunTestSteps() {
+        this.TestAppVersion()
+        this.TestAppConfig()
+        this.TestAppState()
+        ; @todo Add more AppBase tests
     }
 
     TestAppVersion() {
-        success := true
-
-        if (!this.AssertEquals("Version", this.testAppInstance.Version, this.testVersion)) {
-            success := false
-        }
-
-        ; TODO: Test changing app version
-        return success
+        this.TestMethod := "Version"
+        this.AssertEquals(this.testAppInstance.Version, this.testVersion)
+        ; @todo Test changing app version
+        this.TestMethod := ""
     }
 
     TestAppConfig() {
-        return this.AssertEquals("Config", Type(this.testAppInstance.Config), this.appConfigClass)
+        this.TestMethod := "Config"
+        this.AssertEquals(Type(this.testAppInstance.Config), this.appConfigClass)
+        this.TestMethod := ""
     }
 
     TestAppState() {
-        return this.AssertEquals("State", Type(this.testAppInstance.State), this.appStateClass)
-    }
-
-    TestAppServices() {
-        success := true
-        ; TODO: Test that Services is a valid service container
-        return success
-    }
-
-    TestAppLogger() {
-        success := true
-        ; TODO: Test that a valid logger class exists under Logger
-        return success
-        
-    }
-
-    TestAppDebugger() {
-        success := true
-        ; TODO: Test that a valid debugger class exists under Debugger
-        return success
+        this.TestMethod := "State"
+        this.AssertEquals(Type(this.testAppInstance.State), this.appStateClass)
+        this.TestMethod := ""
     }
 }

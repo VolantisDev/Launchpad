@@ -5,6 +5,12 @@ class TestBase {
     requiresTestApp := false
     testSuccess := true
     testFinished := false
+    testMethodVal := ""
+
+    TestMethod {
+        get => this.testMethodVal
+        set => this.testMethodVal := value
+    }
 
     __New() {
         this.testDir := A_Temp . "\" . this.GetKey()
@@ -42,8 +48,12 @@ class TestBase {
     }
 
     Run() {
-        ; Should be implemented
+        this.RunTestSteps()
         return this.testSuccess
+    }
+
+    RunTestSteps() {
+
     }
 
     Teardown() {
@@ -92,57 +102,100 @@ class TestBase {
         return this.testFinished && this.testSuccess
     }
 
-    AssertTrue(method, value, description := "") {
-        condition := (!!value)
-        data := Map("Value", value)
-        return this.Assertion(method, "Assert True", condition, description, data)
+    AssertTrue(value, description := "") {
+        return this.Assertion(
+            "Assert True", 
+            (!!value), 
+            description, 
+            Map("Value", value)
+        )
     }
 
-    AssertFalse(method, value, description := "") {
-        condition := (!value)
-        data := Map("Value", value)
-        return this.Assertion(method, "Assert False", condition, description, data)
+    AssertFalse(value, description := "") {
+        return this.Assertion(
+            "Assert False", 
+            (!value), 
+            description, 
+            Map("Value", value)
+        )
     }
 
-    AssertEquals(method, value1, value2, description := "") {
-        condition := (value1 == value2)
-        data := Map("Value 1", value1, "Value 2", value2)
-        return this.Assertion(method, "Assert Equals", condition, description, data)
+    AssertEquals(value1, value2, description := "") {
+        return this.Assertion(
+            "Assert Equals", 
+            (value1 == value2), 
+            description, 
+            Map(
+                "Value 1", value1, 
+                "Value 2", value2
+            )
+        )
     }
 
-    AssertNotEquals(method, value1, value2, description := "") {
-        condition := (value1 != value2)
-        data := Map("Value 1", value1, "Value 2", value2)
-        return this.Assertion(method, "Assert Not Equals", condition, description, data)
+    AssertNotEquals(value1, value2, description := "") {
+        return this.Assertion(
+            "Assert Not Equals", 
+            (value1 != value2), 
+            description, 
+            Map(
+                "Value 1", value1, 
+                "Value 2", value2
+            )
+        )
     }
 
-    AssertGreaterThan(method, value1, value2, description := "") {
-        condition := (value1 > value2)
-        data := Map("Value 1", value1, "Value 2", value2)
-        return this.Assertion(method, "Assert Greater Than", condition, description, data)
+    AssertGreaterThan(value1, value2, description := "") {
+        return this.Assertion(
+            "Assert Greater Than", 
+            (value1 > value2), 
+            description, 
+            Map(
+                "Value 1", value1, 
+                "Value 2", value2
+            )
+        )
     }
 
-    AssertLessThan(method, value1, value2, description := "") {
-        condition := (value1 < value2)
-        data := Map("Value 1", value1, "Value 2", value2)
-        return this.Assertion(method, "Assert Less Than", condition, description, data)
+    AssertLessThan(value1, value2, description := "") {
+        return this.Assertion(
+            "Assert Less Than", 
+            (value1 < value2), 
+            description, 
+            Map(
+                "Value 1", value1, 
+                "Value 2", value2
+            )
+        )
     }
 
-    AssertFileExists(method, path, description := "") {
-        condition := (!!FileExist(path))
-        data := Map("Path", path)
-        return this.Assertion(method, "Assert File Exists", condition, description, data)
+    AssertFileExists(path, description := "") {
+        return this.Assertion(
+            "Assert File Exists", 
+            (!!FileExist(path)), 
+            description, 
+            Map("Path", path)
+        )
     }
 
-    AssertFileDoesNotExist(method, path, description := "") {
-        condition := (!FileExist(path))
-        data := Map("Path", path)
-        return this.Assertion(method, "Assert File Does Not Exist", condition, description, data)
+    AssertFileDoesNotExist(path, description := "") {
+        return this.Assertion(
+            "Assert File Does Not Exist", 
+            (!FileExist(path)), 
+            description, 
+            Map("Path", path)
+        )
     }
 
-    Assertion(method, assertionName, condition, description := "", data := "") {
+    Assertion(assertionName, condition, description := "", data := "") {
         success := !!condition
-        this.results.Push(Map("success", success, "method", method, "assertion", assertionName, "data", data, "description", description))
+
+        this.results.Push(Map(
+            "success", success, 
+            "method", this.TestMethod, 
+            "assertion", assertionName, 
+            "data", data, 
+            "description", description
+        ))
 
         if (!success) {
             this.testSuccess := false
