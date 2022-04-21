@@ -523,8 +523,6 @@ class GuiBase {
     }
 
     OnShow(windowState := "") {
-        
-
         if (this.lvHeaderHwnd) {
             WinRedraw("ahk_id " . this.lvHeaderHwnd)
         }
