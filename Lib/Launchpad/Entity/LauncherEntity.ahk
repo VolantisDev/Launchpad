@@ -35,25 +35,23 @@ class LauncherEntity extends AppEntityBase {
     BaseFieldDefinitions() {
         definitions := super.BaseFieldDefinitions()
 
-        if (definitions.Has("id")) {
-            definitions["id"]["formField"] := false
+        definitions["id"]["formField"] := false
 
-            if (!definitions["id"].Has("modes")) {
-                definitions["id"]["modes"] := Map()
-            }
-
-            definitions["id"]["modes"]["wizard"] := Map(
-                "formField", true,
-                "widget", "combo",
-                "selectOptionsCallback", ObjBindMethod(this, "ListKnownGames"),
-                "description", "Select an existing game from the API, or enter a custom game key to create your own."
-            )
+        if (!definitions["id"].Has("modes")) {
+            definitions["id"]["modes"] := Map()
         }
 
-        if (definitions.Has("name")) {
-            definitions["name"]["description"] := "You can change the display name of the game if it differs from the key."
-            definitions["name"]["help"] := "The launcher filename will still be created using the key."
+        if (!definitions["id"]["modes"].Has("wizard")) {
+            definitions["id"]["modes"]["wizard"] := Map()
         }
+
+        definitions["id"]["modes"]["wizard"]["formField"] := true
+        definitions["id"]["modes"]["wizard"]["widget"] := "combo"
+        definitions["id"]["modes"]["wizard"]["selectOptionsCallback"] := ObjBindMethod(this, "ListKnownGames")
+        definitions["id"]["modes"]["wizard"]["description"] := "Select an existing game from the API, or enter a custom game key to create your own."
+
+        definitions["name"]["description"] := "You can change the display name of the game if it differs from the key."
+        definitions["name"]["help"] := "The launcher filename will still be created using the key."
 
         if (definitions.Has("DataSourceItemKey")) {
             definitions["DataSourceItemKey"]["default"] := ""
@@ -88,7 +86,8 @@ class LauncherEntity extends AppEntityBase {
                 )
             ),
             "default", this.idVal,
-            "showDefaultCheckbox", false
+            "showDefaultCheckbox", false,
+            "valueType", EntityFieldBase.VALUE_TYPE_DEFAULT
         )
 
         definitions["ManagedGame"] := Map(
@@ -109,7 +108,8 @@ class LauncherEntity extends AppEntityBase {
                 )
             ),
             "default", this.idVal,
-            "showDefaultCheckbox", false
+            "showDefaultCheckbox", false,
+            "valueType", EntityFieldBase.VALUE_TYPE_DEFAULT
         )
 
         definitions["DestinationDir"] := Map(
