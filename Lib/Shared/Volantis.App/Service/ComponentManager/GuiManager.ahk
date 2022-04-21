@@ -67,7 +67,7 @@ class GuiManager extends ComponentManagerBase {
 
     Dialog(config, params*) {
         if (!config) {
-            config := Map("type", "DialogBox")
+            config := Map()
         }
 
         if (Type(config) == "String") {
