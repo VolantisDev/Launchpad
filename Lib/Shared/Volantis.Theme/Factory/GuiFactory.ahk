@@ -133,7 +133,7 @@ class GuiFactory {
     }
 
     GetGuiId(config, params*) {
-        config := this.GetGuiCOnfig(config, params*)
+        config := this.GetGuiConfig(config, params*)
         return config["id"]
     }
 
