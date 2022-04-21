@@ -160,6 +160,7 @@ class TitlebarControl extends GuiControlBase {
                 this.guiObj.Maximize()
             }
         } else if (btn == this.closeBtn.ctl) {
+            this.guiObj.canceled := true
             this.guiObj.Close()
         }
     }
