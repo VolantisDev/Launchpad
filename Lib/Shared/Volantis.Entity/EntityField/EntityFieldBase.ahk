@@ -12,6 +12,9 @@ class EntityFieldBase {
     merger := ""
     needsEntityRefresh := false
 
+    static VALUE_TYPE_DATA := "data"
+    static VALUE_TYPE_DEFAULT := "default"
+
     Definition {
         get => this.fieldDefinition
         set => this.fieldDefinition := value
@@ -44,16 +47,50 @@ class EntityFieldBase {
         )
     }
 
-    DefinitionDefaults(fieldDefinition) {
+    DefaultCallbacks(valueType) {
+        getCallback := ""
+        setCallback := ""
+        hasCallback := ""
+        hasOverrideCallback := ""
+        isEmptyCallback := ""
+        deleteCallback := ""
+
+        if (valueType == EntityFieldBase.VALUE_TYPE_DATA) {
+            getCallback := ObjBindMethod(this, "_getDataValue", "*")
+            setCallback := ObjBindMethod(this, "_setDataValue")
+            hasCallback := ObjBindMethod(this, "_hasDataValue", "*", true)
+            hasOverrideCallback := ObjBindMethod(this, "_hasDataValue", "", true)
+            isEmptyCallback := ObjBindMethod(this, "_hasDataValue", "*", false)
+            deleteCallback := ObjBindMethod(this, "_deleteDataValue")
+        } else if (valueType == EntityFieldBase.VALUE_TYPE_DEFAULT) {
+            getCallback := ObjBindMethod(this, "_getDefaultValue")
+            setCallback := ObjBindMethod(this, "_emptySet")
+            hasCallback := ObjBindMethod(this, "_hasDefaultValue", true)
+            hasOverrideCallback := ObjBindMethod(this, "_hasDefaultOverride")
+            isEmptyCallback := ObjBindMethod(this, "_hasDefaultValue", false)
+            deleteCallback := ObjBindMethod(this, "_emptyDelete")
+        }
+
         return Map(
-            "callbacks", Map(
-                "GetValue", ObjBindMethod(this, "_getDataValue", "*"),
-                "SetValue", ObjBindMethod(this, "_setDataValue"),
-                "HasValue", ObjBindMethod(this, "_hasDataValue", "*", true),
-                "HasOverride", ObjBindMethod(this, "_hasDataValue", "", true),
-                "IsEmpty", ObjBindMethod(this, "_hasDataValue", "*", false),
-                "DeleteValue", ObjBindMethod(this, "_deleteDataValue")
-            ),
+            "GetValue", getCallback,
+            "SetValue", setCallback,
+            "HasValue", hasCallback,
+            "HasOverride", hasOverrideCallback,
+            "IsEmpty", isEmptyCallback,
+            "DeleteValue", deleteCallback
+        )
+    }
+
+    DefinitionDefaults(fieldDefinition) {
+        valueType := fieldDefinition.Has("valueType") ? fieldDefinition["valueType"] : ""
+
+        if (!valueType) {
+            valueType := EntityFieldBase.VALUE_TYPE_DATA
+        }
+
+        return Map(
+            "callbacks", this.DefaultCallbacks(valueType),
+            "valueType", valueType,
             "dataLayer", "config",
             "default", this.defaultValue,
             "description", "",
@@ -170,6 +207,10 @@ class EntityFieldBase {
         )
     }
 
+    _getDefaultValue() {
+        return this.Definition["default"]
+    }
+
     _setDataValue(value, layer := "") {
         this.dataObj.SetValue(
             this.Definition["storageKey"], 
@@ -182,6 +223,10 @@ class EntityFieldBase {
         }
     }
 
+    _emptySet(value) {
+        
+    }
+
     _hasDataValue(layer := "*", allowEmpty := true) {
         return this.dataObj.HasValue(
             this.Definition["storageKey"], 
@@ -190,11 +235,23 @@ class EntityFieldBase {
         )
     }
 
+    _hasDefaultValue(allowEmpty := true) {
+        return allowEmpty ? true : !!(this.Definition["default"])
+    }
+
+    _hasDefaultOverride() {
+        return false
+    }
+
     _deleteDataValue(layer := "") {
         this.dataObj.DeleteValue(
             this.Definition["storageKey"], 
             this._parseLayer(layer, false)
         )
+    }
+
+    _emptyDelete() {
+
     }
 
     RefreshEntity(force := false) {
