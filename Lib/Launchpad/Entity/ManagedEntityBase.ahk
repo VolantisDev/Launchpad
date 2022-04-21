@@ -30,6 +30,8 @@ class ManagedEntityBase extends AppEntityBase {
     BaseFieldDefinitions() {
         definitions := super.BaseFieldDefinitions()
 
+        definitions["name"]["formField"] := false
+
         definitions["Launcher"] := Map(
             "storageKey", "",
             "type", "entity_reference",
