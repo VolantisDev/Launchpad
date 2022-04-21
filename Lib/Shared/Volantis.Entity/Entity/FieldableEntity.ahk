@@ -64,7 +64,6 @@ class FieldableEntity extends EntityBase {
             "id", Map(
                 "editable", false,
                 "type", "id",
-                
                 "weight", -100
             ),
             "name", Map(
