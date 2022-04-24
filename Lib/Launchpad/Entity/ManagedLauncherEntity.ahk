@@ -37,6 +37,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "storageKey", this.configPrefix . "ClosePreDelay",
             "default", 0,
             "required", true,
+            "group", "advanced",
             "description", "How many seconds to wait before closing the launcher"
         )
 
@@ -47,6 +48,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "storageKey", this.configPrefix . "ClosePostDelay",
             "default", 0,
             "required", true,
+            "group", "advanced",
             "description", "How many seconds to wait after closing the launcher"
         )
 
@@ -72,6 +74,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "storageKey", this.configPrefix . "RecheckDelay",
             "default", 10,
             "required", true,
+            "group", "advanced",
             "description", "The amount of time to wait between checks if the launcher is running, if applicable."
         )
 
@@ -82,6 +85,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "storageKey", this.configPrefix . "WaitTimeout",
             "default", 30,
             "required", true,
+            "group", "advanced",
             "description", "Set how long the launcher will attempt to wait before giving up."
         )
 
@@ -92,6 +96,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "storageKey", this.configPrefix . "KillPreDelay",
             "default", 10,
             "required", true,
+            "group", "advanced",
             "description", "If killing a managed launcher forcefully, ending the process will be delayed by this number of seconds."
         )
 
@@ -102,6 +107,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "storageKey", this.configPrefix . "KillPostDelay",
             "default", 5,
             "required", true,
+            "group", "advanced",
             "description", "If killing a managed launcher forcefully, the launcher will wait this number of seconds after trying to end the process before reporting success."
         )
 
@@ -112,6 +118,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "storageKey", this.configPrefix . "PoliteCloseWait",
             "required", true,
             "default", 10,
+            "group", "advanced",
             "description", "How many seconds to give the launcher to close after asking politely before forcefully killing it (if applicable)."
         )
 

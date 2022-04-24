@@ -50,19 +50,21 @@ class ManagedEntityBase extends AppEntityBase {
 
         definitions["EntityType"] := Map(
             "default", this.defaultType,
-            "description", "The key of the entity type to load settings and defaults from.",
+            "description", "The key of the managed type to load settings and defaults from.",
             "required", true,
             "storageKey", this.configPrefix . "Type",
             "widget", "select",
-            "selectOptionsCallback", ObjBindMethod(this, "ListEntityTypes")
+            "selectOptionsCallback", ObjBindMethod(this, "ListEntityTypes"),
+            "group", "general"
         )
 
         definitions["EntityClass"] := Map(
             "default", this.defaultClass,
-            "description", "The name of the AHK class that will be used to control the launcher.",
+            "description", "The name of the AHK class that will be used to control the managed entity.",
             "formField", false,
             "storageKey", this.configPrefix . "Class",
-            "required", true
+            "required", true,
+            "group", "advanced"
         )
 
         definitions["SearchDirs"] := Map(
@@ -102,7 +104,7 @@ class ManagedEntityBase extends AppEntityBase {
             "storageKey", this.configPrefix . "LocateMethod",
             "default", "SearchDirs",
             "description", "How to search for the .exe if it isn't a full path already",
-            "group", "locations",
+            "group", "general",
             "widget", "select",
             "selectOptionsCallback", ObjBindMethod(this, "ListLocateMethods"),
             "help", "Search: Searches a list of possible directories (Defaulting to some common possibilities) for the .exe file and uses that directory`nRegistry: Looks for the provided registry key and uses its value as the install path if present`nBlizzardProductDb: Searches for LauncherSpecificId within the Blizzard product.db file if present"
@@ -155,10 +157,12 @@ class ManagedEntityBase extends AppEntityBase {
 
         definitions["LauncherSpecificId"] := Map(
             "storageKey", this.configPrefix . "LauncherSpecificId",
-            "description", "If the item is known to the launcher by a specific ID, it should be stored here."
+            "description", "If the item is known to the launcher by a specific ID, it should be stored here.",
+            "group", "general"
         )
 
         definitions["WorkingDir"] := Map(
+            "type", "directory",
             "description", "The directory that the launcher should be run from.",
             "help", "If not set, it will be run without setting an explicit working directory, which is usually sufficient.",
             "storageKey", this.configPrefix . "WorkingDir",
@@ -178,12 +182,14 @@ class ManagedEntityBase extends AppEntityBase {
         )
 
         definitions["UsesShortcut"] := Map(
+            "type", "boolean",
             "description", "Whether a shortcut file will be used when starting the internally-managed game launcher",
             "formField", false,
             "storageKey", this.configPrefix . "UsesShortcut"
         )
 
         definitions["ReplaceProcess"] := Map(
+            "type", "boolean",
             "description", "Kill and re-launch the game process immediately after it is detected.",
             "help", "This can be used to force Launchpad to own the game process, but won't for for every game.",
             "storageKey", this.configPrefix . "ReplaceProcess",
