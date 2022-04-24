@@ -56,6 +56,6 @@ class EntityReferenceField extends ServiceReferenceField {
     }
 
     _getSelectQuery() {
-        return this._entityManager().EntityQuery(EntityQuery.RESULT_TYPE_NAMES)
+        return this._entityManager().EntityQuery(EntityQuery.RESULT_TYPE_IDS)
     }
 }
