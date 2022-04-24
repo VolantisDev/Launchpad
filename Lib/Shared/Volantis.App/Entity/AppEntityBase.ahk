@@ -81,17 +81,13 @@ class AppEntityBase extends FieldableEntity {
         return ["ds"]
     }
 
-    populateEntityLayers(layeredData) {
-        layeredData.SetLayer("ds", this.AggregateDataSourceDefaults())
-        super.populateEntityLayers(layeredData)
-    }
-
     UpdateDataSourceDefaults(recurse := true) {
-        this.populateEntityLayers(this.GetData())
+        ; @todo Move this to a module
+        this.GetData().SetLayerSource("ds", this.AggregateDataSourceDefaults())
 
         if (recurse) {
             for key, child in this.GetReferencedEntities(true) {
-                child.UpdateDataSourceDefaults()
+                child.UpdateDataSourceDefaults(recurse)
             }
         }
     }

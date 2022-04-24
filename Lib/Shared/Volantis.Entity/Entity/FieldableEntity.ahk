@@ -223,8 +223,8 @@ class FieldableEntity extends EntityBase {
         this.GetField(key).DeleteValue()
     }
 
-    RefreshEntityData(recurse := false) {
-        super.RefreshEntityData(recurse)
+    RefreshEntityData(recurse := true, reloadUserData := false) {
+        super.RefreshEntityData(recurse, reloadUserData)
 
         for widgetId, widget in this.widgets {
             if (widget.IsRendered) {

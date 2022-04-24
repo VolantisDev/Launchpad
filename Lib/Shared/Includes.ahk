@@ -205,13 +205,14 @@
 #Include Volantis.Entity\EntityStorage\EntityStorageBase.ahk
 #Include Volantis.Entity\EntityType\BasicEntityType.ahk
 #Include Volantis.Entity\EntityType\EntityTypeBase.ahk
-#Include Volantis.Entity\Event\EntityDataEvent.ahk
+#Include Volantis.Entity\Event\EntityDataProcessorsEvent.ahk
 #Include Volantis.Entity\Event\EntityEvent.ahk
 #Include Volantis.Entity\Event\EntityFieldDefinitionsEvent.ahk
 #Include Volantis.Entity\Event\EntityFieldGroupsEvent.ahk
 #Include Volantis.Entity\Event\EntityLayersEvent.ahk
 #Include Volantis.Entity\Event\EntityReferenceEvent.ahk
 #Include Volantis.Entity\Event\EntityRefreshEvent.ahk
+#Include Volantis.Entity\Event\EntityStorageEvent.ahk
 #Include Volantis.Entity\Event\EntityValidateEvent.ahk
 #Include Volantis.Entity\Events\EntityEvents.ahk
 #Include Volantis.Entity\Exception\EntityException.ahk
@@ -220,7 +221,7 @@
 #Include Volantis.Entity\Factory\EntityFieldWidgetFactory.ahk
 #Include Volantis.Entity\Factory\EntityFormFactory.ahk
 #Include Volantis.Entity\Factory\EntityTypeFactory.ahk
-#Include Volantis.Entity\LayeredData\LayeredEntityData.ahk
+#Include Volantis.Entity\LayeredData\EntityData.ahk
 #Include Volantis.Entity\Query\EntityQuery.ahk
 #Include Volantis.Entity\Validator\BasicValidator.ahk
 #Include Volantis.Entity\Validator\ValidatorBase.ahk

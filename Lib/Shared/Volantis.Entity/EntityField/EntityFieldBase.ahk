@@ -7,7 +7,7 @@ class EntityFieldBase {
     fieldKey := ""
     fieldDefinition := ""
     dataObj := ""
-    userLayer := "config"
+    userLayer := "data"
     cloner := ""
     merger := ""
     needsEntityRefresh := false
@@ -91,7 +91,7 @@ class EntityFieldBase {
         return Map(
             "callbacks", this.DefaultCallbacks(valueType),
             "valueType", valueType,
-            "dataLayer", "config",
+            "dataLayer", this.userLayer,
             "default", this.defaultValue,
             "description", "",
             "editable", true,
@@ -254,9 +254,9 @@ class EntityFieldBase {
 
     }
 
-    RefreshEntity(force := false) {
+    RefreshEntity(force := false, refreshUserData := false) {
         if (force || this.needsEntityRefresh) {
-            this.entityObj.RefreshEntityData(true)
+            this.entityObj.RefreshEntityData(true, refreshUserData)
             this.needsEntityRefresh := false
         }
     }

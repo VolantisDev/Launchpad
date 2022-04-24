@@ -20,35 +20,57 @@ class LayeredDataBase {
     processors := []
     original := ""
     snapshots := Map()
+    layerSources := Map()
+    loadedLayers := Map()
+    cloner := ""
+    userLayers := ["data"]
 
-    __New(processors, params*) {
+    static NO_VALUE := ":NO_VAL:"
+
+    __New(cloner, processors, layers*) {
+        this.cloner := cloner
+
         if (processors != "") {
             this.processors := processors
         }
 
-        if (params.Has(1)) {
-            this.SetLayers(params*)
+        if (layers.Has(1)) {
+            this.SetLayers(layers*)
+        }
+    }
+
+    InitializeLayerArray(layerNames) {
+        layers := []
+
+        for index, layerName in layerNames {
+            layers.Push(layerName, Map())
         }
 
-        this.LoadValues()
+        return layers
     }
 
-    LoadValues() {
-        ; Optional hook for subclasses to load data into one or more layers
-        return this
+    SetLayerSources(layerSources) {
+        for key, source in layerSources {
+            this.SetLayerSource(key, source)
+        }
     }
 
-    SetLayers(params*) {
-        if (HasBase(params[1], Map.Prototype)) {
-            for layerName, layerData in params[1] {
+    SetLayerSource(layer, sourceObj) {
+        this.layerSources[layer] := sourceObj
+        this.UnloadLayer(layer)
+    }
+
+    SetLayers(layers*) {
+        if (HasBase(layers[1], Map.Prototype)) {
+            for layerName, layerData in layers[1] {
                 this.SetLayer(layerName, layerData)
             }
         } else {
             nextParam := 1
 
-            while (params.Has(nextParam)) {
-                layerName := params[nextParam]
-                layerData := params[nextParam + 1]
+            while (layers.Has(nextParam)) {
+                layerName := layers[nextParam]
+                layerData := layers[nextParam + 1]
                 this.SetLayer(layerName, layerData)
                 nextParam := nextParam + 2
             }
@@ -57,10 +79,19 @@ class LayeredDataBase {
         return this
     }
 
-    SetLayer(layerName, data, layerPriority := "") {
-        alreadyExists := this.layers.Has(layerName)
-        this.layers[layerName] := data
+    SetLayer(layerName, data := "", layerPriority := "") {
+        alreadyExists := this.HasLayer(layerName)
 
+        if (data && this.layerSources.Has(layerName)) {
+            this.layerSources.Delete(layerName)
+        }
+
+        if (!data) {
+            data := Map()
+        }
+
+        this.layers[layerName] := data
+        
         if (!alreadyExists) {
             if (layerPriority == "") {
                 this.layerPriority.Push(layerName)
@@ -73,7 +104,13 @@ class LayeredDataBase {
     }
 
     GetLayer(layerName) {
-        return this.layers.Has(layerName) ? this.layers[layerName] : Map()
+        hasLayer := this.HasLayer(layerName)
+
+        if (hasLayer && !this.LayerIsLoaded(layerName)) {
+            this.LoadLayer(layerName)
+        }
+
+        return hasLayer ? this.layers[layerName] : Map()
     }
 
     CreateSnapshot(snapshotName, layers := "") {
@@ -111,15 +148,91 @@ class LayeredDataBase {
     }
 
     DeleteLayer(layerName) {
-        if (this.layers.Has(layerName)) {
+        if (this.HasLayer(layerName)) {
             this.layers.Delete(layerName)
+        }
 
-            for index, value in this.layerPriority {
-                if (layerName == value) {
-                    this.layerPriority.RemoveAt(index)
+        for index, value in this.layerPriority {
+            if (layerName == value) {
+                this.layerPriority.RemoveAt(index)
+                break
+            }
+        }
+
+        if (this.layerSources.Has(layerName)) {
+            this.layerSources.Delete(layerName)
+        }
+    }
+
+    LoadLayer(layer, reload := false) {
+        if (
+            this.layerSources.Has(layer)
+            && (reload || !this.LayerIsLoaded(layer))
+        ) {
+            this.loadLayerFromSource(layer, this.layerSources[layer])
+            this.loadedLayers[layer] := true
+        }
+    }
+
+    loadLayerFromSource(layer, sourceObj, cloneMap := true) {
+        data := ""
+
+        if (HasBase(sourceObj, Map.Prototype)) {
+            data := sourceObj
+
+            if (cloneMap) {
+                data := this.cloner.Clone(data)
+            }
+        } else if (HasMethod(sourceObj)) {
+            data := sourceObj()
+        }
+
+        if (!data) {
+            data := Map()
+        }
+
+        this.SetLayer(layer, data)
+    }
+
+    LoadAllLayers(reload := false) {
+        for , layerName in this._getLayerPriority() {
+            this.LoadLayer(layerName, reload)
+        }
+    }
+
+    LayerIsLoaded(layer) {
+        return this.loadedLayers.Has(layer) && this.loadedLayers[layer]
+    }
+
+    HasLayer(layer) {
+        return this.layers.Has(layer)
+    }
+
+    UnloadLayer(layer) {
+        if (this.LayerIsLoaded(layer)) {
+            this.layers[layer] := Map()
+            this.loadedLayers.Delete(layer)
+        }
+    }
+
+    UnloadAllLayers(includeUserLayers := false) {
+        for , layerName in this._getLayerPriority() {
+            if (!includeUserLayers) {
+                isUserLayer := false
+
+                for index, layer in this.userLayers {
+                    if (layer == layerName) {
+                        isUserLayer := true
+                        break
+                    }
+                }
+
+                if (isUserLayer) {
                     break
                 }
             }
+
+            this.UnloadLayer(layerName)
         }
     }
 
@@ -136,15 +249,16 @@ class LayeredDataBase {
         hasValue := false
 
         if (layer != "") {
-            if (this.layers.Has(layer) && this.layers[layer].Has(key)) {
-                value := this.layers[layer][key]
+            if (this.HasValue(key, layer)) {
+                value := this.GetRawLayerValue(layer, key)
                 hasValue := true
             }
         } else {
-            for index, layerName in this.layerPriority {
-                if (this.layers[layerName].Has(key)) {
-                    value := this.layers[layerName][key]
+            for , layerName in this._getLayerPriority(true) {
+                if (this.HasValue(key, layerName)) {
+                    value := this.GetRawLayerValue(layerName, key)
                     hasValue := true
+                    break
                 }
             }
         }
@@ -156,18 +270,57 @@ class LayeredDataBase {
         return value
     }
 
+    GetRawLayerValue(layer, key, default := ":NO_VAL:") {
+        value := default
+
+        if (this.HasLayer(layer)) {
+            if (!this.LayerIsLoaded(layer)) {
+                this.LoadLayer(layer)
+            }
+    
+            if (this.layers[layer].Has(key)) {
+                value := this.layers[layer][key]
+            }
+        }
+
+        return value
+    }
+
+    _getLayerPriority(reverse := false) {
+        layerPriority := this.layerPriority
+
+        if (reverse) {
+            priorityClone := layerPriority.Clone()
+            layerPriority := []
+
+            for index, layerName in this.layerPriority.Clone() {
+                layerPriority.Push(priorityClone.Pop())
+            }
+        }
+
+        return layerPriority
+    }
+
     HasValue(key, layer := "", allowEmpty := true) {
         hasValue := false
 
-        if (layer != "") {
-            hasValue := (this.layers.Has(layer) && this.layers[layer].Has(key))
+        if (layer) {
+            if (this.HasLayer(layer)) {
+                if (!this.LayerIsLoaded(layer)) {
+                    this.LoadLayer(layer)
+                }
+    
+                hasValue := (this.layers[layer].Has(key))
+
+                if (hasValue && !allowEmpty) {
+                    hasValue := this.layers[layer][key] != ""
+                }
+            }
         } else {
-            for index, layerName in this.layerPriority {
-                if (this.layers[layerName].Has(key)) {
-                    if (allowEmpty || this.layers[layerName][key] != "") {
-                        hasValue := true
-                        break
-                    }
+            for , layerName in this._getLayerPriority(true) {
+                if (this.HasValue(key, layerName, allowEmpty)) {
+                    hasValue := true
+                    break
                 }
             }
         }
@@ -199,8 +352,14 @@ class LayeredDataBase {
             layer := this.GetTopLayer()
         }
 
-        if (this.layers.Has(layer)) {
+        if (this.HasLayer(layer)) {
+            if (!this.LayerIsLoaded(layer)) {
+                this.LoadLayer(layer)
+            }
+
             this.layers[layer][key] := value
+        } else {
+            throw AppException("Layer " . layer . " not found.")
         }
     }
 
@@ -209,8 +368,20 @@ class LayeredDataBase {
             layer := this.GetTopLayer()
         }
 
-        if (this.layers.Has(layer) && this.layers[layer].Has(key)) {
-            this.layers[layer].Delete(key)
+        if (this.HasLayer(layer)) {
+            if (!this.LayerIsLoaded(layer)) {
+                this.LoadLayer(layer)
+            }
+
+            if (this.HasValue(key, layer, true)) {
+                this.layers[layer].Delete(key)
+            }
+        }
+    }
+
+    DeleteUserValue(key) {
+        for index, layer in this.userLayers {
+            this.DeleteValue(key, layer)
         }
     }
 
@@ -221,6 +392,10 @@ class LayeredDataBase {
             layer := layerName
         }
 
+        if (!layer) {
+            throw AppException("There is currently no top layer.")
+        }
+
         return layer
     }
 
@@ -228,6 +403,10 @@ class LayeredDataBase {
         data := Map()
 
         for index, layer in this.layerPriority {
+            if (!this.LayerIsLoaded(layer)) {
+                this.LoadLayer(layer)
+            }
+
             data := this.MergeData(data, this.layers[layer], true)
         }
 
@@ -252,8 +431,13 @@ class LayeredDataBase {
 
     CloneLayers(layers := "") {
         if (layers == "") {
+            this.LoadAllLayers()
             layers := this.layers
         } else if (Type(layers) == "String") {
+            if (!this.LayerIsLoaded(layers)) {
+                this.LoadLayer(layers)
+            }
+
             layers := Map(layers, this.layers[layers])
         }
 
@@ -267,6 +451,7 @@ class LayeredDataBase {
     }
 
     CloneData(data) {
+        ; @todo use a deep cloner object?
         return data.Clone()
     }
 
@@ -276,6 +461,10 @@ class LayeredDataBase {
     DiffChanges(snapshotName, layer := "") {
         if (!this.HasSnapshot(snapshotName)) {
             throw AppException("Snapshot " . snapshotName . " does not exist")
+        }
+
+        if (layer && !this.LayerIsLoaded(layer)) {
+            this.LoadLayer(layer)
         }
 
         currentData := (layer == "") ? this.GetMergedData(false) : this.layers[layer]
@@ -321,6 +510,14 @@ class LayeredDataBase {
 
     ; TODO: Replace with a call to Debugger's Inspect method
     DebugData(layer := "") {
+        if (layer == "") {
+            this.LoadAllLayers()
+        } else {
+            if (!this.LayerIsLoaded(layer)) {
+                this.LoadLayer(layer)
+            }
+        }
+
         layers := (layer == "") ? this.layers : Map(layer, this.layers[layer])
 
         output := ""

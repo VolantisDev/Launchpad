@@ -10,6 +10,7 @@ class EntityBase {
     sanitizeId := true
     loaded := false
     merger := ""
+    dataLayer := "data"
     cloner := ""
 
     Id {
@@ -35,8 +36,8 @@ class EntityBase {
     }
 
     UnmergedFieldData {
-        get => this.GetData().GetLayer("config")
-        set => this.GetData().SetLayer("config", value)
+        get => this.GetData().GetLayer(this.dataLayer)
+        set => this.GetData().SetLayer(this.dataLayer, value)
     }
 
     ParentEntity {
@@ -76,13 +77,21 @@ class EntityBase {
             this.SetParentEntity(parentEntity)
         }
 
-        this.dataObj := this._createEntityData()
-
+        this._createEntityData()
         this.SetupEntity()
 
-        if (this.storageObj.HasData(this) && autoLoad) {
+        if (autoLoad) {
             this.LoadEntity(false, true)
         }
+    }
+
+    _createEntityData() {
+        layerData := [
+            "defaults", ObjBindMethod(this, "InitializeDefaults"),
+            "auto", ObjBindMethod(this, "AutoDetectValues"),
+            "data", this.storageObj
+        ]
+        this.dataObj := EntityData(this.EntityTypeId, this, this.storageObj)
     }
 
     static Create(container, eventMgr, id, entityTypeId, storageObj, idSanitizer, parentEntity := "") {
@@ -128,36 +137,10 @@ class EntityBase {
         return this.container.Get("manager.entity_type")[this.EntityTypeId]
     }
 
-    _createEntityData() {
-        return LayeredEntityData(Map(), this.InitializeDefaults(), this.getEntityLayers())
-    }
-
     InitializeDefaults() {
         return Map(
             "name", this.Id
         )
-    }
-
-    getEntityLayers() {
-        layers := []
-
-        event := EntityLayersEvent(EntityEvents.ENTITY_CUSTOM_DATA_LAYERS, this.entityTypeId, this, layers)
-        this.eventMgr.DispatchEvent(event)
-
-        event := EntityLayersEvent(EntityEvents.ENTITY_CUSTOM_DATA_LAYERS_ALTER, this.entityTypeId, this, event.Layers)
-        this.eventMgr.DispatchEvent(event)
-
-        return event.Layers
-    }
-
-    populateEntityLayers(layeredData) {
-        layeredData.SetLayer("auto", this.AutoDetectValues())
-
-        event := EntityDataEvent(EntityEvents.ENTITY_CUSTOM_DATA_POPULATE, this.entityTypeId, this, layeredData)
-        this.eventMgr.DispatchEvent(event)
-
-        event := EntityDataEvent(EntityEvents.ENTITY_CUSTOM_DATA_ALTER, this.entityTypeId, this, layeredData)
-        this.eventMgr.DispatchEvent(event)
     }
 
     GetData() {
@@ -199,11 +182,7 @@ class EntityBase {
     }
 
     DeleteValue(key) {
-        return this.GetData().DeleteValue(key, "config")
-    }
-
-    GetRawValues(process := true) {
-        return this.GetData().GetMergedData(process)
+        return this.GetData().DeleteValue(key, this.dataLayer)
     }
 
     CreateSnapshot(name) {
@@ -224,13 +203,8 @@ class EntityBase {
         loaded := false
 
         if (!this.loaded || reload) {
-            if (this.storageObj.HasData(this.GetStorageId())) {
-                this.GetData().SetLayer("config", this.storageObj.LoadData(this.GetStorageId()))
-            }
-            
-            this.RefreshEntityData(false)
+            this.RefreshEntityData(true)
             this.CreateSnapshot("original")
-        
             this.loaded := true
             loaded := true
         }
@@ -247,12 +221,12 @@ class EntityBase {
         }
     }
 
-    RefreshEntityData(recurse := true) {
-        this.populateEntityLayers(this.GetData())
+    RefreshEntityData(recurse := true, reloadUserData := false) {
+        this.GetData().UnloadAllLayers(reloadUserData)
 
         if (recurse) {
             for index, entityObj in this.GetReferencedEntities(true) {
-                entityObj.RefreshEntityData(recurse)
+                entityObj.RefreshEntityData(recurse, reloadUserData)
             }
         }
 
@@ -270,7 +244,7 @@ class EntityBase {
         event := EntityEvent(EntityEvents.ENTITY_PRESAVE, this.entityTypeId, this)
         this.eventMgr.DispatchEvent(event)
         
-        this.storageObj.SaveData(this.GetStorageId(), this.GetData().GetLayer("config"))
+        this.GetData().SaveData()
         this.CreateSnapshot("original")
 
         if (recurse) {
@@ -289,8 +263,9 @@ class EntityBase {
     }
 
     RestoreEntity(snapshot := "original") {
-        if (this.GetData().HasSnapshot(snapshot)) {
-            this.GetData().RestoreSnapshot(snapshot)
+        dataObj := this.GetData()
+        if (dataObj.HasSnapshot(snapshot)) {
+            dataObj.RestoreSnapshot(snapshot)
 
             event := EntityEvent(EntityEvents.ENTITY_RESTORED, this.entityTypeId, this)
             this.eventMgr.DispatchEvent(event)
@@ -325,7 +300,7 @@ class EntityBase {
     }
 
     DiffChanges(recursive := true) {
-        diff := this.GetData().DiffChanges("original", "config")
+        diff := this.GetData().DiffChanges("original", this.dataLayer)
 
         if (recursive) {
             diffs := [diff]
@@ -395,7 +370,7 @@ class EntityBase {
     }
 
     RevertToDefault(key) {
-        this.GetData().DeleteValue(key, "config")
+        this.GetData().DeleteUserValue(key)
     }
 
     GetEditorButtons(mode) {
