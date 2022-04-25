@@ -11,7 +11,9 @@ class DetectedGame {
     launcherSpecificId := ""
     possibleExeNames := []
     keyMap := Map()
+    ; @todo Move this to properties or config or allow it to be extended
     hyphenPrefixes := ["Call of Duty", "Dragon Age"]
+    ; @todo Move this to properties or config or allow it to be extended
     prioritySuffixes := ["-Win64-Shipping", "-Win32-Shipping"]
     filterExes := []
 
