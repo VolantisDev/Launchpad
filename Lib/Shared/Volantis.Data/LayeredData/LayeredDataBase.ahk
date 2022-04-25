@@ -177,7 +177,9 @@ class LayeredDataBase {
     loadLayerFromSource(layer, sourceObj, cloneMap := true) {
         data := ""
 
-        if (HasBase(sourceObj, Map.Prototype)) {
+        if (HasBase(sourceObj, LayerSourceBase.Prototype)) {
+            data := sourceObj.LoadData()
+        } else if (HasBase(sourceObj, Map.Prototype)) {
             data := sourceObj
 
             if (cloneMap) {
