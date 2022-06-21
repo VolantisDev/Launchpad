@@ -2,10 +2,36 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "update-includes",
+            "command": "Vendor/AutoHotKey/AutoHotkey64.exe",
+            "type": "process",
+            "args": [
+                "Scripts/UpdateIncludes.ahk"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "build-launchpad",
+            "command": "Vendor/AutoHotKey/AutoHotkey64.exe",
+            "type": "process",
+            "args": [
+                "Scripts/Build.ahk"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "build-overlay-debug",
             "command": "msbuild",
             "type": "process",
-            "args": ["Launchpad.sln", "-property:Configuration=Debug"],
+            "args": [
+                "Launchpad.sln",
+                "-property:Configuration=Debug"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -15,7 +41,10 @@
             "label": "build-overlay",
             "command": "msbuild",
             "type": "process",
-            "args": ["Launchpad.sln", "-property:Configuration=Release"],
+            "args": [
+                "Launchpad.sln",
+                "-property:Configuration=Release"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
