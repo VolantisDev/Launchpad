@@ -29,7 +29,12 @@ class FilesystemTestLoader extends TestLoaderBase {
         Loop Files, this.baseDir . "\*" . this.testExt, "R" {
             if (A_LoopFileName != "Includes.ahk" && A_LoopFileName != "Includes.test.ahk") {
                 testClass := this.classPrepend . SubStr(A_LoopFileName, 1, -extLen) . this.classAppend
-                tests.Push(%testClass%())
+
+                if (%testClass% ?? false) {
+                    tests.Push(%testClass%())
+                } else {
+                    ; Error out?
+                }
             }
             
         }
