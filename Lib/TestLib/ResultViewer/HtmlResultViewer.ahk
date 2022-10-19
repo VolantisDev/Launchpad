@@ -25,13 +25,19 @@ class HtmlResultViewer extends TemplateFileResultViewerBase {
             if (testResults.Length) {
                 panelNum += 1
 
+                succeeded := this.TestSucceeded(testResults)
+                icon := succeeded ? 'check-circle-fill' : 'exclamation-circle-fill'
+                color := succeeded ? 'green' : 'red'
+                buttonClass := succeeded ? 'collapsed' : ''
+                panelClass := succeeded ? '' : 'show'
+
                 output .= "<div class='accordion-item test-results'>`n"
                 output .= "<h2 class='accordion-header' id='panelHeading" . panelNum . "'>`n"
-                output .= "<button class='accordion-button collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#panel" . panelNum . "' aria-expanded='false' area-controls='panel" . panelNum . "'>`n"
-                output .= testKey . "`n"
+                output .= "<button class='accordion-button " . buttonClass . "' type='button' data-bs-toggle='collapse' data-bs-target='#panel" . panelNum . "' aria-expanded='false' area-controls='panel" . panelNum . "'>`n"
+                output .= "<i class='bi bi-" . icon . "' style='color: " . color . "; margin-right: 0.5em; font-size: 1.5rem;'></i> " . testKey . "`n"
                 output .= "</button>`n"
                 output .= "</h2>`n"
-                output .= "<div id='panel" . panelNum . "' class='accordion-collapse collapse' aria-labelledby='panelHeading" . panelNum . "'>`n"
+                output .= "<div id='panel" . panelNum . "' class='accordion-collapse collapse " . panelClass . "' aria-labelledby='panelHeading" . panelNum . "'>`n"
                 output .= "<div class='accordion-body'>`n"
                 output .= this.RenderTestSummary(testResults)
                 output .= this.RenderTestResults(testResults)
@@ -48,6 +54,20 @@ class HtmlResultViewer extends TemplateFileResultViewerBase {
 
     RenderTestTitle(testKey) {
         return "<h2>" . testKey . "</h2>`n"
+    }
+
+    TestSucceeded(testResults) {
+        successful := true
+
+        if (testResults.Length > 0) {
+            for taskName, taskResult in testResults {
+                if (!taskResult["success"]) {
+                    successful := false
+                }
+            }
+        }
+
+        return successful
     }
 
     RenderTestSummary(testResults) {
