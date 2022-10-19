@@ -1,40 +1,30 @@
 class AppBaseTest extends TestBase {
-    testVersion := "76.9.12"
-    appConfigClass := "AppConfig"
-    appStateClass := "AppState"
     requiresTestApp := true
+    testAppVersion := "76.9.12"
+    testAppConfigClass := "RuntimeConfig"
+    testAppStateClass := "AppState"
 
-    GetTestAppConfig() {
-        testAppConfig := super.GetTestAppConfig()
-        testAppConfig["version"] := this.testVersion
-        testAppConfig["configClass"] := this.appConfigClass
-        testAppConfig["stateClass"] := this.appStateClass
-        return testAppConfig
+    TestVersion() {
+        this.AssertEquals(
+            this.testAppInstance.Version, 
+            this.testAppVersion, 
+            "App version is " . this.testAppVersion
+        )
     }
 
-    RunTestSteps() {
-        this.TestAppVersion()
-        this.TestAppConfig()
-        this.TestAppState()
-        ; @todo Add more AppBase tests
+    TestConfig() {
+        this.AssertEquals(
+            Type(this.testAppInstance.Config), 
+            this.testAppConfigClass, 
+            "App config class is " . this.testAppConfigClass
+        )
     }
 
-    TestAppVersion() {
-        this.TestMethod := "Version"
-        this.AssertEquals(this.testAppInstance.Version, this.testVersion)
-        ; @todo Test changing app version
-        this.TestMethod := ""
-    }
-
-    TestAppConfig() {
-        this.TestMethod := "Config"
-        this.AssertEquals(Type(this.testAppInstance.Config), this.appConfigClass)
-        this.TestMethod := ""
-    }
-
-    TestAppState() {
-        this.TestMethod := "State"
-        this.AssertEquals(Type(this.testAppInstance.State), this.appStateClass)
-        this.TestMethod := ""
+    TestState() {
+        this.AssertEquals(
+            Type(this.testAppInstance.State), 
+            this.testAppStateClass, 
+            "App state class is " . this.testAppStateClass
+        )
     }
 }

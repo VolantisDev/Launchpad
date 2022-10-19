@@ -1,6 +1,7 @@
 class TestBase {
     results := []
     testDir := ""
+    testAppVersion := "1.23.45"
     testAppInstance := ""
     requiresTestApp := false
     testSuccess := true
@@ -17,34 +18,37 @@ class TestBase {
     }
 
     GetTestAppConfig() {
-        testParameters := Map(
-            "config.flush_cache_on_exit", false,
-            "config.logging_level", "none",
-            "config.module_dirs", [],
-        )
-
-        testServices := Map(
-            "config.app", Map(
-                "class", "RuntimeConfig",
-                "arguments", [ContainerRef(), ParameterRef("config_key")]
-            )
-        )
-
-        return Map(
+        config := Map(
             "appName", "Test App",
             "developer", "Test Developer",
             "appDir", A_ScriptDir,
             "tmpDir", this.testDir . "\Temp",
             "dataDir", this.testDir . "\Data",
-            "version", "1.0.0",
-            "parameters", testParameters,
-            "services", testServices
+            "version", this.testAppVersion,
+            "parameters", Map(
+                "config.flush_cache_on_exit", false,
+                "config.logging_level", "none",
+                "config.module_dirs", [],
+            ),
+            "services", Map(
+                "config.app", Map(
+                    "class", "RuntimeConfig",
+                    "arguments", [ContainerRef(), ParameterRef("config_key")]
+                )
+            )
         )
+
+        return config
     }
 
     Setup() {
         this.CreateTestDir()
         this.StartTestApp()
+        this.CreateTestInstances()
+    }
+
+    CreateTestInstances() {
+        
     }
 
     Run() {
@@ -52,8 +56,64 @@ class TestBase {
         return this.testSuccess
     }
 
-    RunTestSteps() {
+    GetTestSteps() {
+        testSteps := []
 
+        for propName in this.Base.OwnProps() {
+            if (InStr(propName, "Test", true) == 1) {
+                propDesc := this.Base.GetOwnPropDesc(propName)
+
+                if propDesc.HasProp('Call') {
+                    testSteps.Push(propName)
+                }
+            }
+		}
+
+        return testSteps
+    }
+
+    RunTestSteps() {
+        testSteps := this.GetTestSteps()
+
+        if (testSteps.HasBase(Array.Prototype)) {
+            for index, params in testSteps {
+                methodName := ""
+
+                if (params.HasBase(Array.Prototype)) {
+                    methodName := params.RemoveAt(1)
+                } else {
+                    methodName := params
+                    params := ""
+                }
+                
+                if (methodName) {
+                    this.RunTestStep(methodName, params)
+                }
+            }
+        }
+    }
+
+    RunTestStep(methodName, params := "") {
+        testMethod := methodName
+        
+        if (InStr(methodName, "Test") == 1) {
+            testMethod := SubStr(methodName, 5)
+        }
+
+        this.TestMethod := testMethod
+
+        if (methodName && this.HasProp(methodName)) {
+            methodToCall := this.%methodName%
+
+            if (!params) {
+                params := []
+            }
+
+            params.InsertAt(1, this)
+            methodToCall(params*)
+        }
+
+        this.TestMethod := ""
     }
 
     Teardown() {
@@ -129,6 +189,15 @@ class TestBase {
                 "Value 1", value1, 
                 "Value 2", value2
             )
+        )
+    }
+
+    AssertEmpty(value, description := "") {
+        return this.Assertion(
+            "Assert Empty",
+            (value == ""),
+            description,
+            Map("Value", value)
         )
     }
 

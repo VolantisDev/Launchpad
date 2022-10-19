@@ -1,18 +1,11 @@
 class VersionCheckerTest extends TestBase {
     versionCheckerInstance := ""
 
-    Setup() {
+    CreateTestInstances() {
         this.versionCheckerInstance := VersionChecker()
-        ; super.Setup()
-    }
-
-    RunTestSteps() {
-        this.TestFilterVersion()
-        this.TestVersionIsOutdated()
     }
 
     TestFilterVersion() {
-        this.TestMethod := "FilterVersion"
         upperVersion := "9999.9999.9999"
 
         this.AssertEquals(
@@ -41,12 +34,9 @@ class VersionCheckerTest extends TestBase {
                 version . " should filter to itself"
             )
         }
-
-        this.TestMethod := ""
     }
 
     TestVersionIsOutdated() {
-        this.TestMethod := "VersionIsOutdated"
         installedVersion := "1.0.0"
 
         this.AssertFalse(
@@ -83,11 +73,5 @@ class VersionCheckerTest extends TestBase {
             this.versionCheckerInstance.VersionIsOutdated("{{VERSION}}", installedVersion),
             installedVersion . " is outdated compared to version {{VERSION}}"
         )
-        
-        this.TestMethod := ""
-    }
-
-    Teardown() {
-        ; super.Teardown()
     }
 }

@@ -1,20 +1,11 @@
 class DebuggerTest extends TestBase {
     debuggerInstance := ""
 
-    Setup() {
-        ; super.Setup()
+    CreateTestInstances() {
         this.debuggerInstance := Debugger()
     }
 
-    RunTestSteps() {
-        this.TestSetLogger()
-        this.TestToString()
-        this.TestGetIndent()
-    }
-
     TestSetLogger() {
-        this.TestMethod := "SetLogger"
-
         this.debuggerInstance.logger := ""
         logPath := this.testDir . "\Data\log.txt"
         logger := FileLogger(logPath)
@@ -53,50 +44,46 @@ class DebuggerTest extends TestBase {
             Type(this.debuggerInstance.logger),
             "Invalid parameter does not replace logger",
         )
-
-        this.TestMethod := ""
     }
 
     TestToString() {
-        this.TestMethod := "ToString"
+        testStrings := [
+            "Test string 1",
+            "Another test string"
+        ]
+        
+        for testString in testStrings {
+            this.AssertEquals(
+                "`"" . testString . "`"",
+                this.debuggerInstance.ToString(testString),
+                "Passing a string wraps it in quotes"
+            )
 
-        this.AssertEquals(
-            "`"Test string`"", 
-            this.debuggerInstance.ToString("Test string"),
-            "Passing a string wraps it in quotes"
-        )
-
-        testString := "Test string"
-
-        this.AssertEquals(
-            "`"Test string`"", 
-            this.debuggerInstance.ToString("`"Test string`""),
-            "Passing a quoted string returns the same string"
-        )
-
-        this.TestMethod := ""
+            this.AssertEquals(
+                "`"" . testString . "`"",
+                this.debuggerInstance.ToString("`"" . testString . "`""),
+                "Passing a quoted string returns the same string"
+            )
+        }
+        
+        
     }
 
     TestGetIndent() {
-        this.TestMethod := "GetIndent"
+        indents := Map(
+            0, "",
+            5, "-----",
+            10, "----------"
+        )
+
         indentStr := "-"
 
-        this.AssertEquals(
-            this.debuggerInstance.GetIndent(0, indentStr),
-            "",
-            "Level 0 returns an empty string"
-        )
-
-        this.AssertEquals(
-            this.debuggerInstance.GetIndent(10, indentStr), 
-            "----------",
-            "Level 10 returns the correct string"
-        )
-
-        this.TestMethod := ""
-    }
-
-    Teardown() {
-        ;super.Teardown()
+        for level, matchStr in indents {
+            this.AssertEquals(
+                this.debuggerInstance.GetIndent(level, indentStr), 
+                matchStr,
+                "Level " . level . " returns the correct string"
+            )
+        }
     }
 }
