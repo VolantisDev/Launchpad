@@ -105,13 +105,13 @@ class ParameterBag {
             for key, val in value {
                 value[key] := this.ExpandValue(val)
             }
-
-            return value
+        } else {
+            value := this.resolveReferences(value)
+            value := this.expandReferences(value)
+            value := this.replaceTokens(value)
         }
 
-        value := this.resolveReferences(value)
-        value := this.expandReferences(value)
-        return this.replaceTokens(value)
+        return value
     }
 
     replaceTokens(value) {
