@@ -15,17 +15,33 @@ class HtmlResultViewer extends TemplateFileResultViewerBase {
         output := "<div class='row test-summary'>`n"
         output .= this.RenderTestTitle("Test Summary")
         output .= this.RenderTestSummary(allResults)
-        output .= "</div>"
+        output .= "</div>`n"
+
+        output .= "<div class='accordion' id='results-accordion'>`n"
+
+        panelNum := 0
 
         for testKey, testResults in results {
             if (testResults.Length) {
-                output .= "<div class='row test-results'>`n"
-                output .= this.RenderTestTitle(testKey)
+                panelNum += 1
+
+                output .= "<div class='accordion-item test-results'>`n"
+                output .= "<h2 class='accordion-header' id='panelHeading" . panelNum . "'>`n"
+                output .= "<button class='accordion-button collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#panel" . panelNum . "' aria-expanded='false' area-controls='panel" . panelNum . "'>`n"
+                output .= testKey . "`n"
+                output .= "</button>`n"
+                output .= "</h2>`n"
+                output .= "<div id='panel" . panelNum . "' class='accordion-collapse collapse' aria-labelledby='panelHeading" . panelNum . "'>`n"
+                output .= "<div class='accordion-body'>`n"
                 output .= this.RenderTestSummary(testResults)
                 output .= this.RenderTestResults(testResults)
                 output .= "</div>`n"
+                output .= "</div>`n"
+                output .= "</div>`n"
             }
         }
+
+        output .= "</div>`n"
 
         return output
     }
