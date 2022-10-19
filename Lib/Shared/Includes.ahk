@@ -298,6 +298,8 @@
 #Include Volantis.Utility\Cloner\ClonerBase.ahk
 #Include Volantis.Utility\Cloner\ListCloner.ahk
 #Include Volantis.Utility\Cloner\SimpleCloner.ahk
+#Include Volantis.Utility\Converter\ConverterBase.ahk
+#Include Volantis.Utility\Converter\UnixTimestampConverter.ahk
 #Include Volantis.Utility\Debugger\Debugger.ahk
 #Include Volantis.Utility\Hasher\FileHasher.ahk
 #Include Volantis.Utility\Hasher\HasherBase.ahk
