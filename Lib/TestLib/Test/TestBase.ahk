@@ -151,7 +151,7 @@ class TestBase {
     }
 
     GetKey() {
-        return Type(this)
+        return SubStr(Type(this), 1, -4)
     }
 
     GetResults() {
