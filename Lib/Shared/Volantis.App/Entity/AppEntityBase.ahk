@@ -48,13 +48,15 @@ class AppEntityBase extends FieldableEntity {
             "help", "The default datasource is 'api' which connects to the default api endpoint (Which can be any HTTP location compatible with Launchpad's API format)",
             "default", [this.app.Config["data_source_key"]],
             "multiple", true,
-            "group", "api"
+            "group", "api",
+            "processValue", false
         )
 
         definitions["DataSourceItemKey"] := Map(
             "description", "The key that is used to look up the entity's data from configured external datasources.",
             "help", "It defaults to the key which is usually sufficient, but it can be overridden by setting this value.`n`nAddtionally, multiple copies of the same datasource entity can exist by giving them different keys but using the same DataSourceKey",
-            "group", "api"
+            "group", "api",
+            "processValue", false
         )
 
         definitions["AssetsDir"] := Map(
