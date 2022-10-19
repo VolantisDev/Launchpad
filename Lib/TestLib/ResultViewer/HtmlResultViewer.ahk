@@ -2,14 +2,29 @@ class HtmlResultViewer extends TemplateFileResultViewerBase {
     fileExt := ".html"
 
     RenderResultItems(results) {
-        output := ""
+        allResults := []
 
         for testKey, testResults in results {
-            output .= "<div class='row test-results'>`n"
-            output .= this.RenderTestTitle(testKey)
-            output .= this.RenderTestSummary(testResults)
-            output .= this.RenderTestResults(testResults)
-            output .= "</div>`n"
+            if (testResults.Length) {
+                for innerKey, innerResult in testResults {
+                    allResults.Push(innerResult)
+                }
+            }
+        }
+
+        output := "<div class='row test-summary'>`n"
+        output .= this.RenderTestTitle("Test Summary")
+        output .= this.RenderTestSummary(allResults)
+        output .= "</div>"
+
+        for testKey, testResults in results {
+            if (testResults.Length) {
+                output .= "<div class='row test-results'>`n"
+                output .= this.RenderTestTitle(testKey)
+                output .= this.RenderTestSummary(testResults)
+                output .= this.RenderTestResults(testResults)
+                output .= "</div>`n"
+            }
         }
 
         return output
@@ -24,60 +39,68 @@ class HtmlResultViewer extends TemplateFileResultViewerBase {
         successful := true
         succeededCount := 0
         totalCount := testResults.Length
+        output := ""
 
-        for taskName, taskResult in testResults {
-            if (taskResult["success"]) {
-                succeededCount += 1
-            } else {
-                successful := false
-                testStatus := "Failed"
+        if (totalCount > 0) {
+            for taskName, taskResult in testResults {
+                if (taskResult["success"]) {
+                    succeededCount += 1
+                } else {
+                    successful := false
+                    testStatus := "Failed"
+                }
             }
+    
+            output .= "<dl>`n"
+            output .= "`t<dt>Status</dt>`n"
+            statusClass := successful ? "text-success" : "text-danger"
+            output .= "`t<dd class='" . statusClass . "'>" . testStatus . "</dd>`n"
+            output .= "`t<dt>Succeeded</dt>`n"
+            output .= "`t<dd>" . succeededCount . " of " . totalCount . "</dd>`n"
+            output .= "</dl>`n"
         }
-
-        output := "<dl>`n"
-        output .= "`t<dt>Status</dt>`n"
-        statusClass := successful ? "text-success" : "text-danger"
-        output .= "`t<dd class='" . statusClass . "'>" . testStatus . "</dd>`n"
-        output .= "`t<dt>Succeeded</dt>`n"
-        output .= "`t<dd>" . succeededCount . "/" . totalCount . "</dd>`n"
-        output .= "</dl>`n"
+        
         return output
     }
 
     RenderTestResults(testResults) {
-        output := "<table class='table table-bordered'>`n"
-        output .= "`t<tr><th scope='col'>Method</th><th scope='col'>Task</th><th scope='col'>Assertion</th><th scope='col'>Status</th><th scope='col'>Data</th></tr>`n"
+        output := ""
 
-        for taskName, taskResult in testResults {
-            if (taskResult.Has("description") && taskResult["description"]) {
-                taskName := taskResult["description"]
-            }
+        if (testResults.Length > 0) {
+            output .= "<table class='table table-bordered'>`n"
+            output .= "`t<tr><th scope='col'>Method</th><th scope='col'>Task</th><th scope='col'>Assertion</th><th scope='col'>Status</th><th scope='col'>Data</th></tr>`n"
 
-            dataOutput := ""
-
-            if (taskResult.Has("data") && taskResult["data"] && taskResult["data"].Count > 0) {
-                dataOutput .= "<dl>"
-
-                for dataKey, dataValue in taskResult["data"] {
-                    dataOutput .= "<dt>" . dataKey . "</dt><dd>" . this.ConvertToString(dataValue) . "</dd>"
+            for taskName, taskResult in testResults {
+                if (taskResult.Has("description") && taskResult["description"]) {
+                    taskName := taskResult["description"]
                 }
 
-                dataOutput .= "</dl>"
+                dataOutput := ""
+
+                if (taskResult.Has("data") && taskResult["data"] && taskResult["data"].Count > 0) {
+                    dataOutput .= "<dl>"
+
+                    for dataKey, dataValue in taskResult["data"] {
+                        dataOutput .= "<dt>" . dataKey . "</dt><dd>" . this.ConvertToString(dataValue) . "</dd>"
+                    }
+
+                    dataOutput .= "</dl>"
+                }
+
+                className := taskResult["success"] ? "table-success" : "table-danger"
+                taskStatus := taskResult["success"] ? "Success" : "Failure"
+
+                output .= "`t<tr class='" . className . "'>`n"
+                output .= "`t`t<th scope='row'>" . taskResult["method"] . "</th>`n"
+                output .= "`t`t<th scope='row'>" . taskName . "</th>`n"
+                output .= "`t`t<td>" . taskResult["assertion"] . "</td>`n"
+                output .= "`t`t<td>" . taskStatus . "</td>`n"
+                output .= "`t`t<td>" . dataOutput . "</td>`n"
+                output .= "`t</tr>`n"
             }
 
-            className := taskResult["success"] ? "table-success" : "table-danger"
-            taskStatus := taskResult["success"] ? "Success" : "Failure"
-
-            output .= "`t<tr class='" . className . "'>`n"
-            output .= "`t`t<th scope='row'>" . taskResult["method"] . "</th>`n"
-            output .= "`t`t<th scope='row'>" . taskName . "</th>`n"
-            output .= "`t`t<td>" . taskResult["assertion"] . "</td>`n"
-            output .= "`t`t<td>" . taskStatus . "</td>`n"
-            output .= "`t`t<td>" . dataOutput . "</td>`n"
-            output .= "`t</tr>`n"
+            output .= "</table>`n"
         }
-
-        output .= "</table>`n"
 
         return output
     }
