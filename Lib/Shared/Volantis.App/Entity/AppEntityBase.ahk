@@ -118,7 +118,7 @@ class AppEntityBase extends FieldableEntity {
     GetAllDataSources() {
         dataSources := Map()
 
-        if (this["DataSourceKeys"]) {
+        if (this.Has("DataSourceKeys", false)) {
             dataSourceKeys := this["DataSourceKeys"]
 
             if (!HasBase(dataSourceKeys, Array.Prototype)) {
