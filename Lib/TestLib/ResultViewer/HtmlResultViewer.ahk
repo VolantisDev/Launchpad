@@ -27,14 +27,16 @@ class HtmlResultViewer extends TemplateFileResultViewerBase {
 
                 succeeded := this.TestSucceeded(testResults)
                 icon := succeeded ? 'check-circle-fill' : 'exclamation-circle-fill'
-                color := succeeded ? 'green' : 'red'
+                color := succeeded ? 'text-success' : 'text-danger'
                 buttonClass := succeeded ? 'collapsed' : ''
                 panelClass := succeeded ? '' : 'show'
+
+                testName := "<strong>" . testKey . "</strong> <span class='result-counts' style='margin-left: 0.5em'>(" . this.GetResultCounts(testResults) . ")</span>"
 
                 output .= "<div class='accordion-item test-results'>`n"
                 output .= "<h2 class='accordion-header' id='panelHeading" . panelNum . "'>`n"
                 output .= "<button class='accordion-button " . buttonClass . "' type='button' data-bs-toggle='collapse' data-bs-target='#panel" . panelNum . "' aria-expanded='false' area-controls='panel" . panelNum . "'>`n"
-                output .= "<i class='bi bi-" . icon . "' style='color: " . color . "; margin-right: 0.5em; font-size: 1.5rem;'></i> " . testKey . "`n"
+                output .= "<i class='bi bi-" . icon . " " . color . "' style='margin-right: 0.5em; font-size: 1.5rem;'></i> " . testName . "`n"
                 output .= "</button>`n"
                 output .= "</h2>`n"
                 output .= "<div id='panel" . panelNum . "' class='accordion-collapse collapse " . panelClass . "' aria-labelledby='panelHeading" . panelNum . "'>`n"
@@ -68,6 +70,18 @@ class HtmlResultViewer extends TemplateFileResultViewerBase {
         }
 
         return successful
+    }
+
+    GetResultCounts(testResults) {
+        succeededCount := 0
+
+        for taskName, taskResult in testResults {
+            if (taskResult["success"]) {
+                succeededCount += 1
+            }
+        }
+
+        return succeededCount . " of " . testResults.Length
     }
 
     RenderTestSummary(testResults) {
