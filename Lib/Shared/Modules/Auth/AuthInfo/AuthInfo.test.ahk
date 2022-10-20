@@ -100,8 +100,4 @@ class AuthInfoTest extends TestBase {
             "GetPersistentData returns all persistent data"
         )
     }
-
-    TestGetAhkTimestamp(unixTimestamp) {
-        
-    }
 }
