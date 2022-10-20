@@ -6,9 +6,8 @@ class UuidGeneratorTest extends TestBase {
     }
 
     TestGenerate() {
-        this.AssertNotEquals(
+        this.AssertNotEmpty(
             this.objInstance.Generate(),
-            "",
             "UUID is not empty"
         )
     }
