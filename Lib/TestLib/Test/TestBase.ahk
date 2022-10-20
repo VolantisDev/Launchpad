@@ -201,6 +201,23 @@ class TestBase {
         )
     }
 
+    AssertNotEmpty(value, description := "") {
+        isNotEmpty := (value)
+
+        if (HasBase(value, Array.Prototype)) {
+            isNotEmpty := (value.Length > 0)
+        } else if (HasBase(value, Map.Prototype)) {
+            isNotEmpty := (value.Size > 0)
+        }
+
+        return this.Assertion(
+            "Assert Not Empty",
+            !!isNotEmpty,
+            description,
+            Map("Value", value)
+        )
+    }
+
     AssertNotEquals(value1, value2, description := "") {
         return this.Assertion(
             "Assert Not Equals", 
