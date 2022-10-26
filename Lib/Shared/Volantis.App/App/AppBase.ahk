@@ -384,7 +384,7 @@ class AppBase {
         }
 
         if (!config.Has("version")) {
-            config["version"] := 1.0.0
+            config["version"] := "1.0.0"
         }
 
         this.appName := config["appName"]
