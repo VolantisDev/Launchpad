@@ -17,6 +17,8 @@ class HtmlResultViewer extends TemplateFileResultViewerBase {
         output .= this.RenderTestSummary(allResults)
         output .= "</div>`n"
 
+        output .= "<div class='row test-results'>`n"
+        output .= this.RenderTestTitle("Test Results")
         output .= "<div class='accordion' id='results-accordion'>`n"
 
         panelNum := 0
@@ -50,7 +52,7 @@ class HtmlResultViewer extends TemplateFileResultViewerBase {
             }
         }
 
-        output .= "</div>`n"
+        output .= "</div></div>`n"
 
         return output
     }
@@ -118,7 +120,7 @@ class HtmlResultViewer extends TemplateFileResultViewerBase {
         output := ""
 
         if (testResults.Length > 0) {
-            output .= "<table class='table table-bordered table-dark table-striped table-hover'>`n"
+            output .= "<div class='table-responsive-lg'><table class='table table-bordered table-dark table-striped table-hover'>`n"
             output .= "`t<tr><th scope='col'>Method</th><th scope='col'>Task</th><th scope='col'>Assertion</th><th scope='col'>Status</th><th scope='col'>Data</th></tr>`n"
 
             for taskName, taskResult in testResults {
@@ -150,7 +152,7 @@ class HtmlResultViewer extends TemplateFileResultViewerBase {
                 output .= "`t</tr>`n"
             }
 
-            output .= "</table>`n"
+            output .= "</table></div>`n"
         }
 
         return output

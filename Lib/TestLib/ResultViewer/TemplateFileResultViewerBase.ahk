@@ -11,8 +11,9 @@ class TemplateFileResultViewerBase extends FileResultViewerBase {
             throw AppException("No template file provided for rendering results.")
         }
 
-        template := FileRead(this.templateFile)
-        content := StrReplace(template, "{{results}}", this.RenderResultItems(results))
+        content := FileRead(this.templateFile)
+        content := StrReplace(content, "{{title}}", this.testTitle)
+        content := StrReplace(content, "{{results}}", this.RenderResultItems(results))
 
         if (FileExist(this.outputFile)) {
             FileDelete(this.outputFile)
