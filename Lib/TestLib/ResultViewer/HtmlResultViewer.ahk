@@ -30,16 +30,17 @@ class HtmlResultViewer extends TemplateFileResultViewerBase {
                 color := succeeded ? 'text-success' : 'text-danger'
                 buttonClass := succeeded ? 'collapsed' : ''
                 panelClass := succeeded ? '' : 'show'
+                borderClass := succeeded ? 'border-success' : 'border-danger'
 
                 testName := "<strong>" . testKey . "</strong> <span class='result-counts' style='margin-left: 0.5em'>(" . this.GetResultCounts(testResults) . ")</span>"
 
-                output .= "<div class='accordion-item test-results'>`n"
+                output .= "<div class='accordion-item test-results bg-dark text-light " . borderClass . "'>`n"
                 output .= "<h2 class='accordion-header' id='panelHeading" . panelNum . "'>`n"
-                output .= "<button class='accordion-button " . buttonClass . "' type='button' data-bs-toggle='collapse' data-bs-target='#panel" . panelNum . "' aria-expanded='false' area-controls='panel" . panelNum . "'>`n"
+                output .= "<button class='accordion-button bg-dark text-light " . buttonClass . "' type='button' data-bs-toggle='collapse' data-bs-target='#panel" . panelNum . "' aria-expanded='false' area-controls='panel" . panelNum . "'>`n"
                 output .= "<i class='bi bi-" . icon . " " . color . "' style='margin-right: 0.5em; font-size: 1.5rem;'></i> " . testName . "`n"
                 output .= "</button>`n"
                 output .= "</h2>`n"
-                output .= "<div id='panel" . panelNum . "' class='accordion-collapse collapse " . panelClass . "' aria-labelledby='panelHeading" . panelNum . "'>`n"
+                output .= "<div id='panel" . panelNum . "' class='accordion-collapse bg-dark text-light collapse " . panelClass . "' aria-labelledby='panelHeading" . panelNum . "'>`n"
                 output .= "<div class='accordion-body'>`n"
                 output .= this.RenderTestSummary(testResults)
                 output .= this.RenderTestResults(testResults)
