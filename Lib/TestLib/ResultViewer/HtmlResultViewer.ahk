@@ -118,7 +118,7 @@ class HtmlResultViewer extends TemplateFileResultViewerBase {
         output := ""
 
         if (testResults.Length > 0) {
-            output .= "<table class='table table-bordered'>`n"
+            output .= "<table class='table table-bordered table-dark table-striped table-hover'>`n"
             output .= "`t<tr><th scope='col'>Method</th><th scope='col'>Task</th><th scope='col'>Assertion</th><th scope='col'>Status</th><th scope='col'>Data</th></tr>`n"
 
             for taskName, taskResult in testResults {
@@ -138,14 +138,14 @@ class HtmlResultViewer extends TemplateFileResultViewerBase {
                     dataOutput .= "</dl>"
                 }
 
-                className := taskResult["success"] ? "table-success" : "table-danger"
                 taskStatus := taskResult["success"] ? "Success" : "Failure"
+                statusClass := taskResult["success"] ? "text-success" : "text-danger"
 
-                output .= "`t<tr class='" . className . "'>`n"
+                output .= "`t<tr>`n"
                 output .= "`t`t<th scope='row'>" . taskResult["method"] . "</th>`n"
                 output .= "`t`t<th scope='row'>" . taskName . "</th>`n"
                 output .= "`t`t<td>" . taskResult["assertion"] . "</td>`n"
-                output .= "`t`t<td>" . taskStatus . "</td>`n"
+                output .= "`t`t<td class='" . statusClass . "'>" . taskStatus . "</td>`n"
                 output .= "`t`t<td>" . dataOutput . "</td>`n"
                 output .= "`t</tr>`n"
             }
