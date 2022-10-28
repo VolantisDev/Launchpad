@@ -1,18 +1,18 @@
 class TemplateFileResultViewerBase extends FileResultViewerBase {
-    templateFile := ""
     rendered := ""
+    templateContent := ""
 
-    __New(templateFile, outputFile := "", fileExt := "") {
-        this.templateFile := templateFile
+    __New(templateContent, outputFile := "", fileExt := "") {
+        this.templateContent := templateContent
         super.__New(outputFile, fileExt)
     }
 
     RenderResults(results) {
-        if (!this.templateFile) {
-            throw TestException("No template file provided for rendering results.")
+        if (!this.templateContent) {
+            throw TestException("No template provided for rendering results.")
         }
 
-        content := FileRead(this.templateFile)
+        content := this.templateContent
         content := StrReplace(content, "{{title}}", this.testTitle)
         content := StrReplace(content, "{{results}}", this.RenderResultItems(results))
 
