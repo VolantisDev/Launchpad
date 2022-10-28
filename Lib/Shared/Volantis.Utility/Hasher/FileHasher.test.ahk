@@ -1,4 +1,4 @@
-class FileHasherTest extends TestBase {
+class FileHasherTest extends AppTestBase {
     objInstance := ""
 
     CreateTestInstances() {

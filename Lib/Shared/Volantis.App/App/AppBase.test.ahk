@@ -1,4 +1,4 @@
-class AppBaseTest extends TestBase {
+class AppBaseTest extends AppTestBase {
     requiresTestApp := true
     testAppVersion := "76.9.12"
     testAppConfigClass := "RuntimeConfig"

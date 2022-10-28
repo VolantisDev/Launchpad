@@ -12,7 +12,7 @@ class ResultViewerBase {
     }
 
     ViewResults(results) {
-        throw MethodNotImplementedException("ResultViewerBase", "ViewResults")
+        throw NotImplementedTestException("The ViewResults method has not been implemented.")
     }
 
     ConvertToString(value) {

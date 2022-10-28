@@ -1,4 +1,4 @@
-class EventBaseTest extends TestBase {
+class EventBaseTest extends AppTestBase {
     TestEventName() {
         eventNames := [
             "Event Name 1",

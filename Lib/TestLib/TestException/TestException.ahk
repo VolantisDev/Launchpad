@@ -1,0 +1,3 @@
+class TestException extends Error {
+    
+}

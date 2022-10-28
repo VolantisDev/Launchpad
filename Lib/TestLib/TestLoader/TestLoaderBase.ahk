@@ -12,6 +12,6 @@ class TestLoaderBase {
     }
 
     LoadTests() {
-        throw MethodNotImplementedException("TestLoaderBase", "LoadTests")
+        throw NotImplementedTestException("The LoadTests method has not been implemented.")
     }
 }

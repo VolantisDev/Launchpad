@@ -1,4 +1,4 @@
-class VersionCheckerTest extends TestBase {
+class VersionCheckerTest extends AppTestBase {
     versionCheckerInstance := ""
 
     CreateTestInstances() {

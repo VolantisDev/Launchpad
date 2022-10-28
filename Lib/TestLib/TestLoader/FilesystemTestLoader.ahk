@@ -3,6 +3,10 @@ class FilesystemTestLoader extends TestLoaderBase {
     testExt := ".test.ahk"
     classAppend := "Test"
     classPrepend := ""
+    excludeFilenames := [
+        "Includes.ahk",
+        "Includes.test.ahk"
+    ]
 
     __New(baseDir := "", testExt := "", classAppend := "", classPrepend := "") {
         if (baseDir) {
@@ -27,16 +31,19 @@ class FilesystemTestLoader extends TestLoaderBase {
         extLen := StrLen(this.testExt)
 
         Loop Files, this.baseDir . "\*" . this.testExt, "R" {
-            if (A_LoopFileName != "Includes.ahk" && A_LoopFileName != "Includes.test.ahk") {
-                testClass := this.classPrepend . SubStr(A_LoopFileName, 1, -extLen) . this.classAppend
-
-                if (%testClass% ?? false) {
-                    tests.Push(%testClass%())
-                } else {
-                    ; Error out?
+            for excludeFilename in this.excludeFilenames {
+                if (A_LoopFileName == excludeFilename) {
+                    continue 2
                 }
             }
-            
+
+            testClass := this.classPrepend . SubStr(A_LoopFileName, 1, -extLen) . this.classAppend
+
+            if (%testClass% ?? false) {
+                tests.Push(%testClass%())
+            } else {
+                ; Error out?
+            }
         }
 
         this.tests := tests

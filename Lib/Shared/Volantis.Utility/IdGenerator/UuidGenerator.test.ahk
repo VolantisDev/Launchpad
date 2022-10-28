@@ -1,4 +1,4 @@
-class UuidGeneratorTest extends TestBase {
+class UuidGeneratorTest extends AppTestBase {
     objInstance := ""
 
     CreateTestInstances() {

@@ -1,5 +1,26 @@
 class HtmlResultViewer extends TemplateFileResultViewerBase {
     fileExt := ".html"
+    usesOutputFile := false
+
+    DisplayResults() {
+        htmlContent := this.rendered
+
+        resultsGui := Gui("+Resize")
+        resultsGui.MarginX := 0
+        resultsGui.MarginY := 0
+        resultsGui.Title := this.testTitle . " Results"
+        resultsGui.OnEvent("Size", ObjBindMethod(this, "OnGuiSize"))
+
+        wbControl := resultsGui.Add("ActiveX", "vBrowser w1024 h728", "Shell.Explorer").Value
+        wbControl.Navigate("about:<!DOCTYPE html><meta http-equiv='X-UA-Compatible' content='IE=edge'>")
+        wbControl.document.write(this.rendered)
+
+        resultsGui.Show()
+    }
+
+    OnGuiSize(resultsGui, minMax, width, height) {
+        resultsGui["Browser"].Move(0, 0, width, height)
+    }
 
     RenderResultItems(results) {
         allResults := []

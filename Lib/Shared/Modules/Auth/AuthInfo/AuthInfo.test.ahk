@@ -1,4 +1,4 @@
-class AuthInfoTest extends TestBase {
+class AuthInfoTest extends AppTestBase {
     TestAuthenticated() {
         authInfoObj := AuthInfo()
 

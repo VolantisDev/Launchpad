@@ -1,5 +1,6 @@
 class TemplateFileResultViewerBase extends FileResultViewerBase {
     templateFile := ""
+    rendered := ""
 
     __New(templateFile, outputFile := "", fileExt := "") {
         this.templateFile := templateFile
@@ -8,21 +9,29 @@ class TemplateFileResultViewerBase extends FileResultViewerBase {
 
     RenderResults(results) {
         if (!this.templateFile) {
-            throw AppException("No template file provided for rendering results.")
+            throw TestException("No template file provided for rendering results.")
         }
 
         content := FileRead(this.templateFile)
         content := StrReplace(content, "{{title}}", this.testTitle)
         content := StrReplace(content, "{{results}}", this.RenderResultItems(results))
 
-        if (FileExist(this.outputFile)) {
-            FileDelete(this.outputFile)
-        }
+        this.StoreRenderedResults(content)
+    }
 
-        FileAppend(content, this.outputFile)
+    StoreRenderedResults(output) {
+        if (this.usesOutputFile) {
+            if (FileExist(this.outputFile)) {
+                FileDelete(this.outputFile)
+            }
+
+            FileAppend(output, this.outputFile)
+        } else {
+            this.rendered := output
+        }
     }
 
     RenderResultItems(results) {
-        throw MethodNotImplementedException("TemplateFileResultViewerBase", "RenderResultItems")
+        throw NotImplementedTestException("The RenderResultItems method has not been implemented.")
     }
 }

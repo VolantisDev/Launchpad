@@ -1,4 +1,4 @@
-class DebuggerTest extends TestBase {
+class DebuggerTest extends AppTestBase {
     debuggerInstance := ""
 
     CreateTestInstances() {

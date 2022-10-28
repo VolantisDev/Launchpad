@@ -8,6 +8,8 @@
 #Include Vendor\Gdip_All.ahk
 #Include Vendor\LV_Constants.ahk
 #Include Volantis.App\App\AppBase.ahk
+#Include Volantis.App\App\TestApp.ahk
+#Include Volantis.App\App\TestAppBase.ahk
 #Include Volantis.App\BulkOperation\BulkOperationBase.ahk
 #Include Volantis.App\BulkOperation\InstallOp\InstallOp.ahk
 #Include Volantis.App\BulkOperation\InstallOp\UpdateOp.ahk
@@ -93,6 +95,7 @@
 #Include Volantis.App\State\CacheState.ahk
 #Include Volantis.App\State\JsonState.ahk
 #Include Volantis.App\State\StateBase.ahk
+#Include Volantis.App\Test\AppTestBase.ahk
 #Include Volantis.Base\CLR\CLR.ahk
 #Include Volantis.Base\Event\EventBase.ahk
 #Include Volantis.Base\EventSubscriber\EventSubscriberBase.ahk
