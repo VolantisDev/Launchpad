@@ -155,6 +155,8 @@
 #Include Volantis.Data\Exception\DataException.ahk
 #Include Volantis.Data\Factory\StructuredDataFactory.ahk
 #Include Volantis.Data\LayeredData\LayeredDataBase.ahk
+#Include Volantis.Data\LayerSource\LayerSourceBase.ahk
+#Include Volantis.Data\LayerSource\MapLayerSource.ahk
 #Include Volantis.Data\StructuredData\AhkVariable.ahk
 #Include Volantis.Data\StructuredData\BasicData.ahk
 #Include Volantis.Data\StructuredData\JsonData.ahk
