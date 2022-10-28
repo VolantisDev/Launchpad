@@ -3,8 +3,8 @@ class FileResultViewerBase extends ResultViewerBase {
     usesOutputFile := true
     fileExt := ""
 
-    __New(outputFile := "", fileExt := "") {
-        super.__New()
+    __New(title := "", outputFile := "", fileExt := "") {
+        super.__New(title)
         
         if (fileExt) {
             this.fileExt := fileExt

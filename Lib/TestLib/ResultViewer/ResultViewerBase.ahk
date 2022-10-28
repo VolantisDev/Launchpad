@@ -7,7 +7,11 @@ class ResultViewerBase {
         return this
     }
 
-    __New() {
+    __New(title := "") {
+        if (title) {
+            this.testTitle := title
+        }
+
         this.debugger := Debugger()
     }
 

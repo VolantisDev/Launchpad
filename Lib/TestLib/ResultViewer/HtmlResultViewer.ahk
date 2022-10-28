@@ -2,12 +2,12 @@ class HtmlResultViewer extends TemplateFileResultViewerBase {
     fileExt := ".html"
     usesOutputFile := false
 
-    __New(templateContent := "", outputFile := "", fileExt := "") {
+    __New(title := "", templateContent := "", outputFile := "", fileExt := "") {
         if (!templateContent) {
             templateContent := this.GetDefaultTemplate()
         }
 
-        super.__New(templateContent, outputFile, fileExt)
+        super.__New(title, templateContent, outputFile, fileExt)
     }
 
     GetDefaultTemplate() {

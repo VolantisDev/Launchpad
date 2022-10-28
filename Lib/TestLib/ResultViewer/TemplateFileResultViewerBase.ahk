@@ -2,9 +2,14 @@ class TemplateFileResultViewerBase extends FileResultViewerBase {
     rendered := ""
     templateContent := ""
 
-    __New(templateContent, outputFile := "", fileExt := "") {
+    __New(title := "", templateContent := "", outputFile := "", fileExt := "") {
         this.templateContent := templateContent
-        super.__New(outputFile, fileExt)
+        super.__New(title, outputFile, fileExt)
+    }
+
+    SetTemplate(templateContent) {
+        this.templateContent := templateContent
+        return this
     }
 
     RenderResults(results) {
