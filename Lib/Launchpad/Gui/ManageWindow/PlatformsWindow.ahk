@@ -27,7 +27,7 @@ class PlatformsWindow extends ManageWindowBase {
             enabledText := platform["IsEnabled"] ? "Yes" : "No"
             detectGamesText := platform["DetectGames"] ? "Yes" : "No"
             installedText := platform["IsInstalled"] ? "Yes" : "No"
-            data[key] := [platform.GetName(), enabledText, detectGamesText, installedText, platform["InstalledVersion"]]
+            data[key] := [platform["name"], enabledText, detectGamesText, installedText, platform["InstalledVersion"]]
         }
 
         return data
