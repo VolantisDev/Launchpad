@@ -41,7 +41,7 @@ class PlatformManager extends EntityManagerBase {
     
     DetectGames() {
         platforms := this.GetGameDetectionPlatforms()
-        op := DetectGamesOp(this.app, platforms)
+        op := DetectGamesOp(this.container.GetApp(), platforms)
         op.Run()
 
         allDetectedGames := Map()
