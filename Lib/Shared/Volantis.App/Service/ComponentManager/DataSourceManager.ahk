@@ -6,12 +6,12 @@ class DataSourceManager extends ComponentManagerBase {
             this.primaryKey := primaryKey
         }
 
-        super.__New(container, "datasource.", eventMgr, notifierObj, DataSourceBase)
+        super.__New(container, "data_source.", eventMgr, notifierObj, DataSourceBase)
     }
 
     GetDefaultDataSource() {
         if (!this.primaryKey) {
-            throw ComponentException("There is no default datasource set")
+            throw ComponentException("There is no default data source set")
         }
 
         if (!this.Has(this.primaryKey)) {

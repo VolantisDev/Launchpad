@@ -13,7 +13,7 @@
         "dependencies": ["Auth"]
     },
     "services": {
-        "datasource.api": {
+        "data_source.api": {
             "class": "ApiDataSource",
             "arguments": ["@{App}", "@manager.cache", "api", "@@config.api_endpoint"]
         },

@@ -45,7 +45,7 @@ class AppEntityBase extends FieldableEntity {
 
         definitions["DataSourceKeys"] := Map(
             "description", "The data source keys to load defaults from, in order.",
-            "help", "The default datasource is 'api' which connects to the default api endpoint (Which can be any HTTP location compatible with Launchpad's API format)",
+            "help", "The default data source is 'api' which connects to the default api endpoint (Which can be any HTTP location compatible with Launchpad's API format)",
             "default", [this.app.Config["data_source_key"]],
             "multiple", true,
             "group", "api",
@@ -53,8 +53,8 @@ class AppEntityBase extends FieldableEntity {
         )
 
         definitions["DataSourceItemKey"] := Map(
-            "description", "The key that is used to look up the entity's data from configured external datasources.",
-            "help", "It defaults to the key which is usually sufficient, but it can be overridden by setting this value.`n`nAddtionally, multiple copies of the same datasource entity can exist by giving them different keys but using the same DataSourceKey",
+            "description", "The key that is used to look up the entity's data from configured external data sources.",
+            "help", "It defaults to the key which is usually sufficient, but it can be overridden by setting this value.`n`nAddtionally, multiple copies of the same data source entity can exist by giving them different keys but using the same DataSourceKey",
             "group", "api",
             "processValue", false
         )
@@ -126,8 +126,8 @@ class AppEntityBase extends FieldableEntity {
             }
 
             for index, dataSourceKey in dataSourceKeys {
-                if (this.app.Service("manager.datasource").Has(dataSourceKey)) {
-                    dataSource := this.app.Service("manager.datasource")[dataSourceKey]
+                if (this.app.Service("manager.data_source").Has(dataSourceKey)) {
+                    dataSource := this.app.Service("manager.data_source")[dataSourceKey]
 
                     if (dataSource) {
                         dataSources[dataSourceKey] := dataSource

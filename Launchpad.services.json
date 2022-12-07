@@ -84,7 +84,7 @@
             "class": "LaunchpadConfig",
             "arguments": ["@config_storage.app_config", "@{}", "@@config_key"]
         },
-        "datasource.local": {
+        "data_source.local": {
             "class": "LocalDataSource",
             "arguments": ["@manager.cache", "local"]
         },
@@ -104,7 +104,7 @@
             "class": "BuilderManager",
             "arguments": ["@manager.launcher", "@{}", "@manager.event", "@notifier"]
         },
-        "manager.datasource": {
+        "manager.data_source": {
             "class": "DataSourceManager",
             "arguments": ["@{}", "@manager.event", "@notifier", "@@config.data_source_key"]
         },

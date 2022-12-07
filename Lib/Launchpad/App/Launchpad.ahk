@@ -6,8 +6,8 @@
     CheckForUpdates(notify := true) {
         updateAvailable := false
 
-        if (this.Version != "{{VERSION}}" && this.Service("manager.datasource").GetDefaultDataSource()) {
-            dataSource := this.Service("manager.datasource").GetDefaultDataSource()
+        if (this.Version != "{{VERSION}}" && this.Service("manager.data_source").GetDefaultDataSource()) {
+            dataSource := this.Service("manager.data_source").GetDefaultDataSource()
             releaseInfoStr := dataSource.ReadItem("release-info")
 
             if (releaseInfoStr) {

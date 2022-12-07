@@ -22,7 +22,7 @@
 
     Create() {
         super.Create()
-        this.dataSource := this.app.Service("manager.datasource").GetDefaultDataSource()
+        this.dataSource := this.app.Service("manager.data_source").GetDefaultDataSource()
         this.knownPlatforms := this.dataSource.ReadListing("platforms")
         this.knownGames := this.dataSource.ReadListing("game-keys")
         this.launcherTypes := this.dataSource.ReadListing("launcher-types")

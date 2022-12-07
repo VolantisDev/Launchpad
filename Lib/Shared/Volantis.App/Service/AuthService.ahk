@@ -120,7 +120,7 @@ class AuthService extends AppServiceBase {
     }
 
     AddUserInfoFromApi(authInfoObj) {
-        dataSource := this.app.Service("manager.datasource").GetDefaultDataSource()
+        dataSource := this.app.Service("manager.data_source").GetDefaultDataSource()
 
         if (dataSource) {
             apiStatus := dataSource.GetStatus()

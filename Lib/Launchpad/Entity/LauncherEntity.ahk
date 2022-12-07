@@ -55,7 +55,7 @@ class LauncherEntity extends AppEntityBase {
 
         if (definitions.Has("DataSourceItemKey")) {
             definitions["DataSourceItemKey"]["default"] := ""
-            definitions["DataSourceItemKey"]["description"] := "The key to use when looking this item up in its datasource(s)."
+            definitions["DataSourceItemKey"]["description"] := "The key to use when looking this item up in its data source(s)."
             definitions["DataSourceItemKey"]["help"] := "By default, this is the same as the main key."
         }
 
@@ -307,7 +307,7 @@ class LauncherEntity extends AppEntityBase {
 
     ListKnownGames() {
         return this.container
-            .Get("manager.datasource")
+            .Get("manager.data_source")
             .GetDefaultDataSource()
             .ReadListing("game-keys")
     }
