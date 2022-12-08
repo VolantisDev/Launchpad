@@ -1,15 +1,17 @@
 class EntityFactory {
     container := ""
     storageObj := ""
+    mergerObj := ""
     eventMgr := ""
     servicePrefix := ""
     entityTypeId := ""
     entityClass := ""
     idSanitizer := ""
 
-    __New(container, storageObj, eventMgr, idSanitizer, servicePrefix, entityTypeId, entityClass) {
+    __New(container, storageObj, mergerObj, eventMgr, idSanitizer, servicePrefix, entityTypeId, entityClass) {
         this.container := container
         this.storageObj := storageObj
+        this.mergerObj := mergerObj
         this.eventMgr := eventMgr
         this.idSanitizer := idSanitizer
         this.servicePrefix := servicePrefix
@@ -41,6 +43,7 @@ class EntityFactory {
         return %className%(
             container,
             container.Get("manager.entity_type").GetStorage(entityTypeId),
+            container.Get("merger.list"),
             eventMgr,
             idSanitizer,
             definition["service_prefix"],
@@ -62,20 +65,25 @@ class EntityFactory {
     /**
      * Creates a service definition to lazy-load an entity.
      */
-    CreateServiceDefinition(id, data := "", parentEntity := "") {
+    CreateServiceDefinition(id, data := "", parentEntity := "", mergeData := false) {
         return Map(
             "factory", this,
             "method", "CreateEntity",
-            "arguments", [id, data, parentEntity]
+            "arguments", [id, data, parentEntity, mergeData]
         )
     }
 
-    CreateEntity(id, data := "", parentEntity := "") {
+    CreateEntity(id, data := "", parentEntity := "", mergeData := false) {
         entityTypeObj := this.entityClass
 
         if (data) {
             if (Type(data) == "String") {
                 data := Map("class", data)
+            }
+
+            if (mergeData) {
+                storageData := this.storageObj.HasData(id) ? this.storageObj.LoadData(id) : Map()
+                this.mergerObj.Merge(data, storageData)
             }
 
             this.storageObj.SaveData(id, data)

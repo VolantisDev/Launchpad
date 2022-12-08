@@ -27,7 +27,7 @@ class ParameterEntityDefinitionLoader extends EntityDefinitionLoaderBase {
             params := this.container.GetParameter(this.parameterKey)
 
             for id, data in params {
-                services[id] := this.factoryObj.CreateServiceDefinition(id, data)
+                services[id] := this.factoryObj.CreateServiceDefinition(id, data, "", true)
             }
         }
 
