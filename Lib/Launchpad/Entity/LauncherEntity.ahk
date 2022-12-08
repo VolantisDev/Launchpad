@@ -467,7 +467,7 @@ class LauncherEntity extends AppEntityBase {
             
             if (FileExist(checkPath)) {
                 detectedValues["IconSrc"] := checkPath
-            } else if (this.children.Has("ManagedLauncher") && this["ManagedGame"].GetConfigValue("Exe") != "") {
+            } else if (this.Has("ManagedGame", false) && this["ManagedGame"].Has("Exe", false)) {
                 detectedValues["IconSrc"] := this["ManagedGame"].LocateExe()
             } else {
                 detectedValues["IconSrc"] := this.app.appDir . "\Resources\Graphics\Game.ico"
