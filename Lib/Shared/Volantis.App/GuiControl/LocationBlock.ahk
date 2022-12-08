@@ -60,7 +60,7 @@ class LocationBlock extends GuiControlBase {
         Loop Parse str {
             char := A_LoopField
 
-            if (char == "-" || char == "_") {
+            if (!IsAlnum(char)) {
                 upperNext := true
             } else {
                 upper := IsUpper(char)
