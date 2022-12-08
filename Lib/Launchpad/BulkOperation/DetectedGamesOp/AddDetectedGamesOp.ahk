@@ -42,7 +42,6 @@ class AddDetectedGamesOp extends BulkOperationBase {
             this.FinishItem(detectedGameObj.key, true, "Finished adding " . detectedGameObj.key . ".")
         }
 
-        this.launcherManager.SaveModifiedEntities()
         this.state.SaveState()
         this.launcherManager.LoadComponents()
     }
