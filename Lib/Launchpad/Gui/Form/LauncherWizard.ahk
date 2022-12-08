@@ -28,8 +28,8 @@
         platform := this.app.Service("entity_manager.platform")[platformKey]
         
         if (platform) {
-            config["LauncherType"] := platform.platform.launcherType
-            config["GameType"] := platform.platform.gameType
+            config["LauncherType"] := platform.Platform.launcherType
+            config["GameType"] := platform.Platform.gameType
         }
 
         return config

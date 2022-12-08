@@ -1,14 +1,11 @@
 class PlatformEntity extends AppEntityBase {
-    platform := ""
+    platformObj := ""
     configPrefix := ""
     dataSourcePath := "platforms"
 
-    SetupEntity() {
-        super.SetupEntity()
-
-        if (!this.platform) {
-            this.CreatePlatform()
-        }
+    Platform {
+        get => this.GetPlatform()
+        set => this.platformObj := value
     }
 
     BaseFieldDefinitions() {
@@ -18,7 +15,7 @@ class PlatformEntity extends AppEntityBase {
             "type", "class_name",
             "description", "The class name that will be instantiated to manage this platform.",
             "required", true,
-            "formField", false,
+            "formField", true,
             "editable", false,
             "default", "BasicPlatform"
         )
@@ -72,13 +69,21 @@ class PlatformEntity extends AppEntityBase {
         return definitions
     }
 
+    GetPlatform() {
+        if (!this.platformObj) {
+            this.CreatePlatform()
+        }
+
+        return this.platformObj
+    }
+
     CreatePlatform(platformClass := "") {
         if (platformClass == "") {
             platformClass := this["PlatformClass"]
         }
 
         if (platformClass) {
-            this.platform := %platformClass%(this.app, this["InstallDir"], this["ExePath"], this["InstalledVersion"], this["UninstallCmd"])
+            this.platformObj := %platformClass%(this.app, this["InstallDir"], this["ExePath"], this["InstalledVersion"], this["UninstallCmd"])
         } else {
             throw EntityException("Cannot determine platform class.")
         }
@@ -87,8 +92,8 @@ class PlatformEntity extends AppEntityBase {
     GetName() {
         name := ""
 
-        if (this.platform and this.platform.Name) {
-            name := this.platform.Name
+        if (this.Platform and this.Platform.Name) {
+            name := this.Platform.Name
         }
 
         return name
@@ -100,49 +105,46 @@ class PlatformEntity extends AppEntityBase {
     }
 
     CheckForUpdates() {
-        if (!this.platform.IsInstalled() || this.platform.NeedsUpdate()) {
-            this.platform.Install()
+        if (!this.Platform.IsInstalled() || this.Platform.NeedsUpdate()) {
+            this.Platform.Install()
         }
     }
 
     GetLibraryDirs() {
-        return this.platform.GetLibraryDirs()
+        return this.Platform.GetLibraryDirs()
     }
 
     DetectInstalledGames() {
-        return this.platform.DetectInstalledGames()
+        return this.Platform.DetectInstalledGames()
     }
 
     Install() {
-        this.platform.Install()
+        this.Platform.Install()
     }
 
     Update() {
-        this.platform.Update()
+        this.Platform.Update()
     }
 
     Uninstall() {
-        this.platform.Uninstall()
+        this.Platform.Uninstall()
     }
 
     Run() {
-        if (this.platform.IsInstalled()) {
-            this.platform.Run()
+        if (this.Platform.IsInstalled()) {
+            this.Platform.Run()
         }
     }
 
     AutoDetectValues() {
-        if (!this.platform) {
-            this.CreatePlatform()
-        }
-
         detectedValues := super.AutoDetectValues()
-        detectedValues["IsInstalled"] := this.platform.IsInstalled()
-        detectedValues["InstalledVersion"] := this.platform.GetInstalledVersion()
-        detectedValues["InstallDir"] := this.platform.GetInstallDir()
-        detectedValues["ExePath"] := this.platform.GetExePath()
+        detectedValues["IsInstalled"] := this.Platform.IsInstalled()
+        detectedValues["InstalledVersion"] := this.Platform.GetInstalledVersion()
+        detectedValues["InstallDir"] := this.Platform.GetInstallDir()
+        detectedValues["ExePath"] := this.Platform.GetExePath()
         detectedValues["IconSrc"] := detectedValues["ExePath"]
-        detectedValues["UninstallCmd"] := this.platform.GetUninstallCmd()
+        detectedValues["UninstallCmd"] := this.Platform.GetUninstallCmd()
+
         return detectedValues
     }
 }
