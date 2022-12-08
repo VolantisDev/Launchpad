@@ -131,12 +131,12 @@ class LayeredDataBase {
         return this.snapshots.Has(snapshotName)
     }
 
-    GetSnapshot(snapshotName) {
+    GetSnapshot(snapshotName, ignoreFailure := false) {
         snapshot := ""
 
         if (this.snapshots.Has(snapshotName)) {
             snapshot := this.snapshots[snapshotName]
-        } else {
+        } else if (!ignoreFailure) {
             throw AppException("Snapshot name " . snapshotName . " does not exist.")
         }
 
@@ -506,16 +506,12 @@ class LayeredDataBase {
         Diffs changes between the requested layer or all layers merged (default if blank)
     */
     DiffChanges(snapshotName, layer := "") {
-        if (!this.HasSnapshot(snapshotName)) {
-            throw AppException("Snapshot " . snapshotName . " does not exist")
-        }
-
         if (layer && !this.LayerIsLoaded(layer)) {
             this.LoadLayer(layer)
         }
 
         currentData := (layer == "") ? this.GetMergedData(false) : this.layers[layer]
-        snapshotData := this.GetSnapshot(snapshotName)
+        snapshotData := this.GetSnapshot(snapshotName, true)
         originalData := Map()
         
         added := Map()
