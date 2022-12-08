@@ -54,8 +54,9 @@ class EntityManagerBase extends ComponentManagerBase {
 
     RemoveEntity(key) {
         if (this.Has(key)) {
+            entityObj := this[key]
             this.UnloadComponent(key, true)
-            this.storageObj.DeleteData(key)
+            entityObj.DeleteEntity()
         }
 
         return this
