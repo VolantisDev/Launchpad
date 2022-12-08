@@ -7,6 +7,7 @@ class EntityEvents {
     static ENTITY_PRESAVE := 0x4040
     static ENTITY_CREATED := 0x4045
     static ENTITY_UPDATED := 0x4050
+    static ENTITY_SAVED := 0x4052
     static ENTITY_PREDELETE := 0x4054
     static ENTITY_DELETED := 0x4055
     static ENTITY_LOADED := 0x4060

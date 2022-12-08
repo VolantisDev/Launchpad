@@ -268,6 +268,9 @@ class EntityBase {
             event := EntityEvent(EntityEvents.ENTITY_CREATED, this.entityTypeId, this)
             this.eventMgr.DispatchEvent(event)
         }
+
+        event := EntityEvent(EntityEvents.ENTITY_SAVED, this.entityTypeId, this)
+        this.eventMgr.DispatchEvent(event)
     }
 
     RestoreEntity(snapshot := "original") {
