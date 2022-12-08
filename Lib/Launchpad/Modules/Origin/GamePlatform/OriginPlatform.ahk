@@ -22,10 +22,13 @@ class OriginPlatform extends RegistryLookupGamePlatformBase {
         if (FileExist(xmlPath)) {
             xmlFile := Xml.FromFile(xmlPath)
             node := xmlFile.selectSingleNode("/Settings/Setting[@key='DownloadInPlaceDir']")
-            dir := node.getAttribute("value")
 
-            if (dir && !this.LibraryDirExists(dir)) {
-                libraryDirs.Push(dir)
+            if (node) {
+                dir := node.getAttribute("value")
+
+                if (dir && !this.LibraryDirExists(dir)) {
+                    libraryDirs.Push(dir)
+                }
             }
         }
 
