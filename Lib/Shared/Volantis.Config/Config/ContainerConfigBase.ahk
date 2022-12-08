@@ -26,9 +26,8 @@ class ContainerConfigBase extends ConfigBase {
     }
 
     _delete(key) {
-        containerKey := this._getContainerKey(key)
-        if (this.container.HasParameter(containerKey)) {
-            this.container.DeleteParameter(containerKey)
+        if (this._has(key)) {
+            this.container.DeleteParameter(this._getContainerKey(key))
         }
     }
 
