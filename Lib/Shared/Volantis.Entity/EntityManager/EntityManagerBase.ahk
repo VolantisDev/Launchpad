@@ -63,9 +63,8 @@ class EntityManagerBase extends ComponentManagerBase {
     }
 
     AddEntity(key, entityObj) {
-        this.SetComponent(key, entityObj)
-        this.storageObj.SaveData(entityObj)
-
+        this.SetComponent(key, Map("service", entityObj))
+        entityObj.SaveEntity()
         return this
     }
 
