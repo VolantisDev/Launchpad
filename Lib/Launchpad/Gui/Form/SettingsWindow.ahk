@@ -179,10 +179,10 @@
 
     OnLauncherFileMenuClick(btn) {
         if (btn == "ChangeLauncherFile") {
-            this.app.Config["ChangeLauncherFile"]()
+            this.app.Config.ChangeLauncherFile()
             this.SetText("LauncherFile", this.app.Config["launcher_file"], "Bold")
         } else if (btn == "OpenLauncherFile") {
-            this.app.Config["OpenLauncherFile"]()
+            this.app.Config.OpenLauncherFile()
         } else if (btn == "ReloadLauncherFile") {
             this.app.Service("entity_manager.launcher").LoadComponents(true)
         }
@@ -190,10 +190,10 @@
 
     OnBackupsFileMenuClick(btn) {
         if (btn == "ChangeBackupsFile") {
-            this.app.Config["ChangeBackupsFile"]()
+            this.app.Config.ChangeBackupsFile()
             this.SetText("BackupsFile", this.app.Config["backups_file"], "Bold")
         } else if (btn == "OpenBackupsFile") {
-            this.app.Config["OpenBackupsFile"]()
+            this.app.Config.OpenBackupsFile()
         } else if (btn == "ReloadBackupsFile") {
             this.app.Service("entity_manager.backup").LoadComponents(true)
         }
@@ -201,10 +201,10 @@
 
     OnPlatformsFileMenuClick(btn) {
         if (btn == "ChangePlatformsFile") {
-            this.app.Config["ChangePlatformsFile"]()
+            this.app.Config.ChangePlatformsFile()
             this.SetText("PlatformsFile", this.app.Config["platforms_file"], "Bold")
         } else if (btn == "OpenPlatformsFile") {
-            this.app.Config["OpenPlatformsFile"]()
+            this.app.Config.OpenPlatformsFile()
         } else if (btn == "ReloadPlatformsFile") {
             this.app.Service("entity_manager.platform").LoadComponents(true)
         }
@@ -212,11 +212,11 @@
 
     OnDestinationDirMenuClick(btn) {
         if (btn == "ChangeDestinationDir") {
-            this.app.Config["ChangeDestinationDir"]()
+            this.app.Config.ChangeDestinationDir()
             this.SetText("DestinationDir", this.app.Config["destination_dir"], "Bold")
             this.needsRestart := true
         } else if (btn == "OpenDestinationDir") {
-            this.app.Config["OpenDestinationDir"]()
+            this.app.Config.OpenDestinationDir()
         }
     }
 
@@ -228,11 +228,11 @@
 
     OnAssetsDirMenuClick(btn) {
         if (btn == "ChangeAssetsDir") {
-            this.app.Config["ChangeAssetsDir"]()
+            this.app.Config.ChangeAssetsDir()
             this.SetText("AssetsDir", this.app.Config["assets_dir"], "Bold")
             this.needsRestart := true
         } else if (btn == "OpenAssetsDir") {
-            this.app.Config["OpenAssetsDir"]()
+            this.app.Config.OpenAssetsDir()
         }
     }
 
