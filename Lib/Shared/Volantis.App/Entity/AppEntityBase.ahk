@@ -79,13 +79,23 @@ class AppEntityBase extends FieldableEntity {
         return definitions
     }
 
-    getEntityLayers() {
-        return ["ds"]
+    _getLayerNames() {
+        layerNames := super._getLayerNames()
+        layerNames.Push("ds")
+
+        return layerNames
+    }
+
+    _getLayerSources() {
+        layerSources := super._getLayerSources()
+        layerSources["ds"] := ObjBindMethod(this, "AggregateDataSourceDefaults")
+
+        return layerSources
     }
 
     UpdateDataSourceDefaults(recurse := true) {
         ; @todo Move this to a module
-        this.GetData().SetLayerSource("ds", this.AggregateDataSourceDefaults())
+        this.GetData().UnloadLayer("ds")
 
         if (recurse) {
             for key, child in this.GetReferencedEntities(true) {

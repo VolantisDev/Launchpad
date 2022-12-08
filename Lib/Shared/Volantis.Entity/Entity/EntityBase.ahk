@@ -86,12 +86,20 @@ class EntityBase {
     }
 
     _createEntityData() {
-        layerData := [
+        this.dataObj := EntityData(this, this._getLayerNames(), this._getLayerSources())
+    }
+
+    _getLayerNames() {
+        ; "auto" and "data" are automatically added at the end of the array later.
+        return ["defaults"]
+    }
+
+    _getLayerSources() {
+        return Map(
             "defaults", ObjBindMethod(this, "InitializeDefaults"),
             "auto", ObjBindMethod(this, "AutoDetectValues"),
-            "data", this.storageObj
-        ]
-        this.dataObj := EntityData(this.EntityTypeId, this, this.storageObj)
+            "data", EntityStorageLayerSource(this.storageObj, this.GetStorageId())
+        )
     }
 
     static Create(container, eventMgr, id, entityTypeId, storageObj, idSanitizer, parentEntity := "") {
@@ -239,7 +247,7 @@ class EntityBase {
     }
 
     SaveEntity(recurse := true) {
-        alreadyExists := this.storageObj.HasData(this)
+        alreadyExists := this.dataObj.HasData(true)
 
         event := EntityEvent(EntityEvents.ENTITY_PRESAVE, this.entityTypeId, this)
         this.eventMgr.DispatchEvent(event)

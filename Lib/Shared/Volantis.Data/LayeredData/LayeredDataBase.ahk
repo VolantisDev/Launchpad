@@ -1,19 +1,19 @@
 /**
-  This is a base class representing a set of data that has multiple layers.
-
-  Data can be retrieved from any layer, but the main benefit is that the layers can be combined
-  into one set of data, where each layer overwrites the values of the layer underneath it.
-
-  Finally, processors can be applied after the layers are merged.
-
-  Example:
-    - Layer 1: Initial defaults
-    - Layer 2: Defaults from data source
-    - Layer 3: Auto-detected defaults
-    - Layer 4: User configuration values
-    - Processor 1: Token expander
-    - Processor 2: File locator
-*/
+  * This is a base class representing a set of data that has multiple layers.
+  *
+  * Data can be retrieved from any layer, but the main benefit is that the layers can be combined
+  * into one set of data, where each layer overwrites the values of the layer underneath it.
+  *
+  * Finally, processors can be applied to the final data to alter it in any way necessary.
+  *
+  * Example:
+  *   - Layer 1: Initial defaults
+  *   - Layer 2: Defaults from datasource
+  *   - Layer 3: Auto-detected defaults
+  *   - Layer 4: User configuration values
+  *   - Processor 1: Token expander
+  *   - Processor 2: File locator
+  */
 class LayeredDataBase {
     layers := Map()
     layerPriority := []
@@ -24,29 +24,38 @@ class LayeredDataBase {
     loadedLayers := Map()
     cloner := ""
     userLayers := ["data"]
+    loadingLayers := Map()
 
     static NO_VALUE := ":NO_VAL:"
 
-    __New(cloner, processors, layers*) {
+    __New(cloner, processors, layerNames, layerSources) {
         this.cloner := cloner
 
-        if (processors != "") {
+        if (processors) {
+            if (!HasBase(processors, Array.Prototype)) {
+                processors := [processors]
+            }
+
             this.processors := processors
         }
 
-        if (layers.Has(1)) {
-            this.SetLayers(layers*)
+        if (layerNames && layerNames.Length) {
+            this.InitializeLayers(layerNames)
+        }
+
+        if (layerSources) {
+            this.SetLayerSources(layerSources)
         }
     }
 
-    InitializeLayerArray(layerNames) {
-        layers := []
+    InitializeLayers(layerNames) {
+        layers := Map()
 
         for index, layerName in layerNames {
-            layers.Push(layerName, Map())
+            layers[layerName] := Map()
         }
 
-        return layers
+        this.SetLayers(layers)
     }
 
     SetLayerSources(layerSources) {
@@ -57,34 +66,33 @@ class LayeredDataBase {
 
     SetLayerSource(layer, sourceObj) {
         this.layerSources[layer] := sourceObj
+
+        if (!this.HasLayer(layer)) {
+            this.SetLayer(layer)
+        }
+
         this.UnloadLayer(layer)
     }
 
-    SetLayers(layers*) {
-        if (HasBase(layers[1], Map.Prototype)) {
-            for layerName, layerData in layers[1] {
-                this.SetLayer(layerName, layerData)
-            }
-        } else {
-            nextParam := 1
-
-            while (layers.Has(nextParam)) {
-                layerName := layers[nextParam]
-                layerData := layers[nextParam + 1]
-                this.SetLayer(layerName, layerData)
-                nextParam := nextParam + 2
-            }
+    SetLayers(layers) {
+        for layerName, layerData in layers {
+            this.SetLayer(layerName, layerData)
         }
 
         return this
     }
 
+    HasLayer(layerName) {
+        return this.layers.Has(layerName)
+    }
+
     SetLayer(layerName, data := "", layerPriority := "") {
         alreadyExists := this.HasLayer(layerName)
 
-        if (data && this.layerSources.Has(layerName)) {
-            this.layerSources.Delete(layerName)
-        }
+        ; @todo Determine how to handle this
+        ; if (data && this.layerSources.Has(layerName)) {
+        ;     this.layerSources.Delete(layerName)
+        ; }
 
         if (!data) {
             data := Map()
@@ -166,11 +174,14 @@ class LayeredDataBase {
 
     LoadLayer(layer, reload := false) {
         if (
-            this.layerSources.Has(layer)
+            (!this.loadingLayers.Has(layer) || !this.loadingLayers[layer])
+            && this.layerSources.Has(layer)
             && (reload || !this.LayerIsLoaded(layer))
         ) {
+            this.loadingLayers[layer] := true
             this.loadLayerFromSource(layer, this.layerSources[layer])
             this.loadedLayers[layer] := true
+            this.loadingLayers.Delete(layer)
         }
     }
 
@@ -204,10 +215,6 @@ class LayeredDataBase {
 
     LayerIsLoaded(layer) {
         return this.loadedLayers.Has(layer) && this.loadedLayers[layer]
-    }
-
-    HasLayer(layer) {
-        return this.layers.Has(layer)
     }
 
     UnloadLayer(layer) {
@@ -328,6 +335,44 @@ class LayeredDataBase {
         }
 
         return hasValue
+    }
+
+    HasUserValue(key, allowEmpty := true) {
+        hasValue := false
+
+        for , layer in this.userLayers {
+            if (this.HasValue(key, layer, allowEmpty)) {
+                hasValue := true
+                break
+            }
+        }
+
+        return hasValue
+    }
+
+    HasData(userLayersOnly := false) {
+        hasData := false
+        layers := userLayersOnly ? this.userLayers : this._getLayerPriority(true)
+
+        for , layer in layers {
+            hasSource := this.layerSources.Has(layer)
+
+            if (hasSource && HasBase(this.layerSources[layer], LayerSourceBase.Prototype)) {
+                if (this.layerSources[layer].HasData()) {
+                    hasData := true
+                    break
+                }
+            } else {
+                if (hasSource) {
+                    this.LoadLayer(layer, false)
+                }
+
+                if (this.layers[layer] && this.layers[layer].Count > 0) {
+                    hasData := true
+                    break
+                }
+            }
+        }
     }
 
     ApplyProcessors(value) {
@@ -573,5 +618,15 @@ class LayeredDataBase {
         }
 
         return output
+    }
+
+    SaveData() {
+        storageId := this.entity.GetStorageId()
+
+        for index, layer in this.userLayers {
+            if (this.layerSources.Has(layer) && HasBase(this.layerSources[layer], LayerSourceBase.Prototype)) {
+                this.layerSources[layer].SaveData(this.GetLayer(layer))
+            }
+        }
     }
 }

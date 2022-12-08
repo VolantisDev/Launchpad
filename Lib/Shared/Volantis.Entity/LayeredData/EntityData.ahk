@@ -3,26 +3,24 @@ class EntityData extends LayeredDataBase {
     entity := ""
     eventMgr := ""
 
-    __New(entityTypeId, entity, layerSources) {
-        this.entityTypeId := entityTypeId
+    __New(entity, layerNames, layerSources) {
+        this.entityTypeId := entity.EntityTypeId
         this.entity := entity
         this.eventMgr := entity.eventMgr
 
-        if (!HasBase(layerSources, Map.Prototype)) {
-            layerSources := Map("data", layerSources)
-        }
-
-        this.SetLayerSources(this.collectEntityStorage(layerSources))
-
-        layers := this.InitializeLayerArray(this._getLayerNames(entityTypeId, entity))
-        processors := this._createProcessors(entityTypeId, entity)
-
-        super.__New(entity.cloner, processors, layers*)
-
-        this.SetLayer("defaults", entity.InitializeDefaults())
+        super.__New(
+            entity.cloner, 
+            this._createProcessors(), 
+            this._getLayerNames(layerNames), 
+            this._collectEntityStorage(layerSources)
+        )
     }
 
-    collectEntityStorage(layerSources) {
+    _collectEntityStorage(layerSources) {
+        if (!layerSources.Has("defaults")) {
+            layerSources["defaults"] := this.entity.InitializeDefaults()
+        }
+
         event := EntityStorageEvent(EntityEvents.ENTITY_STORAGE_OBJECTS, this.entityTypeId, this.entity, layerSources)
         this.eventMgr.DispatchEvent(event)
 
@@ -32,33 +30,55 @@ class EntityData extends LayeredDataBase {
         return event.Storage
     }
 
-    _createProcessors(entityTypeId, entity) {
+    _createProcessors() {
         processors := [
             StringSanitizer(),
             PlaceholderExpander(this)
         ]
 
-        event := EntityDataProcessorsEvent(EntityEvents.ENTITY_DATA_PROCESSORS, entityTypeId, entity, processors)
+        event := EntityDataProcessorsEvent(EntityEvents.ENTITY_DATA_PROCESSORS, this.entityTypeId, this.entity, processors)
         this.eventMgr.DispatchEvent(event)
 
-        event := EntityDataProcessorsEvent(EntityEvents.ENTITY_DATA_PROCESSORS_ALTER, entityTypeId, entity, event.Processors)
+        event := EntityDataProcessorsEvent(EntityEvents.ENTITY_DATA_PROCESSORS_ALTER, this.entityTypeId, this.entity, event.Processors)
         this.eventMgr.DispatchEvent(event)
 
         return event.Processors
     }
 
-    _getLayerNames(entityTypeId, entity) {
-        layers := ["defaults"]
+    _getLayerNames(layerNames) {
+        if (!layerNames) {
+            layerNames := []
+        }
 
-        event := EntityLayersEvent(EntityEvents.ENTITY_DATA_LAYERS, entityTypeId, entity, layers)
+        this._appendLayerNames(["defaults"], layerNames)
+
+        event := EntityLayersEvent(EntityEvents.ENTITY_DATA_LAYERS, this.entityTypeId, this.entity, layerNames)
         this.eventMgr.DispatchEvent(event)
 
-        event.Layers.Push("auto", "data")
+        layerNames := event.Layers
+        this._appendLayerNames(["auto", "data"], layerNames)
 
-        event := EntityLayersEvent(EntityEvents.ENTITY_DATA_LAYERS_ALTER, entityTypeId, entity, event.Layers)
+        event := EntityLayersEvent(EntityEvents.ENTITY_DATA_LAYERS_ALTER, this.entityTypeId, this.entity, layerNames)
         this.eventMgr.DispatchEvent(event)
 
         return event.Layers
+    }
+
+    _appendLayerNames(namesToAppend, existingNames) {
+        for index, name in namesToAppend {
+            exists := false
+
+            for index, layerName in existingNames {
+                if (name == layerName) {
+                    exists := true
+                    break
+                }
+            }
+
+            if (!exists) {
+                existingNames.Push(name)
+            }
+        }
     }
 
     loadLayerFromSource(layer, sourceObj, cloneMap := true) {
@@ -72,19 +92,5 @@ class EntityData extends LayeredDataBase {
         }
 
         super.loadLayerFromSource(layer, sourceObj, cloneMap)
-    }
-
-    SaveData() {
-        storageId := this.entity.GetStorageId()
-
-        for index, layer in this.userLayers {
-            if (this.layerSources.Has(layer)) {
-                layerSource := this.layerSources[layer]
-
-                if (HasBase(layerSource, EntityStorageBase.Prototype)) {
-                    layerSource.SaveData(storageId, this.GetLayer(layer))
-                }
-            }
-        }
     }
 }
