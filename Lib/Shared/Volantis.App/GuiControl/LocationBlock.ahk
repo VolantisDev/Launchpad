@@ -12,8 +12,10 @@ class LocationBlock extends GuiControlBase {
             w -= (20 + (this.guiObj.margin / 2))
             this.parameters.SetOption("w", w, textOptions)
         }
+
+        fieldNamePascal := this.ToPascalCase(fieldName)
         
-        ctl := this.AddText(location, this.parameters.SetDefaultOptions(textOptions, "v" . fieldName . " h22 c" . (this.guiObj.themeObj.GetColor("textLink")) . " y+" . (this.guiObj.margin/2) . " w" . (this.guiObj.windowSettings["contentWidth"]-20-(this.guiObj.margin/2))))
+        ctl := this.AddText(location, this.parameters.SetDefaultOptions(textOptions, "v" . fieldNamePascal . " h22 c" . (this.guiObj.themeObj.GetColor("textLink")) . " y+" . (this.guiObj.margin/2) . " w" . (this.guiObj.windowSettings["contentWidth"]-20-(this.guiObj.margin/2))))
         this.ctl := ctl
 
         if (helpText) {
@@ -21,20 +23,20 @@ class LocationBlock extends GuiControlBase {
         }
 
         menuItems := []
-        menuItems.Push(Map("label", "Change", "name", "Change" . fieldName))
+        menuItems.Push(Map("label", "Change", "name", "Change" . fieldNamePascal))
 
         if (showOpen) {
-            menuItems.Push(Map("label", "Open", "name", "Open" . fieldName))
+            menuItems.Push(Map("label", "Open", "name", "Open" . fieldNamePascal))
         }
 
         if (extraButton) {
-            menuItems.Push(Map("label", extraButton, "name", StrReplace(extraButton, " ", "") . fieldName))
+            menuItems.Push(Map("label", extraButton, "name", StrReplace(extraButton, " ", "") . fieldNamePascal))
         }
 
         callback := this.RegisterCallback("OnLocationOptions")
         
         opts := this.parameters.GetOptionsString(btnOptions, [
-            "v" . fieldName . "Options",
+            "v" . fieldNamePascal . "Options",
             "w20",
             "h20",
             "x+" . (this.guiObj.margin/2),
@@ -45,10 +47,39 @@ class LocationBlock extends GuiControlBase {
 
         btn.ctl.MenuItems := menuItems
         btn.ctl.ToolTip := "Change options"
-        btn.ctl.Callback := btnCallback ? btnCallback : "On" . fieldName . "MenuClick"
+        btn.ctl.Callback := btnCallback ? btnCallback : "On" . fieldNamePascal . "MenuClick"
         this.btnCtl := btn
 
         return ctl
+    }
+
+    ToPascalCase(str) {
+        newStr := ""
+        upperNext := true
+        
+        Loop Parse str {
+            char := A_LoopField
+
+            if (char == "-" || char == "_") {
+                upperNext := true
+            } else {
+                upper := IsUpper(char)
+
+                if (!upperNext && upper) {
+                    char := StrLower(char)
+                } else if (upperNext) {
+                    if (!upper) {
+                        char := StrUpper(char)
+                    }
+                    
+                    upperNext := false
+                }
+
+                newStr := newStr . char
+            }
+        }
+
+        return newStr
     }
 
     OnLocationOptions(btn, info) {
