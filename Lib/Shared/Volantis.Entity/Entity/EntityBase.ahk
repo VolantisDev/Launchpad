@@ -247,6 +247,10 @@ class EntityBase {
     }
 
     SaveEntity(recurse := true) {
+        if (!this.dataObj) {
+            return
+        }
+
         alreadyExists := this.dataObj.HasData(true)
 
         event := EntityEvent(EntityEvents.ENTITY_PRESAVE, this.entityTypeId, this)
