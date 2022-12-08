@@ -25,7 +25,6 @@
     ProcessResult(result, submittedData := "") {
         if (result == "Delete") {
             this.entityManager.RemoveEntity(this.entityObj.Id)
-            this.entityManager.SaveModifiedEntities()
         }
 
         return result
