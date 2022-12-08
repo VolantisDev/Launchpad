@@ -28,13 +28,13 @@ class PlatformManager extends EntityManagerBase {
     }
 
     GetGameDetectionPlatforms() {
-        return this._getActiveQuery()
+        return this._getActiveQuery(EntityQuery.RESULT_TYPE_ENTITIES)
             .Condition(IsTrueCondition(), "DetectGames")
             .Execute()
     }
 
-    _getActiveQuery() {
-        return this.EntityQuery()
+    _getActiveQuery(resultType := "ids") {
+        return this.EntityQuery(resultType)
             .Condition(IsTrueCondition(), "IsEnabled")
             .Condition(IsTrueCondition(), "IsInstalled")
     }
