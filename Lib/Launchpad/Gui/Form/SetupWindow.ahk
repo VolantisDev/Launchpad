@@ -70,10 +70,10 @@
         name := SubStr(chk.Name, len + 1)
         platformMgr := this.app.Service("entity_manager.platform")
 
-        if (platformMgr.Entities.Has(name)) {
+        if (platformMgr.Has(name)) {
             platform := platformMgr[name]
             platform["DetectGames"] := !!(chk.Value)
-            platform.SaveModifiedData()
+            platform.SaveEntity()
         }
     }
 
@@ -89,10 +89,10 @@
 
     OnDestinationDirMenuClick(btn) {
         if (btn == "ChangeDestinationDir") {
-            this.app.Config["ChangeDestinationDir"]()
+            this.app.Config.ChangeDestinationDir()
             this.SetText("DestinationDir", this.app.Config["destination_dir"], "Bold")
         } else if (btn == "OpenDestinationDir") {
-            this.app.Config["OpenDestinationDir"]()
+            this.app.Config.OpenDestinationDir()
         }
     }
 
