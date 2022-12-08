@@ -28,6 +28,10 @@ class EntityManagerBase extends ComponentManagerBase {
         )
     }
 
+    GetFactory() {
+        return this.factoryObj
+    }
+
     GetStorage() {
         return this.storageObj
     }
