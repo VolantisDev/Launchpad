@@ -114,8 +114,10 @@ class DetectedGame {
             config["GameLauncherSpecificId"] := this.launcherSpecificId
         }
 
-        entity := LauncherEntity(launcherManager.app, this.key, config)
-        launcherManager.AddEntity(this.key, entity)
+        launcherManager.AddEntity(
+            this.key,
+            launcherManager.GetFactory().CreateEntity(this.key, config)
+        )
     }
 
     AutoDetectValues() {
