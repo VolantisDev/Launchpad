@@ -103,7 +103,7 @@ class ComponentManagerBase {
             return
         }
 
-        for componentId, component in this.All() {
+        for , componentId in this.Names() {
             this.UnloadComponent(componentId, deleteDefinitions)
         }
 
