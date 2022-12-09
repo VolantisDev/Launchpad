@@ -78,6 +78,26 @@ class ManageModulesWindow extends ManageWindowBase {
         this.UpdateListView()
     }
 
+    Close(submit := false) {
+        if (this.needsRestart) {
+
+            if (submit) {
+                this.Submit(false)
+            }
+
+            response := this.app.Service("manager.gui").Dialog(Map(
+                "title", "Restart " . this.app.appName . "?",
+                "text", "One or more module changes require restarting " . this.app.appName . " to fully take effect.`n`nWould you like to restart " . this.app.appName . " now?"
+            ))
+
+            if (response == "Yes") {
+                this.app.RestartApp()
+            }
+        }
+
+        super.Close(submit)
+    }
+
     ConfigureModule(key) {
         modified := false
         obj := this.moduleManager[key]
