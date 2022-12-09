@@ -3,6 +3,7 @@
         "name": "Authentication",
         "type": "AppModule",
         "icon": "",
+        "category": "Web Services",
         "tags": ["Launchpad", "LaunchpadBuilder"],
         "description": "Authenticate with remote accounts, such as the Launchpad API",
         "author": {
@@ -11,6 +12,7 @@
         },
         "website": "https://launchpad.games",
         "version": "{{VERSION}}",
+        "appVersion": "",
         "dependencies": []
     },
     "services": {
