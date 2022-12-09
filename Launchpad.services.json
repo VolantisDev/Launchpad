@@ -102,7 +102,7 @@
         },
         "manager.builder": {
             "class": "BuilderManager",
-            "arguments": ["@manager.launcher", "@{}", "@manager.event", "@notifier"]
+            "arguments": ["@entity_manager.launcher", "@{}", "@manager.event", "@notifier"]
         },
         "manager.data_source": {
             "class": "DataSourceManager",
