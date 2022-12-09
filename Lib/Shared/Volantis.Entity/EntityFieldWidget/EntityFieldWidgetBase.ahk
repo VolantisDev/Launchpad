@@ -74,7 +74,7 @@ class EntityFieldWidgetBase {
     }
 
     WriteValueToEntity() {
-        this.GetEntityField().SetValue(this.GetWidgetValue())
+        this.GetEntityField().SetValue(this.GetWidgetValue(true))
     }
 
     /**
