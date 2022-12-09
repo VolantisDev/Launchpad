@@ -20,20 +20,21 @@
     }
 
     AddDescription(text) {
-        return this.guiObj.AddText("w" . this.windowSettings["contentWidth"], text)
+        return this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " y+5", text)
     }
 
     Controls() {
         super.Controls()
 
         this.AddHeading("Theme")
-        this.AddDescription(this.app.appName . " has a growing number of themes available to fit in with the platform or aesthetic of your choice. Choose the primary theme for La" . this.app.appName . "unchpad to use below.")
+        this.AddDescription(this.app.appName . " has a growing number of themes available to fit in with the platform or aesthetic of your choice. Choose the primary theme for " . this.app.appName . " to use.")
         chosen := this.GetItemIndex(this.availableThemes, this.app.Config["theme_name"])
         ctl := this.guiObj.AddDDL("vtheme_name xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"), this.availableThemes)
         ctl.OnEvent("Change", "OnThemeNameChange")
-        ctl.ToolTip := "Select a theme for " . this.app.appName . " to use."
+        ctl.ToolTip := "Select the primary theme for " . this.app.appName . " to use."
 
-        this.AddConfigLocationBlock("Launcher Directory", "destination_dir", "", this.app.appName . " will create a separate .exe file for every game you configure. You can store these launchers in any folder you wish.")
+        this.AddHeading("Launcher Directory")
+        this.AddConfigLocationBlock("", "destination_dir", "", this.app.appName . " will create a separate .exe file for every game you configure. You can store these launchers in any folder you wish.")
 
         this.AddHeading("Platforms")
         this.AddDescription(this.app.appName . " has detected the following game platforms on your computer. Check the ones you wish " . this.app.appName . " to detect your installed games from.")
@@ -43,8 +44,7 @@
         this.AddDescription(this.app.appName . " can detect your installed games automatically right away, or you can do it later from the Tools menu.")
         this.Add("BasicControl", "vDetectGames", "", true, "CheckBox", "Detect my games now")
 
-        closeW := 100
-        closeX := this.margin + (this.windowSettings["contentWidth"] / 2) - (closeW / 2)
+        
     }
 
     AddConfigLocationBlock(heading, settingName, extraButton := "", helpText := "") {
@@ -54,13 +54,12 @@
 
     AddPlatformCheckboxes() {
         platformMgr := this.app.Service("entity_manager.platform")
-        platformMgr.LoadComponents(false)
+        platformQuery := platformMgr.EntityQuery(EntityQuery.RESULT_TYPE_ENTITIES)
+            .Condition(IsTrueCondition(), "IsInstalled")
 
-        for key, platform in platformMgr {
-            if (platform["IsInstalled"]) {
-                ctl := this.Add("BasicControl", "vPlatformToggle" . key, "", platform["DetectGames"], "CheckBox", platform.GetName())
-                ctl.RegisterHandler("Click", "OnPlatformToggle")
-            }
+        for key, platform in platformQuery.Execute() {
+            ctl := this.Add("BasicControl", "vPlatformToggle" . key, "", platform["DetectGames"], "CheckBox", platform.GetName())
+            ctl.RegisterHandler("Click", "OnPlatformToggle")
         }
     }
 
