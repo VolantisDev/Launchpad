@@ -151,7 +151,7 @@ class AppEntityBase extends FieldableEntity {
 
     GetDataSourceDefaults(dataSource) {
         defaults := Map()
-        itemKey := this.GetDataSourceItemKey()
+        itemKey := this.DiscoverDataSourceItemKey()
 
         if (itemKey) {
             dsData := dataSource.ReadJson(itemKey, this.GetDataSourceItemPath())
@@ -173,7 +173,7 @@ class AppEntityBase extends FieldableEntity {
         return defaults
     }
 
-    GetDataSourceItemKey() {
+    DiscoverDataSourceItemKey() {
         return this.Id
     }
 

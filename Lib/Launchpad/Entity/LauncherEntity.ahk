@@ -384,7 +384,7 @@ class LauncherEntity extends AppEntityBase {
         this.app.State.SetLauncherConfigInfo(this.Id)
     }
 
-    GetDataSourceItemKey() {
+    DiscoverDataSourceItemKey() {
         if (!this["DataSourceItemKey"]) {
             dataSources := this.GetAllDataSources()
 

@@ -271,7 +271,7 @@ class ManagedEntityBase extends AppEntityBase {
         return ""
     }
 
-    GetDataSourceItemKey() {
+    DiscoverDataSourceItemKey() {
         return this["EntityType"]
     }
 
