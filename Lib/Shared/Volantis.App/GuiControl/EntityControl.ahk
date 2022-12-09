@@ -64,15 +64,11 @@ class EntityControl extends GuiControlBase {
         val := Trim(this.innerControl.GetValue(true))
         this.widget.WriteValueToEntity()
 
-        if (this.refreshDataOnChange || this.dependentFields && this.dependentFields.Length > 0) {
+        if (this.refreshDataOnChange && (!this.dependentFields || this.dependentFields.Length == 0)) {
             this.entityObj.UpdateDataSourceDefaults()
         }
 
-        if (this.dependentFields && this.dependentFields.Length > 0) {
-            for index, field in this.dependentFields {
-                this.guiObj.guiObj[field].Value := this.entityObj.FieldData[field]
-            }
-        }
+        this.SetDependentFieldValues()
     }
 
     AddDependentField(field) {
@@ -81,7 +77,7 @@ class EntityControl extends GuiControlBase {
     }
 
     DefaultCheckbox(entity, fieldName) {
-        checkedText := !entity.UnmergedFieldData.Has(fieldName) ? " Checked" : ""
+        checkedText := !this.entityField.HasOverride() ? " Checked" : ""
         parameters := this.parameters.Clone()
         parameters["position"]["w"] := ""
         parameters.RemoveOption("w")
@@ -98,27 +94,34 @@ class EntityControl extends GuiControlBase {
         useDefault := !!(chk.Value)
 
         if (useDefault) {
-            this.entityObj.RevertToDefault(this.fieldName)
+            this.entityField.DeleteValue()
             newVal := this.emptyValue
 
-            if (this.entityObj.FieldData.Has(this.fieldName) && this.entityObj.FieldData[this.fieldName]) {
-                newVal := this.entityObj.FieldData[this.fieldName]
+            if (this.entityField.HasValue()) {
+                rawVal := this.entityField.GetRawValue()
+
+                if (rawVal) {
+                    newVal := rawVal
+                }
             }
 
             this.SetText(newVal)
         } else {
-            this.entityObj.UnmergedFieldData[this.fieldName] := this.entityObj.FieldData.Has(this.fieldName) ? this.entityObj.FieldData[this.fieldName] : ""
+            this.entityField.SetValue(this.entityField.GetValue())
         }
 
+        this.SetDependentFieldValues()
+        this.ToggleEnabled(!useDefault)
+    }
+
+    SetDependentFieldValues() {
         if (this.dependentFields && this.dependentFields.Length > 0) {
             this.entityObj.UpdateDataSourceDefaults()
 
             for index, field in this.dependentFields {
-                this.guiObj.guiObj[field].Value := this.entityObj.FieldData[field]
+                this.guiObj.guiObj[field].Value := this.entityObj.GetField(field).GetRawValue()
             }
         }
-
-        this.ToggleEnabled(!useDefault)
     }
 
     SetText(text) {
