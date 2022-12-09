@@ -34,6 +34,26 @@ class ModuleInfoBase {
         if (!this.moduleInfo.Has("version") || !this.moduleInfo["version"] || this.moduleInfo["version"] == "{{VERSION}}") {
             this.moduleInfo["version"] := AppBase.Instance ? AppBase.Instance.Version : ""
         }
+
+        if (!this.moduleInfo.Has("category") || !this.moduleInfo["category"]) {
+            this.moduleInfo["category"] := "General"
+        }
+
+        if (!this.moduleInfo.Has("tags") || !this.moduleInfo["tags"]) {
+            this.moduleInfo["tags"] := ["Launchpad"]
+        }
+
+        if (!HasBase(this.moduleInfo["tags"], Array.Prototype)) {
+            this.moduleInfo["tags"] := [this.moduleInfo["tags"]]
+        }
+
+        if (!this.moduleInfo.Has("dependencies") || !this.moduleInfo["dependencies"]) {
+            this.moduleInfo["dependencies"] := []
+        }
+
+        if (!this.moduleInfo.Has("appVersion") || !this.moduleInfo["appVersion"] || this.moduleInfo["appVersion"] == "{{VERSION}}") {
+            this.moduleInfo["appVersion"] := AppBase.Instance ? AppBase.Instance.Version : ""
+        }
     }
 
     __Enum(numberOfVars) {
