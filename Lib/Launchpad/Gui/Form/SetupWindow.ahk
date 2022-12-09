@@ -37,14 +37,31 @@
         this.AddConfigLocationBlock("", "destination_dir", "", this.app.appName . " will create a separate .exe file for every game you configure. You can store these launchers in any folder you wish.")
 
         this.AddHeading("Platforms")
-        this.AddDescription(this.app.appName . " has detected the following game platforms on your computer. Check the ones you wish " . this.app.appName . " to detect your installed games from.")
-        this.AddPlatformCheckboxes()
+
+        installedPlatforms := this.GetInstalledPlatforms()
+
+        if (installedPlatforms.Count) {
+            this.AddDescription("Your discovered game platforms are below. Check the ones you wish to allow " . this.app.appName . " to detect installed games from.")
+            this.AddPlatformCheckboxes(installedPlatforms)
+        } else {
+            this.AddDescription(this.app.appName . " couldn't find any game platforms on your computer to detect installed games from. You can always configure them later.")
+        }
 
         this.AddHeading("Detect Games")
-        this.AddDescription(this.app.appName . " can detect your installed games automatically right away, or you can do it later from the Tools menu.")
-        this.Add("BasicControl", "vDetectGames", "", true, "CheckBox", "Detect my games now")
 
-        
+        if (installedPlatforms.Count) {
+            this.AddDescription(this.app.appName . " can detect your installed games automatically right now if you wish. You can also do it anytime by clicking the + icon at the bottom of the main Launchpad window.")
+            this.Add("BasicControl", "vDetectGames", "", true, "CheckBox", "Detect my games now")
+        } else {
+            this.AddDescription(this.app.appName . " can detect your installed games automatically if you install and enable any supported game platforms, such as Steam, Epic Games, Battle.net, and more. You can find the Detect Games feature by clicking the + icon at the bottom of the Launchpad window anytime.")
+        }
+    }
+
+    GetInstalledPlatforms() {
+        platformMgr := this.app.Service("entity_manager.platform")
+        platformQuery := platformMgr.EntityQuery(EntityQuery.RESULT_TYPE_ENTITIES)
+            .Condition(IsTrueCondition(), "IsInstalled")
+        return platformQuery.Execute()
     }
 
     AddConfigLocationBlock(heading, settingName, extraButton := "", helpText := "") {
@@ -52,12 +69,8 @@
         this.Add("LocationBlock", "", heading, location, settingName, extraButton, true, helpText)
     }
 
-    AddPlatformCheckboxes() {
-        platformMgr := this.app.Service("entity_manager.platform")
-        platformQuery := platformMgr.EntityQuery(EntityQuery.RESULT_TYPE_ENTITIES)
-            .Condition(IsTrueCondition(), "IsInstalled")
-
-        for key, platform in platformQuery.Execute() {
+    AddPlatformCheckboxes(installedPlatforms) {
+        for key, platform in installedPlatforms {
             ctl := this.Add("BasicControl", "vPlatformToggle" . key, "", platform["DetectGames"], "CheckBox", platform.GetName())
             ctl.RegisterHandler("Click", "OnPlatformToggle")
         }
