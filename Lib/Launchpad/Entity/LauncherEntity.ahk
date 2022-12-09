@@ -52,7 +52,6 @@ class LauncherEntity extends AppEntityBase {
 
         definitions["name"]["description"] := "You can change the display name of the game if it differs from the key."
         definitions["name"]["help"] := "The launcher filename will still be created using the key."
-        definitions["name"]["storageKey"] := "DisplayName"
 
         if (definitions.Has("DataSourceItemKey")) {
             definitions["DataSourceItemKey"]["default"] := ""

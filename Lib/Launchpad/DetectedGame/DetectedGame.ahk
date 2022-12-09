@@ -95,7 +95,7 @@ class DetectedGame {
         config := Map("Platform", this.platform.key, "LauncherType", this.launcherType, "GameType", this.gameType)
 
         if (this.displayName) {
-            config["DisplayName"] := this.displayName
+            config["name"] := this.displayName
         }
 
         if (this.launcherInstallDir) {
