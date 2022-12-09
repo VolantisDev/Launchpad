@@ -82,6 +82,10 @@ class GuiManager extends ComponentManagerBase {
             config["unique"] := true
         }
 
+        if (!config.Has("waitForResult")) {
+            config["waitForResult"] := true
+        }
+
         config["id"] := this.factory.GetGuiId(config, params*)
 
         window := this.GetWindow(config, params*)
