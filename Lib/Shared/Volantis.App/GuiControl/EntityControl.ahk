@@ -61,7 +61,6 @@ class EntityControl extends GuiControlBase {
     }
 
     OnInnerControlChange(ctl, info) {
-        val := Trim(this.innerControl.GetValue(true))
         this.widget.WriteValueToEntity()
 
         if (this.refreshDataOnChange && (!this.dependentFields || this.dependentFields.Length == 0)) {
