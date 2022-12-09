@@ -6,6 +6,11 @@ class AuthService extends AppServiceBase {
 
     __New(app, authProviderObj, stateObj) {
         InvalidParameterException.CheckTypes("AuthenticationService", "stateObj", stateObj, "StateBase")
+
+        if (authProviderObj && Type(authProviderObj) == "String") {
+            authProviderObj := app.Services.Get(authProviderObj)
+        }
+
         this.authProviderObj := authProviderObj
         this.stateObj := stateObj
 
