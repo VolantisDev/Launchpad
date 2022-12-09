@@ -15,10 +15,13 @@
         "appVersion": "",
         "dependencies": []
     },
+    "parameters": {
+        "config.auth_service": ""
+    },
     "services": {
         "Auth": {
             "class": "AuthService",
-            "arguments": ["@{App}", "@auth_provider.launchpad_api", "@state.app"]
+            "arguments": ["@{App}", "@@config.auth_service", "@state.app"]
         }
     }
 }
