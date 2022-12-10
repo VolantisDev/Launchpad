@@ -21,7 +21,7 @@
         "config.launcher_view_mode": "Report",
         "config.enable_custom_launcher_themes": true,
         "config.platforms_file": "@@{data_dir}\\Platforms.json",
-        "config.platforms_view_mode": "Tile",
+        "config.platforms_view_mode": "Details",
         "config.player_name": "",
         "config.rebuild_existing_launchers": false,
         "config.tasks_file": "@@{data_dir}\\Tasks.json",
