@@ -23,6 +23,10 @@ class EntityReferenceField extends ServiceReferenceField {
 
         if (value) {
             ; @todo check if entity exists
+
+            if (this.Definition["child"]) {
+                ; @todo Add validator for child entity
+            }
         }
         
         return validators
