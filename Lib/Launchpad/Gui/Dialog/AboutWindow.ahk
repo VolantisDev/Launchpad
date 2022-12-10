@@ -20,7 +20,7 @@ class AboutWindow extends DialogBox {
         }
 
         this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " y+" . (this.margin/2),  "Version: " . version)
-        text := this.app.appName . " lets you launch your games from any platform in a universally-compatible way. It was born out of frustration with trying to manage non-Steam games effectively, but it has grown hugely since those humble origins into a full-fledged game launching multi-tool."
+        text := this.app.appName . " lets you launch your games in a universally-compatible way. It was born out of frustration with trying to manage non-Steam games effectively, but it has grown since those humble origins into a full-fledged game launching multi-tool."
         text .= "`n`n" . this.app.appName . " was conceived and created by Ben McClure of Volantis Development. It is a free software project that welcomes contributions from everyone, including you!`n"
         this.guiObj.AddText("w" . this.windowSettings["contentWidth"], text)
         position := "Wrap x" . this.margin . " y+" . this.margin
