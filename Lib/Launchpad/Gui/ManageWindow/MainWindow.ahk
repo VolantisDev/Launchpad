@@ -104,7 +104,6 @@
         aboutItems := []
         aboutItems.Push(Map("label", "&About Launchpad", "name", "About"))
         aboutItems.Push(Map("label", "&Open Website", "name", "OpenWebsite"))
-        aboutItems.Push(Map("label", "Provide &Feedback", "name", "ProvideFeedback"))
 
         menuItems := []
         menuItems.Push(Map("label", "&Tools", "name", "ToolsMenu", "childItems", toolsItems))
@@ -114,6 +113,8 @@
         menuItems.Push("")
         menuItems.Push(Map("label", "&Settings", "name", "Settings"))
         menuItems.Push(Map("label", "Check for &Updates", "name", "CheckForUpdates"))
+        menuItems.Push("")
+        menuItems.Push(Map("label", "Provide &Feedback", "name", "ProvideFeedback"))
         menuItems.Push("")
         menuItems.Push(Map("label", "&Restart", "name", "Reload"))
         menuItems.Push(Map("label", "E&xit", "name", "Exit"))
