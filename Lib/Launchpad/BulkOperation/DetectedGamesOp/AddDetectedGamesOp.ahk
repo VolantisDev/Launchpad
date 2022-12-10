@@ -24,6 +24,8 @@ class AddDetectedGamesOp extends BulkOperationBase {
             this.state.State["DetectedGames"] := Map()
         }
 
+        modifiedLaunchers := false
+
         for key, detectedGameObj in this.detectedGames {
             this.StartItem(detectedGameObj.key, "Adding " . detectedGameObj.key . "...")
 
@@ -39,10 +41,14 @@ class AddDetectedGamesOp extends BulkOperationBase {
 
             this.state.State["DetectedGames"][detectedGameObj.platform.displayName][detectedGameObj.detectedKey] := detectedGameObj.key
             this.results[detectedGameObj.key] := true
+            modifiedLaunchers := true
             this.FinishItem(detectedGameObj.key, true, "Finished adding " . detectedGameObj.key . ".")
         }
 
         this.state.SaveState()
-        this.launcherManager.LoadComponents(true)
+
+        if (modifiedLaunchers) {
+            this.launcherManager.LoadComponents(true)
+        }
     }
 }
