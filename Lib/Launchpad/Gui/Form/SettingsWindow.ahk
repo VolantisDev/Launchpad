@@ -89,9 +89,16 @@
 
         this.AddHeading("Default Launcher Theme")
         chosen := this.GetItemIndex(this.availableThemes, this.app.Config["default_launcher_theme"])
-        ctl := this.guiObj.AddDDL("vdefault_launcher_theme xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.availableThemes)
+
+        defaultThemes := [""]
+
+        for , themeName in this.availableThemes {
+            defaultThemes.Push(themeName)
+        }
+
+        ctl := this.guiObj.AddDDL("vdefault_launcher_theme xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), defaultThemes)
         ctl.OnEvent("Change", "OnDefaultLauncherThemeChange")
-        ctl.ToolTip := "Select the theme your launchers will use unless overridden."
+        ctl.ToolTip := "Select the theme your launchers will use unless overridden. Leave blank to use Launchpad's current theme."
 
         this.AddConfigCheckBox("Allow launchers to specify their own theme", "enable_custom_launcher_themes")
 
