@@ -419,15 +419,9 @@ class EntityBase {
     }
 
     GetEditorButtons(mode) {
-        buttonDefs := ""
-
-        if (mode == "build") {
-            buttonDefs := "*&Continue|&Skip"
-        } else {
-            buttonDefs := "*&Save|&Cancel"
-        }
-
-        return buttonDefs
+        return (mode == "build")
+            ? "*&Continue|&Skip"
+            : "*&Save|&Cancel"
     }
 
     GetEditorDescription(mode) {
