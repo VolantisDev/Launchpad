@@ -18,7 +18,7 @@ class EntityData extends LayeredDataBase {
 
     _collectEntityStorage(layerSources) {
         if (!layerSources.Has("defaults")) {
-            layerSources["defaults"] := this.entity.InitializeDefaults()
+            layerSources["defaults"] := ObjBindMethod(this.entity, "InitializeDefaults")
         }
 
         event := EntityStorageEvent(EntityEvents.ENTITY_STORAGE_OBJECTS, this.entityTypeId, this.entity, layerSources)
