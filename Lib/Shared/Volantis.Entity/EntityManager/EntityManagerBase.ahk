@@ -12,7 +12,7 @@ class EntityManagerBase extends ComponentManagerBase {
 
         manager := container.Get("manager.entity_type")
 
-        for , childTypeId in manager.GetChildEntityTypeIds() {
+        for , childTypeId in manager.GetChildEntityTypeIds(entityTypeId) {
             serviceName := "entity_manager." . childTypeId
 
             if (container.Has(serviceName)) {
