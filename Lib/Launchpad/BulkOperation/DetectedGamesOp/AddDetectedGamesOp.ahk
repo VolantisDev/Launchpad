@@ -43,6 +43,6 @@ class AddDetectedGamesOp extends BulkOperationBase {
         }
 
         this.state.SaveState()
-        this.launcherManager.LoadComponents()
+        this.launcherManager.LoadComponents(true)
     }
 }
