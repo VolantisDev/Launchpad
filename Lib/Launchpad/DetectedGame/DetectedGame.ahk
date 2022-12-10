@@ -46,7 +46,8 @@ class DetectedGame {
             this.displayName != launcher["name"]
             || this.launcherType != launcher["ManagedLauncher"].EntityTypeId
             || this.gameType != launcher["ManagedGame"].EntityTypeId 
-            || this.installDir != launcher["ManagedGame"]["InstallDir"] 
+            || this.installDir != launcher["ManagedGame"]["InstallDir"]
+            || this.launcherInstallDir != launcher["ManagedLauncher"]["InstallDir"]
             || this.exeName != launcher["ManagedGame"]["Exe"] 
             || this.launcherSpecificId != launcher["ManagedGame"]["LauncherSpecificId"]
         ) {
