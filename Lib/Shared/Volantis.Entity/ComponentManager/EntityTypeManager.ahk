@@ -38,7 +38,7 @@ class EntityTypeManager extends ComponentManagerBase {
     GetChildEntityTypeIds(parentEntityTypeId) {
         return this.container.Query("entity_type.", ContainerQuery.RESULT_TYPE_NAMES, false, true)
             .Condition(HasFieldCondition("parent_entity_type"))
-            .Condition(MatchesCondition(entityTypeId), "parent_entity_type")
+            .Condition(MatchesCondition(parentEntityTypeId), "parent_entity_type")
             .Execute()
     }
 }
