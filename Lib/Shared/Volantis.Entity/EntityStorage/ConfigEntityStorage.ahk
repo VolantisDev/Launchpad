@@ -19,6 +19,7 @@ class ConfigEntityStorage extends EntityStorageBase {
     }
 
     DiscoverEntities() {
+        this.configObj.LoadConfig(true)
         return this.configObj.Keys()
     }
 
