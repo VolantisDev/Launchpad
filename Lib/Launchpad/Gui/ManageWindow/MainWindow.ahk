@@ -230,7 +230,7 @@
                 iconPath := this.GetItemImage(launcher)
                 displayName := launcher["name"]
 
-                if (launcher.Has("Platform", false, true)) {
+                if (launcher.Has("Platform", false)) {
                     platform := launcher["Platform"]
                     platformIconPath := this.GetPlatformImage(platform)
                     platformName := platform.GetName()

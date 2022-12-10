@@ -170,16 +170,12 @@ class FieldableEntity extends EntityBase {
         this.GetField(key).SetValue(value)
     }
 
-    Has(key, allowEmpty := true, checkDefault := false) {
+    Has(key, allowEmpty := true) {
         field := this.GetField(key)
         hasValue := field.HasValue()
 
         if (hasValue && !allowEmpty) {
             hasValue := !field.IsEmpty()
-        }
-
-        if (!hasValue && checkDefault && field.Definition["default"]) {
-            hasValue := true
         }
 
         return hasValue

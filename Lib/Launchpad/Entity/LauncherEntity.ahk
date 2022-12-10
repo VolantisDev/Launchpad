@@ -467,7 +467,7 @@ class LauncherEntity extends AppEntityBase {
             
             if (FileExist(checkPath)) {
                 detectedValues["IconSrc"] := checkPath
-            } else if (this.Has("ManagedGame", false, true) && this["ManagedGame"].Has("Exe", false, true)) {
+            } else if (this.Has("ManagedGame", false) && this["ManagedGame"].Has("Exe", false)) {
                 detectedValues["IconSrc"] := this["ManagedGame"].LocateExe()
             } else {
                 theme := this.container.Get("manager.theme").GetComponent()
