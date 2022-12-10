@@ -105,7 +105,7 @@ class DetectedGame {
             "GameType", this.gameType
         )
 
-        if (this.displayName) {
+        if (this.displayName && this.displayName != this.key) {
             config["name"] := this.displayName
         }
 
