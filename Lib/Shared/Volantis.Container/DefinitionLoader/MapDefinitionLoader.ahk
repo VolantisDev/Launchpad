@@ -21,7 +21,7 @@ class MapDefinitionLoader extends DefinitionLoaderBase {
     }
 
     LoadFromMap(dataObj, key := "", ignoreFailed := true) {
-        if (Type(dataObj) != "Map") {
+        if (!HasBase(dataObj, Map.Prototype)) {
             throw ContainerException("Services can only be loaded from a Map object")
         }
 
@@ -36,7 +36,7 @@ class MapDefinitionLoader extends DefinitionLoaderBase {
                 }
             }
 
-            if (Type(dataObj) != "Map") {
+            if (!HasBase(dataObj, Map.Prototype)) {
                 throw ContainerException("Services key " . key . " is not a valid map")
             }
         }

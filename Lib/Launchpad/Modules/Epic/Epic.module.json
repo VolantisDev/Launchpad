@@ -2,6 +2,7 @@
     "module": {
         "name": "Epic Platform",
         "icon": "",
+        "category": "Platforms",
         "tags": ["Launchpad", "LaunchpadLauncher"],
         "description": "Launch games installed through the Epic Games Launcher",
         "author": {
@@ -10,9 +11,10 @@
         },
         "website": "https://launchpad.games",
         "version": "{{VERSION}}",
+        "appVersion": "",
         "dependencies": []
     },
     "parameters": {
-        "platforms.Epic": "EpicPlatform"
+        "platforms.Epic.PlatformClass": "EpicPlatform"
     }
 }

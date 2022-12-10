@@ -13,7 +13,8 @@
         defaults["titlebar"] := false
         defaults["waitForResult"] := true
         defaults["menuTitle"] := "Menu"
-        defaults["positionAtMouseCursor"] := !(this.openAtCtl)
+        defaults["positionAtMouseCursor"] := !(this.openAtCtl),
+        defaults["alwaysOnTop"] := true
         return defaults
     }
 
@@ -28,7 +29,7 @@
         if (parent) {
             parent := container.Get("manager.gui").DereferenceGui(parent)
 
-            if (parent.HasBase(MenuGui.Prototype)) {
+            if (HasBase(parent, MenuGui.Prototype)) {
                 this.parentMenu := parent
             }
         }

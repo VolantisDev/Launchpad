@@ -29,6 +29,7 @@ class GuiBase {
     height := ""
     isShown := false
     config := ""
+    merger := ""
 
     GetDefaultConfig(container, config) {
         return Map(
@@ -49,7 +50,8 @@ class GuiBase {
             "positionAtMouseCursor", false,
             "openWindowWithinScreenBounds", true,
             "showInNotificationArea", false,
-            "showStatusIndicator", false
+            "showStatusIndicator", false,
+            "alwaysOnTop", false
         )
     }
 
@@ -57,6 +59,7 @@ class GuiBase {
         this.container := container
         this.app := container.GetApp()
         this.themeObj := themeObj
+        this.merger := container.Get("merger.list")
         this.config := this.MergeConfig(config, container)
 
         if (!this.config.Has("id") || !this.config["id"]) {
@@ -85,6 +88,8 @@ class GuiBase {
         if (this.windowSettingsKey == "") {
             this.windowSettingsKey := Type(this)
         }
+
+        extraOptions["AlwaysOnTop"] := !!(this.config["alwaysOnTop"])
         
         this.windowSettings := themeObj.GetWindowSettings(this.windowSettingsKey)
         this.windowOptions := themeObj.GetWindowOptionsString(this.windowSettingsKey, extraOptions)
@@ -521,8 +526,6 @@ class GuiBase {
     }
 
     OnShow(windowState := "") {
-        
-
         if (this.lvHeaderHwnd) {
             WinRedraw("ahk_id " . this.lvHeaderHwnd)
         }

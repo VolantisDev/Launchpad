@@ -7,8 +7,7 @@ class BasicControl extends GuiControlBase {
             defaults.Push("c" . this.guiObj.themeObj.GetColor("editText"))
         }
 
-        opts := this.SetDefaultOptions(this.options, defaults)
-        this.ctl := this.guiObj.guiObj.Add(ctlType, this.GetOptionsString(opts), params*)
+        this.ctl := this.guiObj.guiObj.Add(ctlType, this.parameters.GetOptionsString(this.parameters["options"], defaults), params*)
 
         if (value) {
             this.SetText(value)

@@ -1,7 +1,7 @@
 class GameAhkFile extends ComposableBuildFile {
     __New(launcherEntityObj, destPath := "") {
         if (destPath == "") {
-            destPath := launcherEntityObj.AssetsDir . "\" . launcherEntityObj.Key . ".ahk"
+            destPath := launcherEntityObj["AssetsDir"] . "\" . launcherEntityObj.Id . ".ahk"
         }
 
         super.__New(launcherEntityObj, destPath)
@@ -11,16 +11,16 @@ class GameAhkFile extends ComposableBuildFile {
         global appVersion
 
         data := Map(
-            "launcherName", this.launcherEntityObj.Key . " - Launchpad",
+            "launcherName", this.launcherEntityObj.Id . " - Launchpad",
             "appVersion", appVersion,
             "appDir", this.appDir,
-            "gameConfig", this.launcherEntityObj.ManagedLauncher.ManagedGame.Config,
-            "launchpadLauncherConfig", this.launcherEntityObj.Config,
-            "launcherConfig", this.launcherEntityObj.ManagedLauncher.Config,
-            "launcherKey", this.launcherEntityObj.Key,
-            "themesDir", this.launcherEntityObj.ThemesDir,
-            "resourcesDir", this.launcherEntityObj.ResourcesDir,
-            "themeName", this.launcherEntityObj.ThemeName,
+            "gameConfig", this.launcherEntityObj["ManagedGame"].FieldData,
+            "launchpadLauncherConfig", this.launcherEntityObj.FieldData,
+            "launcherConfig", this.launcherEntityObj["ManagedLauncher"].FieldData,
+            "launcherId", this.launcherEntityObj.Id,
+            "themesDir", this.launcherEntityObj["ThemesDir"],
+            "resourcesDir", this.launcherEntityObj["ResourcesDir"],
+            "themeName", this.launcherEntityObj["Theme"].name,
             "platforms", this.GetPlatforms()
         )
 
@@ -35,8 +35,8 @@ class GameAhkFile extends ComposableBuildFile {
     GetPlatforms() {
         platforms := Map()
 
-        for key, platform in this.app.Service("manager.platform").GetActivePlatforms() {
-            platforms[key] := platform.Config
+        for key, platform in this.app.Service("entity_manager.platform").GetActivePlatforms(EntityQuery.RESULT_TYPE_ENTITIES) {
+            platforms[key] := platform.FieldData
         }
 
         return platforms

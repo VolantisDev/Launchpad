@@ -5,9 +5,9 @@
     showDetailsPane := true
 
     __New(container, themeObj, config) {
-        this.launcherManager := container.Get("manager.launcher")
-        this.platformManager := container.Get("manager.platform")
-        this.lvCount := this.launcherManager.CountEntities()
+        this.launcherManager := container.Get("entity_manager.launcher")
+        this.platformManager := container.Get("entity_manager.platform")
+        this.lvCount := this.launcherManager.Count(true)
         super.__New(container, themeObj, config)
     }
 
@@ -17,7 +17,7 @@
         defaults["child"] := false
         defaults["title"] := container.GetApp().appName
         defaults["titleIsMenu"] := true
-        defaults["showStatusIndicator"] := !!(container.Get("Config").Has("api_authentication") && container.Get("Config")["api_authentication"])
+        defaults["showStatusIndicator"] := !!(container.Get("config.app").Has("api_authentication") && container.Get("config.app")["api_authentication"])
         return defaults
     }
 
@@ -31,10 +31,10 @@
     }
 
     ShowListViewContextMenu(lv, item, isRightClick, X, Y) {
-        launcherKey := this.listView.GetRowKey(item)
+        launcherId := this.listView.GetRowKey(item)
 
-        if (launcherKey) {
-            launcher := this.launcherManager.Entities[launcherKey]
+        if (launcherId) {
+            launcher := this.launcherManager[launcherId]
 
             menuItems := []
             menuItems.Push(Map("label", "Edit", "name", "EditLauncher"))
@@ -42,28 +42,28 @@
             menuItems.Push(Map("label", "Run", "name", "RunLauncher"))
             menuItems.Push(Map("label", "Delete", "name", "DeleteLauncher"))
 
-            result := this.app.Service("manager.gui").Menu(menuItems, this)
+            result := this.container["manager.gui"].Menu(menuItems, this)
 
             if (result == "EditLauncher") {
-                this.EditLauncher(launcherKey)
+                this.EditLauncher(launcherId)
             } else if (result == "BuildLauncher") {
-                this.app.Service("manager.builder").BuildLaunchers(Map(launcherKey, launcher), true)
+                this.container["manager.builder"].BuildLaunchers(Map(launcherId, launcher), true)
                 this.UpdateListView()
             } else if (result == "RunLauncher") {
-                this.RunLauncher(launcherKey)
+                this.RunLauncher(launcherId)
             } else if (result == "DeleteLauncher") {
-                this.DeleteLauncher(launcherKey, item)
+                this.DeleteLauncher(launcherId, item)
             }
         }
     }
 
-    DeleteLauncher(launcherKey, rowNum := "") {
-        launcher := this.launcherManager.Entities[launcherKey]
-        result := this.app.Service("manager.gui").Dialog(Map(
+    DeleteLauncher(launcherId, rowNum := "") {
+        launcher := this.launcherManager[launcherId]
+        result := this.container["manager.gui"].Dialog(Map(
             "type", "LauncherDeleteWindow",
             "ownerOrParent", this.guiId,
             "child", true,
-        ), launcher, this.app.Services.Get("manager.launcher"))
+        ), launcher, this.launcherManager)
 
         if (result == "Delete") {
             if (rowNum == "") {
@@ -78,11 +78,11 @@
         }
     }
 
-    RunLauncher(launcherKey) {
-        launcher := this.launcherManager.Entities[launcherKey]
+    RunLauncher(launcherId) {
+        launcher := this.launcherManager[launcherId]
 
         if (launcher && launcher.IsBuilt) {
-            filePath := launcher.GetLauncherFile(launcherKey, false)
+            filePath := launcher.GetLauncherFile(launcherId, false)
 
             if (filePath) {
                 Run(filePath,, "Hide")
@@ -104,7 +104,6 @@
         aboutItems := []
         aboutItems.Push(Map("label", "&About Launchpad", "name", "About"))
         aboutItems.Push(Map("label", "&Open Website", "name", "OpenWebsite"))
-        aboutItems.Push(Map("label", "Provide &Feedback", "name", "ProvideFeedback"))
 
         menuItems := []
         menuItems.Push(Map("label", "&Tools", "name", "ToolsMenu", "childItems", toolsItems))
@@ -115,32 +114,34 @@
         menuItems.Push(Map("label", "&Settings", "name", "Settings"))
         menuItems.Push(Map("label", "Check for &Updates", "name", "CheckForUpdates"))
         menuItems.Push("")
+        menuItems.Push(Map("label", "Provide &Feedback", "name", "ProvideFeedback"))
+        menuItems.Push("")
         menuItems.Push(Map("label", "&Restart", "name", "Reload"))
         menuItems.Push(Map("label", "E&xit", "name", "Exit"))
         
-        result := this.app.Service("manager.gui").Menu(menuItems, this, this.guiObj["WindowTitleText"])
+        result := this.container["manager.gui"].Menu(menuItems, this, this.guiObj["WindowTitleText"])
 
         if (result == "ManagePlatforms") {
-            this.app.Service("manager.gui").OpenWindow("PlatformsWindow")
+            this.container["manager.gui"].OpenWindow("PlatformsWindow")
         } else if (result == "ManageBackups") {
-            this.app.Service("manager.gui").OpenWindow("ManageBackupsWindow")
+            this.container["manager.gui"].OpenWindow("ManageBackupsWindow")
         } else if (result == "ManageModules") {
-            this.app.Service("manager.gui").OpenWindow("ManageModulesWindow")
+            this.container["manager.gui"].OpenWindow("ManageModulesWindow")
         } else if (result == "FlushCache") {
-            this.app.Service("manager.cache").FlushCaches(true, true)
+            this.container["manager.cache"].FlushCaches(true, true)
         } else if (result == "CleanLaunchers") {
-            this.app.Service("manager.builder").CleanLaunchers()
+            this.container["manager.builder"].CleanLaunchers()
         } else if (result == "ReloadLaunchers") {
-            this.app.Service("manager.launcher").LoadComponents(this.app.Config["launcher_file"])
+            this.launcherManager.LoadComponents(true)
             this.UpdateListView()
         } else if (result == "About") {
-            this.app.Service("manager.gui").Dialog(Map("type", "AboutWindow"))
+            this.container["manager.gui"].Dialog(Map("type", "AboutWindow"))
         } else if (result == "OpenWebsite") {
             this.app.OpenWebsite()
         } else if (result == "ProvideFeedback") {
             this.app.ProvideFeedback()
         } else if (result == "Settings") {
-            this.app.Service("manager.gui").Dialog(Map("type", "SettingsWindow", "unique", false))
+            this.container["manager.gui"].Dialog(Map("type", "SettingsWindow", "unique", false))
         } else if (result == "CheckForUpdates") {
             this.app.CheckForUpdates()
         } else if (result == "Reload") {
@@ -153,8 +154,8 @@
     GetStatusInfo() {
         info := ""
 
-        if (this.app.Services.Has("Auth")) {
-            info := this.app.Service("Auth").GetStatusInfo()
+        if (this.container.Has("Auth")) {
+            info := this.container["Auth"].GetStatusInfo()
         }
 
         return info
@@ -163,8 +164,8 @@
     OnStatusIndicatorClick(btn, info) {
         menuItems := []
 
-        if (this.app.Services.Has("Auth")) {
-            if (this.app.Service("Auth").IsAuthenticated()) {
+        if (this.container.Has("Auth")) {
+            if (this.container["Auth"].IsAuthenticated()) {
                 menuItems.Push(Map("label", "Account Details", "name", "AccountDetails"))
                 menuItems.Push(Map("label", "Logout", "name", "Logout"))
             } else {
@@ -172,10 +173,10 @@
             }
         }
 
-        result := this.app.Service("manager.gui").Menu(menuItems, this, btn)
+        result := this.container["manager.gui"].Menu(menuItems, this, btn)
 
         if (result == "AccountDetails") {
-            accountResult := this.app.Service("manager.gui").Dialog(Map(
+            accountResult := this.container["manager.gui"].Dialog(Map(
                 "type", "AccountInfoWindow",
                 "ownerOrParent", this.guiId,
                 "child", true
@@ -185,12 +186,12 @@
                 this.UpdateStatusIndicator()
             }
         } else if (result == "Logout") {
-            if (this.app.Services.Has("Auth")) {
-                this.app.Service("Auth").Logout()
+            if (this.container.Has("Auth")) {
+                this.container["Auth"].Logout()
             }
         } else if (result == "Login") {
-            if (this.app.Services.Has("Auth")) {
-                this.app.Service("Auth").Login()
+            if (this.container.Has("Auth")) {
+                this.container["Auth"].Login()
             }
         }
     }
@@ -198,8 +199,8 @@
     StatusWindowIsOnline() {
         isOnline := false
 
-        if (this.app.Services.Has("Auth")) {
-            isOnline := this.app.Service("Auth").IsAuthenticated()
+        if (this.container.Has("Auth")) {
+            isOnline := this.container["Auth"].IsAuthenticated()
         }
         return isOnline
     }
@@ -223,23 +224,20 @@
         built := ""
 
         if (key) {
-            launcher := this.launcherManager.Entities[key]
+            launcher := this.launcherManager[key]
 
             if (launcher) {
                 iconPath := this.GetItemImage(launcher)
-                displayName := launcher.DisplayName
+                displayName := launcher["name"]
 
-                manager := this.app.Service("manager.platform")
-
-                if (launcher.Platform && manager.HasItem(launcher.Platform)) {
-                    platform := manager.GetItem(launcher.Platform)
+                if (launcher.Has("Platform", false)) {
+                    platform := launcher["Platform"]
                     platformIconPath := this.GetPlatformImage(platform)
-                    platformName := platform.GetDisplayName()
+                    platformName := platform.GetName()
                 }
 
-                platformIconPath := 
                 status := launcher.GetStatus()
-                apiStatus := launcher.DataSourceItemKey ? "Linked" : "Not linked"
+                apiStatus := launcher["DataSourceItemKey"] ? "Linked" : "Not linked"
                 created := this.FormatDate(this.app.State.GetLauncherCreated(key))
                 updated := this.FormatDate(this.app.State.GetLauncherInfo("Config")["Timestamp"])
                 built := this.FormatDate(this.app.State.GetLauncherInfo("Build")["Timestamp"])
@@ -305,7 +303,7 @@
         }
         this.Add("ButtonControl", opts, "Delete", "OnDetailsDeleteButton", "detailsButton")
 
-        this.AddDetailsField("Key", "Key", key, "+" . (this.margin*2))
+        this.AddDetailsField("Id", "Id", key, "+" . (this.margin*2))
         this.AddDetailsField("Platform", "Platform", platformName, "", true, platformIconPath)
         this.AddDetailsField("Status", "Status", status)
         this.AddDetailsField("ApiStatus", "API Status", apiStatus)
@@ -370,8 +368,8 @@
 
         if (selected.Length > 0) {
             key := selected[1]
-            launcher := this.launcherManager.Entities[key]
-            this.app.Service("manager.builder").BuildLaunchers(Map(key, launcher), true)
+            launcher := this.launcherManager[key]
+            this.container["manager.builder"].BuildLaunchers(Map(key, launcher), true)
             this.UpdateListView()
         }
     }
@@ -404,20 +402,18 @@
         built := ""
 
         if (key != "") {
-            launcher := this.launcherManager.Entities[key]
+            launcher := this.launcherManager[key]
             iconPath := this.GetItemImage(launcher)
-            displayName := launcher.DisplayName
+            displayName := launcher["name"]
 
-            manager := this.app.Service("manager.platform")
-
-            if (launcher.Platform && manager.HasItem(launcher.Platform)) {
-                platform := manager.GetItem(launcher.Platform)
+            if (launcher.Has("Platform", false)) {
+                platform := launcher["Platform"]
                 platformIconPath := this.GetPlatformImage(platform)
-                platformName := platform.GetDisplayName()
+                platformName := platform.GetName()
             }
 
             status := launcher.GetStatus()
-            apiStatus := launcher.DataSourceItemKey ? "Linked" : "Not linked"
+            apiStatus := launcher["DataSourceItemKey"] ? "Linked" : "Not linked"
             created := this.FormatDate(this.app.State.GetLauncherCreated(key))
             updated := this.FormatDate(this.app.State.GetLauncherInfo(key, "Config")["Timestamp"])
             built := this.FormatDate(this.app.State.GetLauncherInfo(key, "Build")["Timestamp"])
@@ -437,10 +433,10 @@
         this.guiObj["DetailsBuildButton"].Visible := (key != "")
         this.guiObj["DetailsEditButton"].Visible := (key != "")
         this.guiObj["DetailsDeleteButton"].Visible := (key != "")
-        this.guiObj["DetailsKeyText"].Visible := (key != "")
-        this.guiObj["DetailsKeyText"].Text := key
-        this.guiObj["DetailsKeyText"].Visible := (key != "")
-        this.guiObj["DetailsKeyLabel"].Visible := (key != "")
+        this.guiObj["DetailsIdText"].Visible := (key != "")
+        this.guiObj["DetailsIdText"].Text := key
+        this.guiObj["DetailsIdText"].Visible := (key != "")
+        this.guiObj["DetailsIdLabel"].Visible := (key != "")
         this.guiObj["DetailsPlatformText"].Visible := (key != "")
         this.guiObj["DetailsPlatformText"].Text := platformName
         this.guiObj["DetailsPlatformText"].Visible := (key != "")
@@ -468,20 +464,8 @@
     GetListViewData(lv) {
         data := Map()
 
-        for key, launcher in this.launcherManager.Entities {
-            apiStatus := launcher.DataSourceItemKey ? "Linked" : "Not linked"
-            platformName := launcher.Platform
-
-            if (platformName && this.platformManager.HasItem(platformName)) {
-                platformObj := this.platformManager.GetItem(platformName)
-
-                if (platformObj) {
-                    platformName := platformObj.platform.displayName
-                }
-            }
-
-            ;data[key] := [launcher.DisplayName, platformName, launcher.GetStatus(), apiStatus]
-            data[key] := [launcher.DisplayName]
+        for key, launcher in this.launcherManager {
+            data[key] := [launcher["name"]]
         }
 
         return data
@@ -495,7 +479,7 @@
         shouldHighlight := false
 
         if (key) {
-            launcher := this.launcherManager.GetItem(key)
+            launcher := this.launcherManager[key]
             shouldHighlight := launcher.GetStatus() != "Ready"
         }
         
@@ -503,11 +487,11 @@
     }
 
     GetListViewImgList(lv, large := false) {
-        IL := IL_Create(this.launcherManager.CountEntities(), 1, large)
+        IL := IL_Create(this.launcherManager.Count(true), 1, large)
         defaultIcon := this.themeObj.GetIconPath("Game")
         iconNum := 1
 
-        for key, launcher in this.launcherManager.Entities {
+        for key, launcher in this.launcherManager {
             iconSrc := this.GetItemImage(launcher)
             newIndex := IL_Add(IL, iconSrc)
 
@@ -522,8 +506,8 @@
     }
 
     GetItemImage(launcher) {
-        iconSrc := launcher.IconSrc
-        assetIcon := launcher.AssetsDir . "\" . launcher.Key . ".ico"
+        iconSrc := launcher["IconSrc"]
+        assetIcon := launcher["AssetsDir"] . "\" . launcher.Id . ".ico"
         defaultIcon := this.themeObj.GetIconPath("Game")
 
         if ((!iconSrc || !FileExist(iconSrc)) && FileExist(assetIcon)) {
@@ -538,7 +522,7 @@
     }
 
     GetPlatformImage(platform) {
-        iconSrc := platform.IconSrc
+        iconSrc := platform["IconSrc"]
         ; TODO: Find a good default platform icon
         defaultIcon := ""
 
@@ -560,38 +544,39 @@
     }
 
     EditLauncher(key) {
-        entity := this.launcherManager.Entities[key]
-        diff := entity.Edit("config", this.guiId)
-        keyChanged := (entity.Key != key)
+        entity := this.launcherManager[key]
+        formMode := this.app.Config["use_advanced_launcher_editor"] ? "config" : "simple"
+        diff := entity.Edit(formMode, this.guiId)
+        keyChanged := (entity.Id != key)
 
         if (keyChanged || diff != "" && diff.HasChanges()) {
             if (keyChanged) {
                 this.launcherManager.RemoveEntity(key)
-                this.launcherManager.AddEntity(entity.Key, entity)
+                this.launcherManager.AddEntity(entity.Id, entity)
             }
 
-            this.launcherManager.SaveModifiedEntities()
+            entity.SaveEntity()
             entity.UpdateDataSourceDefaults()
             this.UpdateListView()
         }
     }
 
     ImportShortcut() {
-        entity := this.app.Service("manager.gui").Dialog(Map("type", "ImportShortcutForm", "ownerOrParent", this.guiId))
+        entity := this.container["manager.gui"].Dialog(Map("type", "ImportShortcutForm", "ownerOrParent", this.guiId))
 
         if (entity) {
-            this.launcherManager.AddEntity(entity.Key, entity)
-            this.launcherManager.SaveModifiedEntities()
+            this.launcherManager.AddEntity(entity.Id, entity)
+            entity.SaveEntity()
             this.UpdateListView()
         }
     }
 
     AddLauncher() {
-        entity := this.app.Service("manager.gui").Dialog(Map("type", "LauncherWizard", "ownerOrParent", this.guiId))
+        entity := this.container["manager.gui"].Dialog(Map("type", "LauncherWizard", "ownerOrParent", this.guiId))
 
         if (entity) {
-            this.launcherManager.AddEntity(entity.Key, entity)
-            this.launcherManager.SaveModifiedEntities()
+            this.launcherManager.AddEntity(entity.Id, entity)
+            entity.SaveEntity()
             this.UpdateListView()
         }
     }
@@ -602,7 +587,7 @@
 
         if (selected > 0) {
             key := this.listView.GetRowKey(selected)
-            launcherObj := this.launcherManager.Entities[key]
+            launcherObj := this.launcherManager[key]
             showButton := launcherObj.IsBuilt
         }
 
@@ -615,19 +600,19 @@
         menuItems.Push(Map("label", "&Import Shortcut", "name", "ImportShortcut"))
         menuItems.Push(Map("label", "&Detect Games", "name", "DetectGames"))
 
-        result := this.app.Service("manager.gui").Menu(menuItems, this, btn)
+        result := this.container["manager.gui"].Menu(menuItems, this, btn)
 
         if (result == "AddGame") {
             this.AddLauncher()
         } else if (result == "ImportShortcut") {
             this.ImportShortcut()
         } else if (result == "DetectGames") {
-            this.app.Service("manager.platform").DetectGames()
+            this.platformManager.DetectGames()
         }
     }
 
     OnBuildAllButton(btn, info) {
-        this.app.Service("manager.builder").BuildLaunchers(this.app.Service("manager.launcher").Entities, this.app.Config["rebuild_existing_launchers"])
+        this.container["manager.builder"].BuildLaunchers(this.launcherManager.All("", false, true), this.app.Config["rebuild_existing_launchers"])
         this.UpdateListView()
     }
 

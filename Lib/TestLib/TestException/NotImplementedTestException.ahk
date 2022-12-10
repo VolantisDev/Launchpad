@@ -1,0 +1,3 @@
+class NotImplementedTestException extends TestException {
+    
+}

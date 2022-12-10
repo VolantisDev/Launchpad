@@ -19,7 +19,7 @@ class InstallOp extends BulkOperationBase {
             name := "installer." . name
             installer := this.app.Service(name)
 
-            if (!installer.HasBase(InstallerBase.Prototype)) {
+            if (!HasBase(installer, InstallerBase.Prototype)) {
                 throw AppException("Provided installer is not valid: " . name)
             }
 
@@ -34,6 +34,6 @@ class InstallOp extends BulkOperationBase {
     }
 
     CountInstallerItems() {
-        return Type(this.installers) == "Array" ? this.installers.Length : this.installers.Count
+        return HasBase(this.installers, Array.Prototype) ? this.installers.Length : this.installers.Count
     }
 }

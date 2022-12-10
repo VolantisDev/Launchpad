@@ -2,6 +2,7 @@
     "module": {
         "name": "Launchpad API",
         "icon": "",
+        "category": "Web Services",
         "tags": ["Launchpad", "LaunchpadBuilder"],
         "description": "Connect with Launchpad.games to sync game details and share your launchers and themes",
         "author": {
@@ -10,16 +11,17 @@
         },
         "website": "https://launchpad.games",
         "version": "{{VERSION}}",
+        "appVersion": "",
         "dependencies": ["Auth"]
     },
     "services": {
-        "datasource.api": {
+        "data_source.api": {
             "class": "ApiDataSource",
             "arguments": ["@{App}", "@manager.cache", "api", "@@config.api_endpoint"]
         },
         "auth_provider.launchpad_api": {
             "class": "LaunchpadApiAuthProvider",
-            "arguments": ["@{App}", "@State"]
+            "arguments": ["@{App}", "@state.app"]
         },
         "cache_state.api": {
             "class": "CacheState",

@@ -74,7 +74,7 @@ class GuiFactory {
         guiType := this.GetGuiType(config, params*)
         guiClass := guiType
 
-        if (Type(config) == "Map" && config.Has("class")) {
+        if (HasBase(config, Map.Prototype) && config.Has("class")) {
             guiClass := config["class"]
         } else if (this.typeMap.Has(guiType)) {
             if (Type(this.typeMap[guiType]) == "String") {
@@ -110,7 +110,7 @@ class GuiFactory {
             newConfig[key] := val
         }
 
-        if (Type(config) == "Map") {
+        if (HasBase(config, Map.Prototype)) {
             for key, val in config {
                 newConfig[key] := val
             }
@@ -133,7 +133,7 @@ class GuiFactory {
     }
 
     GetGuiId(config, params*) {
-        config := this.GetGuiCOnfig(config, params*)
+        config := this.GetGuiConfig(config, params*)
         return config["id"]
     }
 

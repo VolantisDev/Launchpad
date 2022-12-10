@@ -1,0 +1,3 @@
+class FileSystemTestException extends TestException {
+    
+}

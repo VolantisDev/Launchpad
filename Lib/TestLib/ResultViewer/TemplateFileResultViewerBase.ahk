@@ -1,27 +1,42 @@
 class TemplateFileResultViewerBase extends FileResultViewerBase {
-    templateFile := ""
+    rendered := ""
+    templateContent := ""
 
-    __New(templateFile, outputFile := "", fileExt := "") {
-        this.templateFile := templateFile
-        super.__New(outputFile, fileExt)
+    __New(title := "", templateContent := "", outputFile := "", fileExt := "") {
+        this.templateContent := templateContent
+        super.__New(title, outputFile, fileExt)
+    }
+
+    SetTemplate(templateContent) {
+        this.templateContent := templateContent
+        return this
     }
 
     RenderResults(results) {
-        if (!this.templateFile) {
-            throw AppException("No template file provided for rendering results.")
+        if (!this.templateContent) {
+            throw TestException("No template provided for rendering results.")
         }
 
-        template := FileRead(this.templateFile)
-        content := StrReplace(template, "{{results}}", this.RenderResultItems(results))
+        content := this.templateContent
+        content := StrReplace(content, "{{title}}", this.testTitle)
+        content := StrReplace(content, "{{results}}", this.RenderResultItems(results))
 
-        if (FileExist(this.outputFile)) {
-            FileDelete(this.outputFile)
+        this.StoreRenderedResults(content)
+    }
+
+    StoreRenderedResults(output) {
+        if (this.usesOutputFile) {
+            if (FileExist(this.outputFile)) {
+                FileDelete(this.outputFile)
+            }
+
+            FileAppend(output, this.outputFile)
+        } else {
+            this.rendered := output
         }
-
-        FileAppend(content, this.outputFile)
     }
 
     RenderResultItems(results) {
-        throw MethodNotImplementedException("TemplateFileResultViewerBase", "RenderResultItems")
+        throw NotImplementedTestException("The RenderResultItems method has not been implemented.")
     }
 }

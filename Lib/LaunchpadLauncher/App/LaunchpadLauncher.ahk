@@ -6,7 +6,7 @@ class LaunchpadLauncher extends AppBase {
             parameters["config." . key] := val
         }
 
-        parameters["launcher_key"] := config["launcherKey"]
+        parameters["launcher_key"] := config["launcherId"]
         parameters["launcher_config"] := config["launcherConfig"]
         parameters["game_config"] := config["gameConfig"]
         parameters["platforms"] := config["platforms"]
@@ -17,7 +17,7 @@ class LaunchpadLauncher extends AppBase {
     GetServiceDefinitions(config) {
         services := super.GetServiceDefinitions(config)
 
-        services["Config"] := Map(
+        services["config.app"] := Map(
             "class", "RuntimeConfig",
             "arguments", [
                 ContainerRef(),
@@ -25,7 +25,7 @@ class LaunchpadLauncher extends AppBase {
             ]
         )
 
-        services["State"] := Map(
+        services["state.app"] := Map(
             "class", "LaunchpadLauncherState",
             "arguments", [AppRef(), ParameterRef("state_path")]
         )
@@ -55,7 +55,7 @@ class LaunchpadLauncher extends AppBase {
                 ServiceRef("Game"),
                 ParameterRef("config"), 
                 ParameterRef("launcher_config"),
-                ServiceRef("Logger")
+                ServiceRef("logger")
             ]
         )
         

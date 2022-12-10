@@ -78,7 +78,7 @@ class IconSelector extends DialogBox {
         lvStyles := "+LV" . LVS_EX_LABELTIP . " +LV" . LVS_EX_DOUBLEBUFFER . " +LV" . LVS_EX_FLATSB . " -E0x200"
         lvStyles .= " +LV" . LVS_EX_TRANSPARENTBKGND . " +LV" . LVS_EX_TRANSPARENTSHADOWTEXT
         listViewWidth := this.windowSettings["contentWidth"]
-        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " +Icon " . styling . " Count" . this.platformManager.CountEntities() . " Section +Report -Multi " . lvStyles, this.listViewColumns)
+        lv := this.guiObj.AddListView("vListView w" . listViewWidth . " h" . this.windowSettings["listViewHeight"] . " +Icon " . styling . " Count" . this.platformManager.Count(true) . " Section +Report -Multi " . lvStyles, this.listViewColumns)
         lv.OnEvent("DoubleClick", "OnDoubleClick")
         lv.OnEvent("ItemSelect", "OnItemSelect")
         this.UpdateListView()

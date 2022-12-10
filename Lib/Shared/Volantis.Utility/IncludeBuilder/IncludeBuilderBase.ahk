@@ -3,10 +3,11 @@ class IncludeBuilderBase {
     filePattern := "*"
     recursive := true
     removeBase := false
-    excludeExtensions := []
+    excludeExtensions := ""
+    includeExtensions := ""
     
-    __New(basePaths, filePattern := "", recursive := true, removeBase := false, excludeExtensions := "") {
-        if (Type(basePaths) != "Array") {
+    __New(basePaths, filePattern := "", recursive := true, removeBase := false, excludeExtensions := "", includeExtensions := "") {
+        if (!HasBase(basePaths, Array.Prototype)) {
             basePaths := [basePaths]
         }
         
@@ -20,11 +21,19 @@ class IncludeBuilderBase {
         this.removeBase := removeBase
 
         if (excludeExtensions) {
-            if (Type(excludeExtensions) != "Array") {
+            if (!HasBase(excludeExtensions, Array.Prototype)) {
                 excludeExtensions := [excludeExtensions]
             }
 
             this.excludeExtensions := excludeExtensions
+        }
+
+        if (includeExtensions) {
+            if (!HasBase(includeExtensions, Array.Prototype)) {
+                includeExtensions := [includeExtensions]
+            }
+
+            this.includeExtensions := includeExtensions
         }
     }
 
@@ -53,12 +62,27 @@ class IncludeBuilderBase {
     ShouldInclude(path) {
         shouldInclude := true
 
-        for index, extension in this.excludeExtensions {
-            extLen := StrLen(extension)
+        if (this.includeExtensions) {
+            shouldInclude := false
 
-            if (SubStr(path, -extLen) == extension) {
-                shouldInclude := false
-                break
+            for index, extension in this.includeExtensions {
+                extLen := StrLen(extension)
+
+                if (SubStr(path, -extLen) == extension) {
+                    shouldInclude := true
+                    break
+                }
+            }
+        }
+
+        if (shouldInclude && this.excludeExtensions) {
+            for index, extension in this.excludeExtensions {
+                extLen := StrLen(extension)
+
+                if (SubStr(path, -extLen) == extension) {
+                    shouldInclude := false
+                    break
+                }
             }
         }
 

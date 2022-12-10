@@ -6,14 +6,14 @@ class ShortcutFile extends CopyableBuildFile {
         if (destPath == "") {
             ext := ".lnk"
 
-            if (launcherEntityObj.ManagedLauncher.ManagedGame.ShortcutSrc != "" && SubStr(launcherEntityObj.ManagedLauncher.ManagedGame.ShortcutSrc, -4) == ".url") {
+            if (launcherEntityObj["ManagedGame"]["ShortcutSrc"] != "" && SubStr(launcherEntityObj["ManagedGame"]["ShortcutSrc"], -4) == ".url") {
                 ext := ".url"
             }
             
-            destPath := launcherEntityObj.AssetsDir . "\" . launcherEntityObj.Key . ext
+            destPath := launcherEntityObj["AssetsDir"] . "\" . launcherEntityObj.Id . ext
         }
 
-        super.__New(launcherEntityObj, launcherEntityObj.ManagedLauncher.ManagedGame.ShortcutSrc, destPath)
+        super.__New(launcherEntityObj, launcherEntityObj["ManagedGame"]["ShortcutSrc"], destPath)
     }
 
     Locate() {

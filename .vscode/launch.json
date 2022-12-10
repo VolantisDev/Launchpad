@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launchpad Debug",
+            "name": "Launchpad (Debug)",
             "type": "autohotkey",
             "request": "launch",
             "runtime": "${workspaceFolder}/Vendor/AutoHotkey/AutoHotKey64.exe",
@@ -13,7 +13,15 @@
             "env": {"LAUNCHPAD_DEBUG": "1"}
         },
         {
-            "name": "Launchpad Overlay Debug",
+            "name": "Launchpad Test (Debug)",
+            "type": "autohotkey",
+            "request": "launch",
+            "runtime": "${workspaceFolder}/Vendor/AutoHotkey/AutoHotKey64.exe",
+            "program": "${workspaceFolder}/LaunchpadTest.ahk",
+            "env": {"LAUNCHPAD_DEBUG": "1"}
+        },
+        {
+            "name": "Launchpad Overlay (Debug)",
             "type": "clr",
             "request": "launch",
             "preLaunchTask": "build-overlay-debug",

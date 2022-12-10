@@ -2,6 +2,7 @@
     "module": {
         "name": "Blizzard Platform",
         "icon": "",
+        "category": "Platforms",
         "tags": ["Launchpad", "LaunchpadLauncher"],
         "description": "Launch games installed through Blizzard's Battle.net client",
         "author": {
@@ -10,12 +11,13 @@
         },
         "website": "https://launchpad.games",
         "version": "{{VERSION}}",
+        "appVersion": "",
         "dependencies": []
     },
     "services": {
         "BlizzardProductDb": "BlizzardProductDb"
     },
     "parameters": {
-        "platforms.Blizzard": "BlizzardPlatform"
+        "platforms.Blizzard.PlatformClass": "BlizzardPlatform"
     }
 }

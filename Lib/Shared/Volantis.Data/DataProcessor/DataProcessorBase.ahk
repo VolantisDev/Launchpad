@@ -3,7 +3,7 @@ class DataProcessorBase {
         if (this.AppliesTo(value)) {
             if (Type(value) == "String") {
                 value := this.ProcessSingleValue(value)
-            } else if (Type(value) == "Array" || Type(value) == "Map") {
+            } else if (HasBase(value, Array.Prototype) || HasBase(value, Map.Prototype)) {
                 for key, arrayVal in value {
                     value[key] := this.Process(arrayVal)
                 }
@@ -18,7 +18,10 @@ class DataProcessorBase {
     }
 
     AppliesTo(value) {
-        objType := Type(value)
-        return (objType == "String" || objType == "Map" || objType == "Array")
+        return (
+            Type(value) == "String" 
+            || HasBase(value, Map.Prototype) 
+            || HasBase(value, Array.Prototype)
+        )
     }
 }

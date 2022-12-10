@@ -7,17 +7,16 @@ class TabsControl extends GuiControlBase {
         super.CreateControl(false)
         this.tabs := tabs
 
-        defaults := []
-        defaults.Push("w" . this.guiObj.windowSettings["contentWidth"])
-        defaults.Push("C" . this.guiObj.themeObj.GetColor("text"))
-        defaults.Push("Background" . this.guiObj.themeObj.GetColor("background"))
-        defaults.Push("+0x100")
-        defaults.Push("+" . TabsControl.TCS_OWNERDRAWFIXED)
-        defaults.Push("x" . this.guiObj.margin)
-        defaults.Push("y+" . this.guiObj.margin)
-
-        opts := this.SetDefaultOptions(this.options, defaults)
-        this.ctl := this.guiObj.guiObj.Add("Tab3", this.GetOptionsString(opts), this.tabs)
+        this.ctl := this.guiObj.guiObj.Add("Tab3", this.parameters.GetOptionsString(this.parameters["options"], [
+            "w" . this.guiObj.windowSettings["contentWidth"],
+            "C" . this.guiObj.themeObj.GetColor("text"),
+            "Background" . this.guiObj.themeObj.GetColor("background"),
+            "+0x100",
+            "+" . TabsControl.TCS_OWNERDRAWFIXED,
+            "x" . this.guiObj.margin,
+            "y+" . this.guiObj.margin
+        ]), this.tabs)
+        
         this.ctlHwnd := this.ctl.Hwnd
         this.SubclassControl(this.ctl.Hwnd, ObjBindMethod(this, "OnTabsSubclass"))
         

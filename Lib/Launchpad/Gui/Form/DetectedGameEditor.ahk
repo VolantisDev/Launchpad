@@ -22,7 +22,7 @@
 
     Create() {
         super.Create()
-        this.dataSource := this.app.Service("manager.datasource")["api"]
+        this.dataSource := this.app.Service("manager.data_source").GetDefaultDataSource()
         this.knownPlatforms := this.dataSource.ReadListing("platforms")
         this.knownGames := this.dataSource.ReadListing("game-keys")
         this.launcherTypes := this.dataSource.ReadListing("launcher-types")
@@ -35,7 +35,7 @@
 
     Controls() {
         super.Controls()
-        this.Add("ComboBoxControl", "vKey", "Key", this.detectedGameObj.key, this.knownGames, "OnKeyChange", "You can change the detected game key here, which will become the name of your launcher. Your existing launchers, and all launchers known about via the API, can be selected to match this game up with one of those items.")
+        this.Add("ComboBoxControl", "vId", "Id", this.detectedGameObj.Id, this.knownGames, "OnIdChange", "You can change the detected game key here, which will become the name of your launcher. Your existing launchers, and all launchers known about via the API, can be selected to match this game up with one of those items.")
         this.Add("SelectControl", "vLauncherType", "Launcher Type", this.detectedGameObj.launcherType, this.launcherTypes, "OnLauncherTypeChange", "This tells " . this.app.appName . " how to interact with any launcher your game might require. If your game's launcher isn't listed, or your game doesn't have a launcher, start with `"Default`".`n`nYou can customize the details of the launcher type after it is added.")
         this.Add("SelectControl", "vGameType", "Game Type", this.detectedGameObj.gameType, this.gameTypes, "OnGameTypeChange", "This tells " . this.app.appName . " how to launch your game. Most games can use 'default', but launchers can support different game types.`n`nYou can customize the details of the game type after it is added.")
         this.Add("LocationBlock", "", "Install Dir", this.detectedGameObj.installDir, "InstallDir", "", true, "This is the directory that the game is installed in, if it could be detected.")
@@ -56,7 +56,7 @@
         return ctl
     }
 
-    OnKeyChange(ctl, info) {
+    OnIdChange(ctl, info) {
         this.guiObj.Submit(false)
         this.newValues["key"] := ctl.Text
     }

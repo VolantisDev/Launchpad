@@ -6,7 +6,7 @@ class LaunchpadBuildOp extends BulkOperationBase {
     builders := ""
 
     __New(app, builders, owner := "") {
-        if (Type(builders) != "Array") {
+        if (!HasBase(builders, Array.Prototype)) {
             builders := [builders]
         }
 

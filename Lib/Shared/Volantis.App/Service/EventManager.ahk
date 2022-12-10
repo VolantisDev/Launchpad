@@ -128,12 +128,16 @@ class EventManager {
         return this
     }
 
-    DispatchEvent(eventName, eventObj, extra := "", hwnd := "") {
+    DispatchEvent(eventObj, extra := "", hwnd := "") {
         if (hwnd == "") {
             hwnd := A_ScriptHwnd
         }
 
-        return this.HandleEvent(eventObj, extra, eventName, hwnd)
+        if (!eventObj.EventName) {
+            throw AppException("Event object does not have an event name.")
+        }
+
+        return this.HandleEvent(eventObj, extra, eventObj.EventName, hwnd)
     }
 
     HandleEvent(param1, param2, eventName, hwnd := "") {

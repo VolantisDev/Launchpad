@@ -8,8 +8,7 @@ class CheckboxControl extends GuiControlBase {
             defaults.Push(checked ? "Checked1" : "Checked0")
         }
 
-        opts := this.SetDefaultOptions(this.options, defaults)
-        this.ctl := this.guiObj.guiObj.Add("CheckBox", this.GetOptionsString(opts), text)
+        this.ctl := this.guiObj.guiObj.Add("CheckBox", this.parameters.GetOptionsString(this.parameters["options"], defaults), text)
 
         if (helpText) {
             this.ctl.ToolTip := helpText

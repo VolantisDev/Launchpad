@@ -34,7 +34,7 @@ class JwtAuthProvider extends AuthProviderBase {
             request := WinHttpReq(url)
             payload := Map("grant_type", "refresh_token", "refresh_token", refreshToken)
             response := request.Send("POST", payload)
-           
+
             if (request.GetStatusCode() == 200) {
                 userInfo := this.ExtractAuthInfoFromResponse(request)
             } else {

@@ -21,13 +21,13 @@ class StructuredDataDefinitionLoader extends DefinitionLoaderBase {
     }
 
     LoadFromStructuredData(structuredData, key := "", ignoreFailure := true) {
-        if (!structuredData.HasBase(StructuredDataBase.Prototype)) {
+        if (!HasBase(structuredData, StructuredDataBase.Prototype)) {
             throw ContainerException("A subclass of StructuredDataBase must be provided to load services from. Received: " . Type(structuredData))
         }
 
         dataObj := structuredData.Obj
 
-        if (Type(dataObj) != "Map") {
+        if (!HasBase(dataObj, Map.Prototype)) {
             throw ContainerException("Services can only be loaded from a Map object")
         }
 

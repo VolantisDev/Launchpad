@@ -1,101 +1,128 @@
-class AppEntityBase extends EntityBase {
+class AppEntityBase extends FieldableEntity {
     app := ""
     dataSourcePath := ""
     existsInDataSource := false
 
-    /**
-    * BASE SETTINGS
-    * 
-    * These are the main pieces of data that is interacted with and that all of the other settings are pulled from.
-    */
-
-    ; The data source keys to load defaults from, in order.
-    ; The default datasource is "api" which connects to the default api endpoint (Which can be any HTTP location compatible with Launchpad's API format)
-    DataSourceKeys {
-        get => this.GetConfigValue("DataSourceKeys", false)
-        set => this.SetConfigValue("DataSourceKeys", value, false)
-    }
-
-    ; The key that is used to look up the entity's data from configured external datasources.
-    ; It defaults to the key which is usually sufficient, but it can be overridden by setting this value.
-    ; Addtionally, multiple copies of the same datasource entity can exist by giving them different keys but using the same DataSourceKey
-    DataSourceItemKey {
-        get => this.GetConfigValue("DataSourceItemKey", false)
-        set => this.SetConfigValue("DataSourceItemKey", value, false)
-    }
-
-    ; The directory where any required assets for this entity will be saved.
-    AssetsDir {
-        get => this.GetConfigValue("AssetsDir", false)
-        set => this.SetConfigValue("AssetsDir", value, false)
-    }
-
-    ; The directory where dependencies which have been installed for this entity can be accessed
-    DependenciesDir {
-        get => this.GetConfigValue("DependenciesDir", false)
-        set => this.SetConfigValue("DependenciesDir", value, false)
-    }
-
-    __New(app, key, configObj, parentEntity := "", requiredConfigKeys := "") {
-        InvalidParameterException.CheckTypes("EntityBase", "app", app, "AppBase")
-
+    __New(app, id, entityTypeId, container, eventMgr, storageObj, idSanitizer, parentEntity := "") {
         this.app := app
     
-        super.__New(key, configObj, parentEntity, requiredConfigKeys)
+        super.__New(id, entityTypeId, container, eventMgr, storageObj, idSanitizer, parentEntity)
     }
 
-    static createEntity(container, key, configObj, parentEntity := "", requiredConfigKeys := "") {
+    static Create(container, eventMgr, id, entityTypeId, storageObj, idSanitizer, parentEntity := "") {
         className := this.Prototype.__Class
 
         return %className%(
-            container.GetApp(), 
-            key, 
-            configObj, 
-            parentEntity, 
-            requiredConfigKeys
+            container.GetApp(),
+            id,
+            entityTypeId,
+            container,
+            eventMgr,
+            storageObj,
+            idSanitizer,
+            parentEntity
         )
     }
 
-    getEntityLayers() {
-        return ["ds"]
+    GetDefaultFieldGroups() {
+        groups := super.GetDefaultFieldGroups()
+
+        groups["advanced"] := Map(
+            "name", "Advanced",
+            "weight", 100
+        )
+
+        groups["api"] := Map(
+            "name", "API",
+            "weight", 150
+        )
+
+        return groups
     }
 
-    populateEntityLayers(layeredData) {
-        this.entityData.SetLayer("ds", this.AggregateDataSourceDefaults())
+    BaseFieldDefinitions() {
+        definitions := super.BaseFieldDefinitions()
+
+        definitions["DataSourceKeys"] := Map(
+            "description", "The data source keys to load defaults from, in order.",
+            "help", "The default data source is 'api' which connects to the default api endpoint (Which can be any HTTP location compatible with Launchpad's API format)",
+            "default", [this.app.Config["data_source_key"]],
+            "multiple", true,
+            "group", "api",
+            "processValue", false,
+            "modes", Map("simple", Map("formField", false))
+        )
+
+        definitions["DataSourceItemKey"] := Map(
+            "description", "The key that is used to look up the entity's data from configured external data sources.",
+            "help", "It defaults to the key which is usually sufficient, but it can be overridden by setting this value.`n`nAddtionally, multiple copies of the same data source entity can exist by giving them different keys but using the same DataSourceKey",
+            "group", "api",
+            "processValue", false,
+            "modes", Map("simple", Map("formField", false))
+        )
+
+        definitions["AssetsDir"] := Map(
+            "type", "directory",
+            "description", "The directory where any required assets for this entity will be saved.",
+            "default", this.app.Config["assets_dir"] . "\" . this.Id,
+            "group", "advanced",
+            "formField", false,
+            "modes", Map("simple", Map("formField", false))
+        )
+
+        definitions["DependenciesDir"] := Map(
+            "type", "directory",
+            "description", "The directory where dependencies which have been installed for this entity can be accessed.",
+            "default", this.app.appDir . "\Vendor",
+            "group", "advanced",
+            "required", true,
+            "formField", false,
+            "modes", Map("simple", Map("formField", false))
+        )
+
+        return definitions
     }
 
-    UpdateDataSourceDefaults() {
-        this.entityData.SetLayer("ds", this.AggregateDataSourceDefaults())
-        this.entityData.SetLayer("auto", this.AutoDetectValues())
+    _getLayerNames() {
+        layerNames := super._getLayerNames()
+        layerNames.Push("ds")
 
-        for key, child in this.children {
-            child.UpdateDataSourceDefaults()
+        return layerNames
+    }
+
+    _getLayerSources() {
+        layerSources := super._getLayerSources()
+        layerSources["ds"] := ObjBindMethod(this, "AggregateDataSourceDefaults")
+
+        return layerSources
+    }
+
+    UpdateDataSourceDefaults(recurse := true) {
+        ; @todo Move this to a module
+        this.GetData().UnloadLayer("ds")
+
+        if (recurse) {
+            for key, child in this.GetReferencedEntities(true) {
+                child.UpdateDataSourceDefaults(recurse)
+            }
         }
-    }
-
-    ; NOTICE: Object not yet fully loaded. Might not be safe to call this.entityData
-    InitializeDefaults() {
-        defaults := super.InitializeDefaults()
-        defaults["DataSourceKeys"] := [this.app.Config["data_source_key"]]
-        defaults["DataSourceItemKey"] := ""
-        defaults["AssetsDir"] := this.app.Config["assets_dir"] . "\" . this.keyVal
-        defaults["DependenciesDir"] := this.app.appDir . "\Vendor"
-        return defaults
     }
 
     AggregateDataSourceDefaults(includeParentData := true, includeChildData := true) {
-        dataSources := this.GetAllDataSources()
-        defaults := (this.parentEntity != "" && includeParentData) ? this.parentEntity.AggregateDataSourceDefaults(includeParentData, false) : Map()
+        defaults := (this.parentEntity != "" && includeParentData) 
+            ? this.parentEntity.AggregateDataSourceDefaults(includeParentData, false) 
+            : Map()
 
-        this.entityData.SetLayer("ds", defaults)
+        ; @todo Uncomment if needed, remove if not
+        ;this.GetData().SetLayer("ds", defaults)
 
-        for index, dataSource in dataSources {
-            defaults := this.MergeFromObject(defaults, this.GetDataSourceDefaults(dataSource), false)
+        for index, dataSource in this.GetAllDataSources() {
+            defaults := this.merger.Merge(this.GetDataSourceDefaults(dataSource), defaults)
         }
 
         if (includeChildData) {
-            for key, child in this.children {
-                defaults := this.MergeFromObject(defaults, child.AggregateDataSourceDefaults(false, includeChildData), false)
+            for key, child in this.GetReferencedEntities(true) {
+                defaults := this.merger.Merge(child.AggregateDataSourceDefaults(false, includeChildData), defaults)
             }
         }
 
@@ -105,14 +132,18 @@ class AppEntityBase extends EntityBase {
     GetAllDataSources() {
         dataSources := Map()
 
-        if (this.DataSourceKeys != "") {
-            dataSourceKeys := (Type(this.DataSourceKeys) == "Array") ? this.DataSourceKeys : [this.DataSourceKeys]
+        if (this.Has("DataSourceKeys", false)) {
+            dataSourceKeys := this["DataSourceKeys"]
+
+            if (!HasBase(dataSourceKeys, Array.Prototype)) {
+                dataSourceKeys := [dataSourceKeys]
+            }
 
             for index, dataSourceKey in dataSourceKeys {
-                if (this.app.Service("manager.datasource").Has(dataSourceKey)) {
-                    dataSource := this.app.Service("manager.datasource")[dataSourceKey]
+                if (this.app.Service("manager.data_source").Has(dataSourceKey)) {
+                    dataSource := this.app.Service("manager.data_source")[dataSourceKey]
 
-                    if (dataSource != "") {
+                    if (dataSource) {
                         dataSources[dataSourceKey] := dataSource
                     }
                 }
@@ -124,7 +155,7 @@ class AppEntityBase extends EntityBase {
 
     GetDataSourceDefaults(dataSource) {
         defaults := Map()
-        itemKey := this.GetDataSourceItemKey()
+        itemKey := this.DiscoverDataSourceItemKey()
 
         if (itemKey) {
             dsData := dataSource.ReadJson(itemKey, this.GetDataSourceItemPath())
@@ -137,7 +168,7 @@ class AppEntityBase extends EntityBase {
                 }
 
                 if (dsData.Has("defaults")) {
-                    defaults := this.MergeFromObject(defaults, dsData["defaults"], false)
+                    defaults := this.merger.Merge(dsData["defaults"], defaults)
                     defaults := this.MergeAdditionalDataSourceDefaults(defaults, dsData)
                 }
             }
@@ -146,8 +177,8 @@ class AppEntityBase extends EntityBase {
         return defaults
     }
 
-    GetDataSourceItemKey() {
-        return this.Key
+    DiscoverDataSourceItemKey() {
+        return this.Id
     }
 
     GetDataSourceItemPath() {
@@ -159,6 +190,6 @@ class AppEntityBase extends EntityBase {
     }
 
     GetAssetPath(filePath) {
-        return this.AssetsDir . "\" . filePath
+        return this["AssetsDir"] . "\" . filePath
     }
 }

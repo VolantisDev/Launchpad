@@ -1,0 +1,3 @@
+class BasicEntityManager extends EntityManagerBase {
+
+}

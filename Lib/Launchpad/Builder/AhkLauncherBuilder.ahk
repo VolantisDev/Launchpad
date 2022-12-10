@@ -14,7 +14,7 @@ class AhkLauncherBuilder extends BuilderBase {
                     this.CreateShortcut(entityObj)
                 }
 
-                this.app.State.SetLauncherBuildInfo(entityObj.Key)
+                this.app.State.SetLauncherBuildInfo(entityObj.Id)
             }
         }
 
@@ -23,8 +23,8 @@ class AhkLauncherBuilder extends BuilderBase {
 
     CreateShortcut(entityObj) {
         if (entityObj.LauncherExists(false)) {
-            launcherExe := entityObj.GetLauncherFile(entityObj.Key, false)
-            shortcutPath := A_Desktop . "\" . entityObj.Key . ".lnk"
+            launcherExe := entityObj.GetLauncherFile(entityObj.Id, false)
+            shortcutPath := A_Desktop . "\" . entityObj.Id . ".lnk"
 
             FileCreateShortcut(launcherExe, shortcutPath)
         }
@@ -33,7 +33,7 @@ class AhkLauncherBuilder extends BuilderBase {
     Clean(entityObj) {
         wasCleaned := false
 
-        filePath := this.app.Config["assets_dir"] . "\" . entityObj.Key . "\" . entityObj.Key . ".ahk"
+        filePath := this.app.Config["assets_dir"] . "\" . entityObj.Id . "\" . entityObj.Id . ".ahk"
 
         if (FileExist(filePath)) {
             FileDelete(filePath)

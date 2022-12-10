@@ -7,6 +7,6 @@ class StartsWithCondition extends ConditionBase {
     }
 
     EvaluateCondition(val) {
-        return SubStr(val, 1, StrLen(this.pattern)) == this.pattern
+        return (InStr(val, this.pattern) == 1)
     }
 }

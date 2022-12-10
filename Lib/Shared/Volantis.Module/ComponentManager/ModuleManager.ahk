@@ -38,7 +38,7 @@ class ModuleManager extends ComponentManagerBase {
         moduleParams := this.container.HasParameter("modules") ? this.container.GetParameter("modules") : Map()
 
         for key, config in moduleParams {
-            if (!this.moduleConfig.Has(key)) {
+            if (!this.moduleConfig.Has(key) || !this.moduleConfig[key].Count) {
                 if (IsNumber(config)) {
                     config := Map("enabled", !!config)
                 }
@@ -78,7 +78,7 @@ class ModuleManager extends ComponentManagerBase {
     }
 
     Toggle(keys, deps, enabled := true, enableConfirmationDialog := true) {
-        keys := Type(keys) == "Array" ? keys.Clone() : [keys]
+        keys := HasBase(keys, Array.Prototype) ? keys.Clone() : [keys]
         shouldToggle := true
 
         deps := this.FilterDeps(deps, enabled)
@@ -186,7 +186,7 @@ class ModuleManager extends ComponentManagerBase {
 
     CalculateDependencies(keys := "") {
         if (keys) {
-            if (Type(keys) != "Array") {
+            if (!HasBase(keys, Array.Prototype)) {
                 keys := [keys]
             }
         } else {
@@ -231,7 +231,7 @@ class ModuleManager extends ComponentManagerBase {
 
     CalculateDependents(keys := "") {
         if (keys) {
-            if (Type(keys) != "Array") {
+            if (!HasBase(keys, Array.Prototype)) {
                 keys := [keys]
             }
         } else {

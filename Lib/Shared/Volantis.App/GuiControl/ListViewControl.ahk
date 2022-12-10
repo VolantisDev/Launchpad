@@ -28,19 +28,17 @@ class ListViewControl extends GuiControlBase {
             lvH := this.guiObj.windowSettings["listViewHeight"]
         } 
 
-        defaults := []
-        defaults.Push("w" . this.guiObj.windowSettings["contentWidth"])
-        defaults.Push("h" . lvH)
-        defaults.Push("C" . this.guiObj.themeObj.GetColor("text"))
-        defaults.Push("Background" . this.guiObj.themeObj.GetColor("background"))
-        defaults.Push("+LV" . LVS_EX_LABELTIP)
-        defaults.Push("+LV" . LVS_EX_DOUBLEBUFFER)
-        defaults.Push("+LV" . LVS_EX_FLATSB)
-        defaults.Push("-E0x200")
-        ;defaults.Push("+LV" . LVS_EX_AUTOSIZECOLUMNS)
+        this.ctl := this.guiObj.guiObj.AddListView(this.parameters.GetOptionsString("", [
+            "w" . this.guiObj.windowSettings["contentWidth"],
+            "h" . lvH,
+            "C" . this.guiObj.themeObj.GetColor("text"),
+            "Background" . this.guiObj.themeObj.GetColor("background"),
+            "+LV" . LVS_EX_LABELTIP,
+            "+LV" . LVS_EX_DOUBLEBUFFER,
+            "+LV" . LVS_EX_FLATSB,
+            "-E0x200"
+        ], true, true), this.columns)
 
-        opts := this.SetDefaultOptions(this.options, defaults)
-        this.ctl := this.guiObj.guiObj.AddListView(this.GetOptionsString(opts), this.columns)
         this.headerHwnd := SendMessage(LVM_GETHEADER, 0, 0,, "ahk_id " . this.ctl.Hwnd) + 0
         this.SubclassControl(this.ctl.Hwnd, ObjBindMethod(this, "OnListViewDraw"))
         this.ctl.ModifyCol(2, 0)
@@ -147,8 +145,8 @@ class ListViewControl extends GuiControlBase {
             }
 
             data.InsertAt(this.keyCol, key)
-            opts := this.SetDefaultOptions(rowOpts, this.rowOpts)
-            this.ctl.Add(this.GetOptionsString(opts), data*)
+            opts := this.parameters.GetOptionsString(rowOpts, this.rowOpts, false, false)
+            this.ctl.Add(opts, data*)
         }
 
         this.ctl.ModifyCol(1, "Sort")

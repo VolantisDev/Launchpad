@@ -4,10 +4,14 @@ class FileConditionBase extends ConditionBase {
             return false
         }
 
-        if (!file || !FileExist(file)) {
+        if (!file || !this.Exists(file)) {
             return false
         }
 
         return true
+    }
+
+    Exists(path) {
+        return FileExist(path)
     }
 }

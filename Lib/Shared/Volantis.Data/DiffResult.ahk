@@ -9,6 +9,34 @@ class DiffResult {
         this.deleted := deleted
     }
 
+    static Combine(diffs) {
+        added := Map()
+        modified := Map()
+        deleted := Map()
+
+        for index, diff in diffs {
+            for key, item in diff.GetAdded() {
+                if (!added.Has(key) && !modified.Has(key) && !deleted.Has(key)) {
+                    added[key] := item
+                }
+            }
+
+            for key, item in diff.GetModified() {
+                if (!added.Has(key) && !modified.Has(key) && !deleted.Has(key)) {
+                    modified[key] := item
+                }
+            }
+
+            for key, item in diff.GetDeleted() {
+                if (!added.Has(key) && !modified.Has(key) && !deleted.Has(key)) {
+                    deleted[key] := item
+                }
+            }
+        }
+
+        return DiffResult(added, modified, deleted)
+    }
+
     HasChanges() {
         return this.CountAdded() > 0 || this.CountModified() > 0 || this.CountDeleted() > 0
     }

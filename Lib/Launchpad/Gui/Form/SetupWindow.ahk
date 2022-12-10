@@ -7,7 +7,7 @@
         defaults["buttons"] := "*&Start|&Exit"
         defaults["text"] := "
         (
-        Welcome to Launchpad, your game launching multitool!
+        Welcome to Launchpad, the game launching multitool!
 
         This setup screen will help get you up and running quickly. You can always change your settings later.
         )"
@@ -20,31 +20,48 @@
     }
 
     AddDescription(text) {
-        return this.guiObj.AddText("w" . this.windowSettings["contentWidth"], text)
+        return this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " y+5", text)
     }
 
     Controls() {
         super.Controls()
 
         this.AddHeading("Theme")
-        this.AddDescription(this.app.appName . " has a growing number of themes available to fit in with the platform or aesthetic of your choice. Choose the primary theme for La" . this.app.appName . "unchpad to use below.")
+        this.AddDescription(this.app.appName . " has a growing number of themes available to fit in with the platform or aesthetic of your choice. Choose the primary theme for " . this.app.appName . " to use.")
         chosen := this.GetItemIndex(this.availableThemes, this.app.Config["theme_name"])
         ctl := this.guiObj.AddDDL("vtheme_name xs y+m Choose" . chosen . " w" . this.windowSettings["contentWidth"] . " c" . this.themeObj.GetColor("editText"), this.availableThemes)
         ctl.OnEvent("Change", "OnThemeNameChange")
-        ctl.ToolTip := "Select a theme for " . this.app.appName . " to use."
+        ctl.ToolTip := "Select the primary theme for " . this.app.appName . " to use."
 
-        this.AddConfigLocationBlock("Launcher Directory", "destination_dir", "", this.app.appName . " will create a separate .exe file for every game you configure. You can store these launchers in any folder you wish.")
+        this.AddHeading("Launcher Directory")
+        this.AddConfigLocationBlock("", "destination_dir", "", this.app.appName . " will create a separate .exe file for every game you configure. You can store these launchers in any folder you wish.")
 
         this.AddHeading("Platforms")
-        this.AddDescription(this.app.appName . " has detected the following game platforms on your computer. Check the ones you wish " . this.app.appName . " to detect your installed games from.")
-        this.AddPlatformCheckboxes()
+
+        installedPlatforms := this.GetInstalledPlatforms()
+
+        if (installedPlatforms.Count) {
+            this.AddDescription("Your discovered game platforms are below. Check the ones you wish to allow " . this.app.appName . " to detect installed games from.")
+            this.AddPlatformCheckboxes(installedPlatforms)
+        } else {
+            this.AddDescription(this.app.appName . " couldn't find any game platforms on your computer to detect installed games from. You can always configure them later.")
+        }
 
         this.AddHeading("Detect Games")
-        this.AddDescription(this.app.appName . " can detect your installed games automatically right away, or you can do it later from the Tools menu.")
-        this.Add("BasicControl", "vDetectGames", "", true, "CheckBox", "Detect my games now")
 
-        closeW := 100
-        closeX := this.margin + (this.windowSettings["contentWidth"] / 2) - (closeW / 2)
+        if (installedPlatforms.Count) {
+            this.AddDescription(this.app.appName . " can detect your installed games automatically right now if you wish. You can also do it anytime by clicking the + icon at the bottom of the main Launchpad window.")
+            this.Add("BasicControl", "vDetectGames", "", true, "CheckBox", "Detect my games now")
+        } else {
+            this.AddDescription(this.app.appName . " can detect your installed games automatically if you install and enable any supported game platforms, such as Steam, Epic Games, Battle.net, and more. You can find the Detect Games feature by clicking the + icon at the bottom of the Launchpad window anytime.")
+        }
+    }
+
+    GetInstalledPlatforms() {
+        platformMgr := this.app.Service("entity_manager.platform")
+        platformQuery := platformMgr.EntityQuery(EntityQuery.RESULT_TYPE_ENTITIES)
+            .Condition(IsTrueCondition(), "IsInstalled")
+        return platformQuery.Execute()
     }
 
     AddConfigLocationBlock(heading, settingName, extraButton := "", helpText := "") {
@@ -52,16 +69,10 @@
         this.Add("LocationBlock", "", heading, location, settingName, extraButton, true, helpText)
     }
 
-    AddPlatformCheckboxes() {
-        if (!this.app.Service("manager.platform")._componentsLoaded) {
-            this.app.Service("manager.platform").LoadComponents()
-        }
-
-        for key, platform in this.app.Service("manager.platform").Entities {
-            if (platform.IsInstalled) {
-                 ctl := this.Add("BasicControl", "vPlatformToggle" . key, "", platform.DetectGames, "CheckBox", platform.GetDisplayName())
-                 ctl.RegisterHandler("Click", "OnPlatformToggle")
-            }
+    AddPlatformCheckboxes(installedPlatforms) {
+        for key, platform in installedPlatforms {
+            ctl := this.Add("BasicControl", "vPlatformToggle" . key, "", platform["DetectGames"], "CheckBox", platform.GetName())
+            ctl.RegisterHandler("Click", "OnPlatformToggle")
         }
     }
 
@@ -69,11 +80,12 @@
         this.guiObj.Submit(false)
         len := StrLen("PlatformToggle")
         name := SubStr(chk.Name, len + 1)
+        platformMgr := this.app.Service("entity_manager.platform")
 
-        if (this.app.Service("manager.platform").Entities.Has(name)) {
-            platform := this.app.Service("manager.platform").Entities[name]
-            platform.DetectGames := !!(chk.Value)
-            platform.SaveModifiedData()
+        if (platformMgr.Has(name)) {
+            platform := platformMgr[name]
+            platform["DetectGames"] := !!(chk.Value)
+            platform.SaveEntity()
         }
     }
 
@@ -89,10 +101,10 @@
 
     OnDestinationDirMenuClick(btn) {
         if (btn == "ChangeDestinationDir") {
-            this.app.Config["ChangeDestinationDir"]()
+            this.app.Config.ChangeDestinationDir()
             this.SetText("DestinationDir", this.app.Config["destination_dir"], "Bold")
         } else if (btn == "OpenDestinationDir") {
-            this.app.Config["OpenDestinationDir"]()
+            this.app.Config.OpenDestinationDir()
         }
     }
 
@@ -103,12 +115,8 @@
 
     ProcessResult(result, submittedData := "") {
         if (result == "Start") {
-            this.app.Service("Config").SaveConfig()
-            this.app.Service("manager.platform").SaveModifiedEntities()
-
-            if (!FileExist(this.app.appDir . "\" . this.app.appName . ".ini")) {
-                FileAppend("", this.app.appDir . "\" . this.app.appName . ".ini")
-            }
+            this.app.Service("config.app").SaveConfig()
+            this.app.Service("entity_manager.platform").SaveModifiedEntities()
 
             if (submittedData.DetectGames) {
                 result := "Detect"

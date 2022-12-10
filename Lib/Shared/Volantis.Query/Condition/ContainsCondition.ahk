@@ -11,9 +11,9 @@ class ContainsCondition extends ConditionBase {
 
         if (Type(val) == "String") {
             matches := !!InStr(val, this.pattern)
-        } else if (Type(val) == "Map") {
+        } else if (HasBase(val, Map.Prototype)) {
             matches := val.Has(this.pattern)
-        } else if (Type(val) == "Array") {
+        } else if (HasBase(val, Array.Prototype)) {
             for index, item in val {
                 if (item == this.pattern) {
                     matches := true

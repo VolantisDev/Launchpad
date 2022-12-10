@@ -9,11 +9,11 @@ class BuilderBase {
     }
 
     Build(launcherEntityObj) {
-        launcherDir := launcherEntityObj.DestinationDir
-        assetsDir := launcherEntityObj.AssetsDir
+        launcherDir := launcherEntityObj["DestinationDir"]
+        assetsDir := launcherEntityObj["AssetsDir"]
 
         if (launcherDir == "" or assetsDir == "") {
-            this.notifierObj.Warning(launcherEntityObj.Key . ": Required directories not set. Skipping build.")
+            this.notifierObj.Warning(launcherEntityObj.Id . ": Required directories not set. Skipping build.")
             return false
         }
 
@@ -32,7 +32,7 @@ class BuilderBase {
     }
 
     NeedsShortcutFile(launcherEntityObj) {
-        return (launcherEntityObj.ManagedLauncher.ManagedGame.UsesShortcut)
+        return (launcherEntityObj["ManagedGame"]["UsesShortcut"])
     }
 
     BuildAction(launcherEntityObj, launcherDir, assetsDir) {

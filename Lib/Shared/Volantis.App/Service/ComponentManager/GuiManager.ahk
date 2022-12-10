@@ -14,7 +14,7 @@ class GuiManager extends ComponentManagerBase {
     }
 
     GetDefaultComponentId() {
-        return this.container.Get("Config")["main_window"]
+        return this.container.Get("config.app")["main_window"]
     }
 
     GetWindow(config, params*) {
@@ -67,7 +67,7 @@ class GuiManager extends ComponentManagerBase {
 
     Dialog(config, params*) {
         if (!config) {
-            config := Map("type", "DialogBox")
+            config := Map()
         }
 
         if (Type(config) == "String") {
@@ -80,6 +80,14 @@ class GuiManager extends ComponentManagerBase {
 
         if (!config.Has("unique")) {
             config["unique"] := true
+        }
+
+        if (!config.Has("waitForResult")) {
+            config["waitForResult"] := true
+        }
+
+        if (!config.Has("alwaysOnTop")) {
+            config["alwaysOnTop"] := true
         }
 
         config["id"] := this.factory.GetGuiId(config, params*)
@@ -97,7 +105,7 @@ class GuiManager extends ComponentManagerBase {
         This will resolve to Map("type", "MenuGui", "ownerOrParent", parent, "child", true)
     */
     Menu(config, menuItems := "", openAtCtl := "", params*) {
-        if (Type(config) == "Array") {
+        if (HasBase(config, Array.Prototype)) {
             parent := menuItems ? menuItems : ""
             menuItems := config
             config := Map(
@@ -264,15 +272,14 @@ class GuiManager extends ComponentManagerBase {
     }
 
     DereferenceGui(obj) {
-        guiObj := obj
-        objType := Type(guiObj)
+        guiObj := ""
 
-        if (!obj.HasBase(Gui.Prototype)) {
-            if (objType == "String" && this.Has(obj)) {
-                guiObj := this[obj].guiObj
-            } else if (obj.HasBase(GuiBase.Prototype)) {
-                guiObj := obj.guiObj
-            }
+        if (HasBase(obj, Gui.Prototype)) {
+            guiObj := obj
+        } else if (HasBase(obj, GuiBase.Prototype)) {
+            guiObj := obj.guiObj
+        } else if (Type(guiObj) == "String" && this.Has(obj)) {
+            guiObj := this[obj].guiObj
         }
 
         return guiObj

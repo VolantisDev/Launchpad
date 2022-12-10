@@ -14,13 +14,14 @@ class ThemeManager extends ComponentManagerBase {
     }
 
     DefineServices(event, extra, eventName, hwnd) {
+        ; @todo Use an ID instead of relying on there only being one instance of each type
         if (Type(event.ComponentManager) == Type(this)) {
             services := event.GetDefinitions()
 
             for themeKey, themeParameters in event.GetParameters() {
                 if (!services.Has(themeKey)) {
                     services[themeKey] := Map(
-                        "factory", ServiceRef("ThemeFactory", "CreateTheme"),
+                        "factory", ServiceRef("factory.theme", "CreateTheme"),
                         "arguments", [themeKey]
                     )
                 }

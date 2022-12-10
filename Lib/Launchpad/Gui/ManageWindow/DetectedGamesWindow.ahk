@@ -1,4 +1,5 @@
 ﻿class DetectedGamesWindow extends ManageWindowBase {
+    guiMgr := ""
     listViewColumns := Array("NAME", "ACTION", "PLATFORM", "STATUS", "API", "EXE")
     launcherManager := ""
     detectedGames := ""
@@ -7,10 +8,11 @@
     checkboxes := true
 
     __New(container, themeObj, config, detectedGames) {
+        this.guiMgr := container.Get("manager.gui")
         this.detectedGames := detectedGames
-        this.state := container.Get("State")
-        this.launcherManager := container.Get("manager.launcher")
-        this.knownGames := container.Get("manager.datasource")
+        this.state := container.Get("state.app")
+        this.launcherManager := container.Get("entity_manager.launcher")
+        this.knownGames := container.Get("manager.data_source")
             .GetDefaultDataSource()
             .ReadListing("game-keys")
 
@@ -52,7 +54,7 @@
                 ;continue
             }
 
-            statusText := this.launcherManager.Entities.Has(detectedGameObj.key) ? "Exists" : "New"
+            statusText := this.launcherManager.Has(detectedGameObj.key) ? "Exists" : "New"
             apiStatus := this.GameIsKnown(detectedGameObj) ? "Known" : "Unknown"
             
             isChecked := false
@@ -66,7 +68,7 @@
             action := "Ignore"
 
             if (isChecked) {
-                action := this.launcherManager.Entities.Has(key) ? "Modify" : "Create"
+                action := this.launcherManager.Has(key) ? "Modify" : "Create"
             }
 
             data[detectedGameObj.key] := [detectedGameObj.key, action, detectedGameObj.platform.displayName, statusText, apiStatus, detectedGameObj.exeName]
@@ -101,8 +103,8 @@
     GameHasChanges(detectedGameObj) {
         hasChanges := true
 
-        if (this.GameExists(detectedGameObj) && this.launcherManager.Entities.Has(detectedGameObj.key)) {
-            hasChanges := detectedGameObj.HasChanges(this.launcherManager.Entities[detectedGameObj.key])
+        if (this.GameExists(detectedGameObj) && this.launcherManager.Has(detectedGameObj.key)) {
+            hasChanges := detectedGameObj.HasChanges(this.launcherManager[detectedGameObj.key])
         }
 
         return hasChanges
@@ -124,7 +126,7 @@
         gameStatus := false
 
         if (this.state.State.Has("DetectedGames") && this.state.State["DetectedGames"].Has(detectedGameObj.platform.displayName) && this.state.State["DetectedGames"][detectedGameObj.platform.displayName].Has(detectedGameObj.detectedKey)) {
-            gameStatus := this.launcherManager.Entities.Has(this.state.State["DetectedGames"][detectedGameObj.platform.displayName][detectedGameObj.detectedKey])
+            gameStatus := this.launcherManager.Has(this.state.State["DetectedGames"][detectedGameObj.platform.displayName][detectedGameObj.detectedKey])
         }
 
         return gameStatus
@@ -140,7 +142,7 @@
         action := "Ignore"
 
         if (isChecked) {
-            action := this.launcherManager.Entities.Has(key) ? "Modify" : "Create"
+            action := this.launcherManager.Has(key) ? "Modify" : "Create"
         }
 
         this.listView.ctl.Modify(rowNum,,,, action)
@@ -187,7 +189,7 @@
         op := AddDetectedGamesOp(this.app, games, this.launcherManager, this.state, "DetectedGamesWindow")
         op.Run()
 
-        this.launcherManager.app.Service("manager.gui")["MainWindow"].UpdateListView()
+        this.guiMgr["MainWindow"].UpdateListView()
         this.Destroy()
     }
 

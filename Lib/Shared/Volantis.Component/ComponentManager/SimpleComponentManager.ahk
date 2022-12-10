@@ -1,0 +1,3 @@
+class SimpleComponentManager extends ComponentManagerBase {
+
+}

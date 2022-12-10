@@ -16,7 +16,7 @@ class BuildFileBase {
 
         this.app := launcherEntityObj.app
         this.appDir := this.app.appDir
-        this.tempDir := this.app.tmpDir . "\BuildFiles\" . launcherEntityObj.Key
+        this.tempDir := this.app.tmpDir . "\BuildFiles\" . launcherEntityObj.Id
         this.launcherEntityObj := launcherEntityObj
         this.destPathValue := destPath
     }

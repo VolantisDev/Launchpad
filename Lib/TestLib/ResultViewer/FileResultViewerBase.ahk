@@ -1,17 +1,19 @@
 class FileResultViewerBase extends ResultViewerBase {
     outputFile := ""
+    usesOutputFile := true
     fileExt := ""
 
-    __New(outputFile := "", fileExt := "") {
-        super.__New()
+    __New(title := "", outputFile := "", fileExt := "") {
+        super.__New(title)
         
         if (fileExt) {
             this.fileExt := fileExt
         }
 
-        if (!outputFile) {
+        if (!outputFile && this.usesOutputFile) {
             outputFile := A_Temp . "\test-results" . this.fileExt
         }
+
         this.outputFile := outputFile
     }
 
@@ -22,14 +24,20 @@ class FileResultViewerBase extends ResultViewerBase {
 
         this.RenderResults(results)
 
-        if (FileExist(this.outputFile)) {
-            Run(this.outputFile)
-        } else {
-            throw AppException("Could not generate results file at " . this.outputFile)
+        this.DisplayResults()
+    }
+
+    DisplayResults() {
+        if (this.usesOutputFile) {
+            if (FileExist(this.outputFile)) {
+                Run(this.outputFile)
+            } else {
+                throw FileSystemTestException("Could not generate results file at " . this.outputFile)
+            }
         }
     }
 
     RenderResults(results) {
-        throw MethodNotImplementedException("FileResultViewerBase", "RenderResults")
+        throw NotImplementedTestException("The RenderResults method has not been implemented.")
     }
 }

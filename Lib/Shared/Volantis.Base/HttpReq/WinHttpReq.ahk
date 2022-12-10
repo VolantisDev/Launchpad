@@ -42,7 +42,7 @@ class WinHttpReq extends HttpReqBase {
         WinHttpReq.winHttp.Option[6] := this.autoRedirect
 
         WinHttpReq.winHttp.Send(data)
-	    returnCode := WinHttpReq.winHttp.WaitForResponse(this.timeout ? this.timeout : -1)
+        returnCode := WinHttpReq.winHttp.WaitForResponse(this.timeout ? this.timeout : -1)
 
         this.responseBody := WinHttpReq.winHttp.ResponseBody
         this.responseHeaders := "HTTP/1.1 " WinHttpReq.winHttp.Status() "`n" WinHttpReq.winHttp.GetAllResponseHeaders()
@@ -58,7 +58,7 @@ class WinHttpReq extends HttpReqBase {
         headers := ""
 
         if (this.requestHeaders) {
-            for (key, val in this.requestHeaders) {
+            for key, val in this.requestHeaders {
                 oHTTP.SetRequestHeader(key, val)
             }
         }

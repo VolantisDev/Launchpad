@@ -36,7 +36,7 @@ class JsonData extends StructuredDataBase {
 			}
 
             obj := stack[1]
-			is_array := (Type(obj) == "Array")
+			is_array := HasBase(obj, Array.Prototype)
             i := InStr("{[", ch)
 
             if (i) {
@@ -153,9 +153,10 @@ class JsonData extends StructuredDataBase {
 		
 		if (IsObject(obj)) {
 			memType := Type(obj)
-			is_array := (memType == "Array")
+			is_array := HasBase(obj, Array.Prototype)
+			is_map := HasBase(obj, Map.Prototype)
 
-			if ((memType && memType != "Object" && memType != "Map" && memType != "Array") || (!memType && ObjGetCapacity(obj) == "")) {
+			if ((!is_array && !is_map)) {
 				throw OperationFailedException("Object type not supported.", -1, Format("<Object at 0x{:p}>", ObjPtr(obj)))
 			}
 			
@@ -191,7 +192,7 @@ class JsonData extends StructuredDataBase {
 				if (!is_array) {
                     out .= (ObjGetCapacity([k]) ? this.ToString(k) : q k q) (indent ? ": " : ":") ; token + padding
                 }
-					
+				
 				out .= this.ToString(v, indent, lvl)
                 out .= indent ? ",`n" . indt : ","
 			}

@@ -37,8 +37,4 @@ class AuthInfo {
     GetPersistentData() {
         return this.persistentData
     }
-
-    GetAhkTimestamp(unixTimestamp) {
-        return DateAdd(19700101000000, unixTimestamp, "S")
-    }
 }

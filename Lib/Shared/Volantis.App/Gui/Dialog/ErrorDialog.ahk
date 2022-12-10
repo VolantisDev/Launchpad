@@ -8,13 +8,13 @@ class ErrorDialog extends DialogBox {
 
     __New(container, themeObj, config, errorObj) {
         this.errorObj := errorObj
-        this.notifierObj := container.Get("Notifier").notifierObj
+        this.notifierObj := container.Get("notifier").notifierObj
 
-        if (container.Has("manager.datasource")) {
-            dsManager := container.Get("manager.datasource")
+        if (container.Has("manager.data_source")) {
+            dsManager := container.Get("manager.data_source")
 
-            if (dsManager.Has("api")) {
-                this.apiEndpoint := container.Get("manager.datasource")["api"]
+            if (dsManager.GetDefaultDataSource()) {
+                this.apiEndpoint := container.Get("manager.data_source").GetDefaultDataSource()
             }
         }
 
@@ -27,6 +27,7 @@ class ErrorDialog extends DialogBox {
         defaults := super.GetDefaultConfig(container, config)
         defaults["buttons"] := "*&Continue|&Reload|&Exit",
         defaults["submitError"] := false
+        defaults["alwaysOnTop"] := !!(container.GetApp().Config["force_error_window_to_top"])
         return defaults
     }
 

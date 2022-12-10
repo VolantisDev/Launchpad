@@ -6,6 +6,11 @@ class AuthService extends AppServiceBase {
 
     __New(app, authProviderObj, stateObj) {
         InvalidParameterException.CheckTypes("AuthenticationService", "stateObj", stateObj, "StateBase")
+
+        if (authProviderObj && Type(authProviderObj) == "String") {
+            authProviderObj := app.Services.Get(authProviderObj)
+        }
+
         this.authProviderObj := authProviderObj
         this.stateObj := stateObj
 
@@ -120,7 +125,7 @@ class AuthService extends AppServiceBase {
     }
 
     AddUserInfoFromApi(authInfoObj) {
-        dataSource := this.app.Service("manager.datasource")["api"]
+        dataSource := this.app.Service("manager.data_source").GetDefaultDataSource()
 
         if (dataSource) {
             apiStatus := dataSource.GetStatus()

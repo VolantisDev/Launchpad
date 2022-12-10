@@ -2,6 +2,7 @@
     "module": {
         "name": "Origin Platform",
         "icon": "",
+        "category": "Platforms",
         "tags": ["Launchpad", "LaunchpadLauncher"],
         "description": "Launch games installed through the EA's Origin platform",
         "author": {
@@ -10,9 +11,10 @@
         },
         "website": "https://launchpad.games",
         "version": "{{VERSION}}",
+        "appVersion": "",
         "dependencies": []
     },
     "parameters": {
-        "platforms.Origin": "OriginPlatform"
+        "platforms.Origin.PlatformClass": "OriginPlatform"
     }
 }

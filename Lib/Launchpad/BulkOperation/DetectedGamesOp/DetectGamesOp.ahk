@@ -16,10 +16,11 @@ class DetectGamesOp extends BulkOperationBase {
             this.progress.SetRange(0, this.platforms.Count)
         }
 
-        for key, platform in this.platforms {
-            this.StartItem(platform.displayName, "Detecting games from " . platform.displayName . "...")
-            this.results[platform.displayName] := platform.DetectInstalledGames()
-            this.FinishItem(platform.displayName, true, "Finished detecting games from " . platform.displayName . ".")
+        for , platform in this.platforms {
+            displayName := platform.Platform.displayName
+            this.StartItem(displayName, "Detecting games from " . displayName . "...")
+            this.results[displayName] := platform.DetectInstalledGames()
+            this.FinishItem(displayName, true, "Finished detecting games from " . displayName . ".")
         }
     }
 }

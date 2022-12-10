@@ -62,8 +62,8 @@ class GitHubReleaseInstallerComponent extends DownloadableInstallerComponent {
         filename := StrReplace(this.downloadUrl, "{{version}}", this.version)
         downloadUrl := ""
 
-        if (Type(response) == "Map" && response.Has("assets")) {
-            for (index, component in response["assets"]) {
+        if (HasBase(response, Map.Prototype) && response.Has("assets")) {
+            for index, component in response["assets"] {
                 if (filename == "" or component["name"] == filename) {
                     downloadUrl := component["browser_download_url"]
                     break

@@ -1,21 +1,25 @@
 ﻿class LaunchpadConfig extends AppConfig {
-    LaunchersLoaded() {
-        return this.app.Services.Has("manager.launcher")
+    app := ""
+
+    __New(configStorage, container, parentKey := "", autoLoad := true) {
+        this.app := container.GetApp()
+
+        super.__New(configStorage, container, parentKey, autoLoad)
     }
 
     OpenDestinationDir() {
-        Run(this.destination_dir)
+        Run(this["destination_dir"])
     }
 
     ChangeDestinationDir(existingDir := "") {
         if (existingDir == "") {
-            existingDir := this.destination_dir
+            existingDir := this["destination_dir"]
         }
 
         destinationDir := this.SelectDestinationDir(existingDir)
 
         if (destinationDir != "") {
-            this.destination_dir := destinationDir
+            this["destination_dir"] := destinationDir
         }
 
         return destinationDir
@@ -32,18 +36,18 @@
     }
 
     OpenLauncherFile() {
-        Run(this.launcher_file)
+        Run(this["launcher_file"])
     }
 
     ChangeLauncherFile(existingFile := "") {
         if (existingFile == "") {
-            existingFile := this.launcher_file
+            existingFile := this["launcher_file"]
         }
 
         launcherFile := this.SelectLauncherFile(existingFile)
 
         if (launcherFile != "") {
-            this.launcher_file := launcherFile
+            this["launcher_file"] := launcherFile
         }
 
         return launcherFile
@@ -61,18 +65,18 @@
     }
 
     OpenBackupsFile() {
-        Run(this.backups_file)
+        Run(this["backups_file"])
     }
 
     ChangeBackupsFile(existingFile := "") {
         if (existingFile == "") {
-            existingFile := this.backups_file
+            existingFile := this["backups_file"]
         }
 
         backupsFile := this.SelectBackupsFile(existingFile)
 
         if (backupsFile != "") {
-            this.backups_file := backupsFile
+            this["backups_file"] := backupsFile
         }
 
         return backupsFile
@@ -90,18 +94,18 @@
     }
 
     OpenPlatformsFile() {
-        Run(this.platforms_file)
+        Run(this["platforms_file"])
     }
 
     ChangePlatformsFile(existingFile := "") {
         if (existingFile == "") {
-            existingFile := this.platforms_file
+            existingFile := this["platforms_file"]
         }
 
         platformsFile := this.SelectPlatformsFile(existingFile)
 
         if (platformsFile != "") {
-            this.platforms_file := platformsFile
+            this["platforms_file"] := platformsFile
         }
 
         return platformsFile
@@ -119,12 +123,12 @@
     }
 
     OpenAssetsDir() {
-        Run(this.assets_dir)
+        Run(this["assets_dir"])
     }
 
     ChangeAssetsDir(existingDir := "") {
         if (existingDir == "") {
-            existingDir := this.assets_dir
+            existingDir := this["assets_dir"]
         }
 
         MsgBox(this.app.appName . " sometimes creates and uses other files when building and/or running your launchers. These files are known as Assets, and they are stored in a separate directory for each launcher you create.`n`nOn the following dialog, select the parent directory that " . this.app.appName . " should create launcher assets within.", this.app.appName . " Assets Dir", "OK")

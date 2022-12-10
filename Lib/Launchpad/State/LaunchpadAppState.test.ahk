@@ -1,4 +1,4 @@
-class LaunchpadAppStateTest extends TestBase {
+class LaunchpadAppStateTest extends AppTestBase {
     appState := ""
     stateFile := ""
 

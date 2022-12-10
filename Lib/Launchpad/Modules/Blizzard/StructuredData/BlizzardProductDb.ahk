@@ -20,7 +20,7 @@
 
         productInstalls := []
 
-        if (this.obj.Has("productInstall") && Type(this.obj["productInstall"]) == "Array") {
+        if (this.obj.Has("productInstall") && HasBase(this.obj["productInstall"], Array.Prototype)) {
             productInstalls := this.obj["productInstall"]
         }
 

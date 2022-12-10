@@ -1,6 +1,5 @@
 ﻿class SettingsWindow extends FormGuiBase {
     availableThemes := Map()
-    logLevels := ["None", "Error", "Warning", "Info", "Debug"]
     listViewModes := ["Report", "Tile", "List"]
     doubleClickActions := ["Edit", "Run"]
     needsRestart := false
@@ -90,11 +89,18 @@
 
         this.AddHeading("Default Launcher Theme")
         chosen := this.GetItemIndex(this.availableThemes, this.app.Config["default_launcher_theme"])
-        ctl := this.guiObj.AddDDL("vdefault_launcher_theme xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), this.availableThemes)
-        ctl.OnEvent("Change", "OnDefaultLauncherThemeChange")
-        ctl.ToolTip := "Select the theme your launchers will use unless overridden."
 
-        this.AddConfigCheckBox("Override API launcher themes with the default theme", "override_launcher_theme")
+        defaultThemes := [""]
+
+        for , themeName in this.availableThemes {
+            defaultThemes.Push(themeName)
+        }
+
+        ctl := this.guiObj.AddDDL("vdefault_launcher_theme xs y+m Choose" . chosen . " w250 c" . this.themeObj.GetColor("editText"), defaultThemes)
+        ctl.OnEvent("Change", "OnDefaultLauncherThemeChange")
+        ctl.ToolTip := "Select the theme your launchers will use unless overridden. Leave blank to use Launchpad's current theme."
+
+        this.AddConfigCheckBox("Allow launchers to specify their own theme", "enable_custom_launcher_themes")
 
         tabs.UseTab("Cache", true)
 
@@ -108,9 +114,12 @@
         this.AddHeading("Updates")
         this.AddConfigCheckBox("Check for updates on start", "check_updates_on_start")
 
+        this.AddHeading("Errors")
+        this.AddCOnfigCheckBox("Force error messages to show on top of other windows", "force_error_window_to_top")
+
         this.AddHeading("Logging Level")
-        chosen := this.GetItemIndex(this.logLevels, this.app.Config["logging_level"])
-        ctl := this.guiObj.AddDDL("vlogging_level xs y+m Choose" . chosen . " w200 c" . this.themeObj.GetColor("editText"), this.logLevels)
+        chosen := this.GetItemIndex(this.container.Get("logger").GetLogLevels(), this.app.Config["logging_level"])
+        ctl := this.guiObj.AddDDL("vlogging_level xs y+m Choose" . chosen . " w200 c" . this.themeObj.GetColor("editText"), this.container.Get("logger").GetLogLevels())
         ctl.OnEvent("Change", "OnLoggingLevelChange")
 
         this.AddConfigLocationBlock("API Endpoint", "api_endpoint")
@@ -180,44 +189,44 @@
 
     OnLauncherFileMenuClick(btn) {
         if (btn == "ChangeLauncherFile") {
-            this.app.Config["ChangeLauncherFile"]()
+            this.app.Config.ChangeLauncherFile()
             this.SetText("LauncherFile", this.app.Config["launcher_file"], "Bold")
         } else if (btn == "OpenLauncherFile") {
-            this.app.Config["OpenLauncherFile"]()
+            this.app.Config.OpenLauncherFile()
         } else if (btn == "ReloadLauncherFile") {
-            this.app.Service("manager.launcher").LoadComponents(this.app.Config["launcher_file"])
+            this.app.Service("entity_manager.launcher").LoadComponents(true)
         }
     }
 
     OnBackupsFileMenuClick(btn) {
         if (btn == "ChangeBackupsFile") {
-            this.app.Config["ChangeBackupsFile"]()
+            this.app.Config.ChangeBackupsFile()
             this.SetText("BackupsFile", this.app.Config["backups_file"], "Bold")
         } else if (btn == "OpenBackupsFile") {
-            this.app.Config["OpenBackupsFile"]()
+            this.app.Config.OpenBackupsFile()
         } else if (btn == "ReloadBackupsFile") {
-            this.app.Service("manager.launcher").LoadComponents(this.app.Config["backups_file"])
+            this.app.Service("entity_manager.backup").LoadComponents(true)
         }
     }
 
     OnPlatformsFileMenuClick(btn) {
         if (btn == "ChangePlatformsFile") {
-            this.app.Config["ChangePlatformsFile"]()
+            this.app.Config.ChangePlatformsFile()
             this.SetText("PlatformsFile", this.app.Config["platforms_file"], "Bold")
         } else if (btn == "OpenPlatformsFile") {
-            this.app.Config["OpenPlatformsFile"]()
+            this.app.Config.OpenPlatformsFile()
         } else if (btn == "ReloadPlatformsFile") {
-            this.app.Service("manager.platform").LoadComponents(this.app.Config["platforms_file"])
+            this.app.Service("entity_manager.platform").LoadComponents(true)
         }
     }
 
     OnDestinationDirMenuClick(btn) {
         if (btn == "ChangeDestinationDir") {
-            this.app.Config["ChangeDestinationDir"]()
+            this.app.Config.ChangeDestinationDir()
             this.SetText("DestinationDir", this.app.Config["destination_dir"], "Bold")
             this.needsRestart := true
         } else if (btn == "OpenDestinationDir") {
-            this.app.Config["OpenDestinationDir"]()
+            this.app.Config.OpenDestinationDir()
         }
     }
 
@@ -229,21 +238,21 @@
 
     OnAssetsDirMenuClick(btn) {
         if (btn == "ChangeAssetsDir") {
-            this.app.Config["ChangeAssetsDir"]()
+            this.app.Config.ChangeAssetsDir()
             this.SetText("AssetsDir", this.app.Config["assets_dir"], "Bold")
             this.needsRestart := true
         } else if (btn == "OpenAssetsDir") {
-            this.app.Config["OpenAssetsDir"]()
+            this.app.Config.OpenAssetsDir()
         }
     }
 
     OnApiEndpointMenuClick(btn) {
         if (btn == "ChangeApiEndpoint") {
-            this.app.Service("manager.datasource")["api"].ChangeApiEndpoint("", "")
+            this.app.Service("manager.data_source").GetDefaultDataSource().ChangeApiEndpoint("", "")
             this.SetText("ApiEndpoint", this.app.Config["api_endpoint"], "Bold")
             this.needsRestart := true
         } else if (btn == "OpenApiEndpoint") {
-            this.app.Service("manager.datasource")["api"].Open()
+            this.app.Service("manager.data_source").GetDefaultDataSource().Open()
         }
     }
 
@@ -260,11 +269,11 @@
 
     OnBackupDirMenuClick(btn) {
         if (btn == "ChangeBackupDir") {
-            this.app.Service("manager.backup").ChangeBackupDir()
+            this.app.Service("entity_manager.backup").ChangeBackupDir()
             this.SetText("BackupDir", this.app.Config["backup_dir"], "Bold")
             this.needsRestart := true
         } else if (btn == "OpenBackupDir") {
-            this.app.Service("manager.backup").OpenBackupDir()
+            this.app.Service("entity_manager.backup").OpenBackupDir()
         }
     }
 

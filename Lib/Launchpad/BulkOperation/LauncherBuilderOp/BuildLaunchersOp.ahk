@@ -20,19 +20,19 @@ class BuildLaunchersOp extends LauncherBuilderOpBase {
             detailText := exists ? "Rebuilding launcher..." : "Building launcher..."
 
             if (this.useProgress) {
-                this.progress.SetDetailText(launcherEntityObj.Key . ": " . detailText)
+                this.progress.SetDetailText(launcherEntityObj.Id . ": " . detailText)
             }
 
             success := this.Builder.Build(launcherEntityObj)
 
             if (success) {
-                 message := exists ? "Rebuilt launcher successfully." : "Built launcher successfully."
+                message := exists ? "Rebuilt launcher successfully." : "Built launcher successfully."
             } else {
                 message := "Failed to build launcher."
             }
 
             if (this.useProgress) {
-                this.progress.SetDetailText(launcherEntityObj.Key . ": " . message)
+                this.progress.SetDetailText(launcherEntityObj.Id . ": " . message)
             }
         } else {
             this.skipped++

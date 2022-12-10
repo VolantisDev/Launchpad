@@ -41,7 +41,7 @@ class EpicPlatform extends RegistryLookupGamePlatformBase {
                 }
 
                 if (isGame) {
-                    key := obj["DisplayName"]
+                    key := obj["Name"]
                     installDir := obj["InstallLocation"]
                     launcherSpecificId := obj["AppName"]
                     ;exeName := obj["LaunchExecutable"]

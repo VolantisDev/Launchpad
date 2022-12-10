@@ -11,7 +11,9 @@ class DetectedGame {
     launcherSpecificId := ""
     possibleExeNames := []
     keyMap := Map()
+    ; @todo Move this to properties or config or allow it to be extended
     hyphenPrefixes := ["Call of Duty", "Dragon Age"]
+    ; @todo Move this to properties or config or allow it to be extended
     prioritySuffixes := ["-Win64-Shipping", "-Win32-Shipping"]
     filterExes := []
 
@@ -40,7 +42,15 @@ class DetectedGame {
     HasChanges(launcher) {
         hasChanges := false
             
-        if (this.launcherType != launcher.ManagedLauncher.EntityType || this.gameType != launcher.ManagedLauncher.ManagedGame.EntityType || this.installDir != launcher.ManagedLauncher.ManagedGame.InstallDir || this.exeName != launcher.ManagedLauncher.ManagedGame.Exe || this.launcherSpecificId != launcher.ManagedLauncher.ManagedGame.LauncherSpecificId) {
+        if (
+            this.displayName != launcher["name"]
+            || this.launcherType != launcher["ManagedLauncher"].EntityTypeId
+            || this.gameType != launcher["ManagedGame"].EntityTypeId 
+            || this.installDir != launcher["ManagedGame"]["InstallDir"]
+            || this.launcherInstallDir != launcher["ManagedLauncher"]["InstallDir"]
+            || this.exeName != launcher["ManagedGame"]["Exe"] 
+            || this.launcherSpecificId != launcher["ManagedGame"]["LauncherSpecificId"]
+        ) {
             hasChanges := true
         }
 
@@ -50,37 +60,37 @@ class DetectedGame {
     UpdateLauncher(launcher) {
         modified := false
 
-        if (this.displayName && this.key != this.displayName && launcher.DisplayName != this.displayName) {
-            launcher.DisplayName := this.displayName
+        if (this.displayName && this.key != this.displayName && launcher["name"] != this.displayName) {
+            launcher["name"] := this.displayName
             modified := true
         }
 
-        if (launcher.Platform != this.platform.key) {
-            launcher.Platform := this.platform.key
-            modified := true
-        }
-                
-        if (this.launcherType && launcher.ManagedLauncher.EntityType != this.launcherType) {
-            launcher.ManagedLauncher.EntityType := this.launcherType
+        if (launcher["Platform"]["id"] != this.platform.key) {
+            launcher["Platform"] := this.platform.key
             modified := true
         }
 
-        if (this.gameType && launcher.ManagedLauncher.ManagedGame.EntityType != this.gameType) {
-            launcher.ManagedLauncher.ManagedGame.EntityType := this.gameType
+        if (this.launcherType && launcher["ManagedLauncher"].EntityTypeId != this.launcherType) {
+            launcher["ManagedLauncher"].EntityType := this.launcherType
             modified := true
         }
 
-        if (this.launcherInstallDir && launcher.ManagedLauncher.InstallDir != this.launcherInstallDir) {
-            launcher.ManagedLauncher.InstallDir := this.launcherInstallDir
-        }
-
-        if (this.installDir && launcher.ManagedLauncher.ManagedGame.InstallDir != this.installDir) {
-            launcher.ManagedLauncher.ManagedGame.InstallDir := this.installDir
+        if (this.gameType && launcher["ManagedGame"].EntityTypeId != this.gameType) {
+            launcher["ManagedGame"].EntityType := this.gameType
             modified := true
         }
 
-        if (this.exeName && launcher.ManagedLauncher.ManagedGame.Exe != this.exeName) {
-            launcher.ManagedLauncher.ManagedGame.Exe := this.exeName
+        if (this.launcherInstallDir && launcher["ManagedLauncher"]["InstallDir"] != this.launcherInstallDir) {
+            launcher["ManagedLauncher"]["InstallDir"] := this.launcherInstallDir
+        }
+
+        if (this.installDir && launcher["ManagedGame"]["InstallDir"] != this.installDir) {
+            launcher["ManagedGame"]["InstallDir"] := this.installDir
+            modified := true
+        }
+
+        if (this.exeName && launcher["ManagedGame"]["Exe"] != this.exeName) {
+            launcher["ManagedGame"]["Exe"] := this.exeName
             modified := true
         }
 
@@ -90,10 +100,14 @@ class DetectedGame {
     }
 
     CreateLauncher(launcherManager) {
-        config := Map("Platform", this.platform.key, "LauncherType", this.launcherType, "GameType", this.gameType)
+        config := Map(
+            "Platform", this.platform.key, 
+            "LauncherType", this.launcherType, 
+            "GameType", this.gameType
+        )
 
-        if (this.displayName) {
-            config["DisplayName"] := this.displayName
+        if (this.displayName && this.displayName != this.key) {
+            config["name"] := this.displayName
         }
 
         if (this.launcherInstallDir) {
@@ -112,8 +126,7 @@ class DetectedGame {
             config["GameLauncherSpecificId"] := this.launcherSpecificId
         }
 
-        entity := LauncherEntity(launcherManager.app, this.key, config)
-        launcherManager.AddEntity(this.key, entity)
+        entityObj := launcherManager.GetFactory().CreateEntity(this.key, config)
     }
 
     AutoDetectValues() {

@@ -17,12 +17,24 @@ class FieldCondition extends QueryConditionBase {
             tokens := StrSplit(this.field, ".")
 
             for index, token in tokens {
-                if (context.Has(token)) {
+                found := false
+
+                if (HasBase(context, FieldableEntity.Prototype)) {
+                    if (context.HasField(token)) {
+                        context := context[token]
+                        found := true
+                    }
+                } else if (context.Has(token)) {
                     context := context[token]
-                } else if (this.allowMissing) {
-                    context := this.defaultValue
-                } else {
-                    throw ContainerException("Object does not have field: " . this.field)
+                    found := true
+                }
+
+                if (!found) {
+                    if (this.allowMissing) {
+                        context := this.defaultValue
+                    } else {
+                        throw ContainerException("Object does not have field: " . this.field)
+                    }
                 }
             }
         }

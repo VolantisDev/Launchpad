@@ -4,10 +4,10 @@ class IconFile extends CopyableBuildFile {
 
     __New(launcherEntityObj, destPath := "") {
         if (destPath == "") {
-            destPath := launcherEntityObj.AssetsDir . "\" . launcherEntityObj.Key . ".ico"
+            destPath := launcherEntityObj["AssetsDir"] . "\" . launcherEntityObj.Id . ".ico"
         }
 
-        super.__New(launcherEntityObj, launcherEntityObj.IconSrc, destPath)
+        super.__New(launcherEntityObj, launcherEntityObj["IconSrc"], destPath)
     }
 
     Cleanup() {
@@ -53,7 +53,7 @@ class IconFile extends CopyableBuildFile {
         }
 
         if (iconsCount == 0) {
-            this.app.Service("Notifier").Warning("No icons could be extracted from %exeFile%. Please try another file.")
+            this.app.Service("notifier").Warning("No icons could be extracted from %exeFile%. Please try another file.")
             iconFilePath := ""
             this.Cleanup()
         } else {
@@ -61,7 +61,7 @@ class IconFile extends CopyableBuildFile {
                 iconFilePath := FileSelect(, iconsDir, "Select the correct icon from the extracted files", "Icons (*.ico)")
                 
                 if (iconFilePath == "") {
-                    this.app.Service("Notifier").Warning("Canceled icon selection. Please try again.")
+                    this.app.Service("notifier").Warning("Canceled icon selection. Please try again.")
                     this.Cleanup()
                 }
             }

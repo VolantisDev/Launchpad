@@ -10,7 +10,13 @@ class StatusIndicatorControl extends GuiControlBase {
             handler := "OnStatusIndicatorClick"
         }
 
-        options := this.SetDefaultOptions(this.options.Clone(), ["x+" . this.guiObj.margin, "yp", "w" . this.statusIndicatorW, "h26", "vStatusIndicator"])
+        options := this.parameters.SetDefaultOptions(this.parameters["options"].Clone(), [
+            "x+" . this.guiObj.margin, 
+            "yp", 
+            "w" . this.statusIndicatorW, 
+            "h26", 
+            "vStatusIndicator"
+        ])
         
         name := statusInfo && statusInfo.Has("name") ? statusInfo["name"] : ""
         photo := statusInfo && statusInfo.Has("photo") ? statusInfo["photo"] : ""

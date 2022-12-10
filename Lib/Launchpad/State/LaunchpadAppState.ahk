@@ -18,38 +18,38 @@ class LaunchpadAppState extends AppState {
         this.SaveState()
     }
 
-    GetLauncherCreated(launcherKey) {
+    GetLauncherCreated(launcherId) {
         created := ""
 
-        if (this.Launchers.Has(launcherKey) && this.Launchers[launcherKey].Has("Created")) {
-            created := this.Launchers[launcherKey]["Created"]
+        if (this.Launchers.Has(launcherId) && this.Launchers[launcherId].Has("Created")) {
+            created := this.Launchers[launcherId]["Created"]
         }
 
         return created
     }
 
-    SetLauncherCreated(launcherKey, timestamp := "") {
+    SetLauncherCreated(launcherId, timestamp := "") {
         if (timestamp == "") {
             timestamp := FormatTime(,"yyyyMMddHHmmss")
         }
 
-        if (!this.Launchers.Has(launcherKey)) {
-            this.Launchers[launcherKey] := Map()
+        if (!this.Launchers.Has(launcherId)) {
+            this.Launchers[launcherId] := Map()
         }
 
-        this.Launchers[launcherKey]["Created"] := timestamp
+        this.Launchers[launcherId]["Created"] := timestamp
         this.SaveState()
     }
 
-    SetLauncherConfigInfo(launcherKey, version := "", timestamp := "") {
-        this.SetLauncherInfo(launcherKey, "Config", version, timestamp)
+    SetLauncherConfigInfo(launcherId, version := "", timestamp := "") {
+        this.SetLauncherInfo(launcherId, "Config", version, timestamp)
     }
 
-    SetLauncherBuildInfo(launcherKey, version := "", timestamp := "") {
-        this.SetLauncherInfo(launcherKey, "Build", version, timestamp)
+    SetLauncherBuildInfo(launcherId, version := "", timestamp := "") {
+        this.SetLauncherInfo(launcherId, "Build", version, timestamp)
     }
 
-    SetLauncherInfo(launcherKey, infoKey, version := "", timestamp := "") {
+    SetLauncherInfo(launcherId, infoKey, version := "", timestamp := "") {
         if (version == "") {
             version := this.app.Version
         }
@@ -58,36 +58,36 @@ class LaunchpadAppState extends AppState {
             timestamp := FormatTime(,"yyyyMMddHHmmss")
         }
 
-        if (!this.Launchers.Has(launcherKey)) {
-            this.Launchers[launcherKey] := Map()
+        if (!this.Launchers.Has(launcherId)) {
+            this.Launchers[launcherId] := Map()
         }
 
-        this.Launchers[launcherKey][infoKey] := Map("Version", version, "Timestamp", timestamp)
+        this.Launchers[launcherId][infoKey] := Map("Version", version, "Timestamp", timestamp)
         this.SaveState()
     }
 
-    DeleteLauncherInfo(launcherKey, infoKey := "") {
-        if (this.Launchers.Has(launcherKey)) {
-            if (infoKey != "" && this.Launchers[launcherKey].Has(infoKey)) {
-                this.Launchers[launcherKey].Delete(infoKey)
+    DeleteLauncherInfo(launcherId, infoKey := "") {
+        if (this.Launchers.Has(launcherId)) {
+            if (infoKey != "" && this.Launchers[launcherId].Has(infoKey)) {
+                this.Launchers[launcherId].Delete(infoKey)
             }
 
             if (infoKey == "" || this.Launchers.Count == 0) {
-                this.Launchers.Delete(launcherKey)
+                this.Launchers.Delete(launcherId)
             }
 
             this.SaveState()
         }
     }
 
-    GetLauncherInfo(launcherKey, infoKey) {
+    GetLauncherInfo(launcherId, infoKey) {
         value := ""
 
-        if (this.Launchers.Has(launcherKey) && this.Launchers[launcherKey].Has(infoKey)) {
-            value := this.Launchers[launcherKey][infoKey]
+        if (this.Launchers.Has(launcherId) && this.Launchers[launcherId].Has(infoKey)) {
+            value := this.Launchers[launcherId][infoKey]
         }
 
-        if (Type(value) != "Map") {
+        if (!HasBase(value, Map.Prototype)) {
             value := Map()
         }
 

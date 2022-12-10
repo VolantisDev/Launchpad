@@ -19,8 +19,5 @@ class Events {
     static APP_SHUTDOWN := 0x1020
     static APP_RESTART := 0x1025
 
-    static BACKUPS_REGISTER := 0x2070
-    static BACKUPS_ALTER := 0x2075
-
     static AHK_NOTIFYICON := 0x404
 }

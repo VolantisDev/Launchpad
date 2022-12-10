@@ -14,7 +14,7 @@ LaunchpadLauncher(Map(
     "developer", "Volantis Development",
     "version", "{{appVersion}}",
     "console", true,
-    "launcherKey", "{{launcherKey}}",
+    "launcherId", "{{launcherId}}",
     "launchpadLauncherConfig", {%launchpadLauncherConfig%},
     "launcherConfig", {%launcherConfig%},
     "gameConfig", {%gameConfig%},

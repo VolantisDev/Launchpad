@@ -3,7 +3,7 @@ class FileLocator extends LocatorBase {
     searchDirs := []
     
     __New(searchDirs, config := "") {
-        if (Type(searchDirs) != "Array") {
+        if (!HasBase(searchDirs, Array.Prototype)) {
             searchDirs := [searchDirs]
         }
 
