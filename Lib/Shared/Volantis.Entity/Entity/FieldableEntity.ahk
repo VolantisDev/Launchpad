@@ -242,4 +242,18 @@ class FieldableEntity extends EntityBase {
         values["name"] := this["id"]
         return values
     }
+
+    InitializeDefaults() {
+        defaults := Map()
+
+        for key, fieldObj in this.GetFields() {
+            defaultVal := fieldObj.Definition["default"]
+
+            if (defaultVal) {
+                defaults[key] := defaultVal
+            }
+        }
+
+        return defaults
+    }
 }
