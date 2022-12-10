@@ -42,7 +42,14 @@ class DetectedGame {
     HasChanges(launcher) {
         hasChanges := false
             
-        if (this.launcherType != launcher["ManagedLauncher"].EntityType || this.gameType != launcher["ManagedGame"].EntityType || this.installDir != launcher["ManagedGame"]["InstallDir"] || this.exeName != launcher["ManagedGame"]["Exe"] || this.launcherSpecificId != launcher["ManagedGame"]["LauncherSpecificId"]) {
+        if (
+            this.displayName != launcher["name"]
+            || this.launcherType != launcher["ManagedLauncher"].EntityTypeId
+            || this.gameType != launcher["ManagedGame"].EntityTypeId 
+            || this.installDir != launcher["ManagedGame"]["InstallDir"] 
+            || this.exeName != launcher["ManagedGame"]["Exe"] 
+            || this.launcherSpecificId != launcher["ManagedGame"]["LauncherSpecificId"]
+        ) {
             hasChanges := true
         }
 
@@ -52,22 +59,22 @@ class DetectedGame {
     UpdateLauncher(launcher) {
         modified := false
 
-        if (this.displayName && this.key != this.displayName && launcher.Name != this.displayName) {
-            launcher.Name := this.displayName
+        if (this.displayName && this.key != this.displayName && launcher["name"] != this.displayName) {
+            launcher["name"] := this.displayName
             modified := true
         }
 
-        if (launcher["Platform"].Id != this.platform.key) {
+        if (launcher["Platform"]["id"] != this.platform.key) {
             launcher["Platform"] := this.platform.key
             modified := true
         }
-                
-        if (this.launcherType && launcher["ManagedLauncher"].EntityType != this.launcherType) {
+
+        if (this.launcherType && launcher["ManagedLauncher"].EntityTypeId != this.launcherType) {
             launcher["ManagedLauncher"].EntityType := this.launcherType
             modified := true
         }
 
-        if (this.gameType && launcher["ManagedGame"].EntityType != this.gameType) {
+        if (this.gameType && launcher["ManagedGame"].EntityTypeId != this.gameType) {
             launcher["ManagedGame"].EntityType := this.gameType
             modified := true
         }
@@ -92,7 +99,11 @@ class DetectedGame {
     }
 
     CreateLauncher(launcherManager) {
-        config := Map("Platform", this.platform.key, "LauncherType", this.launcherType, "GameType", this.gameType)
+        config := Map(
+            "Platform", this.platform.key, 
+            "LauncherType", this.launcherType, 
+            "GameType", this.gameType
+        )
 
         if (this.displayName) {
             config["name"] := this.displayName
