@@ -38,7 +38,10 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "default", 0,
             "required", true,
             "group", "advanced",
-            "description", "How many seconds to wait before closing the launcher"
+            "description", "How many seconds to wait before closing the launcher",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
         )
 
         definitions["ClosePostDelay"] := Map(
@@ -49,7 +52,10 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "default", 0,
             "required", true,
             "group", "advanced",
-            "description", "How many seconds to wait after closing the launcher"
+            "description", "How many seconds to wait after closing the launcher",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
         )
 
         ; How to attempt to close the launcher if running. Can be one of:
@@ -75,7 +81,10 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "default", 10,
             "required", true,
             "group", "advanced",
-            "description", "The amount of time to wait between checks if the launcher is running, if applicable."
+            "description", "The amount of time to wait between checks if the launcher is running, if applicable.",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
         )
 
         definitions["WaitTimeout"] := Map(
@@ -86,7 +95,10 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "default", 30,
             "required", true,
             "group", "advanced",
-            "description", "Set how long the launcher will attempt to wait before giving up."
+            "description", "Set how long the launcher will attempt to wait before giving up.",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
         )
 
         definitions["KillPreDelay"] := Map(
@@ -97,7 +109,10 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "default", 10,
             "required", true,
             "group", "advanced",
-            "description", "If killing a managed launcher forcefully, ending the process will be delayed by this number of seconds."
+            "description", "If killing a managed launcher forcefully, ending the process will be delayed by this number of seconds.",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
         )
 
         definitions["KillPostDelay"] := Map(
@@ -108,7 +123,10 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "default", 5,
             "required", true,
             "group", "advanced",
-            "description", "If killing a managed launcher forcefully, the launcher will wait this number of seconds after trying to end the process before reporting success."
+            "description", "If killing a managed launcher forcefully, the launcher will wait this number of seconds after trying to end the process before reporting success.",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
         )
 
         definitions["PoliteCloseWait"] := Map(
@@ -119,7 +137,10 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "required", true,
             "default", 10,
             "group", "advanced",
-            "description", "How many seconds to give the launcher to close after asking politely before forcefully killing it (if applicable)."
+            "description", "How many seconds to give the launcher to close after asking politely before forcefully killing it (if applicable).",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
         )
 
         return definitions

@@ -64,7 +64,10 @@ class ManagedEntityBase extends AppEntityBase {
             "formField", false,
             "storageKey", this.configPrefix . "Class",
             "required", true,
-            "group", "advanced"
+            "group", "advanced",
+            "modes", Map(
+                "simple", Map("formField", false)
+            ),
         )
 
         definitions["SearchDirs"] := Map(
@@ -75,7 +78,10 @@ class ManagedEntityBase extends AppEntityBase {
             "description", "Possible parent directories where the game's launcher might exist, to be used for auto-detection.",
             "help", "These should be as specific as possible to reduce detection time.",
             "multiple", true,
-            "group", "locations"
+            "group", "locations",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
         )
 
         definitions["InstallDir"] := Map(
@@ -83,6 +89,9 @@ class ManagedEntityBase extends AppEntityBase {
             "mustExist", false,
             "storageKey", this.configPrefix . "InstallDir",
             "group", "locations",
+            "modes", Map(
+                "simple", Map("group", "general")
+            ),
             "description", "Select the installation folder, or use default for auto-detection."
         )
 
@@ -93,7 +102,10 @@ class ManagedEntityBase extends AppEntityBase {
             "storageKey", this.configPrefix . "Exe",
             "description", "This can be the full path on the system to the launcher's .exe file, or simply the name of the .exe file itself.",
             "help", "If the .exe doesn't include the absolute path, auto-detection will be used by searching the DestinationDirs.",
-            "group", "locations"
+            "group", "locations",
+            "modes", Map(
+                "simple", Map("group", "general")
+            )
         )
 
         ; Options include:
@@ -105,6 +117,9 @@ class ManagedEntityBase extends AppEntityBase {
             "default", "SearchDirs",
             "description", "How to search for the .exe if it isn't a full path already",
             "group", "general",
+            "modes", Map(
+                "simple", Map("formField", false)
+            ),
             "widget", "select",
             "selectOptionsCallback", ObjBindMethod(this, "ListLocateMethods"),
             "help", "Search: Searches a list of possible directories (Defaulting to some common possibilities) for the .exe file and uses that directory`nRegistry: Looks for the provided registry key and uses its value as the install path if present`nBlizzardProductDb: Searches for LauncherSpecificId within the Blizzard product.db file if present"
@@ -121,38 +136,56 @@ class ManagedEntityBase extends AppEntityBase {
             "group", "registry",
             "widget", "select",
             "selectOptionsCallback", ObjBindMethod(this, "ListRegViews"),
-            "description", "The registry view to use when locating the install dir."
+            "description", "The registry view to use when locating the install dir.",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
         )
 
         definitions["LocateRegKey"] := Map(
             "storageKey", this.configPrefix . "LocateRegKey",
             "group", "registry",
             "description", "The registry key to look up the install dir within.",
-            "help", "Path parts should be separated with backslashes and must start with one of: HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT, HKEY_CURRENT_CONFIG, or the abbreviation of one of those. To read from a remote registry, prefix the root path with two backslashes and the computer name.`n`nSimple example: HKLM\Path\To\Key`nRemote example: \\OTHERPC\HKLM\Path\To\Key"
+            "help", "Path parts should be separated with backslashes and must start with one of: HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT, HKEY_CURRENT_CONFIG, or the abbreviation of one of those. To read from a remote registry, prefix the root path with two backslashes and the computer name.`n`nSimple example: HKLM\Path\To\Key`nRemote example: \\OTHERPC\HKLM\Path\To\Key",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
         )
 
         definitions["LocateRegValue"] := Map(
             "storageKey", this.configPrefix . "LocateRegValue",
             "group", "registry",
             "description", "The name of the registry value to look up within the specified key.",
-            "help", "Example: InstallPath"
+            "help", "Example: InstallPath",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
         )
 
         definitions["LocateRegRemovePrefix"] := Map(
             "storageKey", this.configPrefix . "LocateRegRemovePrefix",
-            "group", "registry"
+            "group", "registry",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
         )
 
         definitions["LocateRegRemoveSuffix"] := Map(
             "storageKey", this.configPrefix . "LocateRegRemoveSuffix",
-            "group", "registry"
+            "group", "registry",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
         )
 
         definitions["LocateRegStripQuotes"] := Map(
             "storageKey", this.configPrefix . "LocateRegStripQuotes",
             "default", false,
             "group", "registry",
-            "description", "Strip quotes from registry value"
+            "description", "Strip quotes from registry value",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
         )
 
         definitions["LauncherSpecificId"] := Map(
@@ -166,7 +199,10 @@ class ManagedEntityBase extends AppEntityBase {
             "description", "The directory that the launcher should be run from.",
             "help", "If not set, it will be run without setting an explicit working directory, which is usually sufficient.",
             "storageKey", this.configPrefix . "WorkingDir",
-            "group", "locations"
+            "group", "locations",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
         )
 
         ; - Shortcut (Run a shortcut file)
@@ -205,7 +241,10 @@ class ManagedEntityBase extends AppEntityBase {
             "description", "The shortcut file used to launch the game launcher itself.",
             "help", "This is typically only needed if the Shortcut LauncherRunType is selected.",
             "storageKey", this.configPrefix . "ShortcutSrc",
-            "group", "locations"
+            "group", "locations",
+            "modes", Map(
+                "simple", Map("group", "general")
+            )
         )
 
         ; - RunWait (the default, uses RunWait to both run a process and wait until it completes in one step. This is most efficient if it works.)
@@ -239,14 +278,20 @@ class ManagedEntityBase extends AppEntityBase {
         definitions["ProcessId"] := Map(
             "help", "This value's type is dependent on the ProcessType above. It can often be detected from other values, and is not needed if the GameRunType is RunWait.",
             "storageKey", this.configPrefix . "ProcessId",
-            "group", "process"
+            "group", "process",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
         )
 
         definitions["ProcessTimeout"] := Map(
             "description", "The number of seconds to wait before giving up when waiting for a process.",
             "storageKey", this.configPrefix . "ProcessTimeout",
             "default", 30,
-            "group", "process"
+            "group", "process",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
         )
 
         definitions["RunCmd"] := Map(

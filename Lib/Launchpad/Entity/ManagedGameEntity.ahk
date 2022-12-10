@@ -31,7 +31,10 @@ class ManagedGameEntity extends ManagedEntityBase {
         ; - Class - This value should be set to the game's window class
         definitions["LoadingWindowProcessId"] := Map(
             "storageKey", this.configPrefix . "LoadingWindowProcessId",
-            "help", "This value's type is dependent on the GameProcessType above. It can often be detected from other values, and is not needed if the GameRunType is RunWait."
+            "help", "This value's type is dependent on the GameProcessType above. It can often be detected from other values, and is not needed if the GameRunType is RunWait.",
+            "modes", Map(
+                "simple", Map("formField", false)
+            )
         )
 
         return definitions

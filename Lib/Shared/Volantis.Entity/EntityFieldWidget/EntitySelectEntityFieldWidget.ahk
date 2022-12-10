@@ -3,7 +3,8 @@ class EntitySelectEntityFieldWidget extends SelectEntityFieldWidget {
         defaults := super.GetDefaultDefinition(definition)
         defaults["selectButton"] := false
         defaults["selectButtonText"] := "Edit",
-        defaults["selectButtonHandler"] := ObjBindMethod(this, "OnEditEntity")
+        defaults["selectButtonHandler"] := ObjBindMethod(this, "OnEditEntity"),
+        defaults["entityFormMode"] := "child"
         return defaults
     }
 
@@ -15,7 +16,7 @@ class EntitySelectEntityFieldWidget extends SelectEntityFieldWidget {
         if (entityId && entityTypeId) {
             manager := this.container.Get("manager.entity_type").GetManager(entityTypeId)
             entityObj := manager[entityId]
-            diff := entityObj.Edit("child", this.guiObj.guiId)
+            diff := entityObj.Edit(this.Definition["entityFormMode"], this.guiObj.guiId)
 
             if (diff) {
                 event := EntityReferenceEvent(EntityEvents.ENTITY_VALIDATE, this.entityObj.entityTypeId, this.entityObj, this.fieldId, entityTypeId, entityObj)
