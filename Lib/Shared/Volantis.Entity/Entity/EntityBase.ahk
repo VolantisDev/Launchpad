@@ -421,10 +421,10 @@ class EntityBase {
     GetEditorButtons(mode) {
         buttonDefs := ""
 
-        if (mode == "config" || mode == "simple") {
-            buttonDefs := "*&Save|&Cancel"
-        } else if (mode == "build") {
+        if (mode == "build") {
             buttonDefs := "*&Continue|&Skip"
+        } else {
+            buttonDefs := "*&Save|&Cancel"
         }
 
         return buttonDefs
