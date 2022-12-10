@@ -126,7 +126,6 @@ class DetectedGame {
         }
 
         entityObj := launcherManager.GetFactory().CreateEntity(this.key, config)
-        launcherManager.LoadComponents(true)
     }
 
     AutoDetectValues() {
