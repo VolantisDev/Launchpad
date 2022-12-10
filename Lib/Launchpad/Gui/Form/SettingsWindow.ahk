@@ -114,6 +114,9 @@
         this.AddHeading("Updates")
         this.AddConfigCheckBox("Check for updates on start", "check_updates_on_start")
 
+        this.AddHeading("Errors")
+        this.AddCOnfigCheckBox("Force error messages to show on top of other windows", "force_error_window_to_top")
+
         this.AddHeading("Logging Level")
         chosen := this.GetItemIndex(this.container.Get("logger").GetLogLevels(), this.app.Config["logging_level"])
         ctl := this.guiObj.AddDDL("vlogging_level xs y+m Choose" . chosen . " w200 c" . this.themeObj.GetColor("editText"), this.container.Get("logger").GetLogLevels())

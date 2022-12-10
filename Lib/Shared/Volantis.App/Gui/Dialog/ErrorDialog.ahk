@@ -27,6 +27,7 @@ class ErrorDialog extends DialogBox {
         defaults := super.GetDefaultConfig(container, config)
         defaults["buttons"] := "*&Continue|&Reload|&Exit",
         defaults["submitError"] := false
+        defaults["alwaysOnTop"] := !!(container.GetApp().Config["force_error_window_to_top"])
         return defaults
     }
 

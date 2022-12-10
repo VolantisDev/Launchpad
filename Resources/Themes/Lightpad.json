@@ -546,7 +546,6 @@
                 "contentWidth": 420,
                 "listViewHeight": "{{tabHeight}}",
                 "options": {
-                    "AlwaysOnTop": "",
                     "Border": "",
                     "Caption": "",
                     "Disabled": "",
@@ -567,7 +566,6 @@
                 "saveSize": false,
                 "savePosition": false,
                 "options": {
-                    "AlwaysOnTop": true,
                     "Border": true,
                     "Caption": true,
                     "OwnDialogs": false,
@@ -595,7 +593,6 @@
                     "buttonSpacing": "{{margin}}"
                 },
                 "options": {
-                    "AlwaysOnTop": true,
                     "Caption": false,
                     "Border": true,
                     "ToolWindow": true

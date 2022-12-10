@@ -50,7 +50,8 @@ class GuiBase {
             "positionAtMouseCursor", false,
             "openWindowWithinScreenBounds", true,
             "showInNotificationArea", false,
-            "showStatusIndicator", false
+            "showStatusIndicator", false,
+            "alwaysOnTop", false
         )
     }
 
@@ -87,6 +88,8 @@ class GuiBase {
         if (this.windowSettingsKey == "") {
             this.windowSettingsKey := Type(this)
         }
+
+        extraOptions["AlwaysOnTop"] := !!(this.config["alwaysOnTop"])
         
         this.windowSettings := themeObj.GetWindowSettings(this.windowSettingsKey)
         this.windowOptions := themeObj.GetWindowOptionsString(this.windowSettingsKey, extraOptions)

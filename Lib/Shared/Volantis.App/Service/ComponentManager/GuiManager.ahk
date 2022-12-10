@@ -86,6 +86,10 @@ class GuiManager extends ComponentManagerBase {
             config["waitForResult"] := true
         }
 
+        if (!config.Has("alwaysOnTop")) {
+            config["alwaysOnTop"] := true
+        }
+
         config["id"] := this.factory.GetGuiId(config, params*)
 
         window := this.GetWindow(config, params*)

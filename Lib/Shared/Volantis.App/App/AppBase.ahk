@@ -67,6 +67,7 @@ class AppBase {
             "config.cache_dir", "@@{tmp_dir}\Cache",
             "config.flush_cache_on_exit", false,
             "config.check_updates_on_start", false,
+            "config.force_error_window_to_top", false,
             "config.logging_level", "Error",
             "config.modules_file", "@@{data_dir}\Modules.json",
             "config.modules_view_mode", "Report",
@@ -656,7 +657,8 @@ class AppBase {
                     "type", "ErrorDialog",
                     "title", "Unhandled Exception",
                     "text", errorText,
-                    "buttons", btns
+                    "buttons", btns,
+                    "alwaysOnTop", this.Config["force_error_window_to_top"]
                 ), err)
             } else {
                 this.ShowUnthemedError(title, err.Message, err, "", allowContinue)
