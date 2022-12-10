@@ -70,9 +70,6 @@ class TokenReplacer extends DataProcessorBase {
                 if (known) {
                     replacements[fullToken] := this._replaceToken(tokenParts)
                 }
-                if (fullToken == "{{param.selectOptionsInternal}}") {
-                    test := "here"
-                }
                 
             }
 
