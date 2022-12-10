@@ -19,7 +19,7 @@
         "config.launcher_double_click_action": "Edit",
         "config.launcher_file": "@@{data_dir}\\Launchers.json",
         "config.launcher_view_mode": "Report",
-        "config.override_launcher_theme": false,
+        "config.enable_custom_launcher_themes": true,
         "config.platforms_file": "@@{data_dir}\\Platforms.json",
         "config.platforms_view_mode": "Tile",
         "config.player_name": "",

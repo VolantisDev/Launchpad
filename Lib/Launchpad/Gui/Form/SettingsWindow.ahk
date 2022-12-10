@@ -93,7 +93,7 @@
         ctl.OnEvent("Change", "OnDefaultLauncherThemeChange")
         ctl.ToolTip := "Select the theme your launchers will use unless overridden."
 
-        this.AddConfigCheckBox("Override API launcher themes with the default theme", "override_launcher_theme")
+        this.AddConfigCheckBox("Allow launchers to specify their own theme", "enable_custom_launcher_themes")
 
         tabs.UseTab("Cache", true)
 

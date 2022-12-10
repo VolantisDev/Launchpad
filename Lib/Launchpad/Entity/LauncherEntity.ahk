@@ -479,7 +479,7 @@ class LauncherEntity extends AppEntityBase {
             this.app.Config["default_launcher_theme"] : 
             this.app.Config["theme_name"]
 
-        if (defaultTheme && this.app.Config["override_launcher_theme"]) {
+        if (defaultTheme && !this.app.Config["enable_custom_launcher_themes"]) {
             detectedValues["Theme"] := defaultTheme
         }
 
