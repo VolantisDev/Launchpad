@@ -136,8 +136,8 @@ class PlatformEntity extends AppEntityBase {
         }
     }
 
-    AutoDetectValues() {
-        detectedValues := super.AutoDetectValues()
+    AutoDetectValues(recurse := true) {
+        detectedValues := super.AutoDetectValues(recurse)
         detectedValues["IsInstalled"] := this.Platform.IsInstalled()
         detectedValues["InstalledVersion"] := this.Platform.GetInstalledVersion()
         detectedValues["InstallDir"] := this.Platform.GetInstallDir()

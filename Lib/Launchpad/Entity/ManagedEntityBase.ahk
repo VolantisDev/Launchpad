@@ -275,8 +275,8 @@ class ManagedEntityBase extends AppEntityBase {
         return this["EntityType"]
     }
 
-    AutoDetectValues() {
-        detectedValues := super.AutoDetectValues()
+    AutoDetectValues(recurse := true) {
+        detectedValues := super.AutoDetectValues(recurse)
         processId := ""
         usesShortcut := false
 

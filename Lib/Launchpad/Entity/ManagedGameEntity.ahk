@@ -75,8 +75,8 @@ class ManagedGameEntity extends ManagedEntityBase {
         return detectShortcut
     }
 
-    AutoDetectValues() {
-        detectedValues := super.AutoDetectValues()
+    AutoDetectValues(recurse := true) {
+        detectedValues := super.AutoDetectValues(recurse)
         exeKey := this.configPrefix . "Exe"
 
         if (!detectedValues.Has(exeKey)) {

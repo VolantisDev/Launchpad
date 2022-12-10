@@ -185,7 +185,7 @@ class FieldableEntity extends EntityBase {
         return this.GetField(key).DeleteValue()
     }
 
-    Validate() {
+    Validate(recursive := true) {
         validateResult := super.Validate()
 
         for key, definition in this.fieldDefinitions {
@@ -233,21 +233,11 @@ class FieldableEntity extends EntityBase {
         }
     }
 
-    AutoDetectValues() {
-        values := super.AutoDetectValues()
-        values["name"] := this["id"]
-        return values
-    }
-
-    InitializeDefaults() {
-        defaults := Map()
+    InitializeDefaults(recurse := true) {
+        defaults := super.InitializeDefaults(recurse)
 
         for key, fieldObj in this.GetFields() {
             defaults[fieldObj.Definition["storageKey"]] := fieldObj.Definition["default"]
-        }
-
-        for key, referencedEntity in this.GetReferencedEntities(true) {
-            this.merger.Merge(defaults, referencedEntity.InitializeDefaults())
         }
 
         return defaults

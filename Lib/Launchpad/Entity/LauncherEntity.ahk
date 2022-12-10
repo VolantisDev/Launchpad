@@ -459,8 +459,8 @@ class LauncherEntity extends AppEntityBase {
         return key
     }
 
-    AutoDetectValues() {
-        detectedValues := super.AutoDetectValues()
+    AutoDetectValues(recurse := true) {
+        detectedValues := super.AutoDetectValues(recurse)
         
         if (!detectedValues.Has("IconSrc")) {
             checkPath := this["AssetsDir"] . "\" . this.Id . ".ico"

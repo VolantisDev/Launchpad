@@ -96,12 +96,12 @@ class BackupEntity extends AppEntityBase {
         this.CreateBackupObject()
     }
 
-    AutoDetectValues() {
+    AutoDetectValues(recurse := true) {
         if (!this.backup) {
             this.CreateBackupObject()
         }
 
-        detectedValues := super.AutoDetectValues()
+        detectedValues := super.AutoDetectValues(recurse)
         return detectedValues
     }
 

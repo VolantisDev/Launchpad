@@ -142,13 +142,22 @@ class EntityBase {
     }
 
     GetEntityType() {
+        ; @todo Inject entity type manager service
         return this.container.Get("manager.entity_type")[this.EntityTypeId]
     }
 
-    InitializeDefaults() {
-        return Map(
+    InitializeDefaults(recurse := true) {
+        defaults := Map(
             "name", this.Id
         )
+
+        if (recurse) {
+            for key, referencedEntity in this.GetReferencedEntities(true) {
+                this.merger.Merge(defaults, referencedEntity.InitializeDefaults())
+            }
+        }
+
+        return defaults
     }
 
     GetData() {
@@ -193,12 +202,25 @@ class EntityBase {
         return this.GetData().DeleteValue(key, this.dataLayer)
     }
 
-    CreateSnapshot(name) {
+    CreateSnapshot(name, recurse := true) {
         this.GetData().CreateSnapshot(name)
+
+        if (recurse) {
+            for index, entityObj in this.GetReferencedEntities(true) {
+                if (entityObj.HasOwnDataStorage()) {
+                    entityObj.GetData().CreateSnapshot(name, recurse)
+                }
+            }
+        }
+
         return this
     }
 
-    RestoreSnapshot(name) {
+    HasOwnDataStorage() {
+        return this.dataObj
+    }
+
+    RestoreSnapshot(name, recurse := true) {
         this.GetData().RestoreSnapshot(name)
         return this
     }
@@ -242,8 +264,16 @@ class EntityBase {
         this.eventMgr.DispatchEvent(event)
     }
 
-    AutoDetectValues() {
-        return Map()
+    AutoDetectValues(recurse := true) {
+        values := Map()
+
+        if (recurse) {
+            for key, referencedEntity in this.GetReferencedEntities(true) {
+                this.merger.Merge(values, referencedEntity.AutoDetectValues(recurse))
+            }
+        }
+
+        return values
     }
 
     SaveEntity(recurse := true) {
