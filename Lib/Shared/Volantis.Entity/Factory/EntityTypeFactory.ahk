@@ -26,7 +26,8 @@ class EntityTypeFactory {
             "factory_class", "EntityFactory",
             "id_sanitizer", this.idSanitizer,
             "event_manager", "manager.event",
-            "notifier", "notifier"
+            "notifier", "notifier",
+            "parent_entity_type", ""
         )
     }
 
@@ -52,6 +53,7 @@ class EntityTypeFactory {
         loaderClass := definition["definition_loader_class"]
         managerClass := definition["entity_manager_class"]
         entityTypeClass := definition["entity_type_class"]
+        parentEntityType := definition["parent_entity_type"]
 
         services := Map(
             "entity_storage." . id, Map(
@@ -77,7 +79,8 @@ class EntityTypeFactory {
             "entity_type." . id, Map(
                 "factory", %entityTypeClass%,
                 "method", "Create",
-                "arguments", [id, definition, "@{}"]
+                "arguments", [id, definition, "@{}"],
+                "parent_entity_type", parentEntityType
             ),
         )
 
