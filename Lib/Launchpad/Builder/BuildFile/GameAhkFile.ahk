@@ -35,7 +35,7 @@ class GameAhkFile extends ComposableBuildFile {
     GetPlatforms() {
         platforms := Map()
 
-        for key, platform in this.app.Service("entity_manager.platform").GetActivePlatforms() {
+        for key, platform in this.app.Service("entity_manager.platform").GetActivePlatforms(EntityQuery.RESULT_TYPE_ENTITIES) {
             platforms[key] := platform.FieldData
         }
 
