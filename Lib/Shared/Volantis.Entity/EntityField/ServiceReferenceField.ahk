@@ -40,6 +40,7 @@ class ServiceReferenceField extends EntityFieldBase {
     }
 
     _getService(serviceId) {
+        serviceId := this._getServiceId(serviceId)
         ; Override if the service ID needs to be expanded or if the service should come from somewhere else
         serviceObj := ""
 
@@ -57,7 +58,7 @@ class ServiceReferenceField extends EntityFieldBase {
     }
 
     _getServiceId(value) {
-        if (InStr(value, this.Definition["servicePrefix"]) != 1) {
+        if (this.Definition["servicePrefix"] && InStr(value, this.Definition["servicePrefix"]) != 1) {
             value := this.Definition["servicePrefix"] . value
         }
 
@@ -65,7 +66,7 @@ class ServiceReferenceField extends EntityFieldBase {
     }
 
     _getSelectQuery() {
-        return this.container.Query(ContainerQuery.RESULT_TYPE_NAMES)
+        return this.container.Query(this.Definition["servicePrefix"], ContainerQuery.RESULT_TYPE_NAMES, false, true)
     }
 
     GetEntitySelectOptions() {
@@ -82,6 +83,12 @@ class ServiceReferenceField extends EntityFieldBase {
             }
         }
 
-        return query.Execute()
+        options := query.Execute()
+
+        if (!this.Definition["required"]) {
+            options.InsertAt(1, "")
+        }
+
+        return options
     }
 }
