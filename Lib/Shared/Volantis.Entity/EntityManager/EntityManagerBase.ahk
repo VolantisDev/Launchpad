@@ -2,12 +2,23 @@ class EntityManagerBase extends ComponentManagerBase {
     storageObj := ""
     factoryObj := ""
     entityTypeId := ""
+    childManagers := Map()
 
     __New(container, entityTypeId, eventMgr, notifierObj, storageObj, factoryObj, componentType, definitionLoaders := "", autoLoad := false) {
         this.storageObj := storageObj
         this.entityTypeId := entityTypeId
         this.factoryObj := factoryObj
         servicePrefix := this.GetServicePrefix()
+
+        manager := container.Get("manager.entity_type")
+
+        for , childTypeId in manager.GetChildEntityTypeIds() {
+            serviceName := "entity_manager." . childTypeId
+
+            if (container.Has(serviceName)) {
+                this.childManagers[childTypeId] := container.Get(serviceName)
+            }
+        }
 
         super.__New(container, servicePrefix, eventMgr, notifierObj, componentType, definitionLoaders, autoLoad)
     }
@@ -74,5 +85,13 @@ class EntityManagerBase extends ComponentManagerBase {
 
     normalizeComponentId(componentId) {
         return super.normalizeComponentId(componentId)
+    }
+
+    LoadComponents(reloadComponents := false) {
+        for childEntityType, childManager in this.childManagers {
+            childManager.LoadComponents(reloadComponents)
+        }
+
+        super.LoadComponents(reloadComponents)
     }
 }
