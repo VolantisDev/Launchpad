@@ -3,7 +3,7 @@ class NamespaceMatchesCondition extends FieldCondition {
 
     __New(serviceName, negate := false) {
         this.serviceName := serviceName
-        super.__New([HasFieldCondition(this.field)], "namespace", negate, true)
+        super.__New([HasFieldCondition("namespace")], "namespace", negate, true)
     }
 
     EvaluateCondition(val) {
