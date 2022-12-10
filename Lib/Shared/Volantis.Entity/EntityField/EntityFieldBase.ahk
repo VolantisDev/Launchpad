@@ -60,14 +60,14 @@ class EntityFieldBase {
             setCallback := ObjBindMethod(this, "_setDataValue")
             hasCallback := ObjBindMethod(this, "_hasDataValue", "*", true)
             hasOverrideCallback := ObjBindMethod(this, "_hasDataValue", "", true)
-            isEmptyCallback := ObjBindMethod(this, "_hasDataValue", "*", false)
+            isEmptyCallback := ObjBindMethod(this, "_hasDataValue", "*", false, true)
             deleteCallback := ObjBindMethod(this, "_deleteDataValue")
         } else if (valueType == EntityFieldBase.VALUE_TYPE_DEFAULT) {
             getCallback := ObjBindMethod(this, "_getDefaultValue")
             setCallback := ObjBindMethod(this, "_emptySet")
             hasCallback := ObjBindMethod(this, "_hasDefaultValue", true)
             hasOverrideCallback := ObjBindMethod(this, "_hasDefaultOverride")
-            isEmptyCallback := ObjBindMethod(this, "_hasDefaultValue", false)
+            isEmptyCallback := ObjBindMethod(this, "_hasDefaultValue", false, true)
             deleteCallback := ObjBindMethod(this, "_emptyDelete")
         }
 
@@ -227,16 +227,28 @@ class EntityFieldBase {
         
     }
 
-    _hasDataValue(layer := "*", allowEmpty := true) {
-        return this.dataObj.HasValue(
+    _hasDataValue(layer := "*", allowEmpty := true, negate := false) {
+        val := this.dataObj.HasValue(
             this.Definition["storageKey"], 
             this._parseLayer(layer), 
             allowEmpty
         )
+
+        if (negate) {
+            val := !val
+        }
+
+        return val
     }
 
-    _hasDefaultValue(allowEmpty := true) {
-        return allowEmpty ? true : !!(this.Definition["default"])
+    _hasDefaultValue(allowEmpty := true, negate := false) {
+        hasValue := allowEmpty ? true : !!(this.Definition["default"])
+
+        if (negate) {
+            hasValue := !hasValue
+        }
+
+        return hasValue
     }
 
     _hasDefaultOverride() {
