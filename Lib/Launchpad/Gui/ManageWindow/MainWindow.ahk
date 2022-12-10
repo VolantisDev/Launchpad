@@ -545,7 +545,8 @@
 
     EditLauncher(key) {
         entity := this.launcherManager[key]
-        diff := entity.Edit("config", this.guiId)
+        formMode := this.app.Config["use_advanced_launcher_editor"] ? "config" : "simple"
+        diff := entity.Edit(formMode, this.guiId)
         keyChanged := (entity.Id != key)
 
         if (keyChanged || diff != "" && diff.HasChanges()) {
