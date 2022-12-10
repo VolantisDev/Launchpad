@@ -67,7 +67,7 @@ class AppBase {
             "config.cache_dir", "@@{tmp_dir}\Cache",
             "config.flush_cache_on_exit", false,
             "config.check_updates_on_start", false,
-            "config.logging_level", "error",
+            "config.logging_level", "Error",
             "config.modules_file", "@@{data_dir}\Modules.json",
             "config.modules_view_mode", "Report",
             "config.log_path", "@@{data_dir}\" . this.appName . "Log.txt",
