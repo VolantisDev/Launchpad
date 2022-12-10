@@ -52,6 +52,7 @@ class LayeredDataBase {
         layers := Map()
 
         for index, layerName in layerNames {
+            this.layerPriority.Push(layerName)
             layers[layerName] := Map()
         }
 
@@ -99,8 +100,17 @@ class LayeredDataBase {
         }
 
         this.layers[layerName] := data
+
+        priorityExists := false
+
+        for index, priorityLayer in this.layerPriority {
+            if (priorityLayer == layerName) {
+                priorityExists := true
+                break
+            }
+        }
         
-        if (!alreadyExists) {
+        if (!alreadyExists && !priorityExists) {
             if (layerPriority == "") {
                 this.layerPriority.Push(layerName)
             } else {
