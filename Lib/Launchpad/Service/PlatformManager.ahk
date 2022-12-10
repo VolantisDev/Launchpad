@@ -23,8 +23,8 @@ class PlatformManager extends EntityManagerBase {
         )
     }
 
-    GetActivePlatforms() {
-        return this._getActiveQuery().Execute()
+    GetActivePlatforms(resultType := "ids") {
+        return this._getActiveQuery(resultType).Execute()
     }
 
     GetGameDetectionPlatforms() {
