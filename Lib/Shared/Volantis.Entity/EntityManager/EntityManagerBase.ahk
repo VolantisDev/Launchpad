@@ -88,10 +88,10 @@ class EntityManagerBase extends ComponentManagerBase {
     }
 
     LoadComponents(reloadComponents := false) {
+        super.LoadComponents(reloadComponents)
+
         for childEntityType, childManager in this.childManagers {
             childManager.LoadComponents(reloadComponents)
         }
-
-        super.LoadComponents(reloadComponents)
     }
 }
