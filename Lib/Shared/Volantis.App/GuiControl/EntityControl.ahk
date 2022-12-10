@@ -32,7 +32,9 @@ class EntityControl extends GuiControlBase {
 
         parameters := this.parameters
         controlW := parameters["contentWidth"]
-        text := this.entityField.HasValue() ? this.entityField.GetRawValue() : this.emptyValue
+        text := (this.entityField.HasValue() || this.entityField.Definition["default"]) 
+            ? this.entityField.GetRawValue() 
+            : this.emptyValue
 
         if (checkW) {
             controlW -= (checkW + this.guiObj.margin)
@@ -96,7 +98,7 @@ class EntityControl extends GuiControlBase {
             this.entityField.DeleteValue()
             newVal := this.emptyValue
 
-            if (this.entityField.HasValue()) {
+            if (this.entityField.HasValue() || this.entityField.Definition["default"]) {
                 rawVal := this.entityField.GetRawValue()
 
                 if (rawVal) {
@@ -106,7 +108,7 @@ class EntityControl extends GuiControlBase {
 
             this.SetText(newVal)
         } else {
-            this.entityField.SetValue(this.entityField.GetValue())
+            this.entityField.SetValue(this.entityField.GetRawValue())
         }
 
         this.SetDependentFieldValues()
