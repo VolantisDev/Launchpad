@@ -47,7 +47,7 @@ class EntityReferenceField extends ServiceReferenceField {
 
         entityObj := ""
 
-        if (entityId && this._entityManager().Has(entityId)) {
+        if (entityId) {
             entityObj := this._entityManager()[entityId]
             entityObj.LoadEntity()
         }
