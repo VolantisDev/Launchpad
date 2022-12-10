@@ -2,7 +2,7 @@ class ListMerger extends MergerBase {
     Merge(value1, value2) {
         if (this._isArrayLike(value1) && this._isArrayLike(value2)) {
             for index, val in value2 {
-                if (this.deep && idx := this._getIndex(val)) {
+                if (this.deep && idx := this._getIndex(value1, val)) {
                     value1[idx] := this.Merge(value1[idx], val)
                 } else {
                     value1.Push(val)
