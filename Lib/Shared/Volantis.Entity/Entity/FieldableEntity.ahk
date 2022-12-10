@@ -243,11 +243,11 @@ class FieldableEntity extends EntityBase {
         defaults := Map()
 
         for key, fieldObj in this.GetFields() {
-            defaultVal := fieldObj.Definition["default"]
+            defaults[fieldObj.Definition["storageKey"]] := fieldObj.Definition["default"]
+        }
 
-            if (defaultVal) {
-                defaults[key] := defaultVal
-            }
+        for key, referencedEntity in this.GetReferencedEntities(true) {
+            this.merger.Merge(defaults, referencedEntity.InitializeDefaults())
         }
 
         return defaults
