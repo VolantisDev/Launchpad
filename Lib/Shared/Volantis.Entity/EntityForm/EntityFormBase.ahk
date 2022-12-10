@@ -53,7 +53,9 @@ class EntityFormBase {
         widgets := Map()
 
         for fieldKey, field in this.Entity.GetFields(groupId, this.formMode) {
-            if (field.Definition["formField"] && (field.Definition["editable"] || !field.HasValue())) {
+            definition := field.GetDefinition(this.formMode)
+            
+            if (definition["formField"] && (definition["editable"] || !field.HasValue())) {
                 widgets[fieldKey] := this.GetFieldWidget(fieldKey, field)
             }
         }
@@ -80,9 +82,10 @@ class EntityFormBase {
             filteredGroups := Map()
 
             for fieldKey, field in this.Entity.GetFields() {
-                groupId := field.Definition["group"]
+                definition := field.GetDefinition(this.formMode)
+                groupId := definition["group"]
 
-                if (groupId && groups.Has(groupId) && !filteredGroups.Has(groupId)) {
+                if (definition["formField"] && groupId && groups.Has(groupId) && !filteredGroups.Has(groupId)) {
                     filteredGroups[groupId] := groups[groupId]
                 }
             }

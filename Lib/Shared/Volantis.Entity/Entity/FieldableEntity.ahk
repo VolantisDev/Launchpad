@@ -142,7 +142,9 @@ class FieldableEntity extends EntityBase {
             filteredFields := Map()
 
             for fieldId, field in fields {
-                if (group == field.GetDefinition(mode)["group"]) {
+                definition := field.GetDefinition(mode)
+                
+                if (group == definition["group"]) {
                     filteredFIelds[fieldId] := field
                 }
             }
