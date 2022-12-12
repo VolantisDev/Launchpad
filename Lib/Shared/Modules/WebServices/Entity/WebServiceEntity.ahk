@@ -9,17 +9,12 @@ class WebServiceEntity extends AppEntityBase {
     }
 
     UserId {
-        get => this.PersistentAuthData["user_id"]
+        get => this.AuthData["user_id"]
     }
 
     AuthData[key] {
-        get => this.GetAuthData(key)
+        get => this.GetAuthData(key, true)
         set => this.SetAuthData(key, value)
-    }
-
-    PersistentAuthData[key] {
-        get => this.GetPersistentAuthData(key)
-        set => this.SetPersistentAuthData(key, value)
     }
 
     __New(app, id, entityTypeId, container, cacheObj, stateObj, persistentStateObj, eventMgr, storageObj, idSanitizer, parentEntity := "") {
@@ -99,33 +94,60 @@ class WebServiceEntity extends AppEntityBase {
         return BasicWebServiceRequest(this.eventMgr, this, this.cacheObj, method, path, data, useAuthentication, cacheResponse)
     }
 
-    GetAuthData(key := "") {
-        return this._getStateData(this.stateObj, key)
+    GetAuthData(key := "", includePersistent := true) {
+        val := this._getStateData(this.stateObj, key)
+
+        if (!val && includePersistent) {
+            val := this._getStateData(this.persistentStateObj, key)
+        }
+
+        return val
     }
 
-    SetAuthData(keyOrMap, value) {
-        return this._setStateData(this.stateObj, keyOrMap, value)
+    SetAuthData(keyOrMap, value, persist := false) {
+        result := this._setStateData(this.stateObj, keyOrMap, value)
+
+        if (persist) {
+            this._setStateData(this.persistentStateObj, keyOrMap, value)
+        }
+
+        return this
     }
 
-    ResetAuthData(newData := "") {
+    ResetAuthData(newData := "", persist := false) {
         if (!newData) {
             newData := Map()
+        }
+
+        if (!newData.Has("authenticated")) {
+            newData["authenticated"] := false
         }
 
         this._createStateParents(this.stateObj)
         this.stateObj.State["WebServices"][this.Id]["AuthData"] := newData
         this.stateObj.SaveState()
+
+        if (persist) {
+            this._createStateParents(this.persistentStateObj)
+            this.persistentStateObj.State["WebServices"][this.Id]["AuthData"] := Map(
+                "authenticated", newData["authenticated"]
+            )
+        }
+
+        return this
     }
 
-    GetPersistentAuthData(key := "") {
-        return this._getStateData(this.persistentStateObj, key)
+    DeleteAuthData(key, persist := false) {
+        this._deleteStateData(this.stateObj, key)
+
+        if (persist) {
+            this._deleteStateData(this.persistentStateObj, key)
+        }
+
+        return this
     }
 
-    SetPersistentAuthData(key, value) {
-        return this._setStateData(this.persistentStateObj, key, value)
-    }
-
-    _getStateData(stateObj, key) {
+    _getStateData(stateObj, key := "") {
         save := this._createStateParents(stateObj)
 
         if (save) {
@@ -145,6 +167,27 @@ class WebServiceEntity extends AppEntityBase {
         this._createStateParents(stateObj)
         stateObj.State["WebServices"][this.Id]["AuthData"][key] := value
         stateObj.SaveState()
+
+        return this
+    }
+
+    _deleteStateData(stateObj, key) {
+        created := this._createStateParents(stateObj)
+        save := created
+        
+        if (!created) {
+            parent := this._getStateData(stateObj)
+
+            if (HasBase(parent, Map.Prototype) && parent.Has(key)) {
+                parent.Delete(key)
+                save := true
+            }
+        }
+
+        if (save) {
+            stateObj.SaveState()
+        }
+
         return this
     }
 

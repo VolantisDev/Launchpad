@@ -20,9 +20,13 @@ class JwtWebServiceAuthenticator extends WebServiceAuthenticatorBase {
     }
 
     Logout(webServiceEnt) {
-        webServiceEnt.PersistentAuthData["auth_token"] := ""
-        webServiceEnt.PersistentAuthData["refresh_token"] := ""
-        webServiceEnt.ResetAuthData(Map("authenticated", false))
+        webServiceEnt
+            .ResetAuthData()
+            .DeleteAuthData("auth_token", true)
+            .DeleteAuthData("refresh_token", true)
+            .DeleteAuthData("expires", true)
+            .SetAuthData("authenticated", false, true)
+
 
         return true
     }
@@ -42,7 +46,7 @@ class JwtWebServiceAuthenticator extends WebServiceAuthenticatorBase {
     }
 
     _hasRefreshToken(webServiceEnt) {
-        return !!(webServiceEnt.PersistentAuthData["refresh_token"])
+        return !!(webServiceEnt.AuthData["refresh_token"])
     }
 
     _reauthenticate(webServiceEnt) {
@@ -56,68 +60,82 @@ class JwtWebServiceAuthenticator extends WebServiceAuthenticatorBase {
     }
 
     _getRefreshToken(webServiceEnt) {
-        return webServiceEnt.PersistentAuthData["refresh_token"]
+        return webServiceEnt.AuthData["refresh_token"]
     }
 
     _setRefreshToken(webServiceEnt, refreshToken) {
-        webServiceEnt.PersistentAuthData["refresh_token"] := refreshToken
+        webServiceEnt.SetAuthData("refresh_token", refreshToken, true)
     }
 
     _extractAuthData(webServiceEnt, response) {
         loginData := response.GetJsonData()
-        authData := Map(
-            "authenticated", (loginData.Has("user_id") && !!(loginData["user_id"]))
+
+        if (!loginData.Has("authenticated")) {
+            loginData["authenticated"] := !!(loginData.Has("refresh_token") && loginData["refresh_token"])
+        }
+
+        keyMap := Map(
+            "id_token", "auth_token", 
+            "expires_in", "expires"
         )
-        persistentData := Map()
-        authDataMap := Map()
-        persistentDataMap := Map(
-            "user_id", "user_id",
-            "refresh_token", "refresh_token",
-            "id_token", "auth_token",
-            "access_token", "access_token"
-        )
-        skipKeys := [
-            "expires_in"
+
+        persistentKeys := [
+            "user_id",
+            "refresh_token",
+            "auth_token",
+            "access_token",
+            "authenticated",
+            "expires"
         ]
 
-        if (loginData.Has("expires_in")) {
-            persistentData["expires"] := DateAdd(A_Now, loginData["expires_in"], "S")
-        }
+        expiresInKeys := [
+            "expires"
+        ]
+
+        skipKeys := []
 
         for key, val in loginData {
-            if (persistentDataMap.Has(key)) {
-                persistentData[persistentDataMap[key]] := loginData[key]
-            } else if (authDataMap.Has(key)) {
-                authData[authDataMap[key]] := loginData[key]
-            } else if (!authData.Has(key) && !persistentData.Has(key)) {
-                skip := false
+            if (keyMap.Has(key)) {
+                key := keyMap[key]
+            }
 
-                for index, skipKey in skipKeys {
-                    if (key == skipKey) {
-                        skip := true
-                        break
-                    }
-                }
+            persist := false
 
-                if (!skip) {
-                    authData[key] := val
+            for , persistKey in persistentKeys {
+                if (key == persistKey) {
+                    persist := true
+                    break
                 }
             }
-        }
 
-        for key, val in authData {
-            webServiceEnt.AuthData[key] := val
-        }
+            expires := false
 
-        for key, val in persistentData {
-            webServiceEnt.PersistentAuthData[key] := val
+            for , expiresKey in expiresInKeys {
+                if (key == expiresKey) {
+                    val := DateAdd(A_Now, val, "S")
+                    break
+                }
+            }
+
+            skip := false
+            
+            for , skipKey in skipKeys {
+                if (key == skipKey) {
+                    skip := true
+                    break
+                }
+            }
+
+            if (!skip) {
+                webServiceEnt.SetAuthData(key, val, persist)
+            }
         }
     }
 
     _refreshAuthentication(webServiceEnt) {
         apiKey := webServiceEnt["Provider"]["AppKey"]
-        refreshToken := webServiceEnt.PersistentAuthData["refresh_token"]
-        refreshUrl := webServiceEnt["Provider"].GetAuthenticationRefreshUrl(Map("token", apiKey))
+        refreshToken := webServiceEnt.AuthData["refresh_token"]
+        refreshUrl := webServiceEnt["Provider"].GetAuthenticationRefreshUrl(Map("key", apiKey))
         response := ""
 
         if (!apiKey) {
@@ -142,7 +160,10 @@ class JwtWebServiceAuthenticator extends WebServiceAuthenticatorBase {
         if (response && success) {
             this._extractAuthData(webServiceEnt, response)
         } else {
-            webServiceEnt.PersistentAuthData["refresh_token"] := ""
+            url := response.httpReqObj.url.ToString(true)
+            webServiceEnt.SetAuthData("refresh_token", "", true)
+
+            ; @todo handle common http error codes
         }
 
         return success

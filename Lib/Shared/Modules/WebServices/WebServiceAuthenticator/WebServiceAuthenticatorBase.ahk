@@ -26,7 +26,11 @@ class WebServiceAuthenticatorBase {
     }
 
     IsAuthenticated(webServiceEnt) {
-        return (webServiceEnt.AuthData[this.authenticatedStateKey] && !this.AuthenticationIsExpired(webServiceEnt))
+        auth := webServiceEnt.AuthData[this.authenticatedStateKey]
+        expired := this.AuthenticationIsExpired(webServiceEnt)
+
+        return auth && !expired
+
     }
 
     NeedsRefresh(webServiceEnt) {
