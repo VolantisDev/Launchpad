@@ -22,7 +22,7 @@ class ModuleFactory {
             ),
             "module." . key, Map(
                 "class", this.classMap.Has(key) ? this.classMap[key] : "SimpleModule",
-                "arguments", [key, "@module_info." . key, "@module_config." . key],
+                "arguments", [key, "@module_info." . key, "@module_config." . key, isCore],
                 "file", file,
                 "enabled", enabled,
                 "core", isCore,

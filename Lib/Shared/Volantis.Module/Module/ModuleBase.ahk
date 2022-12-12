@@ -2,11 +2,13 @@ class ModuleBase {
     moduleInfo := ""
     config := ""
     key := ""
+    _core := false
 
-    __New(key, moduleInfo, config) {
+    __New(key, moduleInfo, config, isCore) {
         this.key := key
         this.moduleInfo := moduleInfo
         this.config := config
+        this._core := isCore
     }
 
     IsEnabled() {
@@ -14,7 +16,7 @@ class ModuleBase {
     }
 
     IsCore() {
-        return (this.config.Has("core") && this.config["core"])
+        return this._core
     }
 
     GetConfigValue(key, defaultValue := "") {
