@@ -2,6 +2,7 @@ class WebServiceEntity extends AppEntityBase {
     cacheObj := ""
     stateObj := ""
     persistentStateObj := ""
+    mergeDataFromApi := false
 
     AuthData[key] {
         get => this.GetAuthData(key)
@@ -30,8 +31,8 @@ class WebServiceEntity extends AppEntityBase {
             entityTypeId,
             container,
             container.Get("cache.web_services"),
+            container.Get("state.web_services_tmp"),
             container.Get("state.web_services"),
-            container.Get("state.web_service_persistent"),
             eventMgr,
             storageObj,
             idSanitizer,
@@ -42,10 +43,15 @@ class WebServiceEntity extends AppEntityBase {
     BaseFieldDefinitions() {
         definitions := super.BaseFieldDefinitions()
 
+        if (this.idVal == "api" && definitions.Has("name")) {
+            definitions["name"]["editable"] := false
+        }
+
         definitions["Provider"] := Map(
             "type", "entity_reference",
-            "entityType", "web_service_provider"
-            "required", true
+            "entityType", "web_service_provider",
+            "required", true,
+            "editable", (this.idVal != "api")
         )
 
         return definitions
@@ -77,7 +83,7 @@ class WebServiceEntity extends AppEntityBase {
         }
 
         this._createStateParents(this.stateObj)
-        this.stateObj["WebServices"][this.Id]["AuthData"] := newData
+        this.stateObj.State["WebServices"][this.Id]["AuthData"] := newData
         this.stateObj.SaveState()
     }
 
@@ -96,7 +102,7 @@ class WebServiceEntity extends AppEntityBase {
             stateObj.SaveState()
         }
 
-        authData := stateObj["WebServices"][this.Id]["AuthData"]
+        authData := stateObj.State["WebServices"][this.Id]["AuthData"]
 
         if (key) {
             authData := (authData.Has(key) ? authData[key] : "")
@@ -107,7 +113,7 @@ class WebServiceEntity extends AppEntityBase {
 
     _setStateData(stateObj, key, value) {
         this._createStateParents(stateObj)
-        stateObj["WebServices"][this.Id]["AuthData"][key] := value
+        stateObj.State["WebServices"][this.Id]["AuthData"][key] := value
         stateObj.SaveState()
         return this
     }
@@ -115,18 +121,18 @@ class WebServiceEntity extends AppEntityBase {
     _createStateParents(stateObj) {
         modified := false
 
-        if (!stateObj.Has("WebServices")) {
-            stateObj["WebServices"] := Map()
+        if (!stateObj.State.Has("WebServices")) {
+            stateObj.State["WebServices"] := Map()
             modified := true
         }
 
-        if (!stateObj["WebServices"].Has(this.Id)) {
-            stateObj["WebServices"][this.Id] := Map()
+        if (!stateObj.State["WebServices"].Has(this.Id)) {
+            stateObj.State["WebServices"][this.Id] := Map()
             modified := true
         }
 
-        if (!stateObj["WebServices"][this.Id].Has("AuthData")) {
-            stateObj["WebServices"][this.Id]["AuthData"] := Map()
+        if (!stateObj.State["WebServices"][this.Id].Has("AuthData")) {
+            stateObj.State["WebServices"][this.Id]["AuthData"] := Map()
             modified := true
         }
 
