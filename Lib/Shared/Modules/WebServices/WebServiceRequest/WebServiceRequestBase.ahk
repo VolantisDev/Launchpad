@@ -22,6 +22,8 @@ class WebServiceRequestBase {
     __New(eventMgr, webServiceEnt, cacheObj, method := "", path := "", data := "", useAuthentication := false, cacheResponse := true) {
         this.eventMgr := eventMgr
         this.webServiceEnt := webServiceEnt
+        this.cacheObj := cacheObj
+
 
         if (!method) {
             method := "GET"
