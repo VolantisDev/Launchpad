@@ -27,6 +27,7 @@
             "storage_config_storage_parent_key": "WebServices",
             "storage_config_path_parameter": "config.web_services_file",
             "manager_view_mode_parameter": "config.web_services_view_mode",
+            "definition_loader_parameter_key": "web_services.services",
             "default_icon": "webhook",
             "allow_add": true,
             "allow_edit": true,
@@ -43,6 +44,7 @@
             "storage_config_path_parameter": "config.web_service_providers_file"
         },
         "web_services.providers.launchpad_api": {
+            "name": "Launchpad API",
             "EndpointUrl": "https://api.launchpad.games/v1",
             "AuthenticationEndpointUrl": "https://securetoken.googleapis.com/v1",
             "IconSrc": "Logo.ico",
@@ -52,6 +54,7 @@
             "LoginWindow": "LaunchpadLoginWindow"
         },
         "web_services.services.api": {
+            "name": "Launchpad API",
             "Provider": "launchpad_api"
         }
     },
@@ -67,6 +70,10 @@
         "state.web_services": {
             "class": "JsonState",
             "arguments": ["@{App}", "@@config.web_services_state_path"]
+        },
+        "state.web_services_tmp": {
+            "class": "ParameterState",
+            "arguments": ["@{App}", "web_services.state.tmp"]
         },
         "web_services_authenticator.jwt": {
             "class": "JwtWebServiceAuthenticator",
