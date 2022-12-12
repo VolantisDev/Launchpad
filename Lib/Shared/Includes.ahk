@@ -56,6 +56,8 @@
 #Include Volantis.App\Gui\Form\FeedbackWindow.ahk
 #Include Volantis.App\Gui\Form\FormGuiBase.ahk
 #Include Volantis.App\Gui\Form\IconSelector.ahk
+#Include Volantis.App\Gui\ManageWindow\ManageEntitiesWindow.ahk
+#Include Volantis.App\Gui\ManageWindow\ManageWindowBase.ahk
 #Include Volantis.App\Gui\Menu\MenuGui.ahk
 #Include Volantis.App\Gui\Progress\MiniProgressIndicator.ahk
 #Include Volantis.App\Gui\Progress\ProgressIndicator.ahk
@@ -105,6 +107,7 @@
 #Include Volantis.Base\Exception\OperationFailedException.ahk
 #Include Volantis.Base\HttpReq\HttpReqBase.ahk
 #Include Volantis.Base\HttpReq\WinHttpReq.ahk
+#Include Volantis.Base\UrlObj\UrlObj.ahk
 #Include Volantis.Component\ComponentManager\ComponentManagerBase.ahk
 #Include Volantis.Component\ComponentManager\SimpleComponentManager.ahk
 #Include Volantis.Component\Event\ComponentDefinitionsEvent.ahk

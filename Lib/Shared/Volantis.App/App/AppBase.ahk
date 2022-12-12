@@ -62,6 +62,7 @@ class AppBase {
             "config_key", "config",
             "config.backup_dir", "@@{data_dir}\\Backups",
             "config.backups_file", "@@{data_dir}\Backups.json",
+            "config.backups_view_mode", "Report",
             "config.theme_name", "Steampad",
             "config.themes_dir", "@@{app_dir}\Resources\Themes",
             "config.cache_dir", "@@{tmp_dir}\Cache",
@@ -108,10 +109,15 @@ class AppBase {
                 "extensions", [".xml"]
             ),
             "entity_type.backup", Map(
+                "name_singular", "Backup",
+                "name_plural", "Backups",
                 "entity_class", "BackupEntity",
                 "entity_manager_class", "BackupManager",
                 "storage_config_storage_parent_key", "Backups",
-                "storage_config_path_parameter", "config.backups_file"
+                "storage_config_path_parameter", "config.backups_file",
+                "manager_view_mode_parameter", "config.backups_view_mode",
+                "manager_gui", "ManageBackupsWindow",
+                "manager_link_in_tools_menu", true
             ),
             "entity_field_type.boolean", "BooleanEntityField",
             "entity_field_type.class_name", "ClassNameEntityField",

@@ -90,11 +90,33 @@
         }
     }
 
+    _getToolsMenuEntityTypes() {
+        entityTypes := Map()
+
+        for key, entityType in this.container["manager.entity_type"] {
+            if (entityType.definition["manager_link_in_tools_menu"]) {
+                entityTypes[key] := entityType
+            }
+        }
+
+        return entityTypes
+    }
+
     ShowTitleMenu() {
+        menuEntityTypes := this._getToolsMenuEntityTypes()
         toolsItems := []
-        toolsItems.Push(Map("label", "Manage &Platforms", "name", "ManagePlatforms"))
-        toolsItems.Push(Map("label", "Manage &Backups", "name", "ManageBackups"))
-        toolsItems.Push(Map("label", "Manage &Modules", "name", "ManageModules"))
+
+        for key, entityType in menuEntityTypes {
+            menuLinkText := entityType.definition["manager_menu_link_text"]
+
+            if (!menuLinkText) {
+                menuLinkText := "&" . entityType.definition["name_plural"]
+            }
+
+            toolsItems.Push(Map("label", menuLinkText, "name", "manage_" . key))
+        }
+
+        toolsItems.Push(Map("label", "&Modules", "name", "ManageModules"))
         toolsItems.Push(Map("label", "&Flush Cache", "name", "FlushCache"))
 
         launchersItems := []
@@ -120,12 +142,8 @@
         menuItems.Push(Map("label", "E&xit", "name", "Exit"))
         
         result := this.container["manager.gui"].Menu(menuItems, this, this.guiObj["WindowTitleText"])
-
-        if (result == "ManagePlatforms") {
-            this.container["manager.gui"].OpenWindow("PlatformsWindow")
-        } else if (result == "ManageBackups") {
-            this.container["manager.gui"].OpenWindow("ManageBackupsWindow")
-        } else if (result == "ManageModules") {
+        
+        if (result == "ManageModules") {
             this.container["manager.gui"].OpenWindow("ManageModulesWindow")
         } else if (result == "FlushCache") {
             this.container["manager.cache"].FlushCaches(true, true)
@@ -148,6 +166,13 @@
             this.app.restartApp()
         } else if (result == "Exit") {
             this.app.ExitApp()
+        } else {
+            for key, entityType in menuEntityTypes {
+                if (result == "manage_" . key) {
+                    this.container["entity_type." . key].OpenManageWindow()
+                    break
+                }
+            }
         }
     }
 

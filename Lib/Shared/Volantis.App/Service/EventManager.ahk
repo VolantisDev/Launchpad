@@ -9,7 +9,7 @@ class EventManager {
     }
 
     RegisterServiceSubscribers(container, servicePrefix := "") {
-         services := container.Query(servicePrefix)
+        services := container.Query(servicePrefix)
             .Condition(HasServiceTagsCondition("event_subscriber"))
             .Execute()
         

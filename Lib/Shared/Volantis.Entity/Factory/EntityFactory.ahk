@@ -7,8 +7,9 @@ class EntityFactory {
     entityTypeId := ""
     entityClass := ""
     idSanitizer := ""
+    definition := ""
 
-    __New(container, storageObj, mergerObj, eventMgr, idSanitizer, servicePrefix, entityTypeId, entityClass) {
+    __New(container, storageObj, mergerObj, eventMgr, idSanitizer, servicePrefix, entityTypeId, entityClass, definition) {
         this.container := container
         this.storageObj := storageObj
         this.mergerObj := mergerObj
@@ -17,6 +18,7 @@ class EntityFactory {
         this.servicePrefix := servicePrefix
         this.entityTypeId := entityTypeId
         this.entityClass := entityClass
+        this.definition := definition
     }
 
     static Create(entityTypeId, definition, container) {
@@ -48,7 +50,8 @@ class EntityFactory {
             idSanitizer,
             definition["service_prefix"],
             entityTypeId,
-            definition["entity_class"]
+            definition["entity_class"],
+            definition
         )
     }
 
@@ -57,6 +60,16 @@ class EntityFactory {
 
         for index, key in this.storageObj.DiscoverEntities() {
             definitions[key] := this.CreateServiceDefinition(key)
+        }
+
+        if (this.definition["definition_loader_parameter_key"]) {
+            param := this.container.GetParameter(this.definition["definition_loader_parameter_key"])
+
+            if (HasBase(param, Map.Prototype)) {
+                for key, data in param {
+                    definitions[key] := this.CreateServiceDefinition(key, data, "", true)
+                }
+            }
         }
 
         return definitions

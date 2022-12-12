@@ -48,7 +48,7 @@ class DataSourceBase {
     }
 
     GetRemoteLocation(path) {
-        
+        return path
     }
 
     ReadListing(path) {

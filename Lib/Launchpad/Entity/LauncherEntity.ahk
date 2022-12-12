@@ -134,7 +134,7 @@ class LauncherEntity extends AppEntityBase {
         ; 3. Prompt for an icon during validation if the path is still not set
         definitions["IconSrc"] := Map(
             "type", "icon_file",
-            "description", "The path to this an icon (.ico or .exe).",
+            "description", "The path to an icon (.ico or .exe).",
             "modes", Map(
                 "simple", Map("formField", false)
             )

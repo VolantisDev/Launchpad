@@ -11,6 +11,11 @@ class CacheState extends JsonState {
         set => this.State["NotFoundItems"] := value
     }
 
+    ResponseCodes {
+        get => this.State.Has("ResponseCodes") ? this.State["ResponseCodes"] : this.State["ResponseCodes"] := Map()
+        set => this.State["ResponseCodes"] := value
+    }
+
     __New(app, cacheDir, stateFilename, cacheExpire := "") {
         if (cacheExpire != "") {
             this.cacheExpire := cacheExpire
@@ -35,6 +40,20 @@ class CacheState extends JsonState {
         }
 
         return timestamp
+    }
+
+    GetResponseCode(item) {
+        responseCode := 0
+
+        if (this.ResponseCodes.Has(item)) {
+            return this.ResponseCodes[item]
+        }
+
+        return responseCode
+    }
+
+    SetResponseCode(item, responseCode) {
+        this.ResponseCodes[item] := responseCode
     }
 
     IsExpired(item, maxCacheAge := "") {
@@ -63,24 +82,41 @@ class CacheState extends JsonState {
         return cacheAge
     }
 
-    SetItem(item) {
+    SetItem(item, responseCode := "") {
         this.CachedItems[item] := FormatTime(,"yyyyMMddHHmmss")
+
+        if (responseCode) {
+            this.ResponseCodes[item] := responseCode
+        }
+
         this.SaveState()
     }
 
     SetNotFoundItem(item) {
         this.NotFoundItems[item] := FormatTime(,"yyyyMMddHHmmss")
+        this.ResponseCodes[item] := 404
         this.SaveState()
     }
 
     RemoveItem(item) {
+        save := false
+
         if (this.CachedItems.Has(item)) {
             this.CachedItems.Delete(item)
-            this.SaveState()
+            save := true
         }
 
         if (this.NotFoundItems.Has(item)) {
             this.NotFoundItems.Delete(item)
+            save := true
+        }
+
+        if (this.ResponseCodes.Has(item)) {
+            this.ResponseCodes.Delete(item)
+            save := true
+        }
+
+        if (save) {
             this.SaveState()
         }
     }
@@ -88,6 +124,7 @@ class CacheState extends JsonState {
     ClearItems() {
         this.CachedItems.Clear()
         this.NotFoundItems.Clear()
+        this.ResponseCodes.Clear()
         this.Version := this.app.Version
         this.SaveState()
     }

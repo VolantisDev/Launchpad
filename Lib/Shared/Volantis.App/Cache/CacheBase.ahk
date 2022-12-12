@@ -19,9 +19,9 @@ class CacheBase {
         return this.stateObj.GetTimestamp(reference)
     }
 
-    WriteItem(reference, content) {
+    WriteItem(reference, content, responseCode := "") {
         if (this.WriteItemAction(reference, content)) {
-            this.stateObj.SetItem(reference)
+            this.stateObj.SetItem(reference, responseCode)
         }
     }
 
@@ -37,6 +37,14 @@ class CacheBase {
 
     SetNotFound(reference) {
         this.stateObj.SetNotFoundItem(reference)
+    }
+
+    GetResponseCode(reference) {
+        this.stateObj.GetResponseCode(reference)
+    }
+
+    SetResponseCode(reference, responseCode) {
+        this.stateObj.SetResponseCode(reference, responseCode)
     }
 
     RemoveItem(reference) {
