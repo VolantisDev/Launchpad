@@ -59,6 +59,9 @@ class EntityTypeBase {
 
     OpenManageWindow() {
         windowKey := this.definition["manager_gui"] ? this.definition["manager_gui"] : "ManageEntitiesWindow"
-        return this.container["manager.gui"].OpenWindow(windowKey)
+        return this.container["manager.gui"].OpenWindow(Map(
+            "type", windowKey,
+            "entity_type", this.id
+        ))
     }
 }
