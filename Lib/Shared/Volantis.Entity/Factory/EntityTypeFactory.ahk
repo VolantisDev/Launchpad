@@ -11,6 +11,8 @@ class EntityTypeFactory {
 
     GetDefaults(entityTypeId) {
         return Map(
+            "name_singular", "Entity",
+            "name_plural", "Entities",
             "entity_type_class", "BasicEntityType",
             "entity_class", this.GetEntityClassFromId(entityTypeId),
             "service_prefix", "entity." . entityTypeId . ".",
@@ -27,7 +29,18 @@ class EntityTypeFactory {
             "id_sanitizer", this.idSanitizer,
             "event_manager", "manager.event",
             "notifier", "notifier",
-            "parent_entity_type", ""
+            "parent_entity_type", "",
+            "default_icon", "cube-outline",
+            "icon_field", "IconSrc",
+            "allow_view", false,
+            "allow_add", false,
+            "allow_edit", true,
+            "allow_delete", false,
+            "manager_view_mode", "Details",
+            "manager_view_mode_parameter", "",
+            "manager_gui", "ManageEntitiesWindow",
+            "manager_link_in_tools_menu", false
+            "manager_menu_link_text", ""
         )
     }
 
