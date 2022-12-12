@@ -35,8 +35,14 @@ class ApiDataSource extends DataSourceBase {
         if (private) {
             request.requestHeaders["Cache-Control"] := "no-cache"
 
-            if (this.app.Config["api_authentication"] && this.app.Services.Has("Api")) {
-                this.app.Service("Auth").AlterApiRequest(request)
+            if (this.app.Config["api_authentication"]) {
+                entityMgr := webService := this.app.Service("entity_manager.web_service")
+
+                if (entityMgr.Has("api") && entityMgr["api"]["Enabled"]) {
+                    webService := this.app.Service("entity_manager.web_service")["api"]
+                    webService["Provider"]["Authenticator"].AlterRequest(webService, request)
+                }
+                
             }
         }
 
@@ -85,12 +91,15 @@ class ApiDataSource extends DataSourceBase {
 
         status := Map("authenticated", false, "email", "", "photo", "")
 
-        if (this.app.Config["api_authentication"] && this.app.Service("Auth").IsAuthenticated()) {
-            statusResult := this.ReadItem(path, true)
+        if (this.app.Config["api_authentication"]) {
+            entityMgr := webService := this.app.Service("entity_manager.web_service")
 
-            if (statusResult) {
-                json := JsonData()
-                status := json.FromString(&statusResult)
+            if (entityMgr.Has("api") && entityMgr["api"]["Enabled"] && entityMgr["api"]["Authenticated"]) {
+                statusResult := this.ReadItem(path, true)
+
+                if (statusResult) {
+                    status := JsonData().FromString(&statusResult)
+                }
             }
         }
 
