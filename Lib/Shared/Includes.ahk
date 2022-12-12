@@ -56,6 +56,7 @@
 #Include Volantis.App\Gui\Form\FeedbackWindow.ahk
 #Include Volantis.App\Gui\Form\FormGuiBase.ahk
 #Include Volantis.App\Gui\Form\IconSelector.ahk
+#Include Volantis.App\Gui\ManageWindow\ManageWindowBase.ahk
 #Include Volantis.App\Gui\Menu\MenuGui.ahk
 #Include Volantis.App\Gui\Progress\MiniProgressIndicator.ahk
 #Include Volantis.App\Gui\Progress\ProgressIndicator.ahk

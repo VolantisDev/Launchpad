@@ -45,7 +45,6 @@
 #Include Gui\ManageWindow\MainWindow.ahk
 #Include Gui\ManageWindow\ManageBackupsWindow.ahk
 #Include Gui\ManageWindow\ManageModulesWindow.ahk
-#Include Gui\ManageWindow\ManageWindowBase.ahk
 #Include Gui\ManageWindow\PlatformsWindow.ahk
 #Include Installer\DependencyInstaller.ahk
 #Include Installer\LaunchpadUpdate.ahk
