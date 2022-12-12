@@ -40,7 +40,8 @@ class EntityTypeFactory {
             "manager_view_mode_parameter", "",
             "manager_gui", "ManageEntitiesWindow",
             "manager_link_in_tools_menu", false,
-            "manager_menu_link_text", ""
+            "manager_menu_link_text", "",
+            "storage_type", "persistent"
         )
     }
 
@@ -97,7 +98,7 @@ class EntityTypeFactory {
             ),
         )
 
-        if (definition["storage_class"] == "ConfigEntityStorage" && definition["storage_config_path_parameter"]) {
+        if (definition["storage_type"] == "persistent" && definition["storage_class"] == "ConfigEntityStorage" && definition["storage_config_path_parameter"]) {
             services["config_storage." . id] := Map(
                 "class", definition["storage_config_storage_class"],
                 "arguments", ["@@" . definition["storage_config_path_parameter"], definition["storage_config_storage_parent_key"]]
@@ -106,6 +107,11 @@ class EntityTypeFactory {
             services["config." . id] := Map(
                 "class", "PersistentConfig",
                 "arguments", ["@config_storage." . id, "@{}", "entity_data." . id]
+            )
+        } else if (definition["storage_type"] == "runtime") {
+            services["config." . id] := Map(
+                "class", "RuntimeConfig",
+                "arguments", ["@{}", "entity_data." . id]
             )
         }
 
