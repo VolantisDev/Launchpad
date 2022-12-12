@@ -159,7 +159,7 @@ class ManageEntitiesWindow extends ManageWindowBase {
         this.AutoXYWH("y", ["AddButton"])
     }
 
-    GetContextMenuItems() {
+    GetContextMenuItems(entityObj) {
         definition := this.entityType.definition
         menuItems := []
 
@@ -182,7 +182,7 @@ class ManageEntitiesWindow extends ManageWindowBase {
         key := this.listView.GetRowKey(item)
         entityObj := this.entityMgr[key]
 
-        menuItems := this.GetContextMenuItems()
+        menuItems := this.GetContextMenuItems(entityObj)
         result := this.app.Service("manager.gui").Menu(menuItems, this)
         this.ProcessContextMenuResult(result, key)
     }
