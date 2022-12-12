@@ -1,19 +1,22 @@
 class ManageWebServicesWindow extends ManageEntitiesWindow {
-    listViewColumns := Array("ID", "PROVIDER", "NAME", "AUTHENTICATED")
+    listViewColumns := Array("SERVICE", "PROVIDER", "AUTHENTICATED")
 
     GetListViewData(lv) {
         data := Map()
 
         for key, webService in this.entityMgr {
             data[key] := [
-                webService["id"],
-                webService["Provider"]["name"],
                 webService["name"],
+                webService["Provider"]["name"],
                 webService.AuthData["authenticated"] ? "Yes" : "No"
             ]
         }
 
         return data
+    }
+
+    GetEntityIconSrc(entityObj) {
+        return entityObj["Provider"]["IconSrc"]
     }
 
     ViewEntity(key) {
