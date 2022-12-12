@@ -24,6 +24,10 @@ class WebServiceRequestBase {
         this.webServiceEnt := webServiceEnt
         this.cacheObj := cacheObj
 
+        if (HasBase(path, UrlObj.Prototype)) {
+            this._url := path
+            path := this._url.Path
+        }
 
         if (!method) {
             method := "GET"
@@ -151,7 +155,7 @@ class WebServiceRequestBase {
     RequestIsCached() {
         path := this.GetPath()
 
-        return this.cacheObj.ItemExists(path && !this.cacheObj.ItemNeedsUpdate(path))
+        return (this.cacheObj.ItemExists(path) && !this.cacheObj.ItemNeedsUpdate(path))
     }
 
     _createCachedResponse() {
