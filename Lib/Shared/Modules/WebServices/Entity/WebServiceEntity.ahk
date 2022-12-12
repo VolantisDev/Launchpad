@@ -4,6 +4,10 @@ class WebServiceEntity extends AppEntityBase {
     persistentStateObj := ""
     mergeDataFromApi := false
 
+    Authenticated {
+        get => this.IsAuthenticated()
+    }
+
     AuthData[key] {
         get => this.GetAuthData(key)
         set => this.SetAuthData(key, value)
@@ -38,6 +42,28 @@ class WebServiceEntity extends AppEntityBase {
             idSanitizer,
             parentEntity
         )
+    }
+
+    IsAuthenticated() {
+        isAuthenticated := false
+
+        if (this["Provider"]["SupportsAuthentication"]) {
+            isAuthenticated := this["Provider"]["Authenticator"].IsAuthenticated(this)
+        }
+
+        return isAuthenticated
+    }
+
+    Login() {
+        if (this["Provider"]["SupportsAuthentication"]) {
+            this["Provider"]["Authenticator"].Login(this)
+        }
+    }
+
+    Logout() {
+        if (this["Provider"]["SupportsAuthentication"]) {
+            this["Provider"]["Authenticator"].Logout(this)
+        }
     }
 
     BaseFieldDefinitions() {
