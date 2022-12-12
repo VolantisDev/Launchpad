@@ -4,16 +4,22 @@ class JwtWebServiceAuthenticator extends WebServiceAuthenticatorBase {
             throw OperationFailedException("Login failed after " . retryCount . " tries.")
         }
 
+        authResult := ""
+
         if (!this._hasRefreshToken(webServiceEnt)) {
-            this._reauthenticate(webServiceEnt)
+            authResult := this._reauthenticate(webServiceEnt)
         }
 
-        success := this._hasRefreshToken(webServiceEnt)
-            ? this._refreshAuthentication(webServiceEnt)
-            : false
+        success := false
 
-        if (!success) {
-            success := this.Login(webServiceEnt, retryCount + 1)
+        if (authResult != "Cancel") {
+            if (this._hasRefreshToken(webServiceEnt)) {
+                success := this._refreshAuthentication(webServiceEnt)
+            }            
+
+            if (!success) {
+                success := this.Login(webServiceEnt, retryCount + 1)
+            }
         }
 
         return success
@@ -52,7 +58,7 @@ class JwtWebServiceAuthenticator extends WebServiceAuthenticatorBase {
     _reauthenticate(webServiceEnt) {
         refreshToken := this._authenticationGui(webServiceEnt)
 
-        if (refreshToken) {
+        if (refreshToken != "Cancel") {
             this._setRefreshToken(webServiceEnt, refreshToken)
         }
 

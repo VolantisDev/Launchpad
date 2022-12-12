@@ -24,6 +24,10 @@
     }
 
     ProcessResult(result, submittedData := "") {
-        return (result == "Login") ? this.guiObj["AuthToken"].Text : ""
+        if (result == "Login") {
+            result := this.guiObj["AuthToken"].Text
+        }
+
+        return result
     }
 }
