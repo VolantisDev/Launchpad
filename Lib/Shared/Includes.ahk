@@ -106,6 +106,7 @@
 #Include Volantis.Base\Exception\OperationFailedException.ahk
 #Include Volantis.Base\HttpReq\HttpReqBase.ahk
 #Include Volantis.Base\HttpReq\WinHttpReq.ahk
+#Include Volantis.Base\UrlObj\UrlObj.ahk
 #Include Volantis.Component\ComponentManager\ComponentManagerBase.ahk
 #Include Volantis.Component\ComponentManager\SimpleComponentManager.ahk
 #Include Volantis.Component\Event\ComponentDefinitionsEvent.ahk
