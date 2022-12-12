@@ -1,5 +1,6 @@
 class StateBase {
     app := ""
+    container := ""
     stateMap := Map()
     stateLoaded := false
 
@@ -21,6 +22,7 @@ class StateBase {
         InvalidParameterException.CheckTypes("StateBase", "app", app, "AppBase")
         
         this.app := app
+        this.container := app.Services
 
         if (state != "") {
             InvalidParameterException.CheckTypes("StateBase", "state", state, "Map")
