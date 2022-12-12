@@ -72,4 +72,12 @@ class WebServiceAuthenticatorBase {
 
         return result
     }
+
+    _handleLoginFailure(message) {
+        this.guiMgr.Dialog(Map(
+            "title", "Login Failure",
+            "text", message,
+            "buttons", "*&OK"
+        ))
+    }
 }

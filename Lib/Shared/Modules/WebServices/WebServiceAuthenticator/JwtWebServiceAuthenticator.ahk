@@ -1,7 +1,8 @@
 class JwtWebServiceAuthenticator extends WebServiceAuthenticatorBase {
     Login(webServiceEnt, retryCount := 0) {
         if (retryCount > this.maxRetries) {
-            throw OperationFailedException("Login failed after " . retryCount . " tries.")
+            this._handleLoginFailure("You have used " . retryCount . " of " . this.maxRetries + 1 . " login attempts. Canceling login.")
+            return false
         }
 
         authResult := ""
