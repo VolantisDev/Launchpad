@@ -8,6 +8,10 @@ class WebServiceEntity extends AppEntityBase {
         get => this.IsAuthenticated()
     }
 
+    UserId {
+        get => this.PersistentAuthData["user_id"]
+    }
+
     AuthData[key] {
         get => this.GetAuthData(key)
         set => this.SetAuthData(key, value)

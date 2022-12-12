@@ -1,5 +1,5 @@
 class ManageWebServicesWindow extends ManageEntitiesWindow {
-    listViewColumns := Array("SERVICE", "PROVIDER", "AUTHENTICATED")
+    listViewColumns := Array("SERVICE", "PROVIDER", "USER", "AUTHENTICATED")
 
     GetListViewData(lv) {
         data := Map()
@@ -8,7 +8,8 @@ class ManageWebServicesWindow extends ManageEntitiesWindow {
             data[key] := [
                 webService["name"],
                 webService["Provider"]["name"],
-                webService.AuthData["authenticated"] ? "Yes" : "No"
+                webService.UserId ? webService.UserId : "None",
+                webService.Authenticated ? "Yes" : "No"
             ]
         }
 
