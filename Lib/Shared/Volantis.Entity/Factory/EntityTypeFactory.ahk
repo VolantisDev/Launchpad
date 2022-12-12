@@ -39,7 +39,7 @@ class EntityTypeFactory {
             "manager_view_mode", "Details",
             "manager_view_mode_parameter", "",
             "manager_gui", "ManageEntitiesWindow",
-            "manager_link_in_tools_menu", false
+            "manager_link_in_tools_menu", false,
             "manager_menu_link_text", ""
         )
     }
