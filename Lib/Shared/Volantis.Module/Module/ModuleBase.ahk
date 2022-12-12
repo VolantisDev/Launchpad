@@ -28,7 +28,20 @@ class ModuleBase {
     }
 
     GetVersion() {
-        return this.moduleInfo.Has("version") ? this.moduleInfo["version"] : ""
+        versionStr := this.moduleInfo.Has("version") ? this.moduleInfo["version"] : ""
+
+        if (versionStr == "{{VERSION}}") {
+
+            if (AppBase.Instance) {
+                versionStr := AppBase.Instance.Version
+            }
+            
+            if (versionStr == "{{VERSION}}") {
+                versionStr := "Built-in"
+            }
+        }
+
+        return versionStr
     }
 
     GetServiceFiles() {
