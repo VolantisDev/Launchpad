@@ -57,17 +57,11 @@ class WebServiceEntity extends AppEntityBase {
             "editable", false
         )
 
-        autoLoginDefault := false
-
-        if (this.Id == "api") {
-            autoLoginDefault := this.container.GetParameter("config.api_auto_login")
-        }
-
         definitions["AutoLogin"] := Map(
             "type", "boolean",
             "description", "Automatically authenticate with this service when Launchpad starts.",
             "required", false,
-            "default", autoLoginDefault
+            "default", (this.idVal == "api")
         )
 
         return definitions

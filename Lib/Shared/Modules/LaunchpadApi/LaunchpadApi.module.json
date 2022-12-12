@@ -35,7 +35,6 @@
     "parameters": {
         "config.data_source_key": "api",
         "config.api_endpoint": "https://api.launchpad.games/v1",
-        "config.api_authentication": true,
-        "config.api_auto_login": false
+        "config.api_authentication": true
     }
 }

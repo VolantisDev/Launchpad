@@ -127,8 +127,6 @@
         this.AddHeading("API Settings")
         ctl := this.AddConfigCheckBox("Enable API login for enhanced functionality", "api_authentication")
         ctl.ctl.NeedsRestart := true
-        ctl := this.AddConfigCheckBox("Automatically initiate API login when needed", "api_auto_login")
-        ctl.ctl.NeedsRestart := true
 
         tabs.UseTab()
 

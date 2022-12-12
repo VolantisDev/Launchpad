@@ -109,10 +109,6 @@
 
     RunApp(config) {
         this.MigrateConfiguration()
-
-        if (this.Config["api_auto_login"] && this.Services.Has("Auth")) {
-            this.Service("Auth").Login()
-        }
         
         super.RunApp(config)
         

@@ -2,7 +2,6 @@
     "parameters": {
         "backups_config": {},
         "config.api_authentication": false,
-        "config.api_auto_login": false,
         "config.api_endpoint": "",
         "config.assets_dir": "@@{data_dir}\\Launcher Assets",
         "config.auto_backup_config_files": true,
