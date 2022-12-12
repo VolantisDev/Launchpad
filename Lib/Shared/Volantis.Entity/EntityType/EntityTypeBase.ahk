@@ -1,4 +1,5 @@
 class EntityTypeBase {
+    container := ""
     id := ""
     servicePrefix := ""
     entityManagerObj := ""
@@ -7,6 +8,7 @@ class EntityTypeBase {
     definition := ""
     
     __New(entityTypeId, servicePrefix, entityManagerObj, storageObj, factoryObj, entityTypeDefinition) {
+        this.container := container
         this.id := entityTypeId
         this.servicePrefix := servicePrefix
         this.entityManagerObj := entityManagerObj
@@ -52,5 +54,10 @@ class EntityTypeBase {
 
     GetDefinition() {
         return this.definition
+    }
+
+    OpenManageWindow() {
+        windowKey := this.definition["manager_gui"] ? this.definition["manager_gui"] : "ManageEntitiesWindow"
+        return this.container["manager.gui"].OpenWindow(windowKey)
     }
 }
