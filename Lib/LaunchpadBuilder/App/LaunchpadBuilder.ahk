@@ -60,8 +60,12 @@ class LaunchpadBuilder extends AppBase {
             this.ExitApp()
         }
 
-        if (buildInfo.DeployToApi && this.Services.Has("Auth")) {
-            this.Service("Auth").Login()
+        if (buildInfo.DeployToApi && this.Services.Has("entity_manager.web_service")) {
+            entityMgr := this.Services["entity_manager.web_service"]
+
+            if (entityMgr.Has("api") && entityMgr["api"]["Enabled"]) {
+                entityMgr["api"].Login()
+            }
         }
 
         version := buildInfo.Version
