@@ -3,12 +3,12 @@ class EpicPlatform extends RegistryLookupGamePlatformBase {
     displayName := "Epic Store"
     launcherType := "Epic"
     gameType := "Epic"
-    installDirRegView := 32
-    installDirRegKey := "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{0E63B233-DC24-442C-BD38-0B91D90FEC5B}"
-    versionRegView := 32
-    versionRegKey := "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{0E63B233-DC24-442C-BD38-0B91D90FEC5B}"
-    uninstallCmdRegView := 32
-    uninstallCmdRegKey := "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{0E63B233-DC24-442C-BD38-0B91D90FEC5B}"
+    installDirRegView := 64
+    installDirRegKey := "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products\B4B4F9022FD3528499604D6D8AE00CE9\InstallProperties"
+    versionRegView := 64
+    versionRegKey := "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products\B4B4F9022FD3528499604D6D8AE00CE9\InstallProperties"
+    uninstallCmdRegView := 64
+    uninstallCmdRegKey := "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products\B4B4F9022FD3528499604D6D8AE00CE9\InstallProperties"
 
     Install() {
         Run("https://www.epicgames.com/store/en-US/download")
