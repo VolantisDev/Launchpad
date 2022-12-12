@@ -164,19 +164,23 @@ class ManageEntitiesWindow extends ManageWindowBase {
         definition := this.entityType.definition
         menuItems := []
 
-        if (definition["allow_view"]) {
+        if (definition["allow_view"] && this._shouldShowButton(entityObj, "ViewEntity")) {
             menuItems.Push(Map("label", "&View", "name", "ViewEntity"))
         }
 
-        if (definition["allow_edit"]) {
+        if (definition["allow_edit"] && this._shouldShowButton(entityObj, "EditEntity")) {
             menuItems.Push(Map("label", "Edit", "name", "EditEntity"))
         }
 
-        if (definition["allow_delete"]) {
+        if (definition["allow_delete"] && this._shouldShowButton(entityObj, "DeleteEntity")) {
             menuItems.Push(Map("label", "Delete", "name", "DeleteEntity"))
         }
 
         return menuItems
+    }
+
+    _shouldShowButton(entityObj, buttonName) {
+        return true
     }
 
     ShowListViewContextMenu(lv, item, isRightClick, X, Y) {

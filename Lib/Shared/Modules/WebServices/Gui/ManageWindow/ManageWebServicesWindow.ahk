@@ -35,6 +35,16 @@ class ManageWebServicesWindow extends ManageEntitiesWindow {
         return menuItems
     }
 
+    _shouldShowButton(entityObj, buttonName) {
+        shouldShow := super._shouldShowButton(entityObj, buttonName)
+        
+        if (shouldShow && buttonName == "DeleteEntity") {
+            shouldShow := entityObj.Id != "api"
+        }
+
+        return shouldShow
+    }
+
     ProcessContextMenuResult(result, key) {
         if (result == "WebServiceLogout") {
             this.Logout(key)
@@ -46,11 +56,19 @@ class ManageWebServicesWindow extends ManageEntitiesWindow {
     }
 
     Logout(key) {
-        return this.entityMgr[key].Logout()
+        result := this.entityMgr[key].Logout()
+
+        this.UpdateListView()
+
+        return result
     }
 
     Login(key) {
-        return this.entityMgr[key].Login()
+        result := this.entityMgr[key].Login()
+        
+        this.UpdateListView()
+
+        return result
     }
 
     ViewEntity(key) {
@@ -58,7 +76,9 @@ class ManageWebServicesWindow extends ManageEntitiesWindow {
     }
 
     AddEntity() {
-        
+        ; @todo open add wizard
+
+        this.UpdateListView()
     }
 
     DeleteEntity(key) {
