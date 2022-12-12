@@ -41,7 +41,21 @@ class EpicPlatform extends RegistryLookupGamePlatformBase {
                 }
 
                 if (isGame) {
-                    key := obj["Name"]
+                    key := obj.Has("Name") ? obj["Name"] : ""
+
+                    if (!key && obj.Has("DisplayName")) {
+                        key := obj["DisplayName"]
+                    }
+
+                    if (!key && obj.Has("MandatoryAppFolderName")) {
+                        key := obj["MandatoryAppFolderName"]
+                    }
+
+                    if (!key) {
+                        throw AppException("Could not determine detected game key.")
+                    }
+
+                    displayName := obj.Has("DisplayName") ? obj["DisplayName"] : ""
                     installDir := obj["InstallLocation"]
                     launcherSpecificId := obj["AppName"]
                     ;exeName := obj["LaunchExecutable"]
@@ -49,7 +63,7 @@ class EpicPlatform extends RegistryLookupGamePlatformBase {
                     locator := GameExeLocator(installDir)
                     possibleExes := locator.Locate("")
                     mainExe := this.DetermineMainExe(key, possibleExes)
-                    games.Push(DetectedGame(key, this, this.launcherType, this.gameType, installDir, mainExe, launcherSpecificId, possibleExes))
+                    games.Push(DetectedGame(key, this, this.launcherType, this.gameType, installDir, mainExe, launcherSpecificId, possibleExes, displayName))
                 }
             }
         }

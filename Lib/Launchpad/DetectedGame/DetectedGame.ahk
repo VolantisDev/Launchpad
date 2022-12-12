@@ -17,9 +17,9 @@ class DetectedGame {
     prioritySuffixes := ["-Win64-Shipping", "-Win32-Shipping"]
     filterExes := []
 
-    __New(key, platform, launcherType, gameType := "Default", installDir := "", exeName := "", launcherSpecificId := "", possibleExeNames := "") {
+    __New(key, platform, launcherType, gameType := "Default", installDir := "", exeName := "", launcherSpecificId := "", possibleExeNames := "", displayName := "") {
         this.key := key
-        this.displayName := key
+        this.displayName := displayName ? displayName : key
         this.platform := platform
         this.detectedKey := key
         this.launcherType := launcherType
@@ -153,15 +153,19 @@ class DetectedGame {
             }
         }
 
-        key := StrReplace(key, ": ", " - ")
-        key := StrReplace(key, ":", "")
-        key := StrReplace(key, "\", "")
-        key := StrReplace(key, "/", "")
-        key := StrReplace(key, "*", "")
-        key := StrReplace(key, "?", "")
-        key := StrReplace(key, "`"", "")
-        key := StrReplace(key, "Â®", "")
-        key := StrReplace(key, "â„¢", "")
+        replacements := [
+            [" : ", " - "],
+            [": ", " - "],
+            [":", "-"],
+            ["Â®", ""],
+            ["â„¢", ""]
+        ]
+
+        for , vals in replacements {
+            key := StrReplace(key, vals[1], vals[2])
+        }
+
+        key := RegExReplace(key, "[\\/:*?`"<>|]'")
 
         return key
     }
