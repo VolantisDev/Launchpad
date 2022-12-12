@@ -64,6 +64,12 @@ class WebServiceEntity extends AppEntityBase {
             "default", (this.idVal == "api")
         )
 
+        definitions["Enabled"] := Map(
+            "type", "boolean",
+            "required", false,
+            "default", true
+        )
+
         return definitions
     }
 
