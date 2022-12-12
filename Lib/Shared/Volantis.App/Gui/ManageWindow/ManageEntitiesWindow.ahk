@@ -23,7 +23,7 @@ class ManageEntitiesWindow extends ManageWindowBase {
     GetDefaultConfig(container, config) {
         defaults := super.GetDefaultConfig(container, config)
         defaults["entity_type"] := this.entityTypeId
-        defaults["title"] := this.entityType.namePlural
+        defaults["title"] := this.entityType.definition["name_plural"]
         return defaults
     }
 
@@ -51,7 +51,7 @@ class ManageEntitiesWindow extends ManageWindowBase {
     GetViewMode() {
         typeViewMode := this.entityType.definition["manager_view_mode"]
         viewMode := typeViewMode ? typeViewMode : "List"
-        viewModeParam := this.entityType.definition["manager_view_mode"]
+        viewModeParam := this.entityType.definition["manager_view_mode_parameter"]
 
         if (viewModeParam) {
             paramMode := this.container.GetParameter(viewModeParam)
