@@ -110,6 +110,7 @@
 #Include Volantis.App\State\AppState.ahk
 #Include Volantis.App\State\CacheState.ahk
 #Include Volantis.App\State\JsonState.ahk
+#Include Volantis.App\State\ParameterState.ahk
 #Include Volantis.App\State\StateBase.ahk
 #Include Volantis.Base\CLR\CLR.ahk
 #Include Volantis.Base\Event\EventBase.ahk
