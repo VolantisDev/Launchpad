@@ -137,11 +137,11 @@
     }
 
     OnManageBackups(btn, info) {
-        this.app.Service("manager.gui").OpenWindow("ManageBackupsWindow")
+        this.app.Service("entity_type.backup").OpenManageWindow()
     }
 
     OnManagePlatforms(btn, info) {
-        this.app.Service("manager.gui").OpenWindow("PlatformsWindow")
+        this.app.Service("entity_type.platform").OpenManageWindow()
     }
 
     AddConfigLocationBlock(heading, settingName, extraButton := "", helpText := "") {
