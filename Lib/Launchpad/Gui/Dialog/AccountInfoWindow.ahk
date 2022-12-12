@@ -9,13 +9,23 @@
     Controls() {
         super.Controls()
 
-        if (this.app.Services.Has("Auth")) {
-            info := this.app.Service("Auth").GetStatusInfo()
+        if (this.app.Services.Has("entity_manager.web_service")) {
+            entityMgr := this.app.Services["entity_manager.web_service"]
 
-            if (info) {
-                opts := "w" . this.windowSettings["contentWidth"] . " x" . this.margin . " y+" . this.margin
-                this.guiObj.AddPicture("x" . this.margin . " y+" . this.margin, info["photo"])
-                this.guiObj.AddText(opts, "Email: " . info["email"])
+            if (entityMgr.Has("api") && entityMgr["api"]["Enabled"]) {
+                info := Map(
+                    "name", "",
+                    "email", "",
+                    "photo", ""
+                )
+
+                ; @todo Pull this information from the API web service
+    
+                if (info) {
+                    opts := "w" . this.windowSettings["contentWidth"] . " x" . this.margin . " y+" . this.margin
+                    this.guiObj.AddPicture("x" . this.margin . " y+" . this.margin, info["photo"])
+                    this.guiObj.AddText(opts, "Email: " . info["email"])
+                }
             }
         }
 
@@ -29,9 +39,15 @@
     }
 
     ProcessResult(result, submittedData := "") {
+        
+
         if (result == "Logout") {
-            if (this.app.Services.Has("Auth")) {
-                this.app.Service("Auth").Logout()
+            if (this.app.Services.Has("entity_manager.web_service")) {
+                entityMgr := this.app.Services["entity_manager.web_service"]
+    
+                if (entityMgr.Has("api") && entityMgr["api"]["Enabled"]) {
+                    entityMgr["api"].Logout()
+                }
             }
         } else if (result == "Save" && submittedData) {
             this.app.Config["player_name"] := submittedData.PlayerName
