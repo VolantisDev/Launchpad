@@ -51,7 +51,7 @@ class WebServiceEntity extends AppEntityBase {
             "type", "entity_reference",
             "entityType", "web_service_provider",
             "required", true,
-            "editable", (this.idVal != "api")
+            "editable", false
         )
 
         return definitions
