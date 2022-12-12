@@ -66,7 +66,7 @@
             "storage_config_path_parameter": "config.platforms_file",
             "manager_view_mode_parameter": "config.platforms_view_mode",
             "default_icon": "Platform",
-            "manager_gui": "ManagePlatformsWindow",
+            "manager_gui": "PlatformsWindow",
             "manager_link_in_tools_menu": true
         },
         "entity_type.task": {
