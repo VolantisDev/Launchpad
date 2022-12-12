@@ -24,6 +24,7 @@ class ManageEntitiesWindow extends ManageWindowBase {
         defaults := super.GetDefaultConfig(container, config)
         defaults["entity_type"] := this.entityTypeId
         defaults["title"] := this.entityType.definition["name_plural"]
+        
         return defaults
     }
 

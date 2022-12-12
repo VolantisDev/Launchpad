@@ -6,11 +6,13 @@
     lvWidth := 0
     showDetailsPane := false
     detailsFields := []
+    lvResizeOpts := "wh"
 
     GetDefaultConfig(container, config) {
         defaults := super.GetDefaultConfig(container, config)
         defaults["frameShadow"] := false
         defaults["saveWindowState"] := true
+        defaults["resizable"] := true
         return defaults
     }
 
@@ -74,8 +76,7 @@
             opts.Push("w" . this.lvWidth)
         }
 
-        this.listView := this.Add("ListViewControl", opts, "", this.listViewColumns, "GetListViewData", "GetListViewImgList", "InitListView", "ShouldHighlightRow")
-        this.listView.resizeOpts := "h"
+        this.listView := this.Add("ListViewControl", opts, "", this.listViewColumns, "GetListViewData", "GetListViewImgList", "InitListView", "ShouldHighlightRow", this.lvResizeOpts)
         return this.listView
     }
 

@@ -182,7 +182,7 @@ class TitlebarControl extends GuiControlBase {
         }
     }
 
-    OnSize(minMax, width, height) {
+    OnSize(guiObj, minMax, width, height) {
         if (minMax == 1 and this.guiObj.config["showMaximize"]) {
             this.guiObj.guiObj["WindowUnmaxButton"].Visible := true
             this.guiObj.guiObj["WindowMaxButton"].Visible := false
@@ -209,7 +209,7 @@ class TitlebarControl extends GuiControlBase {
             this.guiObj.AutoXYWH("x*", ["WindowMaxButton", "WindowUnmaxButton"])
         }
 
-        if (this.guiObj.config["showMaximize"]) {
+        if (this.guiObj.config["showMinimize"]) {
             this.guiObj.AutoXYWH("x*", ["WindowMinButton"])
         }
     }

@@ -30,10 +30,12 @@ class GuiBase {
     isShown := false
     config := ""
     merger := ""
+    addedControls := []
 
     GetDefaultConfig(container, config) {
         return Map(
             "id", Type(this),
+            "resizable", false,
             "titlebar", true,
             "waitForResult", false,
             "titleIsMenu", false,
@@ -81,6 +83,10 @@ class GuiBase {
             extraOptions["Border"] := true
         }
 
+        if (this.config["resizable"]) {
+            extraOptions["Resize"] := true
+        }
+
         if (this.owner != "") {
             extraOptions["Owner" . this.owner.Hwnd] := true
         }
@@ -106,7 +112,6 @@ class GuiBase {
 
         this.margin := this.windowSettings["spacing"]["margin"]
         this.guiId := this.config["id"]
-
         this.RegisterCallbacks()
         this.Create()
     }
@@ -169,7 +174,9 @@ class GuiBase {
     }
 
     Add(ctlClass, options := "", params*) {
-        return %ctlClass%(this, options, params*)
+        ctlObj := %ctlClass%(this, options, params*)
+        this.addedControls.Push(ctlObj)
+        return ctlObj
     }
 
     OnCalcSize(wParam, lParam, msg, hwnd) {
@@ -762,8 +769,12 @@ class GuiBase {
     }
 
     OnSize(guiObj, minMax, width, height) {
-        if (this.config["titlebar"]) {
-            this.titlebar.OnSize(minMax, width, height)
+        for index, ctlObj in this.addedControls {
+            ctlObj.OnSize(guiObj, minMax, width, height)
         }
+
+        ; if (this.config["titlebar"]) {
+        ;     this.titlebar.OnSize(minMax, width, height)
+        ; }
     }
 }

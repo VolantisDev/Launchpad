@@ -3,6 +3,7 @@
     launcherManager := ""
     platformManager := ""
     showDetailsPane := true
+    lvResizeOpts := "h"
 
     __New(container, themeObj, config) {
         this.launcherManager := container.Get("entity_manager.launcher")
