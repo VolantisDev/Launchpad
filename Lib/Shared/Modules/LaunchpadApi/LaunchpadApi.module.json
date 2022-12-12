@@ -12,16 +12,12 @@
         "website": "https://launchpad.games",
         "version": "{{VERSION}}",
         "appVersion": "",
-        "dependencies": ["Auth"]
+        "dependencies": ["WebServices"]
     },
     "services": {
         "data_source.api": {
             "class": "ApiDataSource",
             "arguments": ["@{App}", "@manager.cache", "api", "@@config.api_endpoint"]
-        },
-        "auth_provider.launchpad_api": {
-            "class": "LaunchpadApiAuthProvider",
-            "arguments": ["@{App}", "@state.app"]
         },
         "cache_state.api": {
             "class": "CacheState",
