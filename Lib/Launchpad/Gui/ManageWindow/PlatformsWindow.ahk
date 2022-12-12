@@ -4,7 +4,7 @@ class PlatformsWindow extends ManageWindowBase {
 
     __New(container, themeObj, config) {
         this.platformManager := container.Get("entity_manager.platform")
-        this.lvCount := this.platformManager.Count(true)
+        this.lvCount := this.platformManager.Count(true) - 1
         super.__New(container, themeObj, config)
     }
 
@@ -24,10 +24,12 @@ class PlatformsWindow extends ManageWindowBase {
         data := Map()
 
         for key, platform in this.platformManager {
-            enabledText := platform["IsEnabled"] ? "Yes" : "No"
-            detectGamesText := platform["DetectGames"] ? "Yes" : "No"
-            installedText := platform["IsInstalled"] ? "Yes" : "No"
-            data[key] := [platform.GetName(), enabledText, detectGamesText, installedText, platform["InstalledVersion"]]
+            if (key != "Basic") {
+                enabledText := platform["IsEnabled"] ? "Yes" : "No"
+                detectGamesText := platform["DetectGames"] ? "Yes" : "No"
+                installedText := platform["IsInstalled"] ? "Yes" : "No"
+                data[key] := [platform.GetName(), enabledText, detectGamesText, installedText, platform["InstalledVersion"]]
+            }
         }
 
         return data
@@ -47,14 +49,17 @@ class PlatformsWindow extends ManageWindowBase {
         iconNum := 1
 
         for key, platform in this.platformManager {
-            iconSrc := platform["IconSrc"]
 
-            if (!iconSrc or !FileExist(iconSrc)) {
-                iconSrc := defaultIcon
+            if (key != "Basic") {
+                iconSrc := platform["IconSrc"]
+
+                if (!iconSrc or !FileExist(iconSrc)) {
+                    iconSrc := defaultIcon
+                }
+
+                IL_Add(IL, iconSrc)
+                iconNum++
             }
-
-            IL_Add(IL, iconSrc)
-            iconNum++
         }
 
         return IL
