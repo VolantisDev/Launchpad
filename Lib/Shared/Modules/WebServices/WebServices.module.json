@@ -17,7 +17,6 @@
     },
     "parameters": {
         "config.web_services_file": "@@{data_dir}\\WebServices.json",
-        "config.web_service_providers_file": "@@{data_dir}\\WebServiceProviders.json",
         "config.web_services_state_path": "@@{data_dir}\\WebServicesState.json",
         "config.web_services_view_mode": "Report",
         "entity_type.web_service": {
@@ -41,7 +40,7 @@
             "entity_class": "WebServiceProviderEntity",
             "definition_loader_class": "ParameterEntityDefinitionLoader",
             "definition_loader_parameter_key": "web_services.providers",
-            "storage_config_path_parameter": "config.web_service_providers_file"
+            "storage_type": "runtime"
         },
         "web_services.providers.launchpad_api": {
             "name": "Launchpad API",
