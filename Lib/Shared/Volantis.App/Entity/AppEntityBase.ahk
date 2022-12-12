@@ -2,6 +2,7 @@ class AppEntityBase extends FieldableEntity {
     app := ""
     dataSourcePath := ""
     existsInDataSource := false
+    mergeDataFromApi := true
 
     __New(app, id, entityTypeId, container, eventMgr, storageObj, idSanitizer, parentEntity := "") {
         this.app := app
@@ -32,10 +33,12 @@ class AppEntityBase extends FieldableEntity {
             "weight", 100
         )
 
-        groups["api"] := Map(
-            "name", "API",
-            "weight", 150
-        )
+        if (this.mergeDataFromApi) {
+            groups["api"] := Map(
+                "name", "API",
+                "weight", 150
+            )
+        }
 
         return groups
     }
@@ -43,23 +46,25 @@ class AppEntityBase extends FieldableEntity {
     BaseFieldDefinitions() {
         definitions := super.BaseFieldDefinitions()
 
-        definitions["DataSourceKeys"] := Map(
-            "description", "The data source keys to load defaults from, in order.",
-            "help", "The default data source is 'api' which connects to the default api endpoint (Which can be any HTTP location compatible with Launchpad's API format)",
-            "default", [this.app.Config["data_source_key"]],
-            "multiple", true,
-            "group", "api",
-            "processValue", false,
-            "modes", Map("simple", Map("formField", false))
-        )
+        if (this.mergeDataFromApi) {
+            definitions["DataSourceKeys"] := Map(
+                "description", "The data source keys to load defaults from, in order.",
+                "help", "The default data source is 'api' which connects to the default api endpoint (Which can be any HTTP location compatible with Launchpad's API format)",
+                "default", [this.app.Config["data_source_key"]],
+                "multiple", true,
+                "group", "api",
+                "processValue", false,
+                "modes", Map("simple", Map("formField", false))
+            )
 
-        definitions["DataSourceItemKey"] := Map(
-            "description", "The key that is used to look up the entity's data from configured external data sources.",
-            "help", "It defaults to the key which is usually sufficient, but it can be overridden by setting this value.`n`nAddtionally, multiple copies of the same data source entity can exist by giving them different keys but using the same DataSourceKey",
-            "group", "api",
-            "processValue", false,
-            "modes", Map("simple", Map("formField", false))
-        )
+            definitions["DataSourceItemKey"] := Map(
+                "description", "The key that is used to look up the entity's data from configured external data sources.",
+                "help", "It defaults to the key which is usually sufficient, but it can be overridden by setting this value.`n`nAddtionally, multiple copies of the same data source entity can exist by giving them different keys but using the same DataSourceKey",
+                "group", "api",
+                "processValue", false,
+                "modes", Map("simple", Map("formField", false))
+            )
+        }
 
         definitions["AssetsDir"] := Map(
             "type", "directory",
@@ -109,20 +114,21 @@ class AppEntityBase extends FieldableEntity {
     }
 
     AggregateDataSourceDefaults(includeParentData := true, includeChildData := true) {
-        defaults := (this.parentEntity != "" && includeParentData) 
-            ? this.parentEntity.AggregateDataSourceDefaults(includeParentData, false) 
-            : Map()
+        defaults := Map()
 
-        ; @todo Uncomment if needed, remove if not
-        ;this.GetData().SetLayer("ds", defaults)
+        if (this.mergeDataFromApi) {
+            defaults := (this.parentEntity != "" && includeParentData) 
+                ? this.parentEntity.AggregateDataSourceDefaults(includeParentData, false) 
+                : defaults
 
-        for index, dataSource in this.GetAllDataSources() {
-            defaults := this.merger.Merge(this.GetDataSourceDefaults(dataSource), defaults)
-        }
+            for index, dataSource in this.GetAllDataSources() {
+                defaults := this.merger.Merge(this.GetDataSourceDefaults(dataSource), defaults)
+            }
 
-        if (includeChildData) {
-            for key, child in this.GetReferencedEntities(true) {
-                defaults := this.merger.Merge(child.AggregateDataSourceDefaults(false, includeChildData), defaults)
+            if (includeChildData) {
+                for key, child in this.GetReferencedEntities(true) {
+                    defaults := this.merger.Merge(child.AggregateDataSourceDefaults(false, includeChildData), defaults)
+                }
             }
         }
 
@@ -132,7 +138,7 @@ class AppEntityBase extends FieldableEntity {
     GetAllDataSources() {
         dataSources := Map()
 
-        if (this.Has("DataSourceKeys", false)) {
+        if (this.mergeDataFromApi && this.Has("DataSourceKeys", false)) {
             dataSourceKeys := this["DataSourceKeys"]
 
             if (!HasBase(dataSourceKeys, Array.Prototype)) {
@@ -155,21 +161,24 @@ class AppEntityBase extends FieldableEntity {
 
     GetDataSourceDefaults(dataSource) {
         defaults := Map()
-        itemKey := this.DiscoverDataSourceItemKey()
 
-        if (itemKey) {
-            dsData := dataSource.ReadJson(itemKey, this.GetDataSourceItemPath())
+        if (this.mergeDataFromApi) {
+            itemKey := this.DiscoverDataSourceItemKey()
 
-            if (dsData) {
-                this.existsInDataSource := true
+            if (itemKey) {
+                dsData := dataSource.ReadJson(itemKey, this.GetDataSourceItemPath())
 
-                if (dsData.Has("data")) {
-                    dsData := dsData["data"]
-                }
+                if (dsData) {
+                    this.existsInDataSource := true
 
-                if (dsData.Has("defaults")) {
-                    defaults := this.merger.Merge(dsData["defaults"], defaults)
-                    defaults := this.MergeAdditionalDataSourceDefaults(defaults, dsData)
+                    if (dsData.Has("data")) {
+                        dsData := dsData["data"]
+                    }
+
+                    if (dsData.Has("defaults")) {
+                        defaults := this.merger.Merge(dsData["defaults"], defaults)
+                        defaults := this.MergeAdditionalDataSourceDefaults(defaults, dsData)
+                    }
                 }
             }
         }
