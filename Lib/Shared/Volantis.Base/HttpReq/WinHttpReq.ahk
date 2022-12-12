@@ -3,16 +3,22 @@ class WinHttpReq extends HttpReqBase {
     static adoStream := ComObject("adodb.stream")
 
     Send(method := "GET", data := "", uploadFile := false) {
-        if (IsObject(this.url)) {
-            ; Clear cookie
-            return WinHttpReq.winHttp := ComObject("WinHttp.WinHttpRequest.5.1")
+        url := this.url
+
+        if (IsObject(url)) {
+            if (HasBase(url, UrlObj.Prototype)) {
+                url := url.ToString(true)
+            } else {
+                ; Clear cookie
+                return WinHttpReq.winHttp := ComObject("WinHttp.WinHttpRequest.5.1")
+            }
         }
 
         if (data != "" && method == "GET") {
             method := "POST"
         }
 
-        WinHttpReq.winHttp.Open(method, this.url, true)
+        WinHttpReq.winHttp.Open(method, url, true)
 
         if (data != "" && !this.requestHeaders.Has("Content-Type")) {
             contentType := Type(data) == "String" ? "application/x-www-form-urlencoded" : "application/json"
