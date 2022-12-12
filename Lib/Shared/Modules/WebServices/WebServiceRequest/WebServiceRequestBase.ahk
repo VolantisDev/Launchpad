@@ -129,7 +129,7 @@ class WebServiceRequestBase {
                         authenticator.RefreshAuthentication(this.webServiceEnt)
                     }
     
-                    authenticator.AlterRequest(this.webServiceEnt, this, httpReqObj)
+                    authenticator.AlterRequest(this.webServiceEnt, httpReqObj)
                 }
 
                 event := WebServiceRequestEvent(WebServicesEvents.WEB_SERVICES_HTTP_REQ_ALTER, this)

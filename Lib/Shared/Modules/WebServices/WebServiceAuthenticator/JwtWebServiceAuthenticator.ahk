@@ -44,7 +44,7 @@ class JwtWebServiceAuthenticator extends WebServiceAuthenticatorBase {
         }
     }
 
-    AlterRequest(webServiceEnt, request, httpReqObj) {
+    AlterRequest(webServiceEnt, httpReqObj) {
         bearerToken := webServiceEnt.AuthData["auth_token"]
 
         if (bearerToken) {

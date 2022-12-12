@@ -21,7 +21,7 @@ class WebServiceAuthenticatorBase {
 
     }
 
-    AlterRequest(webServiceEnt, request, httpReqObj) {
+    AlterRequest(webServiceEnt, httpReqObj) {
 
     }
 
