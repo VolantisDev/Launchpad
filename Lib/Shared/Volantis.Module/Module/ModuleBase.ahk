@@ -39,7 +39,7 @@ class ModuleBase {
             }
             
             if (versionStr == "{{VERSION}}") {
-                versionStr := "Built-in"
+                versionStr := "Core"
             }
         }
 
