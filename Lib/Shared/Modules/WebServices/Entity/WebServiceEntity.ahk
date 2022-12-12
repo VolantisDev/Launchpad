@@ -224,4 +224,33 @@ class WebServiceEntity extends AppEntityBase {
 
         return modified
     }
+
+    GetStatusInfo() {
+        ; @todo fix this data
+        statusText := "Not logged in"
+        imgPath := ""
+        email := ""
+
+        if (this.Authenticated) {
+            playerName := this.app.Config["player_name"]
+            email := this.AuthData["email"]
+            
+            if (playerName) {
+                statusText := playerName
+            } else if (email) {
+                statusText := email
+            } else {
+                statusText := "Logged in"
+            }
+
+            imgPath := this.AuthData["photo"]
+
+            if (SubStr(imgPath, 1, 4) == "http") {
+                cachePath := "account--profile.jpg"
+                imgPath := this.app.Service("manager.cache")["file"].GetCachedDownload(cachePath, imgPath)
+            }
+        }
+
+        return Map("name", statusText, "email", email, "photo", imgPath)
+    }
 }
