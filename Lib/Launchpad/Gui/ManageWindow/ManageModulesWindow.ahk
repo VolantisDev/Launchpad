@@ -1,5 +1,5 @@
 class ManageModulesWindow extends ManageWindowBase {
-    listViewColumns := Array("NAME", "ENABLED", "SOURCE", "VERSION")
+    listViewColumns := Array("NAME", "CATEGORY", "ENABLED", "SOURCE", "VERSION")
     moduleManager := ""
     needsRestart := false
 
@@ -26,9 +26,8 @@ class ManageModulesWindow extends ManageWindowBase {
 
         for name, module in this.moduleManager.All("", false, true) {
             enabledText := module.IsEnabled() ? "Yes" : "No"
-            ; TODO Define source
-            source := ""
-            data[name] := [name, enabledText, source, module.GetVersion()]
+            source := module.IsCore() ? "Built-in" : "Third-party"
+            data[name] := [name, module.moduleInfo["category"], enabledText, source, module.GetVersion()]
         }
 
         return data
