@@ -95,7 +95,7 @@ class DetectedGame {
         }
 
         if (modified) {
-            launcher.SaveModifiedData()
+            launcher.SaveEntity(true)
         }
     }
 

@@ -379,8 +379,8 @@ class LauncherEntity extends AppEntityBase {
         return ValidateResult
     }
 
-    SaveModifiedData() {
-        super.SaveModifiedData()
+    SaveEntity(recurse := true) {
+        super.SaveEntity(recurse)
         this.app.State.SetLauncherConfigInfo(this.Id)
     }
 

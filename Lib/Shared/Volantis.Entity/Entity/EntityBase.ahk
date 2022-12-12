@@ -20,10 +20,12 @@ class EntityBase {
 
     EntityTypeId {
         get => this.entityTypeIdVal
+        set => this.entityTypeIdVal := value
     }
 
     EntityType {
         get => this.GetEntityType()
+        set => this.EntityTypeId := value
     }
 
     FieldData {
