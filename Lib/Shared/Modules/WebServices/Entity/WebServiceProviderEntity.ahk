@@ -1,4 +1,6 @@
 class WebServiceProviderEntity extends AppEntityBase {
+    mergeDataFromApi := false
+    
     BaseFieldDefinitions() {
         definitions := super.BaseFieldDefinitions()
 
