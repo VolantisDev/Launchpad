@@ -10,6 +10,7 @@
 #Include Modules\WebServices\Event\WebServiceRequestEvent.ahk
 #Include Modules\WebServices\Event\WebServiceResponseEvent.ahk
 #Include Modules\WebServices\Events\WebServicesEvents.ahk
+#Include Modules\WebServices\EventSubscriber\WebServicesEventSubscriber.ahk
 #Include Modules\WebServices\Gui\AuthenticationGui\LaunchpadLoginWindow.ahk
 #Include Modules\WebServices\Gui\ManageWindow\ManageWebServicesWindow.ahk
 #Include Modules\WebServices\WebServiceAuthenticator\JwtWebServiceAuthenticator.ahk

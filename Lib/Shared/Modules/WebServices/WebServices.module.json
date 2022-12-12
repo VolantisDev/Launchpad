@@ -78,6 +78,11 @@
         "web_services_authenticator.jwt": {
             "class": "JwtWebServiceAuthenticator",
             "arguments": ["@manager.gui"]
+        },
+        "event_subscriber.web_services": {
+            "class": "WebServicesEventSubscriber",
+            "arguments": ["@{}"],
+            "tags": ["event_subscriber"]
         }
     }
 }
