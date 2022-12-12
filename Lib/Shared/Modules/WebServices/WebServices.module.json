@@ -1,0 +1,76 @@
+{
+    "module": {
+        "name": "Web Services",
+        "type": "AppModule",
+        "icon": "",
+        "category": "Web Services",
+        "tags": ["Launchpad", "LaunchpadBuilder"],
+        "description": "Enables Launchpad to connect to and authenticate with remove services on the Internet for additional functionality.",
+        "author": {
+            "name": "Ben McClure, Volantis Dev",
+            "url": "https://volantisdev.com"
+        },
+        "website": "https://launchpad.games",
+        "version": "{{VERSION}}",
+        "appVersion": "",
+        "dependencies": []
+    },
+    "parameters": {
+        "config.web_services_file": "@@{data_dir}\\WebServices.json",
+        "config.web_service_providers_file": "@@{data_dir}\\WebServiceProviders.json",
+        "config.web_services_state_path": "@@{data_dir}\\WebServicesState.json",
+        "config.web_services_view_mode": "Report",
+        "entity_type.web_service": {
+            "name_singular": "Web Service",
+            "name_plural": "Web Services",
+            "entity_class": "WebServiceEntity",
+            "storage_config_storage_parent_key": "WebServices",
+            "storage_config_path_parameter": "config.web_services_file",
+            "manager_view_mode_parameter": "config.web_services_view_mode",
+            "default_icon": "webhook",
+            "allow_add": true,
+            "allow_edit": true,
+            "allow_delete": true,
+            "manager_gui": "ManageWebServicesWindow",
+            "manager_link_in_tools_menu": true
+        },
+        "entity_type.web_service_provider": {
+            "name_singular": "Service Provider",
+            "name_plural": "Service Providers",
+            "entity_class": "WebServiceProviderEntity",
+            "definition_loader_class": "ParameterEntityDefinitionLoader",
+            "definition_loader_parameter_key": "web_services.providers",
+            "storage_config_path_parameter": "config.web_service_providers_file"
+        },
+        "web_services.providers.launchpad_api": {
+            "EndpointUrl": "https://api.launchpad.games/v1",
+            "AuthenticationEndpointUrl": "https://securetoken.googleapis.com/v1",
+            "IconSrc": "Logo.ico",
+            "SupportsAuthentication": true,
+            "Authenticator": "jwt",
+            "AppKey": "AIzaSyCbwzOWJjTft77P96dV5VB3dAx9TjdDowQ",
+            "LoginWindow": "LaunchpadLoginWindow"
+        },
+        "web_services.services.api": {
+            "Provider": "launchpad_api"
+        }
+    },
+    "services": {
+        "cache_state.web_services": {
+            "class": "CacheState",
+            "arguments": ["@{App}", "@@config.cache_dir", "WebServices.json"]
+        },
+        "cache.web_services": {
+            "class": "FileCache",
+            "arguments": ["@{App}", "@cache_state.web_services", "@@config.cache_dir", "WebServices"]
+        },
+        "state.web_services": {
+            "class": "JsonState",
+            "arguments": ["@{App}", "@@config.web_services_state_path"]
+        },
+        "web_services_authenticator.jwt": {
+            "class": "JwtWebServiceAuthenticator",
+            "arguments": ["@manager.gui"]
+        }
+    }
+}
