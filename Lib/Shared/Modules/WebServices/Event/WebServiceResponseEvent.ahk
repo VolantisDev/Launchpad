@@ -1,10 +1,16 @@
 class WebServiceResponseEvent extends EventBase {
+    _requestObj := ""
     _responseObj := ""
     
-    __New(eventName, responseObj) {
+    __New(eventName, requestObj, responseObj) {
+        this._requestObj := requestObj
         this._responseObj := responseObj
 
         super.__New(eventName)
+    }
+
+    Request {
+        get => this._requestObj
     }
 
     Response {
