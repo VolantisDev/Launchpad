@@ -43,6 +43,36 @@ class WebServiceEntity extends AppEntityBase {
         )
     }
 
+    BaseFieldDefinitions() {
+        definitions := super.BaseFieldDefinitions()
+
+        if (this.idVal == "api" && definitions.Has("name")) {
+            definitions["name"]["editable"] := false
+        }
+
+        definitions["Provider"] := Map(
+            "type", "entity_reference",
+            "entityType", "web_service_provider",
+            "required", true,
+            "editable", false
+        )
+
+        autoLoginDefault := false
+
+        if (this.Id == "api") {
+            autoLoginDefault := this.container.GetParameter("config.api_auto_login")
+        }
+
+        definitions["AutoLogin"] := Map(
+            "type", "boolean",
+            "description", "Automatically authenticate with this service when Launchpad starts.",
+            "required", false,
+            "default", autoLoginDefault
+        )
+
+        return definitions
+    }
+
     IsAuthenticated() {
         isAuthenticated := false
 
@@ -63,23 +93,6 @@ class WebServiceEntity extends AppEntityBase {
         if (this["Provider"]["SupportsAuthentication"]) {
             this["Provider"]["Authenticator"].Logout(this)
         }
-    }
-
-    BaseFieldDefinitions() {
-        definitions := super.BaseFieldDefinitions()
-
-        if (this.idVal == "api" && definitions.Has("name")) {
-            definitions["name"]["editable"] := false
-        }
-
-        definitions["Provider"] := Map(
-            "type", "entity_reference",
-            "entityType", "web_service_provider",
-            "required", true,
-            "editable", false
-        )
-
-        return definitions
     }
 
     Request(path, method := "", data := "", useAuthentication := -1, cacheResponse := true) {
