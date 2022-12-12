@@ -19,15 +19,47 @@ class ManageWebServicesWindow extends ManageEntitiesWindow {
         return entityObj["Provider"]["IconSrc"]
     }
 
+    GetContextMenuItems(entityObj) {
+        menuItems := super.GetContextMenuItems(entityObj)
+
+        if (entityObj["Provider"]["SupportsAuthentication"]) {
+            if (entityObj.Authenticated) {
+                menuItems.InsertAt(1, Map("label", "&Logout", "name", "WebServiceLogout"))
+            } else {
+                menuItems.InsertAt(1, Map("label", "&Login", "name", "WebServiceLogin"))
+            }
+        }
+
+        return menuItems
+    }
+
+    ProcessContextMenuResult(result, key) {
+        if (result == "WebServiceLogout") {
+            this.Logout(key)
+        } else if (result == "WebServiceLogin") {
+            this.Login(key)
+        } else {
+            super.ProcessContextMenuResult(result, key)
+        }
+    }
+
+    Logout(key) {
+        return this.entityMgr[key].Logout()
+    }
+
+    Login(key) {
+        return this.entityMgr[key].Login()
+    }
+
     ViewEntity(key) {
-        ; @todo generic view operation for double-clicking non-editable entities
+        entityObj := this.entityMgr[key]
     }
 
     AddEntity() {
-        ; @todo Implement generic add dialog and operation
+        
     }
 
     DeleteEntity(key) {
-        ; @todo Implement generic delete dialog and operation
+        entityObj := this.entityMgr[key]
     }
 }
