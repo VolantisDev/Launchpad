@@ -33,7 +33,7 @@
             "storage_config_storage_parent_key": "Games",
             "storage_config_path_parameter": "config.launcher_file",
             "manager_view_mode_parameter": "config.launcher_view_mode",
-            "default_icon": "Game",
+            "default_icon": "game",
             "allow_add": true,
             "allow_edit": true,
             "allow_delete": true,
@@ -65,7 +65,7 @@
             "storage_config_storage_parent_key": "Platforms",
             "storage_config_path_parameter": "config.platforms_file",
             "manager_view_mode_parameter": "config.platforms_view_mode",
-            "default_icon": "Platform",
+            "default_icon": "platform",
             "manager_gui": "PlatformsWindow",
             "manager_link_in_tools_menu": true
         },

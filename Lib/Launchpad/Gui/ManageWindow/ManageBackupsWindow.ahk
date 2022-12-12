@@ -40,7 +40,7 @@ class ManageBackupsWindow extends ManageWindowBase {
 
     GetListViewImgList(lv, large := false) {
         IL := IL_Create(this.backupManager.Count(true), 1, large)
-        defaultIcon := this.themeObj.GetIconPath("Backup")
+        defaultIcon := this.themeObj.GetIconPath("backup")
         iconNum := 1
 
         for key, backup in this.backupManager {

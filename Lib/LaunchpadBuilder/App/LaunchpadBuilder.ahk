@@ -7,7 +7,7 @@ class LaunchpadBuilder extends AppBase {
         parameters["config.api_authentication"] := true
         parameters["config.dist_dir"] := this.appDir . "\Dist"
         parameters["config.build_dir"] := this.appDir . "\Build"
-        parameters["config.icon_file"] := this.appDir . "\Resources\Graphics\Launchpad.ico"
+        parameters["config.icon_file"] := this.appDir . "\Resources\Graphics\launchpad.ico"
         parameters["config.github_username"] := ""
         parameters["config.github_token"] := ""
         parameters["config.github_repo"] := "VolantisDev/Launchpad"

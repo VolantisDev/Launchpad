@@ -46,7 +46,7 @@
             "name": "Launchpad API",
             "EndpointUrl": "https://api.launchpad.games/v1",
             "AuthenticationEndpointUrl": "https://securetoken.googleapis.com/v1",
-            "IconSrc": "Logo",
+            "IconSrc": "logo",
             "SupportsAuthentication": true,
             "Authenticator": "jwt",
             "AppKey": "AIzaSyCbwzOWJjTft77P96dV5VB3dAx9TjdDowQ",

@@ -513,7 +513,7 @@
 
     GetListViewImgList(lv, large := false) {
         IL := IL_Create(this.launcherManager.Count(true), 1, large)
-        defaultIcon := this.themeObj.GetIconPath("Game")
+        defaultIcon := this.themeObj.GetIconPath("game")
         iconNum := 1
 
         for key, launcher in this.launcherManager {
@@ -533,7 +533,7 @@
     GetItemImage(launcher) {
         iconSrc := launcher["IconSrc"]
         assetIcon := launcher["AssetsDir"] . "\" . launcher.Id . ".ico"
-        defaultIcon := this.themeObj.GetIconPath("Game")
+        defaultIcon := this.themeObj.GetIconPath("game")
 
         if ((!iconSrc || !FileExist(iconSrc)) && FileExist(assetIcon)) {
             iconSrc := assetIcon

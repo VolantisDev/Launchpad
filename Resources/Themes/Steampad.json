@@ -107,7 +107,7 @@
         },
         "themeAssets": {
             "logo": "",
-            "spinner": "Graphics\\Spinner-Steam.gif"
+            "spinner": "Graphics\\spinner-Steam.gif"
         },
         "buttons": {
             "styles": {

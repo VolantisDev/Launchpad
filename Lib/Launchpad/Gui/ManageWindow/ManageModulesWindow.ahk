@@ -43,7 +43,7 @@ class ManageModulesWindow extends ManageWindowBase {
 
     GetListViewImgList(lv, large := false) {
         IL := IL_Create(this.lvCount, 1, large)
-        defaultIcon := this.themeObj.GetIconPath("Module")
+        defaultIcon := this.themeObj.GetIconPath("module")
         iconNum := 1
 
         for key, module in this.moduleManager.All("", false, true) {

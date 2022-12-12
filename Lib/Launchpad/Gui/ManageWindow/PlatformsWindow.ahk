@@ -45,7 +45,7 @@ class PlatformsWindow extends ManageWindowBase {
 
     GetListViewImgList(lv, large := false) {
         IL := IL_Create(this.platformManager.Count(true), 1, large)
-        defaultIcon := this.themeObj.GetIconPath("Platform")
+        defaultIcon := this.themeObj.GetIconPath("platform")
         iconNum := 1
 
         for key, platform in this.platformManager {
