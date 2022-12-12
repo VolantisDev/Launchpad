@@ -74,10 +74,9 @@ class ManageEntitiesWindow extends ManageWindowBase {
 
         defaultIcon := this.themeObj.GetIconPath(defaultIconName)
         iconNum := 1
-        iconField := this.entityType.definition["icon_field"]
 
         for key, entityObj in this.entityMgr {
-            iconSrc := entityObj[iconField]
+            iconSrc := this.GetEntityIconSrc(entityObj)
 
             if (!InStr(iconSrc, ":\")) {
                 iconSrc := this.themeObj.GetIconPath(iconSrc)
@@ -92,6 +91,17 @@ class ManageEntitiesWindow extends ManageWindowBase {
         }
 
         return IL
+    }
+
+    GetEntityIconSrc(entityObj) {
+        iconSrc := ""
+        iconField := this.entityType.definition["icon_field"]
+
+        if (iconField && entityObj.Has(iconField)) {
+            iconSrc := entityObj[iconField]
+        }
+        
+        return iconSrc
     }
 
     OnDoubleClick(LV, rowNum) {
