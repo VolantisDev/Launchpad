@@ -191,9 +191,8 @@
         return webService
     }
 
-    GetStatusInfo() {
+    GetStatusInfo(webService) {
         info := ""
-        webService := this._getApiWebService()
 
         if (webService) {
             info := webService.GetStatusInfo()
@@ -225,7 +224,7 @@
             ))
 
             if (accountResult == "OK") {
-                this.UpdateStatusIndicator()
+                this.UpdateStatusIndicator(webService)
             }
         } else if (result == "Logout") {
             if (webService) {
@@ -238,9 +237,8 @@
         }
     }
 
-    StatusWindowIsOnline() {
+    StatusWindowIsOnline(webService) {
         isOnline := false
-        webService := this._getApiWebService()
 
         if (webService) {
             isOnline := webService.Authenticated

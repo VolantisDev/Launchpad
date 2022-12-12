@@ -5,10 +5,12 @@ class TitlebarControl extends GuiControlBase {
     iconW := 16
     titlebarH := 31
     titlebarButtonW := 16
-    initialStatusIndicatorW := 120
+    initialStatusIndicatorW := 40
+    initialStatusIndicatorExpandedW := 120
     titleButton := ""
     titleText := ""
     statusIndicator := ""
+    statusIndicators := []
     minBtn := ""
     maxBtn := ""
     unmaxBtn := ""
@@ -33,9 +35,21 @@ class TitlebarControl extends GuiControlBase {
 
         buttonsW := 0
         statusIndicatorW := this.guiObj.config["showStatusIndicator"] ? this.initialStatusIndicatorW : 0
+        statusIndicatorExpandedW := this.guiObj.config["showStatusIndicator"] ? this.initialStatusIndicatorExpandedW : 0
+
+        serviceMgr := this.container["entity_manager.web_service"]
+        webServices := Map()
 
         if (this.guiObj.config["showStatusIndicator"]) {
-            buttonsW += statusIndicatorW + (this.guiObj.margin * 2)
+            webServices := serviceMgr.EntityQuery(EntityQuery.RESULT_TYPE_ENTITIES)
+                .Condition(IsTrueCondition(), "Enabled")
+                .Condition(IsTrueCondition(), "StatusIndicator")
+                .Execute()
+            
+            for serviceId, webService in webServices {
+                serviceStatusW := (webService["StatusIndicatorExpanded"]) ? statusIndicatorExpandedW : statusIndicatorW
+                buttonsW += serviceStatusW + (this.guiObj.margin * 2)
+            }
         }
 
         if (this.guiObj.config["showMinimize"]) {
@@ -84,20 +98,19 @@ class TitlebarControl extends GuiControlBase {
             this.titleText := this.guiObj.guiObj.AddText(opts, titleText)
         }
 
-        if (this.guiObj.config["showStatusIndicator"]) {
-            opts := "x" . buttonsX . " y" . (this.topMargin - 5) . " w" . statusIndicatorW
-            statusStyle := this.guiObj.StatusWindowIsOnline() ? "status" : "statusOffline"
-            initialInfo := Map()
-            statusInfo := this.guiObj.GetStatusInfo()
+        if (this.guiObj.config["showStatusIndicator"] && webServices.Count) {
+            for serviceId, service in webServices {
+                expanded := service["StatusIndicatorExpanded"]
+                serviceStatusW := expanded ? statusIndicatorExpandedW : statusIndicatorW
+                opts := "x" . buttonsX . " y" . (this.topMargin - 5) . " w" . serviceStatusW
+                
+                statusIndicator := this.guiObj.Add("StatusIndicatorControl", opts, "", service, "")
+                this.statusIndicators.Push(statusIndicator)
+                service.AddStatusIndicator(statusIndicator)
 
-            if (statusInfo) {
-                initialInfo := statusInfo.Clone()
-                initialInfo["name"] := ""
+                difference := statusIndicator.UpdateStatusIndicator()
+                buttonsX += serviceStatusW + (this.guiObj.margin * 2)
             }
-            
-            this.statusIndicator := this.guiObj.Add("StatusIndicatorControl", opts, "", initialInfo, "", statusStyle)
-            difference := this.statusIndicator.UpdateStatusIndicator(statusInfo, statusStyle)
-            buttonsX += this.initialStatusIndicatorW + (this.guiObj.margin * 2)
         }
 
         handler := this.RegisterCallback("OnTitlebarButtonClick")
@@ -198,7 +211,15 @@ class TitlebarControl extends GuiControlBase {
         this.guiObj.AutoXYWH("w", ["WindowTitlebar"])
 
         if (this.guiObj.config["showStatusIndicator"]) {
-            this.guiObj.AutoXYWH("x*", ["StatusIndicator"])
+            indicatorCtlNames := []
+
+            for index, statusIndicator in this.statusIndicators {
+                indicatorCtlNames.Push(statusIndicator.ctl.Name)
+            }
+
+            if (indicatorCtlNames.Length) {
+                this.guiObj.AutoXYWH("x*", indicatorCtlNames)
+            }
         }
 
         if (this.guiObj.config["showClose"]) {

@@ -155,7 +155,17 @@
 
     UpdateStatusIndicators() {
         if (this.Service("manager.gui").Has("MainWindow")) {
-            this.Service("manager.gui")["MainWindow"].UpdateStatusIndicator()
+            serviceMgr := this.container["entity_manager.web_service"]
+            webServices := serviceMgr.EntityQuery(EntityQuery.RESULT_TYPE_ENTITIES)
+                .Condition(IsTrueCondition(), "Enabled")
+                .Condition(IsTrueCondition(), "StatusIndicator")
+                .Execute()
+
+                windowObj := this.Service("manager.gui")["MainWindow"]
+            
+            for serviceId, webService in webServices {
+                windowObj.UpdateStatusIndicator(webService)
+            }
         }
     }
 

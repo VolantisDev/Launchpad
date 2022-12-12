@@ -349,17 +349,17 @@ class GuiBase {
         return this.guiObj.AddEdit(opts, defaultValue)
     }
 
-    UpdateStatusIndicator() {
+    UpdateStatusIndicator(webService) {
         if (this.config["showStatusIndicator"]) {
-            this.titlebar.statusIndicator.UpdateStatusIndicator(this.GetStatusInfo(), this.StatusWindowIsOnline() ? "status" : "statusOffline")
+            webService.UpdateStatusIndicators()
         }
     }
 
-    StatusWindowIsOnline() {
+    StatusWindowIsOnline(webService) {
         return false
     }
 
-    GetStatusInfo() {
+    GetStatusInfo(webService) {
         return Map("name", "", "photo", "")
     }
 

@@ -3,6 +3,7 @@ class WebServiceEntity extends AppEntityBase {
     stateObj := ""
     persistentStateObj := ""
     mergeDataFromApi := false
+    statusIndicators := []
 
     Authenticated {
         get => this.IsAuthenticated()
@@ -70,7 +71,33 @@ class WebServiceEntity extends AppEntityBase {
             "default", true
         )
 
+        definitions["StatusIndicator"] := Map(
+            "type", "boolean",
+            "required", false,
+            "default", (this.idVal == "api")
+        )
+
+        definitions["StatusIndicatorExpanded"] := Map(
+            "type", "boolean",
+            "required", false,
+            "default", (this.idVal == "api")
+        )
+
         return definitions
+    }
+
+    GetStatusIndicators() {
+        return this.statusIndicators
+    }
+
+    AddStatusIndicator(statusIndicatorCtl) {
+        this.statusIndicators.Push(statusIndicatorCtl)
+    }
+
+    UpdateStatusIndicators() {
+        for , statusIndicatorCtl in this.statusIndicators {
+            statusIndicatorCtl.UpdateStatusIndicator()
+        }
     }
 
     IsAuthenticated() {
