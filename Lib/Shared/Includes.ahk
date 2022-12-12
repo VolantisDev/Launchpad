@@ -1,9 +1,4 @@
 ; Automatically-generated file. Manual edits will be overwritten.
-#Include Modules\Auth\AuthInfo\AuthInfo.ahk
-#Include Modules\Auth\AuthInfo\JwtAuthInfo.ahk
-#Include Modules\Auth\AuthProvider\AuthProviderBase.ahk
-#Include Modules\Auth\AuthProvider\JwtAuthProvider.ahk
-#Include Modules\LaunchpadApi\AuthProvider\LaunchpadApiAuthProvider.ahk
 #Include Modules\LaunchpadApi\DataSource\ApiDataSource.ahk
 #Include Modules\WebServices\Entity\WebServiceEntity.ahk
 #Include Modules\WebServices\Entity\WebServiceProviderEntity.ahk
@@ -98,7 +93,6 @@
 #Include Volantis.App\Installer\InstallerComponent\GitHubReleaseInstallerComponent.ahk
 #Include Volantis.App\Installer\InstallerComponent\InstallerComponentBase.ahk
 #Include Volantis.App\Service\AppServiceBase.ahk
-#Include Volantis.App\Service\AuthService.ahk
 #Include Volantis.App\Service\EventManager.ahk
 #Include Volantis.App\Service\LoggerService.ahk
 #Include Volantis.App\Service\NotificationService.ahk
