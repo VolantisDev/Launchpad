@@ -425,13 +425,13 @@ class AppBase {
         event := AppRunEvent(Events.APP_POST_INITIALIZE, this, config)
         this.Service("manager.event").DispatchEvent(event)
 
-        event := AppRunEvent(Events.APP_POST_STARTUP, this, config)
-        this.Service("manager.event").DispatchEvent(event)
-
         event := AppRunEvent(Events.APP_PRE_RUN, this, config)
         this.Service("manager.event").DispatchEvent(event)
 
         this.RunApp(config)
+
+        event := AppRunEvent(Events.APP_POST_STARTUP, this, config)
+        this.Service("manager.event").DispatchEvent(event)
     }
 
     LoadServices(config) {
