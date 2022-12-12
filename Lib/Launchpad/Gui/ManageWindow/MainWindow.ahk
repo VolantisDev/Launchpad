@@ -177,11 +177,26 @@
         }
     }
 
+    _getApiWebService() {
+        webService := ""
+
+        if (this.app.Services.Has("entity_manager.web_service")) {
+            entityMgr := this.app.Services["entity_manager.web_service"]
+
+            if (entityMgr.Has("api") && entityMgr["api"]["Enabled"]) {
+                webService := entityMgr["api"]
+            }
+        }
+
+        return webService
+    }
+
     GetStatusInfo() {
         info := ""
+        webService := this._getApiWebService()
 
-        if (this.container.Has("Auth")) {
-            info := this.container["Auth"].GetStatusInfo()
+        if (webService) {
+            info := webService.GetStatusInfo()
         }
 
         return info
@@ -189,9 +204,10 @@
 
     OnStatusIndicatorClick(btn, info) {
         menuItems := []
+        webService := this._getApiWebService()
 
-        if (this.container.Has("Auth")) {
-            if (this.container["Auth"].IsAuthenticated()) {
+        if (webService) {
+            if (webService.Authenticated) {
                 menuItems.Push(Map("label", "Account Details", "name", "AccountDetails"))
                 menuItems.Push(Map("label", "Logout", "name", "Logout"))
             } else {
@@ -212,22 +228,24 @@
                 this.UpdateStatusIndicator()
             }
         } else if (result == "Logout") {
-            if (this.container.Has("Auth")) {
-                this.container["Auth"].Logout()
+            if (webService) {
+                webService.Logout()
             }
         } else if (result == "Login") {
-            if (this.container.Has("Auth")) {
-                this.container["Auth"].Login()
+            if (webService) {
+                webService.Login()
             }
         }
     }
 
     StatusWindowIsOnline() {
         isOnline := false
+        webService := this._getApiWebService()
 
-        if (this.container.Has("Auth")) {
-            isOnline := this.container["Auth"].IsAuthenticated()
+        if (webService) {
+            isOnline := webService.Authenticated
         }
+
         return isOnline
     }
 
