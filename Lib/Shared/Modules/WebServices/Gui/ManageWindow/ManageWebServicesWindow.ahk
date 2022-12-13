@@ -39,7 +39,7 @@ class ManageWebServicesWindow extends ManageEntitiesWindow {
         shouldShow := super._shouldShowButton(entityObj, buttonName)
         
         if (shouldShow && buttonName == "DeleteEntity") {
-            shouldShow := entityObj.Id != "api"
+            shouldShow := entityObj.Id != "launchpad_api"
         }
 
         return shouldShow

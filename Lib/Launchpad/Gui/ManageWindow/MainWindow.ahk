@@ -183,8 +183,8 @@
         if (this.app.Services.Has("entity_manager.web_service")) {
             entityMgr := this.app.Services["entity_manager.web_service"]
 
-            if (entityMgr.Has("api") && entityMgr["api"]["Enabled"]) {
-                webService := entityMgr["api"]
+            if (entityMgr.Has("launchpad_api") && entityMgr["launchpad_api"]["Enabled"]) {
+                webService := entityMgr["launchpad_api"]
             }
         }
 

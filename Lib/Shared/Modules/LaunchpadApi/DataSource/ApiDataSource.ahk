@@ -38,8 +38,8 @@ class ApiDataSource extends DataSourceBase {
             if (this.app.Config["api_authentication"]) {
                 entityMgr := webService := this.app.Service("entity_manager.web_service")
 
-                if (entityMgr.Has("api") && entityMgr["api"]["Enabled"]) {
-                    webService := this.app.Service("entity_manager.web_service")["api"]
+                if (entityMgr.Has("launchpad_api") && entityMgr["launchpad_api"]["Enabled"]) {
+                    webService := this.app.Service("entity_manager.web_service")["launchpad_api"]
                     webService["Provider"]["Authenticator"].AlterRequest(webService, request)
                 }
                 
@@ -94,7 +94,7 @@ class ApiDataSource extends DataSourceBase {
         if (this.app.Config["api_authentication"]) {
             entityMgr := webService := this.app.Service("entity_manager.web_service")
 
-            if (entityMgr.Has("api") && entityMgr["api"]["Enabled"] && entityMgr["api"]["Authenticated"]) {
+            if (entityMgr.Has("launchpad_api") && entityMgr["launchpad_api"]["Enabled"] && entityMgr["launchpad_api"]["Authenticated"]) {
                 statusResult := this.ReadItem(path, true)
 
                 if (statusResult) {

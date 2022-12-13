@@ -63,8 +63,8 @@ class LaunchpadBuilder extends AppBase {
         if (buildInfo.DeployToApi && this.Services.Has("entity_manager.web_service")) {
             entityMgr := this.Services["entity_manager.web_service"]
 
-            if (entityMgr.Has("api") && entityMgr["api"]["Enabled"]) {
-                entityMgr["api"].Login()
+            if (entityMgr.Has("launchpad_api") && entityMgr["launchpad_api"]["Enabled"]) {
+                entityMgr["launchpad_api"].Login()
             }
         }
 

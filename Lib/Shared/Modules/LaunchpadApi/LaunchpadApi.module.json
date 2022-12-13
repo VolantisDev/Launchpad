@@ -14,23 +14,23 @@
         "appVersion": "",
         "dependencies": ["WebServices"]
     },
+    "parameters": {
+        "config.data_source_key": "launchpad_api",
+        "config.api_endpoint": "https://api.launchpad.games/v1",
+        "config.api_authentication": true
+    },
     "services": {
-        "data_source.api": {
+        "data_source.launchpad_api": {
             "class": "ApiDataSource",
-            "arguments": ["@{App}", "@manager.cache", "api", "@@config.api_endpoint"]
+            "arguments": ["@{App}", "@manager.cache", "launchpad_api", "@@config.api_endpoint"]
         },
-        "cache_state.api": {
+        "cache_state.launchpad_api": {
             "class": "CacheState",
             "arguments": ["@{App}", "@@config.cache_dir", "API.json"]
         },
-        "cache.api": {
+        "cache.launchpad_api": {
             "class": "FileCache",
-            "arguments": ["@{App}", "@cache_state.api", "@@config.cache_dir", "API"]
+            "arguments": ["@{App}", "@cache_state.launchpad_api", "@@config.cache_dir", "API"]
         }
-    },
-    "parameters": {
-        "config.data_source_key": "api",
-        "config.api_endpoint": "https://api.launchpad.games/v1",
-        "config.api_authentication": true
     }
 }
