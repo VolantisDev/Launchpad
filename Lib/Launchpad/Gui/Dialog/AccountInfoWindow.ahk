@@ -24,7 +24,7 @@
             if (info) {
                 opts := "w" . this.windowSettings["contentWidth"] . " x" . this.margin . " y+" . this.margin
                 this.guiObj.AddPicture("x" . this.margin . " y+" . this.margin, info["photo"])
-                this.guiObj.AddText(opts, "Email: " . info["email"])
+                this.guiObj.AddText(opts, "Account: " . info["account"])
             }
         }
 

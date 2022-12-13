@@ -89,7 +89,7 @@ class ApiDataSource extends DataSourceBase {
         path := "status"
         statusExpire := 5 ;60
 
-        status := Map("authenticated", false, "email", "", "photo", "")
+        status := Map("authenticated", false, "account", "", "photo", "")
 
         if (this.app.Config["api_authentication"]) {
             entityMgr := webService := this.app.Service("entity_manager.web_service")
@@ -99,6 +99,11 @@ class ApiDataSource extends DataSourceBase {
 
                 if (statusResult) {
                     status := JsonData().FromString(&statusResult)
+
+                    if (status.Has("email")) {
+                        status["account"] := status["email"]
+                        status.Delete("email")
+                    }
                 }
             }
         }
