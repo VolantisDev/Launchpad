@@ -278,7 +278,7 @@ class GuiManager extends ComponentManagerBase {
             guiObj := obj
         } else if (HasBase(obj, GuiBase.Prototype)) {
             guiObj := obj.guiObj
-        } else if (Type(guiObj) == "String" && this.Has(obj)) {
+        } else if (Type(obj) == "String" && this.Has(obj)) {
             guiObj := this[obj].guiObj
         }
 

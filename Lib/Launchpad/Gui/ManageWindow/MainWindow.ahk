@@ -191,62 +191,6 @@
         return webService
     }
 
-    GetStatusInfo(webService) {
-        info := ""
-
-        if (webService) {
-            info := webService.GetStatusInfo()
-        }
-
-        return info
-    }
-
-    OnStatusIndicatorClick(btn, info) {
-        menuItems := []
-        webService := this._getApiWebService()
-
-        if (webService) {
-            if (webService.Authenticated) {
-                menuItems.Push(Map("label", "Account Details", "name", "AccountDetails"))
-                menuItems.Push(Map("label", "Logout", "name", "Logout"))
-            } else {
-                menuItems.Push(Map("label", "Login", "name", "Login"))
-            }
-        }
-
-        result := this.container["manager.gui"].Menu(menuItems, this, btn)
-
-        if (result == "AccountDetails") {
-            accountResult := this.container["manager.gui"].Dialog(Map(
-                "type", "AccountInfoWindow",
-                "ownerOrParent", this.guiId,
-                "child", true
-            ))
-
-            if (accountResult == "OK") {
-                this.UpdateStatusIndicator(webService)
-            }
-        } else if (result == "Logout") {
-            if (webService) {
-                webService.Logout()
-            }
-        } else if (result == "Login") {
-            if (webService) {
-                webService.Login()
-            }
-        }
-    }
-
-    StatusWindowIsOnline(webService) {
-        isOnline := false
-
-        if (webService) {
-            isOnline := webService.Authenticated
-        }
-
-        return isOnline
-    }
-
     FormatDate(timestamp) {
         shortDate := FormatTime(timestamp, "ShortDate")
         shortTime := FormatTime(timestamp, "Time")

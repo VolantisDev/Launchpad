@@ -9,6 +9,10 @@ class StatusIndicatorControl extends GuiControlBase {
         super.CreateControl(false)
         this.webService := webService
 
+        if (!handler) {
+            handler := ObjBindMethod(this, "OnStatusIndicatorClick")
+        }
+
         if (handler == "" && HasMethod(this.guiObj, "OnStatusIndicatorClick")) {
             handler := "OnStatusIndicatorClick"
         }
@@ -23,8 +27,8 @@ class StatusIndicatorControl extends GuiControlBase {
             "vStatusIndicator" . webService.Id
         ])
 
-        statusInfo := this.guiObj.GetStatusInfo(webService)
-        statusStyle := this.guiObj.StatusWindowIsOnline(webService) ? "status" : "statusOffline"
+        statusInfo := webService.GetStatusInfo()
+        statusStyle := webService.Authenticated ? "status" : "statusOffline"
         name := (statusInfo && statusInfo.Has("name") && webService["StatusIndicatorExpanded"]) ? statusInfo["name"] : ""
         photo := (statusInfo && statusInfo.Has("photo")) ? statusInfo["photo"] : ""
 
@@ -33,9 +37,46 @@ class StatusIndicatorControl extends GuiControlBase {
         return this.ctl
     }
 
+    OnStatusIndicatorClick(btn, info) {
+        webService := this.webService
+        menuItems := []
+
+        if (webService) {
+            if (webService.Authenticated) {
+                menuItems.Push(Map("label", "Account Details", "name", "AccountDetails"))
+                menuItems.Push(Map("label", "Logout", "name", "Logout"))
+            } else {
+                menuItems.Push(Map("label", "Login", "name", "Login"))
+            }
+        }
+
+        result := this.container["manager.gui"].Menu(menuItems, this, btn)
+
+        if (result == "AccountDetails") {
+            accountResult := this.container["manager.gui"].Dialog(Map(
+                "type", "AccountInfoWindow",
+                "webService", this.webService,
+                "ownerOrParent", this.guiObj.guiId,
+                "child", true
+            ))
+
+            if (accountResult == "OK") {
+                this.UpdateStatusIndicator(webService)
+            }
+        } else if (result == "Logout") {
+            if (webService) {
+                webService.Logout()
+            }
+        } else if (result == "Login") {
+            if (webService) {
+                webService.Login()
+            }
+        }
+    }
+
     UpdateStatusIndicator() {
-        statusInfo := this.guiObj.GetStatusInfo(this.webService)
-        statusStyle := this.guiObj.StatusWindowIsOnline(this.webService) ? "status" : "statusOffline"
+        statusInfo := this.webService.GetStatusInfo()
+        statusStyle := this.webService.Authenticated ? "status" : "statusOffline"
 
         oldW := this.statusIndicatorW
         newW := this.CalculateWidth(statusInfo)

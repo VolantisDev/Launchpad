@@ -355,14 +355,6 @@ class GuiBase {
         }
     }
 
-    StatusWindowIsOnline(webService) {
-        return false
-    }
-
-    GetStatusInfo(webService) {
-        return Map("name", "", "photo", "")
-    }
-
     SetFont(fontPreset := "normal", extraStyles := "", colorName := "text") {
         this.guiObj.SetFont()
         this.guiObj.SetFont("c" . this.themeObj.GetColor(colorName) . " " . this.themeObj.GetFont(fontPreset) . " " . extraStyles)

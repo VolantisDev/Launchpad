@@ -277,4 +277,17 @@ class WebServiceEntity extends AppEntityBase {
 
         return Map("name", statusText, "email", email, "photo", imgPath)
     }
+
+    ShowAccountDetails() {
+        accountResult := this.container["manager.gui"].Dialog(Map(
+            "type", "AccountInfoWindow",
+            "ownerOrParent", this.guiId,
+            "child", true,
+            "webService", this
+        ))
+
+        if (accountResult == "OK" || accountResult == "Logout" || accountResult == "Login") {
+            this.UpdateStatusIndicators()
+        }
+    }
 }
