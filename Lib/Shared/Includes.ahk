@@ -6,7 +6,7 @@
 #Include Modules\WebServices\Event\WebServiceResponseEvent.ahk
 #Include Modules\WebServices\Events\WebServicesEvents.ahk
 #Include Modules\WebServices\EventSubscriber\WebServicesEventSubscriber.ahk
-#Include Modules\WebServices\Factory\WebServiceDataAdapterFactory.ahk
+#Include Modules\WebServices\Factory\WebServiceAdapterFactory.ahk
 #Include Modules\WebServices\Gui\AuthenticationGui\LaunchpadLoginWindow.ahk
 #Include Modules\WebServices\Gui\ManageWindow\ManageWebServicesWindow.ahk
 #Include Modules\WebServices\WebServiceAdapter\FileWebServiceAdapter.ahk
