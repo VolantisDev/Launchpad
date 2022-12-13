@@ -118,39 +118,4 @@ class ApiDataSource extends DataSourceBase {
     Open() {
         Run(this.endpointUrl)
     }
-
-    ChangeApiEndpoint(existingEndpoint := "", owner := "", parent := "") {
-        if (existingEndpoint == "") {
-            existingEndpoint := this.app.Config["api_endpoint"]
-        }
-
-        ownerOrParent := ""
-
-        if (parent) {
-            ownerOrParent := parent
-        } else if (owner) {
-            ownerOrParent := owner
-        }
-
-        apiEndpointUrl := this.app.Service("manager.gui").Dialog(Map(
-            "type", "SingleInputBox",
-            "title", "API Endpoint URL",
-            "text", "Enter the base URL of the API endpoint you would like Launchpad to connect to. Leave blank to revert to the default.",
-            "defaultValue", existingEndpoint,
-            "ownerOrParent", ownerOrParent,
-            "child", !!(parent)
-        ))
-
-        if (apiEndpointUrl != existingEndpoint) {
-            this.app.Config["api_endpoint"] := apiEndpointUrl
-            apiEndpointUrl := this.app.Config["api_endpoint"]
-
-            if (apiEndpointUrl != existingEndpoint) {
-                this.endpointUrl := apiEndpointUrl
-                this.cache.FlushCache()
-            }
-        }
-        
-        return apiEndpointUrl
-    }
 }

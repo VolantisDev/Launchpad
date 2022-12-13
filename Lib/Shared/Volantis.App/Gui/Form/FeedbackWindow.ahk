@@ -1,11 +1,9 @@
 class FeedbackWindow extends DialogBox {
     errorObj := ""
     notifierObj := ""
-    apiEndpointUrl := ""
 
     __New(container, themeObj, config) {
         this.notifierObj := container.Get("notifier").notifierObj
-        this.apiEndpointUrl := container.Get("config.app")["api_endpoint"]
         super.__New(container, themeObj, config)
     }
 

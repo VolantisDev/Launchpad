@@ -16,7 +16,6 @@
     },
     "parameters": {
         "config.data_source_key": "launchpad_api",
-        "config.api_endpoint": "https://api.launchpad.games/v1",
         "config.api_authentication": true,
         "web_services.providers.launchpad_api": {
             "name": "Launchpad API",
@@ -115,7 +114,7 @@
     "services": {
         "data_source.launchpad_api": {
             "class": "ApiDataSource",
-            "arguments": ["@{App}", "@manager.cache", "launchpad_api", "@@config.api_endpoint"]
+            "arguments": ["@{App}", "@manager.cache", "launchpad_api", "https://api.launchpad.games/v1"]
         },
         "cache_state.launchpad_api": {
             "class": "CacheState",

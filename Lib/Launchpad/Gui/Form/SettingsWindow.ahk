@@ -122,8 +122,6 @@
         ctl := this.guiObj.AddDDL("vlogging_level xs y+m Choose" . chosen . " w200 c" . this.themeObj.GetColor("editText"), this.container.Get("logger").GetLogLevels())
         ctl.OnEvent("Change", "OnLoggingLevelChange")
 
-        this.AddConfigLocationBlock("API Endpoint", "api_endpoint")
-
         this.AddHeading("API Settings")
         ctl := this.AddConfigCheckBox("Enable API login for enhanced functionality", "api_authentication")
         ctl.ctl.NeedsRestart := true
@@ -241,16 +239,6 @@
             this.needsRestart := true
         } else if (btn == "OpenAssetsDir") {
             this.app.Config.OpenAssetsDir()
-        }
-    }
-
-    OnApiEndpointMenuClick(btn) {
-        if (btn == "ChangeApiEndpoint") {
-            this.app.Service("manager.data_source").GetDefaultDataSource().ChangeApiEndpoint("", "")
-            this.SetText("ApiEndpoint", this.app.Config["api_endpoint"], "Bold")
-            this.needsRestart := true
-        } else if (btn == "OpenApiEndpoint") {
-            this.app.Service("manager.data_source").GetDefaultDataSource().Open()
         }
     }
 
