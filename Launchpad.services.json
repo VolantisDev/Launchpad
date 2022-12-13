@@ -21,7 +21,6 @@
         "config.platforms_file": "@@{data_dir}\\Platforms.json",
         "config.platforms_view_mode": "Report",
         "config.tasks_view_mode": "Report",
-        "config.player_name": "",
         "config.rebuild_existing_launchers": false,
         "config.tasks_file": "@@{data_dir}\\Tasks.json",
         "config.use_advanced_launcher_editor": false,

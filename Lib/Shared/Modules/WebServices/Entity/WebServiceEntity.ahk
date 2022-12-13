@@ -259,12 +259,9 @@ class WebServiceEntity extends AppEntityBase {
         email := ""
 
         if (this.Authenticated) {
-            playerName := this.app.Config["player_name"]
             email := this.AuthData["email"]
             
-            if (playerName) {
-                statusText := playerName
-            } else if (email) {
+            if (email) {
                 statusText := email
             } else {
                 statusText := "Logged in"
