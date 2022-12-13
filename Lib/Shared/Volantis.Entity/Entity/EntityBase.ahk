@@ -393,7 +393,7 @@ class EntityBase {
         result := "Cancel"
 
         while (mode) {
-            result := this.app.Service("manager.gui").Dialog(Map(
+            result := this.app["manager.gui"].Dialog(Map(
                 "type", "SimpleEntityEditor",
                 "mode", mode,
                 "child", !!(ownerOrParent),

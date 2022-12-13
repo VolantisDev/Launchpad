@@ -22,7 +22,7 @@ class BlizzardPlatform extends RegistryLookupGamePlatformBase {
         productInstalls := []
 
         if (this.app.Services.Has("BlizzardProductDb")) {
-            productInstalls := this.app.Service("BlizzardProductDb").GetProductInstalls()
+            productInstalls := this.app["BlizzardProductDb"].GetProductInstalls()
         }
         
         games := []

@@ -188,7 +188,7 @@ class ManageEntitiesWindow extends ManageWindowBase {
         entityObj := this.entityMgr[key]
 
         menuItems := this.GetContextMenuItems(entityObj)
-        result := this.app.Service("manager.gui").Menu(menuItems, this)
+        result := this.app["manager.gui"].Menu(menuItems, this)
         this.ProcessContextMenuResult(result, key)
     }
 

@@ -129,7 +129,7 @@ class GuiBase {
     RegisterCallbacks() {
         guiId := "Gui" . this.guiId
 
-        this.app.Service("manager.event")
+        this.app["manager.event"]
             .Register(Events.MOUSE_MOVE, guiId, ObjBindMethod(this, "OnMouseMove"))
             .Register(Events.WM_NCCALCSIZE, guiId, ObjBindMethod(this, "OnCalcSize"))
             .Register(Events.WM_NCACTIVATE, guiId, ObjBindMethod(this, "OnActivate"))
@@ -142,10 +142,10 @@ class GuiBase {
 
     __Delete() {
         if (this.app) {
-            this.app.Service("manager.event").Unregister(Events.MOUSE_MOVE, "Gui" . this.guiId)
-            this.app.Service("manager.event").Unregister(Events.WM_NCCALCSIZE, "Gui" . this.guiId)
-            this.app.Service("manager.event").Unregister(Events.WM_NCACTIVATE, "Gui" . this.guiId)
-            this.app.Service("manager.event").Unregister(Events.WM_NCHITTEST, "Gui" . this.guiId)
+            this.app["manager.event"].Unregister(Events.MOUSE_MOVE, "Gui" . this.guiId)
+            this.app["manager.event"].Unregister(Events.WM_NCCALCSIZE, "Gui" . this.guiId)
+            this.app["manager.event"].Unregister(Events.WM_NCACTIVATE, "Gui" . this.guiId)
+            this.app["manager.event"].Unregister(Events.WM_NCHITTEST, "Gui" . this.guiId)
         }
         
         if (this.activeTooltip) {
@@ -567,22 +567,22 @@ class GuiBase {
         }
 
         if (!this.isClosed && WinExist("ahk_id " . this.guiObj.Hwnd)) {
-            this.app.Service("manager.gui").StoreWindowState(this)
+            this.app["manager.gui"].StoreWindowState(this)
             WinClose("ahk_id " . this.guiObj.Hwnd)
         } else {
             this.Destroy()
         }
 
-        this.app.Service("manager.gui").CleanupWindow(this.guiId)
+        this.app["manager.gui"].CleanupWindow(this.guiId)
     }
 
     Destroy() {
         if (!this.isClosed && this.config["saveWindowState"]) {
-            this.app.Service("manager.gui").StoreWindowState(this)
+            this.app["manager.gui"].StoreWindowState(this)
         }
 
         if (this.owner) {
-            this.app.Service("manager.gui").ReleaseFromParent(this.guiId)
+            this.app["manager.gui"].ReleaseFromParent(this.guiId)
         }
 
         this.Cleanup()
@@ -594,7 +594,7 @@ class GuiBase {
     }
 
     Cleanup() {
-        this.app.Service("manager.gui").UnloadComponent(this.guiId)
+        this.app["manager.gui"].UnloadComponent(this.guiId)
         ; Extend to clear any global variables used
     }
 

@@ -146,8 +146,8 @@ class AppEntityBase extends FieldableEntity {
             }
 
             for index, dataSourceKey in dataSourceKeys {
-                if (this.app.Service("manager.data_source").Has(dataSourceKey)) {
-                    dataSource := this.app.Service("manager.data_source")[dataSourceKey]
+                if (this.app["manager.data_source"].Has(dataSourceKey)) {
+                    dataSource := this.app["manager.data_source"][dataSourceKey]
 
                     if (dataSource) {
                         dataSources[dataSourceKey] := dataSource

@@ -91,104 +91,12 @@
         }
     }
 
-    _getToolsMenuEntityTypes() {
-        entityTypes := Map()
-
-        for key, entityType in this.container["manager.entity_type"] {
-            if (entityType.definition["manager_link_in_tools_menu"]) {
-                entityTypes[key] := entityType
-            }
-        }
-
-        return entityTypes
-    }
-
     ShowTitleMenu() {
-        menuEntityTypes := this._getToolsMenuEntityTypes()
-        toolsItems := []
-
-        for key, entityType in menuEntityTypes {
-            menuLinkText := entityType.definition["manager_menu_link_text"]
-
-            if (!menuLinkText) {
-                menuLinkText := "&" . entityType.definition["name_plural"]
-            }
-
-            toolsItems.Push(Map("label", menuLinkText, "name", "manage_" . key))
-        }
-
-        toolsItems.Push(Map("label", "&Modules", "name", "ManageModules"))
-        toolsItems.Push(Map("label", "&Flush Cache", "name", "FlushCache"))
-
-        launchersItems := []
-        launchersItems.Push(Map("label", "&Clean Launchers", "name", "CleanLaunchers"))
-        launchersItems.Push(Map("label", "&Reload Launchers", "name", "ReloadLaunchers"))
-
-        aboutItems := []
-        aboutItems.Push(Map("label", "&About Launchpad", "name", "About"))
-        aboutItems.Push(Map("label", "&Open Website", "name", "OpenWebsite"))
-
-        menuItems := []
-        menuItems.Push(Map("label", "&Tools", "name", "ToolsMenu", "childItems", toolsItems))
-        menuItems.Push(Map("label", "&Launchers", "name", "LaunchersMenu", "childItems", launchersItems))
-        menuItems.Push("")
-        menuItems.Push(Map("label", "&About", "name", "About", "childItems", aboutItems))
-        menuItems.Push("")
-        menuItems.Push(Map("label", "&Settings", "name", "Settings"))
-        menuItems.Push(Map("label", "Check for &Updates", "name", "CheckForUpdates"))
-        menuItems.Push("")
-        menuItems.Push(Map("label", "Provide &Feedback", "name", "ProvideFeedback"))
-        menuItems.Push("")
-        menuItems.Push(Map("label", "&Restart", "name", "Reload"))
-        menuItems.Push(Map("label", "E&xit", "name", "Exit"))
-        
-        result := this.container["manager.gui"].Menu(menuItems, this, this.guiObj["WindowTitleText"])
-        
-        if (result == "ManageModules") {
-            this.container["manager.gui"].OpenWindow("ManageModulesWindow")
-        } else if (result == "FlushCache") {
-            this.container["manager.cache"].FlushCaches(true, true)
-        } else if (result == "CleanLaunchers") {
-            this.container["manager.builder"].CleanLaunchers()
-        } else if (result == "ReloadLaunchers") {
-            this.launcherManager.LoadComponents(true)
-            this.UpdateListView()
-        } else if (result == "About") {
-            this.container["manager.gui"].Dialog(Map("type", "AboutWindow"))
-        } else if (result == "OpenWebsite") {
-            this.app.OpenWebsite()
-        } else if (result == "ProvideFeedback") {
-            this.app.ProvideFeedback()
-        } else if (result == "Settings") {
-            this.container["manager.gui"].Dialog(Map("type", "SettingsWindow", "unique", false))
-        } else if (result == "CheckForUpdates") {
-            this.app.CheckForUpdates()
-        } else if (result == "Reload") {
-            this.app.restartApp()
-        } else if (result == "Exit") {
-            this.app.ExitApp()
-        } else {
-            for key, entityType in menuEntityTypes {
-                if (result == "manage_" . key) {
-                    this.container["entity_type." . key].OpenManageWindow()
-                    break
-                }
-            }
-        }
-    }
-
-    _getApiWebService() {
-        webService := ""
-
-        if (this.app.Services.Has("entity_manager.web_service")) {
-            entityMgr := this.app.Services["entity_manager.web_service"]
-
-            if (entityMgr.Has("launchpad_api") && entityMgr["launchpad_api"]["Enabled"]) {
-                webService := entityMgr["launchpad_api"]
-            }
-        }
-
-        return webService
+        this.app.MainMenu(
+            this, 
+            this.guiObj["WindowTitleText"], 
+            false
+        )
     }
 
     FormatDate(timestamp) {

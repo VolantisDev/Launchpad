@@ -1,28 +1,26 @@
 ﻿class Launchpad extends AppBase {
-    customTrayMenu := true
     detectGames := false
-    isSetup := false
 
     CheckForUpdates(notify := true) {
         updateAvailable := false
 
-        if (this.Version != "{{VERSION}}" && this.Service("manager.data_source").GetDefaultDataSource()) {
-            dataSource := this.Service("manager.data_source").GetDefaultDataSource()
+        if (this.Version != "{{VERSION}}" && this["manager.data_source"].GetDefaultDataSource()) {
+            dataSource := this["manager.data_source"].GetDefaultDataSource()
             releaseInfoStr := dataSource.ReadItem("release-info")
 
             if (releaseInfoStr) {
                 data := JsonData()
                 releaseInfo := data.FromString(&releaseInfoStr)
 
-                if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this.Service("version_checker").VersionIsOutdated(releaseInfo["data"]["version"], this.Version)) {
+                if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this["version_checker"].VersionIsOutdated(releaseInfo["data"]["version"], this.Version)) {
                     updateAvailable := true
-                    this.Service("manager.gui").Dialog(Map("type", "UpdateAvailableWindow"), releaseInfo)
+                    this["manager.gui"].Dialog(Map("type", "UpdateAvailableWindow"), releaseInfo)
                 }
             }
         }
 
         if (!updateAvailable && notify) {
-            this.Service("notifier").Info("You're running the latest version of Launchpad. Shiny!")
+            this["notifier"].Info("You're running the latest version of Launchpad. Shiny!")
         }
     }
 
@@ -32,7 +30,7 @@
     }
 
     InitializeApp(config) {
-        eventMgr := this.Service("manager.event")
+        eventMgr := this["manager.event"]
         eventMgr.Register(EntityEvents.ENTITY_CREATED, "LaunchpadEntityCreated", ObjBindMethod(this, "OnEntityCreated"))
         eventMgr.Register(EntityEvents.ENTITY_UPDATED, "LaunchpadEntityUpdated", ObjBindMethod(this, "OnEntityUpdated"))
         eventMgr.Register(EntityEvents.ENTITY_DELETED, "LaunchpadEntityDeleted", ObjBindMethod(this, "OnEntityDeleted"))
@@ -112,28 +110,28 @@
         
         super.RunApp(config)
         
-        this.Service("entity_manager.platform").LoadComponents()
-        this.Service("entity_manager.launcher").LoadComponents()
-        this.Service("entity_manager.backup").LoadComponents()
+        this["entity_manager.platform"].LoadComponents()
+        this["entity_manager.launcher"].LoadComponents()
+        this["entity_manager.backup"].LoadComponents()
 
         this.OpenApp()
 
         if (this.detectGames) {
-            this.Service("entity_manager.platform").DetectGames()
+            this["entity_manager.platform"].DetectGames()
         }
     }
 
     MigrateConfiguration() {
-        configFile := this.Parameter("previous_config_file")
+        configFile := this.Parameter["previous_config_file"]
 
         if (configFile && FileExist(configFile)) {
-            response := this.Service("manager.gui").Dialog(Map(
+            response := this["manager.gui"].Dialog(Map(
                 "title", "Migrate settings?",
                 "text", this.appName . " uses a new configuration file format, and has detected that you have a previous configuration file.`n`nWould you like to automatically migrate your settings?`n`nChoose Yes to migrate your previous configuration. Choose no to simply delete it and start from scratch."
             ))
         
             if (response == "Yes") {
-                this.Service("ini_migrator").Migrate(configFile, this.Config)
+                this["ini_migrator"].Migrate(configFile, this.Config)
             } else {
                 FileDelete(configFile)
             }
@@ -141,7 +139,7 @@
     }
 
     InitialSetup(config) {
-        result := this.Service("manager.gui").Dialog(Map("type", "SetupWindow"))
+        result := this["manager.gui"].Dialog(Map("type", "SetupWindow"))
 
         if (result == "Exit") {
             this.ExitApp()
@@ -149,19 +147,18 @@
             this.detectGames := true
         }
 
-        this.isSetup := true
         super.InitialSetup(config)
     }
 
     UpdateStatusIndicators() {
-        if (this.Service("manager.gui").Has("MainWindow")) {
+        if (this["manager.gui"].Has("MainWindow")) {
             serviceMgr := this.container["entity_manager.web_service"]
             webServices := serviceMgr.EntityQuery(EntityQuery.RESULT_TYPE_ENTITIES)
                 .Condition(IsTrueCondition(), "Enabled")
                 .Condition(IsTrueCondition(), "StatusIndicator")
                 .Execute()
 
-                windowObj := this.Service("manager.gui")["MainWindow"]
+                windowObj := this["manager.gui"]["MainWindow"]
             
             for serviceId, webService in webServices {
                 windowObj.UpdateStatusIndicator(webService)
@@ -171,33 +168,66 @@
 
     ExitApp() {
         if (this.isSetup && this.Config["clean_launchers_on_exit"]) {
-            this.Service("manager.builder").CleanLaunchers()
+            this["manager.builder"].CleanLaunchers()
         }
 
         if (this.isSetup && this.Config["flush_cache_on_exit"]) {
-            this.Service("manager.cache").FlushCaches(false, false)
+            this["manager.cache"].FlushCaches(false, false)
         }
 
         super.ExitApp()
     }
 
-    OpenWebsite() {
-        Run("https://launchpad.games")
-    }
-
-    ProvideFeedback() {
-        this.Service("manager.gui").Dialog(Map("type", "FeedbackWindow"))
-    }
-
     RestartApp() {
         if (this.Services.Has("manager.gui")) {
-            guiMgr := this.Service("manager.gui")
+            guiMgr := this["manager.gui"]
 
             if (guiMgr.Has("MainWindow")) {
-                guiMgr.StoreWindowState(this.Service("manager.gui")["MainWindow"])
+                guiMgr.StoreWindowState(this["manager.gui"]["MainWindow"])
             }
         }
 
         super.RestartApp()
+    }
+
+    AddMainMenuEarlyItems(menuItems, showOpenItem := false) {
+        menuItems := super.AddMainMenuEarlyItems(menuItems, showOpenItem)
+
+        launchersItems := []
+        launchersItems.Push(Map("label", "&Clean Launchers", "name", "CleanLaunchers"))
+        launchersItems.Push(Map("label", "&Reload Launchers", "name", "ReloadLaunchers"))
+
+        menuItems.Push(Map("label", "&Launchers", "name", "LaunchersMenu", "childItems", launchersItems))
+
+        return menuItems
+    }
+
+    HandleMainMenuClick(result) {
+        if (result == "CleanLaunchers") {
+            this["manager.builder"].CleanLaunchers()
+        } else if (result == "ReloadLaunchers") {
+            this["entity_manager.launcher"].LoadComponents(true)
+            guiMgr := this["manager.gui"]
+
+            if (guiMgr.Has("MainWindow")) {
+                guiMgr["MainWindow"].UpdateListView()
+            }
+        } else if (result == "ManageModules") {
+            this["manager.gui"].OpenWindow("ManageModulesWindow")
+        } else if (result == "FlushCache") {
+            this["manager.cache"].FlushCaches(true, true)
+        } else {
+            super.HandleMainMenuClick(result)
+        }
+
+        return result
+    }
+
+    GetToolsMenuItems() {
+        toolsItems := super.GetToolsMenuItems()
+        toolsItems.Push(Map("label", "&Modules", "name", "ManageModules"))
+        toolsItems.Push(Map("label", "&Flush Cache", "name", "FlushCache"))
+
+        return toolsItems
     }
 }

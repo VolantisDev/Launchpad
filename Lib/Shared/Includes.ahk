@@ -8,6 +8,7 @@
 #Include Modules\WebServices\EventSubscriber\WebServicesEventSubscriber.ahk
 #Include Modules\WebServices\Factory\WebServiceAdapterFactory.ahk
 #Include Modules\WebServices\Gui\AuthenticationGui\LaunchpadLoginWindow.ahk
+#Include Modules\WebServices\Gui\Form\FeedbackWindow.ahk
 #Include Modules\WebServices\Gui\ManageWindow\ManageWebServicesWindow.ahk
 #Include Modules\WebServices\LayerSource\WebServiceAdapterLayerSource.ahk
 #Include Modules\WebServices\WebServiceAdapter\FileWebServiceAdapter.ahk
@@ -53,6 +54,8 @@
 #Include Volantis.App\Event\ComponentInfoEvent.ahk
 #Include Volantis.App\Event\DefineComponentsEvent.ahk
 #Include Volantis.App\Event\LoadComponentEvent.ahk
+#Include Volantis.App\Event\MenuItemsEvent.ahk
+#Include Volantis.App\Event\MenuResultEvent.ahk
 #Include Volantis.App\Event\RegisterComponentsEvent.ahk
 #Include Volantis.App\Event\ServiceDefinitionsEvent.ahk
 #Include Volantis.App\Events\Events.ahk
@@ -68,7 +71,6 @@
 #Include Volantis.App\Gui\Dialog\UpdateAvailableWindow.ahk
 #Include Volantis.App\Gui\EntityEditor\EntityEditorBase.ahk
 #Include Volantis.App\Gui\EntityEditor\SimpleEntityEditor.ahk
-#Include Volantis.App\Gui\Form\FeedbackWindow.ahk
 #Include Volantis.App\Gui\Form\FormGuiBase.ahk
 #Include Volantis.App\Gui\Form\IconSelector.ahk
 #Include Volantis.App\Gui\ManageWindow\ManageEntitiesWindow.ahk

@@ -23,7 +23,7 @@ class GameBase {
             config := Map()
         }
 
-        this.launcherConfig := app.Service("config.app")
+        this.launcherConfig := app["config.app"]
         InvalidParameterException.CheckTypes("GameBase", "app", app, "AppBase", "key", key, "", "config", config, "Map")
         this.app := app
         this.key := key
@@ -33,7 +33,7 @@ class GameBase {
 
     Log(message, level := "Debug") {
         if (this.app.Services.Has("logger") && this.launcherConfig["LoggingLevel"] != "None") {
-            this.app.Service("logger").Log(this.key . ": " . message, level)
+            this.app["logger"].Log(this.key . ": " . message, level)
         }
     }
 
@@ -180,14 +180,14 @@ class GameBase {
     StartOverlay() {
         SetTimer(this.overlayCallbackObj, 0)
         this.Log("Starting Launchpad Overlay...")
-        this.app.Service("manager.overlay").Start(this.launcherConfig["OverlayHotkey"])
+        this.app["manager.overlay"].Start(this.launcherConfig["OverlayHotkey"])
         this.overlayStarted := true
     }
 
     StopOverlay() {
         if (this.overlayStarted) {
             this.Log("Shutting down Launchpad Overlay...")
-            this.app.Service("manager.overlay").Close()
+            this.app["manager.overlay"].Close()
         }
     }
 
@@ -198,7 +198,7 @@ class GameBase {
             }
 
             this.Log("Closing overlay if running...")
-            this.app.Service("manager.overlay").Close()
+            this.app["manager.overlay"].Close()
             this.Log("Cleaning up scheduled task(s)...")
             this.CleanupScheduledTask()
         }

@@ -133,11 +133,11 @@
     }
 
     OnManageBackups(btn, info) {
-        this.app.Service("entity_type.backup").OpenManageWindow()
+        this.app["entity_type.backup"].OpenManageWindow()
     }
 
     OnManagePlatforms(btn, info) {
-        this.app.Service("entity_type.platform").OpenManageWindow()
+        this.app["entity_type.platform"].OpenManageWindow()
     }
 
     AddConfigLocationBlock(heading, settingName, extraButton := "", helpText := "") {
@@ -190,7 +190,7 @@
         } else if (btn == "OpenLauncherFile") {
             this.app.Config.OpenLauncherFile()
         } else if (btn == "ReloadLauncherFile") {
-            this.app.Service("entity_manager.launcher").LoadComponents(true)
+            this.app["entity_manager.launcher"].LoadComponents(true)
         }
     }
 
@@ -201,7 +201,7 @@
         } else if (btn == "OpenBackupsFile") {
             this.app.Config.OpenBackupsFile()
         } else if (btn == "ReloadBackupsFile") {
-            this.app.Service("entity_manager.backup").LoadComponents(true)
+            this.app["entity_manager.backup"].LoadComponents(true)
         }
     }
 
@@ -212,7 +212,7 @@
         } else if (btn == "OpenPlatformsFile") {
             this.app.Config.OpenPlatformsFile()
         } else if (btn == "ReloadPlatformsFile") {
-            this.app.Service("entity_manager.platform").LoadComponents(true)
+            this.app["entity_manager.platform"].LoadComponents(true)
         }
     }
 
@@ -244,22 +244,22 @@
 
     OnCacheDirMenuClick(btn) {
         if (btn == "ChangeCacheDir") {
-            this.app.Service("manager.cache").ChangeCacheDir()
+            this.app["manager.cache"].ChangeCacheDir()
             this.SetText("CacheDir", this.app.Config["cache_dir"], "Bold")
         } else if (btn == "OpenCacheDir") {
-            this.app.Service("manager.cache").OpenCacheDir()
+            this.app["manager.cache"].OpenCacheDir()
         } else if (btn == "FlushCacheDir") {
-            this.app.Service("manager.cache").FlushCaches(true, true)
+            this.app["manager.cache"].FlushCaches(true, true)
         }
     }
 
     OnBackupDirMenuClick(btn) {
         if (btn == "ChangeBackupDir") {
-            this.app.Service("entity_manager.backup").ChangeBackupDir()
+            this.app["entity_manager.backup"].ChangeBackupDir()
             this.SetText("BackupDir", this.app.Config["backup_dir"], "Bold")
             this.needsRestart := true
         } else if (btn == "OpenBackupDir") {
-            this.app.Service("entity_manager.backup").OpenBackupDir()
+            this.app["entity_manager.backup"].OpenBackupDir()
         }
     }
 
@@ -304,7 +304,7 @@
         this.app.Config.SaveConfig()
 
         if (this.needsRestart) {
-            response := this.app.Service("manager.gui").Dialog(Map(
+            response := this.app["manager.gui"].Dialog(Map(
                 "title", "Restart " . this.app.appName . "?",
                 "text", "One or more settings that have been changed require restarting " . this.app.appName . " to fully take effect.`n`nWould you like to restart " . this.app.appName . " now?"
             ))
@@ -314,8 +314,8 @@
             }
         }
 
-        if (this.app.Service("manager.gui").Has("MainWindow")) {
-            this.app.Service("manager.gui")["MainWindow"].UpdateListView()
+        if (this.app["manager.gui"].Has("MainWindow")) {
+            this.app["manager.gui"]["MainWindow"].UpdateListView()
         }
 
         return result

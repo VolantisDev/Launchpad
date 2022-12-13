@@ -200,7 +200,7 @@
 
         detectedGameObj := this.detectedGames[key]
 
-        result := this.app.Service("manager.gui").Dialog(Map(
+        result := this.app["manager.gui"].Dialog(Map(
             "type", "DetectedGameEditor",
             "ownerOrParent", this.guiId,
             "child", true
@@ -233,7 +233,7 @@
         menuItems := []
         menuItems.Push(Map("label", "Edit", "name", "EditDetectedGame"))
 
-        result := this.app.Service("manager.gui").Menu(menuItems, this)
+        result := this.app["manager.gui"].Menu(menuItems, this)
 
         if (result == "EditDetectedGame") {
             this.EditDetectedGame(key)

@@ -87,7 +87,7 @@ class GamePlatformBase {
     }
 
     NeedsUpdate() {
-        return this.app.Service("version_checker").VersionIsOutdated(this.GetLatestVersion(), this.GetInstalledVersion())
+        return this.app["version_checker"].VersionIsOutdated(this.GetLatestVersion(), this.GetInstalledVersion())
     }
 
     GetInstalledVersion() {
@@ -179,7 +179,7 @@ class GamePlatformBase {
     }
 
     DetermineMainExe(key, possibleExes) {
-        dataSource := this.app.Service("manager.data_source").GetDefaultDataSource()
+        dataSource := this.app["manager.data_source"].GetDefaultDataSource()
         dsData := this.GetDataSourceDefaults(dataSource, key)
 
         mainExe := ""

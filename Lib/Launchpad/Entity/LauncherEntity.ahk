@@ -320,7 +320,7 @@ class LauncherEntity extends AppEntityBase {
         if (filePath && FileExist(filePath)) {
             launcherVersion := FileGetVersion(this.GetLauncherFile(this.Id))
 
-            if (launcherVersion && !this.app.Service("version_checker").VersionIsOutdated(this.app.Version, launcherVersion)) {
+            if (launcherVersion && !this.app["version_checker"].VersionIsOutdated(this.app.Version, launcherVersion)) {
                 outdated := false
             }
 
@@ -330,7 +330,7 @@ class LauncherEntity extends AppEntityBase {
             if (!buildInfo["Version"] || !buildInfo["Timestamp"]) {
                 outdated := true
             } else {
-                if (configInfo["Version"] && this.app.Service("version_checker").VersionIsOutdated(configInfo["Version"], buildInfo["Version"])) {
+                if (configInfo["Version"] && this.app["version_checker"].VersionIsOutdated(configInfo["Version"], buildInfo["Version"])) {
                     outdated := true
                 } else if (configInfo["Timestamp"] && DateDiff(configInfo["Timestamp"], buildInfo["Timestamp"], "S") > 0) {
                     outdated := true

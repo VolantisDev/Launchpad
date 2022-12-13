@@ -36,20 +36,44 @@ class FeedbackWindow extends DialogBox {
     SendFeedback() {
         global appVersion
 
-        if (this.apiEndpointUrl) {
-            endpoint := this.apiEndpointUrl . "/submit-feedback"
+        webServiceId := "launchpad_api"
+        entityMgr := this.container["entity_manager.web_service"]
+
+        results := Map()
+        success := false
+
+        if (entityMgr.Has(webServiceId) && entityMgr[webServiceId]["Enabled"]) {
+            webService := entityMgr[webServiceId]
 
             body := Map()
             body["email"] := this.guiObj["Email"].Text
             body["version"] := appVersion
             body["feedback"] := this.guiObj["Feedback"].Text
 
-            request := WinHttpReq(endpoint)
-            response := request.Send("POST", body)
-            success := !!(request.GetStatusCode() == 200)
-
-            notification := success ? "Successfully sent feedback to Volantis Development" : "Failed to send feedback to Volantis Development"
-            this.notifierObj.Notify(notification, "Feedback Sent", success ? "info" : "error")
+            results := webService.AdapterRequest(Map("data", body), "feedback_submission", "create")
         }
+
+        for key, result in results {
+            if (result) {
+                success := true
+                break
+            }
+        }
+
+        message := ""
+
+        if (success) {
+            message := "Successfully sent feedback" 
+        } else if (results.Count) {
+            message := "Failed to send feedback"
+        } else {
+            message := "No feedback adapters are enabled"
+        }
+
+        this.notifierObj.Notify(
+            message, 
+            "Feedback Submission", 
+            success ? "info" : "error"
+        )
     }
 }

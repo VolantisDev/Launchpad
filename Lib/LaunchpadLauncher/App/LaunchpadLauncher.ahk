@@ -64,11 +64,11 @@ class LaunchpadLauncher extends AppBase {
 
     RunApp(config) {
         super.RunApp(config)
-        this.Service("Launcher").LaunchGame()
+        this["Launcher"].LaunchGame()
     }
 
     RestartApp() {
-        game := this.Service("Game")
+        game := this["Game"]
 
         if (game) {
             game.StopOverlay()
@@ -78,7 +78,7 @@ class LaunchpadLauncher extends AppBase {
     }
 
     ExitApp() {
-        game := this.Service("Game")
+        game := this["Game"]
 
         if (game) {
             game.StopOverlay()

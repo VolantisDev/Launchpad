@@ -354,7 +354,7 @@ class WebServiceEntity extends AppEntityBase {
 
             if (SubStr(imgPath, 1, 4) == "http") {
                 cachePath := "account--profile.jpg"
-                imgPath := this.app.Service("manager.cache")["file"].GetCachedDownload(cachePath, imgPath)
+                imgPath := this.app["manager.cache"]["file"].GetCachedDownload(cachePath, imgPath)
             }
         }
 

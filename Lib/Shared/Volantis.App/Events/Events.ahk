@@ -19,5 +19,13 @@ class Events {
     static APP_SHUTDOWN := 0x1020
     static APP_RESTART := 0x1025
 
+    static APP_MENU_ITEMS_EARLY := 0x1030
+    static APP_MENU_ITEMS_MIDDLE := 0x1032
+    static APP_MENU_ITEMS_LATE := 0x1034
+    static APP_MENU_ITEMS_ALTER := 0x1036
+    static APP_MENU_TOOLS_ITEMS_ALTER := 0x1038
+    static APP_MENU_ABOUT_ITEMS_ALTER := 0x1040
+    static APP_MENU_PROCESS_RESULT := 0x1042
+
     static AHK_NOTIFYICON := 0x404
 }

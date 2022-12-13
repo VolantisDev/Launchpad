@@ -25,7 +25,7 @@ class BackupEntity extends AppEntityBase {
         definitions["IconSrc"] := Map(
             "type", "icon_file",
             "description", "The path to this an icon (.ico or .exe).",
-            "default", this.app.Service("manager.theme")[].GetIconPath("backup")
+            "default", this.app["manager.theme"][].GetIconPath("backup")
         )
 
         definitions["Source"] := Map(

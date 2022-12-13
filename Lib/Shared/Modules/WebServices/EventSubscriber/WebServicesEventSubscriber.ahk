@@ -3,6 +3,12 @@ class WebServicesEventSubscriber extends EventSubscriberBase {
         return Map(
             Events.APP_POST_STARTUP, [
                 ObjBindMethod(this, "OnPostStartup")
+            ],
+            Events.APP_MENU_ITEMS_LATE, [
+                ObjBindMethod(this, "OnMenuItemsLate")
+            ],
+            Events.APP_MENU_PROCESS_RESULT, [
+                ObjBindMethod(this, "OnMenuProcessResult")
             ]
         )
     }
@@ -16,6 +22,22 @@ class WebServicesEventSubscriber extends EventSubscriberBase {
 
         for key, webService in webServices {
             webService.Login()
+        }
+    }
+
+    OnMenuItemsLate(event, extra, eventName, hwnd) {
+        event.MenuItems.Push(Map(
+            "label", "Provide &Feedback", 
+            "name", "ProvideFeedback"
+        ))
+    }
+
+    OnMenuProcessResult(event, extra, eventName, hwnd) {
+        if (!event.IsFinished) {
+            if (event.Result == "ProvideFeedback") {
+                this.container["manager.gui"].Dialog(Map("type", "FeedbackWindow"))
+                event.IsFinished := true
+            }
         }
     }
 }

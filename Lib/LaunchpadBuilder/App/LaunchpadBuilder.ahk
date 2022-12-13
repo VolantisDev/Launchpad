@@ -49,8 +49,8 @@ class LaunchpadBuilder extends AppBase {
 
     RunApp(config) {
         super.RunApp(config)
-        version := this.Service("GitTagVersionIdentifier").IdentifyVersion()
-        buildInfo := this.Service("manager.gui").Dialog(Map(
+        version := this["GitTagVersionIdentifier"].IdentifyVersion()
+        buildInfo := this["manager.gui"].Dialog(Map(
             "type", "BuildSettingsForm",
             "version", version
         ))
@@ -83,7 +83,7 @@ class LaunchpadBuilder extends AppBase {
         }
 
         if (buildInfo.DeployToGitHub || buildInfo.DeployToApi || buildInfo.DeployToChocolatey) {
-            releaseInfo := this.Service("manager.gui").Dialog(Map("type", "ReleaseInfoForm"))
+            releaseInfo := this["manager.gui"].Dialog(Map("type", "ReleaseInfoForm"))
 
             if (!releaseInfo) {
                 this.ExitApp()
@@ -148,7 +148,7 @@ class LaunchpadBuilder extends AppBase {
         if (!this.GetCmdOutput("git show-ref " . version)) {
             RunWait("git tag " . version, this.appDir)
 
-            response := this.Service("manager.gui").Dialog(Map(
+            response := this["manager.gui"].Dialog(Map(
                 "title", "Push git tag?",
                 "text", "Would you like to push the git tag that was just created (" . version . ") to origin?"
             ))

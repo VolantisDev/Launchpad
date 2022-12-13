@@ -15,7 +15,7 @@ class StateBase {
     }
 
     IsStateOutdated() {
-        return this.app.Service("version_checker").VersionIsOutdated(this.app.Version, this.Version)
+        return this.app["version_checker"].VersionIsOutdated(this.app.Version, this.Version)
     }
 
     __New(app, state := "", autoLoad := false) {

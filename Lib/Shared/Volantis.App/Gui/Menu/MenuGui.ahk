@@ -133,7 +133,7 @@
 
         if (btn.ChildItems) {
             this.childOpen := true
-            this.result := this.app.Service("manager.gui").Menu(Map(
+            this.result := this.app["manager.gui"].Menu(Map(
                 "parent", this,
                 "child", true,
                 "openAtCtlSide", "right"

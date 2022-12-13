@@ -84,7 +84,7 @@ class ManageModulesWindow extends ManageWindowBase {
                 this.Submit(false)
             }
 
-            response := this.app.Service("manager.gui").Dialog(Map(
+            response := this.app["manager.gui"].Dialog(Map(
                 "title", "Restart " . this.app.appName . "?",
                 "text", "One or more module changes require restarting " . this.app.appName . " to fully take effect.`n`nWould you like to restart " . this.app.appName . " now?"
             ))
@@ -153,7 +153,7 @@ class ManageModulesWindow extends ManageWindowBase {
             menuItems.Push(Map("label", "Delete", "name", "DeleteModule"))
         }
 
-        result := this.app.Service("manager.gui").Menu(menuItems, this)
+        result := this.app["manager.gui"].Menu(menuItems, this)
 
         if (result == "EnableModule") {
             this.EnableModule(key)
