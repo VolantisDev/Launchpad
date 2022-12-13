@@ -42,30 +42,54 @@
             "definition_loader_parameter_key": "web_services.providers",
             "storage_type": "runtime"
         },
-        "web_services.providers.launchpad_api": {
-            "name": "Launchpad API",
-            "EndpointUrl": "https://api.launchpad.games/v1",
-            "AuthenticationEndpointUrl": "https://securetoken.googleapis.com/v1",
-            "AuthenticationRefreshPath": "token",
-            "IconSrc": "logo",
-            "SupportsAuthentication": true,
-            "Authenticator": "jwt",
-            "AppKey": "AIzaSyCbwzOWJjTft77P96dV5VB3dAx9TjdDowQ",
-            "LoginWindow": "LaunchpadLoginWindow"
+        "web_services.data_types.account_info": {
+            "name": "Account Info",
+            "description": "Account information related to an authentication session."
         },
-        "web_services.services.api": {
-            "name": "Launchpad API",
-            "Provider": "launchpad_api"
+        "web_services.data_types.error_submission": {
+            "name": "Error Submission",
+            "description": "An endpoint to submit application errors to."
+        },
+        "web_services.data_types.feedback_submission": {
+            "name": "Feedback Submission",
+            "description": "An endpoint to submit feedback to."
+        },
+        "web_services.data_types.game_submission": {
+            "name": "Game Submission",
+            "description": "An endpoint to game launcher data to for sharing with the community."
+        },
+        "web_services.data_types.release_info": {
+            "name": "Release Info",
+            "description": "Information about the latest (or any) version of Launchpad"
+        },
+        "web_services.data_types.entity_list": {
+            "name": "Entity List",
+            "description": "A listing of entities from a web service."
+        },
+        "web_services.data_types.entity_data": {
+            "name": "Entity Data",
+            "description": "Data to be imported into an entity within the application."
+        },
+        "web_services.adapter_types.json": {
+            "class": "JsonWebServiceAdapter"
+        },
+        "web_services.adapter_types.file": {
+            "class": "FileWebServiceAdapter"
         }
     },
     "services": {
+        "cache.web_services": {
+            "class": "FileCache",
+            "arguments": ["@{App}", "@cache_state.web_services", "@@config.cache_dir", "WebServices"]
+        },
         "cache_state.web_services": {
             "class": "CacheState",
             "arguments": ["@{App}", "@@config.cache_dir", "WebServices.json"]
         },
-        "cache.web_services": {
-            "class": "FileCache",
-            "arguments": ["@{App}", "@cache_state.web_services", "@@config.cache_dir", "WebServices"]
+        "event_subscriber.web_services": {
+            "class": "WebServicesEventSubscriber",
+            "arguments": ["@{}"],
+            "tags": ["event_subscriber"]
         },
         "state.web_services": {
             "class": "JsonState",
@@ -79,10 +103,9 @@
             "class": "JwtWebServiceAuthenticator",
             "arguments": ["@manager.gui"]
         },
-        "event_subscriber.web_services": {
-            "class": "WebServicesEventSubscriber",
-            "arguments": ["@{}"],
-            "tags": ["event_subscriber"]
+        "web_services.adapter_factory": {
+            "class": "WebServiceAdapterFactory",
+            "arguments": ["@{}"]
         }
     }
 }

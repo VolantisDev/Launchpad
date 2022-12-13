@@ -4,6 +4,8 @@ class WebServiceEntity extends AppEntityBase {
     persistentStateObj := ""
     mergeDataFromApi := false
     statusIndicators := []
+    adapters := Map()
+    adapterFactory := ""
 
     Authenticated {
         get => this.IsAuthenticated()
@@ -18,10 +20,11 @@ class WebServiceEntity extends AppEntityBase {
         set => this.SetAuthData(key, value)
     }
 
-    __New(app, id, entityTypeId, container, cacheObj, stateObj, persistentStateObj, eventMgr, storageObj, idSanitizer, parentEntity := "") {
+    __New(app, id, entityTypeId, container, adapterFactory, cacheObj, stateObj, persistentStateObj, eventMgr, storageObj, idSanitizer, parentEntity := "") {
         this.cacheObj := cacheObj
         this.stateObj := stateObj
         this.persistentStateObj := persistentStateObj
+        this.adapterFactory := adapterFactory
 
         super.__New(app, id, entityTypeId, container, eventMgr, storageObj, idSanitizer, parentEntity)
     }
@@ -34,6 +37,7 @@ class WebServiceEntity extends AppEntityBase {
             id,
             entityTypeId,
             container,
+            container.Get("web_services.adapter_factory"),
             container.Get("cache.web_services"),
             container.Get("state.web_services_tmp"),
             container.Get("state.web_services"),
@@ -44,10 +48,59 @@ class WebServiceEntity extends AppEntityBase {
         )
     }
 
+    GetAdapters(filters := "") {
+        if (!filters) {
+            filters := Map()
+        }
+
+        adapterData := this.container.GetParameter("web_services.adapters." . this["Provider"]["id"])
+
+        adapters := Map()
+
+        for key, definition in adapterData {
+            adapter := this.GetAdapter(key)
+            definition := adapter.definition
+            include := true
+
+            for filterKey, filterVal in filters {
+                if (!definition.Has(filterKey) || definition[filterKey] != filterVal) {
+                    include := false
+                    
+                    break
+                }
+            }
+
+            if (include) {
+                adapters[key] := adapter
+            }
+        }
+
+        return adapters
+    }
+
+    GetAdapter(key) {
+        adapter := ""
+        
+        if (this.adapters.Has(key)) {
+            adapter := this.adapters[key]
+        }
+
+        if (!adapter) {
+            param := "web_services.adapters." . this["Provider"]["id"]
+
+            if (this.container.HasParameter(param)) {
+                adapter := this.adapterFactory.CreateWebServiceAdapter(this, this.container.GetParameter(param))
+                this.adapters[key] := adapter
+            }
+        }
+
+        return adapter
+    }
+
     BaseFieldDefinitions() {
         definitions := super.BaseFieldDefinitions()
 
-        if (this.idVal == "api" && definitions.Has("name")) {
+        if (this.idVal == "launchpad_api" && definitions.Has("name")) {
             definitions["name"]["editable"] := false
         }
 
@@ -62,7 +115,7 @@ class WebServiceEntity extends AppEntityBase {
             "type", "boolean",
             "description", "Automatically authenticate with this service when Launchpad starts.",
             "required", false,
-            "default", (this.idVal == "api")
+            "default", (this.idVal == "launchpad_api")
         )
 
         definitions["Enabled"] := Map(
@@ -74,13 +127,13 @@ class WebServiceEntity extends AppEntityBase {
         definitions["StatusIndicator"] := Map(
             "type", "boolean",
             "required", false,
-            "default", (this.idVal == "api")
+            "default", (this.idVal == "launchpad_api")
         )
 
         definitions["StatusIndicatorExpanded"] := Map(
             "type", "boolean",
             "required", false,
-            "default", (this.idVal == "api")
+            "default", (this.idVal == "launchpad_api")
         )
 
         return definitions

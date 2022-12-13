@@ -17,7 +17,100 @@
     "parameters": {
         "config.data_source_key": "launchpad_api",
         "config.api_endpoint": "https://api.launchpad.games/v1",
-        "config.api_authentication": true
+        "config.api_authentication": true,
+        "web_services.providers.launchpad_api": {
+            "name": "Launchpad API",
+            "EndpointUrl": "https://api.launchpad.games/v1",
+            "AuthenticationEndpointUrl": "https://securetoken.googleapis.com/v1",
+            "AuthenticationRefreshPath": "token",
+            "IconSrc": "logo",
+            "SupportsAuthentication": true,
+            "Authenticator": "jwt",
+            "AppKey": "AIzaSyCbwzOWJjTft77P96dV5VB3dAx9TjdDowQ",
+            "LoginWindow": "LaunchpadLoginWindow"
+        },
+        "web_services.services.launchpad_api": {
+            "name": "Launchpad API",
+            "Provider": "launchpad_api"
+        },
+        "web_services.adapters.launchpad_api.account_info": {
+            "dataType": "account_info",
+            "requestPath": "/status",
+            "cacheResponse": false,
+            "readAuth": true,
+            "dataMap": {
+                "email": "account"
+            }
+        },
+        "web_services.adapters.launchpad_api.error_submission": {
+            "dataType": "error_submission",
+            "requestPath": "/error-submissions/{submission}",
+            "cacheResponse": false,
+            "readAllow": false,
+            "createAllow": true,
+            "createAuth": false
+        },
+        "web_services.adapters.launchpad_api.feedback_submission": {
+            "dataType": "feedback_submission",
+            "requestPath": "/feedback-submissions/{submission}",
+            "cacheResponse": false,
+            "readAllow": false,
+            "createAllow": true,
+            "createAuth": false
+        },
+        "web_services.adapters.launchpad_api.game_submission": {
+            "dataType": "game_submission",
+            "requestPath": "/game-submissions/{submission}",
+            "cacheResponse": false,
+            "readAllow": false,
+            "createAllow": true,
+            "createAuth": false
+        },
+        "web_services.adapters.launchpad_api.release_info": {
+            "dataType": "release_info",
+            "requestPath": "/release-info/{tag}",
+            "cacheMaxAge": 1800
+        },
+        "web_services.adapters.launchpad_api.platform_list": {
+            "dataType": "entity_list",
+            "requestPath": "/game-platforms",
+            "entityType": "platform"
+        },
+        "web_services.adapters.launchpad_api.platform_data": {
+            "dataType": "entity_data",
+            "requestPath": "/game-platforms/{id}",
+            "entityType": "platform"
+        },
+        "web_services.adapters.launchpad_api.game_type_list": {
+            "dataType": "entity_list",
+            "requestPath": "/game-types",
+            "entityType": "managed_game"
+        },
+        "web_services.adapters.launchpad_api.game_type_data": {
+            "dataType": "entity_data",
+            "requestPath": "/game-types/{id}",
+            "entityType": "managed_game"
+        },
+        "web_services.adapters.launchpad_api.launcher_list": {
+            "dataType": "entity_list",
+            "requestPath": "/games",
+            "entityType": "launcher"
+        },
+        "web_services.adapters.launchpad_api.launcher_data": {
+            "dataType": "entity_data",
+            "requestPath": "/games/{id}",
+            "entityType": "launcher"
+        },
+        "web_services.adapters.launchpad_api.launcher_type_list": {
+            "dataType": "entity_list",
+            "requestPath": "/launcher-types",
+            "entityType": "managed_launcher"
+        },
+        "web_services.adapters.launchpad_api.launcher_type_data": {
+            "dataType": "entity_data",
+            "requestPath": "/launcher-types/{id}",
+            "entityType": "managed_launcher"
+        }
     },
     "services": {
         "data_source.launchpad_api": {
