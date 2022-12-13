@@ -5,7 +5,6 @@
         "app.developer": "Volantis Development",
         "app.has_settings": true,
         "app.settings_window": "SettingsWindow",
-        "app.supports_update_check": true,
         "app.show_about_menu_item": true,
         "app.about_window": "AboutWindow",
         "app.show_website_menu_item": true,
