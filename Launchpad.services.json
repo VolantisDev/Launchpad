@@ -11,7 +11,7 @@
         "config.clean_launchers_on_build": false,
         "config.clean_launchers_on_exit": true,
         "config.create_desktop_shortcuts": true,
-        "config.data_source_key": "local",
+        "config.data_source_key": "launchpad_api",
         "config.default_launcher_theme": "",
         "config.destination_dir": "@@{data_dir}\\Launchers",
         "config.launcher_double_click_action": "Edit",
@@ -109,10 +109,6 @@
         "config.app": {
             "class": "LaunchpadConfig",
             "arguments": ["@config_storage.app_config", "@{}", "@@config_key"]
-        },
-        "data_source.local": {
-            "class": "LocalDataSource",
-            "arguments": ["@manager.cache", "local"]
         },
         "ini_migrator": {
             "class": "LaunchpadIniMigrator",
