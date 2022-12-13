@@ -48,7 +48,33 @@ class WebServiceEntity extends AppEntityBase {
         )
     }
 
-    GetAdapters(filters := "") {
+    AdapterRequest(params, adapterFilters, operation := "read", limit := false) {
+        if (!adapterFilters) {
+            adapterFilters := Map()
+        }
+
+        if (!adapterFilters) {
+            adapterFilters := Map()
+        }
+
+        if (Type(adapterFilters) == "String") {
+            adapterFilters := Map("adapterType", adapterFilters)
+        }
+
+        results := Map()
+
+        for adapterKey, adapter in this.GetAdapters(adapterFilters, operation) {
+            results[adapterKey] := adapter.SendRequest(operation, params)
+
+            if (limit && results.Count >= limit) {
+                break
+            }
+        }
+
+        return results
+    }
+
+    GetAdapters(filters := "", operation := "") {
         if (!filters) {
             filters := Map()
         }
@@ -68,6 +94,10 @@ class WebServiceEntity extends AppEntityBase {
                     
                     break
                 }
+            }
+
+            if (include && operation) {
+                include := adapter.SupportsOperation(operation)
             }
 
             if (include) {

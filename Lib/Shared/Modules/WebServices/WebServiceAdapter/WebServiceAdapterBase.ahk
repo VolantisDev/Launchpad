@@ -4,6 +4,7 @@ class WebServiceAdapterBase {
     definition := ""
     dataType := ""
     merger := ""
+    operationTypes := ["create", "read", "update", "delete"]
     
     __New(container, merger, webService, definition) {
         this.container := container
@@ -54,6 +55,37 @@ class WebServiceAdapterBase {
             "deleteAuth", true,
             "dataMap", Map()
         )
+    }
+
+    SupportsOperation(operation) {
+        supported := false
+
+        if (this.operationTypes.Contains(operation)) {
+            supported := this.definition[operation + "Allow"]
+        }
+
+        return supported
+    }
+
+    SendRequest(operation, params := "") {
+        if (!this.SupportsOperation(operation)) {
+            throw AppException("The '" . operation . "' operation is not supported by this data adapter.")
+        }
+
+        result := ""
+        data := params.Has("data") ? params["data"] : ""
+
+        if (operation == "create") {
+            result := this.CreateData(data, params)
+        } else if (operation == "read") {
+            result := this.ReadData(params)
+        } else if (operation == "update") {
+            result := this.UpdateData(data, params)
+        } else if (operation == "delete") {
+            result := this.DeleteData(params)
+        }
+
+        return result
     }
 
     CreateData(data, params := "") {
