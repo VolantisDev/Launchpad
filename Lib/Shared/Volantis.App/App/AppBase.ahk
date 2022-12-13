@@ -708,10 +708,6 @@ class AppBase {
         this.isSetup := true
     }
 
-    CheckForUpdates(notify := true) {
-        ; Optional method to override
-    }
-
     ShowTrayMenu() {
         menuItems := []
         menuItems.Push(Map("label", "Open " . this.appName, "name", "OpenApp"))
@@ -952,6 +948,30 @@ class AppBase {
 
         if (websiteUrl) {
             Run(websiteUrl)
+        }
+    }
+
+    CheckForUpdates(notify := true) {
+        if (this.Parameter["app.supports_update_check"]) {
+            updateAvailable := false
+
+            event := ReleaseInfoEvent(Events.APP_GET_RELEASE_INFO, this)
+            this["manager.event"].DispatchEvent(event)
+            releaseInfo := event.ReleaseInfo
+
+            if (
+                releaseInfo 
+                && releaseInfo.Has("version") 
+                && releaseInfo["version"]
+                && this["version_checker"].VersionIsOutdated(releaseInfo["version"], this.Version)
+            ) {
+                updateAvailable := true
+                this["manager.gui"].Dialog(Map("type", "UpdateAvailableWindow"), releaseInfo)
+            }
+
+            if (!updateAvailable && notify) {
+                this["notifier"].Info("You're running the latest version of " . this.appName . ". Shiny!")
+            }
         }
     }
 }

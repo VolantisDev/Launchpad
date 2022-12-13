@@ -1,29 +1,6 @@
 ﻿class Launchpad extends AppBase {
     detectGames := false
 
-    CheckForUpdates(notify := true) {
-        updateAvailable := false
-
-        if (this.Version != "{{VERSION}}" && this["manager.data_source"].GetDefaultDataSource()) {
-            dataSource := this["manager.data_source"].GetDefaultDataSource()
-            releaseInfoStr := dataSource.ReadItem("release-info")
-
-            if (releaseInfoStr) {
-                data := JsonData()
-                releaseInfo := data.FromString(&releaseInfoStr)
-
-                if (releaseInfo && releaseInfo["data"].Has("version") && releaseInfo["data"]["version"] && this["version_checker"].VersionIsOutdated(releaseInfo["data"]["version"], this.Version)) {
-                    updateAvailable := true
-                    this["manager.gui"].Dialog(Map("type", "UpdateAvailableWindow"), releaseInfo)
-                }
-            }
-        }
-
-        if (!updateAvailable && notify) {
-            this["notifier"].Info("You're running the latest version of Launchpad. Shiny!")
-        }
-    }
-
     UpdateIncludes() {
         this.RunAhkScript(this.appDir . "\Scripts\UpdateIncludes.ahk")
         this.RestartApp()

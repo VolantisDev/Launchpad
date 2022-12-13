@@ -27,5 +27,7 @@ class Events {
     static APP_MENU_ABOUT_ITEMS_ALTER := 0x1040
     static APP_MENU_PROCESS_RESULT := 0x1042
 
+    static APP_GET_RELEASE_INFO := 0x1050
+
     static AHK_NOTIFYICON := 0x404
 }

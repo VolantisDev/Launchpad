@@ -1,5 +1,6 @@
 ; Automatically-generated file. Manual edits will be overwritten.
 #Include Modules\LaunchpadApi\DataSource\ApiDataSource.ahk
+#Include Modules\LaunchpadApi\EventSubscriber\LaunchpadApiSubscriber.ahk
 #Include Modules\WebServices\Entity\WebServiceEntity.ahk
 #Include Modules\WebServices\Entity\WebServiceProviderEntity.ahk
 #Include Modules\WebServices\Event\WebServiceRequestEvent.ahk
@@ -57,6 +58,7 @@
 #Include Volantis.App\Event\MenuItemsEvent.ahk
 #Include Volantis.App\Event\MenuResultEvent.ahk
 #Include Volantis.App\Event\RegisterComponentsEvent.ahk
+#Include Volantis.App\Event\ReleaseInfoEvent.ahk
 #Include Volantis.App\Event\ServiceDefinitionsEvent.ahk
 #Include Volantis.App\Events\Events.ahk
 #Include Volantis.App\Exception\AppException.ahk
