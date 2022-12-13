@@ -9,6 +9,7 @@
 #Include Modules\WebServices\Factory\WebServiceAdapterFactory.ahk
 #Include Modules\WebServices\Gui\AuthenticationGui\LaunchpadLoginWindow.ahk
 #Include Modules\WebServices\Gui\ManageWindow\ManageWebServicesWindow.ahk
+#Include Modules\WebServices\LayerSource\WebServiceAdapterLayerSource.ahk
 #Include Modules\WebServices\WebServiceAdapter\FileWebServiceAdapter.ahk
 #Include Modules\WebServices\WebServiceAdapter\JsonWebServiceAdapter.ahk
 #Include Modules\WebServices\WebServiceAdapter\WebServiceAdapterBase.ahk
