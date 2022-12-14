@@ -16,8 +16,6 @@
     },
     "parameters": {
         "app.supports_update_check": true,
-        "config.data_source_key": "launchpad_api",
-        "config.api_authentication": true,
         "web_services.providers.launchpad_api": {
             "name": "Launchpad API",
             "EndpointUrl": "https://api.launchpad.games/v1",

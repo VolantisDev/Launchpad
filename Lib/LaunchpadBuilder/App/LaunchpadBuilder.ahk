@@ -2,8 +2,6 @@ class LaunchpadBuilder extends AppBase {
     GetParameterDefinitions(config) {
         parameters := super.GetParameterDefinitions(config)
         parameters["config_path"] := this.appDir . "\Launchpad.build.json"
-        parameters["config.data_source_key"] := ""
-        parameters["config.api_authentication"] := true
         parameters["config.dist_dir"] := this.appDir . "\Dist"
         parameters["config.build_dir"] := this.appDir . "\Build"
         parameters["config.icon_file"] := this.appDir . "\Resources\Graphics\launchpad.ico"

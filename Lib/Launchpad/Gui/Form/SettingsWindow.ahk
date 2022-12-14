@@ -122,10 +122,6 @@
         ctl := this.guiObj.AddDDL("vlogging_level xs y+m Choose" . chosen . " w200 c" . this.themeObj.GetColor("editText"), this.container.Get("logger").GetLogLevels())
         ctl.OnEvent("Change", "OnLoggingLevelChange")
 
-        this.AddHeading("API Settings")
-        ctl := this.AddConfigCheckBox("Enable API login for enhanced functionality", "api_authentication")
-        ctl.ctl.NeedsRestart := true
-
         tabs.UseTab()
 
         closeW := 100
