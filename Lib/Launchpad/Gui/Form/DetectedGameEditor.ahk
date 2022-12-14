@@ -82,7 +82,7 @@
         this.Add("SelectControl", "vGameType", "Game Type", this.detectedGameObj.gameType, this.gameTypes, "OnGameTypeChange", "This tells " . this.app.appName . " how to launch your game. Most games can use 'default', but launchers can support different game types.`n`nYou can customize the details of the game type after it is added.")
         this.Add("LocationBlock", "", "Install Dir", this.detectedGameObj.installDir, "InstallDir", "", true, "This is the directory that the game is installed in, if it could be detected.")
         this.Add("ComboBoxControl", "vExe", "Exe", this.detectedGameObj.exeName, this.detectedGameObj.possibleExeNames, "OnExeChange", "The main Exe, if detected, should be pre-selected. You may change it to be the name (or path) of another exe, or select another one of the detected .exe files from the list (if more than one was found).")
-        this.AddTextBlock("Launcher-Specific ID", "LauncherSpecificId", this.detectedGameObj.launcherSpecificId, "This is typically the ID which the game platform or launcher uses when referring to the game internally. Changing this value could cause issues with game launching.")
+        this.AddTextBlock("Launcher-Specific ID", "PlatformRef", this.detectedGameObj.platformRef, "This is typically the ID which the game platform or launcher uses when referring to the game internally. Changing this value could cause issues with game launching.")
     }
 
     AddTextBlock(heading, field, existingVal := "", helpText := "") {
@@ -159,9 +159,9 @@
         this.newValues["exeName"] := ctl.Text
     }
 
-    OnLauncherSpecificIdChange(ctl, info) {
+    OnPlatformRefChange(ctl, info) {
         this.guiObj.Submit(false)
-        this.newValues["launcherSpecificId"] := ctl.Text
+        this.newValues["platformRef"] := ctl.Text
     }
 
     ProcessResult(result, submittedData := "") {

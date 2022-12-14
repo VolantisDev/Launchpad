@@ -138,7 +138,7 @@ class GamePlatformBase {
         return []
     }
 
-    GetLauncherSpecificId(key) {
+    GetPlatformRef(key) {
         return key
     }
 
@@ -164,8 +164,8 @@ class GamePlatformBase {
                 locator := GameExeLocator(installDir)
                 possibleExes := locator.Locate("")
                 exeName := this.DetermineMainExe(key, possibleExes)
-                launcherSpecificId := this.GetLauncherSpecificId(key)
-                detectedGameObj := DetectedGame(key, this, this.launcherType, this.gameType, installDir, exeName, launcherSpecificId, possibleExes)
+                platformRef := this.GetPlatformRef(key)
+                detectedGameObj := DetectedGame(key, this, this.launcherType, this.gameType, installDir, exeName, platformRef, possibleExes)
                 
                 if (this.installDir) {
                     detectedGameObj.launcherInstallDir := this["InstallDir"]

@@ -8,7 +8,7 @@ class DetectedGame {
     installDir := ""
     launcherInstallDir := ""
     exeName := ""
-    launcherSpecificId := ""
+    platformRef := ""
     possibleExeNames := []
     keyMap := Map()
     ; @todo Move this to properties or config or allow it to be extended
@@ -17,7 +17,7 @@ class DetectedGame {
     prioritySuffixes := ["-Win64-Shipping", "-Win32-Shipping"]
     filterExes := []
 
-    __New(key, platform, launcherType, gameType := "Default", installDir := "", exeName := "", launcherSpecificId := "", possibleExeNames := "", displayName := "") {
+    __New(key, platform, launcherType, gameType := "Default", installDir := "", exeName := "", platformRef := "", possibleExeNames := "", displayName := "") {
         this.key := key
         this.displayName := displayName ? displayName : key
         this.platform := platform
@@ -26,7 +26,7 @@ class DetectedGame {
         this.gameType := gameType
         this.installDir := installDir
         this.exeName := exeName
-        this.launcherSpecificId := launcherSpecificId
+        this.platformRef := platformRef
 
         if (possibleExeNames) {
             if (Type(possibleExeNames) == "String") {
@@ -49,7 +49,7 @@ class DetectedGame {
             || this.installDir != launcher["ManagedGame"]["InstallDir"]
             || this.launcherInstallDir != launcher["ManagedLauncher"]["InstallDir"]
             || this.exeName != launcher["ManagedGame"]["Exe"] 
-            || this.launcherSpecificId != launcher["ManagedGame"]["LauncherSpecificId"]
+            || this.platformRef != launcher["ManagedGame"]["PlatformRef"]
         ) {
             hasChanges := true
         }
@@ -122,8 +122,8 @@ class DetectedGame {
             config["GameExe"] := this.exeName
         }
 
-        if (this.launcherSpecificId) {
-            config["GameLauncherSpecificId"] := this.launcherSpecificId
+        if (this.platformRef) {
+            config["GamePlatformRef"] := this.platformRef
         }
 
         entityObj := launcherManager.GetFactory().CreateEntity(this.key, config)

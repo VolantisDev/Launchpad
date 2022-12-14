@@ -66,7 +66,7 @@ class RiotPlatform extends RegistryLookupGamePlatformBase {
         return dirs
     }
 
-    GetLauncherSpecificId(key) {
+    GetPlatformRef(key) {
         if (key == "VALORANT") {
             key := "valorant"
         } else if (key == "Legends of Runeterra") {

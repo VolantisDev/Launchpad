@@ -122,7 +122,7 @@ class ManagedProcessEntity extends FieldableEntity {
             ),
             "widget", "select",
             "selectOptionsCallback", ObjBindMethod(this, "ListLocateMethods"),
-            "help", "Search: Searches a list of possible directories (Defaulting to some common possibilities) for the .exe file and uses that directory`nRegistry: Looks for the provided registry key and uses its value as the install path if present`nBlizzardProductDb: Searches for LauncherSpecificId within the Blizzard product.db file if present"
+            "help", "Search: Searches a list of possible directories (Defaulting to some common possibilities) for the .exe file and uses that directory`nRegistry: Looks for the provided registry key and uses its value as the install path if present`nBlizzardProductDb: Searches for PlatformRef within the Blizzard product.db file if present"
         )
 
         definitions["WindowTitle"] := Map(
@@ -188,8 +188,8 @@ class ManagedProcessEntity extends FieldableEntity {
             )
         )
 
-        definitions["LauncherSpecificId"] := Map(
-            "storageKey", this.configPrefix . "LauncherSpecificId",
+        definitions["PlatformRef"] := Map(
+            "storageKey", this.configPrefix . "PlatformRef",
             "description", "If the item is known to the launcher by a specific ID, it should be stored here.",
             "group", "general"
         )

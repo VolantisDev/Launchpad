@@ -40,7 +40,7 @@ class ManagedGameEntity extends ManagedEntityBase {
     }
 
     GetBlizzardProductKey() {
-        productKey := this["LauncherSpecificId"]
+        productKey := this["PlatformRef"]
 
         if (this.HasConfigValue("BlizzardProductId", true, false)) {
             productKey := this.GetConfigValue("BlizzardProductId")

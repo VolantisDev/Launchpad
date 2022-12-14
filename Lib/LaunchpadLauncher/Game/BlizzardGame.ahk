@@ -7,7 +7,7 @@ class BlizzardGame extends SimpleGame {
         launcherPath := this.app["Launcher"].config["LauncherInstallDir"] . "\" . this.app["Launcher"].config["LauncherExe"]
         
         if (launcherPath != "") {
-            gameKey := this.config["GameLauncherSpecificId"]
+            gameKey := this.config["GamePlatformRef"]
             launcherPath .= " --game=" . gameKey . " --gamepath=`"" . this.config["GameInstallDir"] . "`" --productcode=" . gameKey
         }
 
