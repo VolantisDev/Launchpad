@@ -2,7 +2,6 @@
     entityObj := ""
     entityManager := ""
     missingFields := Map()
-    dataSource := ""
 
     GetDefaultConfig(container, config) {
         defaults := super.GetDefaultConfig(container, config)
