@@ -66,6 +66,10 @@
             "name": "Entity List",
             "description": "A listing of entities from a web service."
         },
+        "web_services.data_types.entity_lookup": {
+            "name": "Entity Lookup",
+            "description": "Searches for the ID of a remote entity from the provided data."
+        },
         "web_services.data_types.entity_data": {
             "name": "Entity Data",
             "description": "Data to be imported into an entity within the application."
