@@ -8,7 +8,7 @@
   *
   * Example:
   *   - Layer 1: Initial defaults
-  *   - Layer 2: Defaults from datasource
+  *   - Layer 2: Defaults from external sources
   *   - Layer 3: Auto-detected defaults
   *   - Layer 4: User configuration values
   *   - Processor 1: Token expander
