@@ -145,9 +145,9 @@ class LaunchpadApiSubscriber extends EventSubscriberBase {
             ])
 
             if (adapters.Count) {
-                fieldDefinitions["DataLookupKey"] := Map(
+                fieldDefinitions["LaunchpadApiRef"] := Map(
                     "description", "The key that is used to look up the entity's data from configured external data sources.",
-                    "help", "It defaults to the key which is usually sufficient, but it can be overridden by setting this value.`n`nAddtionally, multiple copies of the same data source entity can exist by giving them different keys but using the same DataLookupKey",
+                    "help", "It defaults to the key which is usually sufficient, but it can be overridden by setting this value.`n`nAddtionally, multiple copies of the same data source entity can exist by giving them different keys but using the same LaunchpadApiRef",
                     "group", "api",
                     "processValue", false,
                     "modes", Map("simple", Map("formField", false))
@@ -167,9 +167,9 @@ class LaunchpadApiSubscriber extends EventSubscriberBase {
 
         if (
             webService["Enabled"]
-            && (!values.Has("DataLookupKey") || !values["DataLookupKey"])
-            && entity.HasField("DataLookupKey") 
-            && (!entity.RawData.Has["DataLookupKey"] || !entity.RawData["DataLookupKey"])
+            && (!values.Has("LaunchpadApiRef") || !values["LaunchpadApiRef"])
+            && entity.HasField("LaunchpadApiRef") 
+            && (!entity.RawData.Has["LaunchpadApiRef"] || !entity.RawData["LaunchpadApiRef"])
         ) {
             result := ""
 
@@ -190,7 +190,7 @@ class LaunchpadApiSubscriber extends EventSubscriberBase {
             }
 
             if (result) {
-                values["DataLookupKey"] := result
+                values["LaunchpadApiRef"] := result
             }
         }
     }
