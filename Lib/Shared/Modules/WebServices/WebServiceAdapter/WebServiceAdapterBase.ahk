@@ -5,6 +5,10 @@ class WebServiceAdapterBase {
     dataType := ""
     merger := ""
     operationTypes := ["create", "read", "update", "delete"]
+
+    static ADAPTER_RESULT_DATA := "data"
+    static ADAPTER_RESULT_HTTP_STATUS := "httpStatus"
+    static ADAPTER_RESULT_SUCCESS := "success"
     
     __New(container, merger, webService, definition) {
         this.container := container
@@ -53,7 +57,8 @@ class WebServiceAdapterBase {
             "deleteAllow", false,
             "deleteMethod", "PUT",
             "deleteAuth", true,
-            "dataMap", Map()
+            "dataMap", Map(),
+            "dataSelector", []
         )
     }
 
@@ -93,13 +98,50 @@ class WebServiceAdapterBase {
             throw AppException("The 'create' operation is not allowed on this data adapter.")
         }
 
-        return this._request(
+        response := this._request(
             params,
             this.definition["createMethod"],
             data ? data : this._getData(params),
             this.definition["createAuth"],
             false
-        ).Send().IsSuccessful()
+        ).Send()
+
+        return this._getResult(
+            params,
+            response,
+            this._getResultType(params, WebServiceAdapterBase.ADAPTER_RESULT_SUCCESS)
+        )
+    }
+
+    _getResultType(params, default) {
+        resultType := default
+
+        if (params.Has("resultType") && params["resultType"]) {
+            resultType := params["resultType"]
+        }
+
+        return resultType
+    }
+
+    _getResult(params, response, resultType) {
+        result := ""
+
+        if (resultType == WebServiceAdapterBase.ADAPTER_RESULT_DATA) {
+            if (response.IsSuccessful()) {
+                data := response.GetResponseBody()
+
+                if (data) {
+                    result := this._mapData(this._parseData(data, params), params)
+                }
+                
+            }
+        } else if (resultType == WebServiceAdapterBase.ADAPTER_RESULT_HTTP_STATUS) {
+            result := response.GetHttpStatusCode()
+        } else if (resultType == WebServiceAdapterBase.ADAPTER_RESULT_SUCCESS) {
+            result := response.IsSuccessful()
+        }
+
+        return result
     }
 
     DataExists(params := "") {
@@ -129,15 +171,11 @@ class WebServiceAdapterBase {
             this.definition["cacheResponse"]
         ).Send()
 
-        data := ""
-
-        if (response.IsSuccessful()) {
-            data := response.GetResponseBody()
-            data := this._parseData(data, params)
-            this._mapData(data, params)
-        }
-
-        return data
+        return this._getResult(
+            params,
+            response,
+            this._getResultType(params, WebServiceAdapterBase.ADAPTER_RESULT_DATA)
+        )
     }
 
     UpdateData(data, params := "") {
@@ -145,13 +183,19 @@ class WebServiceAdapterBase {
             throw AppException("The 'update' operation is not allowed on this data adapter.")
         }
 
-        return this._request(
+        response := this._request(
             params,
             this.definition["updateMethod"],
             data ? data : this._getData(params),
             this.definition["updateAuth"],
             false
-        ).Send().IsSuccessful()
+        ).Send()
+
+        return this._getResult(
+            params,
+            response,
+            this._getResultType(params, WebServiceAdapterBase.ADAPTER_RESULT_SUCCESS)
+        )
     }
 
     DeleteData(params := "") {
@@ -159,13 +203,19 @@ class WebServiceAdapterBase {
             throw AppException("The 'delete' operation is not allowed on this data adapter.")
         }
 
-        return this._request(
+        response := this._request(
             params,
             this.definition["deleteMethod"],
             this._getData(params),
             this.definition["deleteAuth"],
             false
-        ).Send().IsSuccessful()
+        ).Send()
+
+        return this._getResult(
+            params,
+            response,
+            this._getResultType(params, WebServiceAdapterBase.ADAPTER_RESULT_SUCCESS)
+        )
     }
 
     _requestPath(params) {
@@ -220,9 +270,26 @@ class WebServiceAdapterBase {
     }
 
     _parseData(data, params) {
-        if (data && this.dataType) {
-            dataType := this.dataType
+        if (data && this.definition["dataType"]) {
+            dataType := this.definition["dataType"]
             data := %dataType%().FromString(data)
+
+            if (this.definition["dataSelector"]) {
+                dataSelector := this.definition["dataSelector"]
+
+                if (Type(dataSelector) == "String") {
+                    dataSelector := StrSplit(dataSelector, ".")
+                }
+
+                for index, pathPart in dataSelector {
+                    if (data.Has(pathPart)) {
+                        data := data[pathPart]
+                    } else {
+                        data := ""
+                        break
+                    }
+                }
+            }
         }
 
         return data

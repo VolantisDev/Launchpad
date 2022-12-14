@@ -2,7 +2,6 @@ class ManagedGameEntity extends ManagedEntityBase {
     configPrefix := "Game"
     defaultType := "Default"
     defaultClass := "SimpleGame"
-    dataSourcePath := "game-types"
 
     BaseFieldDefinitions() {
         definitions := super.BaseFieldDefinitions()
@@ -99,7 +98,7 @@ class ManagedGameEntity extends ManagedEntityBase {
         }
 
         if (this.ShouldDetectShortcutSrc(detectedValues)) {
-            basePath := this["AssetsDir"] . "\" . this.Id
+            basePath := this.ParentEntity["AssetsDir"] . "\" . this.Id
             shortcutSrc := ""         
 
             if (FileExist(basePath . ".lnk")) {

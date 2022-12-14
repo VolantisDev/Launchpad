@@ -1,21 +1,18 @@
-class BackupEntity extends AppEntityBase {
+class BackupEntity extends FieldableEntity {
     backup := ""
 
-    __New(app, key, config, parentEntity := "", requiredConfigKeys := "") {
-        super.__New(app, key, config, parentEntity, requiredConfigKeys)
-        backupClass := config.Has("BackupClass") ? config["BackupClass"] : "FileBackup"
+    SetupEntity() {
+        super.SetupEntity()
 
         if (!this.backup) {
+            backupClass := this.config.Has("BackupClass") ? this.config["BackupClass"] : "FileBackup"
+
             this.CreateBackupObject(backupClass)
         }
     }
 
     BaseFieldDefinitions() {
         definitions := super.BaseFieldDefinitions()
-
-        if (definitions.Has("DataSourceKeys")) {
-            definitions["DataSourceKeys"]["default"] := []
-        }
 
         definitions["IsEditable"] := Map(
             "type", "boolean",

@@ -18,7 +18,7 @@
         defaults["child"] := false
         defaults["title"] := container.GetApp().appName
         defaults["titleIsMenu"] := true
-        defaults["showStatusIndicator"] := !!(container.Get("config.app").Has("api_authentication") && container.Get("config.app")["api_authentication"])
+        defaults["showStatusIndicator"] := container.Has("entity_manager.web_service")
         return defaults
     }
 
@@ -131,7 +131,9 @@
                 }
 
                 status := launcher.GetStatus()
-                apiStatus := launcher["DataSourceItemKey"] ? "Linked" : "Not linked"
+
+                ; @todo Move the API data to an event in the LaunchpadApi module
+                apiStatus := (launcher.HasField["DataLookupKey"] && launcher["DataLookupKey"]) ? "Linked" : "Not linked"
                 created := this.FormatDate(this.app.State.GetLauncherCreated(key))
                 updated := this.FormatDate(this.app.State.GetLauncherInfo("Config")["Timestamp"])
                 built := this.FormatDate(this.app.State.GetLauncherInfo("Build")["Timestamp"])
@@ -307,7 +309,9 @@
             }
 
             status := launcher.GetStatus()
-            apiStatus := launcher["DataSourceItemKey"] ? "Linked" : "Not linked"
+
+            ; @todo Move the API code to the LaunchpadApi module
+            apiStatus := (launcher.HasField("DataLookupKey") && launcher["DataLookupKey"]) ? "Linked" : "Not linked"
             created := this.FormatDate(this.app.State.GetLauncherCreated(key))
             updated := this.FormatDate(this.app.State.GetLauncherInfo(key, "Config")["Timestamp"])
             built := this.FormatDate(this.app.State.GetLauncherInfo(key, "Build")["Timestamp"])
@@ -450,7 +454,7 @@
             }
 
             entity.SaveEntity()
-            entity.UpdateDataSourceDefaults()
+            entity.UpdateDefaults()
             this.UpdateListView()
         }
     }

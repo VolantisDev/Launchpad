@@ -1,5 +1,4 @@
 ; Automatically-generated file. Manual edits will be overwritten.
-#Include Modules\LaunchpadApi\DataSource\ApiDataSource.ahk
 #Include Modules\LaunchpadApi\EventSubscriber\LaunchpadApiSubscriber.ahk
 #Include Modules\WebServices\Entity\WebServiceEntity.ahk
 #Include Modules\WebServices\Entity\WebServiceProviderEntity.ahk
@@ -40,13 +39,6 @@
 #Include Volantis.App\Config\AppConfig.ahk
 #Include Volantis.App\Container\ServiceComponentContainer.ahk
 #Include Volantis.App\Container\WindowContainer.ahk
-#Include Volantis.App\DataSource\DataSourceBase.ahk
-#Include Volantis.App\DataSourceItem\DataSourceItemBase.ahk
-#Include Volantis.App\DataSourceItem\DSAssetFile.ahk
-#Include Volantis.App\DataSourceItem\DSFile.ahk
-#Include Volantis.App\DataSourceItem\DSJson.ahk
-#Include Volantis.App\DataSourceItem\DSListing.ahk
-#Include Volantis.App\Entity\AppEntityBase.ahk
 #Include Volantis.App\Entity\BackupEntity.ahk
 #Include Volantis.App\Entity\TaskEntity.ahk
 #Include Volantis.App\Event\AlterComponentsEvent.ahk
@@ -106,7 +98,6 @@
 #Include Volantis.App\Service\LoggerService.ahk
 #Include Volantis.App\Service\NotificationService.ahk
 #Include Volantis.App\Service\ComponentManager\CacheManager.ahk
-#Include Volantis.App\Service\ComponentManager\DataSourceManager.ahk
 #Include Volantis.App\Service\ComponentManager\GuiManager.ahk
 #Include Volantis.App\Service\ComponentManager\InstallerManager.ahk
 #Include Volantis.App\Service\ComponentManager\ThemeManager.ahk

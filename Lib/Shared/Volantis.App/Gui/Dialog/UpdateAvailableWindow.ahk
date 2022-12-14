@@ -21,9 +21,9 @@ class UpdateAvailableWindow extends FormGuiBase {
         super.Controls()
         this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " y+" . (this.margin*2), "Current version: " . appVersion)
         this.SetFont("normal", "Bold")
-        this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " y+" . (this.margin), "Latest version: " . this.releaseInfo["data"]["version"])
+        this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " y+" . (this.margin), "Latest version: " . this.releaseInfo["version"])
         this.SetFont()
-        this.guiObj.AddLink("w" . this.windowSettings["contentWidth"] . " y+" . (this.margin), '<a href="' .  this.releaseInfo["data"]["release-page"] . '">View release notes</a>')
+        this.guiObj.AddLink("w" . this.windowSettings["contentWidth"] . " y+" . (this.margin), '<a href="' .  this.releaseInfo["release-page"] . '">View release notes</a>')
         this.guiObj.AddText("w" . this.windowSettings["contentWidth"] . " y+" . (this.margin*2), "Would you like to update " . this.app.appName . " now?")
     }
 
@@ -36,14 +36,14 @@ class UpdateAvailableWindow extends FormGuiBase {
     }
 
     ApplyUpdate() {
-        downloadUrl := this.releaseInfo["data"].Has("installer") ? this.releaseInfo["data"]["installer"] : ""
+        downloadUrl := this.releaseInfo.Has("installer") ? this.releaseInfo["installer"] : ""
         
         if (!DirExist(this.app.tmpDir . "\Installers")) {
             DirCreate(this.app.tmpDir . "\Installers")
         }
         
         if (downloadUrl) {
-            localFile := this.app.tmpDir . "\Installers\" . this.app.appName . "-" . this.releaseInfo["data"]["version"] . ".exe"
+            localFile := this.app.tmpDir . "\Installers\" . this.app.appName . "-" . this.releaseInfo["version"] . ".exe"
             FileDelete(this.app.tmpDir . "\Installers\" . this.app.appName . "-*")
             Download(downloadUrl, localFile)
             Run(localFile)

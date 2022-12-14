@@ -77,6 +77,7 @@
         "web_services.adapters.launchpad_api.platform_data": {
             "dataType": "entity_data",
             "requestPath": "/game-platforms/{id}",
+            "dataSelector": "data.defaults",
             "entityType": "platform"
         },
         "web_services.adapters.launchpad_api.game_type_list": {
@@ -87,6 +88,7 @@
         "web_services.adapters.launchpad_api.game_type_data": {
             "dataType": "entity_data",
             "requestPath": "/game-types/{id}",
+            "dataSelector": "data.defaults",
             "entityType": "managed_game"
         },
         "web_services.adapters.launchpad_api.launcher_list": {
@@ -97,6 +99,13 @@
         "web_services.adapters.launchpad_api.launcher_data": {
             "dataType": "entity_data",
             "requestPath": "/games/{id}",
+            "dataSelector": "data.defaults",
+            "entityType": "launcher"
+        },
+        "web_services.adapters.launchpad_api.launcher_lookup": {
+            "dataType": "entity_lookup",
+            "requestPath": "/lookup/{id}/{platform}",
+            "dataSelector": "id",
             "entityType": "launcher"
         },
         "web_services.adapters.launchpad_api.launcher_type_list": {
@@ -107,14 +116,11 @@
         "web_services.adapters.launchpad_api.launcher_type_data": {
             "dataType": "entity_data",
             "requestPath": "/launcher-types/{id}",
+            "dataSelector": "data.defaults",
             "entityType": "managed_launcher"
         }
     },
     "services": {
-        "data_source.launchpad_api": {
-            "class": "ApiDataSource",
-            "arguments": ["@{App}", "@manager.cache", "launchpad_api", "https://api.launchpad.games/v1"]
-        },
         "cache_state.launchpad_api": {
             "class": "CacheState",
             "arguments": ["@{App}", "@@config.cache_dir", "API.json"]
@@ -122,6 +128,11 @@
         "cache.launchpad_api": {
             "class": "FileCache",
             "arguments": ["@{App}", "@cache_state.launchpad_api", "@@config.cache_dir", "API"]
+        },
+        "event_subscriber.launchpad_api": {
+            "class": "LaunchpadApiSubscriber",
+            "arguments": ["@{}"],
+            "tags": ["event_subscriber"]
         }
     }
 }

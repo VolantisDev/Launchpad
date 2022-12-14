@@ -1,8 +1,7 @@
-class WebServiceEntity extends AppEntityBase {
+class WebServiceEntity extends FieldableEntity {
     cacheObj := ""
     stateObj := ""
     persistentStateObj := ""
-    mergeDataFromApi := false
     statusIndicators := []
     adapters := Map()
     adapterFactory := ""
@@ -20,20 +19,19 @@ class WebServiceEntity extends AppEntityBase {
         set => this.SetAuthData(key, value)
     }
 
-    __New(app, id, entityTypeId, container, adapterFactory, cacheObj, stateObj, persistentStateObj, eventMgr, storageObj, idSanitizer, parentEntity := "") {
+    __New(id, entityTypeId, container, adapterFactory, cacheObj, stateObj, persistentStateObj, fieldFactory, widgetFactory, eventMgr, storageObj, idSanitizer, parentEntity := "") {
         this.cacheObj := cacheObj
         this.stateObj := stateObj
         this.persistentStateObj := persistentStateObj
         this.adapterFactory := adapterFactory
 
-        super.__New(app, id, entityTypeId, container, eventMgr, storageObj, idSanitizer, parentEntity)
+        super.__New(id, entityTypeId, container, fieldFactory, widgetFactory, eventMgr, storageObj, idSanitizer, parentEntity)
     }
 
     static Create(container, eventMgr, id, entityTypeId, storageObj, idSanitizer, parentEntity := "") {
         className := this.Prototype.__Class
 
         return %className%(
-            container.GetApp(),
             id,
             entityTypeId,
             container,
@@ -41,6 +39,8 @@ class WebServiceEntity extends AppEntityBase {
             container.Get("cache.web_services"),
             container.Get("state.web_services_tmp"),
             container.Get("state.web_services"),
+            container.Get("entity_field_factory." . entityTypeId),
+            container.Get("entity_widget_factory." . entityTypeId),
             eventMgr,
             storageObj,
             idSanitizer,
@@ -48,7 +48,7 @@ class WebServiceEntity extends AppEntityBase {
         )
     }
 
-    AdapterRequest(params, adapterFilters, operation := "read", limit := false) {
+    AdapterRequest(params, adapterFilters, operation := "read", multiple := false) {
         if (!adapterFilters) {
             adapterFilters := Map()
         }
@@ -64,9 +64,18 @@ class WebServiceEntity extends AppEntityBase {
         results := Map()
 
         for adapterKey, adapter in this.GetAdapters(adapterFilters, operation) {
-            results[adapterKey] := adapter.SendRequest(operation, params)
+            result := adapter.SendRequest(operation, params)
 
-            if (limit && results.Count >= limit) {
+            if (result) {
+                if (!multiple) {
+                    results := result
+                    break
+                }
+                
+                results[adapterKey] := result
+            }
+
+            if (IsNumber(multiple) && results.Count >= multiple) {
                 break
             }
         }

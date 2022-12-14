@@ -26,6 +26,7 @@
 #Include Entity\ManagedEntityBase.ahk
 #Include Entity\ManagedGameEntity.ahk
 #Include Entity\ManagedLauncherEntity.ahk
+#Include Entity\ManagedProcessEntity.ahk
 #Include Entity\PlatformEntity.ahk
 #Include GamePlatform\BasicPlatform.ahk
 #Include GamePlatform\GamePlatformBase.ahk

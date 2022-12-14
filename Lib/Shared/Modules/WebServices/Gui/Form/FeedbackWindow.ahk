@@ -50,7 +50,7 @@ class FeedbackWindow extends DialogBox {
             body["version"] := appVersion
             body["feedback"] := this.guiObj["Feedback"].Text
 
-            results := webService.AdapterRequest(Map("data", body), "feedback_submission", "create")
+            results := webService.AdapterRequest(Map("data", body), "feedback_submission", "create", true)
         }
 
         for key, result in results {

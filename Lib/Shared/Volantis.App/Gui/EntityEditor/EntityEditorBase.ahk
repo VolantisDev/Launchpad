@@ -9,7 +9,6 @@
 class EntityEditorBase extends FormGuiBase {
     entityObj := ""
     missingFields := Map()
-    dataSource := ""
     entityFormFactory := ""
     entityForm := ""
  
@@ -74,10 +73,5 @@ class EntityEditorBase extends FormGuiBase {
 
     AddEntityCtl(heading, fieldName, showDefaultCheckbox, params*) {
         return this.Add("EntityControl", "", heading, this.entityObj, fieldName, showDefaultCheckbox, params*)
-    }
-
-    Create() {
-        super.Create()
-        this.dataSource := this.app["manager.data_source"].GetDefaultDataSource()
     }
 }

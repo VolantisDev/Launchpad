@@ -179,35 +179,53 @@ class GamePlatformBase {
     }
 
     DetermineMainExe(key, possibleExes) {
-        dataSource := this.app["manager.data_source"].GetDefaultDataSource()
-        dsData := this.GetDataSourceDefaults(dataSource, key)
-
         mainExe := ""
 
         if (possibleExes.Length == 1) {
             mainExe := possibleExes[1]
-        } else if (possibleExes.Length > 1 && dsData.Has("GameExe")) {
-            for index, possibleExe in possibleExes {
-                SplitPath(possibleExe, &fileName)
+        } else if (possibleExes.Length > 1) {
+            ; @todo move the API functionality into a module that depends on WebServices
+            if (this.app.Services.Has("entity_manager.web_service")) {
+                mgr := this.app["entity_manager.web_service"]
+    
+                if (mgr.Has("launchpad_api")) {
+                    webService := mgr["launchpad_api"]
+    
+                    resultData := webService.AdapterRequest(
+                        Map("id", key),
+                        Map(
+                            "adapterType", "entity_data", 
+                            "entityType", "launcher"
+                        ),
+                        "read",
+                        true
+                    )
 
-                if (dsData["GameExe"] == fileName) {
-                    mainExe := possibleExe
-                    break
+                    for key, data in resultData {
+                        if (
+                            data 
+                            && HasBase(data, Map.Prototype)
+                            && data.Has("defaults")
+                            && data["defaults"]
+                            && data["defaults"].Has("GameExe")
+                            && data["defaults"]["GameExe"]
+                        ) {
+                            for index, possibleExe in possibleExes {
+                                SplitPath(possibleExe, &fileName)
+    
+                                if (data["defaults"]["GameExe"] == fileName) {
+                                    mainExe := possibleExe
+                                    break 2
+                                }
+                            }
+                        }
+                    }
                 }
             }
+
+            
         }
 
         return mainExe
-    }
-
-    GetDataSourceDefaults(dataSource, key) {
-        defaults := Map()
-        dsData := dataSource.ReadJson(key, "Games")
-
-        if (dsData != "" && dsData.Has("data") && dsData["data"].Has("defaults")) {
-            defaults := this.merger.Merge(dsData["data"]["defaults"], defaults)
-        }
-
-        return defaults
     }
 }

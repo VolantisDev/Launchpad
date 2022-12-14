@@ -12,9 +12,7 @@
         this.detectedGames := detectedGames
         this.state := container.Get("state.app")
         this.launcherManager := container.Get("entity_manager.launcher")
-        this.knownGames := container.Get("manager.data_source")
-            .GetDefaultDataSource()
-            .ReadListing("game-keys")
+        this.knownGames := this.launcherManager.ListEntities(false, true)
 
         super.__New(container, themeObj, config)
     }

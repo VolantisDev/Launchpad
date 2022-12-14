@@ -30,11 +30,6 @@ class LaunchpadBuilder extends AppBase {
             "arguments", [AppRef(), this.appDir . "\" . this.appName . ".ini"]
         )
 
-        services["manager.data_source"] := Map(
-            "class", "DataSourceManager",
-            "arguments", [ContainerRef(), ServiceRef("manager.event"), ServiceRef("notifier"), ParameterRef("config.data_source_key")]
-        )
-
         services["FileHasher"] := "FileHasher"
 
         services["GitTagVersionIdentifier"] := Map(

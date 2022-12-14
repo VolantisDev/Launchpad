@@ -132,6 +132,10 @@ class WebServiceRequestBase {
                     authenticator.AlterRequest(this.webServiceEnt, httpReqObj)
                 }
 
+                if (!this.cacheResponse) {
+                    httpReqObj.requestHeaders["Cache-Control"] := "no-cache"
+                }
+
                 event := WebServiceRequestEvent(WebServicesEvents.WEB_SERVICES_HTTP_REQ_ALTER, this)
                 this.eventMgr.DispatchEvent(event)
 

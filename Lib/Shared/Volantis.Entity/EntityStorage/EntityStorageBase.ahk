@@ -64,7 +64,7 @@ class EntityStorageBase {
 
     _dereferenceData(idOrObj, data := "") {
         if (HasBase(idOrObj, EntityBase.Prototype) && !data) {
-            data := idOrObj.UnmergedFieldData
+            data := idOrObj.RawData
         }
 
         return data

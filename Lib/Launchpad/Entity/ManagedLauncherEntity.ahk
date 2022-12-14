@@ -2,7 +2,6 @@ class ManagedLauncherEntity extends ManagedEntityBase {
     configPrefix := "Launcher"
     defaultType := "Default"
     defaultClass := "SimpleLauncher"
-    dataSourcePath := "launcher-types"
 
     BaseFieldDefinitions() {
         definitions := super.BaseFieldDefinitions()

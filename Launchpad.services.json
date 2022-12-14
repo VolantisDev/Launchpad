@@ -131,10 +131,6 @@
             "class": "BuilderManager",
             "arguments": ["@entity_manager.launcher", "@{}", "@manager.event", "@notifier"]
         },
-        "manager.data_source": {
-            "class": "DataSourceManager",
-            "arguments": ["@{}", "@manager.event", "@notifier", "@@config.data_source_key"]
-        },
         "state.app": {
             "class": "LaunchpadAppState",
             "arguments": ["@{App}", "@@state_path"]

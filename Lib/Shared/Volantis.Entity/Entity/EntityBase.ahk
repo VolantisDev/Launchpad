@@ -3,6 +3,7 @@ class EntityBase {
     entityTypeIdVal := ""
     parentEntityObj := ""
     container := ""
+    app := ""
     eventMgr := ""
     dataObj := ""
     storageObj := ""
@@ -37,7 +38,7 @@ class EntityBase {
         set => this.SetValue("name", value)
     }
 
-    UnmergedFieldData {
+    RawData {
         get => this.GetData().GetLayer(this.dataLayer)
         set => this.GetData().SetLayer(this.dataLayer, value)
     }
@@ -57,6 +58,7 @@ class EntityBase {
     }
 
     __New(id, entityTypeId, container, eventMgr, storageObj, idSanitizer := "", autoLoad := true, parentEntity := "") {
+        this.app := container.GetApp()
         this.idSanitizer := idSanitizer
         
         if (this.sanitizeId && this.idSanitizer) {
@@ -87,6 +89,20 @@ class EntityBase {
         }
     }
 
+    static Create(container, eventMgr, id, entityTypeId, storageObj, idSanitizer, parentEntity := "") {
+        className := this.Prototype.__Class
+
+        return %className%(
+            id,
+            entityTypeId,
+            container,
+            eventMgr,
+            storageObj,
+            idSanitizer,
+            parentEntity
+        )
+    }
+
     _createEntityData() {
         this.dataObj := EntityData(this, this._getLayerNames(), this._getLayerSources())
     }
@@ -104,18 +120,14 @@ class EntityBase {
         )
     }
 
-    static Create(container, eventMgr, id, entityTypeId, storageObj, idSanitizer, parentEntity := "") {
-        className := this.Prototype.__Class
-
-        return %className%(
-            id,
-            entityTypeId,
-            container,
-            eventMgr,
-            storageObj,
-            idSanitizer,
-            parentEntity
-        )
+    /**
+     * Get an array of all IDs
+     * 
+     * List managed IDs and give modules a chance to add others.
+     */
+    ListEntities(includeManaged := true, includeExtended := true) {
+        return this.container["entity_manager." . this.EntityTypeId]
+            .ListEntities(includeManaged, includeExtended)
     }
 
     DiscoverParentEntity(container, eventMgr, id, storageObj, idSanitizer) {
@@ -137,10 +149,6 @@ class EntityBase {
 
     GetAllValues(raw := false) {
         return this.GetData().GetMergedData(!raw)
-    }
-
-    GetEntityTypeId() {
-        return this.entityTypeId
     }
 
     GetEntityType() {
@@ -224,6 +232,15 @@ class EntityBase {
 
     RestoreSnapshot(name, recurse := true) {
         this.GetData().RestoreSnapshot(name)
+
+        if (recurse) {
+            for index, entityObj in this.GetReferencedEntities(true) {
+                if (entityObj.HasOwnDataStorage()) {
+                    entityObj.GetData().RestoreSnapshot(name, recurse)
+                }
+            }
+        }
+
         return this
     }
 
@@ -275,7 +292,13 @@ class EntityBase {
             }
         }
 
-        return values
+        event := EntityDetectValuesEvent(EntityEvents.ENTITY_DETECT_VALUES, this.EntityTypeId, this, values)
+        this.eventMgr.DispatchEvent(event)
+
+        event := EntityDetectValuesEvent(EntityEvents.ENTITY_DETECT_VALUES_ALTER, this.EntityTypeId, this, event.Values)
+        this.eventMgr.DispatchEvent(event)
+
+        return event.Values
     }
 
     SaveEntity(recurse := true) {
@@ -436,5 +459,17 @@ class EntityBase {
         }
 
         return text
+    }
+
+    UpdateDefaults(recurse := true) {
+        if (this.HasOwnDataStorage()) {
+            this.GetData().UnloadAllLayers(false)
+        }
+
+        if (recurse) {
+            for key, child in this.GetReferencedEntities(true) {
+                child.UpdateDefaults(recurse)
+            }
+        }
     }
 }

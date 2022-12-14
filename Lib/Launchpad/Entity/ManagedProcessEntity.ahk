@@ -1,4 +1,4 @@
-class ManagedEntityBase extends FieldableEntity {
+class ManagedProcessEntity extends FieldableEntity {
     defaultType := "Default"
     defaultClass := "Default"
 

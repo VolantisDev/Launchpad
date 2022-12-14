@@ -2,7 +2,6 @@
     detectedGameObj := ""
     newValues := Map()
     missingFields := Map()
-    dataSource := ""
     knownGames := ""
     launcherTypes := ""
     gameTypes := ""
@@ -22,11 +21,54 @@
 
     Create() {
         super.Create()
-        this.dataSource := this.app["manager.data_source"].GetDefaultDataSource()
-        this.knownPlatforms := this.dataSource.ReadListing("platforms")
-        this.knownGames := this.dataSource.ReadListing("game-keys")
-        this.launcherTypes := this.dataSource.ReadListing("launcher-types")
-        this.gameTypes := this.dataSource.ReadListing("game-types")
+
+        this.knownPlatforms := []
+        this.knownGames := []
+        this.launcherTypes := []
+        this.gameTypes := []
+
+        ; @todo replace this, or at least refactor it to live somewhere else
+        if (this.container.Has("entity_manager.web_service")) {
+            mgr := this.container["entity_manager.web_service"]
+
+            if (mgr.Has("launchpad_api") && mgr["launchpad_api"]["Enabled"]) {
+                webService := mgr["launchpad_api"]
+                knownMap := Map(
+                    "platform", "knownPlatforms",
+                    "game", "knownGames",
+                    "managed_launcher", "launcherTypes",
+                    "managed_game", "gameTypes"
+                )
+    
+                for entityTypeId, varName in knownMap {
+                    results := webService.AdapterRequest("", Map(
+                        "adapterType", "entity_list",
+                        "entityType", entityTypeId
+                    ), "read", true)
+
+                    if (results) {
+                        for , idList in results {
+                            if (idList) {
+                                for , id in idList {
+                                    exists := false
+
+                                    for , item in %varName% {
+                                        if (item == id) {
+                                            exists := true
+                                            break
+                                        }
+                                    }
+
+                                    if (!exists) {
+                                        this.%varName%.Push(id)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     GetTitle() {

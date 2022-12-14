@@ -1,7 +1,6 @@
-class PlatformEntity extends AppEntityBase {
+class PlatformEntity extends FieldableEntity {
     platformObj := ""
     configPrefix := ""
-    dataSourcePath := "platforms"
 
     Platform {
         get => this.GetPlatform()
