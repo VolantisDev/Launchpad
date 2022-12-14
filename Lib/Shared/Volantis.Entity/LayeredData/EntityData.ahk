@@ -11,23 +11,23 @@ class EntityData extends LayeredDataBase {
         super.__New(
             entity.cloner, 
             this._createProcessors(), 
-            this._getLayerNames(layerNames), 
-            this._collectEntityStorage(layerSources)
+            this._collectLayerNames(layerNames), 
+            this._collectSources(layerSources)
         )
     }
 
-    _collectEntityStorage(layerSources) {
+    _collectSources(layerSources) {
         if (!layerSources.Has("defaults")) {
             layerSources["defaults"] := ObjBindMethod(this.entity, "InitializeDefaults")
         }
 
-        event := EntityStorageEvent(EntityEvents.ENTITY_STORAGE_OBJECTS, this.entityTypeId, this.entity, layerSources)
+        event := EntityLayerSourcesEvent(EntityEvents.ENTITY_LAYER_SOURCES, this.entityTypeId, this.entity, layerSources)
         this.eventMgr.DispatchEvent(event)
 
-        event := EntityStorageEvent(EntityEvents.ENTITY_STORAGE_OBJECTS_ALTER, this.entityTypeId, this.entity, event.Storage)
+        event := EntityLayerSourcesEvent(EntityEvents.ENTITY_LAYER_SOURCES_ALTER, this.entityTypeId, this.entity, event.LayerSources)
         this.eventMgr.DispatchEvent(event)
 
-        return event.Storage
+        return event.LayerSources
     }
 
     _createProcessors() {
@@ -45,7 +45,7 @@ class EntityData extends LayeredDataBase {
         return event.Processors
     }
 
-    _getLayerNames(layerNames) {
+    _collectLayerNames(layerNames) {
         if (!layerNames) {
             layerNames := []
         }

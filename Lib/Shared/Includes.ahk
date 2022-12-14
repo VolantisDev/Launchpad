@@ -232,13 +232,15 @@
 #Include Volantis.Entity\EntityType\BasicEntityType.ahk
 #Include Volantis.Entity\EntityType\EntityTypeBase.ahk
 #Include Volantis.Entity\Event\EntityDataProcessorsEvent.ahk
+#Include Volantis.Entity\Event\EntityDetectValuesEvent.ahk
 #Include Volantis.Entity\Event\EntityEvent.ahk
 #Include Volantis.Entity\Event\EntityFieldDefinitionsEvent.ahk
 #Include Volantis.Entity\Event\EntityFieldGroupsEvent.ahk
 #Include Volantis.Entity\Event\EntityLayersEvent.ahk
+#Include Volantis.Entity\Event\EntityLayerSourcesEvent.ahk
+#Include Volantis.Entity\Event\EntityListEvent.ahk
 #Include Volantis.Entity\Event\EntityReferenceEvent.ahk
 #Include Volantis.Entity\Event\EntityRefreshEvent.ahk
-#Include Volantis.Entity\Event\EntityStorageEvent.ahk
 #Include Volantis.Entity\Event\EntityValidateEvent.ahk
 #Include Volantis.Entity\Events\EntityEvents.ahk
 #Include Volantis.Entity\Exception\EntityException.ahk
