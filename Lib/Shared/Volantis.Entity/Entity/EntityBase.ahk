@@ -12,6 +12,7 @@ class EntityBase {
     storageObj := ""
     idSanitizer := ""
     sanitizeId := true
+    loading := false
     loaded := false
     dataLayer := "data"
     dataLoaded := false
@@ -99,7 +100,7 @@ class EntityBase {
         this.SetupEntity()
 
         if (autoLoad) {
-            this.LoadEntity(false, true)
+            this.LoadEntity()
         }
     }
 
@@ -275,24 +276,28 @@ class EntityBase {
     }
 
     LoadEntity(reload := false, recurse := false) {
-        loaded := false
+        if (this.loading) {
+            throw AppException("Attempting to load entity with a circular reference.")
+        }
 
-        if (!this.loaded || reload) {
-            this.RefreshEntityData(true)
+        if (!this.loading && this.dataLoaded && (!this.loaded || reload)) {
+            this.loading := true
+            this.RefreshEntityData(recurse)
             this.CreateSnapshot("original")
             this.loaded := true
             loaded := true
-        }
+            this.loading := false
 
-        if (recurse) {
-            for index, entityObj in this.GetReferencedEntities(true) {
-                entityObj.LoadEntity(reload, recurse)
+            if (recurse) {
+                for index, entityObj in this.ChildEntities {
+                    entityObj.LoadEntity(reload, recurse)
+                }
             }
-        }
 
-        if (loaded) {
-            event := EntityEvent(EntityEvents.ENTITY_LOADED, this.entityTypeId, this)
-            this.eventMgr.DispatchEvent(event)
+            if (loaded) {
+                event := EntityEvent(EntityEvents.ENTITY_LOADED, this.entityTypeId, this)
+                this.eventMgr.DispatchEvent(event)
+            }
         }
     }
 
