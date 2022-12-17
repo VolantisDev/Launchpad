@@ -1,4 +1,4 @@
-class DetectedGameEditor extends FormGuiBase {
+﻿class DetectedGameEditor extends FormGuiBase {
     detectedGameObj := ""
     newValues := Map()
     missingFields := Map()
@@ -22,44 +22,35 @@ class DetectedGameEditor extends FormGuiBase {
 
         this.knownPlatforms := []
         this.knownGames := []
-        this.launcherTypes := []
-        this.gameTypes := []
 
         ; @todo replace this, or at least refactor it to live somewhere else
-        if (this.container.Has("entity_manager.web_service")) {
-            mgr := this.container["entity_manager.web_service"]
+        if (this.container.Has("web_services.adapter_manager")) {
+            knownMap := Map(
+                "platform", "knownPlatforms",
+                "launcher", "knownGames",
+            )
 
-            if (mgr.Has("launchpad_api") && mgr["launchpad_api"]["Enabled"]) {
-                webService := mgr["launchpad_api"]
-                knownMap := Map(
-                    "platform", "knownPlatforms",
-                    "game", "knownGames",
-                    "managed_launcher", "launcherTypes",
-                    "managed_game", "gameTypes"
-                )
-    
-                for entityTypeId, varName in knownMap {
-                    results := webService.AdapterRequest("", Map(
-                        "adapterType", "entity_list",
-                        "entityType", entityTypeId
-                    ), "read", true)
+            for entityTypeId, varName in knownMap {
+                results := this.container["web_services.adapter_manager"].AdapterRequest("", Map(
+                    "dataType", "entity_list",
+                    "entityType", entityTypeId
+                ), "read", true)
 
-                    if (results) {
-                        for , idList in results {
-                            if (idList) {
-                                for , id in idList {
-                                    exists := false
+                if (results) {
+                    for , idList in results {
+                        if (idList) {
+                            for , id in idList {
+                                exists := false
 
-                                    for , item in %varName% {
-                                        if (item == id) {
-                                            exists := true
-                                            break
-                                        }
+                                for , item in %varName% {
+                                    if (item == id) {
+                                        exists := true
+                                        break
                                     }
+                                }
 
-                                    if (!exists) {
-                                        this.%varName%.Push(id)
-                                    }
+                                if (!exists) {
+                                    this.%varName%.Push(id)
                                 }
                             }
                         }
