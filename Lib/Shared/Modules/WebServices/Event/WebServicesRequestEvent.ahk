@@ -1,4 +1,4 @@
-class WebServiceRequestEvent extends EventBase {
+class WebServicesRequestEvent extends EventBase {
     _requestObj := ""
     
     __New(eventName, requestObj) {

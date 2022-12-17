@@ -2,8 +2,9 @@
 #Include Modules\LaunchpadApi\EventSubscriber\LaunchpadApiSubscriber.ahk
 #Include Modules\WebServices\Entity\WebServiceEntity.ahk
 #Include Modules\WebServices\Entity\WebServiceProviderEntity.ahk
-#Include Modules\WebServices\Event\WebServiceRequestEvent.ahk
-#Include Modules\WebServices\Event\WebServiceResponseEvent.ahk
+#Include Modules\WebServices\Event\WebServicesEntityDataParamsEvent.ahk
+#Include Modules\WebServices\Event\WebServicesRequestEvent.ahk
+#Include Modules\WebServices\Event\WebServicesResponseEvent.ahk
 #Include Modules\WebServices\Events\WebServicesEvents.ahk
 #Include Modules\WebServices\EventSubscriber\WebServicesEventSubscriber.ahk
 #Include Modules\WebServices\Factory\WebServiceAdapterFactory.ahk
