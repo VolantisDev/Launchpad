@@ -31,6 +31,29 @@
             "console": "internalConsole",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "Launchpad (app)",
+            "cwd": "launchpad_app",
+            "program": "lib/main.dart",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "Launchpad (app profile mode)",
+            "cwd": "launchpad_app",
+            "program": "lib/main.dart",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "Launchpad (app release mode)",
+            "cwd": "launchpad_app",
+            "program": "lib/main.dart",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
         }
     ]
 }
