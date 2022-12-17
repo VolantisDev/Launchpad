@@ -517,7 +517,7 @@ class EntityBase {
             data := Map()
         }
 
-        this.GetData().SetExtraData(dataKey, data)
+        this.GetData().SetExtraData(data, dataKey)
 
         return this
     }
