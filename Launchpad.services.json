@@ -48,7 +48,8 @@
             "entity_class": "GameProcessEntity",
             "storage_config_storage_parent_key": "Games",
             "storage_config_path_parameter": "config.launcher_file",
-            "parent_entity_type": "launcher"
+            "parent_entity_type": "launcher",
+            "parent_entity_storage": true
         },
         "entity_type.launcher_process": {
             "name_singular": "Managed Launcher",
