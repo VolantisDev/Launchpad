@@ -186,7 +186,7 @@ class LauncherEntity extends FieldableEntity {
         definitions["RunBefore"] := Map(
             "type", "entity_reference",
             "entityType", "task",
-            "multiple", true,
+            "cardinality", 1, ; Change to another number once widgets for multiple values are worked out
             "group", "tasks",
             "modes", Map(
                 "simple", Map("formField", false)
@@ -198,7 +198,7 @@ class LauncherEntity extends FieldableEntity {
         definitions["CloseBefore"] := Map(
             "type", "entity_reference",
             "entityType", "task",
-            "multiple", true,
+            "cardinality", 1, ; Change to another number once widgets for multiple values are worked out
             "group", "tasks",
             "modes", Map(
                 "simple", Map("formField", false)
@@ -210,7 +210,7 @@ class LauncherEntity extends FieldableEntity {
         definitions["RunAfter"] := Map(
             "type", "entity_reference",
             "entityType", "task",
-            "multiple", true,
+            "cardinality", 1, ; Change to another number once widgets for multiple values are worked out
             "group", "tasks",
             "modes", Map(
                 "simple", Map("formField", false)
@@ -222,7 +222,7 @@ class LauncherEntity extends FieldableEntity {
         definitions["CloseAfter"] := Map(
             "type", "entity_reference",
             "entityType", "task",
-            "multiple", true,
+            "cardinality", 1, ; Change to another number once widgets for multiple values are worked out
             "group", "tasks",
             "modes", Map(
                 "simple", Map("formField", false)
