@@ -536,8 +536,22 @@ class LayeredDataBase {
         return data
     }
 
+    GetUserLayers() {
+        layerNames := this.userLayers
+
+        layers := Map()
+
+        for index, layerName in layerNames {
+            layers[layerName] := this.GetLayer(layerName)
+        }
+
+        return layers
+    }
+
     CloneLayers(layers := "") {
         if (layers == "") {
+            layers := this.GetUserLayers()
+        } else if (layers == "*") {
             this.LoadAllLayers()
             layers := this.layers
         } else if (Type(layers) == "String") {
@@ -550,8 +564,10 @@ class LayeredDataBase {
 
         cloned := Map()
 
-        for key, layer in layers {
-            cloned[key] := this.CloneData(layer)
+        if (layers) {
+            for key, layer in layers {
+                cloned[key] := this.CloneData(layer)
+            }
         }
 
         return cloned
