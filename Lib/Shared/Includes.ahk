@@ -220,6 +220,7 @@
 #Include Volantis.Entity\EntityManager\EntityManagerBase.ahk
 #Include Volantis.Entity\EntityStorage\ConfigEntityStorage.ahk
 #Include Volantis.Entity\EntityStorage\EntityStorageBase.ahk
+#Include Volantis.Entity\EntityStorage\NullEntityStorage.ahk
 #Include Volantis.Entity\EntityType\BasicEntityType.ahk
 #Include Volantis.Entity\EntityType\EntityTypeBase.ahk
 #Include Volantis.Entity\Event\EntityDataProcessorsEvent.ahk
