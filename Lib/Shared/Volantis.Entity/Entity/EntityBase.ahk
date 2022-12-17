@@ -239,32 +239,24 @@ class EntityBase {
         return this.GetData().DeleteValue(key, this.dataLayer)
     }
 
-    CreateSnapshot(name, recurse := true) {
-        this.GetData().CreateSnapshot(name)
-
+    CreateSnapshot(name, recurse := false) {
         if (recurse) {
-            for index, entityObj in this.GetReferencedEntities(true) {
-                if (entityObj.HasOwnDataStorage()) {
-                    entityObj.GetData().CreateSnapshot(name, recurse)
-                }
+            for index, entityObj in this.ChildEntities {
+                entityObj.GetData().CreateSnapshot(name, recurse)
             }
         }
+
+        this.GetData().CreateSnapshot(name)
 
         return this
     }
 
-    HasOwnDataStorage() {
-        return this.dataObj
-    }
-
-    RestoreSnapshot(name, recurse := true) {
+    RestoreSnapshot(name, recurse := false) {
         this.GetData().RestoreSnapshot(name)
 
         if (recurse) {
-            for index, entityObj in this.GetReferencedEntities(true) {
-                if (entityObj.HasOwnDataStorage()) {
-                    entityObj.GetData().RestoreSnapshot(name, recurse)
-                }
+            for index, entityObj in this.ChildEntities {
+                entityObj.GetData().RestoreSnapshot(name, recurse)
             }
         }
 
