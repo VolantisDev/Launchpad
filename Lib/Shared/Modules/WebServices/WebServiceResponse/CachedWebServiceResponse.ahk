@@ -2,9 +2,7 @@ class CachedWebServiceResponse extends WebServiceResponseBase {
     cacheObj := ""
 
     __New(webServiceEnt, webServiceReq) {
-        if (webServiceEnt.Has("Cache", false)) {
-            this.cacheObj := webServiceEnt.cacheObj
-        }
+        this.cacheObj := webServiceEnt.cacheObj
         
         super.__New(webServiceEnt, webServiceReq)
     }
