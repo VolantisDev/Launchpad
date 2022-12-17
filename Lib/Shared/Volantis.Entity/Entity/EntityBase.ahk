@@ -11,8 +11,8 @@ class EntityBase {
     idSanitizer := ""
     sanitizeId := true
     loaded := false
-    merger := ""
     dataLayer := "data"
+    dataLoaded := false
     cloner := ""
 
     Id {
@@ -108,7 +108,11 @@ class EntityBase {
     }
 
     _createEntityData() {
-        this.dataObj := EntityData(this, this._getLayerNames(), this._getLayerSources())
+        if (!this.dataLoaded) {
+            this.dataObj := EntityData(this, this._getLayerNames(), this._getLayerSources())
+        }
+        
+        this.dataLoaded := true
     }
 
     _getLayerNames() {
