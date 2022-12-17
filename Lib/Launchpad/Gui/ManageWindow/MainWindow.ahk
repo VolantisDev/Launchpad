@@ -133,7 +133,7 @@
                 status := launcher.GetStatus()
 
                 ; @todo Move the API data to an event in the LaunchpadApi module
-                apiStatus := (launcher.HasField["LaunchpadApiRef"] && launcher["LaunchpadApiRef"]) ? "Linked" : "Not linked"
+                apiStatus := (launcher.HasField["web_service_launchpad_api_ref"] && launcher["web_service_launchpad_api_ref"]) ? "Linked" : "Not linked"
                 created := this.FormatDate(this.app.State.GetLauncherCreated(key))
                 updated := this.FormatDate(this.app.State.GetLauncherInfo("Config")["Timestamp"])
                 built := this.FormatDate(this.app.State.GetLauncherInfo("Build")["Timestamp"])
@@ -311,7 +311,7 @@
             status := launcher.GetStatus()
 
             ; @todo Move the API code to the LaunchpadApi module
-            apiStatus := (launcher.HasField("LaunchpadApiRef") && launcher["LaunchpadApiRef"]) ? "Linked" : "Not linked"
+            apiStatus := (launcher.HasField("web_service_launchpad_api_ref") && launcher["web_service_launchpad_api_ref"]) ? "Linked" : "Not linked"
             created := this.FormatDate(this.app.State.GetLauncherCreated(key))
             updated := this.FormatDate(this.app.State.GetLauncherInfo(key, "Config")["Timestamp"])
             built := this.FormatDate(this.app.State.GetLauncherInfo(key, "Build")["Timestamp"])
