@@ -3,8 +3,7 @@ class WebServiceEntity extends FieldableEntity {
     stateObj := ""
     persistentStateObj := ""
     statusIndicators := []
-    adapters := Map()
-    adapterFactory := ""
+    isWebServiceEntity := true
 
     Authenticated {
         get => this.IsAuthenticated()

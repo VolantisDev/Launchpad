@@ -1,4 +1,6 @@
 class WebServiceProviderEntity extends FieldableEntity {
+    isWebServiceEntity := true
+
     BaseFieldDefinitions() {
         definitions := super.BaseFieldDefinitions()
 
