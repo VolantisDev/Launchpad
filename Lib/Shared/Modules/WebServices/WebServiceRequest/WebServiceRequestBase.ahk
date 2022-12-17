@@ -136,10 +136,10 @@ class WebServiceRequestBase {
                     httpReqObj.requestHeaders["Cache-Control"] := "no-cache"
                 }
 
-                event := WebServiceRequestEvent(WebServicesEvents.WEB_SERVICES_HTTP_REQ_ALTER, this)
+                event := WebServicesRequestEvent(WebServicesEvents.HTTP_REQ_ALTER, this)
                 this.eventMgr.DispatchEvent(event)
 
-                event := WebServiceRequestEvent(WebServicesEvents.WEB_SERVICES_REQUEST_PRESEND, this)
+                event := WebServicesRequestEvent(WebServicesEvents.REQUEST_PRESEND, this)
                 this.eventMgr.DispatchEvent(event)
 
                 httpReqObj.Send(this.GetMethod(), this.GetData())
@@ -147,7 +147,7 @@ class WebServiceRequestBase {
                 this._cacheResponse()
             }
 
-            event := WebServiceResponseEvent(WebServicesEvents.WEB_SERVICES_RESPONSE_ALTER, this, this.responseObj)
+            event := WebServicesResponseEvent(WebServicesEvents.RESPONSE_ALTER, this, this.responseObj)
             this.eventMgr.DispatchEvent(event)
 
             this.responseObj := event.Response
@@ -165,7 +165,7 @@ class WebServiceRequestBase {
     _createCachedResponse() {
         response := CachedWebServiceResponse(this.webServiceEnt, this)
 
-        event := WebServiceResponseEvent(WebServicesEvents.WEB_SERVICES_CACHED_RESPONSE_CREATED, this, response)
+        event := WebServicesResponseEvent(WebServicesEvents.CACHED_RESPONSE_CREATED, this, response)
         this.eventMgr.DispatchEvent(event)
 
         return event.Response
@@ -174,7 +174,7 @@ class WebServiceRequestBase {
     _createHttpReqResponse() {
         response := HttpReqWebServiceResponse(this.webServiceEnt, this)
 
-        event := WebServiceResponseEvent(WebServicesEvents.WEB_SERVICES_HTTP_RESPONSE_CREATED, this, response)
+        event := WebServicesResponseEvent(WebServicesEvents.HTTP_RESPONSE_CREATED, this, response)
         this.eventMgr.DispatchEvent(event)
 
         return event.Response

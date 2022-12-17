@@ -1,4 +1,4 @@
-class WebServiceResponseEvent extends EventBase {
+class WebServicesResponseEvent extends EventBase {
     _requestObj := ""
     _responseObj := ""
     
