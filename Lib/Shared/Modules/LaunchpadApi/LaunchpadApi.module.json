@@ -16,6 +16,120 @@
     },
     "parameters": {
         "app.supports_update_check": true,
+        "web_services.adapters.launchpad_api.account_info": {
+            "dataType": "account_info",
+            "requestPath": "/status",
+            "cacheResponse": false,
+            "readAuth": true,
+            "dataMap": {
+                "email": "account"
+            }
+        },
+        "web_services.adapters.launchpad_api.hello": {
+            "dataType": "availability_check",
+            "requestPath": "/hello",
+            "cacheResponse": false
+        },
+        "web_services.adapters.launchpad_api.game_process_launcher_defaults": {
+            "dataType": "entity_data",
+            "requestPath": "/games/{id}",
+            "dataSelector": "gameProcessDefaults",
+            "entityType": "game_process",
+            "requiredParams": ["id"],
+            "tags": ["defaults"],
+            "weight": 5
+        },
+        "web_services.adapters.launchpad_api.game_process_platform_defaults": {
+            "dataType": "entity_data",
+            "requestPath": "/platforms/{platformId}",
+            "dataSelector": "data.gameProcessDefaults",
+            "entityType": "game_process",
+            "requiredParams": ["platformId"],
+            "tags": ["defaults"],
+            "weight": 2
+        },
+        "web_services.adapters.launchpad_api.launcher_defaults": {
+            "dataType": "entity_data",
+            "requestPath": "/games/{id}",
+            "dataSelector": "defaults",
+            "entityType": "launcher",
+            "requiredParams": ["id"],
+            "tags": ["defaults"],
+            "weight": 5
+        },
+        "web_services.adapters.launchpad_api.launcher_list": {
+            "dataType": "entity_list",
+            "requestPath": "/game-keys",
+            "entityType": "launcher"
+        },
+        "web_services.adapters.launchpad_api.launcher_lookup": {
+            "dataType": "entity_lookup",
+            "requestPath": "/lookup/{id}/{platformId}",
+            "dataSelector": "id",
+            "entityType": "launcher",
+            "requiredParams": ["id"]
+        },
+        "web_services.adapters.launchpad_api.launcher_platform_defaults": {
+            "dataType": "entity_data",
+            "requestPath": "/platforms/{platformId}",
+            "dataSelector": "data.launcherDefaults",
+            "entityType": "launcher",
+            "requiredParams": ["platformId"],
+            "tags": ["defaults"],
+            "weight": 2
+        },
+        "web_services.adapters.launchpad_api.launcher_process_launcher_defaults": {
+            "dataType": "entity_data",
+            "requestPath": "/games/{id}",
+            "dataSelector": "launcherProcessDefaults",
+            "entityType": "launcher_process",
+            "requiredParams": ["id"],
+            "tags": ["defaults"],
+            "weight": 5
+        },
+        "web_services.adapters.launchpad_api.launcher_process_platform_defaults": {
+            "dataType": "entity_data",
+            "requestPath": "/platforms/{platformId}",
+            "dataSelector": "data.launcherProcessDefaults",
+            "entityType": "launcher_process",
+            "requiredParams": ["platformId"],
+            "tags": ["defaults"],
+            "weight": 2
+        },
+        "web_services.adapters.launchpad_api.platform_defaults": {
+            "dataType": "entity_data",
+            "requestPath": "/platforms/{id}",
+            "dataSelector": "data.defaults",
+            "entityType": "platform",
+            "requiredParams": ["id"],
+            "tags": ["defaults"]
+        },
+        "web_services.adapters.launchpad_api.platform_list": {
+            "dataType": "entity_list",
+            "requestPath": "/platforms",
+            "entityType": "platform"
+        },
+        "web_services.adapters.launchpad_api.release_info": {
+            "dataType": "release_info",
+            "requestPath": "/release-info/{version}",
+            "cacheMaxAge": 1800
+        },
+        "web_services.adapters.launchpad_api.submit_error": {
+            "dataType": "error_submission",
+            "requestPath": "/submit-error",
+            "cacheResponse": false,
+            "readAllow": false,
+            "createAllow": true,
+            "createAuth": false
+        },
+        "web_services.adapters.launchpad_api.submit_feedback": {
+            "dataType": "feedback_submission",
+            "requestPath": "/submit-feedback",
+            "cacheResponse": false,
+            "readAllow": false,
+            "createAllow": true,
+            "createAuth": false
+        },
         "web_services.providers.launchpad_api": {
             "name": "Launchpad API",
             "EndpointUrl": "https://api.launchpad.games/v1",
@@ -30,94 +144,6 @@
         "web_services.services.launchpad_api": {
             "name": "Launchpad API",
             "Provider": "launchpad_api"
-        },
-        "web_services.adapters.launchpad_api.account_info": {
-            "dataType": "account_info",
-            "requestPath": "/status",
-            "cacheResponse": false,
-            "readAuth": true,
-            "dataMap": {
-                "email": "account"
-            }
-        },
-        "web_services.adapters.launchpad_api.error_submission": {
-            "dataType": "error_submission",
-            "requestPath": "/error-submissions/{submission}",
-            "cacheResponse": false,
-            "readAllow": false,
-            "createAllow": true,
-            "createAuth": false
-        },
-        "web_services.adapters.launchpad_api.feedback_submission": {
-            "dataType": "feedback_submission",
-            "requestPath": "/feedback-submissions/{submission}",
-            "cacheResponse": false,
-            "readAllow": false,
-            "createAllow": true,
-            "createAuth": false
-        },
-        "web_services.adapters.launchpad_api.game_submission": {
-            "dataType": "game_submission",
-            "requestPath": "/game-submissions/{submission}",
-            "cacheResponse": false,
-            "readAllow": false,
-            "createAllow": true,
-            "createAuth": false
-        },
-        "web_services.adapters.launchpad_api.release_info": {
-            "dataType": "release_info",
-            "requestPath": "/release-info/{tag}",
-            "cacheMaxAge": 1800
-        },
-        "web_services.adapters.launchpad_api.platform_list": {
-            "dataType": "entity_list",
-            "requestPath": "/game-platforms",
-            "entityType": "platform"
-        },
-        "web_services.adapters.launchpad_api.platform_data": {
-            "dataType": "entity_data",
-            "requestPath": "/game-platforms/{id}",
-            "dataSelector": "data.defaults",
-            "entityType": "platform"
-        },
-        "web_services.adapters.launchpad_api.game_type_list": {
-            "dataType": "entity_list",
-            "requestPath": "/game-types",
-            "entityType": "managed_game"
-        },
-        "web_services.adapters.launchpad_api.game_type_data": {
-            "dataType": "entity_data",
-            "requestPath": "/game-types/{id}",
-            "dataSelector": "data.defaults",
-            "entityType": "managed_game"
-        },
-        "web_services.adapters.launchpad_api.launcher_list": {
-            "dataType": "entity_list",
-            "requestPath": "/games",
-            "entityType": "launcher"
-        },
-        "web_services.adapters.launchpad_api.launcher_data": {
-            "dataType": "entity_data",
-            "requestPath": "/games/{id}",
-            "dataSelector": "data.defaults",
-            "entityType": "launcher"
-        },
-        "web_services.adapters.launchpad_api.launcher_lookup": {
-            "dataType": "entity_lookup",
-            "requestPath": "/lookup/{id}/{platform}",
-            "dataSelector": "id",
-            "entityType": "launcher"
-        },
-        "web_services.adapters.launchpad_api.launcher_type_list": {
-            "dataType": "entity_list",
-            "requestPath": "/launcher-types",
-            "entityType": "managed_launcher"
-        },
-        "web_services.adapters.launchpad_api.launcher_type_data": {
-            "dataType": "entity_data",
-            "requestPath": "/launcher-types/{id}",
-            "dataSelector": "data.defaults",
-            "entityType": "managed_launcher"
         }
     },
     "services": {
