@@ -10,6 +10,7 @@ class EntityFieldBase {
     userLayer := "data"
     cloner := ""
     merger := ""
+    multiple := false
     needsEntityRefresh := false
 
     static VALUE_TYPE_DATA := "data"
@@ -18,6 +19,10 @@ class EntityFieldBase {
     Definition {
         get => this.fieldDefinition
         set => this.fieldDefinition := value
+    }
+
+    IsMultiple {
+        get => this.multiple
     }
     
     __New(fieldTypeId, entityObj, container, eventMgr, dataObj, fieldKey, fieldDefinition) {
@@ -31,6 +36,11 @@ class EntityFieldBase {
         this.merger := container.Get("merger.list")
         this.Definition := ParameterBag(this.DefinitionDefaults(fieldDefinition))
         this.Definition.Add(fieldDefinition)
+        this.multiple := (this.Definition["cardinality"] == 0 || this.Definition["cardinality"] > 1)
+
+        if (this.multiple && this.Definition["default"] && !HasBase(this.Definition["default"], Array.Prototype)) {
+            this.Definition["default"] := [this.Definition["default"]]
+        }
     }
 
     static Create(container, entityTypeId, entityObj, dataObj, fieldId, definition) {
@@ -98,9 +108,8 @@ class EntityFieldBase {
             "formField", true,
             "group", "general",
             "help", "",
-            "limit", false,
+            "cardinality", 1,
             "modes", Map(),
-            "multiple", false,
             "processValue", false,
             "refreshEntityOnChange", false,
             "required", false,
@@ -139,15 +148,49 @@ class EntityFieldBase {
         return result
     }
 
-    GetValue() {
-        return this.GetRawValue()
+    GetValue(index := "") {
+        return this.GetRawValue(index)
     }
 
-    GetRawValue() {
-        return this._callback("GetValue")
+    GetRawValue(index := "") {
+        value := this._callback("GetValue")
+
+        if (this.multiple && !HasBase(value, Array.Prototype)) {
+            value := [value]
+        }
+
+        if (this.multiple && index && !value.Has(index)) {
+            throw AppException("Index " . index . " does not exist in field " . this.fieldKey . ".")
+        }
+
+        if (this.multiple && index) {
+            value := value[index]
+        }
+
+        return value
     }
 
-    SetValue(value) {
+    SetValue(value, index := "") {
+        if (index && this.multiple) {
+            existingValues := this.GetRawValue()
+            
+            if (existingValues.Length < (index + 1)) {
+                throw AppException("Index to set is too high, there are only " . existingValues.Length . " values in field " . this.fieldKey . ".")
+            }
+
+            if (existingValues.Length < index) {
+                existingValues.Push(value)
+            } else {
+                existingValues[index] := value
+            }
+
+            value := existingValues
+        }
+
+        if (this.multiple && !HasBase(value, Array.Prototype)) {
+            value := [value]
+        }
+
         this._callback("SetValue", value)
         this.RefreshEntity()
         return this
@@ -175,9 +218,19 @@ class EntityFieldBase {
     }
 
     Validate(value) {
-        return this
-            .CreateValidator(this.GetValidators(value))
-            .Validate(value)
+        if (!HasBase(value, Array.Prototype)) {
+            value := [value]
+        }
+
+        results := []
+
+        validator := this.CreateValidator(this.GetValidators(value))
+
+        for index, singleValue in value {
+            results.Push(validator.Validate(singleValue))
+        }
+
+        return this.multiple ? results : results[1]
     }
 
     /**
@@ -187,11 +240,9 @@ class EntityFieldBase {
     _parseLayer(layer := "", allowAll := true) {
         if (!layer) {
             layer := this.Definition["dataLayer"]
+        } else if (layer == "*" && !allowAll) {
+            throw EntityException("Cannot pass wildcard for this layer value.")
         } else if (layer == "*") {
-            if (!allowAll) {
-                throw EntityException("Cannot pass wildcard for this layer value.")
-            }
-
             layer := ""
         }
 
@@ -234,6 +285,14 @@ class EntityFieldBase {
             allowEmpty
         )
 
+        if (this.multiple && HasBase(val, Array.Prototype)) {
+            if (val.Length) {
+                val := (val[1] != "")
+            } else {
+                val := false
+            }
+        }
+
         if (negate) {
             val := !val
         }
@@ -243,6 +302,10 @@ class EntityFieldBase {
 
     _hasDefaultValue(allowEmpty := true, negate := false) {
         hasValue := allowEmpty ? true : !!(this.Definition["default"])
+
+        if (hasValue && !allowEmpty && this.multiple && HasBase(this.Definition["default"], Array.Prototype)) {
+            hasValue := !!(this.Definition["default"][1])
+        }
 
         if (negate) {
             hasValue := !hasValue

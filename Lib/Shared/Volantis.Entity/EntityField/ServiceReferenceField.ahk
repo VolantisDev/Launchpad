@@ -1,6 +1,13 @@
 class ServiceReferenceField extends EntityFieldBase {
-    ReferencedObject {
-        get => this.GetValue()
+    DefinitionDefaults(fieldDefinition) {
+        defaults := super.DefinitionDefaults(fieldDefinition)
+
+        defaults["servicePrefix"] := ""
+        defaults["widget"] := "select"
+        defaults["selectOptionsCallback"] := ObjBindMethod(this, "GetServiceSelectOptions")
+        defaults["selectConditions"] := []
+        
+        return defaults
     }
 
     GetValidators(value) {
@@ -13,30 +20,34 @@ class ServiceReferenceField extends EntityFieldBase {
         return validators
     }
 
-    DefinitionDefaults(fieldDefinition) {
-        defaults := super.DefinitionDefaults(fieldDefinition)
+    GetValue(index := "") {
+        value := super.GetValue(index)
 
-        defaults["servicePrefix"] := ""
-        defaults["widget"] := "select"
-        defaults["selectOptionsCallback"] := ObjBindMethod(this, "GetEntitySelectOptions")
-        defaults["selectConditions"] := []
-        
-        return defaults
-    }
+        if (!HasBase(value, Array.Prototype)) {
+            value := [value]
+        }
 
-    GetValue() {
-        serviceObj := ""
-        serviceId := super.GetValue()
+        newValues := []
 
-        if (serviceId ) {
-            if (Type(serviceId) != "String") {
-                serviceObj := serviceId
+        for singleIndex, singleValue in value {
+            if (Type(singleValue) != "String") {
+                serviceObj := singleValue
             } else {
-                serviceObj := this._getService(serviceId)
+                serviceObj := this._getService(singleValue)
+            }
+
+            if (serviceObj) {
+                newValues.Push(serviceObj)
             }
         }
 
-        return serviceObj
+        value := newValues
+
+        if (!this.multiple || index) {
+            value := value.Length ? value[1] : ""
+        }
+
+        return value
     }
 
     _getService(serviceId) {
@@ -53,8 +64,20 @@ class ServiceReferenceField extends EntityFieldBase {
         return serviceObj
     }
 
-    SetValue(value) {
-        super.SetValue(this._getServiceId(value))
+    SetValue(value, index := "") {
+        if (index || !this.multiple || !HasBase(value, Array.Prototype)) {
+            value := this._getServiceId(singleValue)
+        } else {
+            newValues := []
+
+            for singleIndex, singleValue in value {
+                newValues[singleIndex] = this._getServiceId(singleValue)
+            }
+
+            value := newValues
+        }
+
+        super.SetValue(value, index)
     }
 
     _getServiceId(value) {
@@ -69,7 +92,7 @@ class ServiceReferenceField extends EntityFieldBase {
         return this.container.Query(this.Definition["servicePrefix"], ContainerQuery.RESULT_TYPE_NAMES, false, true)
     }
 
-    GetEntitySelectOptions() {
+    GetServiceSelectOptions() {
         query := this._getSelectQuery()
         conditions := this.Definition["selectConditions"]
 
