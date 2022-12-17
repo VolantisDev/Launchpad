@@ -58,15 +58,23 @@ class WebServiceAdapterBase {
             "deleteMethod", "PUT",
             "deleteAuth", true,
             "dataMap", Map(),
-            "dataSelector", []
+            "dataSelector", "",
+            "weight", 0,
+            "entityType", "",
+            "tags", [],
+            "requiredParams", [],
         )
     }
 
     SupportsOperation(operation) {
         supported := false
 
-        if (this.operationTypes.Contains(operation)) {
-            supported := this.definition[operation + "Allow"]
+        for index, operationType in this.operationTypes {
+            if (operation == operationType) {
+                supported := true
+
+                break
+            }
         }
 
         return supported
@@ -240,12 +248,47 @@ class WebServiceAdapterBase {
         return requestPath
     }
 
-    _request(params, method, data, cacheResponse) {
+    _validateParams(params) {
+        if (!params) {
+            params := Map()
+        }
+
+        valid := true
+        requiredParams := this.definition["requiredParams"]
+
+        if (requiredParams) {
+            if (Type(requiredParams) == "String") {
+                requiredParams := [requiredParams]
+            }
+    
+            for , requiredParam in requiredParams {
+                if (!params.Has(requiredParam) || !params[requiredParam]) {
+                    valid := false
+    
+                    break
+                }
+            }
+        }
+
+        return valid
+    }
+
+    _request(params, method, data, useAuthentication, cacheResponse) {
+        if (!this._validateParams(params)) {
+            throw AppException("The data adapter request was called with invalid or missing parameters.")
+        }
+
+        requestPath := this.definition["requestPath"]
+
+        for key, value in params {
+
+        }
+
         return this.webService.Request(
-            this.definition["requestPath"], 
+            this._requestPath(params), 
             method, 
             data,
-            this.definition["useAuthentication"], 
+            useAuthentication, 
             cacheResponse
         )
     }
