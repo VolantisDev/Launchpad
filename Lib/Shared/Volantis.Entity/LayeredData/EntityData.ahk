@@ -3,49 +3,20 @@ class EntityData extends LayeredDataBase {
     entity := ""
     eventMgr := ""
 
-    __New(entity, layerNames, layerSources) {
+    __New(entity, layerNames := "", layerSources := "") {
         this.entityTypeId := entity.EntityTypeId
         this.entity := entity
         this.eventMgr := entity.eventMgr
 
         super.__New(
             entity.cloner, 
-            this._createProcessors(), 
-            this._collectLayerNames(layerNames), 
-            this._collectSources(layerSources)
+            this._createProcessors(),
+            layerNames,
+            layerSources
         )
     }
 
-    _collectSources(layerSources) {
-        if (!layerSources.Has("defaults")) {
-            layerSources["defaults"] := ObjBindMethod(this.entity, "InitializeDefaults")
-        }
-
-        event := EntityLayerSourcesEvent(EntityEvents.ENTITY_LAYER_SOURCES, this.entityTypeId, this.entity, layerSources)
-        this.eventMgr.DispatchEvent(event)
-
-        event := EntityLayerSourcesEvent(EntityEvents.ENTITY_LAYER_SOURCES_ALTER, this.entityTypeId, this.entity, event.LayerSources)
-        this.eventMgr.DispatchEvent(event)
-
-        return event.LayerSources
-    }
-
-    _createProcessors() {
-        processors := [
-            StringSanitizer(),
-            PlaceholderExpander(this)
-        ]
-
-        event := EntityDataProcessorsEvent(EntityEvents.ENTITY_DATA_PROCESSORS, this.entityTypeId, this.entity, processors)
-        this.eventMgr.DispatchEvent(event)
-
-        event := EntityDataProcessorsEvent(EntityEvents.ENTITY_DATA_PROCESSORS_ALTER, this.entityTypeId, this.entity, event.Processors)
-        this.eventMgr.DispatchEvent(event)
-
-        return event.Processors
-    }
-
-    _collectLayerNames(layerNames) {
+    InitializeLayers(layerNames) {
         if (!layerNames) {
             layerNames := []
         }
@@ -61,7 +32,46 @@ class EntityData extends LayeredDataBase {
         event := EntityLayersEvent(EntityEvents.ENTITY_DATA_LAYERS_ALTER, this.entityTypeId, this.entity, layerNames)
         this.eventMgr.DispatchEvent(event)
 
-        return event.Layers
+        layerNames := event.Layers
+        layers := Map()
+
+        for index, layerName in layerNames {
+            this.layerPriority.Push(layerName)
+            layers[layerName] := Map()
+        }
+
+        this.SetLayers(layers)
+    }
+
+    SetLayerSources(layerSources) {
+        if (!layerSources.Has("defaults")) {
+            layerSources["defaults"] := ObjBindMethod(this.entity, "InitializeDefaults")
+        }
+
+        event := EntityLayerSourcesEvent(EntityEvents.ENTITY_LAYER_SOURCES, this.entityTypeId, this.entity, layerSources)
+        this.eventMgr.DispatchEvent(event)
+
+        event := EntityLayerSourcesEvent(EntityEvents.ENTITY_LAYER_SOURCES_ALTER, this.entityTypeId, this.entity, event.LayerSources)
+        this.eventMgr.DispatchEvent(event)
+
+        for key, source in event.LayerSources {
+            this.SetLayerSource(key, source)
+        }
+    }
+
+    _createProcessors() {
+        processors := [
+            StringSanitizer(),
+            PlaceholderExpander(this)
+        ]
+
+        event := EntityDataProcessorsEvent(EntityEvents.ENTITY_DATA_PROCESSORS, this.entityTypeId, this.entity, processors)
+        this.eventMgr.DispatchEvent(event)
+
+        event := EntityDataProcessorsEvent(EntityEvents.ENTITY_DATA_PROCESSORS_ALTER, this.entityTypeId, this.entity, event.Processors)
+        this.eventMgr.DispatchEvent(event)
+
+        return event.Processors
     }
 
     _appendLayerNames(namesToAppend, existingNames) {
