@@ -245,6 +245,7 @@
 #Include Volantis.Entity\Factory\EntityTypeFactory.ahk
 #Include Volantis.Entity\LayeredData\EntityData.ahk
 #Include Volantis.Entity\LayerSource\EntityStorageLayerSource.ahk
+#Include Volantis.Entity\LayerSource\ParentEntityLayerSource.ahk
 #Include Volantis.Entity\Query\EntityQuery.ahk
 #Include Volantis.Entity\Validator\BasicValidator.ahk
 #Include Volantis.Entity\Validator\ValidatorBase.ahk

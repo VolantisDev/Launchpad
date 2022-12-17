@@ -30,6 +30,7 @@ class EntityTypeFactory {
             "event_manager", "manager.event",
             "notifier", "notifier",
             "parent_entity_type", "",
+            "parent_entity_storage", false,
             "default_icon", "cube-outline",
             "icon_field", "IconSrc",
             "allow_view", false,

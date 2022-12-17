@@ -461,15 +461,41 @@ class EntityBase {
         return text
     }
 
-    UpdateDefaults(recurse := true) {
-        if (this.HasOwnDataStorage()) {
-            this.GetData().UnloadAllLayers(false)
+    GetAllChildEntityData() {
+        return this.GetData().GetExtraData()
+    }
+
+    GetChildEntityData(entityTypeId, entityId) {
+        dataKey := entityTypeId . "." . entityId
+
+        childData := this.GetData().GetExtraData(dataKey)
+
+        return childData ? childData : Map()
+    }
+
+    SetChildEntityData(entityTypeId, entityId, data) {
+        dataKey := entityTypeId . "." . entityId
+
+        if (!data) {
+            data := Map()
         }
 
-        if (recurse) {
-            for key, child in this.GetReferencedEntities(true) {
-                child.UpdateDefaults(recurse)
-            }
-        }
+        this.GetData().SetExtraData(dataKey, data)
+
+        return this
+    }
+
+    HasChildEntityData(entityTypeId, entityId) {
+        dataKey := entityTypeId . "." . entityId
+
+        return this.GetData().HasExtraData(dataKey)
+    }
+
+    DeleteChildEntityData(entityTypeId, entityId) {
+        dataKey := entityTypeId . "." . entityId
+
+        this.GetData().DeleteExtraData(dataKey)
+
+        return this
     }
 }

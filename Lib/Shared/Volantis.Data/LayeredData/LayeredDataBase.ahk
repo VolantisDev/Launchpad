@@ -25,6 +25,8 @@ class LayeredDataBase {
     cloner := ""
     userLayers := ["data"]
     loadingLayers := Map()
+    extraDataLayer := "data"
+    extraDataKey := "extra"
 
     static NO_VALUE := ":NO_VAL:"
 
@@ -253,6 +255,54 @@ class LayeredDataBase {
 
             this.UnloadLayer(layerName)
         }
+    }
+
+    GetExtraData(key := "") {
+        extraData := this.GetValue(this.extraDataKey, false, this.extraDataLayer, Map())
+
+        if (key) {
+            extraData := extraData.Has(key) ? extraData[key] : Map()
+        }
+
+        return extraData
+    }
+
+    SetExtraData(value, key := "") {
+        if (key) {
+            extraData := this.GetExtraData()
+            extraData[key] := value
+            value := extraData
+        }
+
+        this.SetValue(this.extraDataKey, value, this.extraDataLayer)
+
+        return this
+    }
+
+    HasExtraData(key := "") {
+        hasData := this.HasValue(this.extraDataKey, this.extraDataLayer, false)
+
+        if (hasData && key) {
+            extraData := this.GetExtraData()
+            hasData := extraData.Has(key)
+        }
+
+        return hasData
+    }
+
+    DeleteExtraData(key := "") {
+        if (key) {
+            extraData := this.GetExtraData()
+
+            if (extraData.Has(key)) {
+                extraData.Delete(key)
+                this.SetExtraData(extraData)
+            }
+        } else {
+            this.DeleteValue(this.extraDataKey, this.extraDataLayer)
+        }
+
+        return this
     }
 
     /**
