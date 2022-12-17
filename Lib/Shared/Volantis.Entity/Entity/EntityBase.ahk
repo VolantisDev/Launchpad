@@ -2,6 +2,8 @@ class EntityBase {
     idVal := ""
     entityTypeIdVal := ""
     parentEntityObj := ""
+    parentEntityTypeId := ""
+    parentEntityId := ""
     parentEntityStorage := false
     container := ""
     app := ""
@@ -86,13 +88,11 @@ class EntityBase {
         this.cloner := container.Get("cloner.list")
         this.parentEntityStorage := parentEntityStorage
 
-        if (!parentEntity) {
-            parentEntity := this.DiscoverParentEntity(container, eventMgr, id, storageObj, idSanitizer)
+        if (!parentEntity && this.parentEntityObj) {
+            parentEntity := this.parentEntityObj
         }
 
-        if (parentEntity) {
-            this.SetParentEntity(parentEntity)
-        }
+        this.DiscoverParentEntity(container, eventMgr, id, storageObj, idSanitizer, parentEntity)
 
         this._createEntityData()
         this.SetupEntity()
@@ -156,6 +156,7 @@ class EntityBase {
         if (event.ParentEntity) {
             this.parentEntityObj := event.ParentEntity
         } else if (event.ParentEntityId) {
+            this.parentEntityTypeId := event.ParentEntityTypeId
             this.parentEntityId := event.ParentEntityId
             this.parentEntityMgr := event.ParentEntityManager 
                 ? event.ParentEntityManager 
