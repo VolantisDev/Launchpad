@@ -1,6 +1,5 @@
 class PlatformEntity extends FieldableEntity {
     platformObj := ""
-    configPrefix := ""
 
     Platform {
         get => this.GetPlatform()

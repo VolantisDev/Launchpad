@@ -1,6 +1,5 @@
 class LauncherEntity extends FieldableEntity {
-    configPrefix := "Launcher"
-    additionalManagedLauncherDefaults := Map()
+    additionalLauncherProcessDefaults := Map()
 
     IsBuilt {
         get => this.LauncherExists(false)
