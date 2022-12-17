@@ -107,7 +107,7 @@ class WebServiceEntity extends FieldableEntity {
     IsAuthenticated() {
         isAuthenticated := false
 
-        if (this["Provider"]["SupportsAuthentication"]) {
+        if (this["Provider"] && this["Provider"]["SupportsAuthentication"]) {
             isAuthenticated := this["Provider"]["Authenticator"].IsAuthenticated(this)
         }
 
@@ -115,13 +115,13 @@ class WebServiceEntity extends FieldableEntity {
     }
 
     Login() {
-        if (this["Provider"]["SupportsAuthentication"]) {
+        if (this["Provider"] && this["Provider"]["SupportsAuthentication"]) {
             this["Provider"]["Authenticator"].Login(this)
         }
     }
 
     Logout() {
-        if (this["Provider"]["SupportsAuthentication"]) {
+        if (this["Provider"] && this["Provider"]["SupportsAuthentication"]) {
             this["Provider"]["Authenticator"].Logout(this)
         }
     }
