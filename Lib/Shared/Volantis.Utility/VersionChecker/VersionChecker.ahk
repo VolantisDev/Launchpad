@@ -77,7 +77,7 @@ class VersionChecker {
                     }
 
                     incrementIndex := versionArr.Length - 1
-                } else if (versionArr[0] == "0") {
+                } else if (versionArr[1] == "0") {
                     incrementIndex := versionArr.Length
                 }
 
