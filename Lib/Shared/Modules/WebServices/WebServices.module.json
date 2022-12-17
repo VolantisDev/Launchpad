@@ -114,6 +114,10 @@
         "web_services.adapter_factory": {
             "class": "WebServiceAdapterFactory",
             "arguments": ["@{}"]
+        },
+        "web_services.adapter_manager": {
+            "class": "WebServiceAdapterManager",
+            "arguments": ["@{}", "web_services.adapters.", "@web_services.adapter_factory", "@manager.entity_type", "@manager.event"]
         }
     }
 }

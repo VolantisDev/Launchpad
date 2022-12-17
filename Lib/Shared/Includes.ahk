@@ -1,5 +1,6 @@
 ; Automatically-generated file. Manual edits will be overwritten.
 #Include Modules\LaunchpadApi\EventSubscriber\LaunchpadApiSubscriber.ahk
+#Include Modules\WebServices\ComponentManager\WebServiceAdapterManager.ahk
 #Include Modules\WebServices\Entity\WebServiceEntity.ahk
 #Include Modules\WebServices\Entity\WebServiceProviderEntity.ahk
 #Include Modules\WebServices\Event\WebServicesEntityDataParamsEvent.ahk
