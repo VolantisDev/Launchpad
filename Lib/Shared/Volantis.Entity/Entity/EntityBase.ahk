@@ -15,6 +15,7 @@ class EntityBase {
     loaded := false
     dataLayer := "data"
     dataLoaded := false
+    merger := ""
     cloner := ""
 
     Id {
