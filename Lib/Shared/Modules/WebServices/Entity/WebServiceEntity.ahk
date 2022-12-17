@@ -86,6 +86,18 @@ class WebServiceEntity extends FieldableEntity {
             "default", (this.idVal == "launchpad_api")
         )
 
+        definitions["CacheResponses"] := Map(
+            "type", "boolean",
+            "required", false,
+            "default", true
+        )
+
+        definitions["DefaultResponseCacheExpiration"] := Map(
+            "type", "string",
+            "required", false,
+            "default", 3600
+        )
+
         return definitions
     }
 
