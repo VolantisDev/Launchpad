@@ -74,6 +74,10 @@
             "name": "Entity Data",
             "description": "Data to be imported into an entity within the application."
         },
+        "web_services.data_types.availability_check": {
+            "name": "Availability check",
+            "description": "Simply checks for any response from the web service."
+        },
         "web_services.adapter_types.json": {
             "class": "JsonWebServiceAdapter"
         },
