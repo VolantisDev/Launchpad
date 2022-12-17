@@ -12,8 +12,6 @@ class LaunchpadApiSubscriber extends EventSubscriberBase {
             return
         }
 
-        test := "here"
-
         ; TODO figure out how to access these values while the data layers are still being loaded
         if (event.WebService["id"] == "launchpad_api") {
             if (HasBase(event.Entity, LauncherEntity.Prototype)) {
