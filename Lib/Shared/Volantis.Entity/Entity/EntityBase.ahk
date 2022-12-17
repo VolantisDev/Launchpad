@@ -376,14 +376,14 @@ class EntityBase {
         return !!(changes.GetAdded().Count || changes.GetModified().Count || changes.GetDeleted().Count)
     }
 
-    DiffChanges(recursive := true) {
+    DiffChanges(recurse := true) {
         diff := this.GetData().DiffChanges("original", this.dataLayer)
 
-        if (recursive) {
+        if (recurse) {
             diffs := [diff]
 
             for index, referencedEntity in this.GetReferencedEntities(true) {
-                diffs.Push(referencedEntity.DiffChanges(recursive))
+                diffs.Push(referencedEntity.DiffChanges(recurse))
             }
 
             diff := DiffResult.Combine(diffs)
