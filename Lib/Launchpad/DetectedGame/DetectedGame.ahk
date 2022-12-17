@@ -89,9 +89,7 @@ class DetectedGame {
 
     CreateLauncher(launcherManager) {
         config := Map(
-            "Platform", this.platform.key, 
-            "LauncherType", this.launcherType, 
-            "GameType", this.gameType
+            "Platform", this.platform.key
         )
 
         if (this.displayName && this.displayName != this.key) {
