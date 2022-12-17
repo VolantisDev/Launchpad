@@ -134,10 +134,14 @@ class EntityBase {
     }
 
     _getLayerSources() {
+        layerSource := this.parentEntityStorage
+            ? ParentEntityLayerSource(this)
+            : EntityStorageLayerSource(this.storageObj, this.GetStorageId())
+
         return Map(
             "defaults", ObjBindMethod(this, "InitializeDefaults"),
             "auto", ObjBindMethod(this, "AutoDetectValues"),
-            "data", EntityStorageLayerSource(this.storageObj, this.GetStorageId())
+            "data", layerSource
         )
     }
 
