@@ -93,7 +93,7 @@ class WebServiceEntity extends FieldableEntity {
         )
 
         definitions["ResponseCacheDefaultExpireSeconds"] := Map(
-            "title", "Response Cache - Default Expiration (seconds)"
+            "title", "Response Cache - Default Expiration (seconds)",
             "type", "string",
             "required", false,
             "default", 3600
