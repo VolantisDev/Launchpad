@@ -30,7 +30,7 @@ class LayeredDataBase {
 
     static NO_VALUE := ":NO_VAL:"
 
-    __New(cloner, processors, layerNames, layerSources) {
+    __New(cloner, processors, layerNames := "", layerSources := "") {
         this.cloner := cloner
 
         if (processors) {
