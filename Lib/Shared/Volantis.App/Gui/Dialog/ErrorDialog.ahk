@@ -109,14 +109,13 @@ class ErrorDialog extends DialogBox {
         global appVersion
 
         ; @todo Move the API connection stuff into the LaunchpadApi module
+        filters := "error_submission"
+        operation := "create"
 
         if (
-            this.container.Has("entity_manager.web_service") 
-            && this.container["entity_manager.web_service"].Has("launchpad_api")
-            && this.container["entity_manager.web_service"]["launchpad_api"]["Enabled"]
+            this.container.Has("web_services.adapter_manager")
+            && this.container["web_services.adapter_manager"].HasAdapters(filters, operation)
         ) {
-            webService := this.container["entity_manager.web_service"]["launchpad_api"]
-
             body := Map()
             body["message"] := this.errorObj.Message
             body["what"] := this.errorObj.What
@@ -128,11 +127,22 @@ class ErrorDialog extends DialogBox {
             body["version"] := appVersion ? appVersion : ""
             body["details"] := this.guiObj["ErrorDetails"].Text
 
-            success := webService.AdapterRequest(
+            results := this.container["web_services.adapter_manager"].AdapterRequest(
                 Map("data", body),
-                Map("adapterType", "error_submission"),
-                "create"
+                filters,
+                operation,
+                true
             )
+
+            success := false
+
+            for adapterId, adapterResult in results {
+                if (adapterResult) {
+                    success := true
+
+                    break
+                }
+            }
 
             notification := success ? "Successfully sent error details for further investigation" : "Failed to send error details"
             this.notifierObj.Notify(notification, "Error Submission", success ? "info" : "error")

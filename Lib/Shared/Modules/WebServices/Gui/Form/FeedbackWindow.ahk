@@ -36,44 +36,50 @@ class FeedbackWindow extends DialogBox {
     SendFeedback() {
         global appVersion
 
-        webServiceId := "launchpad_api"
-        entityMgr := this.container["entity_manager.web_service"]
+        filters := "feedback_submission"
+        operation := "create"
 
-        results := Map()
-        success := false
-
-        if (entityMgr.Has(webServiceId) && entityMgr[webServiceId]["Enabled"]) {
-            webService := entityMgr[webServiceId]
-
+        if (
+            this.container.Has("web_services.adapter_manager")
+            && this.container["web_services.adapter_manager"].HasAdapters(filters, operation)
+        ) {
             body := Map()
             body["email"] := this.guiObj["Email"].Text
             body["version"] := appVersion
             body["feedback"] := this.guiObj["Feedback"].Text
 
-            results := webService.AdapterRequest(Map("data", body), "feedback_submission", "create", true)
-        }
+            results := this.container["web_services.adapter_manager"].AdapterRequest(
+                Map("data", body),
+                filters,
+                operation,
+                true
+            )
 
-        for key, result in results {
-            if (result) {
-                success := true
-                break
+            success := false
+
+            for adapterId, adapterResult in results {
+                if (adapterResult) {
+                    success := true
+
+                    break
+                }
             }
+
+            message := ""
+
+            if (success) {
+                message := "Successfully sent feedback"
+            } else if (results.Count) {
+                message := "Failed to send feedback"
+            } else {
+                message := "No feedback adapters are enabled"
+            }
+
+            this.notifierObj.Notify(
+                message, 
+                "Feedback Submission", 
+                success ? "info" : "error"
+            )
         }
-
-        message := ""
-
-        if (success) {
-            message := "Successfully sent feedback" 
-        } else if (results.Count) {
-            message := "Failed to send feedback"
-        } else {
-            message := "No feedback adapters are enabled"
-        }
-
-        this.notifierObj.Notify(
-            message, 
-            "Feedback Submission", 
-            success ? "info" : "error"
-        )
     }
 }
