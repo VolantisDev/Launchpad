@@ -26,7 +26,7 @@ class LayeredDataBase {
     userLayers := ["data"]
     loadingLayers := Map()
     extraDataLayer := "data"
-    extraDataKey := "extra"
+    extraDataKey := "_extra"
 
     static NO_VALUE := ":NO_VAL:"
 
