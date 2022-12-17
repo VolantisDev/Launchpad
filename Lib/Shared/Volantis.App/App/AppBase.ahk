@@ -956,7 +956,7 @@ class AppBase {
             updateAvailable := false
 
             event := ReleaseInfoEvent(Events.APP_GET_RELEASE_INFO, this)
-            this["manager.event"].DispatchEvent(event)
+            this.Dispatch(event)
             releaseInfo := event.ReleaseInfo
 
             if (
