@@ -317,15 +317,15 @@ class EntityBase {
 
         event := EntityEvent(EntityEvents.ENTITY_PRESAVE, this.entityTypeId, this)
         this.eventMgr.DispatchEvent(event)
-        
-        this.GetData().SaveData()
-        this.CreateSnapshot("original")
 
         if (recurse) {
             for index, entityObj in this.GetReferencedEntities(true) {
                 entityObj.SaveEntity(recurse)
             }
         }
+        
+        this.GetData().SaveData()
+        this.CreateSnapshot("original")
 
         if (alreadyExists) {
             event := EntityEvent(EntityEvents.ENTITY_UPDATED, this.entityTypeId, this)
