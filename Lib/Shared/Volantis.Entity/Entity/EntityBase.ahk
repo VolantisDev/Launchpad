@@ -134,16 +134,27 @@ class EntityBase {
             .ListEntities(includeManaged, includeExtended)
     }
 
-    DiscoverParentEntity(container, eventMgr, id, storageObj, idSanitizer) {
-        return ""
+    DiscoverParentEntity(container, eventMgr, id, storageObj, idSanitizer, parentEntity := "") {
+        event := EntityParentEvent(EntityEvents.ENTITY_DISCOVER_PARENT, this.entityTypeId, this, parentEntity)
+        this.eventMgr.DispatchEvent(event)
+
+        if (event.ParentEntity) {
+            this.parentEntityObj := event.ParentEntity
+        } else if (event.ParentEntityId) {
+            this.parentEntityId := event.ParentEntityId
+            this.parentEntityMgr := event.ParentEntityManager 
+                ? event.ParentEntityManager 
+                : container.Get("entity_manager." . event.ParentEntityTypeId)
+            
+        }
+
+        this.parentEntityObj := event.ParentEntity
+
+        return event.ParentEntity
     }
 
     GetParentEntity() {
         return this.parentEntityObj
-    }
-
-    SetParentEntity(parentEntity) {
-        this.parentEntityObj := parentEntity
     }
 
     SetupEntity() {
