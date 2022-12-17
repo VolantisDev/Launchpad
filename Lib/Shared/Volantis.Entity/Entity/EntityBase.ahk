@@ -349,10 +349,16 @@ class EntityBase {
         }
     }
 
-    DeleteEntity() {
+    DeleteEntity(recurse := false) {
         if (this.storageObj.HasData(this.GetStorageId())) {
             event := EntityEvent(EntityEvents.ENTITY_PREDELETE, this.entityTypeId, this)
             this.eventMgr.DispatchEvent(event)
+
+            if (recurse) {
+                for index, entityObj in this.ChildEntities {
+                    entityObj.DeleteEntity(recurse)
+                }
+            }
 
             this.storageObj.DeleteData(this.GetStorageId())
 
