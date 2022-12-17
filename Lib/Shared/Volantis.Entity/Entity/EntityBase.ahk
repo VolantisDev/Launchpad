@@ -175,16 +175,10 @@ class EntityBase {
         return this.container.Get("manager.entity_type")[this.EntityTypeId]
     }
 
-    InitializeDefaults(recurse := true) {
+    InitializeDefaults() {
         defaults := Map(
             "name", this.Id
         )
-
-        if (recurse) {
-            for key, referencedEntity in this.GetReferencedEntities(true) {
-                this.merger.Merge(defaults, referencedEntity.InitializeDefaults())
-            }
-        }
 
         return defaults
     }
@@ -302,14 +296,8 @@ class EntityBase {
         this.eventMgr.DispatchEvent(event)
     }
 
-    AutoDetectValues(recurse := true) {
+    AutoDetectValues() {
         values := Map()
-
-        if (recurse) {
-            for key, referencedEntity in this.GetReferencedEntities(true) {
-                this.merger.Merge(values, referencedEntity.AutoDetectValues(recurse))
-            }
-        }
 
         event := EntityDetectValuesEvent(EntityEvents.ENTITY_DETECT_VALUES, this.EntityTypeId, this, values)
         this.eventMgr.DispatchEvent(event)

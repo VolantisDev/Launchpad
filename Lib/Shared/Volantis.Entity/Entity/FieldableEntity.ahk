@@ -254,8 +254,8 @@ class FieldableEntity extends EntityBase {
         }
     }
 
-    InitializeDefaults(recurse := true) {
-        defaults := super.InitializeDefaults(recurse)
+    InitializeDefaults() {
+        defaults := super.InitializeDefaults()
 
         for key, fieldObj in this.GetFields() {
             defaults[fieldObj.Definition["storageKey"]] := fieldObj.Definition["default"]

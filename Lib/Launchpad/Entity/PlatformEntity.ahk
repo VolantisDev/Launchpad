@@ -134,8 +134,8 @@ class PlatformEntity extends FieldableEntity {
         }
     }
 
-    AutoDetectValues(recurse := true) {
-        detectedValues := super.AutoDetectValues(recurse)
+    AutoDetectValues() {
+        detectedValues := super.AutoDetectValues()
         detectedValues["IsInstalled"] := this.Platform.IsInstalled()
         detectedValues["InstalledVersion"] := this.Platform.GetInstalledVersion()
         detectedValues["InstallDir"] := this.Platform.GetInstallDir()

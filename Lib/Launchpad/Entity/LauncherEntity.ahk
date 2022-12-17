@@ -399,8 +399,8 @@ class LauncherEntity extends FieldableEntity {
         return key
     }
 
-    AutoDetectValues(recurse := true) {
-        detectedValues := super.AutoDetectValues(recurse)
+    AutoDetectValues() {
+        detectedValues := super.AutoDetectValues()
         
         if (!detectedValues.Has("IconSrc")) {
             checkPath := this["AssetsDir"] . "\" . this.Id . ".ico"

@@ -93,12 +93,12 @@ class BackupEntity extends FieldableEntity {
         this.CreateBackupObject()
     }
 
-    AutoDetectValues(recurse := true) {
+    AutoDetectValues() {
         if (!this.backup) {
             this.CreateBackupObject()
         }
 
-        detectedValues := super.AutoDetectValues(recurse)
+        detectedValues := super.AutoDetectValues()
         return detectedValues
     }
 
