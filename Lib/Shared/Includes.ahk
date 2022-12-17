@@ -233,6 +233,7 @@
 #Include Volantis.Entity\Event\EntityLayersEvent.ahk
 #Include Volantis.Entity\Event\EntityLayerSourcesEvent.ahk
 #Include Volantis.Entity\Event\EntityListEvent.ahk
+#Include Volantis.Entity\Event\EntityParentEvent.ahk
 #Include Volantis.Entity\Event\EntityReferenceEvent.ahk
 #Include Volantis.Entity\Event\EntityRefreshEvent.ahk
 #Include Volantis.Entity\Event\EntityValidateEvent.ahk

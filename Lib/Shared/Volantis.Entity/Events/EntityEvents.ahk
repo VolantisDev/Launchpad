@@ -24,4 +24,5 @@ class EntityEvents {
     static ENTITY_FIELD_GROUPS_ALTER := 0x4092
     static ENTITY_REFERENCE_ENTITY_SAVED := 0x4095
     static ENTITY_LIST_ENTITIES := 0x4098
+    static ENTITY_DISCOVER_PARENT := 0x4100
 }
