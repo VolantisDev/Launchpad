@@ -96,7 +96,7 @@
         },
         "event_subscriber.web_services": {
             "class": "WebServicesEventSubscriber",
-            "arguments": ["@{}"],
+            "arguments": ["@{}", "@web_services.adapter_manager"],
             "tags": ["event_subscriber"]
         },
         "state.web_services": {
