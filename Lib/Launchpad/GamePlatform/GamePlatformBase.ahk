@@ -184,39 +184,34 @@ class GamePlatformBase {
         if (possibleExes.Length == 1) {
             mainExe := possibleExes[1]
         } else if (possibleExes.Length > 1) {
-            ; @todo move the API functionality into a module that depends on WebServices
-            if (this.app.Services.Has("entity_manager.web_service")) {
-                mgr := this.app["entity_manager.web_service"]
-    
-                if (mgr.Has("launchpad_api")) {
-                    webService := mgr["launchpad_api"]
-    
-                    resultData := webService.AdapterRequest(
-                        Map("id", key),
-                        Map(
-                            "adapterType", "entity_data", 
-                            "entityType", "launcher"
-                        ),
-                        "read",
-                        true
-                    )
+            ; @todo move the API functionality into an event in an event in the WebServicesEventSubscriber
+            if (this.app.Services.Has("web_services.adapter_manager")) {
+                resultData := this.app["web_services.adapter_manager"].AdapterRequest(
+                    Map("id", key),
+                    Map(
+                        "dataType", "entity_data", 
+                        "entityType", "launcher",
+                        "tags", "defaults"
+                    ),
+                    "read",
+                    true
+                )
 
-                    for key, data in resultData {
-                        if (
-                            data 
-                            && HasBase(data, Map.Prototype)
-                            && data.Has("defaults")
-                            && data["defaults"]
-                            && data["defaults"].Has("GameExe")
-                            && data["defaults"]["GameExe"]
-                        ) {
-                            for index, possibleExe in possibleExes {
-                                SplitPath(possibleExe, &fileName)
-    
-                                if (data["defaults"]["GameExe"] == fileName) {
-                                    mainExe := possibleExe
-                                    break 2
-                                }
+                for key, data in resultData {
+                    if (
+                        data 
+                        && HasBase(data, Map.Prototype)
+                        && data.Has("defaults")
+                        && data["defaults"]
+                        && data["defaults"].Has("GameExe")
+                        && data["defaults"]["GameExe"]
+                    ) {
+                        for index, possibleExe in possibleExes {
+                            SplitPath(possibleExe, &fileName)
+
+                            if (data["defaults"]["GameExe"] == fileName) {
+                                mainExe := possibleExe
+                                break 2
                             }
                         }
                     }
