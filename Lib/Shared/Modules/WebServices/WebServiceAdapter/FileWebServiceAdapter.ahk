@@ -1,5 +1,5 @@
 class FileWebServiceAdapter extends WebServiceAdapterBase {
-    dataType := ""
+    dataClass := ""
 
     ; @todo Implement file downloading
 }

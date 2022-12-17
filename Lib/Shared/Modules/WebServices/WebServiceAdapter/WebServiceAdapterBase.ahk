@@ -2,7 +2,7 @@ class WebServiceAdapterBase {
     container := ""
     webService := ""
     definition := ""
-    dataType := ""
+    dataClass := ""
     merger := ""
     operationTypes := ["create", "read", "update", "delete"]
 
@@ -270,9 +270,9 @@ class WebServiceAdapterBase {
     }
 
     _parseData(data, params) {
-        if (data && this.definition["dataType"]) {
-            dataType := this.definition["dataType"]
-            data := %dataType%().FromString(data)
+        if (data && this.dataClass) {
+            dataClass := this.dataClass
+            data := %dataClass%().FromString(&data)
 
             if (this.definition["dataSelector"]) {
                 dataSelector := this.definition["dataSelector"]
