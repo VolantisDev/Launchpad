@@ -11,14 +11,14 @@ class FieldableEntity extends EntityBase {
         get => this.GetFieldDefinitions()
     }
 
-    __New(id, entityTypeId, container, fieldFactory, widgetFactory, eventMgr, storageObj, idSanitizer := "", autoLoad := true) {
+    __New(id, entityTypeId, container, fieldFactory, widgetFactory, eventMgr, storageObj, idSanitizer := "", autoLoad := true, parentEntity := "", parentEntityStorage := false) {
         this.entityFieldFactory := fieldFactory
         this.entityWidgetFactory := widgetFactory
         
-        super.__New(id, entityTypeId, container, eventMgr, storageObj, idSanitizer, autoLoad)
+        super.__New(id, entityTypeId, container, eventMgr, storageObj, idSanitizer, autoLoad, parentEntity, parentEntityStorage)
     }
 
-    static Create(container, eventMgr, id, entityTypeId, storageObj, idSanitizer, parentEntity := "") {
+    static Create(container, eventMgr, id, entityTypeId, storageObj, idSanitizer, autoLoad := true, parentEntity := "", parentEntityStorage := false) {
         className := this.Prototype.__Class
 
         return %className%(
@@ -30,7 +30,9 @@ class FieldableEntity extends EntityBase {
             eventMgr,
             storageObj,
             idSanitizer,
-            parentEntity
+            autoLoad,
+            parentEntity,
+            parentEntityStorage
         )
     }
 

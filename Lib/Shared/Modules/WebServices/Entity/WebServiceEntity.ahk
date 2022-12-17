@@ -19,23 +19,21 @@ class WebServiceEntity extends FieldableEntity {
         set => this.SetAuthData(key, value)
     }
 
-    __New(id, entityTypeId, container, adapterFactory, cacheObj, stateObj, persistentStateObj, fieldFactory, widgetFactory, eventMgr, storageObj, idSanitizer, parentEntity := "") {
+    __New(id, entityTypeId, container, cacheObj, stateObj, persistentStateObj, fieldFactory, widgetFactory, eventMgr, storageObj, idSanitizer, autoLoad := true, parentEntity := "", parentEntityStorage := false) {
         this.cacheObj := cacheObj
         this.stateObj := stateObj
         this.persistentStateObj := persistentStateObj
-        this.adapterFactory := adapterFactory
 
-        super.__New(id, entityTypeId, container, fieldFactory, widgetFactory, eventMgr, storageObj, idSanitizer, parentEntity)
+        super.__New(id, entityTypeId, container, fieldFactory, widgetFactory, eventMgr, storageObj, idSanitizer, autoLoad, parentEntity, parentEntityStorage)
     }
 
-    static Create(container, eventMgr, id, entityTypeId, storageObj, idSanitizer, parentEntity := "") {
+    static Create(container, eventMgr, id, entityTypeId, storageObj, idSanitizer, autoLoad := true, parentEntity := "", parentEntityStorage := false) {
         className := this.Prototype.__Class
 
         return %className%(
             id,
             entityTypeId,
             container,
-            container.Get("web_services.adapter_factory"),
             container.Get("cache.web_services"),
             container.Get("state.web_services_tmp"),
             container.Get("state.web_services"),
@@ -44,96 +42,10 @@ class WebServiceEntity extends FieldableEntity {
             eventMgr,
             storageObj,
             idSanitizer,
-            parentEntity
+            autoLoad,
+            parentEntity,
+            parentEntityStorage
         )
-    }
-
-    AdapterRequest(params, adapterFilters, operation := "read", multiple := false) {
-        if (!adapterFilters) {
-            adapterFilters := Map()
-        }
-
-        if (!adapterFilters) {
-            adapterFilters := Map()
-        }
-
-        if (Type(adapterFilters) == "String") {
-            adapterFilters := Map("adapterType", adapterFilters)
-        }
-
-        results := Map()
-
-        for adapterKey, adapter in this.GetAdapters(adapterFilters, operation) {
-            result := adapter.SendRequest(operation, params)
-
-            if (result) {
-                if (!multiple) {
-                    results := result
-                    break
-                }
-                
-                results[adapterKey] := result
-            }
-
-            if (IsNumber(multiple) && results.Count >= multiple) {
-                break
-            }
-        }
-
-        return results
-    }
-
-    GetAdapters(filters := "", operation := "") {
-        if (!filters) {
-            filters := Map()
-        }
-
-        adapterData := this.container.GetParameter("web_services.adapters." . this["Provider"]["id"])
-
-        adapters := Map()
-
-        for key, definition in adapterData {
-            adapter := this.GetAdapter(key)
-            definition := adapter.definition
-            include := true
-
-            for filterKey, filterVal in filters {
-                if (!definition.Has(filterKey) || definition[filterKey] != filterVal) {
-                    include := false
-                    
-                    break
-                }
-            }
-
-            if (include && operation) {
-                include := adapter.SupportsOperation(operation)
-            }
-
-            if (include) {
-                adapters[key] := adapter
-            }
-        }
-
-        return adapters
-    }
-
-    GetAdapter(key) {
-        adapter := ""
-        
-        if (this.adapters.Has(key)) {
-            adapter := this.adapters[key]
-        }
-
-        if (!adapter) {
-            param := "web_services.adapters." . this["Provider"]["id"]
-
-            if (this.container.HasParameter(param)) {
-                adapter := this.adapterFactory.CreateWebServiceAdapter(this, this.container.GetParameter(param))
-                this.adapters[key] := adapter
-            }
-        }
-
-        return adapter
     }
 
     BaseFieldDefinitions() {

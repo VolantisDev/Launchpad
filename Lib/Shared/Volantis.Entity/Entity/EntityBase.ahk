@@ -2,6 +2,7 @@ class EntityBase {
     idVal := ""
     entityTypeIdVal := ""
     parentEntityObj := ""
+    parentEntityStorage := false
     container := ""
     app := ""
     eventMgr := ""
@@ -57,7 +58,7 @@ class EntityBase {
         return this.GetAllValues().__Enum(numberOfVars)
     }
 
-    __New(id, entityTypeId, container, eventMgr, storageObj, idSanitizer := "", autoLoad := true, parentEntity := "") {
+    __New(id, entityTypeId, container, eventMgr, storageObj, idSanitizer := "", autoLoad := true, parentEntity := "", parentEntityStorage := false) {
         this.app := container.GetApp()
         this.idSanitizer := idSanitizer
         
@@ -72,6 +73,7 @@ class EntityBase {
         this.storageObj := storageObj
         this.merger := container.Get("merger.list")
         this.cloner := container.Get("cloner.list")
+        this.parentEntityStorage := parentEntityStorage
 
         if (!parentEntity) {
             parentEntity := this.DiscoverParentEntity(container, eventMgr, id, storageObj, idSanitizer)
@@ -89,7 +91,7 @@ class EntityBase {
         }
     }
 
-    static Create(container, eventMgr, id, entityTypeId, storageObj, idSanitizer, parentEntity := "") {
+    static Create(container, eventMgr, id, entityTypeId, storageObj, idSanitizer, autoLoad := true, parentEntity := "", parentEntityStorage := false) {
         className := this.Prototype.__Class
 
         return %className%(
@@ -99,7 +101,9 @@ class EntityBase {
             eventMgr,
             storageObj,
             idSanitizer,
-            parentEntity
+            autoLoad,
+            parentEntity,
+            parentEntityStorage
         )
     }
 
