@@ -2,9 +2,7 @@ class LaunchProcessEntity extends FieldableEntity {
     defaultClass := "Default"
 
     DiscoverParentEntity(container, eventMgr, id, storageObj, idSanitizer, parentEntity := "") {
-        ; TODO fix circular reference occurring
-
-        return parentEntity
+        this.parentEntityObj := parentEntity
             ? parentEntity
             : container.Get("entity_manager.launcher")[id]
     }
