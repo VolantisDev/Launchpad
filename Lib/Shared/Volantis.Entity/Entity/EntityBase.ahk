@@ -488,6 +488,16 @@ class EntityBase {
         return text
     }
 
+    UpdateDefaults(recurse := false) {
+        if (recurse) {
+            for key, child in this.ChildEntities {
+                child.UpdateDefaults(recurse)
+            }
+        }
+        
+        this.GetData().UnloadAllLayers(false)
+    }
+
     GetAllChildEntityData() {
         return this.GetData().GetExtraData()
     }
