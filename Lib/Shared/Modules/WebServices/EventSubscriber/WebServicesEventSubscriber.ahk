@@ -267,8 +267,8 @@ class WebServicesEventSubscriber extends EventSubscriberBase {
                     webService
                 )
 
-                if (!result) {
-                    result := event.Entity["id"]
+                if (!result || Type(result) != "String") {
+                    result := "" ; TODO decide whether to default to blank or the entity ID
                 }
 
                 event.Values[fieldId] := result
