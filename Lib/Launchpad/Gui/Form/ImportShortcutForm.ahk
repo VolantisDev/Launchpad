@@ -29,7 +29,7 @@
     GetLauncherConfig() {
         platformKey := Trim(this.guiObj["Platform"].Text)
         config := Map("Platform", platformKey)
-        platform := this.app.Service("entity_manager.platform")[platformKey]
+        platform := this.app["entity_manager.platform"][platformKey]
 
         if (platform) {
             config["LauncherType"] := platform.Platform.launcherType

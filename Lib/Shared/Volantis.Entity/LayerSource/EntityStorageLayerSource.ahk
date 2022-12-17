@@ -24,5 +24,7 @@ class EntityStorageLayerSource extends LayerSourceBase {
         if (this.HasData()) {
             this.storageObj.DeleteData(this.storageId)
         }
+
+        return this
     }
 }

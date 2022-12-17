@@ -1,21 +1,18 @@
-class BackupEntity extends AppEntityBase {
+class BackupEntity extends FieldableEntity {
     backup := ""
 
-    __New(app, key, config, parentEntity := "", requiredConfigKeys := "") {
-        super.__New(app, key, config, parentEntity, requiredConfigKeys)
-        backupClass := config.Has("BackupClass") ? config["BackupClass"] : "FileBackup"
+    SetupEntity() {
+        super.SetupEntity()
 
         if (!this.backup) {
+            backupClass := this.config.Has("BackupClass") ? this.config["BackupClass"] : "FileBackup"
+
             this.CreateBackupObject(backupClass)
         }
     }
 
     BaseFieldDefinitions() {
         definitions := super.BaseFieldDefinitions()
-
-        if (definitions.Has("DataSourceKeys")) {
-            definitions["DataSourceKeys"]["default"] := []
-        }
 
         definitions["IsEditable"] := Map(
             "type", "boolean",
@@ -25,7 +22,7 @@ class BackupEntity extends AppEntityBase {
         definitions["IconSrc"] := Map(
             "type", "icon_file",
             "description", "The path to this an icon (.ico or .exe).",
-            "default", this.app.Service("manager.theme")[].GetIconPath("Backup")
+            "default", this.app["manager.theme"][].GetIconPath("backup")
         )
 
         definitions["Source"] := Map(
@@ -96,12 +93,12 @@ class BackupEntity extends AppEntityBase {
         this.CreateBackupObject()
     }
 
-    AutoDetectValues(recurse := true) {
+    AutoDetectValues() {
         if (!this.backup) {
             this.CreateBackupObject()
         }
 
-        detectedValues := super.AutoDetectValues(recurse)
+        detectedValues := super.AutoDetectValues()
         return detectedValues
     }
 

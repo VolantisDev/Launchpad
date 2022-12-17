@@ -16,7 +16,7 @@
 
     Create() {
         super.Create()
-        this.availableThemes := this.app.Service("manager.theme").GetAvailableThemes()
+        this.availableThemes := this.app["manager.theme"].GetAvailableThemes()
     }
 
     AddDescription(text) {
@@ -58,7 +58,7 @@
     }
 
     GetInstalledPlatforms() {
-        platformMgr := this.app.Service("entity_manager.platform")
+        platformMgr := this.app["entity_manager.platform"]
         platformQuery := platformMgr.EntityQuery(EntityQuery.RESULT_TYPE_ENTITIES)
             .Condition(IsTrueCondition(), "IsInstalled")
         return platformQuery.Execute()
@@ -80,7 +80,7 @@
         this.guiObj.Submit(false)
         len := StrLen("PlatformToggle")
         name := SubStr(chk.Name, len + 1)
-        platformMgr := this.app.Service("entity_manager.platform")
+        platformMgr := this.app["entity_manager.platform"]
 
         if (platformMgr.Has(name)) {
             platform := platformMgr[name]
@@ -115,8 +115,8 @@
 
     ProcessResult(result, submittedData := "") {
         if (result == "Start") {
-            this.app.Service("config.app").SaveConfig()
-            this.app.Service("entity_manager.platform").SaveModifiedEntities()
+            this.app["config.app"].SaveConfig()
+            this.app["entity_manager.platform"].SaveModifiedEntities()
 
             if (submittedData.DetectGames) {
                 result := "Detect"

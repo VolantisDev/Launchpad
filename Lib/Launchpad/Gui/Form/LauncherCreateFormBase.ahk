@@ -1,10 +1,12 @@
 ﻿class LauncherCreateFormBase extends FormGuiBase {
     knownGames := ""
     knownPlatforms := ""
-    dataSource := ""
+    launcherMgr := ""
+    platformMgr := ""
 
     __New(container, themeObj, config) {
-        this.dataSource := container.Get("manager.data_source").GetDefaultDataSource()
+        this.launcherMgr := container.Get("entity_manager.launcher")
+        this.platformMgr := container.Get("entity_manager.platform")
         super.__New(container, themeObj, config)
     }
 
@@ -17,8 +19,8 @@
 
     Create() {
         super.Create()
-        this.knownGames := this.dataSource.ReadListing("game-keys")
-        this.knownPlatforms := this.dataSource.ReadListing("platforms")
+        this.knownGames := this.launcherMgr.ListEntities(false, true)
+        this.knownPlatforms := this.platformMgr.ListEntities(false, true)
     }
 
     ProcessResult(result, submittedData := "") {

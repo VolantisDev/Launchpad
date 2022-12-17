@@ -94,4 +94,30 @@ class EntityManagerBase extends ComponentManagerBase {
             childManager.LoadComponents(reloadComponents)
         }
     }
+
+    /**
+     * Get an array of all IDs
+     * 
+     * List managed IDs and give modules a chance to add others.
+     */
+    ListEntities(includeManaged := true, includeExtended := true) {
+        entities := includeManaged
+            ? this.EntityQuery(EntityQuery.RESULT_TYPE_IDS).Execute()
+            : []
+
+        if (includeExtended) {
+            event := EntityListEvent(
+                EntityEvents.ENTITY_LIST_ENTITIES, 
+                this.entityTypeId, 
+                entities, 
+                includeManaged, 
+                includeExtended
+            )
+            this.eventMgr.DispatchEvent(event)
+
+            entities := event.EntityList
+        }
+
+        return entities
+    }
 }

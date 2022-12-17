@@ -11,7 +11,7 @@ class ListViewControl extends GuiControlBase {
     imgListL := ""
     resizeOpts := "wh"
 
-    CreateControl(columns, dataCallback, imgListCallback := "", initCallback := "", highlightRowCallback := "", resizeOpts := "") {
+    CreateControl(columns, dataCallback, imgListCallback := "", initCallback := "", highlightRowCallback := "", resizeOpts := "wh") {
         global LVM_GETHEADER
         super.CreateControl(false)
         columns.InsertAt(this.keyCol, "")

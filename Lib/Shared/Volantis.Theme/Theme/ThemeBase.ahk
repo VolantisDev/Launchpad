@@ -8,7 +8,7 @@ class ThemeBase {
     defaultTheme := "Lightpad"
     vars := Map()
     colors := Map("background", "FFFFFF", "text", "000000", "textInactive", "959595", "accent", "9466FC", "accentBright", "EEE6FF", "accentBg", "8A57F0", "transColor", "")
-    themeAssets := Map("logo", "Resources\Graphics\Logo.png", "icon", "Resources\Graphics\Launchpad.ico", "spinner", "Resources\Graphics\Spinner.gif")
+    themeAssets := Map("logo", "Resources\Graphics\logo.png", "icon", "Resources\Graphics\launchpad.ico", "spinner", "Resources\Graphics\spinner.gif")
     symbols := Map()
     buttons := Map("height", Map("s", 20, "m", 30, "l", 40, "xl", 80), "fixedWidth", Map("s", 80, "m", 100, "l", 120, "xl", 140))
     labels := Map("height", "auto", "fixedWidth", 75, "font", "normal")

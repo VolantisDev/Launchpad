@@ -122,6 +122,5 @@ class TabsControl extends GuiControlBase {
         }
 
         this.guiObj.AutoXYWH("wh", [this.ctl.Name])
-        this.ResizeColumns()
     }
 }

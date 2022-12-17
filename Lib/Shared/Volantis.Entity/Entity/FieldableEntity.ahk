@@ -11,10 +11,29 @@ class FieldableEntity extends EntityBase {
         get => this.GetFieldDefinitions()
     }
 
-    __New(id, entityTypeId, container, eventMgr, storageObj, idSanitizer := "", autoLoad := true) {
-        this.entityFieldFactory := container.Get("entity_field_factory." . entityTypeId)
-        this.entityWidgetFactory := container.Get("entity_widget_factory." . entityTypeId)
-        super.__New(id, entityTypeId, container, eventMgr, storageObj, idSanitizer, autoLoad)
+    __New(id, entityTypeId, container, fieldFactory, widgetFactory, eventMgr, storageObj, idSanitizer := "", autoLoad := true, parentEntity := "", parentEntityStorage := false) {
+        this.entityFieldFactory := fieldFactory
+        this.entityWidgetFactory := widgetFactory
+        
+        super.__New(id, entityTypeId, container, eventMgr, storageObj, idSanitizer, autoLoad, parentEntity, parentEntityStorage)
+    }
+
+    static Create(container, eventMgr, id, entityTypeId, storageObj, idSanitizer, autoLoad := true, parentEntity := "", parentEntityStorage := false) {
+        className := this.Prototype.__Class
+
+        return %className%(
+            id,
+            entityTypeId,
+            container,
+            container.Get("entity_field_factory." . entityTypeId),
+            container.Get("entity_widget_factory." . entityTypeId),
+            eventMgr,
+            storageObj,
+            idSanitizer,
+            autoLoad,
+            parentEntity,
+            parentEntityStorage
+        )
     }
 
     GetDefaultFieldGroups() {
@@ -235,8 +254,8 @@ class FieldableEntity extends EntityBase {
         }
     }
 
-    InitializeDefaults(recurse := true) {
-        defaults := super.InitializeDefaults(recurse)
+    InitializeDefaults() {
+        defaults := super.InitializeDefaults()
 
         for key, fieldObj in this.GetFields() {
             defaults[fieldObj.Definition["storageKey"]] := fieldObj.Definition["default"]

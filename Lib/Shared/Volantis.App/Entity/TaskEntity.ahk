@@ -1,3 +1,3 @@
-class TaskEntity extends AppEntityBase {
+class TaskEntity extends FieldableEntity {
     
 }

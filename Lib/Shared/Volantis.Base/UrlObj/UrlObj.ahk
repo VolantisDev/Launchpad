@@ -51,19 +51,21 @@ class UrlObj {
         urlMap := Map()
 
         urlParts := ""
-        regexStr := "^((P<protocol>[^:/?#]+):)?(//(P<host>[^/?#]*))?(P<path>[^?#]*)(\?(P<query>[^#]*))?(#(P<anchor>.*))?"
-        isUrl := RegExMatch(urlStr, regexStr, urlParts)
+        regexStr := "^((?P<protocol>[^:/?#]+):)?(//(?P<host>[^/?#]*))?(?P<path>[^?#]*)(\?(?P<query>[^#]*))?(#(?P<anchor>.*))?"
+        isUrl := RegExMatch(urlStr, regexStr, &urlParts)
 
-        loop urlParts.Count {
-            matchName := urlParts.Name[A_Index]
-            matchVal := urlParts[A_Index]
-
-            if (matchName) {
-                if (matchName == "query") {
-                    matchVal := this._splitQueryStr(matchVal)
+        if (urlParts) {
+            loop urlParts.Count {
+                matchName := urlParts.Name[A_Index]
+                matchVal := urlParts[A_Index]
+    
+                if (matchName) {
+                    if (matchName == "query") {
+                        matchVal := this._splitQueryStr(matchVal)
+                    }
+    
+                    urlMap[matchName] := matchVal
                 }
-
-                urlMap[matchName] := matchVal
             }
         }
 

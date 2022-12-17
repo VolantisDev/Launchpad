@@ -3,6 +3,7 @@
     launcherManager := ""
     platformManager := ""
     showDetailsPane := true
+    lvResizeOpts := "h"
 
     __New(container, themeObj, config) {
         this.launcherManager := container.Get("entity_manager.launcher")
@@ -17,7 +18,7 @@
         defaults["child"] := false
         defaults["title"] := container.GetApp().appName
         defaults["titleIsMenu"] := true
-        defaults["showStatusIndicator"] := !!(container.Get("config.app").Has("api_authentication") && container.Get("config.app")["api_authentication"])
+        defaults["showStatusIndicator"] := container.Has("entity_manager.web_service")
         return defaults
     }
 
@@ -90,144 +91,12 @@
         }
     }
 
-    _getToolsMenuEntityTypes() {
-        entityTypes := Map()
-
-        for key, entityType in this.container["manager.entity_type"] {
-            if (entityType.definition["manager_link_in_tools_menu"]) {
-                entityTypes[key] := entityType
-            }
-        }
-
-        return entityTypes
-    }
-
     ShowTitleMenu() {
-        menuEntityTypes := this._getToolsMenuEntityTypes()
-        toolsItems := []
-
-        for key, entityType in menuEntityTypes {
-            menuLinkText := entityType.definition["manager_menu_link_text"]
-
-            if (!menuLinkText) {
-                menuLinkText := "&" . entityType.definition["name_plural"]
-            }
-
-            toolsItems.Push(Map("label", menuLinkText, "name", "manage_" . key))
-        }
-
-        toolsItems.Push(Map("label", "&Modules", "name", "ManageModules"))
-        toolsItems.Push(Map("label", "&Flush Cache", "name", "FlushCache"))
-
-        launchersItems := []
-        launchersItems.Push(Map("label", "&Clean Launchers", "name", "CleanLaunchers"))
-        launchersItems.Push(Map("label", "&Reload Launchers", "name", "ReloadLaunchers"))
-
-        aboutItems := []
-        aboutItems.Push(Map("label", "&About Launchpad", "name", "About"))
-        aboutItems.Push(Map("label", "&Open Website", "name", "OpenWebsite"))
-
-        menuItems := []
-        menuItems.Push(Map("label", "&Tools", "name", "ToolsMenu", "childItems", toolsItems))
-        menuItems.Push(Map("label", "&Launchers", "name", "LaunchersMenu", "childItems", launchersItems))
-        menuItems.Push("")
-        menuItems.Push(Map("label", "&About", "name", "About", "childItems", aboutItems))
-        menuItems.Push("")
-        menuItems.Push(Map("label", "&Settings", "name", "Settings"))
-        menuItems.Push(Map("label", "Check for &Updates", "name", "CheckForUpdates"))
-        menuItems.Push("")
-        menuItems.Push(Map("label", "Provide &Feedback", "name", "ProvideFeedback"))
-        menuItems.Push("")
-        menuItems.Push(Map("label", "&Restart", "name", "Reload"))
-        menuItems.Push(Map("label", "E&xit", "name", "Exit"))
-        
-        result := this.container["manager.gui"].Menu(menuItems, this, this.guiObj["WindowTitleText"])
-        
-        if (result == "ManageModules") {
-            this.container["manager.gui"].OpenWindow("ManageModulesWindow")
-        } else if (result == "FlushCache") {
-            this.container["manager.cache"].FlushCaches(true, true)
-        } else if (result == "CleanLaunchers") {
-            this.container["manager.builder"].CleanLaunchers()
-        } else if (result == "ReloadLaunchers") {
-            this.launcherManager.LoadComponents(true)
-            this.UpdateListView()
-        } else if (result == "About") {
-            this.container["manager.gui"].Dialog(Map("type", "AboutWindow"))
-        } else if (result == "OpenWebsite") {
-            this.app.OpenWebsite()
-        } else if (result == "ProvideFeedback") {
-            this.app.ProvideFeedback()
-        } else if (result == "Settings") {
-            this.container["manager.gui"].Dialog(Map("type", "SettingsWindow", "unique", false))
-        } else if (result == "CheckForUpdates") {
-            this.app.CheckForUpdates()
-        } else if (result == "Reload") {
-            this.app.restartApp()
-        } else if (result == "Exit") {
-            this.app.ExitApp()
-        } else {
-            for key, entityType in menuEntityTypes {
-                if (result == "manage_" . key) {
-                    this.container["entity_type." . key].OpenManageWindow()
-                    break
-                }
-            }
-        }
-    }
-
-    GetStatusInfo() {
-        info := ""
-
-        if (this.container.Has("Auth")) {
-            info := this.container["Auth"].GetStatusInfo()
-        }
-
-        return info
-    }
-
-    OnStatusIndicatorClick(btn, info) {
-        menuItems := []
-
-        if (this.container.Has("Auth")) {
-            if (this.container["Auth"].IsAuthenticated()) {
-                menuItems.Push(Map("label", "Account Details", "name", "AccountDetails"))
-                menuItems.Push(Map("label", "Logout", "name", "Logout"))
-            } else {
-                menuItems.Push(Map("label", "Login", "name", "Login"))
-            }
-        }
-
-        result := this.container["manager.gui"].Menu(menuItems, this, btn)
-
-        if (result == "AccountDetails") {
-            accountResult := this.container["manager.gui"].Dialog(Map(
-                "type", "AccountInfoWindow",
-                "ownerOrParent", this.guiId,
-                "child", true
-            ))
-
-            if (accountResult == "OK") {
-                this.UpdateStatusIndicator()
-            }
-        } else if (result == "Logout") {
-            if (this.container.Has("Auth")) {
-                this.container["Auth"].Logout()
-            }
-        } else if (result == "Login") {
-            if (this.container.Has("Auth")) {
-                this.container["Auth"].Login()
-            }
-        }
-    }
-
-    StatusWindowIsOnline() {
-        isOnline := false
-
-        if (this.container.Has("Auth")) {
-            isOnline := this.container["Auth"].IsAuthenticated()
-        }
-        return isOnline
+        this.app.MainMenu(
+            this, 
+            this.guiObj["WindowTitleText"], 
+            false
+        )
     }
 
     FormatDate(timestamp) {
@@ -262,7 +131,9 @@
                 }
 
                 status := launcher.GetStatus()
-                apiStatus := launcher["DataSourceItemKey"] ? "Linked" : "Not linked"
+
+                ; @todo Move the API data to an event in the LaunchpadApi module
+                apiStatus := (launcher.HasField["web_service_launchpad_api_ref"] && launcher["web_service_launchpad_api_ref"]) ? "Linked" : "Not linked"
                 created := this.FormatDate(this.app.State.GetLauncherCreated(key))
                 updated := this.FormatDate(this.app.State.GetLauncherInfo("Config")["Timestamp"])
                 built := this.FormatDate(this.app.State.GetLauncherInfo("Build")["Timestamp"])
@@ -438,7 +309,9 @@
             }
 
             status := launcher.GetStatus()
-            apiStatus := launcher["DataSourceItemKey"] ? "Linked" : "Not linked"
+
+            ; @todo Move the API code to the LaunchpadApi module
+            apiStatus := (launcher.HasField("web_service_launchpad_api_ref") && launcher["web_service_launchpad_api_ref"]) ? "Linked" : "Not linked"
             created := this.FormatDate(this.app.State.GetLauncherCreated(key))
             updated := this.FormatDate(this.app.State.GetLauncherInfo(key, "Config")["Timestamp"])
             built := this.FormatDate(this.app.State.GetLauncherInfo(key, "Build")["Timestamp"])
@@ -513,7 +386,7 @@
 
     GetListViewImgList(lv, large := false) {
         IL := IL_Create(this.launcherManager.Count(true), 1, large)
-        defaultIcon := this.themeObj.GetIconPath("Game")
+        defaultIcon := this.themeObj.GetIconPath("game")
         iconNum := 1
 
         for key, launcher in this.launcherManager {
@@ -533,7 +406,7 @@
     GetItemImage(launcher) {
         iconSrc := launcher["IconSrc"]
         assetIcon := launcher["AssetsDir"] . "\" . launcher.Id . ".ico"
-        defaultIcon := this.themeObj.GetIconPath("Game")
+        defaultIcon := this.themeObj.GetIconPath("game")
 
         if ((!iconSrc || !FileExist(iconSrc)) && FileExist(assetIcon)) {
             iconSrc := assetIcon
@@ -581,7 +454,7 @@
             }
 
             entity.SaveEntity()
-            entity.UpdateDataSourceDefaults()
+            entity.UpdateDefaults()
             this.UpdateListView()
         }
     }

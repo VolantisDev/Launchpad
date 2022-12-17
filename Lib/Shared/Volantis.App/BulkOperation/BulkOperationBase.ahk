@@ -40,7 +40,7 @@ class BulkOperationBase {
         }
 
         if (this.app.Services.Has("logger")) {
-            this.app.Service("logger").Debug(Type(this) . ": Starting bulk operation...")
+            this.app["logger"].Debug(Type(this) . ": Starting bulk operation...")
         }
         
         this.running := true
@@ -56,7 +56,7 @@ class BulkOperationBase {
 
     LogResults() {
         if (this.app.Services.Has("logger")) {
-            this.app.Service("logger").Info(Type(this) . " Results: " . this.GetResultMessage())
+            this.app["logger"].Info(Type(this) . " Results: " . this.GetResultMessage())
         }
     }
 
@@ -89,7 +89,7 @@ class BulkOperationBase {
                     ownerOrParent := this.parent
                 }
 
-                this.progress := this.app.Service("manager.gui").OpenWindow(Map(
+                this.progress := this.app["manager.gui"].OpenWindow(Map(
                     "type", "ProgressIndicator",
                     "title", this.progressTitle,
                     "text", this.progressText,
@@ -115,7 +115,7 @@ class BulkOperationBase {
 
     Notify() {
         if (this.shouldNotify && this.app.Services.Has("notifier")) {
-            this.app.Service("notifier").Info(this.GetResultMessage())
+            this.app["notifier"].Info(this.GetResultMessage())
         }
     }
 

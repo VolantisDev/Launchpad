@@ -17,7 +17,7 @@ class InstallOp extends BulkOperationBase {
 
         for index, name in this.installers {
             name := "installer." . name
-            installer := this.app.Service(name)
+            installer := this.app[name]
 
             if (!HasBase(installer, InstallerBase.Prototype)) {
                 throw AppException("Provided installer is not valid: " . name)

@@ -40,7 +40,7 @@ class ManageBackupsWindow extends ManageWindowBase {
 
     GetListViewImgList(lv, large := false) {
         IL := IL_Create(this.backupManager.Count(true), 1, large)
-        defaultIcon := this.themeObj.GetIconPath("Backup")
+        defaultIcon := this.themeObj.GetIconPath("backup")
         iconNum := 1
 
         for key, backup in this.backupManager {
@@ -109,7 +109,7 @@ class ManageBackupsWindow extends ManageWindowBase {
         menuItems.Push(Map("label", "Restore", "name", "RestoreBackup"))
         menuItems.Push(Map("label", "Delete", "name", "DeleteBackup"))
 
-        result := this.app.Service("manager.gui").Menu(menuItems, this)
+        result := this.app["manager.gui"].Menu(menuItems, this)
 
         if (result == "EditBackup") {
             this.EditBackup(key)

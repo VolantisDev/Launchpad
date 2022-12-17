@@ -1,7 +1,6 @@
 class ErrorDialog extends DialogBox {
     errorObj := ""
     notifierObj := ""
-    apiEndpoint := ""
     formShown := false
     formH := 0
     guiH := 0
@@ -9,15 +8,6 @@ class ErrorDialog extends DialogBox {
     __New(container, themeObj, config, errorObj) {
         this.errorObj := errorObj
         this.notifierObj := container.Get("notifier").notifierObj
-
-        if (container.Has("manager.data_source")) {
-            dsManager := container.Get("manager.data_source")
-
-            if (dsManager.GetDefaultDataSource()) {
-                this.apiEndpoint := container.Get("manager.data_source").GetDefaultDataSource()
-            }
-        }
-
         this.formShown := config.Has("submitError") ? config["submitError"] : false
         
         super.__New(container, themeObj, config)
@@ -118,9 +108,14 @@ class ErrorDialog extends DialogBox {
     SendError() {
         global appVersion
 
-        if (this.apiEndpoint) {
-            endpoint := this.apiEndpoint.endpointUrl . "/submit-error"
+        ; @todo Move the API connection stuff into the LaunchpadApi module
+        filters := "error_submission"
+        operation := "create"
 
+        if (
+            this.container.Has("web_services.adapter_manager")
+            && this.container["web_services.adapter_manager"].HasAdapters(filters, operation)
+        ) {
             body := Map()
             body["message"] := this.errorObj.Message
             body["what"] := this.errorObj.What
@@ -132,12 +127,25 @@ class ErrorDialog extends DialogBox {
             body["version"] := appVersion ? appVersion : ""
             body["details"] := this.guiObj["ErrorDetails"].Text
 
-            request := WinHttpReq(endpoint)
-            response := request.Send("POST", body)
-            success := !!(request.GetStatusCode() == 200)
+            results := this.container["web_services.adapter_manager"].AdapterRequest(
+                Map("data", body),
+                filters,
+                operation,
+                true
+            )
 
-            notification := success ? "Successfully sent error to Volantis Development" : "Failed to send error to Volantis Development"
-            this.notifierObj.Notify(notification, "Error Sent", success ? "info" : "error")
+            success := false
+
+            for adapterId, adapterResult in results {
+                if (adapterResult) {
+                    success := true
+
+                    break
+                }
+            }
+
+            notification := success ? "Successfully sent error details for further investigation" : "Failed to send error details"
+            this.notifierObj.Notify(notification, "Error Submission", success ? "info" : "error")
         }
     }
 }

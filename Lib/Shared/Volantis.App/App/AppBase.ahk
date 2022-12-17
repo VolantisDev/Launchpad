@@ -1,5 +1,4 @@
 class AppBase {
-    developer := ""
     versionStr := ""
     appName := ""
     appDir := ""
@@ -8,9 +7,9 @@ class AppBase {
     configObj := ""
     stateObj := ""
     serviceContainerObj := ""
-    customTrayMenu := false
     themeReady := false
     startConfig := ""
+    isSetup := false
 
     static Instance := ""
 
@@ -25,11 +24,20 @@ class AppBase {
     }
 
     Config {
-        get => this.Service("config.app")
+        get => this["config.app"]
     }
 
     State {
-        get => this.Service("state.app")
+        get => this["state.app"]
+    }
+
+    Parameter[key] {
+        get => this.Services.GetParameter(key)
+        set => this.Services.SetParameter(key, value)
+    }
+
+    __Item[serviceId] {
+        get => this.Service(serviceId)
     }
 
     __New(config := "", autoStart := true) {
@@ -57,6 +65,16 @@ class AppBase {
             "app_dir", this.appDir,
             "data_dir", this.dataDir,
             "tmp_dir", this.tmpDir,
+            "app.website_url", "",
+            "app.custom_tray_menu", false,
+            "app.developer", "",
+            "app.has_settings", false,
+            "app.settings_window", "",
+            "app.show_restart_menu_item", true,
+            "app.supports_update_check", false,
+            "app.show_about_menu_item", false,
+            "app.about_window", "",
+            "app.show_website_menu_item", false,
             "resources_dir", "@@{app_dir}\Resources",
             "config_path", "@@{app_dir}\" . this.appName . ".json",
             "config_key", "config",
@@ -374,10 +392,6 @@ class AppBase {
             config["appName"] := appBaseName
         }
 
-        if (!config.Has("developer")) {
-            config["developer"] := ""
-        }
-
         if (!config.Has("appDir") || !config["appDir"]) {
             config["appDir"] := A_ScriptDir
         }
@@ -396,7 +410,6 @@ class AppBase {
 
         this.appName := config["appName"]
         this.versionStr := config["version"]
-        this.developer := config["developer"]
         this.appDir := config["appDir"]
         this.tmpDir := config["tmpDir"]
         this.dataDir := config["dataDir"]
@@ -412,26 +425,26 @@ class AppBase {
         this.LoadServices(config)
 
         if (!config.Has("useShell") || config("useShell")) {
-            this.Service("shell")
+            this["shell"]
         }
         
         OnError(ObjBindMethod(this, "OnException"))
 
         event := AppRunEvent(Events.APP_PRE_INITIALIZE, this, config)
-        this.Service("manager.event").DispatchEvent(event)
+        this["manager.event"].DispatchEvent(event)
 
         this.InitializeApp(config)
 
         event := AppRunEvent(Events.APP_POST_INITIALIZE, this, config)
-        this.Service("manager.event").DispatchEvent(event)
-
-        event := AppRunEvent(Events.APP_POST_STARTUP, this, config)
-        this.Service("manager.event").DispatchEvent(event)
+        this["manager.event"].DispatchEvent(event)
 
         event := AppRunEvent(Events.APP_PRE_RUN, this, config)
-        this.Service("manager.event").DispatchEvent(event)
+        this["manager.event"].DispatchEvent(event)
 
         this.RunApp(config)
+
+        event := AppRunEvent(Events.APP_POST_STARTUP, this, config)
+        this["manager.event"].DispatchEvent(event)
     }
 
     LoadServices(config) {
@@ -441,18 +454,18 @@ class AppBase {
         ))
         
         this.Services.LoadDefinitions(MapDefinitionLoader(config))
-        sdFactory := this.Service("factory.structured_data")
-        serviceFile := this.Services.GetParameter("service_files.app")
+        sdFactory := this["factory.structured_data"]
+        serviceFile := this.Parameter["service_files.app"]
 
         if (FileExist(serviceFile)) {
             this.Services.LoadDefinitions(FileDefinitionLoader(sdFactory, serviceFile))
         }
 
-        this.Service("config.app")
+        this["config.app"]
         this.InitializeTheme()
         this.InitializeModules(config)
 
-        for index, moduleServiceFile in this.Service("manager.module").GetModuleServiceFiles() {
+        for index, moduleServiceFile in this["manager.module"].GetModuleServiceFiles() {
             if (FileExist(moduleServiceFile)) {
                 this.Services.LoadDefinitions(FileDefinitionLoader(sdFactory, moduleServiceFile))
             } else {
@@ -461,49 +474,49 @@ class AppBase {
         }
         
         ; Reload user config files to ensure they are the active values
-        this.Service("config.app").LoadConfig(true)
+        this["config.app"].LoadConfig(true)
 
         ; Register early event subscribers (e.g. modules)
-        this.Service("manager.event").RegisterServiceSubscribers(this.Services)
+        this["manager.event"].RegisterServiceSubscribers(this.Services)
 
-        this.Service("manager.event").Register(Events.APP_SERVICES_LOADED, "AppServices", ObjBindMethod(this, "OnServicesLoaded"))
+        this["manager.event"].Register(Events.APP_SERVICES_LOADED, "AppServices", ObjBindMethod(this, "OnServicesLoaded"))
 
         event := ServiceDefinitionsEvent(Events.APP_SERVICE_DEFINITIONS, "", "", config)
-        this.Service("manager.event").DispatchEvent(event)
+        this["manager.event"].DispatchEvent(event)
 
         if (event.Services.Count || event.Parameters.Count) {
             this.Services.LoadDefinitions(SimpleDefinitionLoader(event.Services, event.Parameters))
         }
 
-        serviceFile := this.Services.GetParameter("service_files.user")
+        serviceFile := this.Parameter["service_files.user"]
 
         if (FileExist(serviceFile)) {
             this.Services.LoadDefinitions(FileDefinitionLoader(sdFactory, serviceFile))
         }
 
         ; Register any missing late-loading event subscribers
-        this.Service("manager.event").RegisterServiceSubscribers(this.Services)
+        this["manager.event"].RegisterServiceSubscribers(this.Services)
 
         event := AppRunEvent(Events.APP_SERVICES_LOADED, this, config)
-        this.Service("manager.event").DispatchEvent(event)
+        this["manager.event"].DispatchEvent(event)
     }
 
     OnServicesLoaded(event, extra, eventName, hwnd) {
-        this.Service("manager.cache")
-        this.Service("manager.entity_type").All()
-        this.Service("manager.installer").RunInstallers(InstallerBase.INSTALLER_TYPE_REQUIREMENT)
+        this["manager.cache"]
+        this["manager.entity_type"].All()
+        this["manager.installer"].RunInstallers(InstallerBase.INSTALLER_TYPE_REQUIREMENT)
     }
 
     InitializeModules(config) {
-        includeFiles := this.Services.GetParameter("include_files")
-        updated := this.Service("manager.module").UpdateModuleIncludes(includeFiles["modules"], includeFiles["module_tests"])
+        includeFiles := this.Parameter["include_files"]
+        updated := this["manager.module"].UpdateModuleIncludes(includeFiles["modules"], includeFiles["module_tests"])
 
         if (updated) {
             message := A_IsCompiled ?
                 "Your modules have been updated. Currently, you must recompile " this.appName . " yourself for the changes to take effect. Would you like to exit now (highly recommended)?" :
                 "Your modules have been updated, and " this.appName . " must be restarted for the changes to take effect. Would you like to restart now?"
 
-            response := this.app.Service("manager.gui").Dialog(Map(
+            response := this.app["manager.gui"].Dialog(Map(
                 "title", "Module Includes Updated",
                 "text", message
             ))
@@ -519,16 +532,16 @@ class AppBase {
     }
 
     InitializeTheme() {
-        this.Service("gdip", "manager.gui", "manager.theme")
+        this[["gdip", "manager.gui", "manager.theme"]]
         this.themeReady := true
     }
 
     InitializeApp(config) {
         A_AllowMainWindow := false
 
-        if (this.customTrayMenu) {
+        if (this.Parameter["app.custom_tray_menu"]) {
             A_TrayMenu.Delete()
-            this.Service("manager.event").Register(Events.AHK_NOTIFYICON, "TrayClick", ObjBindMethod(this, "OnTrayIconRightClick"), 1)
+            this["manager.event"].Register(Events.AHK_NOTIFYICON, "TrayClick", ObjBindMethod(this, "OnTrayIconRightClick"), 1)
         }
     }
 
@@ -537,19 +550,19 @@ class AppBase {
             this.CheckForUpdates(false)
         }
 
-        if (this.Services.HasParameter("config_path") && !FileExist(this.Parameter("config_path"))) {
+        if (this.Services.HasParameter("config_path") && !FileExist(this.Parameter["config_path"])) {
             this.InitialSetup(config)
         }
     }
 
     OpenApp() {
-        mainWin := this.Parameter("config.main_window")
+        mainWin := this.Parameter["config.main_window"]
 
         if (mainWin) {
-            if (this.Service("manager.gui").Has(mainWin)) {
-                WinActivate("ahk_id " . this.Service("manager.gui")[mainWin].GetHwnd())
+            if (this["manager.gui"].Has(mainWin)) {
+                WinActivate("ahk_id " . this["manager.gui"][mainWin].GetHwnd())
             } else {
-                this.Service("manager.gui").OpenWindow(Map(
+                this["manager.gui"].OpenWindow(Map(
                     "type", mainWin,
                     "title", this.appName
                 ))
@@ -559,7 +572,7 @@ class AppBase {
 
     ExitApp() {
         event := AppRunEvent(Events.APP_SHUTDOWN, this)
-        this.Service("manager.event").DispatchEvent(event)
+        this["manager.event"].DispatchEvent(event)
 
         if (this.Services.Has("gdip")) {
             Gdip_Shutdown(this.Services["gdip"].GetHandle())
@@ -570,7 +583,7 @@ class AppBase {
 
     RestartApp() {
         event := AppRunEvent(Events.APP_RESTART, this)
-        this.Service("manager.event").DispatchEvent(event)
+        this["manager.event"].DispatchEvent(event)
 
         if (this.Services.Has("gdip")) {
             Gdip_Shutdown(this.Services["gdip"].GetHandle())
@@ -586,7 +599,7 @@ class AppBase {
             throw AppException("The shell is disabled, so shell commands cannot currently be run.")
         }
         
-        result := this.Service("shell").Exec(A_ComSpec . " /C " . command).StdOut.ReadAll()
+        result := this["shell"].Exec(A_ComSpec . " /C " . command).StdOut.ReadAll()
 
         if (trimOutput) {
             result := Trim(result, " `r`n`t")
@@ -606,12 +619,12 @@ class AppBase {
             }
 
             for index, arrName in name {
-                results[arrName] := this.Service(arrName)
+                results[arrName] := this[arrName]
             }
 
             if (params && params.Length) {
                 for index, arrName in params {
-                    results[arrName] := this.Service(arrName)
+                    results[arrName] := this[arrName]
                 }
             }
 
@@ -621,14 +634,15 @@ class AppBase {
         return this.Services.Get(name)
     }
 
-    Parameter(name) {
-        return this.Services.GetParameter(name)
-    }
-
     OnException(e, mode) {
         extra := (e.HasProp("Extra") && e.Extra != "") ? "`n`nExtra information:`n" . e.Extra : ""
         occurredIn := e.What ? " in " . e.What : ""
-        developer := this.developer ? this.developer : "the developer(s)"
+
+        developer := this.Parameter["app.developer"]
+
+        if (!developer) {
+            developer := "the developer(s)"
+        }
 
         errorText := this.appName . " has experienced an unhandled exception. You can find the details below."
         errorText .= "`n`n" . e.Message . extra
@@ -646,7 +660,7 @@ class AppBase {
         }
 
         if (this.Services.Has("logger")) {
-            this.Service("logger").Error(errorText)
+            this["logger"].Error(errorText)
         }
         
         errorText .= "`n"
@@ -659,7 +673,7 @@ class AppBase {
             if (this.themeReady) {
                 btns := allowContinue ? "*&Continue|&Reload|&Exit" : "*&Reload|&Exit"
 
-                this.Service("manager.gui").Dialog(Map(
+                this["manager.gui"].Dialog(Map(
                     "type", "ErrorDialog",
                     "title", "Unhandled Exception",
                     "text", errorText,
@@ -683,7 +697,7 @@ class AppBase {
     
     OnTrayIconRightClick(wParam, lParam, msg, hwnd) {
         if (lParam == Events.MOUSE_RIGHT_UP) {
-            if (this.customTrayMenu) {
+            if (this.Parameter["app.custom_tray_menu"]) {
                 this.ShowTrayMenu()
                 return 0
             }
@@ -691,11 +705,7 @@ class AppBase {
     }
 
     InitialSetup(config) {
-        ; Override this to set config values as needed
-    }
-
-    CheckForUpdates(notify := true) {
-        ; Optional method to override
+        this.isSetup := true
     }
 
     ShowTrayMenu() {
@@ -706,7 +716,7 @@ class AppBase {
         menuItems.Push(Map("label", "Restart", "name", "RestartApp"))
         menuItems.Push(Map("label", "Exit", "name", "ExitApp"))
 
-        result := this.Service("manager.gui").Menu(menuItems, this)
+        result := this["manager.gui"].Menu(menuItems, this)
         this.HandleTrayMenuClick(result)
     }
 
@@ -729,5 +739,239 @@ class AppBase {
     __Delete() {
         this.ExitApp()
         super.__Delete()
+    }
+
+    MainMenu(parentGui, parentCtl, showOpenAppItem := false) {
+        menuItems := this.GetMainMenuItems(showOpenAppItem)
+
+        if (menuItems.Length) {
+            this.HandleMainMenuClick(this["manager.gui"].Menu(
+                menuItems, 
+                parentGui, 
+                parentCtl
+            ))
+        }
+    }
+
+    GetMainMenuItems(showOpenAppItem := false) {
+        menuItems := []
+        menuItems := this.AddMainMenuEarlyItems(menuItems, showOpenAppItem)
+
+        if (menuItems.Length) {
+            menuItems.Push("")
+        }
+
+        length := menuItems.Length
+
+        toolsItems := this.GetToolsMenuItems()
+
+        if (toolsItems.Length) {
+            menuItems.Push(Map("label", "&Tools", "name", "ToolsMenu", "childItems", toolsItems))
+        }
+
+        aboutItems := this.GetAboutMenuItems()
+
+        if (aboutItems.Length) {
+            menuItems.Push(Map("label", "&About", "name", "About", "childItems", aboutItems))
+        }
+
+        menuItems := this.AddMainMenuMiddleItems(menuItems)
+
+        if (menuItems.Length > length) {
+            menuItems.Push("")
+        }
+
+        length := menuItems.Length
+        menuItems := this.AddMainMenuLateItems(menuItems)
+
+        if (menuItems.Length > length) {
+            menuItems.Push("")
+        }
+
+        if (this.Parameter["app.show_restart_menu_item"]) {
+            menuItems.Push(Map("label", "&Restart", "name", "Reload"))
+        }
+
+        menuItems.Push(Map("label", "E&xit", "name", "Exit"))
+
+        event := MenuItemsEvent(Events.APP_MENU_ITEMS_ALTER, menuItems)
+        this.Dispatch(event)
+        menuItems := event.MenuItems
+
+        return menuItems
+    }
+
+    GetAboutMenuItems() {
+        aboutItems := []
+
+        if (this.Parameter["app.show_about_menu_item"]) {
+            aboutItems.Push(Map("label", "&About " . this.appName, "name", "About"))
+        }
+
+        if (this.Parameter["app.show_website_menu_item"]) {
+            aboutItems.Push(Map("label", "Open &Website", "name", "OpenWebsite"))
+        }
+
+        event := MenuItemsEvent(Events.APP_MENU_ABOUT_ITEMS_ALTER, aboutItems)
+        this.Dispatch(event)
+        aboutItems := event.MenuItems
+
+        return aboutItems
+    }
+
+    GetToolsMenuItems() {
+        toolsItems := this.AddEntityManagerMenuLinks([])
+        event := MenuItemsEvent(Events.APP_MENU_TOOLS_ITEMS_ALTER, toolsItems)
+        this.Dispatch(event)
+        toolsItems := event.MenuItems
+
+        return toolsItems
+    }
+
+    AddMainMenuEarlyItems(menuItems, showOpenAppItem := false) {
+        if (showOpenAppItem) {
+            menuItems.Push(Map("label", "Open " . this.appName, "name", "OpenApp"))
+            menuItems.Push("")
+        }
+
+        event := MenuItemsEvent(Events.APP_MENU_ITEMS_EARLY, menuItems)
+        this.Dispatch(event)
+        menuItems := event.MenuItems
+
+        return menuItems
+    }
+
+    AddMainMenuMiddleItems(menuItems) {
+        event := MenuItemsEvent(Events.APP_MENU_ITEMS_MIDDLE, menuItems)
+        this.Dispatch(event)
+        menuItems := event.MenuItems
+        return menuItems
+    }
+
+    AddMainMenuLateItems(menuItems) {
+        if (this.Parameter["app.has_settings"]) {
+            menuItems.Push(Map("label", "&Settings", "name", "Settings"))
+        }
+
+        if (this.Parameter["app.supports_update_check"]) {
+            menuItems.Push(Map("label", "Check for &Updates", "name", "CheckForUpdates"))
+        }
+
+        event := MenuItemsEvent(Events.APP_MENU_ITEMS_LATE, menuItems)
+        this.Dispatch(event)
+        menuItems := event.MenuItems
+
+        return menuItems
+    }
+
+    AddEntityManagerMenuLinks(menuItems) {
+        menuEntityTypes := this._getToolsMenuEntityTypes()
+
+        for key, entityType in menuEntityTypes {
+            menuLinkText := entityType.definition["manager_menu_link_text"]
+
+            if (!menuLinkText) {
+                menuLinkText := "&" . entityType.definition["name_plural"]
+            }
+
+            menuItems.Push(Map("label", menuLinkText, "name", "manage_" . key))
+        }
+
+        return menuItems
+    }
+
+    Dispatch(event) {
+        this["manager.event"].DispatchEvent(event)
+    }
+
+    _getToolsMenuEntityTypes() {
+        entityTypes := Map()
+
+        for key, entityType in this["manager.entity_type"] {
+            if (entityType.definition["manager_link_in_tools_menu"]) {
+                entityTypes[key] := entityType
+            }
+        }
+
+        return entityTypes
+    }
+
+    HandleMainMenuClick(result) {
+        event := MenuResultEvent(Events.APP_MENU_PROCESS_RESULT, result)
+        this.Dispatch(event)
+        result := event.Result
+
+        if (!event.IsFinished) {
+            if (result == "About") {
+                this.ShowAbout()
+            } else if (result == "OpenWebsite") {
+                this.OpenWebsite()
+            } else if (result == "Settings") {
+                this.ShowSettings()
+            } else if (result == "CheckForUpdates") {
+                this.CheckForUpdates()
+            } else if (result == "Reload") {
+                this.restartApp()
+            } else if (result == "Exit") {
+                this.ExitApp()
+            } else {
+                for key, entityType in this._getToolsMenuEntityTypes() {
+                    if (result == "manage_" . key) {
+                        this["entity_type." . key].OpenManageWindow()
+                        break
+                    }
+                }
+            }
+        }
+
+        return result
+    }
+
+    ShowSettings() {
+        windowName := this.Parameter["app.settings_window"]
+
+        if (windowName) {
+            this["manager.gui"].Dialog(Map("type", windowName, "unique", false))
+        }
+    }
+
+    ShowAbout() {
+        windowName := this.Parameter["app.about_window"]
+
+        if (windowName) {
+            this["manager.gui"].Dialog(Map("type", windowName))
+        }
+    }
+
+    OpenWebsite() {
+        websiteUrl := this.Parameter["app.website_url"]
+
+        if (websiteUrl) {
+            Run(websiteUrl)
+        }
+    }
+
+    CheckForUpdates(notify := true) {
+        if (this.Parameter["app.supports_update_check"]) {
+            updateAvailable := false
+
+            event := ReleaseInfoEvent(Events.APP_GET_RELEASE_INFO, this)
+            this.Dispatch(event)
+            releaseInfo := event.ReleaseInfo
+
+            if (
+                releaseInfo 
+                && releaseInfo.Has("version") 
+                && releaseInfo["version"]
+                && this["version_checker"].VersionIsOutdated(releaseInfo["version"], this.Version)
+            ) {
+                updateAvailable := true
+                this["manager.gui"].Dialog(Map("type", "UpdateAvailableWindow"), releaseInfo)
+            }
+
+            if (!updateAvailable && notify) {
+                this["notifier"].Info("You're running the latest version of " . this.appName . ". Shiny!")
+            }
+        }
     }
 }

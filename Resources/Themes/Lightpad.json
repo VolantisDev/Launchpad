@@ -108,9 +108,9 @@
             "transColor": ""
         },
         "themeAssets": {
-            "icon": "Graphics\\Launchpad.ico",
-            "logo": "Graphics\\Logo.png",
-            "spinner": "Graphics\\Spinner.gif"
+            "icon": "Graphics\\launchpad.ico",
+            "logo": "Graphics\\logo.png",
+            "spinner": "Graphics\\spinner.gif"
         },
         "symbols": {
             "arrowDown": "ArrowDownSymbol",

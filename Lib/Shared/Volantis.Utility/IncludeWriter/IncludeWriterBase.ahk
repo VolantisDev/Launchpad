@@ -25,7 +25,12 @@ class IncludeWriterBase {
                 updated := this.FilesAreDifferent(this.tmpPath, this.outputPath)
 
                 if (updated) {
-                    FileDelete(this.outputPath)
+                    try {
+                        FileDelete(this.outputPath)
+                    } catch Any {
+                        throw AppException("Unable to delete file path " . this.outputPath)
+                    }
+                    
                 }
             }
 

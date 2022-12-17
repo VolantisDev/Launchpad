@@ -2,6 +2,12 @@
     Extending this class is optional as its main purpose is to document the API
 */
 class EventSubscriberBase {
+    container := ""
+
+    __New(container) {
+        this.container := container
+    }
+
     /*
         Format:
         Map(
@@ -12,6 +18,6 @@ class EventSubscriberBase {
         )
     */
     GetEventSubscribers() {
-        return []
+        return Map()
     }
 }

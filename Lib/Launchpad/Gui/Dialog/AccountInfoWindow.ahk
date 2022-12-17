@@ -3,25 +3,30 @@
         defaults := super.GetDefaultConfig(container, config)
         defaults["title"] := "Account Info"
         defaults["buttons"] := "*&Save|&Cancel|&Logout"
+        defaults["webService"] := ""
         return defaults
     }
 
     Controls() {
         super.Controls()
 
-        if (this.app.Services.Has("Auth")) {
-            info := this.app.Service("Auth").GetStatusInfo()
+        if (this.app.Services.Has("entity_manager.web_service")) {
+            entityMgr := this.app.Services["entity_manager.web_service"]
+
+            webService := this.config["webService"]
+
+            if (!webService) {
+                throw AppException("Opened AccountInfoWindow without a webService specified.")
+            }
+
+            info := webService.GetStatusInfo()
 
             if (info) {
                 opts := "w" . this.windowSettings["contentWidth"] . " x" . this.margin . " y+" . this.margin
                 this.guiObj.AddPicture("x" . this.margin . " y+" . this.margin, info["photo"])
-                this.guiObj.AddText(opts, "Email: " . info["email"])
+                this.guiObj.AddText(opts, "Account: " . info["account"])
             }
         }
-
-        this.AddHeading("Player Name")
-        this.AddEdit("PlayerName", this.app.Config["player_name"], "", 250)
-        this.guiObj.AddText("w" . this.windowSettings["contentWidth"], "Note: Player name is stored locally and not synced with your online Launchpad account yet.")
 
         position := "Wrap x" . this.margin . " y+" . this.margin
         options := position . " w" . this.windowSettings["contentWidth"] . " +0x200 c" . this.themeObj.GetColor("textLink")
@@ -30,11 +35,17 @@
 
     ProcessResult(result, submittedData := "") {
         if (result == "Logout") {
-            if (this.app.Services.Has("Auth")) {
-                this.app.Service("Auth").Logout()
+            webService := this.config["webService"]
+
+            if (webService) {
+                webService.Logout()
             }
-        } else if (result == "Save" && submittedData) {
-            this.app.Config["player_name"] := submittedData.PlayerName
+        } else if (result == "Login") {
+            webService := this.config["webService"]
+
+            if (webService) {
+                webService.Login()
+            }
         }
 
         return result

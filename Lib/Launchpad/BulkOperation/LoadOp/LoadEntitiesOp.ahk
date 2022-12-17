@@ -10,7 +10,7 @@ class LoadEntitiesOp extends BulkOperationBase {
     failedMessage := "{n} launcher(s) could not be loaded due to errors."
 
     __New(app, launcherConfigObj := "", owner := "") {
-        this.launcherManager := app.Service("entity_manager.launcher")
+        this.launcherManager := app["entity_manager.launcher"]
 
         if (launcherConfigObj == "") {
             launcherConfigObj := this.launcherManager.GetConfig()
@@ -29,7 +29,7 @@ class LoadEntitiesOp extends BulkOperationBase {
         }
 
         ; @todo replace this since EntityFactory is no longer used
-        factory := this.app.Service("EntityFactory")
+        factory := this.app["EntityFactory"]
 
         for key, config in this.launcherConfigObj {
             this.StartItem(key, key)

@@ -32,7 +32,7 @@ class BuilderBase {
     }
 
     NeedsShortcutFile(launcherEntityObj) {
-        return (launcherEntityObj["ManagedGame"]["UsesShortcut"])
+        return (launcherEntityObj["GameProcess"]["UsesShortcut"])
     }
 
     BuildAction(launcherEntityObj, launcherDir, assetsDir) {

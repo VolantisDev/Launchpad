@@ -1,5 +1,6 @@
 class StateBase {
     app := ""
+    container := ""
     stateMap := Map()
     stateLoaded := false
 
@@ -14,13 +15,14 @@ class StateBase {
     }
 
     IsStateOutdated() {
-        return this.app.Service("version_checker").VersionIsOutdated(this.app.Version, this.Version)
+        return this.app["version_checker"].VersionIsOutdated(this.app.Version, this.Version)
     }
 
     __New(app, state := "", autoLoad := false) {
         InvalidParameterException.CheckTypes("StateBase", "app", app, "AppBase")
         
         this.app := app
+        this.container := app.Services
 
         if (state != "") {
             InvalidParameterException.CheckTypes("StateBase", "state", state, "Map")

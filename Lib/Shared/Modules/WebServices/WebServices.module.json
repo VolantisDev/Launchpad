@@ -1,0 +1,123 @@
+{
+    "module": {
+        "name": "Web Services",
+        "type": "AppModule",
+        "icon": "",
+        "category": "Web Services",
+        "tags": ["Launchpad", "LaunchpadBuilder"],
+        "description": "Enables Launchpad to connect to and authenticate with remove services on the Internet for additional functionality.",
+        "author": {
+            "name": "Ben McClure, Volantis Dev",
+            "url": "https://volantisdev.com"
+        },
+        "website": "https://launchpad.games",
+        "version": "{{VERSION}}",
+        "appVersion": "",
+        "dependencies": []
+    },
+    "parameters": {
+        "config.web_services_file": "@@{data_dir}\\WebServices.json",
+        "config.web_services_state_path": "@@{data_dir}\\WebServicesState.json",
+        "config.web_services_view_mode": "Report",
+        "entity_type.web_service": {
+            "name_singular": "Web Service",
+            "name_plural": "Web Services",
+            "entity_class": "WebServiceEntity",
+            "storage_config_storage_parent_key": "WebServices",
+            "storage_config_path_parameter": "config.web_services_file",
+            "manager_view_mode_parameter": "config.web_services_view_mode",
+            "definition_loader_parameter_key": "web_services.services",
+            "default_icon": "webhook",
+            "allow_add": true,
+            "allow_edit": true,
+            "allow_delete": true,
+            "manager_gui": "ManageWebServicesWindow",
+            "manager_link_in_tools_menu": true
+        },
+        "entity_type.web_service_provider": {
+            "name_singular": "Service Provider",
+            "name_plural": "Service Providers",
+            "entity_class": "WebServiceProviderEntity",
+            "definition_loader_class": "ParameterEntityDefinitionLoader",
+            "definition_loader_parameter_key": "web_services.providers",
+            "storage_type": "runtime"
+        },
+        "web_services.data_types.account_info": {
+            "name": "Account Info",
+            "description": "Account information related to an authentication session."
+        },
+        "web_services.data_types.error_submission": {
+            "name": "Error Submission",
+            "description": "An endpoint to submit application errors to."
+        },
+        "web_services.data_types.feedback_submission": {
+            "name": "Feedback Submission",
+            "description": "An endpoint to submit feedback to."
+        },
+        "web_services.data_types.game_submission": {
+            "name": "Game Submission",
+            "description": "An endpoint to game launcher data to for sharing with the community."
+        },
+        "web_services.data_types.release_info": {
+            "name": "Release Info",
+            "description": "Information about the latest (or any) version of Launchpad"
+        },
+        "web_services.data_types.entity_list": {
+            "name": "Entity List",
+            "description": "A listing of entities from a web service."
+        },
+        "web_services.data_types.entity_lookup": {
+            "name": "Entity Lookup",
+            "description": "Searches for the ID of a remote entity from the provided data."
+        },
+        "web_services.data_types.entity_data": {
+            "name": "Entity Data",
+            "description": "Data to be imported into an entity within the application."
+        },
+        "web_services.data_types.availability_check": {
+            "name": "Availability check",
+            "description": "Simply checks for any response from the web service."
+        },
+        "web_services.adapter_types.json": {
+            "class": "JsonWebServiceAdapter"
+        },
+        "web_services.adapter_types.file": {
+            "class": "FileWebServiceAdapter"
+        }
+    },
+    "services": {
+        "cache.web_services": {
+            "class": "FileCache",
+            "arguments": ["@{App}", "@cache_state.web_services", "@@config.cache_dir", "WebServices"]
+        },
+        "cache_state.web_services": {
+            "class": "CacheState",
+            "arguments": ["@{App}", "@@config.cache_dir", "WebServices.json"]
+        },
+        "event_subscriber.web_services": {
+            "class": "WebServicesEventSubscriber",
+            "arguments": ["@{}", "@web_services.adapter_manager"],
+            "tags": ["event_subscriber"]
+        },
+        "state.web_services": {
+            "class": "JsonState",
+            "arguments": ["@{App}", "@@config.web_services_state_path"]
+        },
+        "state.web_services_tmp": {
+            "class": "ParameterState",
+            "arguments": ["@{App}", "web_services.state.tmp"]
+        },
+        "web_services_authenticator.jwt": {
+            "class": "JwtWebServiceAuthenticator",
+            "arguments": ["@manager.gui"]
+        },
+        "web_services.adapter_factory": {
+            "class": "WebServiceAdapterFactory",
+            "arguments": ["@{}"]
+        },
+        "web_services.adapter_manager": {
+            "class": "WebServiceAdapterManager",
+            "arguments": ["@{}", "web_services.adapters.", "@web_services.adapter_factory", "@manager.entity_type", "@manager.event"]
+        }
+    }
+}

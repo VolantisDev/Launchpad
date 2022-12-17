@@ -4,7 +4,7 @@ class PlatformsWindow extends ManageWindowBase {
 
     __New(container, themeObj, config) {
         this.platformManager := container.Get("entity_manager.platform")
-        this.lvCount := this.platformManager.Count(true)
+        this.lvCount := this.platformManager.Count(true) - 1
         super.__New(container, themeObj, config)
     }
 
@@ -24,10 +24,12 @@ class PlatformsWindow extends ManageWindowBase {
         data := Map()
 
         for key, platform in this.platformManager {
-            enabledText := platform["IsEnabled"] ? "Yes" : "No"
-            detectGamesText := platform["DetectGames"] ? "Yes" : "No"
-            installedText := platform["IsInstalled"] ? "Yes" : "No"
-            data[key] := [platform.GetName(), enabledText, detectGamesText, installedText, platform["InstalledVersion"]]
+            if (key != "Basic") {
+                enabledText := platform["IsEnabled"] ? "Yes" : "No"
+                detectGamesText := platform["DetectGames"] ? "Yes" : "No"
+                installedText := platform["IsInstalled"] ? "Yes" : "No"
+                data[key] := [platform.GetName(), enabledText, detectGamesText, installedText, platform["InstalledVersion"]]
+            }
         }
 
         return data
@@ -43,18 +45,21 @@ class PlatformsWindow extends ManageWindowBase {
 
     GetListViewImgList(lv, large := false) {
         IL := IL_Create(this.platformManager.Count(true), 1, large)
-        defaultIcon := this.themeObj.GetIconPath("Platform")
+        defaultIcon := this.themeObj.GetIconPath("platform")
         iconNum := 1
 
         for key, platform in this.platformManager {
-            iconSrc := platform["IconSrc"]
 
-            if (!iconSrc or !FileExist(iconSrc)) {
-                iconSrc := defaultIcon
+            if (key != "Basic") {
+                iconSrc := platform["IconSrc"]
+
+                if (!iconSrc or !FileExist(iconSrc)) {
+                    iconSrc := defaultIcon
+                }
+
+                IL_Add(IL, iconSrc)
+                iconNum++
             }
-
-            IL_Add(IL, iconSrc)
-            iconNum++
         }
 
         return IL
@@ -110,7 +115,7 @@ class PlatformsWindow extends ManageWindowBase {
             menuItems.Push(Map("label", "Install", "name", "InstallPlatform"))
         }
 
-        result := this.app.Service("manager.gui").Menu(menuItems, this)
+        result := this.app["manager.gui"].Menu(menuItems, this)
 
         if (result == "EditPlatform") {
             this.EditPlatform(key)
