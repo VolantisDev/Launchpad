@@ -1,6 +1,4 @@
-class ManagedGameEntity extends ManagedEntityBase {
-    configPrefix := "Game"
-    defaultType := "Default"
+class GameProcessEntity extends LaunchProcessEntity {
     defaultClass := "SimpleGame"
 
     BaseFieldDefinitions() {
@@ -9,7 +7,7 @@ class ManagedGameEntity extends ManagedEntityBase {
         definitions["HasLoadingWindow"] := Map(
             "type", "boolean",
             "description", "Whether or not the game has a loading window to watch for.",
-            "storageKey", this.configPrefix . "HasLoadingWindow",
+            "storageKey", "HasLoadingWindow",
             "default", false
         )
 
@@ -19,7 +17,7 @@ class ManagedGameEntity extends ManagedEntityBase {
         definitions["LoadingWindowProcessType"] := Map(
             "description", "Which method to use to wait for the game's loading window to open.",
             "help", "This lets Launchpad know when the game is loading. Only used if a LoadingWindowProcessId is set",
-            "storageKey", this.configPrefix . "LoadingWindowProcessType",
+            "storageKey", "LoadingWindowProcessType",
             "default", "Exe",
             "widget", "select",
             "selectOptionsCallback", ObjBindMethod(this, "ListProcessTypes")
@@ -29,7 +27,7 @@ class ManagedGameEntity extends ManagedEntityBase {
         ; - Title - This value will default to the game's Key unless overridden
         ; - Class - This value should be set to the game's window class
         definitions["LoadingWindowProcessId"] := Map(
-            "storageKey", this.configPrefix . "LoadingWindowProcessId",
+            "storageKey", "LoadingWindowProcessId",
             "help", "This value's type is dependent on the GameProcessType above. It can often be detected from other values, and is not needed if the GameRunType is RunWait.",
             "modes", Map(
                 "simple", Map("formField", false)
@@ -37,16 +35,6 @@ class ManagedGameEntity extends ManagedEntityBase {
         )
 
         return definitions
-    }
-
-    GetBlizzardProductKey() {
-        productKey := this["PlatformRef"]
-
-        if (this.HasConfigValue("BlizzardProductId", true, false)) {
-            productKey := this.GetConfigValue("BlizzardProductId")
-        }
-
-        return productKey
     }
 
     ShouldDetectShortcutSrc(extraConfig) {
@@ -77,24 +65,24 @@ class ManagedGameEntity extends ManagedEntityBase {
         return detectShortcut
     }
 
-    AutoDetectValues(recurse := true) {
-        detectedValues := super.AutoDetectValues(recurse)
-        exeKey := this.configPrefix . "Exe"
+    AutoDetectValues() {
+        detectedValues := super.AutoDetectValues()
+        exeKey := "Exe"
 
         if (!detectedValues.Has(exeKey)) {
             detectedValues[exeKey] := this["Exe"] ? this["Exe"] : this.Id . ".exe"
         }
 
-        if (!detectedValues.Has(this.configPrefix . "ProcessId") || !detectedValues[this.configPrefix . "ProcessId"]) {
-            detectedValues[this.configPrefix . "ProcessId"] := detectedValues[exeKey]
+        if (!detectedValues.Has("ProcessId") || !detectedValues["ProcessId"]) {
+            detectedValues["ProcessId"] := detectedValues[exeKey]
         }
 
-        if (detectedValues.Has(this.configPrefix . "ProcessType")) {
-            detectedValues[this.configPrefix . "LoadingWindowProcessType"] := detectedValues[this.configPrefix . "ProcessType"]
+        if (detectedValues.Has("ProcessType")) {
+            detectedValues["LoadingWindowProcessType"] := detectedValues["ProcessType"]
         }
 
         if (!this["LoadingWindowProcessId"]) {
-            detectedValues[this.configPrefix . "LoadingWindowProcessId"] := detectedValues[exeKey]
+            detectedValues["LoadingWindowProcessId"] := detectedValues[exeKey]
         }
 
         if (this.ShouldDetectShortcutSrc(detectedValues)) {
@@ -110,7 +98,7 @@ class ManagedGameEntity extends ManagedEntityBase {
             }
 
             if (shortcutSrc != "") {
-                detectedValues[this.configPrefix . "ShortcutSrc"] := shortcutSrc
+                detectedValues["ShortcutSrc"] := shortcutSrc
             }
         }
 

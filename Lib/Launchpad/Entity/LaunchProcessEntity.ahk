@@ -1,9 +1,12 @@
-class ManagedProcessEntity extends FieldableEntity {
-    defaultType := "Default"
+class LaunchProcessEntity extends FieldableEntity {
     defaultClass := "Default"
 
-    DiscoverParentEntity(container, eventMgr, id, storageObj, idSanitizer) {
-        return container.Get("entity_manager.launcher")[id]
+    DiscoverParentEntity(container, eventMgr, id, storageObj, idSanitizer, parentEntity := "") {
+        ; TODO fix circular reference occurring
+
+        return parentEntity
+            ? parentEntity
+            : container.Get("entity_manager.launcher")[id]
     }
 
     GetDefaultFieldGroups() {
@@ -48,21 +51,10 @@ class ManagedProcessEntity extends FieldableEntity {
             )
         )
 
-        definitions["EntityType"] := Map(
-            "default", this.defaultType,
-            "description", "The key of the managed type to load settings and defaults from.",
-            "required", true,
-            "storageKey", this.configPrefix . "Type",
-            "widget", "select",
-            "selectOptionsCallback", ObjBindMethod(this, "ListEntities", false, true),
-            "group", "general"
-        )
-
-        definitions["EntityClass"] := Map(
+        definitions["ProcessClass"] := Map(
             "default", this.defaultClass,
-            "description", "The name of the AHK class that will be used to control the managed entity.",
+            "description", "The name of the AHK class that will be used to control the process.",
             "formField", false,
-            "storageKey", this.configPrefix . "Class",
             "required", true,
             "group", "advanced",
             "modes", Map(
@@ -73,11 +65,10 @@ class ManagedProcessEntity extends FieldableEntity {
         definitions["SearchDirs"] := Map(
             "type", "directory",
             "mustExist", false,
-            "storageKey", this.configPrefix . "SearchDirs",
             "default", [A_ProgramFiles],
             "description", "Possible parent directories where the game's launcher might exist, to be used for auto-detection.",
             "help", "These should be as specific as possible to reduce detection time.",
-            "multiple", true,
+            "cardinality", 1, ; Change to another number once widgets for multiple values are worked out
             "group", "locations",
             "modes", Map(
                 "simple", Map("formField", false)
@@ -87,7 +78,6 @@ class ManagedProcessEntity extends FieldableEntity {
         definitions["InstallDir"] := Map(
             "type", "directory",
             "mustExist", false,
-            "storageKey", this.configPrefix . "InstallDir",
             "group", "locations",
             "modes", Map(
                 "simple", Map("group", "general")
@@ -99,7 +89,6 @@ class ManagedProcessEntity extends FieldableEntity {
             "type", "file",
             "fileMask", "*.exe",
             "mustExist", false,
-            "storageKey", this.configPrefix . "Exe",
             "description", "This can be the full path on the system to the launcher's .exe file, or simply the name of the .exe file itself.",
             "help", "If the .exe doesn't include the absolute path, auto-detection will be used by searching the DestinationDirs.",
             "group", "locations",
@@ -113,7 +102,6 @@ class ManagedProcessEntity extends FieldableEntity {
         ; - BlizzardProductDb (will search Battle.net's product.db file if it can be located for the installation directory, and the file will be found from there
         ; - Registry (will get a directory from the registry key specified by LocateRegKey and search for the file within it)
         definitions["LocateMethod"] := Map(
-            "storageKey", this.configPrefix . "LocateMethod",
             "default", "SearchDirs",
             "description", "How to search for the .exe if it isn't a full path already",
             "group", "general",
@@ -126,12 +114,10 @@ class ManagedProcessEntity extends FieldableEntity {
         )
 
         definitions["WindowTitle"] := Map(
-            "storageKey", this.configPrefix . "WindowTitle",
             "group", "process"
         )
 
         definitions["LocateRegView"] := Map(
-            "storageKey", this.configPrefix . "LocateRegView",
             "default", 64,
             "group", "registry",
             "widget", "select",
@@ -143,7 +129,7 @@ class ManagedProcessEntity extends FieldableEntity {
         )
 
         definitions["LocateRegKey"] := Map(
-            "storageKey", this.configPrefix . "LocateRegKey",
+            "title", "Registry Locator - Key",
             "group", "registry",
             "description", "The registry key to look up the install dir within.",
             "help", "Path parts should be separated with backslashes and must start with one of: HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT, HKEY_CURRENT_CONFIG, or the abbreviation of one of those. To read from a remote registry, prefix the root path with two backslashes and the computer name.`n`nSimple example: HKLM\Path\To\Key`nRemote example: \\OTHERPC\HKLM\Path\To\Key",
@@ -153,7 +139,7 @@ class ManagedProcessEntity extends FieldableEntity {
         )
 
         definitions["LocateRegValue"] := Map(
-            "storageKey", this.configPrefix . "LocateRegValue",
+            "title", "Registry Locator - Value",
             "group", "registry",
             "description", "The name of the registry value to look up within the specified key.",
             "help", "Example: InstallPath",
@@ -163,7 +149,7 @@ class ManagedProcessEntity extends FieldableEntity {
         )
 
         definitions["LocateRegRemovePrefix"] := Map(
-            "storageKey", this.configPrefix . "LocateRegRemovePrefix",
+            "title", "Registry Locator - Remove Prefix",
             "group", "registry",
             "modes", Map(
                 "simple", Map("formField", false)
@@ -171,7 +157,7 @@ class ManagedProcessEntity extends FieldableEntity {
         )
 
         definitions["LocateRegRemoveSuffix"] := Map(
-            "storageKey", this.configPrefix . "LocateRegRemoveSuffix",
+            "title", "Registry Locator - Remove Suffix",
             "group", "registry",
             "modes", Map(
                 "simple", Map("formField", false)
@@ -179,7 +165,7 @@ class ManagedProcessEntity extends FieldableEntity {
         )
 
         definitions["LocateRegStripQuotes"] := Map(
-            "storageKey", this.configPrefix . "LocateRegStripQuotes",
+            "title", "Registry Locator - Strip Quotes",
             "default", false,
             "group", "registry",
             "description", "Strip quotes from registry value",
@@ -189,16 +175,16 @@ class ManagedProcessEntity extends FieldableEntity {
         )
 
         definitions["PlatformRef"] := Map(
-            "storageKey", this.configPrefix . "PlatformRef",
+            "title", "Platform Reference",
             "description", "If the item is known to the launcher by a specific ID, it should be stored here.",
             "group", "general"
         )
 
         definitions["WorkingDir"] := Map(
+            "title", "Working Directory",
             "type", "directory",
             "description", "The directory that the launcher should be run from.",
             "help", "If not set, it will be run without setting an explicit working directory, which is usually sufficient.",
-            "storageKey", this.configPrefix . "WorkingDir",
             "group", "locations",
             "modes", Map(
                 "simple", Map("formField", false)
@@ -210,7 +196,6 @@ class ManagedProcessEntity extends FieldableEntity {
         definitions["RunType"] := Map(
             "description", "Which method to use for launching this item.",
             "help", "This is only needed for launchers that have to manage their own process.",
-            "storageKey", this.configPrefix . "RunType",
             "default", "Command",
             "group", "process",
             "widget", "select",
@@ -220,15 +205,13 @@ class ManagedProcessEntity extends FieldableEntity {
         definitions["UsesShortcut"] := Map(
             "type", "boolean",
             "description", "Whether a shortcut file will be used when starting the internally-managed game launcher",
-            "formField", false,
-            "storageKey", this.configPrefix . "UsesShortcut"
+            "formField", false
         )
 
         definitions["ReplaceProcess"] := Map(
             "type", "boolean",
             "description", "Kill and re-launch the game process immediately after it is detected.",
             "help", "This can be used to force Launchpad to own the game process, but won't for for every game.",
-            "storageKey", this.configPrefix . "ReplaceProcess",
             "default", false,
             "group", "process"
         )
@@ -238,9 +221,9 @@ class ManagedProcessEntity extends FieldableEntity {
         ; - The path of an .exe file on the system to which a shortcut will be created in AssetsDir if it doesn't already exist. Using this option
         ;   is usually not necessary, since you can run the .exe directly instead.
         definitions["ShortcutSrc"] := Map(
+            "title", "Shortcut Source",
             "description", "The shortcut file used to launch the game launcher itself.",
             "help", "This is typically only needed if the Shortcut LauncherRunType is selected.",
-            "storageKey", this.configPrefix . "ShortcutSrc",
             "group", "locations",
             "modes", Map(
                 "simple", Map("group", "general")
@@ -252,7 +235,6 @@ class ManagedProcessEntity extends FieldableEntity {
         ; - Scheduled (Creates an immediate scheduled task that runs the game, then waits until the window opens (if needed) and then closes)
         definitions["RunMethod"] := Map(
             "description", "Which method to use to run the RunCmd",
-            "storageKey", this.configPrefix . "RunMethod",
             "default", "Run",
             "group", "process",
             "widget", "select",
@@ -265,7 +247,6 @@ class ManagedProcessEntity extends FieldableEntity {
         definitions["ProcessType"] := Map(
             "description", "Which method to use to wait for the game to close.",
             "help", "This is not needed if the GameRunType is RunWait",
-            "storageKey", this.configPrefix . "ProcessType",
             "default", "Exe",
             "group", "process",
             "widget", "select",
@@ -277,7 +258,6 @@ class ManagedProcessEntity extends FieldableEntity {
         ; - Class - This value should be set to the game's window class
         definitions["ProcessId"] := Map(
             "help", "This value's type is dependent on the ProcessType above. It can often be detected from other values, and is not needed if the GameRunType is RunWait.",
-            "storageKey", this.configPrefix . "ProcessId",
             "group", "process",
             "modes", Map(
                 "simple", Map("formField", false)
@@ -286,7 +266,6 @@ class ManagedProcessEntity extends FieldableEntity {
 
         definitions["ProcessTimeout"] := Map(
             "description", "The number of seconds to wait before giving up when waiting for a process.",
-            "storageKey", this.configPrefix . "ProcessTimeout",
             "default", 30,
             "group", "process",
             "modes", Map(
@@ -295,41 +274,26 @@ class ManagedProcessEntity extends FieldableEntity {
         )
 
         definitions["RunCmd"] := Map(
+            "title", "Run Command",
             "description", "The command that will be used to run the game's launcher.",
             "help", "Typically only used if LauncherRunType is Command.",
-            "storageKey", this.configPrefix . "RunCmd",
             "group", "process"
         )
 
         return definitions
     }
 
-    GetData() {
-        if (!this.ParentEntity) {
-            throw EntityException("A parent entity is required on type " . Type(this))
-        }
-
-        return this.ParentEntity.GetData()
-    }
-
-    _createEntityData() {
-        return ""
-    }
-
-    AutoDetectValues(recurse := true) {
-        detectedValues := super.AutoDetectValues(recurse)
+    AutoDetectValues() {
+        detectedValues := super.AutoDetectValues()
         processId := ""
-        usesShortcut := false
 
-        if (this.GetData().HasValue(this.configPrefix . "UsesShortcut")) {
-            usesShortcut := this.GetData().GetValue(this.configPrefix . "UsesShortcut")
-        } else {
-            usesShortcut := (this["RunType"] == "Shortcut" || this["ShortcutSrc"] != "" || this["RunCmd"] == "")
-        }
+        usesShortcut := (this.GetData().HasValue("UsesShortcut"))
+            ? this.GetData().GetValue("UsesShortcut")
+            : (this["RunType"] == "Shortcut" || this["ShortcutSrc"] != "" || this["RunCmd"] == "")
 
-        detectedValues[this.configPrefix . "UsesShortcut"] := usesShortcut
-        detectedValues[this.configPrefix . "RunType"] := usesShortcut ? "Shortcut" : "Command"
-        detectedValues[this.configPrefix . "InstallDir"] := this.LocateInstallDir() ; This needs to run to expand exes without a dir
+        detectedValues["UsesShortcut"] := usesShortcut
+        detectedValues["RunType"] := usesShortcut ? "Shortcut" : "Command"
+        detectedValues["InstallDir"] := this.LocateInstallDir() ; This needs to run to expand exes without a dir
 
         if (this["ProcessType"] == "Exe") {
             SplitPath(this["Exe"], &processId)
@@ -337,8 +301,8 @@ class ManagedProcessEntity extends FieldableEntity {
             processId := this["WindowTitle"] ? this["WindowTitle"] : this.Id
         }
 
-        detectedValues[this.configPrefix . "ProcessId"] := processId
-        detectedValues[this.configPrefix . "WorkingDir"] := this["InstallDir"]
+        detectedValues["ProcessId"] := processId
+        detectedValues["WorkingDir"] := this["InstallDir"]
 
         return detectedValues
     }
@@ -352,19 +316,25 @@ class ManagedProcessEntity extends FieldableEntity {
 
     ListProcessTypes() {
         return [
-            "Exe", "Title", "Class"
+            "Exe", 
+            "Title", 
+            "Class"
         ]
     }
 
     ListRunMethods() {
         return [
-            "Run", "Scheduled", "RunWait"
+            "Run", 
+            "Scheduled", 
+            "RunWait"
         ]
     }
 
     ListLocateMethods() {
         return [
-            "Search", "Registry", "BlizzardProductDb"
+            "Search", 
+            "Registry", 
+            "BlizzardProductDb" ; TODO Move this to the Blizzard module
         ]
     }
 
@@ -393,7 +363,7 @@ class ManagedProcessEntity extends FieldableEntity {
             validateResult["invalidFields"].push("RunCmd")
         }
 
-        ; TODO: Perform more launcher and game type validation here
+        ; TODO: Perform more validation here
 
         return validateResult
     }
@@ -416,8 +386,7 @@ class ManagedProcessEntity extends FieldableEntity {
     LocateInstallDir() {
         installDir := ""
 
-        ; TODO: Add additional methods to detect the install dir
-
+        ; TODO Move BlizzardProductDb method to an event handled by the Blizzard module
         if (this["LocateMethod"] == "BlizzardProductDb") {
             blizzardDir := this.GetBlizzardProductDir()
 
@@ -425,6 +394,8 @@ class ManagedProcessEntity extends FieldableEntity {
                 installDir := blizzardDir
             }
         }
+
+        ; TODO: Add additional methods to detect the install dir
 
         return installDir
     }
@@ -477,6 +448,7 @@ class ManagedProcessEntity extends FieldableEntity {
                         }
                     }
                 } else if (this["LocateMethod"] == "BlizzardProductDb") {
+                    ; TODO Move BlizzardProductDb method to an event handled by the Blizzard module
                     blizzardDir := this.GetBlizzardProductDir()
 
                     if (blizzardDir != "") {
@@ -516,18 +488,14 @@ class ManagedProcessEntity extends FieldableEntity {
         return path
     }
 
-    GetBlizzardProductKey() {
-        return "bna" ; Default to the Battle.net client itself
-    }
-
+    ; TODO Move this method to the Blizzard module and call it from an eevent
     GetBlizzardProductDir() {
-        path := ""
-        productCode := this.GetBlizzardProductKey()
+        productCode (HasBase(this, GameProcessEntity.Prototype))
+            ? productCode := this["PlatformRef"]
+            : "bna" ; Default to the Battle.net client itself
 
-        if (productCode != "" && this.app.Services.Has("BlizzardProductDb")) {
-            path := this.app["BlizzardProductDb"].GetProductInstallPath(productCode)
-        }
-
-        return path
+        return (productCode != "" && this.app.Services.Has("BlizzardProductDb"))
+            ? this.app["BlizzardProductDb"].GetProductInstallPath(productCode)
+            : ""
     }
 }

@@ -44,12 +44,10 @@ class DetectedGame {
             
         if (
             this.displayName != launcher["name"]
-            || this.launcherType != launcher["ManagedLauncher"].EntityTypeId
-            || this.gameType != launcher["ManagedGame"].EntityTypeId 
-            || this.installDir != launcher["ManagedGame"]["InstallDir"]
-            || this.launcherInstallDir != launcher["ManagedLauncher"]["InstallDir"]
-            || this.exeName != launcher["ManagedGame"]["Exe"] 
-            || this.platformRef != launcher["ManagedGame"]["PlatformRef"]
+            || this.installDir != launcher["GameProcess"]["InstallDir"]
+            || this.launcherInstallDir != launcher["LauncherProcess"]["InstallDir"]
+            || this.exeName != launcher["GameProcess"]["Exe"] 
+            || this.platformRef != launcher["GameProcess"]["PlatformRef"]
         ) {
             hasChanges := true
         }
@@ -70,27 +68,17 @@ class DetectedGame {
             modified := true
         }
 
-        if (this.launcherType && launcher["ManagedLauncher"].EntityTypeId != this.launcherType) {
-            launcher["ManagedLauncher"].EntityType := this.launcherType
+        if (this.launcherInstallDir && launcher["LauncherProcess"]["InstallDir"] != this.launcherInstallDir) {
+            launcher["LauncherProcess"]["InstallDir"] := this.launcherInstallDir
+        }
+
+        if (this.installDir && launcher["GameProcess"]["InstallDir"] != this.installDir) {
+            launcher["GameProcess"]["InstallDir"] := this.installDir
             modified := true
         }
 
-        if (this.gameType && launcher["ManagedGame"].EntityTypeId != this.gameType) {
-            launcher["ManagedGame"].EntityType := this.gameType
-            modified := true
-        }
-
-        if (this.launcherInstallDir && launcher["ManagedLauncher"]["InstallDir"] != this.launcherInstallDir) {
-            launcher["ManagedLauncher"]["InstallDir"] := this.launcherInstallDir
-        }
-
-        if (this.installDir && launcher["ManagedGame"]["InstallDir"] != this.installDir) {
-            launcher["ManagedGame"]["InstallDir"] := this.installDir
-            modified := true
-        }
-
-        if (this.exeName && launcher["ManagedGame"]["Exe"] != this.exeName) {
-            launcher["ManagedGame"]["Exe"] := this.exeName
+        if (this.exeName && launcher["GameProcess"]["Exe"] != this.exeName) {
+            launcher["GameProcess"]["Exe"] := this.exeName
             modified := true
         }
 

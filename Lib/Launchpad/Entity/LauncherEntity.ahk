@@ -66,10 +66,10 @@ class LauncherEntity extends FieldableEntity {
             "showDefaultCheckbox", false
         )
 
-        definitions["ManagedLauncher"] := Map(
+        definitions["LauncherProcess"] := Map(
             "type", "entity_reference",
             "required", true,
-            "entityType", "managed_launcher",
+            "entityType", "launcher_process",
             "child", true,
             "weight", -25,
             "widget", "entity_select",
@@ -85,13 +85,13 @@ class LauncherEntity extends FieldableEntity {
             ),
             "default", this.idVal,
             "showDefaultCheckbox", false,
-            "valueType", EntityFieldBase.VALUE_TYPE_DEFAULT
+            "storeEntityData", true
         )
 
-        definitions["ManagedGame"] := Map(
+        definitions["GameProcess"] := Map(
             "type", "entity_reference",
             "required", true,
-            "entityType", "managed_game",
+            "entityType", "game_process",
             "child", true,
             "weight", -20,
             "widget", "entity_select",
@@ -107,7 +107,7 @@ class LauncherEntity extends FieldableEntity {
             ),
             "default", this.idVal,
             "showDefaultCheckbox", false,
-            "valueType", EntityFieldBase.VALUE_TYPE_DEFAULT
+            "storeEntityData", true
         )
 
         definitions["DestinationDir"] := Map(
@@ -408,8 +408,8 @@ class LauncherEntity extends FieldableEntity {
             
             if (FileExist(checkPath)) {
                 detectedValues["IconSrc"] := checkPath
-            } else if (this.Has("ManagedGame", false) && this["ManagedGame"].Has("Exe", false)) {
-                detectedValues["IconSrc"] := this["ManagedGame"].LocateExe()
+            } else if (this.Has("GameProcess", false) && this["GameProcess"].Has("Exe", false)) {
+                detectedValues["IconSrc"] := this["GameProcess"].LocateExe()
             } else {
                 theme := this.container.Get("manager.theme").GetComponent()
                 detectedValues["IconSrc"] := theme.GetIconPath("game")

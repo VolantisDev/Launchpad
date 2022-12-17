@@ -39,7 +39,7 @@ class LaunchpadLauncher extends AppBase {
         )
 
         services["Game"] := Map(
-            "class", config["gameConfig"]["GameClass"],
+            "class", config["gameConfig"]["ProcessClass"],
             "arguments", [
                 AppRef(), 
                 ParameterRef("launcher_key"), 
@@ -48,7 +48,7 @@ class LaunchpadLauncher extends AppBase {
         )
 
         services["Launcher"] := Map(
-            "class", config["launcherConfig"]["LauncherClass"],
+            "class", config["launcherConfig"]["ProcessClass"],
             "arguments", [
                 ParameterRef("launcher_key"),
                 ServiceRef("manager.gui"),

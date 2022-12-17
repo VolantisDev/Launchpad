@@ -42,18 +42,18 @@
             "allow_delete": true,
             "manager_gui": "MainWindow"
         },
-        "entity_type.managed_game": {
+        "entity_type.game_process": {
             "name_singular": "Managed Game",
             "name_plural": "Managed Games",
-            "entity_class": "ManagedGameEntity",
+            "entity_class": "GameProcessEntity",
             "storage_config_storage_parent_key": "Games",
             "storage_config_path_parameter": "config.launcher_file",
             "parent_entity_type": "launcher"
         },
-        "entity_type.managed_launcher": {
+        "entity_type.launcher_process": {
             "name_singular": "Managed Launcher",
             "name_plural": "Managed Launchers",
-            "entity_class": "ManagedLauncherEntity",
+            "entity_class": "LauncherProcessEntity",
             "storage_config_storage_parent_key": "Games",
             "storage_config_path_parameter": "config.launcher_file",
             "parent_entity_type": "launcher"

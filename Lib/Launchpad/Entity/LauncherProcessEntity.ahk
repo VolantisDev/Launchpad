@@ -1,15 +1,13 @@
-class ManagedLauncherEntity extends ManagedEntityBase {
-    configPrefix := "Launcher"
-    defaultType := "Default"
+class LauncherProcessEntity extends LaunchProcessEntity {
     defaultClass := "SimpleLauncher"
 
     BaseFieldDefinitions() {
         definitions := super.BaseFieldDefinitions()
 
-        definitions["ManagedGame"] := Map(
+        definitions["GameProcess"] := Map(
             "type", "entity_reference",
             "required", true,
-            "entityType", "managed_game",
+            "entityType", "game_process",
             "child", false,
             "formField", false,
             "editable", false
@@ -17,14 +15,14 @@ class ManagedLauncherEntity extends ManagedEntityBase {
 
         definitions["CloseBeforeRun"] := Map(
             "type", "boolean",
-            "storageKey", this.configPrefix . "CloseBeforeRun",
+            "storageKey", "CloseBeforeRun",
             "default", false,
             "description", "whether or not the launcher should be closed (if it is running) before starting the game"
         )
 
         definitions["CloseAfterRun"] := Map(
             "type", "boolean",
-            "storageKey", this.configPrefix . "CloseAfterRun",
+            "storageKey", "CloseAfterRun",
             "default", false,
             "description", "Indicates whether the launcher should be closed after the game stops"
         )
@@ -33,7 +31,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "type", "time_offset",
             "timeUnits", "s",
             "min", 0,
-            "storageKey", this.configPrefix . "ClosePreDelay",
+            "storageKey", "ClosePreDelay",
             "default", 0,
             "required", true,
             "group", "advanced",
@@ -47,7 +45,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "type", "time_offset",
             "timeUnits", "s",
             "min", 0,
-            "storageKey", this.configPrefix . "ClosePostDelay",
+            "storageKey", "ClosePostDelay",
             "default", 0,
             "required", true,
             "group", "advanced",
@@ -64,7 +62,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
         ; - "AutoPolite" - Automatically attempt to politely close the launcher, or fail if it can't be closed politely
         ; - "AutoKill" - Automatically attempts to end the launcher process, forcefully if needed
         definitions["CloseMethod"] := Map(
-            "storageKey", this.configPrefix . "CloseMethod",
+            "storageKey", "CloseMethod",
             "default", "Prompt",
             "description", "How to attempt to close the launcher if running",
             "widget", "select",
@@ -76,7 +74,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "type", "time_offset",
             "timeUnits", "s",
             "min", 0,
-            "storageKey", this.configPrefix . "RecheckDelay",
+            "storageKey", "RecheckDelay",
             "default", 10,
             "required", true,
             "group", "advanced",
@@ -90,7 +88,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "type", "time_offset",
             "timeUnits", "s",
             "min", 0,
-            "storageKey", this.configPrefix . "WaitTimeout",
+            "storageKey", "WaitTimeout",
             "default", 30,
             "required", true,
             "group", "advanced",
@@ -104,11 +102,11 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "type", "time_offset",
             "timeUnits", "ms",
             "min", 0,
-            "storageKey", this.configPrefix . "KillPreDelay",
+            "storageKey", "KillPreDelay",
             "default", 10,
             "required", true,
             "group", "advanced",
-            "description", "If killing a managed launcher forcefully, ending the process will be delayed by this number of seconds.",
+            "description", "If killing a launch process forcefully, ending the process will be delayed by this number of seconds.",
             "modes", Map(
                 "simple", Map("formField", false)
             )
@@ -118,11 +116,11 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "type", "time_offset",
             "timeUnits", "ms",
             "min", 0,
-            "storageKey", this.configPrefix . "KillPostDelay",
+            "storageKey", "KillPostDelay",
             "default", 5,
             "required", true,
             "group", "advanced",
-            "description", "If killing a managed launcher forcefully, the launcher will wait this number of seconds after trying to end the process before reporting success.",
+            "description", "If killing a launch process forcefully, the launcher will wait this number of seconds after trying to end the process before reporting success.",
             "modes", Map(
                 "simple", Map("formField", false)
             )
@@ -132,7 +130,7 @@ class ManagedLauncherEntity extends ManagedEntityBase {
             "type", "time_offset",
             "timeUnits", "s",
             "min", 0,
-            "storageKey", this.configPrefix . "PoliteCloseWait",
+            "storageKey", "PoliteCloseWait",
             "required", true,
             "default", 10,
             "group", "advanced",
