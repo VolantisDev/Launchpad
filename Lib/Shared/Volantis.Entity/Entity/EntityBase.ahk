@@ -31,7 +31,7 @@ class EntityBase {
     }
 
     FieldData {
-        Get => this.GetData().GetMergedData()
+        get => this.GetData().GetMergedData()
     }
 
     Name {
@@ -46,7 +46,18 @@ class EntityBase {
 
     ParentEntity {
         get => this.GetParentEntity()
-        set => this.SetParentEntity(value)
+    }
+
+    ReferencedEntities {
+        get => this.GetReferencedEntities(false)
+    }
+
+    ChildEntities {
+        get => this.GetReferencedEntities(true)
+    }
+
+    ChildEntityData {
+        get => this.GetAllChildEntityData()
     }
 
     __Item[key := ""] {
@@ -287,7 +298,7 @@ class EntityBase {
         this.GetData().UnloadAllLayers(reloadUserData)
 
         if (recurse) {
-            for index, entityObj in this.GetReferencedEntities(true) {
+            for index, entityObj in this.ChildEntities {
                 entityObj.RefreshEntityData(recurse, reloadUserData)
             }
         }
@@ -319,7 +330,7 @@ class EntityBase {
         this.eventMgr.DispatchEvent(event)
 
         if (recurse) {
-            for index, entityObj in this.GetReferencedEntities(true) {
+            for index, entityObj in this.ChildEntities {
                 entityObj.SaveEntity(recurse)
             }
         }
@@ -388,7 +399,7 @@ class EntityBase {
         if (recurse) {
             diffs := [diff]
 
-            for index, referencedEntity in this.GetReferencedEntities(true) {
+            for index, referencedEntity in this.ChildEntities {
                 diffs.Push(referencedEntity.DiffChanges(recurse))
             }
 
