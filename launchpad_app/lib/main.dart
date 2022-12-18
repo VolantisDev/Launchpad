@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart' hide Page;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:url_launcher/link.dart';
@@ -10,16 +11,12 @@ import 'package:window_manager/window_manager.dart';
 import 'screens/home.dart';
 import 'screens/settings.dart';
 
-import 'routes/forms.dart' deferred as forms;
 import 'routes/inputs.dart' deferred as inputs;
-import 'routes/navigation.dart' deferred as navigation;
-import 'routes/surfaces.dart' deferred as surfaces;
-import 'routes/theming.dart' deferred as theming;
 
 import 'theme.dart';
 import 'widgets/deferred_widget.dart';
 
-const String appTitle = 'Fluent UI Showcase for Flutter';
+const String appTitle = 'Launchpad - Game Launching Multitool';
 
 /// Checks if the current environment is a desktop environment.
 bool get isDesktop {
@@ -53,8 +50,8 @@ void main() async {
         TitleBarStyle.hidden,
         windowButtonVisibility: false,
       );
-      await windowManager.setSize(const Size(755, 545));
-      await windowManager.setMinimumSize(const Size(350, 600));
+      await windowManager.setSize(const Size(900, 600));
+      await windowManager.setMinimumSize(const Size(400, 400));
       await windowManager.center();
       await windowManager.show();
       await windowManager.setPreventClose(true);
@@ -64,11 +61,7 @@ void main() async {
 
   runApp(const MyApp());
 
-  DeferredWidget.preload(forms.loadLibrary);
   DeferredWidget.preload(inputs.loadLibrary);
-  DeferredWidget.preload(navigation.loadLibrary);
-  DeferredWidget.preload(surfaces.loadLibrary);
-  DeferredWidget.preload(theming.loadLibrary);
 }
 
 class MyApp extends StatelessWidget {
@@ -147,6 +140,69 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       title: const Text('Home'),
       body: const HomePage(),
     ),
+    PaneItemHeader(header: const Icon(FluentIcons.game)),
+    // TODO Add links to the most recent 5 games edited, launched, or built
+    PaneItem(
+      icon: const Icon(FluentIcons.game),
+      title: const Text('All Games'),
+      body: const Text('To be replaced with a page widget.'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.add),
+      title: const Text('Add Game'),
+      body: const Text('To be replaced with a page widget.'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.search),
+      title: const Text('Find Installed Games'),
+      body: const Text('To be replaced with a page widget.'),
+    ),
+    PaneItemHeader(header: const Icon(FluentIcons.library)),
+    // TODO Add links to all enabled and installed game platforms here
+    PaneItem(
+      icon: const Icon(FluentIcons.library),
+      title: const Text('All Platforms'),
+      body: const Text('Show manage list for platform entities.'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.download),
+      title: const Text('Find More Platforms'),
+      body: const Text('Show manage list for platform entities.'),
+    ),
+    PaneItemHeader(header: const Icon(FluentIcons.archive)),
+    PaneItem(
+      icon: const Icon(FluentIcons.archive),
+      title: const Text('Backups'),
+      body: const Text('.'),
+    ),
+    PaneItemHeader(header: const Icon(FluentIcons.cloud)),
+    // TODO Add links to all enabled web services here
+    PaneItem(
+      icon: const Icon(FluentIcons.cloud),
+      title: const Text('All Services'),
+      body: const Text('Show manage list for platform entities.'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.accounts),
+      title: const Text('Add Service'),
+      body: const Text('.'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.download),
+      title: const Text('Find More Services'),
+      body: const Text('.'),
+    ),
+    PaneItemHeader(header: const Icon(FluentIcons.puzzle)),
+    PaneItem(
+      icon: const Icon(FluentIcons.puzzle),
+      title: const Text('Modules'),
+      body: const Text('.'),
+    ),
+    PaneItem(
+      icon: const Icon(FluentIcons.download),
+      title: const Text('Extend Launchpad'),
+      body: const Text('.'),
+    ),
     PaneItemHeader(header: const Text('Inputs')),
     PaneItem(
       icon: const Icon(FluentIcons.button_control),
@@ -154,202 +210,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       body: DeferredWidget(
         inputs.loadLibrary,
         () => inputs.ButtonPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.checkbox_composite),
-      title: const Text('Checkbox'),
-      body: DeferredWidget(
-        inputs.loadLibrary,
-        () => inputs.CheckBoxPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.slider),
-      title: const Text('Slider'),
-      body: DeferredWidget(
-        inputs.loadLibrary,
-        () => inputs.SliderPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.toggle_left),
-      title: const Text('ToggleSwitch'),
-      body: DeferredWidget(
-        inputs.loadLibrary,
-        () => inputs.ToggleSwitchPage(),
-      ),
-    ),
-    PaneItemHeader(header: const Text('Form')),
-    PaneItem(
-      icon: const Icon(FluentIcons.text_field),
-      title: const Text('TextBox'),
-      body: DeferredWidget(
-        forms.loadLibrary,
-        () => forms.TextBoxPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.page_list),
-      title: const Text('AutoSuggestBox'),
-      body: DeferredWidget(
-        forms.loadLibrary,
-        () => forms.AutoSuggestBoxPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.combobox),
-      title: const Text('ComboBox'),
-      body: DeferredWidget(
-        forms.loadLibrary,
-        () => forms.ComboBoxPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.time_picker),
-      title: const Text('TimePicker'),
-      body: DeferredWidget(
-        forms.loadLibrary,
-        () => forms.TimePickerPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.date_time),
-      title: const Text('DatePicker'),
-      body: DeferredWidget(
-        forms.loadLibrary,
-        () => forms.DatePickerPage(),
-      ),
-    ),
-    PaneItemHeader(header: const Text('Navigation')),
-    PaneItem(
-      icon: const Icon(FluentIcons.navigation_flipper),
-      title: const Text('NavigationView'),
-      body: DeferredWidget(
-        navigation.loadLibrary,
-        () => navigation.NavigationViewPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.table_header_row),
-      title: const Text('TabView'),
-      body: DeferredWidget(
-        navigation.loadLibrary,
-        () => navigation.TabViewPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.bulleted_tree_list),
-      title: const Text('TreeView'),
-      body: DeferredWidget(
-        navigation.loadLibrary,
-        () => navigation.TreeViewPage(),
-      ),
-    ),
-    PaneItemHeader(header: const Text('Surfaces')),
-    PaneItem(
-      icon: const Icon(FluentIcons.un_set_color),
-      title: const Text('Acrylic'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.AcrylicPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.customize_toolbar),
-      title: const Text('CommandBar'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.CommandBarsPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.comment_urgent),
-      title: const Text('ContentDialog'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.ContentDialogPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.expand_all),
-      title: const Text('Expander'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.ExpanderPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.info_solid),
-      title: const Text('InfoBar'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.InfoBarsPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.progress_ring_dots),
-      title: const Text('Progress Indicators'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.ProgressIndicatorsPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.tiles),
-      title: const Text('Tiles'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.TilesPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.hint_text),
-      title: const Text('Tooltip'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.TooltipPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.pop_expand),
-      title: const Text('Flyout'),
-      body: DeferredWidget(
-        surfaces.loadLibrary,
-        () => surfaces.FlyoutPage(),
-      ),
-    ),
-    PaneItemHeader(header: const Text('Theming')),
-    PaneItem(
-      icon: const Icon(FluentIcons.color_solid),
-      title: const Text('Colors'),
-      body: DeferredWidget(
-        theming.loadLibrary,
-        () => theming.ColorsPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.font_color_a),
-      title: const Text('Typography'),
-      body: DeferredWidget(
-        theming.loadLibrary,
-        () => theming.TypographyPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.icon_sets_flag),
-      title: const Text('Icons'),
-      body: DeferredWidget(
-        theming.loadLibrary,
-        () => theming.IconsPage(),
-      ),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.focus),
-      title: const Text('Reveal Focus'),
-      body: DeferredWidget(
-        theming.loadLibrary,
-        () => theming.RevealFocusPage(),
       ),
     ),
   ];
@@ -363,10 +223,9 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     _LinkPaneItemAction(
       icon: const Icon(FluentIcons.open_source),
       title: const Text('Source code'),
-      link: 'https://github.com/bdlukaa/fluent_ui',
+      link: 'https://github.com/VolantisDev/Launchpad/tree/flutter',
       body: const SizedBox.shrink(),
     ),
-    // TODO: mobile widgets, Scrollbar, BottomNavigationBar, RatingBar
   ];
 
   @override
@@ -429,26 +288,12 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           setState(() => index = i);
         },
         header: SizedBox(
-          height: kOneLineTileHeight,
-          child: ShaderMask(
-            shaderCallback: (rect) {
-              final color = appTheme.color.resolveFromReverseBrightness(
-                theme.brightness,
-                level: theme.brightness == Brightness.light ? 0 : 2,
-              );
-              return LinearGradient(
-                colors: [
-                  color,
-                  color,
-                ],
-              ).createShader(rect);
-            },
-            child: const FlutterLogo(
-              style: FlutterLogoStyle.horizontal,
-              size: 80.0,
-              textColor: Colors.white,
-              duration: Duration.zero,
-            ),
+          height: kOneLineTileHeight + 5,
+          child: SvgPicture.asset(
+            FluentTheme.of(context).brightness.isDark
+                ? 'assets/graphics/logo_wide.svg'
+                : 'assets/graphics/light/logo_wide.svg',
+            semanticsLabel: 'Launchpad',
           ),
         ),
         displayMode: appTheme.displayMode,

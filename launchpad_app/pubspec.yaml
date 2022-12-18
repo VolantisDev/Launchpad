@@ -36,6 +36,7 @@ dependencies:
   characters: ^1.2.1
   network_info_plus: ^3.0.1
   flutter_native_splash: ^2.2.16
+  flutter_svg: ^1.1.6
 
 dev_dependencies:
   flutter_test:
@@ -44,6 +45,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/graphics/logo_wide.svg
 
 flutter_native_splash:
   color: "#42a5f5"

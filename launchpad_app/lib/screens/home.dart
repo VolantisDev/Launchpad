@@ -25,10 +25,11 @@ class _HomePageState extends State<HomePage> with PageMixin {
 
     return ScaffoldPage.scrollable(
       header: PageHeader(
-        title: const Text('Fluent UI for Flutter Showcase App'),
+        title: const Text('Your Game Launching Multitool'),
         commandBar: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           Link(
-            uri: Uri.parse('https://github.com/bdlukaa/fluent_ui'),
+            uri: Uri.parse(
+                'https://github.com/VolantisDev/Launchpad/tree/flutter'),
             builder: (context, open) => Tooltip(
               message: 'Source code',
               child: IconButton(
@@ -40,106 +41,6 @@ class _HomePageState extends State<HomePage> with PageMixin {
         ]),
       ),
       children: [
-        Card(
-          child:
-              Wrap(alignment: WrapAlignment.center, spacing: 10.0, children: [
-            InfoLabel(
-              label: 'Inputs',
-              child: ToggleSwitch(
-                checked: selected,
-                onChanged: (v) => setState(() => selected = v),
-              ),
-            ),
-            SizedBox(
-              width: 100,
-              child: InfoLabel(
-                label: 'Forms',
-                child: ComboBox<String>(
-                  value: comboboxValue,
-                  items: ['Item 1', 'Item 2']
-                      .map((e) => ComboBoxItem(
-                            child: Text(e),
-                            value: e,
-                          ))
-                      .toList(),
-                  isExpanded: true,
-                  onChanged: (v) => setState(() => comboboxValue = v),
-                ),
-              ),
-            ),
-            RepaintBoundary(
-              child: Padding(
-                padding: const EdgeInsetsDirectional.only(start: 4.0),
-                child: InfoLabel(
-                  label: 'Progress',
-                  child: const SizedBox(
-                      height: 30, width: 30, child: ProgressRing()),
-                ),
-              ),
-            ),
-            InfoLabel(
-              label: 'Surfaces & Materials',
-              child: SizedBox(
-                height: 40,
-                width: 120,
-                child: Stack(children: [
-                  Container(
-                    width: 120,
-                    height: 50,
-                    color: theme.accentColor.lightest,
-                  ),
-                  const Positioned.fill(child: Acrylic(luminosityAlpha: 0.5)),
-                ]),
-              ),
-            ),
-            InfoLabel(
-              label: 'Icons',
-              child: const Icon(FluentIcons.graph_symbol, size: 30.0),
-            ),
-            InfoLabel(
-              label: 'Colors',
-              child: SizedBox(
-                width: 40,
-                height: 30,
-                child: Wrap(
-                  children: <Color>[
-                    ...Colors.accentColors,
-                    Colors.successPrimaryColor,
-                    Colors.warningPrimaryColor,
-                    Colors.errorPrimaryColor,
-                    Colors.grey,
-                  ].map((color) {
-                    return Container(
-                      height: 10,
-                      width: 10,
-                      color: color,
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-            InfoLabel(
-              label: 'Typography',
-              child: ShaderMask(
-                shaderCallback: (rect) {
-                  return LinearGradient(
-                    colors: [
-                      Colors.white,
-                      ...Colors.accentColors,
-                    ],
-                  ).createShader(rect);
-                },
-                blendMode: BlendMode.srcATop,
-                child: const Text(
-                  'ABCDEFGH',
-                  style: TextStyle(fontSize: 24, shadows: [
-                    Shadow(offset: Offset(1, 1)),
-                  ]),
-                ),
-              ),
-            ),
-          ]),
-        ),
         const SizedBox(height: 22.0),
         IconButton(
           onPressed: () {
@@ -153,13 +54,13 @@ class _HomePageState extends State<HomePage> with PageMixin {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'What\'s new on 4.0.0',
+                'What\'s new in Launchpad 10',
                 style: theme.typography.body
                     ?.copyWith(fontWeight: FontWeight.bold),
               ),
-              Text('June 21, 2022', style: theme.typography.caption),
+              Text('Dec 17, 2022', style: theme.typography.caption),
               Text(
-                'A native look-and-feel out of the box',
+                'A brand new desktop app!',
                 style: theme.typography.bodyLarge,
               ),
             ],
@@ -219,8 +120,6 @@ class _HomePageState extends State<HomePage> with PageMixin {
             ),
           ],
         ),
-        subtitle(content: const Text('Equivalents with the material library')),
-        const MaterialEquivalents(),
       ],
     );
   }
