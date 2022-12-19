@@ -136,14 +136,18 @@ flutter:
     - assets/graphics/icon.png
 
 flutter_icons:
-  android: false
-  ios: false
+  android:
+    generate: false
+  ios:
+    generate: false
   image_path: "assets/graphics/icon.png"
-  web: true
+  web:
+    generate: true
   windows:
     generate: true
     icon_size: 256
-  macos: true
+  macos:
+    generate: true
 
 flutter_native_splash:
   color: "#202020"

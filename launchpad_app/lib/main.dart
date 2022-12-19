@@ -166,8 +166,13 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     ),
     PaneItemHeader(header: const Icon(FluentIcons.archive)),
     PaneItem(
+      icon: const Icon(FluentIcons.lifesaver),
+      title: const Text('All Backups'),
+      body: const Text('.'),
+    ),
+    PaneItem(
       icon: const Icon(FluentIcons.archive),
-      title: const Text('Backups'),
+      title: const Text('Add Backup'),
       body: const Text('.'),
     ),
     PaneItemHeader(header: const Icon(FluentIcons.accounts)),

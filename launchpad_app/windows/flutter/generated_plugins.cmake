@@ -3,11 +3,22 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  desktop_webview_auth
+  file_selector_windows
   flutter_acrylic
+  hotkey_manager
+  isar_flutter_libs
+  local_auth_windows
+  local_notifier
   network_info_plus
+  permission_handler_windows
+  protocol_handler
   screen_retriever
+  share_plus
   system_theme
+  tray_manager
   url_launcher_windows
+  webview_windows
   window_manager
 )
 
