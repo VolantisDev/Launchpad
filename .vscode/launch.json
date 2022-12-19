@@ -5,6 +5,29 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launchpad (app)",
+            "cwd": "launchpad_app",
+            "program": "lib/main.dart",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "Launchpad (app profile mode)",
+            "cwd": "launchpad_app",
+            "program": "lib/main.dart",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "Launchpad (app release mode)",
+            "cwd": "launchpad_app",
+            "program": "lib/main.dart",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
             "name": "Launchpad (Debug)",
             "type": "autohotkey",
             "request": "launch",
@@ -31,29 +54,6 @@
             "console": "internalConsole",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
-        },
-        {
-            "name": "Launchpad (app)",
-            "cwd": "launchpad_app",
-            "program": "lib/main.dart",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "Launchpad (app profile mode)",
-            "cwd": "launchpad_app",
-            "program": "lib/main.dart",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile"
-        },
-        {
-            "name": "Launchpad (app release mode)",
-            "cwd": "launchpad_app",
-            "program": "lib/main.dart",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "release"
         }
     ]
 }
