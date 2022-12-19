@@ -71,7 +71,6 @@ dependencies:
   logger: ^1.1.0
   mime: ^1.0.3
   msix: ^3.7.0
-  nested: ^1.0.0
   network_info_plus: ^3.0.1
   nil: ^1.1.1
   number_display: ^3.0.0
@@ -105,6 +104,8 @@ dependencies:
   xml: ^6.1.0
   yaml: ^3.1.1
   provider: ^6.0.5
+  http: ^0.13.5
+  intl: ^0.17.0
 
 dependency_overrides:
   firebase_core_platform_interface: 4.5.1
@@ -132,8 +133,14 @@ flutter:
   uses-material-design: true
   assets:
     - assets/graphics/logo_wide.svg
+    - assets/graphics/light/logo_wide.svg
     - assets/graphics/splash.png
+    - assets/graphics/light/splash.png
     - assets/graphics/icon.png
+
+flutter_gen:
+  integrations:
+    flutter_svg: true
 
 flutter_icons:
   android:

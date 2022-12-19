@@ -850,7 +850,7 @@ packages:
     source: hosted
     version: "0.15.1"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       url: "https://pub.dartlang.org"
@@ -927,7 +927,7 @@ packages:
     source: hosted
     version: "0.1.0+3"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       url: "https://pub.dartlang.org"
@@ -1116,7 +1116,7 @@ packages:
     source: hosted
     version: "3.7.0"
   nested:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: nested
       url: "https://pub.dartlang.org"
