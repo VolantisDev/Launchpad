@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/widgets/deferred_widget.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -30,7 +31,7 @@ mixin PageMixin {
   }
 }
 
-abstract class Page extends StatelessWidget {
+abstract class Page extends HookConsumerWidget {
   Page({super.key}) {
     _pageIndex++;
   }
@@ -39,7 +40,7 @@ abstract class Page extends StatelessWidget {
   Stream get stateStream => _controller.stream;
 
   @override
-  Widget build(BuildContext context);
+  Widget build(BuildContext context, WidgetRef ref);
 
   void setState(VoidCallback func) {
     func();
@@ -77,20 +78,22 @@ abstract class ScrollablePage extends Page {
   ScrollablePage({super.key});
 
   final scrollController = ScrollController();
-  Widget buildHeader(BuildContext context) => const SizedBox.shrink();
+  Widget buildHeader(BuildContext context, WidgetRef ref) =>
+      const SizedBox.shrink();
 
-  Widget buildBottomBar(BuildContext context) => const SizedBox.shrink();
+  Widget buildBottomBar(BuildContext context, WidgetRef ref) =>
+      const SizedBox.shrink();
 
-  List<Widget> buildScrollable(BuildContext context);
+  List<Widget> buildScrollable(BuildContext context, WidgetRef ref);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ScaffoldPage.scrollable(
       key: PageStorageKey(_pageIndex),
       scrollController: scrollController,
-      header: buildHeader(context),
-      children: buildScrollable(context),
-      bottomBar: buildBottomBar(context),
+      header: buildHeader(context, ref),
+      bottomBar: buildBottomBar(context, ref),
+      children: buildScrollable(context, ref),
     );
   }
 }
@@ -104,7 +107,7 @@ class EmptyPage extends Page {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return child ?? const SizedBox.shrink();
   }
 }
@@ -122,18 +125,19 @@ class DeferredPage extends Page {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return DeferredWidget(libraryLoader, () => createPage().build(context));
+  Widget build(BuildContext context, WidgetRef ref) {
+    return DeferredWidget(
+        libraryLoader, () => createPage().build(context, ref));
   }
 }
 
 extension PageExtension on List<Page> {
-  List<Widget> transform(BuildContext context) {
+  List<Widget> transform(BuildContext context, WidgetRef ref) {
     return map((page) {
       return StreamBuilder(
         stream: page.stateStream,
         builder: (context, _) {
-          return page.build(context);
+          return page.build(context, ref);
         },
       );
     }).toList();

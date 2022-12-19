@@ -1,11 +1,12 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/link.dart';
 
-class SponsorDialog extends StatelessWidget {
+class SponsorDialog extends HookConsumerWidget {
   const SponsorDialog({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     assert(debugCheckHasFluentTheme(context));
     return ContentDialog(
       constraints: const BoxConstraints(maxWidth: 600),
@@ -61,8 +62,8 @@ class SponsorDialog extends StatelessWidget {
         Link(
           uri: Uri.parse('https://www.patreon.com/bdlukaa'),
           builder: (context, open) => FilledButton(
-            child: const Text('Become a Sponsor'),
             onPressed: open,
+            child: const Text('Become a Sponsor'),
           ),
         ),
       ],

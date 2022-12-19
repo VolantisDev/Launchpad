@@ -5,6 +5,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 typedef LibraryLoader = Future<void> Function();
 typedef DeferredWidgetBuilder = Widget Function();
@@ -14,7 +15,7 @@ typedef DeferredWidgetBuilder = Widget Function();
 /// The child is created and a single instance of the Widget is maintained in
 /// state as long as closure to create widget stays the same.
 ///
-class DeferredWidget extends StatefulWidget {
+class DeferredWidget extends StatefulHookConsumerWidget {
   DeferredWidget(
     this.libraryLoader,
     this.createWidget, {
@@ -38,10 +39,10 @@ class DeferredWidget extends StatefulWidget {
   }
 
   @override
-  State<DeferredWidget> createState() => _DeferredWidgetState();
+  ConsumerState<DeferredWidget> createState() => _DeferredWidgetState();
 }
 
-class _DeferredWidgetState extends State<DeferredWidget> {
+class _DeferredWidgetState extends ConsumerState<DeferredWidget> {
   _DeferredWidgetState();
 
   Widget? _loadedChild;

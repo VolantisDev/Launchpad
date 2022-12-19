@@ -1,15 +1,17 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/widgets/card_highlight.dart';
 import 'package:launchpad_app/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-class TimePickerPage extends StatefulWidget {
+class TimePickerPage extends StatefulHookConsumerWidget {
   const TimePickerPage({Key? key}) : super(key: key);
 
   @override
-  State<TimePickerPage> createState() => _TimePickerPageState();
+  ConsumerState<TimePickerPage> createState() => _TimePickerPageState();
 }
 
-class _TimePickerPageState extends State<TimePickerPage> with PageMixin {
+class _TimePickerPageState extends ConsumerState<TimePickerPage>
+    with PageMixin {
   DateTime? simpleTime;
   DateTime? arrivalTime;
   DateTime? hhTime;
@@ -31,6 +33,12 @@ class _TimePickerPageState extends State<TimePickerPage> with PageMixin {
         ),
         subtitle(content: const Text('A simple TimePicker')),
         CardHighlight(
+          codeSnippet: '''DateTime? selected;
+
+TimePicker(
+  selected: selected,
+  onChanged: (time) => setState(() => selected = time),
+),''',
           child: Align(
             alignment: AlignmentDirectional.centerStart,
             child: TimePicker(
@@ -38,12 +46,6 @@ class _TimePickerPageState extends State<TimePickerPage> with PageMixin {
               onChanged: (time) => setState(() => simpleTime = time),
             ),
           ),
-          codeSnippet: '''DateTime? selected;
-
-TimePicker(
-  selected: selected,
-  onChanged: (time) => setState(() => selected = time),
-),''',
         ),
         subtitle(
           content: const Text(
@@ -51,6 +53,14 @@ TimePicker(
           ),
         ),
         CardHighlight(
+          codeSnippet: '''DateTime? selected;
+        
+TimePicker(
+  selected: selected,
+  onChanged: (time) => setState(() => selected = time),
+  header: 'Arrival time',
+  minuteIncrement: 15,
+),''',
           child: Align(
             alignment: AlignmentDirectional.centerStart,
             child: TimePicker(
@@ -60,14 +70,6 @@ TimePicker(
               minuteIncrement: 15,
             ),
           ),
-          codeSnippet: '''DateTime? selected;
-        
-TimePicker(
-  selected: selected,
-  onChanged: (time) => setState(() => selected = time),
-  header: 'Arrival time',
-  minuteIncrement: 15,
-),''',
         ),
         subtitle(
           content: const Text(
@@ -75,6 +77,14 @@ TimePicker(
           ),
         ),
         CardHighlight(
+          codeSnippet: '''DateTime? selected;
+        
+TimePicker(
+  selected: selected,
+  onChanged: (time) => setState(() => selected = time),
+  header: '24 hour clock',
+  hourFormat: HourFormat.HH,
+),''',
           child: Align(
             alignment: AlignmentDirectional.centerStart,
             child: TimePicker(
@@ -84,14 +94,6 @@ TimePicker(
               hourFormat: HourFormat.HH,
             ),
           ),
-          codeSnippet: '''DateTime? selected;
-        
-TimePicker(
-  selected: selected,
-  onChanged: (time) => setState(() => selected = time),
-  header: '24 hour clock',
-  hourFormat: HourFormat.HH,
-),''',
         ),
       ],
     );

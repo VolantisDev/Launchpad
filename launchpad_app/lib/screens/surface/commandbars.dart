@@ -1,15 +1,17 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../widgets/page.dart';
 
-class CommandBarsPage extends StatefulWidget {
+class CommandBarsPage extends StatefulHookConsumerWidget {
   const CommandBarsPage({Key? key}) : super(key: key);
 
   @override
-  State<CommandBarsPage> createState() => _CommandBarsPageState();
+  ConsumerState<CommandBarsPage> createState() => _CommandBarsPageState();
 }
 
-class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
+class _CommandBarsPageState extends ConsumerState<CommandBarsPage>
+    with PageMixin {
   final simpleCommandBarItems = <CommandBarItem>[
     CommandBarBuilderItem(
       builder: (context, mode, w) => Tooltip(

@@ -1,5 +1,6 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void showCopiedSnackbar(BuildContext context, String copiedText) {
   showSnackbar(
@@ -27,14 +28,14 @@ void showCopiedSnackbar(BuildContext context, String copiedText) {
   );
 }
 
-class IconsPage extends StatefulWidget {
+class IconsPage extends StatefulHookConsumerWidget {
   const IconsPage({Key? key}) : super(key: key);
 
   @override
   _IconsPageState createState() => _IconsPageState();
 }
 
-class _IconsPageState extends State<IconsPage> {
+class _IconsPageState extends ConsumerState<IconsPage> {
   String filterText = '';
 
   @override
@@ -128,7 +129,7 @@ class _IconsPageState extends State<IconsPage> {
                           Padding(
                             padding: const EdgeInsetsDirectional.only(top: 8.0),
                             child: Text(
-                              snakeCasetoSentenceCase(e.key),
+                              snakeCaseToSentenceCase(e.key),
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.fade,
                             ),
@@ -146,7 +147,7 @@ class _IconsPageState extends State<IconsPage> {
     );
   }
 
-  static String snakeCasetoSentenceCase(String original) {
+  static String snakeCaseToSentenceCase(String original) {
     return '${original[0].toUpperCase()}${original.substring(1)}'
         .replaceAll(RegExp(r'(_|-)+'), ' ');
   }

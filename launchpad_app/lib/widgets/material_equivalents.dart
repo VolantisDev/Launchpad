@@ -2,15 +2,17 @@ import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as m;
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class MaterialEquivalents extends StatefulWidget {
+class MaterialEquivalents extends StatefulHookConsumerWidget {
   const MaterialEquivalents({Key? key}) : super(key: key);
 
   @override
-  State<MaterialEquivalents> createState() => _MaterialEquivalentsState();
+  ConsumerState<MaterialEquivalents> createState() =>
+      _MaterialEquivalentsState();
 }
 
-class _MaterialEquivalentsState extends State<MaterialEquivalents> {
+class _MaterialEquivalentsState extends ConsumerState<MaterialEquivalents> {
   bool comboboxChecked = true;
   bool radioChecked = true;
   bool switchChecked = true;
@@ -144,14 +146,14 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
         const Text('ComboBox'),
         ComboBox<String>(
           items: comboboxItems
-              .map((e) => ComboBoxItem(child: Text(e), value: e))
+              .map((e) => ComboBoxItem(value: e, child: Text(e)))
               .toList(),
           value: comboboxItem,
           onChanged: (value) => setState(() => comboboxItem = value),
         ),
         m.DropdownButton<String>(
           items: comboboxItems
-              .map((e) => m.DropdownMenuItem(child: Text(e), value: e))
+              .map((e) => m.DropdownMenuItem(value: e, child: Text(e)))
               .toList(),
           value: comboboxItem,
           onChanged: (value) => setState(() => comboboxItem = value),
@@ -176,8 +178,8 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
             return comboboxItems
                 .map(
                   (e) => m.PopupMenuItem(
-                    child: Text(e),
                     value: e,
+                    child: Text(e),
                   ),
                 )
                 .toList();

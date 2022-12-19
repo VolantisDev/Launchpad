@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as m;
 import 'package:flutter_markdown/flutter_markdown.dart'
     deferred as flutter_markdown;
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -10,14 +11,14 @@ import 'deferred_widget.dart';
 
 List<String>? changelog;
 
-class Changelog extends StatefulWidget {
+class Changelog extends StatefulHookConsumerWidget {
   const Changelog({Key? key}) : super(key: key);
 
   @override
-  State<Changelog> createState() => _ChangelogState();
+  ConsumerState<Changelog> createState() => _ChangelogState();
 }
 
-class _ChangelogState extends State<Changelog> {
+class _ChangelogState extends ConsumerState<Changelog> {
   @override
   void initState() {
     super.initState();

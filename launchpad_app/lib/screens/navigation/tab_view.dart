@@ -1,17 +1,18 @@
 import 'dart:math';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/widgets/card_highlight.dart';
 import 'package:launchpad_app/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-class TabViewPage extends StatefulWidget {
+class TabViewPage extends StatefulHookConsumerWidget {
   const TabViewPage({Key? key}) : super(key: key);
 
   @override
-  State<TabViewPage> createState() => _TabViewPageState();
+  ConsumerState<TabViewPage> createState() => _TabViewPageState();
 }
 
-class _TabViewPageState extends State<TabViewPage> with PageMixin {
+class _TabViewPageState extends ConsumerState<TabViewPage> with PageMixin {
   int currentIndex = 0;
   List<Tab>? tabs;
 
@@ -56,7 +57,7 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
         ),
         subtitle(
           content: const Text(
-            'A TabView with support for adding, closing and rearraging tabs',
+            'A TabView with support for adding, closing and rearranging tabs',
           ),
         ),
         Card(
@@ -74,8 +75,8 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
                     value: tabWidthBehavior,
                     items: TabWidthBehavior.values.map((behavior) {
                       return ComboBoxItem(
-                        child: Text(behavior.name),
                         value: behavior,
+                        child: Text(behavior.name),
                       );
                     }).toList(),
                     onChanged: (behavior) {
@@ -89,14 +90,14 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
               SizedBox(
                 width: 150,
                 child: InfoLabel(
-                  label: 'Close button visbility',
+                  label: 'Close button visibility',
                   child: ComboBox<CloseButtonVisibilityMode>(
                     isExpanded: true,
                     value: closeButtonVisibilityMode,
                     items: CloseButtonVisibilityMode.values.map((mode) {
                       return ComboBoxItem(
-                        child: Text(mode.name),
                         value: mode,
+                        child: Text(mode.name),
                       );
                     }).toList(),
                     onChanged: (mode) {
@@ -121,6 +122,7 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
           ),
         ),
         CardHighlight(
+          codeSnippet: '''''',
           child: SizedBox(
             height: 400,
             child: TabView(
@@ -155,8 +157,6 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
               },
             ),
           ),
-          // TODO: TabView snippets
-          codeSnippet: '''''',
         ),
       ],
     );

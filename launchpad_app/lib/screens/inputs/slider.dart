@@ -1,15 +1,16 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/widgets/card_highlight.dart';
 import 'package:launchpad_app/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-class SliderPage extends StatefulWidget {
+class SliderPage extends StatefulHookConsumerWidget {
   const SliderPage({Key? key}) : super(key: key);
 
   @override
-  State<SliderPage> createState() => _SliderPageState();
+  ConsumerState<SliderPage> createState() => _SliderPageState();
 }
 
-class _SliderPageState extends State<SliderPage> with PageMixin {
+class _SliderPageState extends ConsumerState<SliderPage> with PageMixin {
   bool disabled = false;
   double firstValue = 23.0;
   double verticalValue = 50.0;
@@ -37,6 +38,14 @@ class _SliderPageState extends State<SliderPage> with PageMixin {
         ),
         subtitle(content: const Text('A simple Slider')),
         CardHighlight(
+          codeSnippet: '''double value = 0;
+
+Slider(
+  label: '\${value.toInt()}',
+  value: value,
+  onChanged: disabled ? null : (v) => setState(() => value = v),
+),
+''',
           child: Row(children: [
             Slider(
               label: '${firstValue.toInt()}',
@@ -50,14 +59,6 @@ class _SliderPageState extends State<SliderPage> with PageMixin {
             const Spacer(),
             Text('Output:\n${firstValue.toInt()}'),
           ]),
-          codeSnippet: '''double value = 0;
-
-Slider(
-  label: '\${value.toInt()}',
-  value: value,
-  onChanged: disabled ? null : (v) => setState(() => value = v),
-),
-''',
         ),
         subtitle(content: const Text('A vertical slider')),
         description(
@@ -71,6 +72,15 @@ Slider(
           ),
         ),
         CardHighlight(
+          codeSnippet: '''double value = 0;
+
+Slider(
+  vertical: true,
+  label: '\${value.toInt()}',
+  value: value,
+  onChanged: disabled ? null : (v) => setState(() => value = v),
+),
+''',
           child: Row(children: [
             Slider(
               vertical: true,
@@ -82,15 +92,6 @@ Slider(
             const Spacer(),
             Text('Output:\n${verticalValue.toInt()}'),
           ]),
-          codeSnippet: '''double value = 0;
-
-Slider(
-  vertical: true,
-  label: '\${value.toInt()}',
-  value: value,
-  onChanged: disabled ? null : (v) => setState(() => value = v),
-),
-''',
         ),
       ],
     );

@@ -1,15 +1,17 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/widgets/card_highlight.dart';
 import 'package:launchpad_app/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-class DatePickerPage extends StatefulWidget {
+class DatePickerPage extends StatefulHookConsumerWidget {
   const DatePickerPage({Key? key}) : super(key: key);
 
   @override
-  State<DatePickerPage> createState() => _DatePickerPageState();
+  ConsumerState<DatePickerPage> createState() => _DatePickerPageState();
 }
 
-class _DatePickerPageState extends State<DatePickerPage> with PageMixin {
+class _DatePickerPageState extends ConsumerState<DatePickerPage>
+    with PageMixin {
   DateTime? simpleTime;
   DateTime? hiddenTime;
 
@@ -30,6 +32,13 @@ class _DatePickerPageState extends State<DatePickerPage> with PageMixin {
         ),
         subtitle(content: const Text('A simple DatePicker with a header')),
         CardHighlight(
+          codeSnippet: '''DateTime? selected;
+
+DatePicker(
+  header: 'Pick a date',
+  selected: selected,
+  onChanged: (time) => setState(() => selected = time),
+),''',
           child: Align(
             alignment: AlignmentDirectional.centerStart,
             child: DatePicker(
@@ -38,16 +47,16 @@ class _DatePickerPageState extends State<DatePickerPage> with PageMixin {
               onChanged: (time) => setState(() => simpleTime = time),
             ),
           ),
-          codeSnippet: '''DateTime? selected;
-
-DatePicker(
-  header: 'Pick a date',
-  selected: selected,
-  onChanged: (time) => setState(() => selected = time),
-),''',
         ),
         subtitle(content: const Text('A DatePicker with year hidden')),
         CardHighlight(
+          codeSnippet: '''DateTime? selected;
+
+DatePicker(
+  selected: selected,
+  onChanged: (time) => setState(() => selected = time),
+  showYear: false,
+),''',
           child: Align(
             alignment: AlignmentDirectional.centerStart,
             child: DatePicker(
@@ -56,13 +65,6 @@ DatePicker(
               showYear: false,
             ),
           ),
-          codeSnippet: '''DateTime? selected;
-
-DatePicker(
-  selected: selected,
-  onChanged: (time) => setState(() => selected = time),
-  showYear: false,
-),''',
         ),
       ],
     );

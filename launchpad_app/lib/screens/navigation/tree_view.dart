@@ -1,15 +1,16 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/widgets/card_highlight.dart';
 import 'package:launchpad_app/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-class TreeViewPage extends StatefulWidget {
+class TreeViewPage extends StatefulHookConsumerWidget {
   const TreeViewPage({Key? key}) : super(key: key);
 
   @override
-  State<TreeViewPage> createState() => _TreeViewPageState();
+  ConsumerState<TreeViewPage> createState() => _TreeViewPageState();
 }
 
-class _TreeViewPageState extends State<TreeViewPage> with PageMixin {
+class _TreeViewPageState extends ConsumerState<TreeViewPage> with PageMixin {
   final treeViewKey = GlobalKey<TreeViewState>();
 
   @override
@@ -30,19 +31,6 @@ class _TreeViewPageState extends State<TreeViewPage> with PageMixin {
           content: const Text('A TreeView with Multi-selection enabled'),
         ),
         CardHighlight(
-          child: TreeView(
-            key: treeViewKey,
-            selectionMode: TreeViewSelectionMode.multiple,
-            shrinkWrap: true,
-            items: items,
-            onItemInvoked: (item, reason) async =>
-                debugPrint('onItemInvoked(reason=$reason): $item'),
-            onSelectionChanged: (selectedItems) async => debugPrint(
-                'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
-            onSecondaryTap: (item, details) async {
-              debugPrint('onSecondaryTap $item at ${details.globalPosition}');
-            },
-          ),
           codeSnippet: r'''final items = [
   TreeViewItem(
     content: const Text('Personal Documents'),
@@ -61,12 +49,12 @@ class _TreeViewPageState extends State<TreeViewPage> with PageMixin {
             value: 'paint_color_scheme',
           ),
           TreeViewItem(
-            content: const Text('Flooring weedgrain type'),
-            value: 'flooring_weedgrain_type',
+            content: const Text('Flooring wood grain type'),
+            value: 'flooring_wood_grain_type',
           ),
           TreeViewItem(
             content: const Text('Kitchen cabinet style'),
-            value: 'kitch_cabinet_style',
+            value: 'kitchen_cabinet_style',
           ),
         ],
       ),
@@ -104,25 +92,22 @@ TreeView(
   },
 )
 ''',
+          child: TreeView(
+            key: treeViewKey,
+            selectionMode: TreeViewSelectionMode.multiple,
+            shrinkWrap: true,
+            items: items,
+            onItemInvoked: (item, reason) async =>
+                debugPrint('onItemInvoked(reason=$reason): $item'),
+            onSelectionChanged: (selectedItems) async => debugPrint(
+                'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
+            onSecondaryTap: (item, details) async {
+              debugPrint('onSecondaryTap $item at ${details.globalPosition}');
+            },
+          ),
         ),
         subtitle(content: const Text('A TreeView with lazy-loading items')),
         CardHighlight(
-          child: Column(
-            children: [
-              TreeView(
-                shrinkWrap: true,
-                items: lazyItems,
-                onItemInvoked: (item, reason) async =>
-                    debugPrint('onItemInvoked(reason=$reason): $item'),
-                onSelectionChanged: (selectedItems) async => debugPrint(
-                    'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
-                onSecondaryTap: (item, details) async {
-                  debugPrint(
-                      'onSecondaryTap $item at ${details.globalPosition}');
-                },
-              ),
-            ],
-          ),
           codeSnippet: r'''final lazyItems = [
   TreeViewItem(
     content: const Text('Item with lazy loading'),
@@ -176,6 +161,22 @@ TreeView(
           },
 )
 ''',
+          child: Column(
+            children: [
+              TreeView(
+                shrinkWrap: true,
+                items: lazyItems,
+                onItemInvoked: (item, reason) async =>
+                    debugPrint('onItemInvoked(reason=$reason): $item'),
+                onSelectionChanged: (selectedItems) async => debugPrint(
+                    'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
+                onSecondaryTap: (item, details) async {
+                  debugPrint(
+                      'onSecondaryTap $item at ${details.globalPosition}');
+                },
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -199,12 +200,12 @@ TreeView(
               value: 'paint_color_scheme',
             ),
             TreeViewItem(
-              content: const Text('Flooring weedgrain type'),
-              value: 'flooring_weedgrain_type',
+              content: const Text('Flooring wood grain type'),
+              value: 'flooring_wood_grain_type',
             ),
             TreeViewItem(
               content: const Text('Kitchen cabinet style'),
-              value: 'kitch_cabinet_style',
+              value: 'kitchen_cabinet_style',
             ),
           ],
         ),

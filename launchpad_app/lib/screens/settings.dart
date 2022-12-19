@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:provider/provider.dart';
 
 import '../theme.dart';
@@ -81,12 +82,12 @@ class Settings extends ScrollablePage {
   Settings({super.key});
 
   @override
-  Widget buildHeader(BuildContext context) {
+  Widget buildHeader(BuildContext context, WidgetRef ref) {
     return const PageHeader(title: Text('Settings'));
   }
 
   @override
-  List<Widget> buildScrollable(BuildContext context) {
+  List<Widget> buildScrollable(BuildContext context, WidgetRef ref) {
     assert(debugCheckHasMediaQuery(context));
     final appTheme = context.watch<AppTheme>();
     const spacer = SizedBox(height: 10.0);
@@ -165,8 +166,8 @@ class Settings extends ScrollablePage {
       spacer,
       Wrap(children: [
         Tooltip(
-          child: _buildColorBlock(appTheme, systemAccentColor),
           message: accentColorNames[0],
+          child: _buildColorBlock(appTheme, systemAccentColor),
         ),
         ...List.generate(Colors.accentColors.length, (index) {
           final color = Colors.accentColors[index];

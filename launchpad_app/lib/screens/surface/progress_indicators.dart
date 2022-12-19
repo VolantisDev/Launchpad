@@ -1,18 +1,20 @@
 import 'dart:math';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 import '../../widgets/card_highlight.dart';
 
-class ProgressIndicatorsPage extends StatefulWidget {
+class ProgressIndicatorsPage extends StatefulHookConsumerWidget {
   const ProgressIndicatorsPage({Key? key}) : super(key: key);
 
   @override
-  State<ProgressIndicatorsPage> createState() => _ProgressIndicatorsPageState();
+  ConsumerState<ProgressIndicatorsPage> createState() =>
+      _ProgressIndicatorsPageState();
 }
 
-class _ProgressIndicatorsPageState extends State<ProgressIndicatorsPage>
+class _ProgressIndicatorsPageState extends ConsumerState<ProgressIndicatorsPage>
     with PageMixin {
   double determinateValue = Random().nextDouble() * 100;
   @override
@@ -36,6 +38,11 @@ class _ProgressIndicatorsPageState extends State<ProgressIndicatorsPage>
           ),
         ),
         CardHighlight(
+          codeSnippet: '''// indeterminate progress bar
+ProgressBar(),
+
+// indeterminate progress ring
+ProgressRing(),''',
           child: RepaintBoundary(
             child: Row(children: const [
               ProgressBar(),
@@ -43,11 +50,6 @@ class _ProgressIndicatorsPageState extends State<ProgressIndicatorsPage>
               ProgressRing(),
             ]),
           ),
-          codeSnippet: '''// indeterminate progress bar
-ProgressBar(),
-
-// indeterminate progress ring
-ProgressRing(),''',
         ),
         subtitle(content: const Text('Determinate Progress Indicators')),
         description(
@@ -58,6 +60,11 @@ ProgressRing(),''',
           ),
         ),
         CardHighlight(
+            codeSnippet: '''// determinate progress bar
+ProgressBar(value: ${determinateValue.toInt()}),
+
+// determinate progress ring
+ProgressRing(value: ${determinateValue.toInt()}),''',
             child: Row(children: [
               ProgressBar(value: determinateValue),
               const SizedBox(width: 20.0),
@@ -70,12 +77,7 @@ ProgressRing(),''',
                   onChanged: (v) => setState(() => determinateValue = v),
                 ),
               ),
-            ]),
-            codeSnippet: '''// determinate progress bar
-ProgressBar(value: ${determinateValue.toInt()}),
-
-// determinate progress ring
-ProgressRing(value: ${determinateValue.toInt()}),'''),
+            ])),
       ],
     );
   }

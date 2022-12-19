@@ -1,3 +1,4 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -23,17 +24,17 @@ InlineSpan _buildLabel(String label, String description) {
   );
 }
 
-class AcrylicPage extends StatefulWidget {
+class AcrylicPage extends StatefulHookConsumerWidget {
   const AcrylicPage({Key? key}) : super(key: key);
 
   @override
-  State<AcrylicPage> createState() => _AcrylicPageState();
+  ConsumerState<AcrylicPage> createState() => _AcrylicPageState();
 }
 
-class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
+class _AcrylicPageState extends ConsumerState<AcrylicPage> with PageMixin {
   double tintOpacity = 0.8;
   double luminosityOpacity = 0.8;
-  double blurAmout = 30;
+  double blurAmount = 30;
   double elevation = 0;
   Color? color;
 
@@ -78,7 +79,7 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
                       child: Acrylic(
                         tintAlpha: tintOpacity,
                         luminosityAlpha: luminosityOpacity,
-                        blurAmount: blurAmout,
+                        blurAmount: blurAmount,
                         elevation: elevation,
                         tint: color,
                       ),
@@ -98,30 +99,30 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
                     value: color,
                     items: [
                       ComboBoxItem(
+                        value: Colors.white,
                         child: Row(children: [
                           buildColorBox(Colors.white),
                           const SizedBox(width: 10.0),
                           const Text('White'),
                         ]),
-                        value: Colors.white,
                       ),
                       ComboBoxItem(
+                        value: const Color(0xE4000000),
                         child: Row(children: [
                           buildColorBox(const Color(0xE4000000)),
                           const SizedBox(width: 10.0),
                           const Text('Black'),
                         ]),
-                        value: const Color(0xE4000000),
                       ),
                       ...List.generate(Colors.accentColors.length, (index) {
                         final color = Colors.accentColors[index];
                         return ComboBoxItem(
+                          value: color,
                           child: Row(children: [
                             buildColorBox(color),
                             const SizedBox(width: 10.0),
                             Text(accentColorNames[index + 1]),
                           ]),
-                          value: color,
                         );
                       }),
                     ],
@@ -155,10 +156,10 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
                 InfoLabel(
                   label: 'Blur amount',
                   child: Slider(
-                    value: blurAmout,
+                    value: blurAmount,
                     min: 0.0,
                     max: 100,
-                    onChanged: (v) => setState(() => blurAmout = v),
+                    onChanged: (v) => setState(() => blurAmount = v),
                   ),
                 ),
                 InfoLabel(

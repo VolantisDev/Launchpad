@@ -1,14 +1,15 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/widgets/card_highlight.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-class FlyoutPage extends StatefulWidget {
+class FlyoutPage extends StatefulHookConsumerWidget {
   const FlyoutPage({Key? key}) : super(key: key);
 
   @override
-  State<FlyoutPage> createState() => _FlyoutShowcaseState();
+  ConsumerState<FlyoutPage> createState() => _FlyoutShowcaseState();
 }
 
-class _FlyoutShowcaseState extends State<FlyoutPage> {
+class _FlyoutShowcaseState extends ConsumerState<FlyoutPage> {
   Typography get typography => FluentTheme.of(context).typography;
 
   FlyoutController buttonController = FlyoutController();
@@ -32,37 +33,8 @@ class _FlyoutShowcaseState extends State<FlyoutPage> {
         Text('A button with a Flyout', style: typography.subtitle),
         const SizedBox(height: 10.0),
         CardHighlight(
-          child: Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: Flyout(
-              controller: buttonController,
-              content: (context) {
-                return FlyoutContent(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'All items will be removed. Do you want to continue?',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 12.0),
-                      Button(
-                        child: const Text('Yes, empty my cart'),
-                        onPressed: buttonController.close,
-                      ),
-                    ],
-                  ),
-                );
-              },
-              child: Button(
-                child: const Text('Empty cart'),
-                onPressed: buttonController.open,
-              ),
-            ),
-          ),
           codeSnippet:
-              '''// define the controller. It'll be responsible to open/close the flyout programatically
+              '''// define the controller. It'll be responsible to open/close the flyout programmatically
 FlyoutController buttonController = FlyoutController();
 
 Flyout(
@@ -93,6 +65,35 @@ Flyout(
     onPressed: buttonController.open,
   )
 )''',
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: Flyout(
+              controller: buttonController,
+              content: (context) {
+                return FlyoutContent(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'All items will be removed. Do you want to continue?',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 12.0),
+                      Button(
+                        onPressed: buttonController.close,
+                        child: const Text('Yes, empty my cart'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              child: Button(
+                onPressed: buttonController.open,
+                child: const Text('Empty cart'),
+              ),
+            ),
+          ),
         ),
         const SizedBox(height: 20.0),
         DefaultTextStyle(

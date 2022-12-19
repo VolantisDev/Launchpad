@@ -2,7 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart' hide Page;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:launchpad_app/gen/assets.gen.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -17,6 +18,7 @@ import 'theme.dart';
 import 'widgets/deferred_widget.dart';
 
 const String appTitle = 'Launchpad - Game Launching Multitool';
+final themeProvider = ChangeNotifierProvider((ref) => AppTheme());
 
 /// Checks if the current environment is a desktop environment.
 bool get isDesktop {
@@ -59,71 +61,69 @@ void main() async {
     });
   }
 
-  runApp(const MyApp());
+  runApp(const ProviderScope(
+    child: MyApp(),
+  ));
 
   DeferredWidget.preload(inputs.loadLibrary);
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends HookConsumerWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AppTheme(),
-      builder: (context, _) {
-        final appTheme = context.watch<AppTheme>();
-        return FluentApp(
-          title: appTitle,
-          themeMode: appTheme.mode,
-          debugShowCheckedModeBanner: false,
-          color: appTheme.color,
-          darkTheme: ThemeData(
-            brightness: Brightness.dark,
-            accentColor: appTheme.color,
-            visualDensity: VisualDensity.standard,
-            focusTheme: FocusThemeData(
-              glowFactor: is10footScreen() ? 2.0 : 0.0,
-            ),
-          ),
-          theme: ThemeData(
-            accentColor: appTheme.color,
-            visualDensity: VisualDensity.standard,
-            focusTheme: FocusThemeData(
-              glowFactor: is10footScreen() ? 2.0 : 0.0,
-            ),
-          ),
-          locale: appTheme.locale,
-          builder: (context, child) {
-            return Directionality(
-              textDirection: appTheme.textDirection,
-              child: NavigationPaneTheme(
-                data: NavigationPaneThemeData(
-                  backgroundColor: appTheme.windowEffect !=
-                          flutter_acrylic.WindowEffect.disabled
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appTheme = ref.watch(themeProvider);
+
+    return FluentApp(
+      title: appTitle,
+      themeMode: appTheme.mode,
+      debugShowCheckedModeBanner: false,
+      color: appTheme.color,
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        accentColor: appTheme.color,
+        visualDensity: VisualDensity.standard,
+        focusTheme: FocusThemeData(
+          glowFactor: is10footScreen() ? 2.0 : 0.0,
+        ),
+      ),
+      theme: ThemeData(
+        accentColor: appTheme.color,
+        visualDensity: VisualDensity.standard,
+        focusTheme: FocusThemeData(
+          glowFactor: is10footScreen() ? 2.0 : 0.0,
+        ),
+      ),
+      locale: appTheme.locale,
+      builder: (context, child) {
+        return Directionality(
+          textDirection: appTheme.textDirection,
+          child: NavigationPaneTheme(
+            data: NavigationPaneThemeData(
+              backgroundColor:
+                  appTheme.windowEffect != flutter_acrylic.WindowEffect.disabled
                       ? Colors.transparent
                       : null,
-                ),
-                child: child!,
-              ),
-            );
-          },
-          initialRoute: '/',
-          routes: {'/': (context) => const MyHomePage()},
+            ),
+            child: child!,
+          ),
         );
       },
+      initialRoute: '/',
+      routes: {'/': (context) => const MyHomePage()},
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatefulHookConsumerWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with WindowListener {
+class _MyHomePageState extends ConsumerState<MyHomePage> with WindowListener {
   bool value = false;
 
   int index = 0;
@@ -239,8 +239,9 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
 
   @override
   Widget build(BuildContext context) {
-    final appTheme = context.watch<AppTheme>();
+    final appTheme = this.ref.watch(themeProvider);
     final theme = FluentTheme.of(context);
+
     return NavigationView(
       key: viewKey,
       appBar: NavigationAppBar(
@@ -286,8 +287,8 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           height: kOneLineTileHeight + 5,
           child: SvgPicture.asset(
             FluentTheme.of(context).brightness.isDark
-                ? 'assets/graphics/logo_wide.svg'
-                : 'assets/graphics/light/logo_wide.svg',
+                ? Assets.graphics.logoWide.path
+                : Assets.graphics.light.logoWide.path,
             semanticsLabel: 'Launchpad',
           ),
         ),

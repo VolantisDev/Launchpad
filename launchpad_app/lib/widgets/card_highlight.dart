@@ -1,8 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_syntax_view/flutter_syntax_view.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class CardHighlight extends StatefulWidget {
+class CardHighlight extends StatefulHookConsumerWidget {
   const CardHighlight({
     Key? key,
     this.backgroundColor,
@@ -16,10 +17,10 @@ class CardHighlight extends StatefulWidget {
   final Color? backgroundColor;
 
   @override
-  State<CardHighlight> createState() => _CardHighlightState();
+  ConsumerState<CardHighlight> createState() => _CardHighlightState();
 }
 
-class _CardHighlightState extends State<CardHighlight>
+class _CardHighlightState extends ConsumerState<CardHighlight>
     with AutomaticKeepAliveClientMixin<CardHighlight> {
   bool isOpen = false;
   bool isCopying = false;

@@ -1,18 +1,19 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 import '../../widgets/card_highlight.dart';
 
-class ButtonPage extends StatefulWidget {
+class ButtonPage extends StatefulHookConsumerWidget {
   const ButtonPage({Key? key}) : super(key: key);
 
   @override
-  State<ButtonPage> createState() => _ButtonPageState();
+  ConsumerState<ButtonPage> createState() => _ButtonPageState();
 }
 
-class _ButtonPageState extends State<ButtonPage> with PageMixin {
+class _ButtonPageState extends ConsumerState<ButtonPage> with PageMixin {
   bool simpleDisabled = false;
   bool filledDisabled = false;
   bool iconDisabled = false;
@@ -35,10 +36,14 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
           content: const Text('A button that initiates an immediate action.'),
         ),
         CardHighlight(
+          codeSnippet: '''Button(
+  child: const Text('Standard Button'),
+  onPressed: disabled ? null : () => debugPrint('pressed button'),
+)''',
           child: Row(children: [
             Button(
-              child: const Text('Standard Button'),
               onPressed: simpleDisabled ? null : () {},
+              child: const Text('Standard Button'),
             ),
             const Spacer(),
             ToggleSwitch(
@@ -51,17 +56,17 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
               content: const Text('Disabled'),
             ),
           ]),
-          codeSnippet: '''Button(
-  child: const Text('Standard Button'),
-  onPressed: disabled ? null : () => debugPrint('pressed button'),
-)''',
         ),
         subtitle(content: const Text('Accent Style applied to Button')),
         CardHighlight(
+          codeSnippet: '''FilledButton(
+  child: const Text('Filled Button'),
+  onPressed: disabled ? null : () => debugPrint('pressed button'),
+)''',
           child: Row(children: [
             FilledButton(
-              child: const Text('Filled Button'),
               onPressed: filledDisabled ? null : () {},
+              child: const Text('Filled Button'),
             ),
             const Spacer(),
             ToggleSwitch(
@@ -74,15 +79,15 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
               content: const Text('Disabled'),
             ),
           ]),
-          codeSnippet: '''FilledButton(
-  child: const Text('Filled Button'),
-  onPressed: disabled ? null : () => debugPrint('pressed button'),
-)''',
         ),
         subtitle(
           content: const Text('A Button with graphical content (IconButton)'),
         ),
         CardHighlight(
+          codeSnippet: '''IconButton(
+  icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
+  onPressed: disabled ? null : () => debugPrint('pressed button'),
+)''',
           child: Row(children: [
             IconButton(
               icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
@@ -99,10 +104,6 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
               content: const Text('Disabled'),
             ),
           ]),
-          codeSnippet: '''IconButton(
-  icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
-  onPressed: disabled ? null : () => debugPrint('pressed button'),
-)''',
         ),
         subtitle(
             content: const Text('A simple ToggleButton with text content')),
@@ -113,9 +114,15 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
           ),
         ),
         CardHighlight(
+          codeSnippet: '''bool checked = false;
+
+ToggleButton(
+  child: const Text('Toggle Button'),
+  checked: checked,
+  onPressed: disabled ? null : (v) => setState(() => checked = v),
+)''',
           child: Row(children: [
             ToggleButton(
-              child: const Text('Toggle Button'),
               checked: toggleState,
               onChanged: toggleDisabled
                   ? null
@@ -124,6 +131,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
                         toggleState = v;
                       });
                     },
+              child: const Text('Toggle Button'),
             ),
             const Spacer(),
             ToggleSwitch(
@@ -136,19 +144,20 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
               content: const Text('Disabled'),
             ),
           ]),
-          codeSnippet: '''bool checked = false;
-
-ToggleButton(
-  child: const Text('Toggle Button'),
-  checked: checked,
-  onPressed: disabled ? null : (v) => setState(() => checked = v),
-)''',
         ),
         subtitle(content: const Text('DropDownButton')),
         const Text(
           'A control that drops down a flyout of choices from which one can be chosen',
         ),
         CardHighlight(
+          codeSnippet: '''DropDownButton(
+  title: Text('Email'),
+  items: [
+    MenuFlyoutItem(text: const Text('Send'), onPressed: () {}),
+    MenuFlyoutItem(text: const Text('Reply'), onPressed: () {}),
+    MenuFlyoutItem(text: const Text('Reply all'), onPressed: () {}),
+  ],
+)''',
           child: Row(children: [
             DropDownButton(
               title: Text('Email'),
@@ -180,14 +189,6 @@ ToggleButton(
               ],
             ),
           ]),
-          codeSnippet: '''DropDownButton(
-  title: Text('Email'),
-  items: [
-    MenuFlyoutItem(text: const Text('Send'), onPressed: () {}),
-    MenuFlyoutItem(text: const Text('Reply'), onPressed: () {}),
-    MenuFlyoutItem(text: const Text('Reply all'), onPressed: () {}),
-  ],
-)''',
         ),
         subtitle(content: const Text('SplitButton')),
         description(
@@ -198,10 +199,27 @@ ToggleButton(
           ),
         ),
         CardHighlight(
+          codeSnippet: '''SplitButtonBar(
+  buttons: [
+    Button(
+      child: Container(
+        height: 24.0,
+        width: 24.0,
+        color: Colors.green,
+      ),
+      onPressed: () {},
+    ),
+    IconButton(
+      icon: const Icon(FluentIcons.chevron_down, size: 10.0),
+      onPressed: () {},
+    ),
+  ],
+)''',
           child: Row(children: [
             SplitButtonBar(
               buttons: [
                 Button(
+                  onPressed: splitButtonDisabled ? null : () {},
                   child: Container(
                     decoration: BoxDecoration(
                       color: splitButtonDisabled
@@ -214,7 +232,6 @@ ToggleButton(
                     height: 24,
                     width: 24,
                   ),
-                  onPressed: splitButtonDisabled ? null : () {},
                 ),
                 IconButton(
                   icon: const SizedBox(
@@ -236,22 +253,6 @@ ToggleButton(
               content: const Text('Disabled'),
             ),
           ]),
-          codeSnippet: '''SplitButtonBar(
-  buttons: [
-    Button(
-      child: Container(
-        height: 24.0,
-        width: 24.0,
-        color: Colors.green,
-      ),
-      onPressed: () {},
-    ),
-    IconButton(
-      icon: const Icon(FluentIcons.chevron_down, size: 10.0),
-      onPressed: () {},
-    ),
-  ],
-)''',
         ),
         subtitle(content: const Text('RadioButton')),
         description(
@@ -263,6 +264,20 @@ ToggleButton(
           ),
         ),
         CardHighlight(
+          codeSnippet: '''int? selected;
+
+Column(
+  children: List.generate(3, (index) {
+    return RadioButton(
+      checked: selected == index,
+      onChanged: (checked) {
+        if (checked) {
+          setState(() => selected = index);
+        }
+      }
+    );
+  }),
+)''',
           child: Row(children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -300,20 +315,6 @@ ToggleButton(
               content: const Text('Disabled'),
             )
           ]),
-          codeSnippet: '''int? selected;
-
-Column(
-  children: List.generate(3, (index) {
-    return RadioButton(
-      checked: selected == index,
-      onChanged: (checked) {
-        if (checked) {
-          setState(() => selected = index);
-        }
-      }
-    );
-  }),
-)''',
         ),
       ],
     );

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/widgets/card_highlight.dart';
 import 'package:fluent_ui/fluent_ui.dart' hide Page;
 
@@ -11,7 +12,7 @@ class RevealFocusPage extends Page {
   RevealFocusPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = FluentTheme.of(context);
     return ScaffoldPage.withPadding(
       header: PageHeader(
@@ -36,7 +37,7 @@ class RevealFocusPage extends Page {
           CardHighlight(
             codeSnippet: '''FocusTheme(
   data: FocusThemeData(
-    borderRadius: BorderRaidus.zero,
+    borderRadius: BorderRadius.zero,
     glowFactor: 4.0,
   ),
   child: ...,

@@ -1,5 +1,6 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../widgets/page.dart';
 import 'icons.dart';
@@ -19,12 +20,12 @@ class ColorsPage extends ScrollablePage {
   ColorsPage({super.key});
 
   @override
-  Widget buildHeader(BuildContext context) {
+  Widget buildHeader(BuildContext context, WidgetRef ref) {
     return const PageHeader(title: Text('Colors Showcase'));
   }
 
   @override
-  Widget buildBottomBar(BuildContext context) {
+  Widget buildBottomBar(BuildContext context, WidgetRef ref) {
     return const SizedBox(
       width: double.infinity,
       child: InfoBar(
@@ -36,7 +37,7 @@ class ColorsPage extends ScrollablePage {
   }
 
   @override
-  List<Widget> buildScrollable(BuildContext context) {
+  List<Widget> buildScrollable(BuildContext context, WidgetRef ref) {
     const Divider divider = Divider(
       style: DividerThemeData(
         verticalMargin: EdgeInsets.all(10),
@@ -130,9 +131,9 @@ class ColorsPage extends ScrollablePage {
           ),
           const SizedBox(height: 10),
           Wrap(
-            children: accent,
             runSpacing: 10,
             spacing: 10,
+            children: accent,
           ),
         ]),
       ),

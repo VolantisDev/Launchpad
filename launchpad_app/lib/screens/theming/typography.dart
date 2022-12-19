@@ -1,15 +1,16 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../settings.dart';
 
-class TypographyPage extends StatefulWidget {
+class TypographyPage extends StatefulHookConsumerWidget {
   const TypographyPage({Key? key}) : super(key: key);
 
   @override
   _TypographyPageState createState() => _TypographyPageState();
 }
 
-class _TypographyPageState extends State<TypographyPage> {
+class _TypographyPageState extends ConsumerState<TypographyPage> {
   Color? color;
   double scale = 1.0;
 
@@ -45,30 +46,30 @@ class _TypographyPageState extends State<TypographyPage> {
               value: color,
               items: [
                 ComboBoxItem(
+                  value: Colors.white,
                   child: Row(children: [
                     buildColorBox(Colors.white),
                     const SizedBox(width: 10.0),
                     const Text('White'),
                   ]),
-                  value: Colors.white,
                 ),
                 ComboBoxItem(
+                  value: const Color(0xE4000000),
                   child: Row(children: [
                     buildColorBox(const Color(0xE4000000)),
                     const SizedBox(width: 10.0),
                     const Text('Black'),
                   ]),
-                  value: const Color(0xE4000000),
                 ),
                 ...List.generate(Colors.accentColors.length, (index) {
                   final color = Colors.accentColors[index];
                   return ComboBoxItem(
+                    value: color,
                     child: Row(children: [
                       buildColorBox(color),
                       const SizedBox(width: 10.0),
                       Text(accentColorNames[index + 1]),
                     ]),
-                    value: color,
                   );
                 }),
               ],

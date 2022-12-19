@@ -1,25 +1,26 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 import '../../widgets/card_highlight.dart';
 
-class ExpanderPage extends StatefulWidget {
+class ExpanderPage extends StatefulHookConsumerWidget {
   const ExpanderPage({Key? key}) : super(key: key);
 
   @override
-  State<ExpanderPage> createState() => _ExpanderPageState();
+  ConsumerState<ExpanderPage> createState() => _ExpanderPageState();
 }
 
-class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
+class _ExpanderPageState extends ConsumerState<ExpanderPage> with PageMixin {
   final expanderKey = GlobalKey<ExpanderState>();
 
-  bool crostOpen = false;
-  List<String> crosts = [
+  bool crustOpen = false;
+  List<String> crusts = [
     'Classic',
     'Whole wheat',
     'Gluten free',
   ];
-  String crost = 'Whole wheat';
+  String crust = 'Whole wheat';
   List<String> sizes = [
     'Regular',
     'Thin',
@@ -62,27 +63,35 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
           ),
         ),
         CardHighlight(
+          codeSnippet: '''Expander(
+  leading: RadioButton(
+    checked: checked,
+    onChanged: (v) => setState(() => checked = v),
+  ),
+  header: Text('This text is in header'),
+  content: Text('This text is in content'),
+)''',
           child: Expander(
-            header: const Text('Choose your crost'),
-            onStateChanged: (open) => setState(() => crostOpen = open),
-            trailing: crostOpen
+            header: const Text('Choose your crust'),
+            onStateChanged: (open) => setState(() => crustOpen = open),
+            trailing: crustOpen
                 ? null
                 : Text(
-                    '$crost, $size',
+                    '$crust, $size',
                     style: FluentTheme.of(context).typography.caption,
                   ),
             content:
                 Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: crosts
+                children: crusts
                     .map(
                       (e) => Padding(
                         padding: const EdgeInsetsDirectional.only(bottom: 8.0),
                         child: RadioButton(
-                          checked: crost == e,
+                          checked: crust == e,
                           onChanged: (selected) {
-                            if (selected) setState(() => crost = e);
+                            if (selected) setState(() => crust = e);
                           },
                           content: Text(e),
                         ),
@@ -109,17 +118,18 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
               ),
             ]),
           ),
-          codeSnippet: '''Expander(
-  leading: RadioButton(
-    checked: checked,
-    onChanged: (v) => setState(() => checked = v),
-  ),
-  header: Text('This text is in header'),
-  content: Text('This text is in content'),
-)''',
         ),
         subtitle(content: const Text('Scrollable content')),
         const CardHighlight(
+          codeSnippet: '''Expander(
+  header: Text('Open to see the scrollable text'),
+  content: SizedBox(
+    height: 300,
+    child: SingleChildScrollView(
+      child: Text('A LONG TEXT HERE'),
+    ),
+  ),
+)''',
           child: Expander(
             header: Text('Open to see the scrollable text'),
             content: SizedBox(
@@ -139,18 +149,28 @@ Fusce nunc neque, imperdiet id justo non, porttitor finibus massa. Ut quis risus
               ),
             ),
           ),
-          codeSnippet: '''Expander(
-  header: Text('Open to see the scrollable text'),
-  content: SizedBox(
-    height: 300,
-    child: SingleChildScrollView(
-      child: Text('A LONG TEXT HERE'),
-    ),
-  ),
-)''',
         ),
         subtitle(content: const Text('Expander opened programatically')),
         CardHighlight(
+            codeSnippet: '''final expanderKey = GlobalKey<ExpanderState>();
+
+Expander(
+  key: expanderKey,
+  header: Text('This text is in header'),
+  content: Text('This text is in content'),
+  onStateChanged: (open) {
+    print('state changed to open=$open');
+  },
+)
+
+/// Toggles the current expander state
+/// 
+/// if it's open, now it's closed, and vice versa
+void toggle() {
+  final open = expanderKey.currentState?.open ?? false;
+
+  expanderKey.currentState?.open = !open;
+}''',
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Expanded(
                 child: Expander(
@@ -170,26 +190,7 @@ Fusce nunc neque, imperdiet id justo non, porttitor finibus massa. Ut quis risus
                 },
                 content: Text(open ? 'Close' : 'Open'),
               ),
-            ]),
-            codeSnippet: '''final expanderKey = GlobalKey<ExpanderState>();
-
-Expander(
-  key: expanderKey,
-  header: Text('This text is in header'),
-  content: Text('This text is in content'),
-  onStateChanged: (open) {
-    print('state changed to open=$open');
-  },
-)
-
-/// Toggles the current expander state
-/// 
-/// if it's open, now it's closed, and vice versa
-void toggle() {
-  final open = expanderKey.currentState?.open ?? false;
-
-  expanderKey.currentState?.open = !open;
-}'''),
+            ])),
       ],
     );
   }
