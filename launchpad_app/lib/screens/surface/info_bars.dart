@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:launchpad_app/widgets/card_highlight.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 import '../../widgets/page.dart';

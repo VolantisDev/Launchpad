@@ -164,32 +164,22 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       title: const Text('All Platforms'),
       body: const Text('Show manage list for platform entities.'),
     ),
-    PaneItem(
-      icon: const Icon(FluentIcons.download),
-      title: const Text('Find More Platforms'),
-      body: const Text('Show manage list for platform entities.'),
-    ),
     PaneItemHeader(header: const Icon(FluentIcons.archive)),
     PaneItem(
       icon: const Icon(FluentIcons.archive),
       title: const Text('Backups'),
       body: const Text('.'),
     ),
-    PaneItemHeader(header: const Icon(FluentIcons.cloud)),
+    PaneItemHeader(header: const Icon(FluentIcons.accounts)),
     // TODO Add links to all enabled web services here
     PaneItem(
-      icon: const Icon(FluentIcons.cloud),
-      title: const Text('All Services'),
+      icon: const Icon(FluentIcons.globe),
+      title: const Text('All Web Services'),
       body: const Text('Show manage list for platform entities.'),
     ),
     PaneItem(
-      icon: const Icon(FluentIcons.accounts),
-      title: const Text('Add Service'),
-      body: const Text('.'),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.download),
-      title: const Text('Find More Services'),
+      icon: const Icon(FluentIcons.o_d_link),
+      title: const Text('Add Web Service'),
       body: const Text('.'),
     ),
     PaneItemHeader(header: const Icon(FluentIcons.puzzle)),

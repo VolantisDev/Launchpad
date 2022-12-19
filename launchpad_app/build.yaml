@@ -1,0 +1,5 @@
+targets:
+  $default:
+    builders:
+      swagger_dart_code_generator:
+        enabled: false

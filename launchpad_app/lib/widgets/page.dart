@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:example/widgets/deferred_widget.dart';
+import 'package:launchpad_app/widgets/deferred_widget.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
 

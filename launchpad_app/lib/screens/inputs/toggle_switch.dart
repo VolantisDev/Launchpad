@@ -1,6 +1,6 @@
-import 'package:example/widgets/page.dart';
+import 'package:launchpad_app/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:example/widgets/card_highlight.dart';
+import 'package:launchpad_app/widgets/card_highlight.dart';
 
 class ToggleSwitchPage extends StatefulWidget {
   const ToggleSwitchPage({Key? key}) : super(key: key);
