@@ -15,7 +15,7 @@
             "presentation": {
                 "reveal": "silent",
                 "panel": "dedicated",
-                "close": true
+                "close": false
             },
             "problemMatcher": [
                 "$dart-build_runner"
@@ -47,7 +47,8 @@
             "presentation": {
                 "reveal": "always",
                 "panel": "shared",
-                "showReuseMessage": true
+                "showReuseMessage": true,
+                "close": false
             },
             "problemMatcher": [
                 "$dart-build_runner"
