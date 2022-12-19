@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
         "Multitool"
-    ]
+    ],
+    "terminal.integrated.cwd": "${workspaceFolder}/launchpad_app"
 }
