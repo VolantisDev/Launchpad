@@ -59,7 +59,7 @@
             "detail": ""
         },
         {
-            "label": "flutter pub get",
+            "label": "flutter: pub get",
             "type": "flutter",
             "command": "flutter",
             "args": [
@@ -81,7 +81,7 @@
             "detail": ""
         },
         {
-            "label": "flutter-launcher-icons",
+            "label": "flutter: launcher icons",
             "type": "flutter",
             "command": "flutter",
             "args": [
@@ -95,7 +95,7 @@
             }
         },
         {
-            "label": "flutter-native-splash",
+            "label": "flutter: native splash",
             "type": "flutter",
             "command": "flutter",
             "args": [
@@ -117,7 +117,7 @@
                 "-property:Configuration=Release"
             ],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/launchpad_legacy"
             },
             "group": "build",
             "problemMatcher": "$tsc"
@@ -131,7 +131,7 @@
                 "-property:Configuration=Debug"
             ],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/launchpad_legacy"
             },
             "group": "none",
             "problemMatcher": "$tsc"
@@ -144,7 +144,7 @@
                 "Scripts/UpdateIncludes.ahk"
             ],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/launchpad_legacy"
             },
             "group": "build",
             "problemMatcher": []
@@ -157,7 +157,7 @@
                 "Scripts/Build.ahk"
             ],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/launchpad_legacy"
             },
             "group": "build",
             "problemMatcher": []
