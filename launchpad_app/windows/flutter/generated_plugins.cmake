@@ -11,10 +11,8 @@ list(APPEND FLUTTER_PLUGIN_LIST
   local_auth_windows
   local_notifier
   network_info_plus
-  permission_handler_windows
   protocol_handler
   screen_retriever
-  share_plus
   system_theme
   tray_manager
   url_launcher_windows
