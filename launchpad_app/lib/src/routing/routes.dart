@@ -13,7 +13,8 @@ class DashboardRoute extends GoRouteData {
   const DashboardRoute();
 
   @override
-  Widget build(BuildContext context) => const DashboardPage();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const DashboardPage();
 }
 
 // @TypedGoRoute<LoginRoute>(path: '/login')
