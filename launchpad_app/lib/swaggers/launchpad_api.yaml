@@ -1,0 +1,468 @@
+openapi: '3.0.2'
+info:
+  title: Launchpad API
+  version: '1.0'
+servers:
+  - url: https://api.launchpad.games/v1
+paths:
+  /hello:
+    get:
+      description: Simply test that you can get a valid response from the API
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Hey there!
+  /status:
+    get:
+      description: Get the status of your connection to the API
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+  "/release-info":
+    get:
+      description: Get information about the latest release of Launchpad
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReleaseInfo"
+  /platforms:
+    get:
+      description: Retrieve a list of available game platforms
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+  /platforms/{platformId}:
+    get:
+      description: Get the details of a specific game platform
+      parameters:
+        - name: platformId
+          in: path
+          required: true
+          description: The id of the platform
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlatformDocument"
+  /launcher-types:
+    get:
+      description: Retrieve a list of available launcher types
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+  /launcher-types/{launcherTypeId}:
+    get:
+      description: Get the details of a specific launcher type
+      parameters:
+        - name: launcherTypeId
+          in: path
+          required: true
+          description: The id of the launcher type
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LauncherTypeDocument"
+  "/game-types":
+    get:
+      description: Retrieve a list of available game types
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+  /game-types/{gameTypeId}:
+    get:
+      description: Get the details of a specific game type
+      parameters:
+        - name: gameTypeId
+          in: path
+          required: true
+          description: The id of the game type
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameTypeDocument"
+  /games:
+    get:
+      description: Gets a listing of all games available
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    key:
+                      type: string
+                    platform:
+                      type: string
+  /game-keys:
+    get:
+      description: Gets a list of all unique game keys available
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /games/{gameId}:
+    get:
+      description: Retrieves the details of a specific game ID
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          description: The id of the game
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameDocument"
+  /lookup/{gameKey}/{platformId}:
+    get:
+      description: Look up the ID of a game based on its name and platform.
+      parameters:
+        - name: gameKey
+          in: path
+          required: true
+          description: The key of the game
+          schema:
+            type: string
+        - name: platformId
+          in: path
+          required: true
+          description: The id of the platform
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+  /submit-error:
+    post:
+      description: Submit an error to be fixed
+      parameters:
+        - name: message
+          in: query
+          required: true
+          description: The error message
+          schema:
+            type: string
+        - name: what
+          in: query
+          required: true
+          description: What caused the error
+          schema:
+            type: string
+        - name: file
+          in: query
+          required: true
+          description: What file the error originated in
+          schema:
+            type: string
+        - name: line
+          in: query
+          required: true
+          description: The line within the file
+          schema:
+            type: integer
+        - name: extra
+          in: query
+          required: false
+          description: Extra information about the error
+          schema:
+            type: string
+        - name: stack
+          in: query
+          required: false
+          description: The stack trace if available
+          schema:
+            type: string
+        - name: email
+          in: query
+          required: false
+          description: The email address of the submitter if provided
+          schema:
+            type: string
+        - name: details
+          in: query
+          required: false
+          description: Additional details by the submitter if provided
+          schema:
+            type: string
+        - name: version
+          in: query
+          required: false
+          description: The version of Launchpad that generated the error
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /submit-feedback:
+    post:
+      description: Submit feedback to the developers
+      parameters:
+        - name: feedback
+          in: query
+          required: true
+          description: The feedback that was submitted
+          schema:
+            type: string
+        - name: email
+          in: query
+          required: false
+          description: The email address of the submitter if provided
+          schema:
+            type: string
+        - name: version
+          in: query
+          required: false
+          description: The version of Launchpad
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+
+components:
+  schemas:
+    Status:
+      required:
+        - authenticated
+        - email
+      properties:
+        authenticated:
+          type: boolean
+        email:
+          type: string
+          example: user@example.com
+    ReleaseInfo:
+      required:
+        - installer
+        - releasePage
+        - version
+      properties:
+        tag:
+          type: string
+          example: stable
+        version:
+          type: string
+          example: "6.2.0"
+        installer:
+          type: string
+          example: "https://github.com/VolantisDev/Launchpad/releases/download/6.2.0/Launchpad-6.2.0.exe"
+        releasePage:
+          type: string
+          example: "https://github.com/VolantisDev/Launchpad/releases/tag/6.2.0"
+        timestamp:
+          type: integer
+          example: 1616027680
+    Listing:
+      type: array
+      items:
+        type: string
+        example: Key1
+    PlatformDocument:
+      required:
+        - id
+        - data
+      properties:
+        id:
+          type: string
+          example: Steam
+        data:
+          $ref: "#/components/schemas/Platform"
+    Platform:
+      required:
+        - key
+        - name
+        - launcherType
+        - gameType
+        - class
+        - enabled
+      properties:
+        key:
+          type: string
+          example: Steam
+        name:
+          type: string
+          example: Steam
+        launcherType:
+          type: string
+          example: Default
+        gameType:
+          type: string
+          example: Default
+        class:
+          type: string
+          example: SteamPlatform
+        enabled:
+          type: boolean
+        registry:
+          type: object
+          properties:
+            uninstallCmd:
+              $ref: "#/components/schemas/RegistryValue"
+            installDir:
+              $ref: "#/components/schemas/RegistryValue"
+            version:
+              $ref: "#/components/schemas/RegistryValue"
+        links:
+          type: object
+          properties:
+            install:
+              type: string
+            website:
+              type: string
+    LauncherTypeDocument:
+      required:
+        - id
+        - data
+      properties:
+        id:
+          type: string
+          example: Steam
+        data:
+          $ref: "#/components/schemas/LauncherType"
+    LauncherType:
+      required:
+        - key
+        - name
+        - defaults
+        - enabled
+      properties:
+        key:
+          type: string
+          example: Steam
+        name:
+          type: string
+          example: Steam
+        defaults:
+          type: object
+        enabled:
+          type: boolean
+    GameTypeDocument:
+      required:
+        - id
+        - data
+      properties:
+        id:
+          type: string
+          example: Steam
+        data:
+          $ref: "#/components/schemas/GameType"
+    GameType:
+      required:
+        - key
+        - name
+        - defaults
+        - enabled
+      properties:
+        key:
+          type: string
+          example: Steam
+        name:
+          type: string
+          example: Steam
+        defaults:
+          type: object
+        enabled:
+          type: boolean
+    RegistryValue:
+      required:
+        - view
+        - key
+        - value
+      properties:
+        view:
+          type: integer
+          example: 64
+          description: Whether to use the 32-bit or 64-bit registry interface
+        key:
+          type: string
+          example: "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\MySoftware"
+        value:
+          type: string
+          example: "ValueName"
+    GameDocument:
+      required:
+        - id
+        - data
+      properties:
+        id:
+          type: string
+        data:
+          $ref: '#/components/schemas/Game'
+    Game:
+      required:
+        - key
+        - platform
+        - defaults
+      properties:
+        key:
+          type: string
+          example: Steam
+        platform:
+          type: string
+          example: Steam
+        defaults:
+          type: object
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
