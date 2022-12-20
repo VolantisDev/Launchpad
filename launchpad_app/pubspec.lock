@@ -7,7 +7,7 @@ packages:
       name: _discoveryapis_commons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   _fe_analyzer_shared:
     dependency: transitive
     description:
@@ -294,7 +294,7 @@ packages:
       name: dart_code_metrics
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.2.1"
+    version: "5.3.0"
   dart_style:
     dependency: transitive
     description:
@@ -399,7 +399,7 @@ packages:
       name: email_validator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.1.17"
   expressions:
     dependency: "direct main"
     description:
@@ -661,7 +661,7 @@ packages:
       name: flutter_markdown
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.10+5"
+    version: "0.6.10+6"
   flutter_native_splash:
     dependency: "direct dev"
     description:
@@ -869,7 +869,7 @@ packages:
       name: http_parser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.1"
+    version: "4.0.2"
   humanizer:
     dependency: "direct main"
     description:
@@ -911,7 +911,7 @@ packages:
       name: image_picker_ios
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.6+2"
+    version: "0.8.6+3"
   image_picker_platform_interface:
     dependency: transitive
     description:
@@ -1002,28 +1002,28 @@ packages:
       name: local_auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.2"
+    version: "2.1.3"
   local_auth_android:
     dependency: transitive
     description:
       name: local_auth_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.16"
+    version: "1.0.17"
   local_auth_ios:
     dependency: transitive
     description:
       name: local_auth_ios
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.11"
+    version: "1.0.12"
   local_auth_platform_interface:
     dependency: transitive
     description:
       name: local_auth_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.6"
   local_auth_windows:
     dependency: transitive
     description:
@@ -1471,7 +1471,7 @@ packages:
       name: screen_retriever
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.2"
+    version: "0.1.4"
   scroll_pos:
     dependency: transitive
     description:
@@ -1513,7 +1513,7 @@ packages:
       name: share_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.1.0"
+    version: "6.3.0"
   share_plus_platform_interface:
     dependency: transitive
     description:
@@ -1763,7 +1763,7 @@ packages:
       name: typed_data
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.0"
+    version: "1.3.1"
   undo:
     dependency: "direct main"
     description:
@@ -1791,49 +1791,49 @@ packages:
       name: url_launcher_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.13"
+    version: "6.0.22"
   url_launcher_ios:
     dependency: transitive
     description:
       name: url_launcher_ios
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.13"
+    version: "6.0.17"
   url_launcher_linux:
     dependency: transitive
     description:
       name: url_launcher_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "3.0.1"
   url_launcher_macos:
     dependency: transitive
     description:
       name: url_launcher_macos
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "3.0.1"
   url_launcher_platform_interface:
     dependency: transitive
     description:
       name: url_launcher_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   url_launcher_web:
     dependency: transitive
     description:
       name: url_launcher_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.5"
+    version: "2.0.13"
   url_launcher_windows:
     dependency: transitive
     description:
       name: url_launcher_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "3.0.1"
   url_strategy:
     dependency: "direct main"
     description:
@@ -1910,7 +1910,7 @@ packages:
       name: window_manager
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.7"
+    version: "0.2.8"
   xdg_directories:
     dependency: transitive
     description:
