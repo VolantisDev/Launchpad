@@ -2,19 +2,19 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/link.dart';
 
-import '../models/sponsor.dart';
-import '../widgets/changelog.dart';
-import '../widgets/page.dart';
-import '../widgets/sponsor.dart';
+import '../../../../models/sponsor.dart';
+import '../../../../widgets/changelog.dart';
+import '../../../../widgets/page.dart';
+import '../../../../widgets/sponsor.dart';
 
-class HomePage extends StatefulHookConsumerWidget {
-  const HomePage({Key? key}) : super(key: key);
+class DashboardPage extends StatefulHookConsumerWidget {
+  const DashboardPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<HomePage> createState() => _HomePageState();
+  ConsumerState<DashboardPage> createState() => _DashboardState();
 }
 
-class _HomePageState extends ConsumerState<HomePage> with PageMixin {
+class _DashboardState extends ConsumerState<DashboardPage> with PageMixin {
   bool selected = true;
   String? comboboxValue;
 

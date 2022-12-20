@@ -4,12 +4,13 @@ import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/gen/assets.gen.dart';
+import 'package:launchpad_app/src/features/dashboard/presentation/dashboard.dart';
+import 'package:launchpad_app/src/utils/theme_provider.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'screens/home.dart';
 import 'screens/settings.dart';
 
 import 'routes/inputs.dart' deferred as inputs;
@@ -18,7 +19,6 @@ import 'theme.dart';
 import 'widgets/deferred_widget.dart';
 
 const String appTitle = 'Launchpad - Game Launching Multitool';
-final themeProvider = ChangeNotifierProvider((ref) => AppTheme());
 
 /// Checks if the current environment is a desktop environment.
 bool get isDesktop {
@@ -73,7 +73,7 @@ class MyApp extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appTheme = ref.watch(themeProvider);
+    final appTheme = ref.watch(appThemeProvider);
 
     return FluentApp(
       title: appTitle,
@@ -138,7 +138,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> with WindowListener {
     PaneItem(
       icon: const Icon(FluentIcons.home),
       title: const Text('Home'),
-      body: const HomePage(),
+      body: const DashboardPage(),
     ),
     PaneItemHeader(header: const Icon(FluentIcons.game)),
     // TODO Add links to the most recent 5 games edited, launched, or built
@@ -198,15 +198,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> with WindowListener {
       title: const Text('Extend Launchpad'),
       body: const Text('.'),
     ),
-    PaneItemHeader(header: const Text('Inputs')),
-    PaneItem(
-      icon: const Icon(FluentIcons.button_control),
-      title: const Text('Button'),
-      body: DeferredWidget(
-        inputs.loadLibrary,
-        () => inputs.ButtonPage(),
-      ),
-    ),
   ];
   final List<NavigationPaneItem> footerItems = [
     PaneItemSeparator(),
@@ -239,7 +230,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> with WindowListener {
 
   @override
   Widget build(BuildContext context) {
-    final appTheme = this.ref.watch(themeProvider);
+    final appTheme = this.ref.watch(appThemeProvider);
     final theme = FluentTheme.of(context);
 
     return NavigationView(
