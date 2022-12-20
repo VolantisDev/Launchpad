@@ -32,7 +32,8 @@ RUN if ! cat /etc/group | grep -e "^pub-cache:" > /dev/null 2>&1; then groupadd 
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
     openjdk-11-jdk-headless wget curl git xz-utils zip unzip \
-    clang cmake ninja-build pkg-config libgtk-3-dev
+    clang cmake ninja-build pkg-config libgtk-3-dev \
+    libwebkit2gtk-4.0-dev libkeybinder-3.0-dev libayatana-appindicator3-dev
 # Clean up packages
 RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts
 
