@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/link.dart';
 
 import '../../../../models/sponsor.dart';
-import '../../../common_widgets/changelog.dart';
+import '../../news/presentation/changelog.dart';
 import '../../../common_widgets/page.dart';
 import '../../../common_widgets/sponsor.dart';
 

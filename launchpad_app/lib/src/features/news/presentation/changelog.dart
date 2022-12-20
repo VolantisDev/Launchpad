@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'deferred_widget.dart';
+import '../../../common_widgets/deferred_widget.dart';
 
 List<String>? changelog;
 
