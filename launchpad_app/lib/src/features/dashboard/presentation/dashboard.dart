@@ -3,9 +3,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/link.dart';
 
 import '../../../../models/sponsor.dart';
-import '../../../../widgets/changelog.dart';
-import '../../../../widgets/page.dart';
-import '../../../../widgets/sponsor.dart';
+import '../../../common_widgets/changelog.dart';
+import '../../../common_widgets/page.dart';
+import '../../../common_widgets/sponsor.dart';
 
 class DashboardPage extends StatefulHookConsumerWidget {
   const DashboardPage({Key? key}) : super(key: key);

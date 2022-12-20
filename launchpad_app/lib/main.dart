@@ -11,12 +11,9 @@ import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'screens/settings.dart';
+import 'src/features/settings/presentation/settings.dart';
 
-import 'routes/inputs.dart' deferred as inputs;
-
-import 'theme.dart';
-import 'widgets/deferred_widget.dart';
+import 'src/utils/theme.dart';
 
 const String appTitle = 'Launchpad - Game Launching Multitool';
 
@@ -64,8 +61,6 @@ void main() async {
   runApp(const ProviderScope(
     child: MyApp(),
   ));
-
-  DeferredWidget.preload(inputs.loadLibrary);
 }
 
 class MyApp extends HookConsumerWidget {
@@ -137,7 +132,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> with WindowListener {
   final List<NavigationPaneItem> originalItems = [
     PaneItem(
       icon: const Icon(FluentIcons.home),
-      title: const Text('Home'),
+      title: const Text('Dashboard'),
       body: const DashboardPage(),
     ),
     PaneItemHeader(header: const Icon(FluentIcons.game)),
@@ -164,17 +159,17 @@ class _MyHomePageState extends ConsumerState<MyHomePage> with WindowListener {
       title: const Text('All Platforms'),
       body: const Text('Show manage list for platform entities.'),
     ),
-    PaneItemHeader(header: const Icon(FluentIcons.archive)),
-    PaneItem(
-      icon: const Icon(FluentIcons.lifesaver),
-      title: const Text('All Backups'),
-      body: const Text('.'),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.archive),
-      title: const Text('Add Backup'),
-      body: const Text('.'),
-    ),
+    // PaneItemHeader(header: const Icon(FluentIcons.archive)),
+    // PaneItem(
+    //   icon: const Icon(FluentIcons.lifesaver),
+    //   title: const Text('All Backups'),
+    //   body: const Text('.'),
+    // ),
+    // PaneItem(
+    //   icon: const Icon(FluentIcons.archive),
+    //   title: const Text('Add Backup'),
+    //   body: const Text('.'),
+    // ),
     PaneItemHeader(header: const Icon(FluentIcons.accounts)),
     // TODO Add links to all enabled web services here
     PaneItem(
@@ -187,17 +182,17 @@ class _MyHomePageState extends ConsumerState<MyHomePage> with WindowListener {
       title: const Text('Add Web Service'),
       body: const Text('.'),
     ),
-    PaneItemHeader(header: const Icon(FluentIcons.puzzle)),
-    PaneItem(
-      icon: const Icon(FluentIcons.puzzle),
-      title: const Text('Modules'),
-      body: const Text('.'),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.download),
-      title: const Text('Extend Launchpad'),
-      body: const Text('.'),
-    ),
+    // PaneItemHeader(header: const Icon(FluentIcons.puzzle)),
+    // PaneItem(
+    //   icon: const Icon(FluentIcons.puzzle),
+    //   title: const Text('Modules'),
+    //   body: const Text('.'),
+    // ),
+    // PaneItem(
+    //   icon: const Icon(FluentIcons.download),
+    //   title: const Text('Extend Launchpad'),
+    //   body: const Text('.'),
+    // ),
   ];
   final List<NavigationPaneItem> footerItems = [
     PaneItemSeparator(),

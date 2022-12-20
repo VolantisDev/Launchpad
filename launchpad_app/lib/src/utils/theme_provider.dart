@@ -1,10 +1,5 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../theme.dart';
+import 'theme.dart';
 
-part 'theme_provider.g.dart';
-
-@riverpod
-AppTheme appTheme(AppThemeRef ref) {
-  return AppTheme();
-}
+final appThemeProvider = ChangeNotifierProvider((ref) => AppTheme());

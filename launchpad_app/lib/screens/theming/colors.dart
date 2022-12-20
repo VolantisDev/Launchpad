@@ -2,7 +2,7 @@ import 'package:clipboard/clipboard.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../widgets/page.dart';
+import '../../src/common_widgets/page.dart';
 import 'icons.dart';
 
 const _primaryNames = [

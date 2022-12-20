@@ -1,6 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:launchpad_app/widgets/card_highlight.dart';
-import 'package:launchpad_app/widgets/page.dart';
+import 'package:launchpad_app/src/common_widgets/card_highlight.dart';
+import 'package:launchpad_app/src/common_widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class TextBoxPage extends ScrollablePage {

@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../settings.dart';
+import '../../src/features/settings/presentation/settings.dart';
 
 class TypographyPage extends StatefulHookConsumerWidget {
   const TypographyPage({Key? key}) : super(key: key);

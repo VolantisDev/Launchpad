@@ -7,8 +7,8 @@ import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:provider/provider.dart';
 
-import '../theme.dart';
-import '../widgets/page.dart';
+import '../../../utils/theme.dart';
+import '../../../common_widgets/page.dart';
 
 const List<String> accentColorNames = [
   'System',

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:launchpad_app/widgets/deferred_widget.dart';
+import 'package:launchpad_app/src/common_widgets/deferred_widget.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
 

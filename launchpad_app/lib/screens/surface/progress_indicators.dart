@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:launchpad_app/widgets/page.dart';
+import 'package:launchpad_app/src/common_widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-import '../../widgets/card_highlight.dart';
+import '../../src/common_widgets/card_highlight.dart';
 
 class ProgressIndicatorsPage extends StatefulHookConsumerWidget {
   const ProgressIndicatorsPage({Key? key}) : super(key: key);

@@ -1,8 +1,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:launchpad_app/widgets/card_highlight.dart';
+import 'package:launchpad_app/src/common_widgets/card_highlight.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-import '../../widgets/page.dart';
+import '../../src/common_widgets/page.dart';
 
 class NavigationViewPage extends StatefulHookConsumerWidget {
   const NavigationViewPage({Key? key}) : super(key: key);

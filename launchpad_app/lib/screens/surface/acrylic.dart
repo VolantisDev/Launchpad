@@ -1,8 +1,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:launchpad_app/widgets/page.dart';
+import 'package:launchpad_app/src/common_widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-import '../settings.dart';
+import '../../src/features/settings/presentation/settings.dart';
 
 const questionMark = Padding(
   padding: EdgeInsetsDirectional.only(start: 4.0),
