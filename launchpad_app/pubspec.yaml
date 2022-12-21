@@ -12,6 +12,7 @@ dependencies:
   async: ^2.9.0
   auto_size_text: ^3.0.0
   badges: ^2.0.3
+  catcher: ^0.7.0
   characters: ^1.2.1
   chopper: ^6.0.0
   clipboard: ^0.1.3
@@ -20,6 +21,7 @@ dependencies:
   crypto: ^3.0.2
   dart_code_metrics: ^5.2.1
   dartx: ^1.1.0
+  device_info_plus: ^7.0.1
   drift: ^2.3.0
   dropdown_search: ^5.0.5
   easy_localization: ^3.0.1
@@ -56,9 +58,11 @@ dependencies:
   googleapis: ^9.2.0
   hooks_riverpod: ^2.1.1
   hotkey_manager: ^0.1.7
+  http: ^0.13.5
   humanizer: ^2.0.0
   image_picker: ^0.8.6
   image_picker_windows: ^0.1.0+3
+  intl: ^0.17.0
   isar: ^3.0.5
   isar_flutter_libs: ^3.0.5
   json_annotation: ^4.7.0
@@ -76,6 +80,7 @@ dependencies:
   path: ^1.8.2
   path_provider: ^2.0.11
   percent_indicator: ^4.2.2
+  platform_info: ^3.2.0
   pool: ^1.5.1
   protobuf: ^2.1.0
   protocol_handler: ^0.1.4
@@ -83,12 +88,14 @@ dependencies:
   riverpod_annotation: ^1.0.6
   scroll_to_index: ^3.0.1
   stack_trace: ^1.10.0
+  stock: ^1.0.1
   string_validator: ^0.3.0
   synchronized: ^3.0.0+3
   system_theme: ^2.0.0
   timeago: ^3.3.0
   tray_manager: ^0.2.0
   undo: ^1.4.0
+  updat: ^1.2.0
   usage: ^4.1.0
   url_launcher: ^6.1.5
   url_strategy: ^0.2.0
@@ -98,15 +105,8 @@ dependencies:
   webview_windows: ^0.2.2
   win32: ^3.1.3
   window_manager: ^0.2.7
-  yaml: ^3.1.1
-  provider: ^6.0.5
-  intl: ^0.17.0
-  catcher: ^0.7.0
-  http: ^0.13.5
   xml: ^6.1.0
-  device_info_plus: ^7.0.1
-  updat: ^1.2.0
-  platform_info: ^3.2.0
+  yaml: ^3.1.1
 
 dependency_overrides:
   firebase_core_platform_interface: 4.5.1

@@ -1073,13 +1073,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.7.0"
-  nested:
+  mutex:
     dependency: transitive
     description:
-      name: nested
+      name: mutex
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "3.0.1"
   network_info_plus:
     dependency: "direct main"
     description:
@@ -1304,13 +1304,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.4"
-  provider:
-    dependency: "direct main"
-    description:
-      name: provider
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "6.0.5"
   pub_semver:
     dependency: transitive
     description:
@@ -1533,6 +1526,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.2+1"
+  stock:
+    dependency: "direct main"
+    description:
+      name: stock
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   storagebox:
     dependency: transitive
     description:

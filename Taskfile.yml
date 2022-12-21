@@ -4,3 +4,7 @@ tasks:
   build:
     cmds:
       - cd launchpad_app
+  release-dev:
+    dir: launchpad_app
+    cmds:
+      - flutter_distributor release --name dev

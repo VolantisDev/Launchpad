@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:provider/provider.dart';
+import 'package:launchpad_app/src/utils/theme_provider.dart';
 
 import '../../../utils/theme.dart';
 import '../../../common_widgets/page.dart';
@@ -89,7 +89,7 @@ class Settings extends ScrollablePage {
   @override
   List<Widget> buildScrollable(BuildContext context, WidgetRef ref) {
     assert(debugCheckHasMediaQuery(context));
-    final appTheme = context.watch<AppTheme>();
+    final appTheme = ref.watch(appThemeProvider);
     const spacer = SizedBox(height: 10.0);
     const biggerSpacer = SizedBox(height: 40.0);
 

@@ -1,0 +1,8 @@
+app_id: 03C1FD4A-E37E-4F24-8068-CC6921A2CAB1
+publisher: VolantisDev
+publisher_url: https://github.com/VolantisDev/Launchpad
+display_name: Launchpad - Game Launching Multitool
+create_desktop_icon: true
+install_dir_name: Launchpad
+locales:
+  - en
