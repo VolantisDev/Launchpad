@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  catcher
   desktop_webview_auth
   file_selector_windows
   flutter_acrylic

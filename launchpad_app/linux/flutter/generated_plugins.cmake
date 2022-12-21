@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  catcher
   desktop_webview_auth
   flutter_acrylic
   hotkey_manager

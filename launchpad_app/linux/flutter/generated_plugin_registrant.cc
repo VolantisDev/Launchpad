@@ -6,6 +6,7 @@
 
 #include "generated_plugin_registrant.h"
 
+#include <catcher/catcher_plugin.h>
 #include <desktop_webview_auth/desktop_webview_auth_plugin.h>
 #include <flutter_acrylic/flutter_acrylic_plugin.h>
 #include <hotkey_manager/hotkey_manager_plugin.h>
@@ -17,6 +18,9 @@
 #include <window_manager/window_manager_plugin.h>
 
 void fl_register_plugins(FlPluginRegistry* registry) {
+  g_autoptr(FlPluginRegistrar) catcher_registrar =
+      fl_plugin_registry_get_registrar_for_plugin(registry, "CatcherPlugin");
+  catcher_plugin_register_with_registrar(catcher_registrar);
   g_autoptr(FlPluginRegistrar) desktop_webview_auth_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "DesktopWebviewAuthPlugin");
   desktop_webview_auth_plugin_register_with_registrar(desktop_webview_auth_registrar);
