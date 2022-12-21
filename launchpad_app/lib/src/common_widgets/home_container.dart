@@ -1,11 +1,17 @@
+import 'dart:convert';
+
 import 'package:fluent_ui/fluent_ui.dart' hide Page;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/gen/assets.gen.dart';
 import 'package:launchpad_app/src/features/dashboard/presentation/dashboard.dart';
 import 'package:launchpad_app/src/utils/globals.dart';
 import 'package:launchpad_app/src/utils/theme_provider.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:platform_info/platform_info.dart';
+import 'package:updat/updat_window_manager.dart';
 import 'package:url_launcher/link.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -113,12 +119,6 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
   ];
 
   @override
-  void initState() {
-    windowManager.addListener(this);
-    super.initState();
-  }
-
-  @override
   void dispose() {
     windowManager.removeListener(this);
     searchController.dispose();
@@ -127,102 +127,153 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
   }
 
   @override
+  void initState() {
+    windowManager.addListener(this);
+    WidgetsFlutterBinding.ensureInitialized();
+    super.initState();
+  }
+
+  Future<PackageInfo> _getPackageInfo() {
+    return PackageInfo.fromPlatform();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final appTheme = this.ref.watch(appThemeProvider);
     final theme = FluentTheme.of(context);
 
-    return NavigationView(
-      key: viewKey,
-      appBar: NavigationAppBar(
-        automaticallyImplyLeading: false,
-        title: () {
-          if (kIsWeb) {
-            return const Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Text(appTitle),
-            );
-          }
-          return const DragToMoveArea(
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Text(appTitle),
-            ),
-          );
-        }(),
-        actions: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          Padding(
-            padding: const EdgeInsetsDirectional.only(end: 8.0),
-            child: ToggleSwitch(
-              content: const Text('Dark Mode'),
-              checked: FluentTheme.of(context).brightness.isDark,
-              onChanged: (v) {
-                if (v) {
-                  appTheme.mode = ThemeMode.dark;
-                } else {
-                  appTheme.mode = ThemeMode.light;
-                }
-              },
-            ),
-          ),
-          if (!kIsWeb) const WindowButtons(),
-        ]),
-      ),
-      pane: NavigationPane(
-        selected: index,
-        onChanged: (i) {
-          setState(() => index = i);
-        },
-        header: SizedBox(
-          height: kOneLineTileHeight + 5,
-          child: SvgPicture.asset(
-            FluentTheme.of(context).brightness.isDark
-                ? Assets.graphics.logoWide.path
-                : Assets.graphics.light.logoWide.path,
-            semanticsLabel: 'Launchpad',
-          ),
-        ),
-        displayMode: appTheme.displayMode,
-        indicator: () {
-          switch (appTheme.indicator) {
-            case NavigationIndicators.end:
-              return const EndNavigationIndicator();
-            case NavigationIndicators.sticky:
-            default:
-              return const StickyNavigationIndicator();
-          }
-        }(),
-        items: originalItems,
-        autoSuggestBox: AutoSuggestBox(
-          key: searchKey,
-          focusNode: searchFocusNode,
-          controller: searchController,
-          items: originalItems.whereType<PaneItem>().map((item) {
-            assert(item.title is Text);
-            final text = (item.title as Text).data!;
+    return FutureBuilder<PackageInfo>(
+        future: _getPackageInfo(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Text("Failed to initialize.");
+          } else if (!snapshot.hasData) {
+            return const ProgressRing();
+          } else {
+            final data = snapshot.data!;
 
-            return AutoSuggestBoxItem(
-              label: text,
-              value: text,
-              onSelected: () async {
-                final itemIndex = NavigationPane(
-                  items: originalItems,
-                ).effectiveIndexOf(item);
+            return UpdatWindowManager(
+                appName: appTitle,
+                currentVersion: data.version,
+                getLatestVersion: () async {
+                  final data = await http.get(Uri.parse(
+                    "https://api.github.com/repos/VolantisDev/Launchpad/releases/latest",
+                  ));
 
-                setState(() => index = itemIndex);
-                await Future.delayed(const Duration(milliseconds: 17));
-                searchController.clear();
-              },
-            );
-          }).toList(),
-          placeholder: 'Search',
-        ),
-        autoSuggestBoxReplacement: const Icon(FluentIcons.search),
-        footerItems: footerItems,
-      ),
-      onOpenSearch: () {
-        searchFocusNode.requestFocus();
-      },
-    );
+                  return jsonDecode(data.body)["tag_name"];
+                },
+                getBinaryUrl: (version) async {
+                  String ext =
+                      Platform.instance.operatingSystem.name == 'windows'
+                          ? 'exe'
+                          : 'dmg';
+
+                  return "https://github.com/VolantisDev/Launchpad/releases/download/$version/Launchpad-${Platform.instance.operatingSystem}-$version.$ext";
+                },
+                getChangelog: (_, __) async {
+                  final data = await http.get(Uri.parse(
+                    "https://api.github.com/repos/VolantisDev/Launchpad/releases/latest",
+                  ));
+                  return jsonDecode(data.body)["body"];
+                },
+                child: NavigationView(
+                  key: viewKey,
+                  appBar: NavigationAppBar(
+                    automaticallyImplyLeading: false,
+                    title: () {
+                      if (kIsWeb) {
+                        return const Align(
+                          alignment: AlignmentDirectional.centerStart,
+                          child: Text(appTitle),
+                        );
+                      }
+                      return const DragToMoveArea(
+                        child: Align(
+                          alignment: AlignmentDirectional.centerStart,
+                          child: Text(appTitle),
+                        ),
+                      );
+                    }(),
+                    actions: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsetsDirectional.only(end: 8.0),
+                            child: ToggleSwitch(
+                              content: const Text('Dark Mode'),
+                              checked:
+                                  FluentTheme.of(context).brightness.isDark,
+                              onChanged: (v) {
+                                if (v) {
+                                  appTheme.mode = ThemeMode.dark;
+                                } else {
+                                  appTheme.mode = ThemeMode.light;
+                                }
+                              },
+                            ),
+                          ),
+                          if (!kIsWeb) const WindowButtons(),
+                        ]),
+                  ),
+                  pane: NavigationPane(
+                    selected: index,
+                    onChanged: (i) {
+                      setState(() => index = i);
+                    },
+                    header: SizedBox(
+                      height: kOneLineTileHeight + 5,
+                      child: SvgPicture.asset(
+                        FluentTheme.of(context).brightness.isDark
+                            ? Assets.graphics.logoWide.path
+                            : Assets.graphics.light.logoWide.path,
+                        semanticsLabel: 'Launchpad',
+                      ),
+                    ),
+                    displayMode: appTheme.displayMode,
+                    indicator: () {
+                      switch (appTheme.indicator) {
+                        case NavigationIndicators.end:
+                          return const EndNavigationIndicator();
+                        case NavigationIndicators.sticky:
+                        default:
+                          return const StickyNavigationIndicator();
+                      }
+                    }(),
+                    items: originalItems,
+                    autoSuggestBox: AutoSuggestBox(
+                      key: searchKey,
+                      focusNode: searchFocusNode,
+                      controller: searchController,
+                      items: originalItems.whereType<PaneItem>().map((item) {
+                        assert(item.title is Text);
+                        final text = (item.title as Text).data!;
+
+                        return AutoSuggestBoxItem(
+                          label: text,
+                          value: text,
+                          onSelected: () async {
+                            final itemIndex = NavigationPane(
+                              items: originalItems,
+                            ).effectiveIndexOf(item);
+
+                            setState(() => index = itemIndex);
+                            await Future.delayed(
+                                const Duration(milliseconds: 17));
+                            searchController.clear();
+                          },
+                        );
+                      }).toList(),
+                      placeholder: 'Search',
+                    ),
+                    autoSuggestBoxReplacement: const Icon(FluentIcons.search),
+                    footerItems: footerItems,
+                  ),
+                  onOpenSearch: () {
+                    searchFocusNode.requestFocus();
+                  },
+                ));
+          }
+        });
   }
 
   @override
