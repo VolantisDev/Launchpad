@@ -139,7 +139,7 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
 
   @override
   Widget build(BuildContext context) {
-    final appTheme = this.ref.watch(appThemeProvider);
+    final appTheme = ref.watch(appThemeProvider);
     final theme = FluentTheme.of(context);
 
     return FutureBuilder<PackageInfo>(
