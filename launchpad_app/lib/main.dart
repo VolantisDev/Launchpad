@@ -1,24 +1,18 @@
+import 'package:catcher/catcher.dart';
 import 'package:fluent_ui/fluent_ui.dart' hide Page;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:launchpad_app/gen/assets.gen.dart';
-import 'package:launchpad_app/src/features/dashboard/presentation/dashboard.dart';
 import 'package:launchpad_app/src/routing/routes.dart';
 import 'package:launchpad_app/src/utils/globals.dart';
 import 'package:launchpad_app/src/utils/theme_provider.dart';
 import 'package:system_theme/system_theme.dart';
-import 'package:url_launcher/link.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'src/features/settings/presentation/settings.dart';
-
-import 'src/utils/theme.dart';
-
-final _router = GoRouter(routes: $appRoutes);
+final _router =
+    GoRouter(routes: $appRoutes, navigatorKey: Catcher.navigatorKey);
 
 /// Checks if the current environment is a desktop environment.
 bool get isDesktop {
@@ -61,9 +55,19 @@ void main() async {
     });
   }
 
-  runApp(const ProviderScope(
-    child: MyApp(),
-  ));
+  CatcherOptions debugOptions =
+      CatcherOptions(DialogReportMode(), [ConsoleHandler()]);
+
+  CatcherOptions releaseOptions = CatcherOptions(DialogReportMode(), [
+    EmailManualHandler(["support@volantisdev.com"])
+  ]);
+
+  Catcher(
+      rootWidget: const ProviderScope(
+        child: MyApp(),
+      ),
+      debugConfig: debugOptions,
+      releaseConfig: releaseOptions);
 }
 
 class MyApp extends HookConsumerWidget {
