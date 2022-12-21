@@ -1,20 +1,19 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
-
-import '../features/dashboard/presentation/dashboard.dart';
+import 'package:launchpad_app/src/common_widgets/home_container.dart';
 
 part 'routes.g.dart';
 
-@TypedGoRoute<DashboardRoute>(
+@TypedGoRoute<HomeRoute>(
   path: '/',
   routes: <TypedGoRoute<GoRouteData>>[],
 )
-class DashboardRoute extends GoRouteData {
-  const DashboardRoute();
+class HomeRoute extends GoRouteData {
+  const HomeRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const DashboardPage();
+      const HomeContainer();
 }
 
 // @TypedGoRoute<LoginRoute>(path: '/login')
