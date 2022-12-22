@@ -2,5 +2,8 @@
     "cSpell.words": [
         "Multitool"
     ],
-    "terminal.integrated.cwd": "${workspaceFolder}/launchpad_app"
+    "terminal.integrated.cwd": "${workspaceFolder}/launchpad_app",
+    "[dart]": {
+        "editor.formatOnSave": true
+    }
 }
