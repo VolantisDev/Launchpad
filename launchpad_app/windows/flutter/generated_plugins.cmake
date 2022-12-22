@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   catcher
+  desktop_drop
   desktop_webview_auth
   file_selector_windows
   flutter_acrylic
@@ -11,6 +12,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   isar_flutter_libs
   local_auth_windows
   local_notifier
+  native_context_menu
   network_info_plus
   protocol_handler
   screen_retriever
