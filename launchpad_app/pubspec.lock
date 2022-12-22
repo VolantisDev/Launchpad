@@ -261,7 +261,7 @@ packages:
     source: hosted
     version: "1.0.1"
   cross_file:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: cross_file
       url: "https://pub.dartlang.org"
@@ -316,6 +316,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.2"
+  desktop_drop:
+    dependency: "direct main"
+    description:
+      name: desktop_drop
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0"
   desktop_webview_auth:
     dependency: transitive
     description:
@@ -379,6 +386,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.17"
+  expandable_menu:
+    dependency: "direct main"
+    description:
+      name: expandable_menu
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.5"
   expressions:
     dependency: "direct main"
     description:
@@ -540,6 +554,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  floating_action_bubble:
+    dependency: "direct main"
+    description:
+      name: floating_action_bubble
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.4"
   fluent_ui:
     dependency: "direct main"
     description:
@@ -559,6 +580,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0+2"
+  flutter_form_builder:
+    dependency: "direct main"
+    description:
+      name: flutter_form_builder
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "7.7.0"
   flutter_gen_core:
     dependency: transitive
     description:
@@ -1080,6 +1108,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+  native_context_menu:
+    dependency: "direct main"
+    description:
+      name: native_context_menu
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.2+5"
   network_info_plus:
     dependency: "direct main"
     description:
