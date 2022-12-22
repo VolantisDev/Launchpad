@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "flutter: flutter pub run build_runner watch",
+            "label": "flutter pub run build_runner watch",
             "type": "flutter",
             "command": "flutter",
             "args": [
@@ -14,8 +14,9 @@
             ],
             "presentation": {
                 "reveal": "silent",
+                "revealProblems": "onProblem",
                 "panel": "dedicated",
-                "close": false
+                "close": true
             },
             "problemMatcher": [
                 "$dart-build_runner"
@@ -30,11 +31,16 @@
             "isBackground": true,
             "detail": "",
             "runOptions": {
-                "runOn": "folderOpen"
-            }
+                "runOn": "folderOpen",
+                "instanceLimit": 1,
+                "reevaluateOnRerun": true
+            },
+            "dependsOn": [
+                "flutter pub get"
+            ],
         },
         {
-            "label": "flutter: flutter pub run build_runner build",
+            "label": "flutter pub run build_runner build",
             "type": "flutter",
             "command": "flutter",
             "args": [
@@ -60,7 +66,7 @@
             "detail": ""
         },
         {
-            "label": "flutter: pub get",
+            "label": "flutter pub get",
             "type": "flutter",
             "command": "flutter",
             "args": [
@@ -69,11 +75,11 @@
             ],
             "presentation": {
                 "echo": true,
-                "reveal": "silent",
                 "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                "panel": "dedicated",
+                "close": true
             },
             "options": {
                 "cwd": "${workspaceFolder}/launchpad_app"
@@ -82,7 +88,7 @@
             "detail": ""
         },
         {
-            "label": "flutter: launcher icons",
+            "label": "flutter launcher icons",
             "type": "flutter",
             "command": "flutter",
             "args": [
@@ -96,7 +102,7 @@
             }
         },
         {
-            "label": "flutter: native splash",
+            "label": "flutter native splash",
             "type": "flutter",
             "command": "flutter",
             "args": [
