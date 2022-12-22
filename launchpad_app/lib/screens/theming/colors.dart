@@ -141,7 +141,7 @@ class ColorsPage extends ScrollablePage {
   }
 
   List<Widget> get accent {
-    List<Widget> children = [];
+    var children = <Widget>[];
     for (var i = 0; i < Colors.accentColors.length; i++) {
       final accent = Colors.accentColors[i];
       final name = _primaryNames[i];

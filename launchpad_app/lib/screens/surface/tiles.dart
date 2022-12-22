@@ -19,7 +19,7 @@ class _TilesPageState extends ConsumerState<TilesPage> with PageMixin {
 
   // second
   final secondController = ScrollController();
-  List<String> selected = [];
+  var selected = <String>[];
 
   // third
   var thirdSelected = '';
@@ -82,7 +82,7 @@ ListView.builder(
           content: const Text('ListViewItems with many properties applied'),
         ),
         CardHighlight(
-          codeSnippet: '''List<String> selectedContacts = [];
+          codeSnippet: '''var selectedContacts = <String>[];
 
 const contacts = ['Kendall', 'Collins', ...];
 
