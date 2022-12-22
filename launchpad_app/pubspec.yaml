@@ -110,6 +110,12 @@ dependencies:
   xml: ^6.1.0
   yaml: ^3.1.1
   windows_single_instance: ^0.1.5
+  native_context_menu: ^0.2.2+5
+  expandable_menu: ^0.0.5
+  floating_action_bubble: ^1.1.4
+  flutter_form_builder: ^7.7.0
+  desktop_drop: ^0.4.0
+  cross_file: ^0.3.3+2
 
 dependency_overrides:
   firebase_core_platform_interface: 4.5.1
