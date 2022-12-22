@@ -261,7 +261,7 @@ packages:
     source: hosted
     version: "1.0.1"
   cross_file:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: cross_file
       url: "https://pub.dartlang.org"
@@ -1813,13 +1813,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.0"
-  webview_windows:
-    dependency: "direct main"
-    description:
-      name: webview_windows
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.2"
   win32:
     dependency: "direct main"
     description:
