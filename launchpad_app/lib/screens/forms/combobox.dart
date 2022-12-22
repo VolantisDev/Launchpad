@@ -50,7 +50,8 @@ class _ComboBoxPageState extends ConsumerState<ComboBoxPage> with PageMixin {
           ),
         ),
         CardHighlight(
-          codeSnippet: '''// Green by default
+          codeSnippet:
+              '''// Green by default
 Color selectedColor = 'Green';
 
 ComboBox<String>(
@@ -93,7 +94,8 @@ ComboBox<String>(
           content: const Text('A ComboBox with a long list of items'),
         ),
         CardHighlight(
-          codeSnippet: '''List<String> cats= [...];
+          codeSnippet:
+              '''var cats= <String>[...];
 
 ComboBox<String>(
   value: selectedCat,
@@ -145,7 +147,8 @@ ComboBox<String>(
           ),
         ),
         CardHighlight(
-          codeSnippet: '''static const fontSizes = <double>[
+          codeSnippet:
+              '''static const fontSizes = <double>[
   8,
   9,
   ...,
@@ -267,7 +270,8 @@ EditableComboBox<int>(
         ),
         subtitle(content: const Text('A ComboBox Form Field')),
         CardHighlight(
-          codeSnippet: '''Map<String, Color> colors = { ... };
+          codeSnippet:
+              '''var colors = <String, Color>{ ... };
 Color selectedColor = 'Green';
 
 Form(

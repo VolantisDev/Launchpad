@@ -26,7 +26,7 @@ class DeferredWidget extends StatefulHookConsumerWidget {
   final LibraryLoader libraryLoader;
   final DeferredWidgetBuilder createWidget;
   final Widget placeholder;
-  static final Map<LibraryLoader, Future<void>> _moduleLoaders = {};
+  static final _moduleLoaders = <LibraryLoader, Future<void>>{};
   static final Set<LibraryLoader> _loadedModules = {};
 
   static Future<void> preload(LibraryLoader loader) {

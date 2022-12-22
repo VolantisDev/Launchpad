@@ -38,7 +38,7 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
   final searchFocusNode = FocusNode();
   final searchController = TextEditingController();
 
-  final List<NavigationPaneItem> originalItems = [
+  final originalItems = [
     PaneItem(
       icon: const Icon(FluentIcons.home),
       title: const Text('Dashboard'),
@@ -119,7 +119,7 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
   ];
 
   @override
-  void dispose() {
+  dispose() {
     windowManager.removeListener(this);
     searchController.dispose();
     searchFocusNode.dispose();
@@ -127,7 +127,7 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
   }
 
   @override
-  void initState() {
+  initState() {
     windowManager.addListener(this);
     WidgetsFlutterBinding.ensureInitialized();
     super.initState();
@@ -138,7 +138,7 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
   }
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     final appTheme = ref.watch(appThemeProvider);
 
     return FutureBuilder<PackageInfo>(
@@ -272,9 +272,10 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
   }
 
   @override
-  void onWindowClose() async {
-    bool _isPreventClose = await windowManager.isPreventClose();
-    if (_isPreventClose) {
+  onWindowClose() async {
+    var isPreventClose = await windowManager.isPreventClose();
+
+    if (isPreventClose) {
       showDialog(
         context: context,
         builder: (_) {
@@ -307,7 +308,7 @@ class WindowButtons extends StatelessWidget {
   const WindowButtons({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     final theme = FluentTheme.of(context);
 
     return SizedBox(
@@ -332,12 +333,12 @@ class _LinkPaneItemAction extends PaneItem {
   final String link;
 
   @override
-  Widget build(
+  build(
     BuildContext context,
     bool selected,
     VoidCallback? onPressed, {
     PaneDisplayMode? displayMode,
-    bool showTextOnTop = true,
+    var showTextOnTop = true,
     bool? autofocus,
     int? itemIndex,
   }) {

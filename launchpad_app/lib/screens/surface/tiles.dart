@@ -1,6 +1,6 @@
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/src/common_widgets/card_highlight.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:launchpad_app/src/common_widgets/page.dart';
 
 class TilesPage extends StatefulHookConsumerWidget {
