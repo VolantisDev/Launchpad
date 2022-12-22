@@ -1,4 +1,4 @@
-ouptut: dist/
+output: dist/
 releases:
   - name: dev
     jobs:
@@ -10,20 +10,31 @@ releases:
             flavor: dev
             dart-define:
               APP_ENV: dev
-  - name: prod
-    jobs:
-      - name: release-prod-windows
-        package:
-          platform: windows
-          target: exe
-          build_arts:
-            flavor: prod
-            dart-define:
-              APP_ENV: prod
-        publish:
-          targets: github
-          args:
-            repo-owner: VolantisDev
-            repo-name: Launchpad
+  # - name: prod
+  #   jobs:
+  #     - name: release-prod-windows
+  #       package:
+  #         platform: windows
+  #         target: exe
+  #         build_arts:
+  #           flavor: prod
+  #           dart-define:
+  #             APP_ENV: prod
+  #       publish:
+  #         targets: github
+  #         args:
+  #           repo-owner: VolantisDev
+  #           repo-name: Launchpad
+  #     - name: release-prod-web
+  #       package:
+  #         platform: web
+  #         build_arts:
+  #           flavor: prod
+  #           dart-define:
+  #             APP_ENV: prod
+  #       publish:
+  #         targets: firebase
+  #         args:
+            
 # @todo Add release version and publish_to when I'm ready to publish 
 # to GitHub and/or Firebase
