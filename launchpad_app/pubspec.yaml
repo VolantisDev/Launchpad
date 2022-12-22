@@ -60,6 +60,7 @@ dependencies:
   hotkey_manager: ^0.1.7
   http: ^0.13.5
   humanizer: ^2.0.0
+  image: ^3.2.2
   image_picker: ^0.8.6
   image_picker_windows: ^0.1.0+3
   intl: ^0.17.0
@@ -87,6 +88,7 @@ dependencies:
   recase: ^4.1.0
   riverpod_annotation: ^1.0.6
   scroll_to_index: ^3.0.1
+  shimmer: ^2.0.0
   stack_trace: ^1.10.0
   stock: ^1.0.1
   string_validator: ^0.3.0
