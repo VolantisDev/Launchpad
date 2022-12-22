@@ -39,7 +39,7 @@ class DeferredWidget extends StatefulHookConsumerWidget {
   }
 
   @override
-  ConsumerState<DeferredWidget> createState() => _DeferredWidgetState();
+  createState() => _DeferredWidgetState();
 }
 
 class _DeferredWidgetState extends ConsumerState<DeferredWidget> {

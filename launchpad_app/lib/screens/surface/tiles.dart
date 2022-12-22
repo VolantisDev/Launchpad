@@ -7,7 +7,7 @@ class TilesPage extends StatefulHookConsumerWidget {
   const TilesPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<TilesPage> createState() => _TilesPageState();
+  createState() => _TilesPageState();
 }
 
 class _TilesPageState extends ConsumerState<TilesPage> with PageMixin {
@@ -15,18 +15,18 @@ class _TilesPageState extends ConsumerState<TilesPage> with PageMixin {
 
   // first
   final firstController = ScrollController();
-  String firstSelected = '';
+  var firstSelected = '';
 
   // second
   final secondController = ScrollController();
   List<String> selected = [];
 
   // third
-  String thirdSelected = '';
+  var thirdSelected = '';
   final thirdController = ScrollController();
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     final theme = FluentTheme.of(context);
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Tiles')),
@@ -222,7 +222,7 @@ ListView.builder(
   }
 }
 
-const String _contactsList = '''Kendall
+const _contactsList = '''Kendall
 Collins
 Adatum Corporation
 Henry
@@ -304,4 +304,4 @@ Hayden
 Cook
 Tailwind Traders''';
 
-List<String> contacts = _contactsList.split('\n');
+var contacts = _contactsList.split('\n');

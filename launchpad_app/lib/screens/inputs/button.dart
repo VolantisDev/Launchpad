@@ -10,21 +10,21 @@ class ButtonPage extends StatefulHookConsumerWidget {
   const ButtonPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ButtonPage> createState() => _ButtonPageState();
+  createState() => _ButtonPageState();
 }
 
 class _ButtonPageState extends ConsumerState<ButtonPage> with PageMixin {
-  bool simpleDisabled = false;
-  bool filledDisabled = false;
-  bool iconDisabled = false;
-  bool toggleDisabled = false;
-  bool toggleState = false;
-  bool splitButtonDisabled = false;
-  bool radioButtonDisabled = false;
-  int radioButtonSelected = -1;
+  var simpleDisabled = false;
+  var filledDisabled = false;
+  var iconDisabled = false;
+  var toggleDisabled = false;
+  var toggleState = false;
+  var splitButtonDisabled = false;
+  var radioButtonDisabled = false;
+  var radioButtonSelected = -1;
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Button')),
       children: [

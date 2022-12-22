@@ -23,14 +23,14 @@ class HomeContainer extends StatefulHookConsumerWidget {
   const HomeContainer({Key? key}) : super(key: key);
 
   @override
-  _HomeContainerState createState() => _HomeContainerState();
+  createState() => _HomeContainerState();
 }
 
 class _HomeContainerState extends ConsumerState<HomeContainer>
     with WindowListener {
-  bool value = false;
+  var value = false;
 
-  int index = 0;
+  var index = 0;
 
   final viewKey = GlobalKey();
 
@@ -103,7 +103,7 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
     //   body: const Text('.'),
     // ),
   ];
-  final List<NavigationPaneItem> footerItems = [
+  final footerItems = [
     PaneItemSeparator(),
     PaneItem(
       icon: const Icon(FluentIcons.settings),
@@ -140,7 +140,6 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
   @override
   Widget build(BuildContext context) {
     final appTheme = ref.watch(appThemeProvider);
-    final theme = FluentTheme.of(context);
 
     return FutureBuilder<PackageInfo>(
         future: _getPackageInfo(),
@@ -163,10 +162,9 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
                   return jsonDecode(data.body)["tag_name"];
                 },
                 getBinaryUrl: (version) async {
-                  String ext =
-                      Platform.instance.operatingSystem.name == 'windows'
-                          ? 'exe'
-                          : 'dmg';
+                  var ext = Platform.instance.operatingSystem.name == 'windows'
+                      ? 'exe'
+                      : 'dmg';
 
                   return "https://github.com/VolantisDev/Launchpad/releases/download/$version/Launchpad-${Platform.instance.operatingSystem}-$version.$ext";
                 },
@@ -204,11 +202,8 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
                               checked:
                                   FluentTheme.of(context).brightness.isDark,
                               onChanged: (v) {
-                                if (v) {
-                                  appTheme.mode = ThemeMode.dark;
-                                } else {
-                                  appTheme.mode = ThemeMode.light;
-                                }
+                                appTheme.mode =
+                                    v ? ThemeMode.dark : ThemeMode.light;
                               },
                             ),
                           ),
@@ -313,7 +308,7 @@ class WindowButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = FluentTheme.of(context);
+    final theme = FluentTheme.of(context);
 
     return SizedBox(
       width: 138,

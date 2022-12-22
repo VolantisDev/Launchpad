@@ -7,13 +7,14 @@ import 'package:fluent_ui/fluent_ui.dart' hide Page;
 import '../../src/common_widgets/page.dart';
 
 class RevealFocusPage extends Page {
-  final FocusNode focus = FocusNode();
+  final focus = FocusNode();
 
   RevealFocusPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  build(BuildContext context, WidgetRef ref) {
     final theme = FluentTheme.of(context);
+
     return ScaffoldPage.withPadding(
       header: PageHeader(
         title: const Text('Reveal Focus'),
@@ -75,6 +76,7 @@ class RevealFocusPage extends Page {
   Widget buildCard([FocusNode? node]) {
     final color =
         Colors.accentColors[Random().nextInt(Colors.accentColors.length - 1)];
+
     return HoverButton(
       focusNode: node,
       onPressed: () {},

@@ -7,16 +7,16 @@ class SliderPage extends StatefulHookConsumerWidget {
   const SliderPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<SliderPage> createState() => _SliderPageState();
+  createState() => _SliderPageState();
 }
 
 class _SliderPageState extends ConsumerState<SliderPage> with PageMixin {
-  bool disabled = false;
-  double firstValue = 23.0;
-  double verticalValue = 50.0;
+  var disabled = false;
+  var firstValue = 23.0;
+  var verticalValue = 50.0;
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     return ScaffoldPage.scrollable(
       header: PageHeader(
         title: const Text('Slider'),

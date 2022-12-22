@@ -20,12 +20,12 @@ class ColorsPage extends ScrollablePage {
   ColorsPage({super.key});
 
   @override
-  Widget buildHeader(BuildContext context, WidgetRef ref) {
+  buildHeader(BuildContext context, WidgetRef ref) {
     return const PageHeader(title: Text('Colors Showcase'));
   }
 
   @override
-  Widget buildBottomBar(BuildContext context, WidgetRef ref) {
+  buildBottomBar(BuildContext context, WidgetRef ref) {
     return const SizedBox(
       width: double.infinity,
       child: InfoBar(
@@ -37,7 +37,7 @@ class ColorsPage extends ScrollablePage {
   }
 
   @override
-  List<Widget> buildScrollable(BuildContext context, WidgetRef ref) {
+  buildScrollable(BuildContext context, WidgetRef ref) {
     const Divider divider = Divider(
       style: DividerThemeData(
         verticalMargin: EdgeInsets.all(10),
@@ -180,8 +180,9 @@ class ColorBlock extends StatelessWidget {
   final String clipboard;
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     final textColor = color.basedOnLuminance();
+
     return Tooltip(
       message: '\n$clipboard\n(tap to copy to clipboard)\n',
       child: HoverButton(

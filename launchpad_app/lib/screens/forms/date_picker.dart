@@ -7,7 +7,7 @@ class DatePickerPage extends StatefulHookConsumerWidget {
   const DatePickerPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<DatePickerPage> createState() => _DatePickerPageState();
+  createState() => _DatePickerPageState();
 }
 
 class _DatePickerPageState extends ConsumerState<DatePickerPage>

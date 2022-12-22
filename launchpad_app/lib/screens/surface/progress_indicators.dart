@@ -10,15 +10,15 @@ class ProgressIndicatorsPage extends StatefulHookConsumerWidget {
   const ProgressIndicatorsPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ProgressIndicatorsPage> createState() =>
-      _ProgressIndicatorsPageState();
+  createState() => _ProgressIndicatorsPageState();
 }
 
 class _ProgressIndicatorsPageState extends ConsumerState<ProgressIndicatorsPage>
     with PageMixin {
-  double determinateValue = Random().nextDouble() * 100;
+  var determinateValue = Random().nextDouble() * 100;
+
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Progress controls')),
       children: [

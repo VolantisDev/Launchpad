@@ -7,7 +7,7 @@ class CommandBarsPage extends StatefulHookConsumerWidget {
   const CommandBarsPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<CommandBarsPage> createState() => _CommandBarsPageState();
+  createState() => _CommandBarsPageState();
 }
 
 class _CommandBarsPageState extends ConsumerState<CommandBarsPage>
@@ -119,7 +119,7 @@ class _CommandBarsPageState extends ConsumerState<CommandBarsPage>
   ];
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     return ScaffoldPage.scrollable(
       header: PageHeader(
         title: const Text('CommandBar'),

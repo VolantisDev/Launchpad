@@ -7,17 +7,17 @@ class CheckBoxPage extends StatefulHookConsumerWidget {
   const CheckBoxPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<CheckBoxPage> createState() => _CheckBoxPageState();
+  createState() => _CheckBoxPageState();
 }
 
 class _CheckBoxPageState extends ConsumerState<CheckBoxPage> with PageMixin {
-  bool firstChecked = false;
-  bool firstDisabled = false;
+  var firstChecked = false;
+  var firstDisabled = false;
   bool? secondChecked = false;
-  bool secondDisabled = false;
-  bool iconDisabled = false;
+  var secondDisabled = false;
+  var iconDisabled = false;
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Checkbox')),
       children: [

@@ -8,30 +8,30 @@ class ExpanderPage extends StatefulHookConsumerWidget {
   const ExpanderPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ExpanderPage> createState() => _ExpanderPageState();
+  createState() => _ExpanderPageState();
 }
 
 class _ExpanderPageState extends ConsumerState<ExpanderPage> with PageMixin {
   final expanderKey = GlobalKey<ExpanderState>();
 
-  bool crustOpen = false;
-  List<String> crusts = [
+  var crustOpen = false;
+  var crusts = [
     'Classic',
     'Whole wheat',
     'Gluten free',
   ];
-  String crust = 'Whole wheat';
-  List<String> sizes = [
+  var crust = 'Whole wheat';
+  var sizes = [
     'Regular',
     'Thin',
     'Pan',
     'Stuffed',
   ];
-  String size = 'Pan';
-  bool checked = false;
+  var size = 'Pan';
+  var checked = false;
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     final open = expanderKey.currentState?.isExpanded ?? false;
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Expander')),

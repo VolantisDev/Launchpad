@@ -33,8 +33,7 @@ class _ChangelogState extends ConsumerState<Changelog> {
     );
 
     if (response.statusCode == 200) {
-      final _changelog = response.body.split('\n')..removeRange(0, 2);
-      setState(() => changelog = _changelog);
+      setState(() => changelog = response.body.split('\n')..removeRange(0, 2));
     } else {
       debugPrint(response.body);
     }
@@ -59,7 +58,7 @@ class _ChangelogState extends ConsumerState<Changelog> {
                   // if (line.split('-').length == 2) {
                   //   print('GO- ${line.split('-')[0]} - ${line.split('-')[1]}');
                   // }
-                  String date = line
+                  var date = line
                       .split('-')
                       .last
                       .replaceAll('[', '')

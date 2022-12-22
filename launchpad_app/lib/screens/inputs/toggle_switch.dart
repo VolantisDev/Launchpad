@@ -7,17 +7,17 @@ class ToggleSwitchPage extends StatefulHookConsumerWidget {
   const ToggleSwitchPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ToggleSwitchPage> createState() => _ToggleSwitchPageState();
+  createState() => _ToggleSwitchPageState();
 }
 
 class _ToggleSwitchPageState extends ConsumerState<ToggleSwitchPage>
     with PageMixin {
-  bool disabled = false;
-  bool firstValue = false;
-  bool secondValue = true;
+  var disabled = false;
+  var firstValue = false;
+  var secondValue = true;
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     return ScaffoldPage.scrollable(
       header: PageHeader(
         title: const Text('ToggleSwitch'),

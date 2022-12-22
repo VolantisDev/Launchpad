@@ -8,6 +8,7 @@ class SponsorDialog extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     assert(debugCheckHasFluentTheme(context));
+
     return ContentDialog(
       constraints: const BoxConstraints(maxWidth: 600),
       title: Row(

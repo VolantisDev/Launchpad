@@ -8,18 +8,18 @@ class NavigationViewPage extends StatefulHookConsumerWidget {
   const NavigationViewPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<NavigationViewPage> createState() => _NavigationViewPageState();
+  createState() => _NavigationViewPageState();
 }
 
 class _NavigationViewPageState extends ConsumerState<NavigationViewPage>
     with PageMixin {
-  static const double itemHeight = 300.0;
+  static const itemHeight = 300.0;
 
-  int topIndex = 0;
+  var topIndex = 0;
 
   PaneDisplayMode displayMode = PaneDisplayMode.open;
-  String pageTransition = 'default';
-  static const List<String> pageTransitions = [
+  var pageTransition = 'default';
+  static const pageTransitions = [
     'default',
     'entrance',
     'drill in',
@@ -27,7 +27,7 @@ class _NavigationViewPageState extends ConsumerState<NavigationViewPage>
   ];
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('NavigationView')),
       children: [
@@ -253,7 +253,7 @@ class _NavigationBodyItem extends StatelessWidget {
   final Widget? content;
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     return ScaffoldPage.withPadding(
       header: PageHeader(title: Text(header ?? 'This is a header text')),
       content: content ?? const SizedBox.shrink(),

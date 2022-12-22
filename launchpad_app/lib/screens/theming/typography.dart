@@ -7,15 +7,16 @@ class TypographyPage extends StatefulHookConsumerWidget {
   const TypographyPage({Key? key}) : super(key: key);
 
   @override
-  _TypographyPageState createState() => _TypographyPageState();
+  createState() => _TypographyPageState();
 }
 
 class _TypographyPageState extends ConsumerState<TypographyPage> {
   Color? color;
-  double scale = 1.0;
+  var scale = 1.0;
 
   Widget buildColorBox(Color color) {
-    const double boxSize = 25.0;
+    const boxSize = 25.0;
+
     return Container(
       height: boxSize,
       width: boxSize,
@@ -27,12 +28,14 @@ class _TypographyPageState extends ConsumerState<TypographyPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    Typography typography = FluentTheme.of(context).typography;
+
+    var typography = FluentTheme.of(context).typography;
     color ??= typography.display!.color;
     typography = typography.apply(displayColor: color!);
-    const Widget spacer = SizedBox(height: 4.0);
+    const spacer = SizedBox(height: 4.0);
+
     return ScaffoldPage.withPadding(
       header: PageHeader(
         title: const Text('Typography showcase'),

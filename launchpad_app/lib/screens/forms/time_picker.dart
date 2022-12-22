@@ -7,7 +7,7 @@ class TimePickerPage extends StatefulHookConsumerWidget {
   const TimePickerPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<TimePickerPage> createState() => _TimePickerPageState();
+  createState() => _TimePickerPageState();
 }
 
 class _TimePickerPageState extends ConsumerState<TimePickerPage>
@@ -17,7 +17,7 @@ class _TimePickerPageState extends ConsumerState<TimePickerPage>
   DateTime? hhTime;
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('TimePicker')),
       children: [

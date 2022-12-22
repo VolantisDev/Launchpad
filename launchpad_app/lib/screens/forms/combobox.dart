@@ -9,14 +9,14 @@ class ComboBoxPage extends StatefulHookConsumerWidget {
   const ComboBoxPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ComboBoxPage> createState() => _ComboBoxPageState();
+  createState() => _ComboBoxPageState();
 }
 
 class _ComboBoxPageState extends ConsumerState<ComboBoxPage> with PageMixin {
   String? selectedColor = 'Green';
   String? selectedCat;
-  double fontSize = 20.0;
-  bool disabled = false;
+  var fontSize = 20.0;
+  var disabled = false;
   final comboboxKey = GlobalKey<ComboBoxState>();
 
   @override
@@ -383,7 +383,7 @@ Button(
     );
   }
 
-  Map<String, Color> colors = {
+  var colors = {
     'Blue': Colors.blue,
     'Green': Colors.green,
     'Red': Colors.red,

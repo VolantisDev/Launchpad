@@ -6,35 +6,35 @@ import 'package:flutter_acrylic/flutter_acrylic.dart';
 enum NavigationIndicators { sticky, end }
 
 class AppTheme extends ChangeNotifier {
-  AccentColor _color = systemAccentColor;
+  var _color = systemAccentColor;
   AccentColor get color => _color;
   set color(AccentColor color) {
     _color = color;
     notifyListeners();
   }
 
-  ThemeMode _mode = ThemeMode.system;
+  var _mode = ThemeMode.system;
   ThemeMode get mode => _mode;
   set mode(ThemeMode mode) {
     _mode = mode;
     notifyListeners();
   }
 
-  PaneDisplayMode _displayMode = PaneDisplayMode.auto;
+  var _displayMode = PaneDisplayMode.auto;
   PaneDisplayMode get displayMode => _displayMode;
   set displayMode(PaneDisplayMode displayMode) {
     _displayMode = displayMode;
     notifyListeners();
   }
 
-  NavigationIndicators _indicator = NavigationIndicators.sticky;
+  var _indicator = NavigationIndicators.sticky;
   NavigationIndicators get indicator => _indicator;
   set indicator(NavigationIndicators indicator) {
     _indicator = indicator;
     notifyListeners();
   }
 
-  WindowEffect _windowEffect = WindowEffect.disabled;
+  var _windowEffect = WindowEffect.disabled;
   WindowEffect get windowEffect => _windowEffect;
   set windowEffect(WindowEffect windowEffect) {
     _windowEffect = windowEffect;
@@ -54,7 +54,7 @@ class AppTheme extends ChangeNotifier {
     );
   }
 
-  TextDirection _textDirection = TextDirection.ltr;
+  var _textDirection = TextDirection.ltr;
   TextDirection get textDirection => _textDirection;
   set textDirection(TextDirection direction) {
     _textDirection = direction;

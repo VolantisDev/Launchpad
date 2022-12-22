@@ -32,14 +32,14 @@ class IconsPage extends StatefulHookConsumerWidget {
   const IconsPage({Key? key}) : super(key: key);
 
   @override
-  _IconsPageState createState() => _IconsPageState();
+  createState() => _IconsPageState();
 }
 
 class _IconsPageState extends ConsumerState<IconsPage> {
-  String filterText = '';
+  var filterText = '';
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
 
     final entries = FluentIcons.allIcons.entries.where(

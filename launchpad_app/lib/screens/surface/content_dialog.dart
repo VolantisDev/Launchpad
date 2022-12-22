@@ -7,7 +7,7 @@ class ContentDialogPage extends StatefulHookConsumerWidget {
   const ContentDialogPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ContentDialogPage> createState() => _ContentDialogPageState();
+  createState() => _ContentDialogPageState();
 }
 
 class _ContentDialogPageState extends ConsumerState<ContentDialogPage>
@@ -15,7 +15,7 @@ class _ContentDialogPageState extends ConsumerState<ContentDialogPage>
   String? result = '';
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('ContentDialog')),
       children: [

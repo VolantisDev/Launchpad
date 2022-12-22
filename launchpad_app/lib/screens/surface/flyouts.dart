@@ -6,24 +6,24 @@ class FlyoutPage extends StatefulHookConsumerWidget {
   const FlyoutPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<FlyoutPage> createState() => _FlyoutShowcaseState();
+  createState() => _FlyoutShowcaseState();
 }
 
 class _FlyoutShowcaseState extends ConsumerState<FlyoutPage> {
   Typography get typography => FluentTheme.of(context).typography;
 
-  FlyoutController buttonController = FlyoutController();
-  FlyoutController flyoutController = FlyoutController();
+  var buttonController = FlyoutController();
+  var flyoutController = FlyoutController();
 
   @override
-  void dispose() {
+  dispose() {
     buttonController.dispose();
     flyoutController.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Flyouts')),
       children: [

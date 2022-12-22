@@ -8,22 +8,22 @@ class InfoBarsPage extends StatefulHookConsumerWidget {
   const InfoBarsPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<InfoBarsPage> createState() => _InfoBarsPageState();
+  createState() => _InfoBarsPageState();
 }
 
 class _InfoBarsPageState extends ConsumerState<InfoBarsPage> with PageMixin {
   // First info bar
-  bool _firstOpen = true;
-  InfoBarSeverity severity = InfoBarSeverity.info;
+  var _firstOpen = true;
+  var severity = InfoBarSeverity.info;
 
   // Second info bar
-  bool _secondOpen = true;
-  bool _isLong = false;
-  bool _hasActionButton = true;
-  bool _isIconVisible = true;
+  var _secondOpen = true;
+  var _isLong = false;
+  var _hasActionButton = true;
+  var _isIconVisible = true;
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('InfoBar')),
       children: [

@@ -7,14 +7,14 @@ class TreeViewPage extends StatefulHookConsumerWidget {
   const TreeViewPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<TreeViewPage> createState() => _TreeViewPageState();
+  createState() => _TreeViewPageState();
 }
 
 class _TreeViewPageState extends ConsumerState<TreeViewPage> with PageMixin {
   final treeViewKey = GlobalKey<TreeViewState>();
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('TreeView')),
       children: [

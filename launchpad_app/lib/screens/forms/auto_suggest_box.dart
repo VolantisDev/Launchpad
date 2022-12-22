@@ -7,17 +7,17 @@ class AutoSuggestBoxPage extends StatefulHookConsumerWidget {
   const AutoSuggestBoxPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<AutoSuggestBoxPage> createState() => _AutoSuggestBoxPageState();
+  createState() => _AutoSuggestBoxPageState();
 }
 
 class _AutoSuggestBoxPageState extends ConsumerState<AutoSuggestBoxPage>
     with PageMixin {
   String? selectedCat;
   Cat? selectedObjectCat;
-  bool enabled = true;
+  var enabled = true;
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     return ScaffoldPage.scrollable(
       header: PageHeader(
         title: const Text('AutoSuggestBox'),

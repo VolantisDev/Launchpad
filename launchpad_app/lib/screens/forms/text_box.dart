@@ -7,12 +7,12 @@ class TextBoxPage extends ScrollablePage {
   TextBoxPage({super.key});
 
   @override
-  Widget buildHeader(BuildContext context, WidgetRef ref) {
+  buildHeader(BuildContext context, WidgetRef ref) {
     return const PageHeader(title: Text('TextBox'));
   }
 
   @override
-  List<Widget> buildScrollable(BuildContext context, WidgetRef ref) {
+  buildScrollable(BuildContext context, WidgetRef ref) {
     return [
       const Text(
         'The TextBox control lets a user type text into an app. It\'s typically '

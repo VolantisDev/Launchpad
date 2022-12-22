@@ -9,18 +9,18 @@ class TabViewPage extends StatefulHookConsumerWidget {
   const TabViewPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<TabViewPage> createState() => _TabViewPageState();
+  createState() => _TabViewPageState();
 }
 
 class _TabViewPageState extends ConsumerState<TabViewPage> with PageMixin {
-  int currentIndex = 0;
+  var currentIndex = 0;
   List<Tab>? tabs;
 
   TabWidthBehavior tabWidthBehavior = TabWidthBehavior.equal;
   CloseButtonVisibilityMode closeButtonVisibilityMode =
       CloseButtonVisibilityMode.always;
-  bool showScrollButtons = true;
-  bool wheelScroll = false;
+  var showScrollButtons = true;
+  var wheelScroll = false;
 
   Tab generateTab(int index) {
     late Tab tab;
@@ -44,7 +44,7 @@ class _TabViewPageState extends ConsumerState<TabViewPage> with PageMixin {
   }
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     tabs ??= List.generate(3, generateTab);
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('TabView')),

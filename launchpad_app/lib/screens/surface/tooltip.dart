@@ -7,12 +7,12 @@ class TooltipPage extends ScrollablePage {
   TooltipPage({super.key});
 
   @override
-  Widget buildHeader(BuildContext context, WidgetRef ref) {
+  buildHeader(BuildContext context, WidgetRef ref) {
     return const PageHeader(title: Text('Tooltip'));
   }
 
   @override
-  List<Widget> buildScrollable(BuildContext context, WidgetRef ref) {
+  buildScrollable(BuildContext context, WidgetRef ref) {
     return [
       const Text(
         'A ToolTip shows more information about a UI element. You might show information about what the element does, or what the user should do. The ToolTip is shown when a user hovers over or presses and holds the UI element.',

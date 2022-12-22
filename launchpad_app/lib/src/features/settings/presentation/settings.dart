@@ -10,7 +10,7 @@ import 'package:launchpad_app/src/utils/theme_provider.dart';
 import '../../../utils/theme.dart';
 import '../../../common_widgets/page.dart';
 
-const List<String> accentColorNames = [
+const accentColorNames = [
   'System',
   'Yellow',
   'Orange',

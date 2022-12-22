@@ -17,15 +17,15 @@ class CardHighlight extends StatefulHookConsumerWidget {
   final Color? backgroundColor;
 
   @override
-  ConsumerState<CardHighlight> createState() => _CardHighlightState();
+  createState() => _CardHighlightState();
 }
 
 class _CardHighlightState extends ConsumerState<CardHighlight>
     with AutomaticKeepAliveClientMixin<CardHighlight> {
-  bool isOpen = false;
-  bool isCopying = false;
+  var isOpen = false;
+  var isCopying = false;
 
-  final GlobalKey expanderKey = GlobalKey<ExpanderState>();
+  final expanderKey = GlobalKey<ExpanderState>();
 
   @override
   Widget build(BuildContext context) {

@@ -31,11 +31,11 @@ class Sponsor {
   }
 
   @override
-  String toString() =>
+  toString() =>
       'Sponsor(username: $username, name: $name, imageUrl: $imageUrl)';
 
   @override
-  bool operator ==(Object other) {
+  operator ==(Object other) {
     if (identical(this, other)) return true;
 
     return other is Sponsor &&
@@ -45,5 +45,5 @@ class Sponsor {
   }
 
   @override
-  int get hashCode => username.hashCode ^ name.hashCode ^ imageUrl.hashCode;
+  get hashCode => username.hashCode ^ name.hashCode ^ imageUrl.hashCode;
 }

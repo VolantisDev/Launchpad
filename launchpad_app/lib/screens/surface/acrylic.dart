@@ -28,18 +28,18 @@ class AcrylicPage extends StatefulHookConsumerWidget {
   const AcrylicPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<AcrylicPage> createState() => _AcrylicPageState();
+  createState() => _AcrylicPageState();
 }
 
 class _AcrylicPageState extends ConsumerState<AcrylicPage> with PageMixin {
-  double tintOpacity = 0.8;
-  double luminosityOpacity = 0.8;
-  double blurAmount = 30;
-  double elevation = 0;
+  var tintOpacity = 0.8;
+  var luminosityOpacity = 0.8;
+  var blurAmount = 30.0;
+  var elevation = 0.0;
   Color? color;
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Acrylic')),
       children: [
@@ -196,7 +196,7 @@ class _AcrylicChildren extends StatelessWidget {
   const _AcrylicChildren({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     return Stack(children: [
       Container(
         height: 200,
