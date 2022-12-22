@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/src/routing/routes.dart';
 import 'package:launchpad_app/src/utils/globals.dart';
 import 'package:launchpad_app/src/utils/theme_provider.dart';
+import 'package:protocol_handler/protocol_handler.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
@@ -54,6 +55,10 @@ void main() async {
       await windowManager.setSkipTaskbar(false);
     });
   }
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await protocolHandler.register("launchpad");
 
   CatcherOptions debugOptions =
       CatcherOptions(DialogReportMode(), [ConsoleHandler()]);

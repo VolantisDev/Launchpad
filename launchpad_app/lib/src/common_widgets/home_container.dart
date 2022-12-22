@@ -11,6 +11,7 @@ import 'package:launchpad_app/src/utils/globals.dart';
 import 'package:launchpad_app/src/utils/theme_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:platform_info/platform_info.dart';
+import 'package:protocol_handler/protocol_handler.dart';
 import 'package:updat/updat_window_manager.dart';
 import 'package:url_launcher/link.dart';
 import 'package:window_manager/window_manager.dart';
@@ -27,7 +28,7 @@ class HomeContainer extends StatefulHookConsumerWidget {
 }
 
 class _HomeContainerState extends ConsumerState<HomeContainer>
-    with WindowListener {
+    with WindowListener, ProtocolListener {
   var value = false;
 
   var index = 0;
@@ -120,6 +121,7 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
 
   @override
   dispose() {
+    protocolHandler.removeListener(this);
     windowManager.removeListener(this);
     searchController.dispose();
     searchFocusNode.dispose();
@@ -128,6 +130,7 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
 
   @override
   initState() {
+    protocolHandler.addListener(this);
     windowManager.addListener(this);
     WidgetsFlutterBinding.ensureInitialized();
     super.initState();
@@ -135,6 +138,11 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
 
   Future<PackageInfo> _getPackageInfo() {
     return PackageInfo.fromPlatform();
+  }
+
+  @override
+  void onProtocolUrlReceived(String url) {
+    // TODO Handle protocol response
   }
 
   @override
