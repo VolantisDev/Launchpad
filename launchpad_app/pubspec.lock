@@ -1806,6 +1806,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.8"
+  windows_single_instance:
+    dependency: "direct main"
+    description:
+      name: windows_single_instance
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.5"
   xdg_directories:
     dependency: transitive
     description:

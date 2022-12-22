@@ -11,6 +11,7 @@ import 'package:protocol_handler/protocol_handler.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:windows_single_instance/windows_single_instance.dart';
 
 final _router =
     GoRouter(routes: $appRoutes, navigatorKey: Catcher.navigatorKey);
@@ -25,8 +26,33 @@ bool get isDesktop {
   ].contains(defaultTargetPlatform);
 }
 
-void main() async {
+bool get isWindows {
+  if (kIsWeb) return false;
+  return (defaultTargetPlatform == TargetPlatform.windows);
+}
+
+void navigateFromArgs(List<String> args) {
+  String? path;
+
+  for (var arg in args) {
+    const prefix = "launchpad://";
+
+    if (arg.startsWith(prefix)) {
+      path = arg.replaceFirst(prefix, "/");
+
+      break;
+    }
+  }
+
+  if (path != null && path.isNotEmpty) {
+    _router.go(path);
+  }
+}
+
+void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await protocolHandler.register("launchpad");
 
   // if it's not on the web, windows or android, load the accent color
   if (!kIsWeb &&
@@ -40,6 +66,11 @@ void main() async {
   setPathUrlStrategy();
 
   if (isDesktop) {
+    await WindowsSingleInstance.ensureSingleInstance(
+        args, "com.volantisdev.launchpad", onSecondWindow: (args) {
+      navigateFromArgs(args);
+    });
+
     await flutter_acrylic.Window.initialize();
     await WindowManager.instance.ensureInitialized();
     windowManager.waitUntilReadyToShow().then((_) async {
@@ -55,10 +86,6 @@ void main() async {
       await windowManager.setSkipTaskbar(false);
     });
   }
-
-  WidgetsFlutterBinding.ensureInitialized();
-
-  await protocolHandler.register("launchpad");
 
   CatcherOptions debugOptions =
       CatcherOptions(DialogReportMode(), [ConsoleHandler()]);

@@ -109,6 +109,7 @@ dependencies:
   window_manager: ^0.2.7
   xml: ^6.1.0
   yaml: ^3.1.1
+  windows_single_instance: ^0.1.5
 
 dependency_overrides:
   firebase_core_platform_interface: 4.5.1
