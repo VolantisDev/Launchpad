@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:launchpad_app/src/common_widgets/home_container.dart';
+import 'package:launchpad_app/src/features/main_window/presentation/home_container.dart';
 
 part 'routes.g.dart';
 

@@ -54,6 +54,13 @@ void main(List<String> args) async {
 
   await protocolHandler.register("launchpad");
 
+  if (isWindows) {
+    await WindowsSingleInstance.ensureSingleInstance(
+        args, "com.volantisdev.launchpad", onSecondWindow: (args) {
+      navigateFromArgs(args);
+    });
+  }
+
   // if it's not on the web, windows or android, load the accent color
   if (!kIsWeb &&
       [
@@ -66,11 +73,6 @@ void main(List<String> args) async {
   setPathUrlStrategy();
 
   if (isDesktop) {
-    await WindowsSingleInstance.ensureSingleInstance(
-        args, "com.volantisdev.launchpad", onSecondWindow: (args) {
-      navigateFromArgs(args);
-    });
-
     await flutter_acrylic.Window.initialize();
     await WindowManager.instance.ensureInitialized();
     windowManager.waitUntilReadyToShow().then((_) async {

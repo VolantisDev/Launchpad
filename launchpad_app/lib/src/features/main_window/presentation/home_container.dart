@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/gen/assets.gen.dart';
 import 'package:launchpad_app/src/features/dashboard/presentation/dashboard.dart';
+import 'package:launchpad_app/src/features/main_window/presentation/main_drop_target.dart';
 import 'package:launchpad_app/src/utils/globals.dart';
 import 'package:launchpad_app/src/utils/theme_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -16,9 +17,9 @@ import 'package:updat/updat_window_manager.dart';
 import 'package:url_launcher/link.dart';
 import 'package:window_manager/window_manager.dart';
 
-import '../features/settings/presentation/settings.dart';
+import '../../settings/presentation/settings.dart';
 
-import '../utils/theme.dart';
+import '../../../utils/theme.dart';
 
 class HomeContainer extends StatefulHookConsumerWidget {
   const HomeContainer({Key? key}) : super(key: key);
@@ -182,7 +183,8 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
                   ));
                   return jsonDecode(data.body)["body"];
                 },
-                child: NavigationView(
+                child: MainDropTarget(
+                    child: NavigationView(
                   key: viewKey,
                   appBar: NavigationAppBar(
                     automaticallyImplyLeading: false,
@@ -274,7 +276,7 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
                   onOpenSearch: () {
                     searchFocusNode.requestFocus();
                   },
-                ));
+                )));
           }
         });
   }
