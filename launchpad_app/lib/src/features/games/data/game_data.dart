@@ -1,12 +1,18 @@
 import 'package:isar/isar.dart';
 
-part 'launcher.g.dart';
+part 'game_data.g.dart';
 
 @collection
-class Launcher {
+class GameData {
   Id? id = Isar.autoIncrement;
 
   String? key;
 
   String? name;
+
+  String? platformId;
+
+  String? installDir;
+
+  String? exeFile;
 }
