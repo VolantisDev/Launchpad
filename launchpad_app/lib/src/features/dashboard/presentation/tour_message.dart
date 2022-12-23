@@ -38,7 +38,6 @@ class _TourMessage extends ConsumerState<TourMessage> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 11.0),
                     const Text(
                         'Welcome to Launchpad! Would you like a quick tour to help get up to speed?'),
                     const SizedBox(height: 10.0),
@@ -46,7 +45,7 @@ class _TourMessage extends ConsumerState<TourMessage> {
                       children: [
                         FilledButton(
                           onPressed: () => Intro.of(context).start(),
-                          child: const Text("Let's go!"),
+                          child: const Text("Let's go"),
                         ),
                         const SizedBox(width: 10.0),
                         Button(

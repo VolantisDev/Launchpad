@@ -1,15 +1,12 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_intro/flutter_intro.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/src/features/dashboard/presentation/contributors.dart';
 import 'package:launchpad_app/src/features/dashboard/presentation/sponsors.dart';
 import 'package:launchpad_app/src/features/dashboard/presentation/tour_message.dart';
 import 'package:launchpad_app/src/features/dashboard/presentation/updated_message.dart';
 import 'package:launchpad_app/src/utils/heading.dart';
-import 'package:once/once.dart';
 import 'package:state_persistence/state_persistence.dart';
 
-import 'changelog.dart';
 import '../../../common_widgets/page.dart';
 
 class DashboardPage extends StatefulHookConsumerWidget {
