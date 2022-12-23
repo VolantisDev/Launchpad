@@ -23,7 +23,6 @@ dependencies:
   dartx: ^1.1.0
   desktop_drop: ^0.4.0
   device_info_plus: ^7.0.1
-  drift: ^2.3.0
   dropdown_search: ^5.0.5
   easy_localization: ^3.0.1
   email_validator: ^2.0.1
@@ -114,6 +113,9 @@ dependencies:
   windows_single_instance: ^0.1.5
   xml: ^6.1.0
   yaml: ^3.1.1
+  flutter_intro: ^3.0.2
+  state_persistence: ^0.1.0
+  hive: ^2.2.3
 
 dependency_overrides:
   firebase_core_platform_interface: 4.5.1
