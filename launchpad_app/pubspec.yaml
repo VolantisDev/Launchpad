@@ -76,7 +76,6 @@ dependencies:
   logger: ^1.1.0
   mime: ^1.0.3
   msix: ^3.7.0
-  native_context_menu: ^0.2.2+5
   network_info_plus: ^3.0.1
   nil: ^1.1.1
   number_display: ^3.0.0
@@ -117,6 +116,13 @@ dependencies:
   state_persistence: ^0.1.0
   hive: ^2.2.3
   flutter_improved_scrolling: ^0.0.3
+  win32_registry: ^1.0.2
+  screen_retriever: ^0.1.4
+  clipboard_watcher: ^0.1.2
+  contextual_menu: ^0.1.2
+  screen_capturer: ^0.1.3
+  screen_text_extractor: ^0.1.2
+  app_links: ^3.4.1
 
 dependency_overrides:
   firebase_core_platform_interface: 4.5.1

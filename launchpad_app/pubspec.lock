@@ -43,6 +43,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  app_links:
+    dependency: "direct main"
+    description:
+      name: app_links
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.4.1"
+  app_links_platform_interface:
+    dependency: transitive
+    description:
+      name: app_links_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   archive:
     dependency: "direct main"
     description:
@@ -197,6 +211,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.3"
+  clipboard_watcher:
+    dependency: "direct main"
+    description:
+      name: clipboard_watcher
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   clock:
     dependency: transitive
     description:
@@ -246,6 +267,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.1.0"
+  contextual_menu:
+    dependency: "direct main"
+    description:
+      name: contextual_menu
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   convert:
     dependency: transitive
     description:
@@ -1122,13 +1150,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
-  native_context_menu:
-    dependency: "direct main"
-    description:
-      name: native_context_menu
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.2+5"
   network_info_plus:
     dependency: "direct main"
     description:
@@ -1423,13 +1444,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.27.7"
+  screen_capturer:
+    dependency: "direct main"
+    description:
+      name: screen_capturer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.3"
   screen_retriever:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: screen_retriever
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.4"
+  screen_text_extractor:
+    dependency: "direct main"
+    description:
+      name: screen_text_extractor
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   scroll_pos:
     dependency: transitive
     description:
@@ -1835,7 +1870,7 @@ packages:
     source: hosted
     version: "3.1.3"
   win32_registry:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: win32_registry
       url: "https://pub.dartlang.org"
