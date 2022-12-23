@@ -1,10 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_improved_scrolling/flutter_improved_scrolling.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:launchpad_app/src/features/dashboard/presentation/contributors.dart';
-import 'package:launchpad_app/src/features/dashboard/presentation/sponsors.dart';
-import 'package:launchpad_app/src/features/dashboard/presentation/tour_message.dart';
-import 'package:launchpad_app/src/features/dashboard/presentation/updated_message.dart';
 import 'package:state_persistence/state_persistence.dart';
 
 import '../../../common_widgets/page.dart';
@@ -105,8 +101,6 @@ class _AllGamesState extends ConsumerState<AllGamesPage> with PageMixin {
                       ],
                     );
                   }),
-                  const SizedBox(height: 22.0),
-                  const Contributors(),
                 ],
               )));
     });
