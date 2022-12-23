@@ -15,6 +15,16 @@ class LaunchConfigData {
   String? platformId;
 
   List<LaunchConfigValue>? values;
+
+  Map<String, Object?> toConfigMap(List<LaunchConfigValue> values) {
+    var configMap = <String, Object?>{};
+
+    for (var value in values) {
+      configMap[value.key!] = value;
+    }
+
+    return configMap;
+  }
 }
 
 @embedded

@@ -22,24 +22,34 @@ const GameDataSchema = CollectionSchema(
       name: r'exeFile',
       type: IsarType.string,
     ),
-    r'installDir': PropertySchema(
+    r'iconPath': PropertySchema(
       id: 1,
+      name: r'iconPath',
+      type: IsarType.string,
+    ),
+    r'iconType': PropertySchema(
+      id: 2,
+      name: r'iconType',
+      type: IsarType.string,
+    ),
+    r'installDir': PropertySchema(
+      id: 3,
       name: r'installDir',
       type: IsarType.string,
     ),
     r'key': PropertySchema(
-      id: 2,
+      id: 4,
       name: r'key',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'name',
       type: IsarType.string,
     ),
-    r'platformId': PropertySchema(
-      id: 4,
-      name: r'platformId',
+    r'platformRef': PropertySchema(
+      id: 6,
+      name: r'platformRef',
       type: IsarType.string,
     )
   },
@@ -49,7 +59,26 @@ const GameDataSchema = CollectionSchema(
   deserializeProp: _gameDataDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'gamePlatform': LinkSchema(
+      id: -6693473593046117857,
+      name: r'gamePlatform',
+      target: r'GamePlatformData',
+      single: true,
+    ),
+    r'launchConfig': LinkSchema(
+      id: 6684939833935828972,
+      name: r'launchConfig',
+      target: r'LaunchConfigData',
+      single: true,
+    ),
+    r'launchProcesses': LinkSchema(
+      id: -8678547302105873528,
+      name: r'launchProcesses',
+      target: r'LaunchProcessData',
+      single: false,
+    )
+  },
   embeddedSchemas: {},
   getId: _gameDataGetId,
   getLinks: _gameDataGetLinks,
@@ -65,6 +94,18 @@ int _gameDataEstimateSize(
   var bytesCount = offsets.last;
   {
     final value = object.exeFile;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.iconPath;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.iconType;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
@@ -88,7 +129,7 @@ int _gameDataEstimateSize(
     }
   }
   {
-    final value = object.platformId;
+    final value = object.platformRef;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
@@ -103,10 +144,12 @@ void _gameDataSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.exeFile);
-  writer.writeString(offsets[1], object.installDir);
-  writer.writeString(offsets[2], object.key);
-  writer.writeString(offsets[3], object.name);
-  writer.writeString(offsets[4], object.platformId);
+  writer.writeString(offsets[1], object.iconPath);
+  writer.writeString(offsets[2], object.iconType);
+  writer.writeString(offsets[3], object.installDir);
+  writer.writeString(offsets[4], object.key);
+  writer.writeString(offsets[5], object.name);
+  writer.writeString(offsets[6], object.platformRef);
 }
 
 GameData _gameDataDeserialize(
@@ -117,11 +160,13 @@ GameData _gameDataDeserialize(
 ) {
   final object = GameData();
   object.exeFile = reader.readStringOrNull(offsets[0]);
+  object.iconPath = reader.readStringOrNull(offsets[1]);
+  object.iconType = reader.readStringOrNull(offsets[2]);
   object.id = id;
-  object.installDir = reader.readStringOrNull(offsets[1]);
-  object.key = reader.readStringOrNull(offsets[2]);
-  object.name = reader.readStringOrNull(offsets[3]);
-  object.platformId = reader.readStringOrNull(offsets[4]);
+  object.installDir = reader.readStringOrNull(offsets[3]);
+  object.key = reader.readStringOrNull(offsets[4]);
+  object.name = reader.readStringOrNull(offsets[5]);
+  object.platformRef = reader.readStringOrNull(offsets[6]);
   return object;
 }
 
@@ -142,6 +187,10 @@ P _gameDataDeserializeProp<P>(
       return (reader.readStringOrNull(offset)) as P;
     case 4:
       return (reader.readStringOrNull(offset)) as P;
+    case 5:
+      return (reader.readStringOrNull(offset)) as P;
+    case 6:
+      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -152,11 +201,17 @@ Id _gameDataGetId(GameData object) {
 }
 
 List<IsarLinkBase<dynamic>> _gameDataGetLinks(GameData object) {
-  return [];
+  return [object.gamePlatform, object.launchConfig, object.launchProcesses];
 }
 
 void _gameDataAttach(IsarCollection<dynamic> col, Id id, GameData object) {
   object.id = id;
+  object.gamePlatform.attach(
+      col, col.isar.collection<GamePlatformData>(), r'gamePlatform', id);
+  object.launchConfig.attach(
+      col, col.isar.collection<LaunchConfigData>(), r'launchConfig', id);
+  object.launchProcesses.attach(
+      col, col.isar.collection<LaunchProcessData>(), r'launchProcesses', id);
 }
 
 extension GameDataQueryWhereSort on QueryBuilder<GameData, GameData, QWhere> {
@@ -377,6 +432,298 @@ extension GameDataQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'exeFile',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconPathIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'iconPath',
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconPathIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'iconPath',
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconPathEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'iconPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconPathGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'iconPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconPathLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'iconPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconPathBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'iconPath',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconPathStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'iconPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconPathEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'iconPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconPathContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'iconPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconPathMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'iconPath',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconPathIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'iconPath',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconPathIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'iconPath',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconTypeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'iconType',
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconTypeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'iconType',
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconTypeEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'iconType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconTypeGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'iconType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconTypeLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'iconType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconTypeBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'iconType',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconTypeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'iconType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconTypeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'iconType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconTypeContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'iconType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconTypeMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'iconType',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconTypeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'iconType',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> iconTypeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'iconType',
         value: '',
       ));
     });
@@ -890,37 +1237,38 @@ extension GameDataQueryFilter
     });
   }
 
-  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdIsNull() {
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformRefIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'platformId',
+        property: r'platformRef',
       ));
     });
   }
 
   QueryBuilder<GameData, GameData, QAfterFilterCondition>
-      platformIdIsNotNull() {
+      platformRefIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'platformId',
+        property: r'platformRef',
       ));
     });
   }
 
-  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdEqualTo(
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformRefEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'platformId',
+        property: r'platformRef',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdGreaterThan(
+  QueryBuilder<GameData, GameData, QAfterFilterCondition>
+      platformRefGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -928,14 +1276,14 @@ extension GameDataQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'platformId',
+        property: r'platformRef',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdLessThan(
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformRefLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -943,14 +1291,14 @@ extension GameDataQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'platformId',
+        property: r'platformRef',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdBetween(
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformRefBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -959,7 +1307,7 @@ extension GameDataQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'platformId',
+        property: r'platformRef',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -969,70 +1317,70 @@ extension GameDataQueryFilter
     });
   }
 
-  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdStartsWith(
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformRefStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'platformId',
+        property: r'platformRef',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdEndsWith(
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformRefEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'platformId',
+        property: r'platformRef',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdContains(
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformRefContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'platformId',
+        property: r'platformRef',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdMatches(
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformRefMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'platformId',
+        property: r'platformRef',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdIsEmpty() {
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformRefIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'platformId',
+        property: r'platformRef',
         value: '',
       ));
     });
   }
 
   QueryBuilder<GameData, GameData, QAfterFilterCondition>
-      platformIdIsNotEmpty() {
+      platformRefIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'platformId',
+        property: r'platformRef',
         value: '',
       ));
     });
@@ -1043,7 +1391,95 @@ extension GameDataQueryObject
     on QueryBuilder<GameData, GameData, QFilterCondition> {}
 
 extension GameDataQueryLinks
-    on QueryBuilder<GameData, GameData, QFilterCondition> {}
+    on QueryBuilder<GameData, GameData, QFilterCondition> {
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> gamePlatform(
+      FilterQuery<GamePlatformData> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'gamePlatform');
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> gamePlatformIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'gamePlatform', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> launchConfig(
+      FilterQuery<LaunchConfigData> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'launchConfig');
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> launchConfigIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'launchConfig', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> launchProcesses(
+      FilterQuery<LaunchProcessData> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'launchProcesses');
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition>
+      launchProcessesLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'launchProcesses', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition>
+      launchProcessesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'launchProcesses', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition>
+      launchProcessesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'launchProcesses', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition>
+      launchProcessesLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'launchProcesses', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition>
+      launchProcessesLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'launchProcesses', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition>
+      launchProcessesLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'launchProcesses', lower, includeLower, upper, includeUpper);
+    });
+  }
+}
 
 extension GameDataQuerySortBy on QueryBuilder<GameData, GameData, QSortBy> {
   QueryBuilder<GameData, GameData, QAfterSortBy> sortByExeFile() {
@@ -1055,6 +1491,30 @@ extension GameDataQuerySortBy on QueryBuilder<GameData, GameData, QSortBy> {
   QueryBuilder<GameData, GameData, QAfterSortBy> sortByExeFileDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'exeFile', Sort.desc);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterSortBy> sortByIconPath() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconPath', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterSortBy> sortByIconPathDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconPath', Sort.desc);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterSortBy> sortByIconType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconType', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterSortBy> sortByIconTypeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconType', Sort.desc);
     });
   }
 
@@ -1094,15 +1554,15 @@ extension GameDataQuerySortBy on QueryBuilder<GameData, GameData, QSortBy> {
     });
   }
 
-  QueryBuilder<GameData, GameData, QAfterSortBy> sortByPlatformId() {
+  QueryBuilder<GameData, GameData, QAfterSortBy> sortByPlatformRef() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'platformId', Sort.asc);
+      return query.addSortBy(r'platformRef', Sort.asc);
     });
   }
 
-  QueryBuilder<GameData, GameData, QAfterSortBy> sortByPlatformIdDesc() {
+  QueryBuilder<GameData, GameData, QAfterSortBy> sortByPlatformRefDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'platformId', Sort.desc);
+      return query.addSortBy(r'platformRef', Sort.desc);
     });
   }
 }
@@ -1118,6 +1578,30 @@ extension GameDataQuerySortThenBy
   QueryBuilder<GameData, GameData, QAfterSortBy> thenByExeFileDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'exeFile', Sort.desc);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterSortBy> thenByIconPath() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconPath', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterSortBy> thenByIconPathDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconPath', Sort.desc);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterSortBy> thenByIconType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconType', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterSortBy> thenByIconTypeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconType', Sort.desc);
     });
   }
 
@@ -1169,15 +1653,15 @@ extension GameDataQuerySortThenBy
     });
   }
 
-  QueryBuilder<GameData, GameData, QAfterSortBy> thenByPlatformId() {
+  QueryBuilder<GameData, GameData, QAfterSortBy> thenByPlatformRef() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'platformId', Sort.asc);
+      return query.addSortBy(r'platformRef', Sort.asc);
     });
   }
 
-  QueryBuilder<GameData, GameData, QAfterSortBy> thenByPlatformIdDesc() {
+  QueryBuilder<GameData, GameData, QAfterSortBy> thenByPlatformRefDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'platformId', Sort.desc);
+      return query.addSortBy(r'platformRef', Sort.desc);
     });
   }
 }
@@ -1188,6 +1672,20 @@ extension GameDataQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'exeFile', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QDistinct> distinctByIconPath(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'iconPath', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QDistinct> distinctByIconType(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'iconType', caseSensitive: caseSensitive);
     });
   }
 
@@ -1212,10 +1710,10 @@ extension GameDataQueryWhereDistinct
     });
   }
 
-  QueryBuilder<GameData, GameData, QDistinct> distinctByPlatformId(
+  QueryBuilder<GameData, GameData, QDistinct> distinctByPlatformRef(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'platformId', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'platformRef', caseSensitive: caseSensitive);
     });
   }
 }
@@ -1231,6 +1729,18 @@ extension GameDataQueryProperty
   QueryBuilder<GameData, String?, QQueryOperations> exeFileProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'exeFile');
+    });
+  }
+
+  QueryBuilder<GameData, String?, QQueryOperations> iconPathProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'iconPath');
+    });
+  }
+
+  QueryBuilder<GameData, String?, QQueryOperations> iconTypeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'iconType');
     });
   }
 
@@ -1252,9 +1762,9 @@ extension GameDataQueryProperty
     });
   }
 
-  QueryBuilder<GameData, String?, QQueryOperations> platformIdProperty() {
+  QueryBuilder<GameData, String?, QQueryOperations> platformRefProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'platformId');
+      return query.addPropertyName(r'platformRef');
     });
   }
 }
