@@ -114,6 +114,11 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
       title: const Text('Settings'),
       body: Settings(),
     ),
+    PaneItem(
+      icon: const Icon(FluentIcons.help),
+      title: const Text('Help'),
+      body: const Text('To be replaced with a page widget.'),
+    ),
     _LinkPaneItemAction(
       icon: const Icon(FluentIcons.open_source),
       title: const Text('Source code'),
