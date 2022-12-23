@@ -39,8 +39,8 @@ class _DashboardState extends ConsumerState<DashboardPage> with PageMixin {
           title: Text(appHeading),
         ),
         children: [
+          const UpdatedMessage(),
           TourMessage(key: GlobalKey()),
-          UpdatedMessage(),
           const Sponsors(),
           const SizedBox(height: 22.0),
           const Contributors(),

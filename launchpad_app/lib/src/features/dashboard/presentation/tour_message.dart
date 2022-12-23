@@ -38,7 +38,7 @@ class _TourMessage extends ConsumerState<TourMessage> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 22.0),
+                    const SizedBox(height: 11.0),
                     const Text(
                         'Welcome to Launchpad! Would you like a quick tour to help get up to speed?'),
                     const SizedBox(height: 10.0),
@@ -56,7 +56,7 @@ class _TourMessage extends ConsumerState<TourMessage> {
                         )
                       ],
                     ),
-                    const SizedBox(height: 66.0),
+                    const SizedBox(height: 44.0),
                   ]));
         } else {
           return const SizedBox.shrink();
