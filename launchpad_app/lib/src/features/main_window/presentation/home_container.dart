@@ -13,6 +13,7 @@ import 'package:launchpad_app/src/utils/theme_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:platform_info/platform_info.dart';
 import 'package:protocol_handler/protocol_handler.dart';
+import 'package:state_persistence/state_persistence.dart';
 import 'package:updat/updat_window_manager.dart';
 import 'package:url_launcher/link.dart';
 import 'package:window_manager/window_manager.dart';
@@ -46,7 +47,7 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
       title: const Text('Dashboard'),
       body: const DashboardPage(),
     ),
-    PaneItemHeader(header: const Icon(FluentIcons.game)),
+    PaneItemHeader(header: const Text("Games")),
     // TODO Add links to the most recent 5 games edited, launched, or built
     PaneItem(
       icon: const Icon(FluentIcons.game),
@@ -63,7 +64,7 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
       title: const Text('Find Installed Games'),
       body: const Text('To be replaced with a page widget.'),
     ),
-    PaneItemHeader(header: const Icon(FluentIcons.library)),
+    PaneItemHeader(header: const Text("Game Platforms")),
     // TODO Add links to all enabled and installed game platforms here
     PaneItem(
       icon: const Icon(FluentIcons.library),
@@ -81,18 +82,18 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
     //   title: const Text('Add Backup'),
     //   body: const Text('.'),
     // ),
-    PaneItemHeader(header: const Icon(FluentIcons.accounts)),
-    // TODO Add links to all enabled web services here
-    PaneItem(
-      icon: const Icon(FluentIcons.globe),
-      title: const Text('All Web Services'),
-      body: const Text('Show manage list for platform entities.'),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.o_d_link),
-      title: const Text('Add Web Service'),
-      body: const Text('.'),
-    ),
+    // PaneItemHeader(header: const Text("Web Services")),
+    // // TODO Add links to all enabled web services here
+    // PaneItem(
+    //   icon: const Icon(FluentIcons.globe),
+    //   title: const Text('All Web Services'),
+    //   body: const Text('Show manage list for platform entities.'),
+    // ),
+    // PaneItem(
+    //   icon: const Icon(FluentIcons.o_d_link),
+    //   title: const Text('Add Web Service'),
+    //   body: const Text('.'),
+    // ),
     // PaneItemHeader(header: const Icon(FluentIcons.puzzle)),
     // PaneItem(
     //   icon: const Icon(FluentIcons.puzzle),
@@ -134,6 +135,7 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
     protocolHandler.addListener(this);
     windowManager.addListener(this);
     WidgetsFlutterBinding.ensureInitialized();
+
     super.initState();
   }
 

@@ -1,29 +1,29 @@
-/// Current sponsors of Launchpad
-const sponsors = [
-  Sponsor(
+/// Current contributors of Launchpad
+const contributors = [
+  Contributor(
     username: 'bmcclure',
     imageUrl: 'https://avatars.githubusercontent.com/u/277977?v=4',
-    name: 'Sander in \'t Hout',
+    name: 'Ben McClure',
   )
 ];
 
-class Sponsor {
+class Contributor {
   final String? username;
   final String name;
   final String imageUrl;
 
-  const Sponsor({
+  const Contributor({
     required this.username,
     required this.name,
     required this.imageUrl,
   });
 
-  Sponsor copyWith({
+  Contributor copyWith({
     String? username,
     String? name,
     String? imageUrl,
   }) {
-    return Sponsor(
+    return Contributor(
       username: username ?? this.username,
       name: name ?? this.name,
       imageUrl: imageUrl ?? this.imageUrl,
@@ -32,13 +32,13 @@ class Sponsor {
 
   @override
   toString() =>
-      'Sponsor(username: $username, name: $name, imageUrl: $imageUrl)';
+      'Contributor(username: $username, name: $name, imageUrl: $imageUrl)';
 
   @override
   operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Sponsor &&
+    return other is Contributor &&
         other.username == username &&
         other.name == name &&
         other.imageUrl == imageUrl;

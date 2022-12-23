@@ -2,8 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/link.dart';
 
-class SponsorDialog extends HookConsumerWidget {
-  const SponsorDialog({Key? key}) : super(key: key);
+class ContributorDialog extends HookConsumerWidget {
+  const ContributorDialog({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -13,9 +13,9 @@ class SponsorDialog extends HookConsumerWidget {
       constraints: const BoxConstraints(maxWidth: 600),
       title: Row(
         children: [
-          const Icon(FluentIcons.diamond_user, size: 24.0),
+          const Icon(FluentIcons.rocket, size: 24.0),
           const SizedBox(width: 8.0),
-          const Expanded(child: Text('Benefits')),
+          const Expanded(child: Text('Help Make it Happen')),
           SmallIconButton(
             child: Tooltip(
               message: FluentLocalizations.of(context).closeButtonLabel,
@@ -27,44 +27,15 @@ class SponsorDialog extends HookConsumerWidget {
           ),
         ],
       ),
-      content: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Expanded(
-            child: _Tier(
-              name: 'Royal Secretary',
-              price: r'US$6 per month',
-              benefits: [
-                'General support',
-                'Priority on issues fix',
-                'Sponsor role on Discord',
-                'Be the first to know when a new update rolls out',
-              ],
-            ),
-          ),
-          SizedBox(width: 10.0),
-          Expanded(
-            child: _Tier(
-              name: 'Royal Executor',
-              price: r'US$15 per month',
-              benefits: [
-                'General support',
-                'Priority on issues fix',
-                'Sponsor role on Discord',
-                'Showcasing in the "Sponsors" section',
-                'Be the first to know when a new update rolls out',
-                'Private channel on Discord with dedicated help',
-              ],
-            ),
-          )
-        ],
-      ),
+      content: const Text(
+          "Launchpad is free software, and creating it takes a lot of work. If you'd like to help out, you can contribute to the project on GitHub."),
       actions: [
         Link(
-          uri: Uri.parse('https://www.patreon.com/bdlukaa'),
+          uri: Uri.parse(
+              'https://github.com/VolantisDev/Launchpad/blob/master/CONTRIBUTING.md'),
           builder: (context, open) => FilledButton(
             onPressed: open,
-            child: const Text('Become a Sponsor'),
+            child: const Text('Contribute to Launchpad'),
           ),
         ),
       ],
