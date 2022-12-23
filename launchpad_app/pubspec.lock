@@ -601,6 +601,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.18.5+1"
+  flutter_improved_scrolling:
+    dependency: "direct main"
+    description:
+      name: flutter_improved_scrolling
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
   flutter_intro:
     dependency: "direct main"
     description:
