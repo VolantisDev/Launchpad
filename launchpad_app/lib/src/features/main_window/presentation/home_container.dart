@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/gen/assets.gen.dart';
 import 'package:launchpad_app/src/features/dashboard/presentation/dashboard.dart';
+import 'package:launchpad_app/src/features/games/presentation/all_games.dart';
 import 'package:launchpad_app/src/features/main_window/presentation/main_drop_target.dart';
 import 'package:launchpad_app/src/utils/globals.dart';
 import 'package:launchpad_app/src/utils/theme_provider.dart';
@@ -52,7 +53,7 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
     PaneItem(
       icon: const Icon(FluentIcons.game),
       title: const Text('All Games'),
-      body: const Text('To be replaced with a page widget.'),
+      body: const AllGamesPage(),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.add),
