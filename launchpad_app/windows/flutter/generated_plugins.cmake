@@ -3,7 +3,10 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  app_links
   catcher
+  clipboard_watcher
+  contextual_menu
   desktop_drop
   desktop_webview_auth
   file_selector_windows
@@ -12,10 +15,11 @@ list(APPEND FLUTTER_PLUGIN_LIST
   isar_flutter_libs
   local_auth_windows
   local_notifier
-  native_context_menu
   network_info_plus
   protocol_handler
+  screen_capturer
   screen_retriever
+  screen_text_extractor
   system_theme
   tray_manager
   url_launcher_windows

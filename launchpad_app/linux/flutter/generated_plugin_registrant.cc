@@ -7,14 +7,16 @@
 #include "generated_plugin_registrant.h"
 
 #include <catcher/catcher_plugin.h>
+#include <clipboard_watcher/clipboard_watcher_plugin.h>
+#include <contextual_menu/contextual_menu_plugin.h>
 #include <desktop_drop/desktop_drop_plugin.h>
 #include <desktop_webview_auth/desktop_webview_auth_plugin.h>
 #include <flutter_acrylic/flutter_acrylic_plugin.h>
 #include <hotkey_manager/hotkey_manager_plugin.h>
 #include <isar_flutter_libs/isar_flutter_libs_plugin.h>
 #include <local_notifier/local_notifier_plugin.h>
-#include <native_context_menu/native_context_menu_plugin.h>
 #include <screen_retriever/screen_retriever_plugin.h>
+#include <screen_text_extractor/screen_text_extractor_plugin.h>
 #include <tray_manager/tray_manager_plugin.h>
 #include <url_launcher_linux/url_launcher_plugin.h>
 #include <window_manager/window_manager_plugin.h>
@@ -23,6 +25,12 @@ void fl_register_plugins(FlPluginRegistry* registry) {
   g_autoptr(FlPluginRegistrar) catcher_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "CatcherPlugin");
   catcher_plugin_register_with_registrar(catcher_registrar);
+  g_autoptr(FlPluginRegistrar) clipboard_watcher_registrar =
+      fl_plugin_registry_get_registrar_for_plugin(registry, "ClipboardWatcherPlugin");
+  clipboard_watcher_plugin_register_with_registrar(clipboard_watcher_registrar);
+  g_autoptr(FlPluginRegistrar) contextual_menu_registrar =
+      fl_plugin_registry_get_registrar_for_plugin(registry, "ContextualMenuPlugin");
+  contextual_menu_plugin_register_with_registrar(contextual_menu_registrar);
   g_autoptr(FlPluginRegistrar) desktop_drop_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "DesktopDropPlugin");
   desktop_drop_plugin_register_with_registrar(desktop_drop_registrar);
@@ -41,12 +49,12 @@ void fl_register_plugins(FlPluginRegistry* registry) {
   g_autoptr(FlPluginRegistrar) local_notifier_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "LocalNotifierPlugin");
   local_notifier_plugin_register_with_registrar(local_notifier_registrar);
-  g_autoptr(FlPluginRegistrar) native_context_menu_registrar =
-      fl_plugin_registry_get_registrar_for_plugin(registry, "NativeContextMenuPlugin");
-  native_context_menu_plugin_register_with_registrar(native_context_menu_registrar);
   g_autoptr(FlPluginRegistrar) screen_retriever_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "ScreenRetrieverPlugin");
   screen_retriever_plugin_register_with_registrar(screen_retriever_registrar);
+  g_autoptr(FlPluginRegistrar) screen_text_extractor_registrar =
+      fl_plugin_registry_get_registrar_for_plugin(registry, "ScreenTextExtractorPlugin");
+  screen_text_extractor_plugin_register_with_registrar(screen_text_extractor_registrar);
   g_autoptr(FlPluginRegistrar) tray_manager_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "TrayManagerPlugin");
   tray_manager_plugin_register_with_registrar(tray_manager_registrar);

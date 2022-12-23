@@ -4,14 +4,16 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   catcher
+  clipboard_watcher
+  contextual_menu
   desktop_drop
   desktop_webview_auth
   flutter_acrylic
   hotkey_manager
   isar_flutter_libs
   local_notifier
-  native_context_menu
   screen_retriever
+  screen_text_extractor
   tray_manager
   url_launcher_linux
   window_manager
