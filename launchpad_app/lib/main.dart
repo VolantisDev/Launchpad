@@ -10,7 +10,6 @@ import 'package:launchpad_app/src/features/main_window/data/persisted_state_stor
 import 'package:launchpad_app/src/routing/routes.dart';
 import 'package:launchpad_app/src/utils/globals.dart';
 import 'package:launchpad_app/src/utils/theme_provider.dart';
-import 'package:once/once.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:protocol_handler/protocol_handler.dart';
 import 'package:state_persistence/state_persistence.dart';
