@@ -123,6 +123,9 @@ dependencies:
   screen_capturer: ^0.1.3
   screen_text_extractor: ^0.1.2
   app_links: ^3.4.1
+  vdf: ^1.0.2
+  fixnum: ^1.0.1
+  path_provider_windows: ^2.1.3
 
 dependency_overrides:
   firebase_core_platform_interface: 4.5.1

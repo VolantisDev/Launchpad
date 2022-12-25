@@ -22,11 +22,10 @@ GamePlatform _$GamePlatformFromJson(Map<String, dynamic> json) {
 mixin _$GamePlatform {
   String get key => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  String get installDir => throw _privateConstructorUsedError;
-  String get exeFile => throw _privateConstructorUsedError;
-  String get iconPath => throw _privateConstructorUsedError;
-  String get launcherProcessType => throw _privateConstructorUsedError;
-  String get gameProcessType => throw _privateConstructorUsedError;
+  String get platformTypeId => throw _privateConstructorUsedError;
+  String? get installDir => throw _privateConstructorUsedError;
+  String? get exeFile => throw _privateConstructorUsedError;
+  String? get iconPath => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -43,11 +42,10 @@ abstract class $GamePlatformCopyWith<$Res> {
   $Res call(
       {String key,
       String name,
-      String installDir,
-      String exeFile,
-      String iconPath,
-      String launcherProcessType,
-      String gameProcessType});
+      String platformTypeId,
+      String? installDir,
+      String? exeFile,
+      String? iconPath});
 }
 
 /// @nodoc
@@ -65,11 +63,10 @@ class _$GamePlatformCopyWithImpl<$Res, $Val extends GamePlatform>
   $Res call({
     Object? key = null,
     Object? name = null,
-    Object? installDir = null,
-    Object? exeFile = null,
-    Object? iconPath = null,
-    Object? launcherProcessType = null,
-    Object? gameProcessType = null,
+    Object? platformTypeId = null,
+    Object? installDir = freezed,
+    Object? exeFile = freezed,
+    Object? iconPath = freezed,
   }) {
     return _then(_value.copyWith(
       key: null == key
@@ -80,26 +77,22 @@ class _$GamePlatformCopyWithImpl<$Res, $Val extends GamePlatform>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      installDir: null == installDir
+      platformTypeId: null == platformTypeId
+          ? _value.platformTypeId
+          : platformTypeId // ignore: cast_nullable_to_non_nullable
+              as String,
+      installDir: freezed == installDir
           ? _value.installDir
           : installDir // ignore: cast_nullable_to_non_nullable
-              as String,
-      exeFile: null == exeFile
+              as String?,
+      exeFile: freezed == exeFile
           ? _value.exeFile
           : exeFile // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconPath: null == iconPath
+              as String?,
+      iconPath: freezed == iconPath
           ? _value.iconPath
           : iconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      launcherProcessType: null == launcherProcessType
-          ? _value.launcherProcessType
-          : launcherProcessType // ignore: cast_nullable_to_non_nullable
-              as String,
-      gameProcessType: null == gameProcessType
-          ? _value.gameProcessType
-          : gameProcessType // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ) as $Val);
   }
 }
@@ -115,11 +108,10 @@ abstract class _$$_GamePlatformCopyWith<$Res>
   $Res call(
       {String key,
       String name,
-      String installDir,
-      String exeFile,
-      String iconPath,
-      String launcherProcessType,
-      String gameProcessType});
+      String platformTypeId,
+      String? installDir,
+      String? exeFile,
+      String? iconPath});
 }
 
 /// @nodoc
@@ -135,11 +127,10 @@ class __$$_GamePlatformCopyWithImpl<$Res>
   $Res call({
     Object? key = null,
     Object? name = null,
-    Object? installDir = null,
-    Object? exeFile = null,
-    Object? iconPath = null,
-    Object? launcherProcessType = null,
-    Object? gameProcessType = null,
+    Object? platformTypeId = null,
+    Object? installDir = freezed,
+    Object? exeFile = freezed,
+    Object? iconPath = freezed,
   }) {
     return _then(_$_GamePlatform(
       key: null == key
@@ -150,41 +141,37 @@ class __$$_GamePlatformCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      installDir: null == installDir
+      platformTypeId: null == platformTypeId
+          ? _value.platformTypeId
+          : platformTypeId // ignore: cast_nullable_to_non_nullable
+              as String,
+      installDir: freezed == installDir
           ? _value.installDir
           : installDir // ignore: cast_nullable_to_non_nullable
-              as String,
-      exeFile: null == exeFile
+              as String?,
+      exeFile: freezed == exeFile
           ? _value.exeFile
           : exeFile // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconPath: null == iconPath
+              as String?,
+      iconPath: freezed == iconPath
           ? _value.iconPath
           : iconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      launcherProcessType: null == launcherProcessType
-          ? _value.launcherProcessType
-          : launcherProcessType // ignore: cast_nullable_to_non_nullable
-              as String,
-      gameProcessType: null == gameProcessType
-          ? _value.gameProcessType
-          : gameProcessType // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$_GamePlatform with DiagnosticableTreeMixin implements _GamePlatform {
+class _$_GamePlatform extends _GamePlatform with DiagnosticableTreeMixin {
   const _$_GamePlatform(
       {required this.key,
       required this.name,
-      required this.installDir,
-      required this.exeFile,
-      required this.iconPath,
-      required this.launcherProcessType,
-      required this.gameProcessType});
+      required this.platformTypeId,
+      this.installDir,
+      this.exeFile,
+      this.iconPath})
+      : super._();
 
   factory _$_GamePlatform.fromJson(Map<String, dynamic> json) =>
       _$$_GamePlatformFromJson(json);
@@ -194,19 +181,17 @@ class _$_GamePlatform with DiagnosticableTreeMixin implements _GamePlatform {
   @override
   final String name;
   @override
-  final String installDir;
+  final String platformTypeId;
   @override
-  final String exeFile;
+  final String? installDir;
   @override
-  final String iconPath;
+  final String? exeFile;
   @override
-  final String launcherProcessType;
-  @override
-  final String gameProcessType;
+  final String? iconPath;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'GamePlatform(key: $key, name: $name, installDir: $installDir, exeFile: $exeFile, iconPath: $iconPath, launcherProcessType: $launcherProcessType, gameProcessType: $gameProcessType)';
+    return 'GamePlatform(key: $key, name: $name, platformTypeId: $platformTypeId, installDir: $installDir, exeFile: $exeFile, iconPath: $iconPath)';
   }
 
   @override
@@ -216,11 +201,10 @@ class _$_GamePlatform with DiagnosticableTreeMixin implements _GamePlatform {
       ..add(DiagnosticsProperty('type', 'GamePlatform'))
       ..add(DiagnosticsProperty('key', key))
       ..add(DiagnosticsProperty('name', name))
+      ..add(DiagnosticsProperty('platformTypeId', platformTypeId))
       ..add(DiagnosticsProperty('installDir', installDir))
       ..add(DiagnosticsProperty('exeFile', exeFile))
-      ..add(DiagnosticsProperty('iconPath', iconPath))
-      ..add(DiagnosticsProperty('launcherProcessType', launcherProcessType))
-      ..add(DiagnosticsProperty('gameProcessType', gameProcessType));
+      ..add(DiagnosticsProperty('iconPath', iconPath));
   }
 
   @override
@@ -230,21 +214,19 @@ class _$_GamePlatform with DiagnosticableTreeMixin implements _GamePlatform {
             other is _$_GamePlatform &&
             (identical(other.key, key) || other.key == key) &&
             (identical(other.name, name) || other.name == name) &&
+            (identical(other.platformTypeId, platformTypeId) ||
+                other.platformTypeId == platformTypeId) &&
             (identical(other.installDir, installDir) ||
                 other.installDir == installDir) &&
             (identical(other.exeFile, exeFile) || other.exeFile == exeFile) &&
             (identical(other.iconPath, iconPath) ||
-                other.iconPath == iconPath) &&
-            (identical(other.launcherProcessType, launcherProcessType) ||
-                other.launcherProcessType == launcherProcessType) &&
-            (identical(other.gameProcessType, gameProcessType) ||
-                other.gameProcessType == gameProcessType));
+                other.iconPath == iconPath));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, key, name, installDir, exeFile,
-      iconPath, launcherProcessType, gameProcessType);
+  int get hashCode => Object.hash(
+      runtimeType, key, name, platformTypeId, installDir, exeFile, iconPath);
 
   @JsonKey(ignore: true)
   @override
@@ -260,15 +242,15 @@ class _$_GamePlatform with DiagnosticableTreeMixin implements _GamePlatform {
   }
 }
 
-abstract class _GamePlatform implements GamePlatform {
+abstract class _GamePlatform extends GamePlatform {
   const factory _GamePlatform(
       {required final String key,
       required final String name,
-      required final String installDir,
-      required final String exeFile,
-      required final String iconPath,
-      required final String launcherProcessType,
-      required final String gameProcessType}) = _$_GamePlatform;
+      required final String platformTypeId,
+      final String? installDir,
+      final String? exeFile,
+      final String? iconPath}) = _$_GamePlatform;
+  const _GamePlatform._() : super._();
 
   factory _GamePlatform.fromJson(Map<String, dynamic> json) =
       _$_GamePlatform.fromJson;
@@ -278,15 +260,13 @@ abstract class _GamePlatform implements GamePlatform {
   @override
   String get name;
   @override
-  String get installDir;
+  String get platformTypeId;
   @override
-  String get exeFile;
+  String? get installDir;
   @override
-  String get iconPath;
+  String? get exeFile;
   @override
-  String get launcherProcessType;
-  @override
-  String get gameProcessType;
+  String? get iconPath;
   @override
   @JsonKey(ignore: true)
   _$$_GamePlatformCopyWith<_$_GamePlatform> get copyWith =>

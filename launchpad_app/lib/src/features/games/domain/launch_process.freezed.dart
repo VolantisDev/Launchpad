@@ -120,9 +120,10 @@ class __$$_LaunchProcessCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_LaunchProcess with DiagnosticableTreeMixin implements _LaunchProcess {
+class _$_LaunchProcess extends _LaunchProcess with DiagnosticableTreeMixin {
   const _$_LaunchProcess(
-      {required this.processType, required this.launchConfig});
+      {required this.processType, required this.launchConfig})
+      : super._();
 
   factory _$_LaunchProcess.fromJson(Map<String, dynamic> json) =>
       _$$_LaunchProcessFromJson(json);
@@ -175,10 +176,11 @@ class _$_LaunchProcess with DiagnosticableTreeMixin implements _LaunchProcess {
   }
 }
 
-abstract class _LaunchProcess implements LaunchProcess {
+abstract class _LaunchProcess extends LaunchProcess {
   const factory _LaunchProcess(
       {required final String processType,
       required final LaunchConfig launchConfig}) = _$_LaunchProcess;
+  const _LaunchProcess._() : super._();
 
   factory _LaunchProcess.fromJson(Map<String, dynamic> json) =
       _$_LaunchProcess.fromJson;

@@ -47,8 +47,13 @@ const GameDataSchema = CollectionSchema(
       name: r'name',
       type: IsarType.string,
     ),
-    r'platformRef': PropertySchema(
+    r'platformId': PropertySchema(
       id: 6,
+      name: r'platformId',
+      type: IsarType.string,
+    ),
+    r'platformRef': PropertySchema(
+      id: 7,
       name: r'platformRef',
       type: IsarType.string,
     )
@@ -60,12 +65,6 @@ const GameDataSchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {
-    r'gamePlatform': LinkSchema(
-      id: -6693473593046117857,
-      name: r'gamePlatform',
-      target: r'GamePlatformData',
-      single: true,
-    ),
     r'launchConfig': LinkSchema(
       id: 6684939833935828972,
       name: r'launchConfig',
@@ -129,6 +128,12 @@ int _gameDataEstimateSize(
     }
   }
   {
+    final value = object.platformId;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.platformRef;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -149,7 +154,8 @@ void _gameDataSerialize(
   writer.writeString(offsets[3], object.installDir);
   writer.writeString(offsets[4], object.key);
   writer.writeString(offsets[5], object.name);
-  writer.writeString(offsets[6], object.platformRef);
+  writer.writeString(offsets[6], object.platformId);
+  writer.writeString(offsets[7], object.platformRef);
 }
 
 GameData _gameDataDeserialize(
@@ -166,7 +172,8 @@ GameData _gameDataDeserialize(
   object.installDir = reader.readStringOrNull(offsets[3]);
   object.key = reader.readStringOrNull(offsets[4]);
   object.name = reader.readStringOrNull(offsets[5]);
-  object.platformRef = reader.readStringOrNull(offsets[6]);
+  object.platformId = reader.readStringOrNull(offsets[6]);
+  object.platformRef = reader.readStringOrNull(offsets[7]);
   return object;
 }
 
@@ -191,6 +198,8 @@ P _gameDataDeserializeProp<P>(
       return (reader.readStringOrNull(offset)) as P;
     case 6:
       return (reader.readStringOrNull(offset)) as P;
+    case 7:
+      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -201,13 +210,11 @@ Id _gameDataGetId(GameData object) {
 }
 
 List<IsarLinkBase<dynamic>> _gameDataGetLinks(GameData object) {
-  return [object.gamePlatform, object.launchConfig, object.launchProcesses];
+  return [object.launchConfig, object.launchProcesses];
 }
 
 void _gameDataAttach(IsarCollection<dynamic> col, Id id, GameData object) {
   object.id = id;
-  object.gamePlatform.attach(
-      col, col.isar.collection<GamePlatformData>(), r'gamePlatform', id);
   object.launchConfig.attach(
       col, col.isar.collection<LaunchConfigData>(), r'launchConfig', id);
   object.launchProcesses.attach(
@@ -1237,6 +1244,154 @@ extension GameDataQueryFilter
     });
   }
 
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'platformId',
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition>
+      platformIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'platformId',
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'platformId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'platformId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'platformId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'platformId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'platformId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'platformId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'platformId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'platformId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition> platformIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'platformId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterFilterCondition>
+      platformIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'platformId',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<GameData, GameData, QAfterFilterCondition> platformRefIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1392,19 +1547,6 @@ extension GameDataQueryObject
 
 extension GameDataQueryLinks
     on QueryBuilder<GameData, GameData, QFilterCondition> {
-  QueryBuilder<GameData, GameData, QAfterFilterCondition> gamePlatform(
-      FilterQuery<GamePlatformData> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'gamePlatform');
-    });
-  }
-
-  QueryBuilder<GameData, GameData, QAfterFilterCondition> gamePlatformIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'gamePlatform', 0, true, 0, true);
-    });
-  }
-
   QueryBuilder<GameData, GameData, QAfterFilterCondition> launchConfig(
       FilterQuery<LaunchConfigData> q) {
     return QueryBuilder.apply(this, (query) {
@@ -1554,6 +1696,18 @@ extension GameDataQuerySortBy on QueryBuilder<GameData, GameData, QSortBy> {
     });
   }
 
+  QueryBuilder<GameData, GameData, QAfterSortBy> sortByPlatformId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'platformId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterSortBy> sortByPlatformIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'platformId', Sort.desc);
+    });
+  }
+
   QueryBuilder<GameData, GameData, QAfterSortBy> sortByPlatformRef() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'platformRef', Sort.asc);
@@ -1653,6 +1807,18 @@ extension GameDataQuerySortThenBy
     });
   }
 
+  QueryBuilder<GameData, GameData, QAfterSortBy> thenByPlatformId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'platformId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GameData, GameData, QAfterSortBy> thenByPlatformIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'platformId', Sort.desc);
+    });
+  }
+
   QueryBuilder<GameData, GameData, QAfterSortBy> thenByPlatformRef() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'platformRef', Sort.asc);
@@ -1710,6 +1876,13 @@ extension GameDataQueryWhereDistinct
     });
   }
 
+  QueryBuilder<GameData, GameData, QDistinct> distinctByPlatformId(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'platformId', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<GameData, GameData, QDistinct> distinctByPlatformRef(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1759,6 +1932,12 @@ extension GameDataQueryProperty
   QueryBuilder<GameData, String?, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<GameData, String?, QQueryOperations> platformIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'platformId');
     });
   }
 

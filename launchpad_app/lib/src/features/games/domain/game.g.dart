@@ -11,9 +11,8 @@ _$_Game _$$_GameFromJson(Map<String, dynamic> json) => _$_Game(
       name: json['name'] as String,
       platformId: json['platformId'] as String,
       installDir: json['installDir'] as String,
-      exeFile: json['exeFile'] as String,
-      launchConfig:
-          LaunchConfig.fromJson(json['launchConfig'] as Map<String, dynamic>),
+      platformRef: json['platformRef'] as String?,
+      exeFile: json['exeFile'] as String?,
     );
 
 Map<String, dynamic> _$$_GameToJson(_$_Game instance) => <String, dynamic>{
@@ -21,6 +20,6 @@ Map<String, dynamic> _$$_GameToJson(_$_Game instance) => <String, dynamic>{
       'name': instance.name,
       'platformId': instance.platformId,
       'installDir': instance.installDir,
+      'platformRef': instance.platformRef,
       'exeFile': instance.exeFile,
-      'launchConfig': instance.launchConfig,
     };

@@ -1,6 +1,5 @@
 import 'package:isar/isar.dart';
 
-import 'game_platform_data.dart';
 import 'launch_config_data.dart';
 import 'launch_process_data.dart';
 
@@ -14,7 +13,7 @@ class GameData {
 
   String? name;
 
-  final gamePlatform = IsarLink<GamePlatformData>();
+  String? platformId;
 
   String? platformRef;
 

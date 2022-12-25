@@ -150,14 +150,15 @@ class __$$_LaunchConfigCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_LaunchConfig with DiagnosticableTreeMixin implements _LaunchConfig {
+class _$_LaunchConfig extends _LaunchConfig with DiagnosticableTreeMixin {
   const _$_LaunchConfig(
       {required this.type,
       required this.gameId,
       required this.gameKey,
       required this.platformId,
       required final Map<String, Object?> values})
-      : _values = values;
+      : _values = values,
+        super._();
 
   factory _$_LaunchConfig.fromJson(Map<String, dynamic> json) =>
       _$$_LaunchConfigFromJson(json);
@@ -227,13 +228,14 @@ class _$_LaunchConfig with DiagnosticableTreeMixin implements _LaunchConfig {
   }
 }
 
-abstract class _LaunchConfig implements LaunchConfig {
+abstract class _LaunchConfig extends LaunchConfig {
   const factory _LaunchConfig(
       {required final String type,
       required final String gameId,
       required final String gameKey,
       required final String platformId,
       required final Map<String, Object?> values}) = _$_LaunchConfig;
+  const _LaunchConfig._() : super._();
 
   factory _LaunchConfig.fromJson(Map<String, dynamic> json) =
       _$_LaunchConfig.fromJson;

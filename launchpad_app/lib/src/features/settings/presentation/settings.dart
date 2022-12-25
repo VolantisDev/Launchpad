@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:launchpad_app/src/features/settings/presentation/sample_data_options.dart';
 import 'package:launchpad_app/src/utils/theme_provider.dart';
 
 import '../../../utils/theme.dart';
@@ -98,6 +99,7 @@ class Settings extends ScrollablePage {
         appTheme.locale ?? Localizations.maybeLocaleOf(context);
 
     return [
+      const SampleDataOptions(),
       Text('Theme mode', style: FluentTheme.of(context).typography.subtitle),
       spacer,
       ...List.generate(ThemeMode.values.length, (index) {

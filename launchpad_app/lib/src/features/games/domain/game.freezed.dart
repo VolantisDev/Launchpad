@@ -24,8 +24,8 @@ mixin _$Game {
   String get name => throw _privateConstructorUsedError;
   String get platformId => throw _privateConstructorUsedError;
   String get installDir => throw _privateConstructorUsedError;
-  String get exeFile => throw _privateConstructorUsedError;
-  LaunchConfig get launchConfig => throw _privateConstructorUsedError;
+  String? get platformRef => throw _privateConstructorUsedError;
+  String? get exeFile => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -42,10 +42,8 @@ abstract class $GameCopyWith<$Res> {
       String name,
       String platformId,
       String installDir,
-      String exeFile,
-      LaunchConfig launchConfig});
-
-  $LaunchConfigCopyWith<$Res> get launchConfig;
+      String? platformRef,
+      String? exeFile});
 }
 
 /// @nodoc
@@ -65,8 +63,8 @@ class _$GameCopyWithImpl<$Res, $Val extends Game>
     Object? name = null,
     Object? platformId = null,
     Object? installDir = null,
-    Object? exeFile = null,
-    Object? launchConfig = null,
+    Object? platformRef = freezed,
+    Object? exeFile = freezed,
   }) {
     return _then(_value.copyWith(
       key: null == key
@@ -85,23 +83,15 @@ class _$GameCopyWithImpl<$Res, $Val extends Game>
           ? _value.installDir
           : installDir // ignore: cast_nullable_to_non_nullable
               as String,
-      exeFile: null == exeFile
+      platformRef: freezed == platformRef
+          ? _value.platformRef
+          : platformRef // ignore: cast_nullable_to_non_nullable
+              as String?,
+      exeFile: freezed == exeFile
           ? _value.exeFile
           : exeFile // ignore: cast_nullable_to_non_nullable
-              as String,
-      launchConfig: null == launchConfig
-          ? _value.launchConfig
-          : launchConfig // ignore: cast_nullable_to_non_nullable
-              as LaunchConfig,
+              as String?,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $LaunchConfigCopyWith<$Res> get launchConfig {
-    return $LaunchConfigCopyWith<$Res>(_value.launchConfig, (value) {
-      return _then(_value.copyWith(launchConfig: value) as $Val);
-    });
   }
 }
 
@@ -116,11 +106,8 @@ abstract class _$$_GameCopyWith<$Res> implements $GameCopyWith<$Res> {
       String name,
       String platformId,
       String installDir,
-      String exeFile,
-      LaunchConfig launchConfig});
-
-  @override
-  $LaunchConfigCopyWith<$Res> get launchConfig;
+      String? platformRef,
+      String? exeFile});
 }
 
 /// @nodoc
@@ -136,8 +123,8 @@ class __$$_GameCopyWithImpl<$Res> extends _$GameCopyWithImpl<$Res, _$_Game>
     Object? name = null,
     Object? platformId = null,
     Object? installDir = null,
-    Object? exeFile = null,
-    Object? launchConfig = null,
+    Object? platformRef = freezed,
+    Object? exeFile = freezed,
   }) {
     return _then(_$_Game(
       key: null == key
@@ -156,28 +143,29 @@ class __$$_GameCopyWithImpl<$Res> extends _$GameCopyWithImpl<$Res, _$_Game>
           ? _value.installDir
           : installDir // ignore: cast_nullable_to_non_nullable
               as String,
-      exeFile: null == exeFile
+      platformRef: freezed == platformRef
+          ? _value.platformRef
+          : platformRef // ignore: cast_nullable_to_non_nullable
+              as String?,
+      exeFile: freezed == exeFile
           ? _value.exeFile
           : exeFile // ignore: cast_nullable_to_non_nullable
-              as String,
-      launchConfig: null == launchConfig
-          ? _value.launchConfig
-          : launchConfig // ignore: cast_nullable_to_non_nullable
-              as LaunchConfig,
+              as String?,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$_Game with DiagnosticableTreeMixin implements _Game {
+class _$_Game extends _Game {
   const _$_Game(
       {required this.key,
       required this.name,
       required this.platformId,
       required this.installDir,
-      required this.exeFile,
-      required this.launchConfig});
+      this.platformRef,
+      this.exeFile})
+      : super._();
 
   factory _$_Game.fromJson(Map<String, dynamic> json) => _$$_GameFromJson(json);
 
@@ -190,26 +178,13 @@ class _$_Game with DiagnosticableTreeMixin implements _Game {
   @override
   final String installDir;
   @override
-  final String exeFile;
+  final String? platformRef;
   @override
-  final LaunchConfig launchConfig;
+  final String? exeFile;
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Game(key: $key, name: $name, platformId: $platformId, installDir: $installDir, exeFile: $exeFile, launchConfig: $launchConfig)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'Game'))
-      ..add(DiagnosticsProperty('key', key))
-      ..add(DiagnosticsProperty('name', name))
-      ..add(DiagnosticsProperty('platformId', platformId))
-      ..add(DiagnosticsProperty('installDir', installDir))
-      ..add(DiagnosticsProperty('exeFile', exeFile))
-      ..add(DiagnosticsProperty('launchConfig', launchConfig));
+  String toString() {
+    return 'Game(key: $key, name: $name, platformId: $platformId, installDir: $installDir, platformRef: $platformRef, exeFile: $exeFile)';
   }
 
   @override
@@ -223,15 +198,15 @@ class _$_Game with DiagnosticableTreeMixin implements _Game {
                 other.platformId == platformId) &&
             (identical(other.installDir, installDir) ||
                 other.installDir == installDir) &&
-            (identical(other.exeFile, exeFile) || other.exeFile == exeFile) &&
-            (identical(other.launchConfig, launchConfig) ||
-                other.launchConfig == launchConfig));
+            (identical(other.platformRef, platformRef) ||
+                other.platformRef == platformRef) &&
+            (identical(other.exeFile, exeFile) || other.exeFile == exeFile));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, key, name, platformId, installDir, exeFile, launchConfig);
+      runtimeType, key, name, platformId, installDir, platformRef, exeFile);
 
   @JsonKey(ignore: true)
   @override
@@ -247,14 +222,15 @@ class _$_Game with DiagnosticableTreeMixin implements _Game {
   }
 }
 
-abstract class _Game implements Game {
+abstract class _Game extends Game {
   const factory _Game(
       {required final String key,
       required final String name,
       required final String platformId,
       required final String installDir,
-      required final String exeFile,
-      required final LaunchConfig launchConfig}) = _$_Game;
+      final String? platformRef,
+      final String? exeFile}) = _$_Game;
+  const _Game._() : super._();
 
   factory _Game.fromJson(Map<String, dynamic> json) = _$_Game.fromJson;
 
@@ -267,9 +243,9 @@ abstract class _Game implements Game {
   @override
   String get installDir;
   @override
-  String get exeFile;
+  String? get platformRef;
   @override
-  LaunchConfig get launchConfig;
+  String? get exeFile;
   @override
   @JsonKey(ignore: true)
   _$$_GameCopyWith<_$_Game> get copyWith => throw _privateConstructorUsedError;

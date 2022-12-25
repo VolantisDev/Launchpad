@@ -8,6 +8,8 @@ part 'launch_process.g.dart';
 
 @freezed
 class LaunchProcess with _$LaunchProcess {
+  const LaunchProcess._();
+
   const factory LaunchProcess({
     required String processType,
     required LaunchConfig launchConfig,

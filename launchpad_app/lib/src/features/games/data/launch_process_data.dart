@@ -1,8 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:launchpad_app/src/features/games/data/game_data.dart';
 
-import 'launch_config_data.dart';
-
 part 'launch_process_data.g.dart';
 
 @collection

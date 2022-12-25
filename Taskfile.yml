@@ -8,3 +8,7 @@ tasks:
     dir: launchpad_app
     cmds:
       - flutter_distributor release --name dev
+  generate-protobuf-code:
+    dir: launchpad_app/lib/proto
+    cmds:
+      - protoc --dart_out=. .\BlizzardProductDb.proto

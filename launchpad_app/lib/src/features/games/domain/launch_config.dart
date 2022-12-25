@@ -8,6 +8,8 @@ part 'launch_config.g.dart';
 
 @freezed
 class LaunchConfig with _$LaunchConfig {
+  const LaunchConfig._();
+
   const factory LaunchConfig({
     required String type,
     required String gameId,

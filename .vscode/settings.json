@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
-        "Multitool"
+        "Multitool",
+        "r'riotclient"
     ],
     "terminal.integrated.cwd": "${workspaceFolder}/launchpad_app",
     "[dart]": {
