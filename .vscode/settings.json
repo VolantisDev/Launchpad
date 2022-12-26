@@ -1,7 +1,12 @@
 {
     "cSpell.words": [
+        "appmanifest",
+        "FOLDERID",
+        "installdir",
+        "libraryfolders",
         "Multitool",
-        "r'riotclient"
+        "r'riotclient",
+        "steamapps"
     ],
     "terminal.integrated.cwd": "${workspaceFolder}/launchpad_app",
     "[dart]": {
