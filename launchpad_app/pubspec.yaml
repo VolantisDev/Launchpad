@@ -7,6 +7,7 @@ environment:
   sdk: '>=2.17.0 <3.0.0'
 
 dependencies:
+  app_links: ^3.4.1
   archive: ^3.3.5
   args: ^2.3.1
   async: ^2.9.0
@@ -16,7 +17,9 @@ dependencies:
   characters: ^1.2.1
   chopper: ^6.0.0
   clipboard: ^0.1.3
+  clipboard_watcher: ^0.1.2
   collection: ^1.16.0
+  contextual_menu: ^0.1.2
   counter_button: ^1.0.1
   crypto: ^3.0.2
   dart_code_metrics: ^5.2.1
@@ -37,6 +40,7 @@ dependencies:
   firebase_core: ^1.24.0
   firebase_core_desktop: ^1.0.2
   filter_list: ^1.0.2
+  fixnum: ^1.0.1
   floating_action_bubble: ^1.1.4
   fluent_ui: ^4.1.2
   flutter:
@@ -44,6 +48,8 @@ dependencies:
   flutter_acrylic: ^1.0.0+2
   flutter_form_builder: ^7.7.0
   flutter_hooks: ^0.18.5+1
+  flutter_improved_scrolling: ^0.0.3
+  flutter_intro: ^3.0.2
   flutter_layout_grid: ^2.0.1
   flutter_markdown: ^0.6.10+5
   flutter_phoenix: ^1.1.0
@@ -59,6 +65,7 @@ dependencies:
   go_router: ^6.0.0
   google_fonts: ^3.0.1
   googleapis: ^9.2.0
+  hive: ^2.2.3
   hooks_riverpod: ^2.1.1
   hotkey_manager: ^0.1.7
   http: ^0.13.5
@@ -83,6 +90,7 @@ dependencies:
   package_info_plus: ^3.0.2
   path: ^1.8.2
   path_provider: ^2.0.11
+  path_provider_windows: ^2.1.3
   percent_indicator: ^4.2.2
   platform_info: ^3.2.0
   pool: ^1.5.1
@@ -90,9 +98,13 @@ dependencies:
   protocol_handler: ^0.1.4
   recase: ^4.1.0
   riverpod_annotation: ^1.0.6
+  screen_capturer: ^0.1.3
+  screen_retriever: ^0.1.4
+  screen_text_extractor: ^0.1.2
   scroll_to_index: ^3.0.1
   shimmer: ^2.0.0
   stack_trace: ^1.10.0
+  state_persistence: ^0.1.0
   stock: ^1.0.1
   string_validator: ^0.3.0
   synchronized: ^3.0.0+3
@@ -105,27 +117,16 @@ dependencies:
   url_launcher: ^6.1.5
   url_strategy: ^0.2.0
   uuid: ^3.0.7
+  vdf: ^1.0.2
   version: ^3.0.2
   watcher: ^1.0.2
   win32: ^3.1.3
+  win32_registry: ^1.0.2
   window_manager: ^0.2.7
   windows_single_instance: ^0.1.5
+  windows_taskbar: ^1.1.1
   xml: ^6.1.0
   yaml: ^3.1.1
-  flutter_intro: ^3.0.2
-  state_persistence: ^0.1.0
-  hive: ^2.2.3
-  flutter_improved_scrolling: ^0.0.3
-  win32_registry: ^1.0.2
-  screen_retriever: ^0.1.4
-  clipboard_watcher: ^0.1.2
-  contextual_menu: ^0.1.2
-  screen_capturer: ^0.1.3
-  screen_text_extractor: ^0.1.2
-  app_links: ^3.4.1
-  vdf: ^1.0.2
-  fixnum: ^1.0.1
-  path_provider_windows: ^2.1.3
 
 dependency_overrides:
   firebase_core_platform_interface: 4.5.1
@@ -157,6 +158,15 @@ flutter:
     - assets/graphics/splash.png
     - assets/graphics/light/splash.png
     - assets/graphics/icon.png
+    - assets/graphics/platform_icon_bethesda.png
+    - assets/graphics/light/platform_icon_bethesda.png
+    - assets/graphics/platform_icon_blizzard.png
+    - assets/graphics/platform_icon_ea.png
+    - assets/graphics/platform_icon_epic.png
+    - assets/graphics/platform_icon_origin.png
+    - assets/graphics/platform_icon_riot.png
+    - assets/graphics/platform_icon_steam.png
+    - assets/graphics/platform_icon_uplay.png
 
 flutter_gen:
   integrations:
