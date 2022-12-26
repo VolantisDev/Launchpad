@@ -23,11 +23,55 @@ class $AssetsGraphicsGen {
   SvgGenImage get logoWide =>
       const SvgGenImage('assets/graphics/logo_wide.svg');
 
+  /// File path: assets/graphics/platform_icon_bethesda.png
+  AssetGenImage get platformIconBethesda =>
+      const AssetGenImage('assets/graphics/platform_icon_bethesda.png');
+
+  /// File path: assets/graphics/platform_icon_blizzard.png
+  AssetGenImage get platformIconBlizzard =>
+      const AssetGenImage('assets/graphics/platform_icon_blizzard.png');
+
+  /// File path: assets/graphics/platform_icon_ea.png
+  AssetGenImage get platformIconEa =>
+      const AssetGenImage('assets/graphics/platform_icon_ea.png');
+
+  /// File path: assets/graphics/platform_icon_epic.png
+  AssetGenImage get platformIconEpic =>
+      const AssetGenImage('assets/graphics/platform_icon_epic.png');
+
+  /// File path: assets/graphics/platform_icon_origin.png
+  AssetGenImage get platformIconOrigin =>
+      const AssetGenImage('assets/graphics/platform_icon_origin.png');
+
+  /// File path: assets/graphics/platform_icon_riot.png
+  AssetGenImage get platformIconRiot =>
+      const AssetGenImage('assets/graphics/platform_icon_riot.png');
+
+  /// File path: assets/graphics/platform_icon_steam.png
+  AssetGenImage get platformIconSteam =>
+      const AssetGenImage('assets/graphics/platform_icon_steam.png');
+
+  /// File path: assets/graphics/platform_icon_uplay.png
+  AssetGenImage get platformIconUplay =>
+      const AssetGenImage('assets/graphics/platform_icon_uplay.png');
+
   /// File path: assets/graphics/splash.png
   AssetGenImage get splash => const AssetGenImage('assets/graphics/splash.png');
 
   /// List of all assets
-  List<dynamic> get values => [icon, logoWide, splash];
+  List<dynamic> get values => [
+        icon,
+        logoWide,
+        platformIconBethesda,
+        platformIconBlizzard,
+        platformIconEa,
+        platformIconEpic,
+        platformIconOrigin,
+        platformIconRiot,
+        platformIconSteam,
+        platformIconUplay,
+        splash
+      ];
 }
 
 class $AssetsGraphicsLightGen {
@@ -37,12 +81,16 @@ class $AssetsGraphicsLightGen {
   SvgGenImage get logoWide =>
       const SvgGenImage('assets/graphics/light/logo_wide.svg');
 
+  /// File path: assets/graphics/light/platform_icon_bethesda.png
+  AssetGenImage get platformIconBethesda =>
+      const AssetGenImage('assets/graphics/light/platform_icon_bethesda.png');
+
   /// File path: assets/graphics/light/splash.png
   AssetGenImage get splash =>
       const AssetGenImage('assets/graphics/light/splash.png');
 
   /// List of all assets
-  List<dynamic> get values => [logoWide, splash];
+  List<dynamic> get values => [logoWide, platformIconBethesda, splash];
 }
 
 class Assets {
