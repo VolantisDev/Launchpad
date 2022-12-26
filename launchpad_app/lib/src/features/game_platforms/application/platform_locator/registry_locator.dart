@@ -74,29 +74,24 @@ class RegistryUninstallDataLocator extends RegistryLocator {
                 registryKey: uninstallerKey,
                 registryValueName: installDirValue ?? '',
               ),
-          mainExe: mainExe ??
-              RegistryLocatorValue(
-                registryHive: registryHive,
-                registryKey: uninstallerKey,
-                registryValueName: installDirValue ?? '',
-              ),
+          mainExe: mainExe,
           installedVersion: installedVersion ??
               RegistryLocatorValue(
                 registryHive: registryHive,
                 registryKey: uninstallerKey,
-                registryValueName: installDirValue ?? '',
+                registryValueName: installedVersionValue ?? '',
               ),
           uninstallCommand: uninstallCommand ??
               RegistryLocatorValue(
                 registryHive: registryHive,
                 registryKey: uninstallerKey,
-                registryValueName: installDirValue ?? '',
+                registryValueName: uninstallCommandValue ?? '',
               ),
           icon: icon ??
               RegistryLocatorValue(
                 registryHive: registryHive,
                 registryKey: uninstallerKey,
-                registryValueName: installDirValue ?? '',
+                registryValueName: iconValue ?? '',
               ),
         );
 }
@@ -130,13 +125,13 @@ class RegistryLocatorValue {
 
     if (value != null && stringSelector != null) {
       final regex = RegExp(stringSelector!);
-      final match = regex.firstMatch(value!);
+      final match = regex.firstMatch(value);
       value = (match != null) ? match.group(0) : null;
     }
 
     if (value != null &&
         stripTrailingSlash &&
-        value[value.length - 1] == r'\') {
+        (value[value.length - 1] == r'\' || value[value.length - 1] == '/')) {
       value = value.substring(0, value.length - 1);
     }
 
