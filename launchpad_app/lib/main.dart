@@ -3,11 +3,10 @@ import 'package:fluent_ui/fluent_ui.dart' hide Page;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:flutter_intro/flutter_intro.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/src/features/main_window/data/persisted_state_storage.dart';
-import 'package:launchpad_app/src/routing/routes.dart';
+import 'package:launchpad_app/src/routing/router.dart';
 import 'package:launchpad_app/src/utils/globals.dart';
 import 'package:launchpad_app/src/utils/theme_provider.dart';
 import 'package:path_provider/path_provider.dart';
@@ -17,9 +16,6 @@ import 'package:system_theme/system_theme.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:windows_single_instance/windows_single_instance.dart';
-
-final _router =
-    GoRouter(routes: $appRoutes, navigatorKey: Catcher.navigatorKey);
 
 /// Checks if the current environment is a desktop environment.
 bool get isDesktop {
@@ -36,33 +32,31 @@ bool get isWindows {
   return (defaultTargetPlatform == TargetPlatform.windows);
 }
 
-void navigateFromArgs(List<String> args) {
-  String? path;
-
-  for (var arg in args) {
-    const prefix = "launchpad://";
-
-    if (arg.startsWith(prefix)) {
-      path = arg.replaceFirst(prefix, "/");
-
-      break;
-    }
-  }
-
-  if (path != null && path.isNotEmpty) {
-    _router.go(path);
-  }
-}
-
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final container = ProviderContainer();
 
   await protocolHandler.register("launchpad");
 
   if (isWindows) {
     await WindowsSingleInstance.ensureSingleInstance(
         args, "com.volantisdev.launchpad", onSecondWindow: (args) {
-      navigateFromArgs(args);
+      String? path;
+
+      for (var arg in args) {
+        const prefix = "launchpad://";
+
+        if (arg.startsWith(prefix)) {
+          path = arg.replaceFirst(prefix, "/");
+
+          break;
+        }
+      }
+
+      if (path != null && path.isNotEmpty) {
+        container.read(routerProvider).go(path);
+      }
     });
   }
 
@@ -97,19 +91,16 @@ void main(List<String> args) async {
     });
   }
 
-  CatcherOptions debugOptions =
-      CatcherOptions(DialogReportMode(), [ConsoleHandler()]);
-
-  CatcherOptions releaseOptions = CatcherOptions(DialogReportMode(), [
-    EmailManualHandler(["support@volantisdev.com"])
-  ]);
-
   Catcher(
-      rootWidget: ProviderScope(
-        child: Intro(child: const MyApp()),
-      ),
-      debugConfig: debugOptions,
-      releaseConfig: releaseOptions);
+    rootWidget: UncontrolledProviderScope(
+      container: container,
+      child: Intro(child: const MyApp()),
+    ),
+    debugConfig: CatcherOptions(DialogReportMode(), [ConsoleHandler()]),
+    releaseConfig: CatcherOptions(DialogReportMode(), [
+      EmailManualHandler(["support@volantisdev.com"])
+    ]),
+  );
 }
 
 class MyApp extends HookConsumerWidget {
@@ -118,6 +109,7 @@ class MyApp extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appTheme = ref.watch(appThemeProvider);
+    final router = ref.watch(routerProvider);
 
     return PersistedAppState(
         storage: HiveStateStorage(),
@@ -156,7 +148,7 @@ class MyApp extends HookConsumerWidget {
                 ),
               );
             },
-            routerDelegate: _router.routerDelegate,
-            routeInformationParser: _router.routeInformationParser));
+            routerDelegate: router.routerDelegate,
+            routeInformationParser: router.routeInformationParser));
   }
 }

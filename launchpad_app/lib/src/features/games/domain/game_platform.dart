@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
-import 'package:launchpad_app/src/features/game_platforms/application/platform_type.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:launchpad_app/src/features/game_platforms/application/game_platform_types.dart';
 
 part 'game_platform.freezed.dart';
 
@@ -22,10 +23,10 @@ class GamePlatform with _$GamePlatform {
   factory GamePlatform.fromJson(Map<String, Object?> json) =>
       _$GamePlatformFromJson(json);
 
-  Future<PlatformType> getPlatformType() async {
-    var platformTypes = await getPlatformTypes();
+  Future<GamePlatformType?> getPlatformType(Ref ref) async {
+    var platformTypes = ref.watch(gamePlatformTypesProvider);
 
-    return platformTypes.values
+    return platformTypes.value?.values
         .firstWhere((element) => element.key == platformTypeId);
   }
 }

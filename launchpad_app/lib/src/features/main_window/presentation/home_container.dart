@@ -7,14 +7,17 @@ import 'package:http/http.dart' as http;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/gen/assets.gen.dart';
 import 'package:launchpad_app/src/features/dashboard/presentation/dashboard.dart';
+import 'package:launchpad_app/src/features/game_platforms/application/game_platform_types.dart';
+import 'package:launchpad_app/src/features/game_platforms/application/game_platforms.dart';
 import 'package:launchpad_app/src/features/games/presentation/all_games.dart';
 import 'package:launchpad_app/src/features/main_window/presentation/main_drop_target.dart';
 import 'package:launchpad_app/src/utils/globals.dart';
 import 'package:launchpad_app/src/utils/theme_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path/path.dart' as p;
 import 'package:platform_info/platform_info.dart';
 import 'package:protocol_handler/protocol_handler.dart';
-import 'package:state_persistence/state_persistence.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:updat/updat_window_manager.dart';
 import 'package:url_launcher/link.dart';
 import 'package:window_manager/window_manager.dart';
@@ -23,26 +26,56 @@ import '../../settings/presentation/settings.dart';
 
 import '../../../utils/theme.dart';
 
-class HomeContainer extends StatefulHookConsumerWidget {
-  const HomeContainer({Key? key}) : super(key: key);
+part 'home_container.g.dart';
 
-  @override
-  createState() => _HomeContainerState();
-}
+@riverpod
+Future<List<NavigationPaneItem>> paneItems(PaneItemsRef ref) async {
+  var platforms = ref.watch(gamePlatformsProvider);
+  var platformTypes = ref.watch(gamePlatformTypesProvider);
 
-class _HomeContainerState extends ConsumerState<HomeContainer>
-    with WindowListener, ProtocolListener {
-  var value = false;
+  Future<List<NavigationPaneItem>> getPlatformItems() async {
+    var list = <NavigationPaneItem>[];
 
-  var index = 0;
+    if (platforms.hasValue && platformTypes.hasValue) {
+      for (var platform in platforms.value!) {
+        var platformType = platformTypes.value![platform.platformTypeId];
+        var iconPath = await platformType?.locateIconPath();
+        Widget? icon;
 
-  final viewKey = GlobalKey();
+        try {
+          if (iconPath != null && iconPath.isNotEmpty) {
+            if (p.extension(iconPath) == '.svg') {
+              icon = SvgPicture.asset(
+                iconPath,
+                width: 16,
+                height: 16,
+              );
+            } else {
+              icon = Image.asset(
+                iconPath,
+                width: 16,
+                height: 16,
+              );
+            }
+          } else {
+            icon = const Icon(FluentIcons.game);
+          }
+        } on Exception catch (e) {
+          icon = const Icon(FluentIcons.game);
+        }
 
-  final searchKey = GlobalKey();
-  final searchFocusNode = FocusNode();
-  final searchController = TextEditingController();
+        list.add(PaneItem(
+          icon: icon,
+          title: Text(platform.name),
+          body: const Text('Show manage list for platform entities.'),
+        ));
+      }
+    }
 
-  final originalItems = [
+    return list;
+  }
+
+  return [
     PaneItem(
       icon: const Icon(FluentIcons.home),
       title: const Text('Dashboard'),
@@ -66,7 +99,7 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
       body: const Text('To be replaced with a page widget.'),
     ),
     PaneItemHeader(header: const Text("Game Platforms")),
-    // TODO Add links to all enabled and installed game platforms here
+    ...(await getPlatformItems()),
     PaneItem(
       icon: const Icon(FluentIcons.library),
       title: const Text('All Platforms'),
@@ -107,25 +140,26 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
     //   body: const Text('.'),
     // ),
   ];
-  final footerItems = [
-    PaneItemSeparator(),
-    PaneItem(
-      icon: const Icon(FluentIcons.settings),
-      title: const Text('Settings'),
-      body: Settings(),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.help),
-      title: const Text('Help'),
-      body: const Text('To be replaced with a page widget.'),
-    ),
-    _LinkPaneItemAction(
-      icon: const Icon(FluentIcons.open_source),
-      title: const Text('Source code'),
-      link: 'https://github.com/VolantisDev/Launchpad/tree/flutter',
-      body: const SizedBox.shrink(),
-    ),
-  ];
+}
+
+class HomeContainer extends StatefulHookConsumerWidget {
+  const HomeContainer({Key? key}) : super(key: key);
+
+  @override
+  createState() => _HomeContainerState();
+}
+
+class _HomeContainerState extends ConsumerState<HomeContainer>
+    with WindowListener, ProtocolListener {
+  var value = false;
+
+  var index = 0;
+
+  final viewKey = GlobalKey();
+
+  final searchKey = GlobalKey();
+  final searchFocusNode = FocusNode();
+  final searchController = TextEditingController();
 
   @override
   dispose() {
@@ -157,6 +191,26 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
   @override
   build(BuildContext context) {
     final appTheme = ref.watch(appThemeProvider);
+    final originalItems = ref.watch(paneItemsProvider);
+    final footerItems = [
+      PaneItemSeparator(),
+      PaneItem(
+        icon: const Icon(FluentIcons.settings),
+        title: const Text('Settings'),
+        body: Settings(),
+      ),
+      PaneItem(
+        icon: const Icon(FluentIcons.help),
+        title: const Text('Help'),
+        body: const Text('To be replaced with a page widget.'),
+      ),
+      _LinkPaneItemAction(
+        icon: const Icon(FluentIcons.open_source),
+        title: const Text('Source code'),
+        link: 'https://github.com/VolantisDev/Launchpad/tree/flutter',
+        body: const SizedBox.shrink(),
+      ),
+    ];
 
     return FutureBuilder<PackageInfo>(
         future: _getPackageInfo(),
@@ -252,12 +306,14 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
                           return const StickyNavigationIndicator();
                       }
                     }(),
-                    items: originalItems,
+                    items: originalItems.value ?? [],
                     autoSuggestBox: AutoSuggestBox(
                       key: searchKey,
                       focusNode: searchFocusNode,
                       controller: searchController,
-                      items: originalItems.whereType<PaneItem>().map((item) {
+                      items: (originalItems.value ?? [])
+                          .whereType<PaneItem>()
+                          .map((item) {
                         assert(item.title is Text);
                         final text = (item.title as Text).data!;
 
@@ -266,7 +322,7 @@ class _HomeContainerState extends ConsumerState<HomeContainer>
                           value: text,
                           onSelected: () async {
                             final itemIndex = NavigationPane(
-                              items: originalItems,
+                              items: originalItems.value ?? [],
                             ).effectiveIndexOf(item);
 
                             setState(() => index = itemIndex);

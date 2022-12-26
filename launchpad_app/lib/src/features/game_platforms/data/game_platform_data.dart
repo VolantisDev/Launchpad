@@ -16,7 +16,5 @@ class GamePlatformData {
 
   String? iconPath;
 
-  String launcherProcessType = 'default';
-
-  String gameProcessType = 'default';
+  String? platformTypeId;
 }

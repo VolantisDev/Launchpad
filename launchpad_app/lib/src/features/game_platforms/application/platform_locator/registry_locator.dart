@@ -1,3 +1,4 @@
+import 'package:win32/win32.dart';
 import 'package:win32_registry/win32_registry.dart';
 
 import 'platform_locator.dart';
@@ -118,17 +119,23 @@ class RegistryLocatorValue {
   final bool stripTrailingSlash;
 
   String? lookupValue() {
-    final key = Registry.openPath(registryHive, path: registryKey);
-    var value = key.getValueAsString(registryValueName);
+    String? value;
 
-    if (stringSelector != null) {
+    try {
+      final key = Registry.openPath(registryHive, path: registryKey);
+      value = key.getValueAsString(registryValueName);
+    } on WindowsException catch (_) {
+      value = null;
+    }
+
+    if (value != null && stringSelector != null) {
       final regex = RegExp(stringSelector!);
       final match = regex.firstMatch(value!);
       value = (match != null) ? match.group(0) : null;
     }
 
-    if (stripTrailingSlash &&
-        value != null &&
+    if (value != null &&
+        stripTrailingSlash &&
         value[value.length - 1] == r'\') {
       value = value.substring(0, value.length - 1);
     }

@@ -22,34 +22,29 @@ const GamePlatformDataSchema = CollectionSchema(
       name: r'exeFile',
       type: IsarType.string,
     ),
-    r'gameProcessType': PropertySchema(
-      id: 1,
-      name: r'gameProcessType',
-      type: IsarType.string,
-    ),
     r'iconPath': PropertySchema(
-      id: 2,
+      id: 1,
       name: r'iconPath',
       type: IsarType.string,
     ),
     r'installDir': PropertySchema(
-      id: 3,
+      id: 2,
       name: r'installDir',
       type: IsarType.string,
     ),
     r'key': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'key',
       type: IsarType.string,
     ),
-    r'launcherProcessType': PropertySchema(
-      id: 5,
-      name: r'launcherProcessType',
+    r'name': PropertySchema(
+      id: 4,
+      name: r'name',
       type: IsarType.string,
     ),
-    r'name': PropertySchema(
-      id: 6,
-      name: r'name',
+    r'platformTypeId': PropertySchema(
+      id: 5,
+      name: r'platformTypeId',
       type: IsarType.string,
     )
   },
@@ -79,7 +74,6 @@ int _gamePlatformDataEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
-  bytesCount += 3 + object.gameProcessType.length * 3;
   {
     final value = object.iconPath;
     if (value != null) {
@@ -98,9 +92,14 @@ int _gamePlatformDataEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
-  bytesCount += 3 + object.launcherProcessType.length * 3;
   {
     final value = object.name;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.platformTypeId;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
@@ -115,12 +114,11 @@ void _gamePlatformDataSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.exeFile);
-  writer.writeString(offsets[1], object.gameProcessType);
-  writer.writeString(offsets[2], object.iconPath);
-  writer.writeString(offsets[3], object.installDir);
-  writer.writeString(offsets[4], object.key);
-  writer.writeString(offsets[5], object.launcherProcessType);
-  writer.writeString(offsets[6], object.name);
+  writer.writeString(offsets[1], object.iconPath);
+  writer.writeString(offsets[2], object.installDir);
+  writer.writeString(offsets[3], object.key);
+  writer.writeString(offsets[4], object.name);
+  writer.writeString(offsets[5], object.platformTypeId);
 }
 
 GamePlatformData _gamePlatformDataDeserialize(
@@ -131,13 +129,12 @@ GamePlatformData _gamePlatformDataDeserialize(
 ) {
   final object = GamePlatformData();
   object.exeFile = reader.readStringOrNull(offsets[0]);
-  object.gameProcessType = reader.readString(offsets[1]);
-  object.iconPath = reader.readStringOrNull(offsets[2]);
+  object.iconPath = reader.readStringOrNull(offsets[1]);
   object.id = id;
-  object.installDir = reader.readStringOrNull(offsets[3]);
-  object.key = reader.readStringOrNull(offsets[4]);
-  object.launcherProcessType = reader.readString(offsets[5]);
-  object.name = reader.readStringOrNull(offsets[6]);
+  object.installDir = reader.readStringOrNull(offsets[2]);
+  object.key = reader.readStringOrNull(offsets[3]);
+  object.name = reader.readStringOrNull(offsets[4]);
+  object.platformTypeId = reader.readStringOrNull(offsets[5]);
   return object;
 }
 
@@ -151,7 +148,7 @@ P _gamePlatformDataDeserializeProp<P>(
     case 0:
       return (reader.readStringOrNull(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
@@ -159,8 +156,6 @@ P _gamePlatformDataDeserializeProp<P>(
     case 4:
       return (reader.readStringOrNull(offset)) as P;
     case 5:
-      return (reader.readString(offset)) as P;
-    case 6:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -410,142 +405,6 @@ extension GamePlatformDataQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'exeFile',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      gameProcessTypeEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'gameProcessType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      gameProcessTypeGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'gameProcessType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      gameProcessTypeLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'gameProcessType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      gameProcessTypeBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'gameProcessType',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      gameProcessTypeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'gameProcessType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      gameProcessTypeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'gameProcessType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      gameProcessTypeContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'gameProcessType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      gameProcessTypeMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'gameProcessType',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      gameProcessTypeIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'gameProcessType',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      gameProcessTypeIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'gameProcessType',
         value: '',
       ));
     });
@@ -1088,142 +947,6 @@ extension GamePlatformDataQueryFilter
   }
 
   QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      launcherProcessTypeEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'launcherProcessType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      launcherProcessTypeGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'launcherProcessType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      launcherProcessTypeLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'launcherProcessType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      launcherProcessTypeBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'launcherProcessType',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      launcherProcessTypeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'launcherProcessType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      launcherProcessTypeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'launcherProcessType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      launcherProcessTypeContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'launcherProcessType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      launcherProcessTypeMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'launcherProcessType',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      launcherProcessTypeIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'launcherProcessType',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
-      launcherProcessTypeIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'launcherProcessType',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
       nameIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1376,6 +1099,160 @@ extension GamePlatformDataQueryFilter
       ));
     });
   }
+
+  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
+      platformTypeIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'platformTypeId',
+      ));
+    });
+  }
+
+  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
+      platformTypeIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'platformTypeId',
+      ));
+    });
+  }
+
+  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
+      platformTypeIdEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'platformTypeId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
+      platformTypeIdGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'platformTypeId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
+      platformTypeIdLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'platformTypeId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
+      platformTypeIdBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'platformTypeId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
+      platformTypeIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'platformTypeId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
+      platformTypeIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'platformTypeId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
+      platformTypeIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'platformTypeId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
+      platformTypeIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'platformTypeId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
+      platformTypeIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'platformTypeId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GamePlatformData, GamePlatformData, QAfterFilterCondition>
+      platformTypeIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'platformTypeId',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension GamePlatformDataQueryObject
@@ -1397,20 +1274,6 @@ extension GamePlatformDataQuerySortBy
       sortByExeFileDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'exeFile', Sort.desc);
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterSortBy>
-      sortByGameProcessType() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'gameProcessType', Sort.asc);
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterSortBy>
-      sortByGameProcessTypeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'gameProcessType', Sort.desc);
     });
   }
 
@@ -1455,20 +1318,6 @@ extension GamePlatformDataQuerySortBy
     });
   }
 
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterSortBy>
-      sortByLauncherProcessType() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'launcherProcessType', Sort.asc);
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterSortBy>
-      sortByLauncherProcessTypeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'launcherProcessType', Sort.desc);
-    });
-  }
-
   QueryBuilder<GamePlatformData, GamePlatformData, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1479,6 +1328,20 @@ extension GamePlatformDataQuerySortBy
       sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+
+  QueryBuilder<GamePlatformData, GamePlatformData, QAfterSortBy>
+      sortByPlatformTypeId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'platformTypeId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GamePlatformData, GamePlatformData, QAfterSortBy>
+      sortByPlatformTypeIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'platformTypeId', Sort.desc);
     });
   }
 }
@@ -1496,20 +1359,6 @@ extension GamePlatformDataQuerySortThenBy
       thenByExeFileDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'exeFile', Sort.desc);
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterSortBy>
-      thenByGameProcessType() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'gameProcessType', Sort.asc);
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterSortBy>
-      thenByGameProcessTypeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'gameProcessType', Sort.desc);
     });
   }
 
@@ -1567,20 +1416,6 @@ extension GamePlatformDataQuerySortThenBy
     });
   }
 
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterSortBy>
-      thenByLauncherProcessType() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'launcherProcessType', Sort.asc);
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QAfterSortBy>
-      thenByLauncherProcessTypeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'launcherProcessType', Sort.desc);
-    });
-  }
-
   QueryBuilder<GamePlatformData, GamePlatformData, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1593,6 +1428,20 @@ extension GamePlatformDataQuerySortThenBy
       return query.addSortBy(r'name', Sort.desc);
     });
   }
+
+  QueryBuilder<GamePlatformData, GamePlatformData, QAfterSortBy>
+      thenByPlatformTypeId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'platformTypeId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GamePlatformData, GamePlatformData, QAfterSortBy>
+      thenByPlatformTypeIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'platformTypeId', Sort.desc);
+    });
+  }
 }
 
 extension GamePlatformDataQueryWhereDistinct
@@ -1601,14 +1450,6 @@ extension GamePlatformDataQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'exeFile', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<GamePlatformData, GamePlatformData, QDistinct>
-      distinctByGameProcessType({bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'gameProcessType',
-          caseSensitive: caseSensitive);
     });
   }
 
@@ -1633,18 +1474,18 @@ extension GamePlatformDataQueryWhereDistinct
     });
   }
 
-  QueryBuilder<GamePlatformData, GamePlatformData, QDistinct>
-      distinctByLauncherProcessType({bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'launcherProcessType',
-          caseSensitive: caseSensitive);
-    });
-  }
-
   QueryBuilder<GamePlatformData, GamePlatformData, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<GamePlatformData, GamePlatformData, QDistinct>
+      distinctByPlatformTypeId({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'platformTypeId',
+          caseSensitive: caseSensitive);
     });
   }
 }
@@ -1660,13 +1501,6 @@ extension GamePlatformDataQueryProperty
   QueryBuilder<GamePlatformData, String?, QQueryOperations> exeFileProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'exeFile');
-    });
-  }
-
-  QueryBuilder<GamePlatformData, String, QQueryOperations>
-      gameProcessTypeProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'gameProcessType');
     });
   }
 
@@ -1689,16 +1523,16 @@ extension GamePlatformDataQueryProperty
     });
   }
 
-  QueryBuilder<GamePlatformData, String, QQueryOperations>
-      launcherProcessTypeProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'launcherProcessType');
-    });
-  }
-
   QueryBuilder<GamePlatformData, String?, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<GamePlatformData, String?, QQueryOperations>
+      platformTypeIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'platformTypeId');
     });
   }
 }
