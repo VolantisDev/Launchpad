@@ -78,11 +78,11 @@ Future<List<NavigationPaneItem>> paneItems(PaneItemsRef ref) async {
     ),
     PaneItemHeader(header: const Text("Game Platforms")),
     ...(await getPlatformItems()),
-    // PaneItem(
-    //   icon: const Icon(FluentIcons.library),
-    //   title: const Text('All Platforms'),
-    //   body: const Text('Show manage list for platform entities.'),
-    // ),
+    PaneItem(
+      icon: const Icon(FluentIcons.library),
+      title: const Text('All Platforms'),
+      body: const Text('Show manage list for platform entities.'),
+    ),
     // PaneItemHeader(header: const Icon(FluentIcons.archive)),
     // PaneItem(
     //   icon: const Icon(FluentIcons.lifesaver),
