@@ -1,14 +1,23 @@
 version: '3'
 
 tasks:
-  build:
+  app-watch:
+    dir: launchpad_app
     cmds:
-      - cd launchpad_app
-  release-dev:
+      - flutter pub run build_runner watch --delete-conflicting-outputs
+  app-release-dev:
     dir: launchpad_app
     cmds:
       - flutter_distributor release --name dev
-  generate-protobuf-code:
-    dir: launchpad_app/lib/proto
+  app-generate-protobuf-code:
+    dir: launchpad_app
     cmds:
-      - protoc --dart_out=. .\BlizzardProductDb.proto
+      - protoc --dart_out=./lib/proto ./lib/proto/BlizzardProductDb.proto
+  dotnet-build-debug:
+    dir: launchpad_dotnet
+    cmds:
+      - dotnet publish /p:LaunchpadDotNet=Shared /p:SelfContained=true -r win-x64 -c debug -o assets/bin/debug/
+  dotnet-build-release:
+    dir: launchpad_dotnet
+    cmds:
+      - dotnet publish /p:LaunchpadDotNet=Shared /p:SelfContained=true -r win-x64 -c release -o assets/bin/release/
