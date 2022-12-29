@@ -29,7 +29,7 @@ class _SystemHash {
   }
 }
 
-String $paneItemsHash() => r'6a14819e027500d8e86f79abb6a2575adfd60c81';
+String $paneItemsHash() => r'b5363764b8c1c9e4542fb3cda15440fb37f21ecb';
 
 /// See also [paneItems].
 final paneItemsProvider = AutoDisposeFutureProvider<List<NavigationPaneItem>>(

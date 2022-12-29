@@ -257,7 +257,7 @@ class GamePlatformType {
     return image;
   }
 
-  Future<Widget> locateIcon(Ref ref, {int size = 16}) async {
+  Future<Widget> locateIcon({int size = 16}) async {
     var iconPath = await locateIconPath();
     Widget? icon;
 

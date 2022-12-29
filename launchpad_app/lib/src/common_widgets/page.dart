@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_improved_scrolling/flutter_improved_scrolling.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/src/common_widgets/deferred_widget.dart';
 
@@ -31,7 +32,7 @@ mixin PageMixin {
   }
 }
 
-abstract class Page extends HookConsumerWidget {
+abstract class Page extends HookConsumerWidget with PageMixin {
   Page({super.key}) {
     _pageIndex++;
   }
@@ -46,54 +47,57 @@ abstract class Page extends HookConsumerWidget {
     func();
     _controller.add(null);
   }
-
-  Widget description({required Widget content}) {
-    return Builder(builder: (context) {
-      return Padding(
-        padding: const EdgeInsetsDirectional.only(bottom: 4.0),
-        child: DefaultTextStyle(
-          style: FluentTheme.of(context).typography.body!,
-          child: content,
-        ),
-      );
-    });
-  }
-
-  Widget subtitle({required Widget content}) {
-    return Builder(builder: (context) {
-      return Padding(
-        padding: const EdgeInsetsDirectional.only(top: 14.0, bottom: 2.0),
-        child: DefaultTextStyle(
-          style: FluentTheme.of(context).typography.subtitle!,
-          child: content,
-        ),
-      );
-    });
-  }
 }
 
 int _pageIndex = -1;
 
-abstract class ScrollablePage extends Page {
-  ScrollablePage({super.key});
+class ScrollablePage extends Page {
+  ScrollablePage(
+      {super.key, this.header, this.bottomBar, this.children = const []});
 
   final scrollController = ScrollController();
-  Widget buildHeader(BuildContext context, WidgetRef ref) =>
-      const SizedBox.shrink();
 
-  Widget buildBottomBar(BuildContext context, WidgetRef ref) =>
-      const SizedBox.shrink();
+  final Widget? header;
+  final Widget? bottomBar;
+  final List<Widget> children;
 
-  List<Widget> buildScrollable(BuildContext context, WidgetRef ref);
+  Widget? buildHeader(BuildContext context, WidgetRef ref) {
+    return header;
+  }
+
+  List<Widget> buildScrollable(BuildContext context, WidgetRef ref) {
+    return children;
+  }
+
+  Widget? buildBottomBar(BuildContext context, WidgetRef ref) {
+    return bottomBar;
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ScaffoldPage.scrollable(
+    return ScaffoldPage(
       key: PageStorageKey(_pageIndex),
-      scrollController: scrollController,
       header: buildHeader(context, ref),
       bottomBar: buildBottomBar(context, ref),
-      children: buildScrollable(context, ref),
+      content: ImprovedScrolling(
+          scrollController: scrollController,
+          enableCustomMouseWheelScrolling: true,
+          customMouseWheelScrollConfig: const CustomMouseWheelScrollConfig(
+            scrollAmountMultiplier: 12.5,
+            scrollDuration: Duration(milliseconds: 350),
+            scrollCurve: Curves.easeOutCubic,
+            mouseWheelTurnsThrottleTimeMs: 50,
+          ),
+          child: ListView(
+            controller: scrollController,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: EdgeInsetsDirectional.only(
+              bottom: kPageDefaultVerticalPadding,
+              start: PageHeader.horizontalPadding(context),
+              end: PageHeader.horizontalPadding(context),
+            ),
+            children: buildScrollable(context, ref),
+          )),
     );
   }
 }

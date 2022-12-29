@@ -39,8 +39,8 @@ Future<List<NavigationPaneItem>> paneItems(PaneItemsRef ref) async {
     if (platforms.hasValue && platformTypes.hasValue) {
       for (var platform in platforms.value!) {
         var platformType = platformTypes.value![platform.platformTypeId];
-        var icon = (await platformType?.locateIcon(ref)) ??
-            const Icon(FluentIcons.game);
+        var icon =
+            (await platformType?.locateIcon()) ?? const Icon(FluentIcons.game);
 
         list.add(PaneItem(
           icon: icon,
