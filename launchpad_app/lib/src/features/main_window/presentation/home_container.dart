@@ -39,30 +39,8 @@ Future<List<NavigationPaneItem>> paneItems(PaneItemsRef ref) async {
     if (platforms.hasValue && platformTypes.hasValue) {
       for (var platform in platforms.value!) {
         var platformType = platformTypes.value![platform.platformTypeId];
-        var iconPath = await platformType?.locateIconPath();
-        Widget? icon;
-
-        try {
-          if (iconPath != null && iconPath.isNotEmpty) {
-            if (p.extension(iconPath) == '.svg') {
-              icon = SvgPicture.asset(
-                iconPath,
-                width: 16,
-                height: 16,
-              );
-            } else {
-              icon = Image.asset(
-                iconPath,
-                width: 16,
-                height: 16,
-              );
-            }
-          } else {
-            icon = const Icon(FluentIcons.game);
-          }
-        } on Exception catch (e) {
-          icon = const Icon(FluentIcons.game);
-        }
+        var icon = (await platformType?.locateIcon(ref)) ??
+            const Icon(FluentIcons.game);
 
         list.add(PaneItem(
           icon: icon,
@@ -100,11 +78,11 @@ Future<List<NavigationPaneItem>> paneItems(PaneItemsRef ref) async {
     ),
     PaneItemHeader(header: const Text("Game Platforms")),
     ...(await getPlatformItems()),
-    PaneItem(
-      icon: const Icon(FluentIcons.library),
-      title: const Text('All Platforms'),
-      body: const Text('Show manage list for platform entities.'),
-    ),
+    // PaneItem(
+    //   icon: const Icon(FluentIcons.library),
+    //   title: const Text('All Platforms'),
+    //   body: const Text('Show manage list for platform entities.'),
+    // ),
     // PaneItemHeader(header: const Icon(FluentIcons.archive)),
     // PaneItem(
     //   icon: const Icon(FluentIcons.lifesaver),

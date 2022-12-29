@@ -72,7 +72,7 @@ void main(List<String> args) async {
   setPathUrlStrategy();
 
   var path = await getApplicationSupportDirectory();
-  Hive.init("${path.path}/VolantisDev/Launchpad");
+  Hive.init(path.path);
 
   if (isDesktop) {
     await flutter_acrylic.Window.initialize();

@@ -29,7 +29,7 @@ class _SystemHash {
   }
 }
 
-String $gamePlatformTypesHash() => r'743f356026bc1e4837244551458a5ac1666b9cc5';
+String $gamePlatformTypesHash() => r'8a61850571bbe96096f1981b4ff4a380f0947fac';
 
 /// See also [gamePlatformTypes].
 final gamePlatformTypesProvider = FutureProvider<Map<String, GamePlatformType>>(

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.launchpad_app">
+    package="com.volantisdev.launchpad_app">
     <application
         android:label="launchpad_app"
         android:name="${applicationName}"

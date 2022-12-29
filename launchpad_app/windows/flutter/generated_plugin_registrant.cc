@@ -16,6 +16,7 @@
 #include <flutter_acrylic/flutter_acrylic_plugin.h>
 #include <hotkey_manager/hotkey_manager_plugin.h>
 #include <isar_flutter_libs/isar_flutter_libs_plugin.h>
+#include <launchpad_dotnet/launchpad_dotnet_plugin_c_api.h>
 #include <local_auth_windows/local_auth_plugin.h>
 #include <local_notifier/local_notifier_plugin.h>
 #include <network_info_plus/network_info_plus_windows_plugin.h>
@@ -51,6 +52,8 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("HotkeyManagerPlugin"));
   IsarFlutterLibsPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("IsarFlutterLibsPlugin"));
+  LaunchpadDotnetPluginCApiRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("LaunchpadDotnetPluginCApi"));
   LocalAuthPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("LocalAuthPlugin"));
   LocalNotifierPluginRegisterWithRegistrar(

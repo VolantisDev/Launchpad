@@ -1,4 +1,4 @@
-package com.example.launchpad_app
+package com.volantisdev.launchpad_app
 
 import io.flutter.embedding.android.FlutterActivity
 

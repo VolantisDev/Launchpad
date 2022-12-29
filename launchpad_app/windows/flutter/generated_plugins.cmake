@@ -13,6 +13,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   flutter_acrylic
   hotkey_manager
   isar_flutter_libs
+  launchpad_dotnet
   local_auth_windows
   local_notifier
   network_info_plus
