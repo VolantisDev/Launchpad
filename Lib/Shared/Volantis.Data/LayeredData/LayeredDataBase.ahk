@@ -8,7 +8,7 @@
   *
   * Example:
   *   - Layer 1: Initial defaults
-  *   - Layer 2: Defaults from datasource
+  *   - Layer 2: Defaults from external sources
   *   - Layer 3: Auto-detected defaults
   *   - Layer 4: User configuration values
   *   - Processor 1: Token expander
@@ -25,10 +25,12 @@ class LayeredDataBase {
     cloner := ""
     userLayers := ["data"]
     loadingLayers := Map()
+    extraDataLayer := "data"
+    extraDataKey := "_extra"
 
     static NO_VALUE := ":NO_VAL:"
 
-    __New(cloner, processors, layerNames, layerSources) {
+    __New(cloner, processors, layerNames := "", layerSources := "") {
         this.cloner := cloner
 
         if (processors) {
@@ -253,6 +255,54 @@ class LayeredDataBase {
 
             this.UnloadLayer(layerName)
         }
+    }
+
+    GetExtraData(key := "") {
+        extraData := this.GetValue(this.extraDataKey, false, this.extraDataLayer, Map())
+
+        if (key) {
+            extraData := extraData.Has(key) ? extraData[key] : Map()
+        }
+
+        return extraData
+    }
+
+    SetExtraData(value, key := "") {
+        if (key) {
+            extraData := this.GetExtraData()
+            extraData[key] := value
+            value := extraData
+        }
+
+        this.SetValue(this.extraDataKey, value, this.extraDataLayer)
+
+        return this
+    }
+
+    HasExtraData(key := "") {
+        hasData := this.HasValue(this.extraDataKey, this.extraDataLayer, false)
+
+        if (hasData && key) {
+            extraData := this.GetExtraData()
+            hasData := extraData.Has(key)
+        }
+
+        return hasData
+    }
+
+    DeleteExtraData(key := "") {
+        if (key) {
+            extraData := this.GetExtraData()
+
+            if (extraData.Has(key)) {
+                extraData.Delete(key)
+                this.SetExtraData(extraData)
+            }
+        } else {
+            this.DeleteValue(this.extraDataKey, this.extraDataLayer)
+        }
+
+        return this
     }
 
     /**
@@ -486,8 +536,22 @@ class LayeredDataBase {
         return data
     }
 
+    GetUserLayers() {
+        layerNames := this.userLayers
+
+        layers := Map()
+
+        for index, layerName in layerNames {
+            layers[layerName] := this.GetLayer(layerName)
+        }
+
+        return layers
+    }
+
     CloneLayers(layers := "") {
         if (layers == "") {
+            layers := this.GetUserLayers()
+        } else if (layers == "*") {
             this.LoadAllLayers()
             layers := this.layers
         } else if (Type(layers) == "String") {
@@ -500,8 +564,10 @@ class LayeredDataBase {
 
         cloned := Map()
 
-        for key, layer in layers {
-            cloned[key] := this.CloneData(layer)
+        if (layers) {
+            for key, layer in layers {
+                cloned[key] := this.CloneData(layer)
+            }
         }
 
         return cloned

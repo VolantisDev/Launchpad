@@ -2,15 +2,21 @@ class EntityBase {
     idVal := ""
     entityTypeIdVal := ""
     parentEntityObj := ""
+    parentEntityTypeId := ""
+    parentEntityId := ""
+    parentEntityStorage := false
     container := ""
+    app := ""
     eventMgr := ""
     dataObj := ""
     storageObj := ""
     idSanitizer := ""
     sanitizeId := true
+    loading := false
     loaded := false
-    merger := ""
     dataLayer := "data"
+    dataLoaded := false
+    merger := ""
     cloner := ""
 
     Id {
@@ -20,14 +26,16 @@ class EntityBase {
 
     EntityTypeId {
         get => this.entityTypeIdVal
+        set => this.entityTypeIdVal := value
     }
 
     EntityType {
         get => this.GetEntityType()
+        set => this.EntityTypeId := value
     }
 
     FieldData {
-        Get => this.GetData().GetMergedData()
+        get => this.GetData().GetMergedData()
     }
 
     Name {
@@ -35,14 +43,25 @@ class EntityBase {
         set => this.SetValue("name", value)
     }
 
-    UnmergedFieldData {
+    RawData {
         get => this.GetData().GetLayer(this.dataLayer)
         set => this.GetData().SetLayer(this.dataLayer, value)
     }
 
     ParentEntity {
         get => this.GetParentEntity()
-        set => this.SetParentEntity(value)
+    }
+
+    ReferencedEntities {
+        get => this.GetReferencedEntities(false)
+    }
+
+    ChildEntities {
+        get => this.GetReferencedEntities(true)
+    }
+
+    ChildEntityData {
+        get => this.GetAllChildEntityData()
     }
 
     __Item[key := ""] {
@@ -54,7 +73,8 @@ class EntityBase {
         return this.GetAllValues().__Enum(numberOfVars)
     }
 
-    __New(id, entityTypeId, container, eventMgr, storageObj, idSanitizer := "", autoLoad := true, parentEntity := "") {
+    __New(id, entityTypeId, container, eventMgr, storageObj, idSanitizer := "", autoLoad := true, parentEntity := "", parentEntityStorage := false) {
+        this.app := container.GetApp()
         this.idSanitizer := idSanitizer
         
         if (this.sanitizeId && this.idSanitizer) {
@@ -68,41 +88,23 @@ class EntityBase {
         this.storageObj := storageObj
         this.merger := container.Get("merger.list")
         this.cloner := container.Get("cloner.list")
+        this.parentEntityStorage := parentEntityStorage
 
-        if (!parentEntity) {
-            parentEntity := this.DiscoverParentEntity(container, eventMgr, id, storageObj, idSanitizer)
+        if (!parentEntity && this.parentEntityObj) {
+            parentEntity := this.parentEntityObj
         }
 
-        if (parentEntity) {
-            this.SetParentEntity(parentEntity)
-        }
+        this.DiscoverParentEntity(container, eventMgr, id, storageObj, idSanitizer, parentEntity)
 
         this._createEntityData()
         this.SetupEntity()
 
         if (autoLoad) {
-            this.LoadEntity(false, true)
+            this.LoadEntity()
         }
     }
 
-    _createEntityData() {
-        this.dataObj := EntityData(this, this._getLayerNames(), this._getLayerSources())
-    }
-
-    _getLayerNames() {
-        ; "auto" and "data" are automatically added at the end of the array later.
-        return ["defaults"]
-    }
-
-    _getLayerSources() {
-        return Map(
-            "defaults", ObjBindMethod(this, "InitializeDefaults"),
-            "auto", ObjBindMethod(this, "AutoDetectValues"),
-            "data", EntityStorageLayerSource(this.storageObj, this.GetStorageId())
-        )
-    }
-
-    static Create(container, eventMgr, id, entityTypeId, storageObj, idSanitizer, parentEntity := "") {
+    static Create(container, eventMgr, id, entityTypeId, storageObj, idSanitizer, autoLoad := true, parentEntity := "", parentEntityStorage := false) {
         className := this.Prototype.__Class
 
         return %className%(
@@ -112,20 +114,69 @@ class EntityBase {
             eventMgr,
             storageObj,
             idSanitizer,
-            parentEntity
+            autoLoad,
+            parentEntity,
+            parentEntityStorage
         )
     }
 
-    DiscoverParentEntity(container, eventMgr, id, storageObj, idSanitizer) {
-        return ""
+    _createEntityData() {
+        if (!this.dataLoaded) {
+            this.dataObj := EntityData(this, this._getLayerNames(), this._getLayerSources())
+        }
+        
+        this.dataLoaded := true
+    }
+
+    _getLayerNames() {
+        ; "auto" and "data" are automatically added at the end of the array later.
+        return ["defaults"]
+    }
+
+    _getLayerSources() {
+        layerSource := this.parentEntityStorage
+            ? ParentEntityLayerSource(this)
+            : EntityStorageLayerSource(this.storageObj, this.GetStorageId())
+
+        return Map(
+            "defaults", ObjBindMethod(this, "InitializeDefaults"),
+            "auto", ObjBindMethod(this, "AutoDetectValues"),
+            "data", layerSource
+        )
+    }
+
+    /**
+     * Get an array of all IDs
+     * 
+     * List managed IDs and give modules a chance to add others.
+     */
+    ListEntities(includeManaged := true, includeExtended := true) {
+        return this.container["entity_manager." . this.EntityTypeId]
+            .ListEntities(includeManaged, includeExtended)
+    }
+
+    DiscoverParentEntity(container, eventMgr, id, storageObj, idSanitizer, parentEntity := "") {
+        event := EntityParentEvent(EntityEvents.ENTITY_DISCOVER_PARENT, this.entityTypeId, this, parentEntity)
+        this.eventMgr.DispatchEvent(event)
+
+        if (event.ParentEntity) {
+            this.parentEntityObj := event.ParentEntity
+        } else if (event.ParentEntityId) {
+            this.parentEntityTypeId := event.ParentEntityTypeId
+            this.parentEntityId := event.ParentEntityId
+            this.parentEntityMgr := event.ParentEntityManager 
+                ? event.ParentEntityManager 
+                : container.Get("entity_manager." . event.ParentEntityTypeId)
+            
+        }
+
+        this.parentEntityObj := event.ParentEntity
+
+        return event.ParentEntity
     }
 
     GetParentEntity() {
         return this.parentEntityObj
-    }
-
-    SetParentEntity(parentEntity) {
-        this.parentEntityObj := parentEntity
     }
 
     SetupEntity() {
@@ -137,25 +188,15 @@ class EntityBase {
         return this.GetData().GetMergedData(!raw)
     }
 
-    GetEntityTypeId() {
-        return this.entityTypeId
-    }
-
     GetEntityType() {
         ; @todo Inject entity type manager service
         return this.container.Get("manager.entity_type")[this.EntityTypeId]
     }
 
-    InitializeDefaults(recurse := true) {
+    InitializeDefaults() {
         defaults := Map(
             "name", this.Id
         )
-
-        if (recurse) {
-            for key, referencedEntity in this.GetReferencedEntities(true) {
-                this.merger.Merge(defaults, referencedEntity.InitializeDefaults())
-            }
-        }
 
         return defaults
     }
@@ -202,26 +243,27 @@ class EntityBase {
         return this.GetData().DeleteValue(key, this.dataLayer)
     }
 
-    CreateSnapshot(name, recurse := true) {
-        this.GetData().CreateSnapshot(name)
-
+    CreateSnapshot(name, recurse := false) {
         if (recurse) {
-            for index, entityObj in this.GetReferencedEntities(true) {
-                if (entityObj.HasOwnDataStorage()) {
-                    entityObj.GetData().CreateSnapshot(name, recurse)
-                }
+            for index, entityObj in this.ChildEntities {
+                entityObj.GetData().CreateSnapshot(name, recurse)
             }
         }
+
+        this.GetData().CreateSnapshot(name)
 
         return this
     }
 
-    HasOwnDataStorage() {
-        return this.dataObj
-    }
-
-    RestoreSnapshot(name, recurse := true) {
+    RestoreSnapshot(name, recurse := false) {
         this.GetData().RestoreSnapshot(name)
+
+        if (recurse) {
+            for index, entityObj in this.ChildEntities {
+                entityObj.GetData().RestoreSnapshot(name, recurse)
+            }
+        }
+
         return this
     }
 
@@ -230,24 +272,28 @@ class EntityBase {
     }
 
     LoadEntity(reload := false, recurse := false) {
-        loaded := false
+        if (this.loading) {
+            throw AppException("Attempting to load entity with a circular reference.")
+        }
 
-        if (!this.loaded || reload) {
-            this.RefreshEntityData(true)
+        if (!this.loading && this.dataLoaded && (!this.loaded || reload)) {
+            this.loading := true
+            this.RefreshEntityData(recurse)
             this.CreateSnapshot("original")
             this.loaded := true
             loaded := true
-        }
+            this.loading := false
 
-        if (recurse) {
-            for index, entityObj in this.GetReferencedEntities(true) {
-                entityObj.LoadEntity(reload, recurse)
+            if (recurse) {
+                for index, entityObj in this.ChildEntities {
+                    entityObj.LoadEntity(reload, recurse)
+                }
             }
-        }
 
-        if (loaded) {
-            event := EntityEvent(EntityEvents.ENTITY_LOADED, this.entityTypeId, this)
-            this.eventMgr.DispatchEvent(event)
+            if (loaded) {
+                event := EntityEvent(EntityEvents.ENTITY_LOADED, this.entityTypeId, this)
+                this.eventMgr.DispatchEvent(event)
+            }
         }
     }
 
@@ -255,7 +301,7 @@ class EntityBase {
         this.GetData().UnloadAllLayers(reloadUserData)
 
         if (recurse) {
-            for index, entityObj in this.GetReferencedEntities(true) {
+            for index, entityObj in this.ChildEntities {
                 entityObj.RefreshEntityData(recurse, reloadUserData)
             }
         }
@@ -264,16 +310,16 @@ class EntityBase {
         this.eventMgr.DispatchEvent(event)
     }
 
-    AutoDetectValues(recurse := true) {
+    AutoDetectValues() {
         values := Map()
 
-        if (recurse) {
-            for key, referencedEntity in this.GetReferencedEntities(true) {
-                this.merger.Merge(values, referencedEntity.AutoDetectValues(recurse))
-            }
-        }
+        event := EntityDetectValuesEvent(EntityEvents.ENTITY_DETECT_VALUES, this.EntityTypeId, this, values)
+        this.eventMgr.DispatchEvent(event)
 
-        return values
+        event := EntityDetectValuesEvent(EntityEvents.ENTITY_DETECT_VALUES_ALTER, this.EntityTypeId, this, event.Values)
+        this.eventMgr.DispatchEvent(event)
+
+        return event.Values
     }
 
     SaveEntity(recurse := true) {
@@ -285,15 +331,15 @@ class EntityBase {
 
         event := EntityEvent(EntityEvents.ENTITY_PRESAVE, this.entityTypeId, this)
         this.eventMgr.DispatchEvent(event)
-        
-        this.GetData().SaveData()
-        this.CreateSnapshot("original")
 
         if (recurse) {
-            for index, entityObj in this.GetReferencedEntities(true) {
+            for index, entityObj in this.ChildEntities {
                 entityObj.SaveEntity(recurse)
             }
         }
+        
+        this.GetData().SaveData()
+        this.CreateSnapshot("original")
 
         if (alreadyExists) {
             event := EntityEvent(EntityEvents.ENTITY_UPDATED, this.entityTypeId, this)
@@ -317,10 +363,16 @@ class EntityBase {
         }
     }
 
-    DeleteEntity() {
+    DeleteEntity(recurse := false) {
         if (this.storageObj.HasData(this.GetStorageId())) {
             event := EntityEvent(EntityEvents.ENTITY_PREDELETE, this.entityTypeId, this)
             this.eventMgr.DispatchEvent(event)
+
+            if (recurse) {
+                for index, entityObj in this.ChildEntities {
+                    entityObj.DeleteEntity(recurse)
+                }
+            }
 
             this.storageObj.DeleteData(this.GetStorageId())
 
@@ -344,14 +396,14 @@ class EntityBase {
         return !!(changes.GetAdded().Count || changes.GetModified().Count || changes.GetDeleted().Count)
     }
 
-    DiffChanges(recursive := true) {
+    DiffChanges(recurse := true) {
         diff := this.GetData().DiffChanges("original", this.dataLayer)
 
-        if (recursive) {
+        if (recurse) {
             diffs := [diff]
 
-            for index, referencedEntity in this.GetReferencedEntities(true) {
-                diffs.Push(referencedEntity.DiffChanges(recursive))
+            for index, referencedEntity in this.ChildEntities {
+                diffs.Push(referencedEntity.DiffChanges(recurse))
             }
 
             diff := DiffResult.Combine(diffs)
@@ -391,7 +443,7 @@ class EntityBase {
         result := "Cancel"
 
         while (mode) {
-            result := this.app.Service("manager.gui").Dialog(Map(
+            result := this.app["manager.gui"].Dialog(Map(
                 "type", "SimpleEntityEditor",
                 "mode", mode,
                 "child", !!(ownerOrParent),
@@ -434,5 +486,53 @@ class EntityBase {
         }
 
         return text
+    }
+
+    UpdateDefaults(recurse := false) {
+        if (recurse) {
+            for key, child in this.ChildEntities {
+                child.UpdateDefaults(recurse)
+            }
+        }
+        
+        this.GetData().UnloadAllLayers(false)
+    }
+
+    GetAllChildEntityData() {
+        return this.GetData().GetExtraData()
+    }
+
+    GetChildEntityData(entityTypeId, entityId) {
+        dataKey := entityTypeId . "." . entityId
+
+        childData := this.GetData().GetExtraData(dataKey)
+
+        return childData ? childData : Map()
+    }
+
+    SetChildEntityData(entityTypeId, entityId, data) {
+        dataKey := entityTypeId . "." . entityId
+
+        if (!data) {
+            data := Map()
+        }
+
+        this.GetData().SetExtraData(data, dataKey)
+
+        return this
+    }
+
+    HasChildEntityData(entityTypeId, entityId) {
+        dataKey := entityTypeId . "." . entityId
+
+        return this.GetData().HasExtraData(dataKey)
+    }
+
+    DeleteChildEntityData(entityTypeId, entityId) {
+        dataKey := entityTypeId . "." . entityId
+
+        this.GetData().DeleteExtraData(dataKey)
+
+        return this
     }
 }

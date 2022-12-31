@@ -8,7 +8,7 @@ class DetectedGame {
     installDir := ""
     launcherInstallDir := ""
     exeName := ""
-    launcherSpecificId := ""
+    platformRef := ""
     possibleExeNames := []
     keyMap := Map()
     ; @todo Move this to properties or config or allow it to be extended
@@ -17,16 +17,16 @@ class DetectedGame {
     prioritySuffixes := ["-Win64-Shipping", "-Win32-Shipping"]
     filterExes := []
 
-    __New(key, platform, launcherType, gameType := "Default", installDir := "", exeName := "", launcherSpecificId := "", possibleExeNames := "") {
+    __New(key, platform, launcherType, gameType := "Default", installDir := "", exeName := "", platformRef := "", possibleExeNames := "", displayName := "") {
         this.key := key
-        this.displayName := key
+        this.displayName := displayName ? displayName : key
         this.platform := platform
         this.detectedKey := key
         this.launcherType := launcherType
         this.gameType := gameType
         this.installDir := installDir
         this.exeName := exeName
-        this.launcherSpecificId := launcherSpecificId
+        this.platformRef := platformRef
 
         if (possibleExeNames) {
             if (Type(possibleExeNames) == "String") {
@@ -44,12 +44,10 @@ class DetectedGame {
             
         if (
             this.displayName != launcher["name"]
-            || this.launcherType != launcher["ManagedLauncher"].EntityTypeId
-            || this.gameType != launcher["ManagedGame"].EntityTypeId 
-            || this.installDir != launcher["ManagedGame"]["InstallDir"]
-            || this.launcherInstallDir != launcher["ManagedLauncher"]["InstallDir"]
-            || this.exeName != launcher["ManagedGame"]["Exe"] 
-            || this.launcherSpecificId != launcher["ManagedGame"]["LauncherSpecificId"]
+            || this.installDir != launcher["GameProcess"]["InstallDir"]
+            || this.launcherInstallDir != launcher["LauncherProcess"]["InstallDir"]
+            || this.exeName != launcher["GameProcess"]["Exe"] 
+            || this.platformRef != launcher["GameProcess"]["PlatformRef"]
         ) {
             hasChanges := true
         }
@@ -70,40 +68,28 @@ class DetectedGame {
             modified := true
         }
 
-        if (this.launcherType && launcher["ManagedLauncher"].EntityTypeId != this.launcherType) {
-            launcher["ManagedLauncher"].EntityType := this.launcherType
+        if (this.launcherInstallDir && launcher["LauncherProcess"]["InstallDir"] != this.launcherInstallDir) {
+            launcher["LauncherProcess"]["InstallDir"] := this.launcherInstallDir
+        }
+
+        if (this.installDir && launcher["GameProcess"]["InstallDir"] != this.installDir) {
+            launcher["GameProcess"]["InstallDir"] := this.installDir
             modified := true
         }
 
-        if (this.gameType && launcher["ManagedGame"].EntityTypeId != this.gameType) {
-            launcher["ManagedGame"].EntityType := this.gameType
-            modified := true
-        }
-
-        if (this.launcherInstallDir && launcher["ManagedLauncher"]["InstallDir"] != this.launcherInstallDir) {
-            launcher["ManagedLauncher"]["InstallDir"] := this.launcherInstallDir
-        }
-
-        if (this.installDir && launcher["ManagedGame"]["InstallDir"] != this.installDir) {
-            launcher["ManagedGame"]["InstallDir"] := this.installDir
-            modified := true
-        }
-
-        if (this.exeName && launcher["ManagedGame"]["Exe"] != this.exeName) {
-            launcher["ManagedGame"]["Exe"] := this.exeName
+        if (this.exeName && launcher["GameProcess"]["Exe"] != this.exeName) {
+            launcher["GameProcess"]["Exe"] := this.exeName
             modified := true
         }
 
         if (modified) {
-            launcher.SaveModifiedData()
+            launcher.SaveEntity(true)
         }
     }
 
     CreateLauncher(launcherManager) {
         config := Map(
-            "Platform", this.platform.key, 
-            "LauncherType", this.launcherType, 
-            "GameType", this.gameType
+            "Platform", this.platform.key
         )
 
         if (this.displayName && this.displayName != this.key) {
@@ -122,8 +108,8 @@ class DetectedGame {
             config["GameExe"] := this.exeName
         }
 
-        if (this.launcherSpecificId) {
-            config["GameLauncherSpecificId"] := this.launcherSpecificId
+        if (this.platformRef) {
+            config["GamePlatformRef"] := this.platformRef
         }
 
         entityObj := launcherManager.GetFactory().CreateEntity(this.key, config)
@@ -153,15 +139,19 @@ class DetectedGame {
             }
         }
 
-        key := StrReplace(key, ": ", " - ")
-        key := StrReplace(key, ":", "")
-        key := StrReplace(key, "\", "")
-        key := StrReplace(key, "/", "")
-        key := StrReplace(key, "*", "")
-        key := StrReplace(key, "?", "")
-        key := StrReplace(key, "`"", "")
-        key := StrReplace(key, "Â®", "")
-        key := StrReplace(key, "â„¢", "")
+        replacements := [
+            [" : ", " - "],
+            [": ", " - "],
+            [":", "-"],
+            ["Â®", ""],
+            ["â„¢", ""]
+        ]
+
+        for , vals in replacements {
+            key := StrReplace(key, vals[1], vals[2])
+        }
+
+        key := RegExReplace(key, "[\\/:*?`"<>|]'")
 
         return key
     }

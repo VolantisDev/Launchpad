@@ -87,7 +87,7 @@ class GamePlatformBase {
     }
 
     NeedsUpdate() {
-        return this.app.Service("version_checker").VersionIsOutdated(this.GetLatestVersion(), this.GetInstalledVersion())
+        return this.app["version_checker"].VersionIsOutdated(this.GetLatestVersion(), this.GetInstalledVersion())
     }
 
     GetInstalledVersion() {
@@ -138,7 +138,7 @@ class GamePlatformBase {
         return []
     }
 
-    GetLauncherSpecificId(key) {
+    GetPlatformRef(key) {
         return key
     }
 
@@ -164,8 +164,8 @@ class GamePlatformBase {
                 locator := GameExeLocator(installDir)
                 possibleExes := locator.Locate("")
                 exeName := this.DetermineMainExe(key, possibleExes)
-                launcherSpecificId := this.GetLauncherSpecificId(key)
-                detectedGameObj := DetectedGame(key, this, this.launcherType, this.gameType, installDir, exeName, launcherSpecificId, possibleExes)
+                platformRef := this.GetPlatformRef(key)
+                detectedGameObj := DetectedGame(key, this, this.launcherType, this.gameType, installDir, exeName, platformRef, possibleExes)
                 
                 if (this.installDir) {
                     detectedGameObj.launcherInstallDir := this["InstallDir"]
@@ -179,35 +179,48 @@ class GamePlatformBase {
     }
 
     DetermineMainExe(key, possibleExes) {
-        dataSource := this.app.Service("manager.data_source").GetDefaultDataSource()
-        dsData := this.GetDataSourceDefaults(dataSource, key)
-
         mainExe := ""
 
         if (possibleExes.Length == 1) {
             mainExe := possibleExes[1]
-        } else if (possibleExes.Length > 1 && dsData.Has("GameExe")) {
-            for index, possibleExe in possibleExes {
-                SplitPath(possibleExe, &fileName)
+        } else if (possibleExes.Length > 1) {
+            ; @todo move the API functionality into an event in an event in the WebServicesEventSubscriber
+            if (this.app.Services.Has("web_services.adapter_manager")) {
+                resultData := this.app["web_services.adapter_manager"].AdapterRequest(
+                    Map("id", key),
+                    Map(
+                        "dataType", "entity_data", 
+                        "entityType", "launcher",
+                        "tags", "defaults"
+                    ),
+                    "read",
+                    true
+                )
 
-                if (dsData["GameExe"] == fileName) {
-                    mainExe := possibleExe
-                    break
+                for key, data in resultData {
+                    if (
+                        data 
+                        && HasBase(data, Map.Prototype)
+                        && data.Has("defaults")
+                        && data["defaults"]
+                        && data["defaults"].Has("GameExe")
+                        && data["defaults"]["GameExe"]
+                    ) {
+                        for index, possibleExe in possibleExes {
+                            SplitPath(possibleExe, &fileName)
+
+                            if (data["defaults"]["GameExe"] == fileName) {
+                                mainExe := possibleExe
+                                break 2
+                            }
+                        }
+                    }
                 }
             }
+
+            
         }
 
         return mainExe
-    }
-
-    GetDataSourceDefaults(dataSource, key) {
-        defaults := Map()
-        dsData := dataSource.ReadJson(key, "Games")
-
-        if (dsData != "" && dsData.Has("data") && dsData["data"].Has("defaults")) {
-            defaults := this.merger.Merge(dsData["data"]["defaults"], defaults)
-        }
-
-        return defaults
     }
 }

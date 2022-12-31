@@ -189,7 +189,7 @@ class LauncherBase {
     }
 
     LaunchGameAction() {
-        this.Log("Calling managed game's RunGame action")
+        this.Log("Calling game process's RunGame action")
         return this.game.RunGame(this.progress)
     }
 

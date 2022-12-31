@@ -1,7 +1,5 @@
-class PlatformEntity extends AppEntityBase {
+class PlatformEntity extends FieldableEntity {
     platformObj := ""
-    configPrefix := ""
-    dataSourcePath := "platforms"
 
     Platform {
         get => this.GetPlatform()
@@ -136,8 +134,8 @@ class PlatformEntity extends AppEntityBase {
         }
     }
 
-    AutoDetectValues(recurse := true) {
-        detectedValues := super.AutoDetectValues(recurse)
+    AutoDetectValues() {
+        detectedValues := super.AutoDetectValues()
         detectedValues["IsInstalled"] := this.Platform.IsInstalled()
         detectedValues["InstalledVersion"] := this.Platform.GetInstalledVersion()
         detectedValues["InstallDir"] := this.Platform.GetInstallDir()

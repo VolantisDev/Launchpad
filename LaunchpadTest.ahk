@@ -13,7 +13,7 @@
 
 appVersion := "1.0.0"
 
-TraySetIcon("Resources\Graphics\Launchpad.ico")
+TraySetIcon("Resources\Graphics\launchpad.ico")
 
 HtmlResultViewer("Launchpad Test")
     .ViewResults(SimpleTestRunner(FilesystemTestLoader().GetTests()).RunTests())

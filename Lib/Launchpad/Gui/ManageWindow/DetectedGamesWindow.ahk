@@ -12,9 +12,7 @@
         this.detectedGames := detectedGames
         this.state := container.Get("state.app")
         this.launcherManager := container.Get("entity_manager.launcher")
-        this.knownGames := container.Get("manager.data_source")
-            .GetDefaultDataSource()
-            .ReadListing("game-keys")
+        this.knownGames := this.launcherManager.ListEntities(false, true)
 
         super.__New(container, themeObj, config)
     }
@@ -83,7 +81,7 @@
 
     GetListViewImgList(lv, large := false) {
         IL := IL_Create(this.detectedGames.Count, 1, large)
-        defaultIcon := this.themeObj.GetIconPath("Game")
+        defaultIcon := this.themeObj.GetIconPath("game")
         iconNum := 1
 
         for key, detectedGameObj in this.detectedGames {
@@ -200,7 +198,7 @@
 
         detectedGameObj := this.detectedGames[key]
 
-        result := this.app.Service("manager.gui").Dialog(Map(
+        result := this.app["manager.gui"].Dialog(Map(
             "type", "DetectedGameEditor",
             "ownerOrParent", this.guiId,
             "child", true
@@ -233,7 +231,7 @@
         menuItems := []
         menuItems.Push(Map("label", "Edit", "name", "EditDetectedGame"))
 
-        result := this.app.Service("manager.gui").Menu(menuItems, this)
+        result := this.app["manager.gui"].Menu(menuItems, this)
 
         if (result == "EditDetectedGame") {
             this.EditDetectedGame(key)

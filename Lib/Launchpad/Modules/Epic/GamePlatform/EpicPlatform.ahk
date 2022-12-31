@@ -3,12 +3,12 @@ class EpicPlatform extends RegistryLookupGamePlatformBase {
     displayName := "Epic Store"
     launcherType := "Epic"
     gameType := "Epic"
-    installDirRegView := 32
-    installDirRegKey := "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{0E63B233-DC24-442C-BD38-0B91D90FEC5B}"
-    versionRegView := 32
-    versionRegKey := "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{0E63B233-DC24-442C-BD38-0B91D90FEC5B}"
-    uninstallCmdRegView := 32
-    uninstallCmdRegKey := "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{0E63B233-DC24-442C-BD38-0B91D90FEC5B}"
+    installDirRegView := 64
+    installDirRegKey := "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products\B4B4F9022FD3528499604D6D8AE00CE9\InstallProperties"
+    versionRegView := 64
+    versionRegKey := "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products\B4B4F9022FD3528499604D6D8AE00CE9\InstallProperties"
+    uninstallCmdRegView := 64
+    uninstallCmdRegKey := "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products\B4B4F9022FD3528499604D6D8AE00CE9\InstallProperties"
 
     Install() {
         Run("https://www.epicgames.com/store/en-US/download")
@@ -41,15 +41,29 @@ class EpicPlatform extends RegistryLookupGamePlatformBase {
                 }
 
                 if (isGame) {
-                    key := obj["Name"]
+                    key := obj.Has("Name") ? obj["Name"] : ""
+
+                    if (!key && obj.Has("DisplayName")) {
+                        key := obj["DisplayName"]
+                    }
+
+                    if (!key && obj.Has("MandatoryAppFolderName")) {
+                        key := obj["MandatoryAppFolderName"]
+                    }
+
+                    if (!key) {
+                        throw AppException("Could not determine detected game key.")
+                    }
+
+                    displayName := obj.Has("DisplayName") ? obj["DisplayName"] : ""
                     installDir := obj["InstallLocation"]
-                    launcherSpecificId := obj["AppName"]
+                    platformRef := obj["AppName"]
                     ;exeName := obj["LaunchExecutable"]
                     ;possibleExes := [obj["LaunchExecutable"]]
                     locator := GameExeLocator(installDir)
                     possibleExes := locator.Locate("")
                     mainExe := this.DetermineMainExe(key, possibleExes)
-                    games.Push(DetectedGame(key, this, this.launcherType, this.gameType, installDir, mainExe, launcherSpecificId, possibleExes))
+                    games.Push(DetectedGame(key, this, this.launcherType, this.gameType, installDir, mainExe, platformRef, possibleExes, displayName))
                 }
             }
         }

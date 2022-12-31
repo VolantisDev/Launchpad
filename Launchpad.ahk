@@ -13,8 +13,7 @@ appVersion := "{{VERSION}}"
 
 Launchpad(Map(
     "appName", "Launchpad",
-    "developer", "Volantis Development",
     "version", appVersion,
-    "trayIcon", "Resources\Graphics\Launchpad.ico",
+    "trayIcon", "Resources\Graphics\launchpad.ico",
     "console", true
 ))

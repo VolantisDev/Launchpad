@@ -2,7 +2,6 @@
     entityObj := ""
     entityManager := ""
     missingFields := Map()
-    dataSource := ""
  
     __New(container, themeObj, config, entityObj, entityManager) {
         this.entityObj := entityObj

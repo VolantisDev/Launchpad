@@ -1,9 +1,14 @@
 {
     "parameters": {
+        "app.website_url": "https://launchpad.games",
+        "app.custom_tray_menu": true,
+        "app.developer": "Volantis Development",
+        "app.has_settings": true,
+        "app.settings_window": "SettingsWindow",
+        "app.show_about_menu_item": true,
+        "app.about_window": "AboutWindow",
+        "app.show_website_menu_item": true,
         "backups_config": {},
-        "config.api_authentication": false,
-        "config.api_auto_login": false,
-        "config.api_endpoint": "",
         "config.assets_dir": "@@{data_dir}\\Launcher Assets",
         "config.auto_backup_config_files": true,
         "config.backups_to_keep": 5,
@@ -12,7 +17,6 @@
         "config.clean_launchers_on_build": false,
         "config.clean_launchers_on_exit": true,
         "config.create_desktop_shortcuts": true,
-        "config.data_source_key": "local",
         "config.default_launcher_theme": "",
         "config.destination_dir": "@@{data_dir}\\Launchers",
         "config.launcher_double_click_action": "Edit",
@@ -22,7 +26,6 @@
         "config.platforms_file": "@@{data_dir}\\Platforms.json",
         "config.platforms_view_mode": "Report",
         "config.tasks_view_mode": "Report",
-        "config.player_name": "",
         "config.rebuild_existing_launchers": false,
         "config.tasks_file": "@@{data_dir}\\Tasks.json",
         "config.use_advanced_launcher_editor": false,
@@ -33,27 +36,29 @@
             "storage_config_storage_parent_key": "Games",
             "storage_config_path_parameter": "config.launcher_file",
             "manager_view_mode_parameter": "config.launcher_view_mode",
-            "default_icon": "Game",
+            "default_icon": "game",
             "allow_add": true,
             "allow_edit": true,
             "allow_delete": true,
             "manager_gui": "MainWindow"
         },
-        "entity_type.managed_game": {
+        "entity_type.game_process": {
             "name_singular": "Managed Game",
             "name_plural": "Managed Games",
-            "entity_class": "ManagedGameEntity",
+            "entity_class": "GameProcessEntity",
             "storage_config_storage_parent_key": "Games",
             "storage_config_path_parameter": "config.launcher_file",
-            "parent_entity_type": "launcher"
+            "parent_entity_type": "launcher",
+            "parent_entity_storage": true
         },
-        "entity_type.managed_launcher": {
+        "entity_type.launcher_process": {
             "name_singular": "Managed Launcher",
             "name_plural": "Managed Launchers",
-            "entity_class": "ManagedLauncherEntity",
+            "entity_class": "LauncherProcessEntity",
             "storage_config_storage_parent_key": "Games",
             "storage_config_path_parameter": "config.launcher_file",
-            "parent_entity_type": "launcher"
+            "parent_entity_type": "launcher",
+            "parent_entity_storage": true
         },
         "entity_type.platform": {
             "name_singular": "Platform",
@@ -65,8 +70,8 @@
             "storage_config_storage_parent_key": "Platforms",
             "storage_config_path_parameter": "config.platforms_file",
             "manager_view_mode_parameter": "config.platforms_view_mode",
-            "default_icon": "Platform",
-            "manager_gui": "ManagePlatformsWindow",
+            "default_icon": "platform",
+            "manager_gui": "PlatformsWindow",
             "manager_link_in_tools_menu": true
         },
         "entity_type.task": {
@@ -112,10 +117,6 @@
             "class": "LaunchpadConfig",
             "arguments": ["@config_storage.app_config", "@{}", "@@config_key"]
         },
-        "data_source.local": {
-            "class": "LocalDataSource",
-            "arguments": ["@manager.cache", "local"]
-        },
         "ini_migrator": {
             "class": "LaunchpadIniMigrator",
             "arguments": ["@{App}", "@manager.gui"]
@@ -131,10 +132,6 @@
         "manager.builder": {
             "class": "BuilderManager",
             "arguments": ["@entity_manager.launcher", "@{}", "@manager.event", "@notifier"]
-        },
-        "manager.data_source": {
-            "class": "DataSourceManager",
-            "arguments": ["@{}", "@manager.event", "@notifier", "@@config.data_source_key"]
         },
         "state.app": {
             "class": "LaunchpadAppState",

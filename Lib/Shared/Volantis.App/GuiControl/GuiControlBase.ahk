@@ -1,5 +1,6 @@
 class GuiControlBase {
     app := ""
+    container := ""
     guiObj := ""
     ctl := ""
     defaultH := 20
@@ -12,6 +13,7 @@ class GuiControlBase {
     __New(guiObj, options := "", heading := "", params*) {
         InvalidParameterException.CheckTypes("GuiControlBase", "guiObj", guiObj, "GuiBase")
         this.app := guiObj.app
+        this.container := this.app.Services
         this.guiObj := guiObj
 
         if (HasBase(options, GuiControlParameters.Prototype)) {

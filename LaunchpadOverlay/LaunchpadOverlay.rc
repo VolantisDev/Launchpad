@@ -52,7 +52,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_ICON1               ICON                    "E:\\Tools\\Launchpad\\Resources\\Graphics\\Launchpad.ico"
+IDI_ICON1               ICON                    "E:\\Tools\\Launchpad\\Resources\\Graphics\\launchpad.ico"
 
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////

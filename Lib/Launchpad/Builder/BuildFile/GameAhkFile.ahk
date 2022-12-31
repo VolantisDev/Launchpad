@@ -14,9 +14,9 @@ class GameAhkFile extends ComposableBuildFile {
             "launcherName", this.launcherEntityObj.Id . " - Launchpad",
             "appVersion", appVersion,
             "appDir", this.appDir,
-            "gameConfig", this.launcherEntityObj["ManagedGame"].FieldData,
+            "gameConfig", this.launcherEntityObj["GameProcess"].FieldData,
             "launchpadLauncherConfig", this.launcherEntityObj.FieldData,
-            "launcherConfig", this.launcherEntityObj["ManagedLauncher"].FieldData,
+            "launcherConfig", this.launcherEntityObj["LauncherProcess"].FieldData,
             "launcherId", this.launcherEntityObj.Id,
             "themesDir", this.launcherEntityObj["ThemesDir"],
             "resourcesDir", this.launcherEntityObj["ResourcesDir"],
@@ -35,7 +35,7 @@ class GameAhkFile extends ComposableBuildFile {
     GetPlatforms() {
         platforms := Map()
 
-        for key, platform in this.app.Service("entity_manager.platform").GetActivePlatforms(EntityQuery.RESULT_TYPE_ENTITIES) {
+        for key, platform in this.app["entity_manager.platform"].GetActivePlatforms(EntityQuery.RESULT_TYPE_ENTITIES) {
             platforms[key] := platform.FieldData
         }
 

@@ -66,7 +66,7 @@ class EntityControl extends GuiControlBase {
         this.widget.WriteValueToEntity()
 
         if (this.refreshDataOnChange && (!this.dependentFields || this.dependentFields.Length == 0)) {
-            this.entityObj.UpdateDataSourceDefaults()
+            this.entityObj.UpdateDefaults()
         }
 
         this.SetDependentFieldValues()
@@ -117,7 +117,7 @@ class EntityControl extends GuiControlBase {
 
     SetDependentFieldValues() {
         if (this.dependentFields && this.dependentFields.Length > 0) {
-            this.entityObj.UpdateDataSourceDefaults()
+            this.entityObj.UpdateDefaults()
 
             for index, field in this.dependentFields {
                 this.guiObj.guiObj[field].Value := this.entityObj.GetField(field).GetRawValue()

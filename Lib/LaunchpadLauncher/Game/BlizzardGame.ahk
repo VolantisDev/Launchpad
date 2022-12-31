@@ -4,10 +4,10 @@ class BlizzardGame extends SimpleGame {
     playButtonColors := ["0074E0", "148EFF"]
 
     GetRunCmd() {
-        launcherPath := this.app.Service("Launcher").config["LauncherInstallDir"] . "\" . this.app.Service("Launcher").config["LauncherExe"]
+        launcherPath := this.app["Launcher"].config["LauncherInstallDir"] . "\" . this.app["Launcher"].config["LauncherExe"]
         
         if (launcherPath != "") {
-            gameKey := this.config["GameLauncherSpecificId"]
+            gameKey := this.config["GamePlatformRef"]
             launcherPath .= " --game=" . gameKey . " --gamepath=`"" . this.config["GameInstallDir"] . "`" --productcode=" . gameKey
         }
 
@@ -16,7 +16,7 @@ class BlizzardGame extends SimpleGame {
 
     RunGameRun() {
         pid := super.RunGameRun()
-        winTitle := this.app.Service("Launcher").config["LauncherWindowTitle"]
+        winTitle := this.app["Launcher"].config["LauncherWindowTitle"]
 
         if (!WinExist(winTitle)) {
             WinWait(winTitle)
@@ -53,7 +53,7 @@ class BlizzardGame extends SimpleGame {
     }
 
     CleanupAfterRun(progress := "") {
-        winTitle := this.app.Service("Launcher").config["LauncherWindowTitle"]
+        winTitle := this.app["Launcher"].config["LauncherWindowTitle"]
         if (WinExist(winTitle)) {
             WinClose("ahk_id" . WinGetID(winTitle))
         }

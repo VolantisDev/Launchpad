@@ -2,10 +2,7 @@
     detectedGameObj := ""
     newValues := Map()
     missingFields := Map()
-    dataSource := ""
     knownGames := ""
-    launcherTypes := ""
-    gameTypes := ""
  
     __New(container, themeObj, config, detectedGameObj) {
         this.detectedGameObj := detectedGameObj
@@ -22,11 +19,45 @@
 
     Create() {
         super.Create()
-        this.dataSource := this.app.Service("manager.data_source").GetDefaultDataSource()
-        this.knownPlatforms := this.dataSource.ReadListing("platforms")
-        this.knownGames := this.dataSource.ReadListing("game-keys")
-        this.launcherTypes := this.dataSource.ReadListing("launcher-types")
-        this.gameTypes := this.dataSource.ReadListing("game-types")
+
+        this.knownPlatforms := []
+        this.knownGames := []
+
+        ; @todo replace this, or at least refactor it to live somewhere else
+        if (this.container.Has("web_services.adapter_manager")) {
+            knownMap := Map(
+                "platform", "knownPlatforms",
+                "launcher", "knownGames",
+            )
+
+            for entityTypeId, varName in knownMap {
+                results := this.container["web_services.adapter_manager"].AdapterRequest("", Map(
+                    "dataType", "entity_list",
+                    "entityType", entityTypeId
+                ), "read", true)
+
+                if (results) {
+                    for , idList in results {
+                        if (idList) {
+                            for , id in idList {
+                                exists := false
+
+                                for , item in %varName% {
+                                    if (item == id) {
+                                        exists := true
+                                        break
+                                    }
+                                }
+
+                                if (!exists) {
+                                    this.%varName%.Push(id)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     GetTitle() {
@@ -35,12 +66,10 @@
 
     Controls() {
         super.Controls()
-        this.Add("ComboBoxControl", "vId", "Id", this.detectedGameObj.Id, this.knownGames, "OnIdChange", "You can change the detected game key here, which will become the name of your launcher. Your existing launchers, and all launchers known about via the API, can be selected to match this game up with one of those items.")
-        this.Add("SelectControl", "vLauncherType", "Launcher Type", this.detectedGameObj.launcherType, this.launcherTypes, "OnLauncherTypeChange", "This tells " . this.app.appName . " how to interact with any launcher your game might require. If your game's launcher isn't listed, or your game doesn't have a launcher, start with `"Default`".`n`nYou can customize the details of the launcher type after it is added.")
-        this.Add("SelectControl", "vGameType", "Game Type", this.detectedGameObj.gameType, this.gameTypes, "OnGameTypeChange", "This tells " . this.app.appName . " how to launch your game. Most games can use 'default', but launchers can support different game types.`n`nYou can customize the details of the game type after it is added.")
+        this.Add("ComboBoxControl", "vId", "Id", this.detectedGameObj.key, this.knownGames, "OnIdChange", "You can change the detected game key here, which will become the name of your launcher. Your existing launchers, and all launchers known about via the API, can be selected to match this game up with one of those items.")
         this.Add("LocationBlock", "", "Install Dir", this.detectedGameObj.installDir, "InstallDir", "", true, "This is the directory that the game is installed in, if it could be detected.")
         this.Add("ComboBoxControl", "vExe", "Exe", this.detectedGameObj.exeName, this.detectedGameObj.possibleExeNames, "OnExeChange", "The main Exe, if detected, should be pre-selected. You may change it to be the name (or path) of another exe, or select another one of the detected .exe files from the list (if more than one was found).")
-        this.AddTextBlock("Launcher-Specific ID", "LauncherSpecificId", this.detectedGameObj.launcherSpecificId, "This is typically the ID which the game platform or launcher uses when referring to the game internally. Changing this value could cause issues with game launching.")
+        this.AddTextBlock("Launcher-Specific ID", "PlatformRef", this.detectedGameObj.platformRef, "This is typically the ID which the game platform or launcher uses when referring to the game internally. Changing this value could cause issues with game launching.")
     }
 
     AddTextBlock(heading, field, existingVal := "", helpText := "") {
@@ -59,16 +88,6 @@
     OnIdChange(ctl, info) {
         this.guiObj.Submit(false)
         this.newValues["key"] := ctl.Text
-    }
-
-    OnLauncherTypeChange(ctl, info) {
-        this.guiObj.Submit(false)
-        this.newValues["launcherType"] := ctl.Text
-    }
-
-    OnGameTypeChange(ctl, info) {
-        this.guiObj.Submit(false)
-        this.newValues["gameType"] := ctl.Text
     }
 
     GetValue(key) {
@@ -117,9 +136,9 @@
         this.newValues["exeName"] := ctl.Text
     }
 
-    OnLauncherSpecificIdChange(ctl, info) {
+    OnPlatformRefChange(ctl, info) {
         this.guiObj.Submit(false)
-        this.newValues["launcherSpecificId"] := ctl.Text
+        this.newValues["platformRef"] := ctl.Text
     }
 
     ProcessResult(result, submittedData := "") {

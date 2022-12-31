@@ -64,7 +64,7 @@ class SteamPlatform extends RegistryLookupGamePlatformBase {
 
                 if (IsObject(obj) && obj.Has("AppState")) {
                     gameState := obj["AppState"]
-                    launcherSpecificId := gameState["appid"]
+                    platformRef := gameState["appid"]
                     key := gameState["name"]
                     installDir := dir . "\common\" . gameState["installdir"]
                     installDir := StrReplace(installDir, "/", "\")
@@ -76,7 +76,7 @@ class SteamPlatform extends RegistryLookupGamePlatformBase {
                     }
 
                     mainExe := this.DetermineMainExe(key, possibleExes)
-                    games.Push(DetectedGame(key, this, this.launcherType, this.gameType, installDir, mainExe, launcherSpecificId, possibleExes))
+                    games.Push(DetectedGame(key, this, this.launcherType, this.gameType, installDir, mainExe, platformRef, possibleExes))
                 }
             }
         }

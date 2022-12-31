@@ -1,5 +1,5 @@
 class ManageModulesWindow extends ManageWindowBase {
-    listViewColumns := Array("NAME", "ENABLED", "SOURCE", "VERSION")
+    listViewColumns := Array("NAME", "CATEGORY", "ENABLED", "SOURCE", "VERSION")
     moduleManager := ""
     needsRestart := false
 
@@ -26,9 +26,8 @@ class ManageModulesWindow extends ManageWindowBase {
 
         for name, module in this.moduleManager.All("", false, true) {
             enabledText := module.IsEnabled() ? "Yes" : "No"
-            ; TODO Define source
-            source := ""
-            data[name] := [name, enabledText, source, module.GetVersion()]
+            source := module.IsCore() ? "Built-in" : "Third-party"
+            data[name] := [name, module.moduleInfo["category"], enabledText, source, module.GetVersion()]
         }
 
         return data
@@ -44,7 +43,7 @@ class ManageModulesWindow extends ManageWindowBase {
 
     GetListViewImgList(lv, large := false) {
         IL := IL_Create(this.lvCount, 1, large)
-        defaultIcon := this.themeObj.GetIconPath("Module")
+        defaultIcon := this.themeObj.GetIconPath("module")
         iconNum := 1
 
         for key, module in this.moduleManager.All("", false, true) {
@@ -85,7 +84,7 @@ class ManageModulesWindow extends ManageWindowBase {
                 this.Submit(false)
             }
 
-            response := this.app.Service("manager.gui").Dialog(Map(
+            response := this.app["manager.gui"].Dialog(Map(
                 "title", "Restart " . this.app.appName . "?",
                 "text", "One or more module changes require restarting " . this.app.appName . " to fully take effect.`n`nWould you like to restart " . this.app.appName . " now?"
             ))
@@ -154,7 +153,7 @@ class ManageModulesWindow extends ManageWindowBase {
             menuItems.Push(Map("label", "Delete", "name", "DeleteModule"))
         }
 
-        result := this.app.Service("manager.gui").Menu(menuItems, this)
+        result := this.app["manager.gui"].Menu(menuItems, this)
 
         if (result == "EnableModule") {
             this.EnableModule(key)

@@ -6,12 +6,12 @@ class AppTestBase extends TestBase {
     GetTestAppConfig() {
         config := Map(
             "appName", "Test App",
-            "developer", "Test Developer",
             "appDir", A_ScriptDir,
             "tmpDir", this.testDir . "\Temp",
             "dataDir", this.testDir . "\Data",
             "version", this.testAppVersion,
             "parameters", Map(
+                "app.developer", "Test Developer",
                 "config.flush_cache_on_exit", false,
                 "config.logging_level", "none",
                 "config.module_dirs", [],

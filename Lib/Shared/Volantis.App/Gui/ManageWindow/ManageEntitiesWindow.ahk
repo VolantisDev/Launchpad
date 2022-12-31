@@ -24,6 +24,7 @@ class ManageEntitiesWindow extends ManageWindowBase {
         defaults := super.GetDefaultConfig(container, config)
         defaults["entity_type"] := this.entityTypeId
         defaults["title"] := this.entityType.definition["name_plural"]
+        
         return defaults
     }
 
@@ -74,10 +75,9 @@ class ManageEntitiesWindow extends ManageWindowBase {
 
         defaultIcon := this.themeObj.GetIconPath(defaultIconName)
         iconNum := 1
-        iconField := this.entityType.definition["icon_field"]
 
         for key, entityObj in this.entityMgr {
-            iconSrc := entityObj[iconField]
+            iconSrc := this.GetEntityIconSrc(entityObj)
 
             if (!InStr(iconSrc, ":\")) {
                 iconSrc := this.themeObj.GetIconPath(iconSrc)
@@ -92,6 +92,17 @@ class ManageEntitiesWindow extends ManageWindowBase {
         }
 
         return IL
+    }
+
+    GetEntityIconSrc(entityObj) {
+        iconSrc := ""
+        iconField := this.entityType.definition["icon_field"]
+
+        if (iconField && entityObj.Has(iconField)) {
+            iconSrc := entityObj[iconField]
+        }
+        
+        return iconSrc
     }
 
     OnDoubleClick(LV, rowNum) {
@@ -149,31 +160,35 @@ class ManageEntitiesWindow extends ManageWindowBase {
         this.AutoXYWH("y", ["AddButton"])
     }
 
-    GetContextMenuItems() {
+    GetContextMenuItems(entityObj) {
         definition := this.entityType.definition
         menuItems := []
 
-        if (definition["allow_view"]) {
+        if (definition["allow_view"] && this._shouldShowButton(entityObj, "ViewEntity")) {
             menuItems.Push(Map("label", "&View", "name", "ViewEntity"))
         }
 
-        if (definition["allow_edit"]) {
+        if (definition["allow_edit"] && this._shouldShowButton(entityObj, "EditEntity")) {
             menuItems.Push(Map("label", "Edit", "name", "EditEntity"))
         }
 
-        if (definition["allow_delete"]) {
+        if (definition["allow_delete"] && this._shouldShowButton(entityObj, "DeleteEntity")) {
             menuItems.Push(Map("label", "Delete", "name", "DeleteEntity"))
         }
 
         return menuItems
     }
 
+    _shouldShowButton(entityObj, buttonName) {
+        return true
+    }
+
     ShowListViewContextMenu(lv, item, isRightClick, X, Y) {
         key := this.listView.GetRowKey(item)
         entityObj := this.entityMgr[key]
 
-        menuItems := this.GetContextMenuItems()
-        result := this.app.Service("manager.gui").Menu(menuItems, this)
+        menuItems := this.GetContextMenuItems(entityObj)
+        result := this.app["manager.gui"].Menu(menuItems, this)
         this.ProcessContextMenuResult(result, key)
     }
 

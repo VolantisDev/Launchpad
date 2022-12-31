@@ -24,6 +24,7 @@ class EntityStorageBase {
         id := this._dereferenceId(idOrObj)
         data := this._dereferenceData(idOrObj, data)
         this._saveEntityData(id, data)
+        return this
     }
 
     _saveEntityData(id, data) {
@@ -48,6 +49,7 @@ class EntityStorageBase {
 
     DeleteData(idOrObj) {
         this._deleteEntityData(this._dereferenceId(idOrObj))
+        return this
     }
 
     _dereferenceId(idOrObj) {
@@ -64,7 +66,7 @@ class EntityStorageBase {
 
     _dereferenceData(idOrObj, data := "") {
         if (HasBase(idOrObj, EntityBase.Prototype) && !data) {
-            data := idOrObj.UnmergedFieldData
+            data := idOrObj.RawData
         }
 
         return data

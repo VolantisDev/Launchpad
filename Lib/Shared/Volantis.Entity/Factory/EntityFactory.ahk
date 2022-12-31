@@ -110,6 +110,6 @@ class EntityFactory {
             throw EntityException("Unable to create entity '" . id . "' of type '" . entityTypeObj . "' in EntityFactory")
         }
 
-        return %entityTypeObj%.Create(this.container, this.eventMgr, id, this.entityTypeId, this.storageObj, this.idSanitizer, parentEntity)
+        return %entityTypeObj%.Create(this.container, this.eventMgr, id, this.entityTypeId, this.storageObj, this.idSanitizer, true, parentEntity, this.definition["parent_entity_storage"])
     }
 }

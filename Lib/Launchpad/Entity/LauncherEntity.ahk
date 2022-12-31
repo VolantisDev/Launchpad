@@ -1,7 +1,5 @@
-class LauncherEntity extends AppEntityBase {
-    dataSourcePath := "games"
-    configPrefix := "Launcher"
-    additionalManagedLauncherDefaults := Map()
+class LauncherEntity extends FieldableEntity {
+    additionalLauncherProcessDefaults := Map()
 
     IsBuilt {
         get => this.LauncherExists(false)
@@ -29,6 +27,11 @@ class LauncherEntity extends AppEntityBase {
             "weight", 80
         )
 
+        groups["advanced"] := Map(
+            "name", "Advanced",
+            "weight", 100
+        )
+
         return groups
     }
 
@@ -47,17 +50,11 @@ class LauncherEntity extends AppEntityBase {
 
         definitions["id"]["modes"]["wizard"]["formField"] := true
         definitions["id"]["modes"]["wizard"]["widget"] := "combo"
-        definitions["id"]["modes"]["wizard"]["selectOptionsCallback"] := ObjBindMethod(this, "ListKnownGames")
+        definitions["id"]["modes"]["wizard"]["selectOptionsCallback"] := ObjBindMethod(this, "ListEntities", false, true)
         definitions["id"]["modes"]["wizard"]["description"] := "Select an existing game from the API, or enter a custom game key to create your own."
 
         definitions["name"]["description"] := "You can change the display name of the game if it differs from the key."
         definitions["name"]["help"] := "The launcher filename will still be created using the key."
-
-        if (definitions.Has("DataSourceItemKey")) {
-            definitions["DataSourceItemKey"]["default"] := ""
-            definitions["DataSourceItemKey"]["description"] := "The key to use when looking this item up in its data source(s)."
-            definitions["DataSourceItemKey"]["help"] := "By default, this is the same as the main key."
-        }
 
         definitions["Platform"] := Map(
             "type", "entity_reference",
@@ -68,10 +65,10 @@ class LauncherEntity extends AppEntityBase {
             "showDefaultCheckbox", false
         )
 
-        definitions["ManagedLauncher"] := Map(
+        definitions["LauncherProcess"] := Map(
             "type", "entity_reference",
             "required", true,
-            "entityType", "managed_launcher",
+            "entityType", "launcher_process",
             "child", true,
             "weight", -25,
             "widget", "entity_select",
@@ -87,13 +84,13 @@ class LauncherEntity extends AppEntityBase {
             ),
             "default", this.idVal,
             "showDefaultCheckbox", false,
-            "valueType", EntityFieldBase.VALUE_TYPE_DEFAULT
+            "storeEntityData", true
         )
 
-        definitions["ManagedGame"] := Map(
+        definitions["GameProcess"] := Map(
             "type", "entity_reference",
             "required", true,
-            "entityType", "managed_game",
+            "entityType", "game_process",
             "child", true,
             "weight", -20,
             "widget", "entity_select",
@@ -109,7 +106,7 @@ class LauncherEntity extends AppEntityBase {
             ),
             "default", this.idVal,
             "showDefaultCheckbox", false,
-            "valueType", EntityFieldBase.VALUE_TYPE_DEFAULT
+            "storeEntityData", true
         )
 
         definitions["DestinationDir"] := Map(
@@ -189,7 +186,7 @@ class LauncherEntity extends AppEntityBase {
         definitions["RunBefore"] := Map(
             "type", "entity_reference",
             "entityType", "task",
-            "multiple", true,
+            "cardinality", 1, ; Change to another number once widgets for multiple values are worked out
             "group", "tasks",
             "modes", Map(
                 "simple", Map("formField", false)
@@ -201,7 +198,7 @@ class LauncherEntity extends AppEntityBase {
         definitions["CloseBefore"] := Map(
             "type", "entity_reference",
             "entityType", "task",
-            "multiple", true,
+            "cardinality", 1, ; Change to another number once widgets for multiple values are worked out
             "group", "tasks",
             "modes", Map(
                 "simple", Map("formField", false)
@@ -213,7 +210,7 @@ class LauncherEntity extends AppEntityBase {
         definitions["RunAfter"] := Map(
             "type", "entity_reference",
             "entityType", "task",
-            "multiple", true,
+            "cardinality", 1, ; Change to another number once widgets for multiple values are worked out
             "group", "tasks",
             "modes", Map(
                 "simple", Map("formField", false)
@@ -225,7 +222,7 @@ class LauncherEntity extends AppEntityBase {
         definitions["CloseAfter"] := Map(
             "type", "entity_reference",
             "entityType", "task",
-            "multiple", true,
+            "cardinality", 1, ; Change to another number once widgets for multiple values are worked out
             "group", "tasks",
             "modes", Map(
                 "simple", Map("formField", false)
@@ -295,6 +292,15 @@ class LauncherEntity extends AppEntityBase {
             "help", "If the Steam Overlay attaches within this time, and the Force option is not active, then the Launchpad Overlay will not be used."
         )
 
+        definitions["AssetsDir"] := Map(
+            "type", "directory",
+            "description", "The directory where any required assets for this launcher will be saved.",
+            "default", this.app.Config["assets_dir"] . "\" . this.Id,
+            "group", "advanced",
+            "formField", false,
+            "modes", Map("simple", Map("formField", false))
+        )
+
         return definitions
     }
 
@@ -305,13 +311,6 @@ class LauncherEntity extends AppEntityBase {
         return (FileExist(this.GetLauncherFile(this.Id, checkSourceFile)) != "")
     }
 
-    ListKnownGames() {
-        return this.container
-            .Get("manager.data_source")
-            .GetDefaultDataSource()
-            .ReadListing("game-keys")
-    }
-
     LauncherIsOutdated() {
         outdated := true
 
@@ -320,7 +319,7 @@ class LauncherEntity extends AppEntityBase {
         if (filePath && FileExist(filePath)) {
             launcherVersion := FileGetVersion(this.GetLauncherFile(this.Id))
 
-            if (launcherVersion && !this.app.Service("version_checker").VersionIsOutdated(this.app.Version, launcherVersion)) {
+            if (launcherVersion && !this.app["version_checker"].VersionIsOutdated(this.app.Version, launcherVersion)) {
                 outdated := false
             }
 
@@ -330,7 +329,7 @@ class LauncherEntity extends AppEntityBase {
             if (!buildInfo["Version"] || !buildInfo["Timestamp"]) {
                 outdated := true
             } else {
-                if (configInfo["Version"] && this.app.Service("version_checker").VersionIsOutdated(configInfo["Version"], buildInfo["Version"])) {
+                if (configInfo["Version"] && this.app["version_checker"].VersionIsOutdated(configInfo["Version"], buildInfo["Version"])) {
                     outdated := true
                 } else if (configInfo["Timestamp"] && DateDiff(configInfo["Timestamp"], buildInfo["Timestamp"], "S") > 0) {
                     outdated := true
@@ -379,76 +378,17 @@ class LauncherEntity extends AppEntityBase {
         return ValidateResult
     }
 
-    SaveModifiedData() {
-        super.SaveModifiedData()
+    SaveEntity(recurse := true) {
+        super.SaveEntity(recurse)
         this.app.State.SetLauncherConfigInfo(this.Id)
     }
 
-    DiscoverDataSourceItemKey() {
-        if (!this["DataSourceItemKey"]) {
-            dataSources := this.GetAllDataSources()
-
-            for index, dataSource in dataSources {
-                platform := this["Platform"] ? this["Platform"]["id"] : ""
-                apiPath := "lookup/" this.Id
-
-                if (platform) {
-                    apiPath .= "/" . platform
-                }
-                
-                dsData := dataSource.ReadJson(apiPath)
-
-                if (dsData != "" && dsData.Has("id") && dsData["id"]) {
-                    this["DataSourceItemKey"] := dsData["id"]
-                    break
-                }
-            }
-        }
-
-        if (this["DataSourceItemKey"]) {
-            return this["DataSourceItemKey"]
-        } else {
-            return ""
-        }
-    }
-
     IconFileExists() {
-        iconSrc := this["IconSrc"] != "" ? this["IconSrc"] : this.GetAssetPath(this.Id . ".ico")
-        return FileExist(iconSrc)
-    }
-
-    MergeAdditionalDataSourceDefaults(defaults, dataSourceData) {
-        launcherType := this.DetectLauncherType(defaults, dataSourceData)
-
-        checkType := (launcherType == "") ? "Default" : launcherType
-        if (dataSourceData.Has("Launchers") && dataSourceData["Launchers"].Has(checkType) && HasBase(dataSourceData["Launchers"][checkType], Map.Prototype)) {
-            this.additionalManagedLauncherDefaults := this.merger.Merge(dataSourceData["Launchers"][checkType], this.additionalManagedLauncherDefaults)
-            defaults := this.merger.Merge(defaults, dataSourceData["Launchers"][checkType])
-        }
-
-        defaults["ManagedLauncher"] := launcherType
+        iconSrc := (this["IconSrc"] != "") 
+            ? this["IconSrc"] 
+            : this["AssetsDir"] . "\" . this.Id . ".ico"
         
-        return defaults
-    }
-
-    DetectLauncherType(defaults, dataSourceData := "") {
-        launcherType := ""
-
-        if (this.UnmergedFieldData.Has("LauncherType")) {
-            launcherType := this.UnmergedFieldData["LauncherType"]
-        } else if (defaults.Has("LauncherType")) {
-            launcherType := defaults["LauncherType"]
-        }
-
-        if (launcherType == "") {
-            launcherType := "Default"
-        }
-
-        if (dataSourceData != "" && dataSourceData.Has("Launchers")) {
-            launcherType := this._dereferenceKey(launcherType, dataSourceData["Launchers"])
-        }
-
-        return launcherType
+        return FileExist(iconSrc)
     }
 
     _dereferenceKey(key, map) {
@@ -459,19 +399,19 @@ class LauncherEntity extends AppEntityBase {
         return key
     }
 
-    AutoDetectValues(recurse := true) {
-        detectedValues := super.AutoDetectValues(recurse)
+    AutoDetectValues() {
+        detectedValues := super.AutoDetectValues()
         
         if (!detectedValues.Has("IconSrc")) {
             checkPath := this["AssetsDir"] . "\" . this.Id . ".ico"
             
             if (FileExist(checkPath)) {
                 detectedValues["IconSrc"] := checkPath
-            } else if (this.Has("ManagedGame", false) && this["ManagedGame"].Has("Exe", false)) {
-                detectedValues["IconSrc"] := this["ManagedGame"].LocateExe()
+            } else if (this.Has("GameProcess", false) && this["GameProcess"].Has("Exe", false)) {
+                detectedValues["IconSrc"] := this["GameProcess"].LocateExe()
             } else {
                 theme := this.container.Get("manager.theme").GetComponent()
-                detectedValues["IconSrc"] := theme.GetIconPath("Game")
+                detectedValues["IconSrc"] := theme.GetIconPath("game")
             }
         }
 

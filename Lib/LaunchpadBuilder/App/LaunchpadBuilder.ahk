@@ -2,12 +2,9 @@ class LaunchpadBuilder extends AppBase {
     GetParameterDefinitions(config) {
         parameters := super.GetParameterDefinitions(config)
         parameters["config_path"] := this.appDir . "\Launchpad.build.json"
-        parameters["config.api_endpoint"] := "https://api.launchpad.games/v1"
-        parameters["config.data_source_key"] := ""
-        parameters["config.api_authentication"] := true
         parameters["config.dist_dir"] := this.appDir . "\Dist"
         parameters["config.build_dir"] := this.appDir . "\Build"
-        parameters["config.icon_file"] := this.appDir . "\Resources\Graphics\Launchpad.ico"
+        parameters["config.icon_file"] := this.appDir . "\Resources\Graphics\launchpad.ico"
         parameters["config.github_username"] := ""
         parameters["config.github_token"] := ""
         parameters["config.github_repo"] := "VolantisDev/Launchpad"
@@ -33,11 +30,6 @@ class LaunchpadBuilder extends AppBase {
             "arguments", [AppRef(), this.appDir . "\" . this.appName . ".ini"]
         )
 
-        services["manager.data_source"] := Map(
-            "class", "DataSourceManager",
-            "arguments", [ContainerRef(), ServiceRef("manager.event"), ServiceRef("notifier"), ParameterRef("config.data_source_key")]
-        )
-
         services["FileHasher"] := "FileHasher"
 
         services["GitTagVersionIdentifier"] := Map(
@@ -50,8 +42,8 @@ class LaunchpadBuilder extends AppBase {
 
     RunApp(config) {
         super.RunApp(config)
-        version := this.Service("GitTagVersionIdentifier").IdentifyVersion()
-        buildInfo := this.Service("manager.gui").Dialog(Map(
+        version := this["GitTagVersionIdentifier"].IdentifyVersion()
+        buildInfo := this["manager.gui"].Dialog(Map(
             "type", "BuildSettingsForm",
             "version", version
         ))
@@ -60,8 +52,12 @@ class LaunchpadBuilder extends AppBase {
             this.ExitApp()
         }
 
-        if (buildInfo.DeployToApi && this.Services.Has("Auth")) {
-            this.Service("Auth").Login()
+        if (buildInfo.DeployToApi && this.Services.Has("entity_manager.web_service")) {
+            entityMgr := this.Services["entity_manager.web_service"]
+
+            if (entityMgr.Has("launchpad_api") && entityMgr["launchpad_api"]["Enabled"]) {
+                entityMgr["launchpad_api"].Login()
+            }
         }
 
         version := buildInfo.Version
@@ -80,7 +76,7 @@ class LaunchpadBuilder extends AppBase {
         }
 
         if (buildInfo.DeployToGitHub || buildInfo.DeployToApi || buildInfo.DeployToChocolatey) {
-            releaseInfo := this.Service("manager.gui").Dialog(Map("type", "ReleaseInfoForm"))
+            releaseInfo := this["manager.gui"].Dialog(Map("type", "ReleaseInfoForm"))
 
             if (!releaseInfo) {
                 this.ExitApp()
@@ -145,7 +141,7 @@ class LaunchpadBuilder extends AppBase {
         if (!this.GetCmdOutput("git show-ref " . version)) {
             RunWait("git tag " . version, this.appDir)
 
-            response := this.Service("manager.gui").Dialog(Map(
+            response := this["manager.gui"].Dialog(Map(
                 "title", "Push git tag?",
                 "text", "Would you like to push the git tag that was just created (" . version . ") to origin?"
             ))
