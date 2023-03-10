@@ -119,7 +119,7 @@ class PackshotGameListingItem extends HookConsumerWidget {
                     Positioned.fill(
                       child: Image.file(
                         File(
-                            'E:/Tools/Launchpad - Assets/Games/Overwatch/background_art.png'),
+                            'E:/Dev/Apps/Launchpad/Launchpad - Assets/Games/Overwatch/background_art.png'),
                         fit: BoxFit.cover,
                       ),
                     ),
