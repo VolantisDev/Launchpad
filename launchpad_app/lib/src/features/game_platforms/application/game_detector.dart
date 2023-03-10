@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:launchpad_app/src/features/games/domain/game.dart';
-import 'package:launchpad_app/src/features/games/domain/game_platform.dart';
+import 'package:launchpad_app/src/features/game_platforms/domain/game_platform.dart';
 
 abstract class GameDetectorBase {
   Future<List<Game>> detectGames(GamePlatform platform, Ref ref);
