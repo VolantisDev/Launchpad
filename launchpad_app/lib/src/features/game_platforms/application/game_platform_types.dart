@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image/image.dart' as img;
 import 'package:launchpad_app/gen/assets.gen.dart';
 import 'package:launchpad_app/proto/BlizzardProductDb.pb.dart';
@@ -11,7 +10,7 @@ import 'package:launchpad_app/src/features/game_platforms/application/game_detec
 import 'package:launchpad_app/src/features/game_platforms/application/platform_locator/platform_locator.dart';
 import 'package:launchpad_app/src/features/game_platforms/application/platform_locator/xml_locator.dart';
 import 'package:launchpad_app/src/features/games/domain/game.dart';
-import 'package:launchpad_app/src/features/games/domain/game_platform.dart';
+import 'package:launchpad_app/src/features/game_platforms/domain/game_platform.dart';
 import 'package:launchpad_dotnet/extract_icon.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';

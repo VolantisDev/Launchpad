@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../games/domain/game_platform.dart';
+import '../domain/game_platform.dart';
 import 'game_platform_types.dart';
 
 part 'game_platforms.g.dart';
