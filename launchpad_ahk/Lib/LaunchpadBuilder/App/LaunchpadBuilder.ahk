@@ -1,0 +1,175 @@
+class LaunchpadBuilder extends AppBase {
+    GetParameterDefinitions(config) {
+        parameters := super.GetParameterDefinitions(config)
+        parameters["config_path"] := this.appDir . "\Launchpad.build.json"
+        parameters["config.dist_dir"] := this.appDir . "\Dist"
+        parameters["config.build_dir"] := this.appDir . "\Build"
+        parameters["config.icon_file"] := this.appDir . "\Resources\Graphics\launchpad.ico"
+        parameters["config.github_username"] := ""
+        parameters["config.github_token"] := ""
+        parameters["config.github_repo"] := "VolantisDev/Launchpad"
+        parameters["config.cleanup_build_artifacts"] := false
+        parameters["config.makensis"] := "C:\Program Files (x86)\NSIS\makensis.exe"
+        parameters["config.open_build_dir"] := false
+        parameters["config.open_dist_dir"] := true
+        parameters["config.choco_pkg_name"] := this.GetChocoName()
+        return parameters
+    }
+
+    GetChocoName() {
+        name := StrLower(this.appName)
+        StrReplace(name, " ", "-")
+        return name
+    }
+
+    GetServiceDefinitions(config) {
+        services := super.GetServiceDefinitions(config)
+
+        services["LaunchpadConfig"] := Map(
+            "class", "LaunchpadConfig",
+            "arguments", [AppRef(), this.appDir . "\" . this.appName . ".ini"]
+        )
+
+        services["FileHasher"] := "FileHasher"
+
+        services["GitTagVersionIdentifier"] := Map(
+            "class", "GitTagVersionIdentifier",
+            "arguments", AppRef()
+        )
+
+        return services
+    }
+
+    RunApp(config) {
+        super.RunApp(config)
+        version := this["GitTagVersionIdentifier"].IdentifyVersion()
+        buildInfo := this["manager.gui"].Dialog(Map(
+            "type", "BuildSettingsForm",
+            "version", version
+        ))
+
+        if (!buildInfo) {
+            this.ExitApp()
+        }
+
+        if (buildInfo.DeployToApi && this.Services.Has("entity_manager.web_service")) {
+            entityMgr := this.Services["entity_manager.web_service"]
+
+            if (entityMgr.Has("launchpad_api") && entityMgr["launchpad_api"]["Enabled"]) {
+                entityMgr["launchpad_api"].Login()
+            }
+        }
+
+        version := buildInfo.Version
+
+        if (!version) {
+            throw AppException("Version not provided.")
+        }
+
+        this.Version := version
+        this.CreateGitTag(version)
+
+        success := LaunchpadBuildOp(this, this.GetBuilders(buildInfo)).Run()
+
+        if (!success) {
+            throw AppException(this.appName . "build failed. Skipping deploy...")
+        }
+
+        if (buildInfo.DeployToGitHub || buildInfo.DeployToApi || buildInfo.DeployToChocolatey) {
+            releaseInfo := this["manager.gui"].Dialog(Map("type", "ReleaseInfoForm"))
+
+            if (!releaseInfo) {
+                this.ExitApp()
+            }
+
+            success := LaunchpadDeployOp(this, this.GetDeployers(buildInfo)).Run()
+
+            if (!success) {
+                throw AppException(this.appName . " deployment failed. You might need to handle things manually...")
+            }
+        }
+
+        TrayTip("Finished building " . this.appName . "!", this.appName . " Build", 1)
+        this.ExitApp()
+    }
+
+    GetBuilders(buildInfo) {
+        builders := []
+        
+        if (buildInfo.BuildLaunchpadOverlay) {
+            builders.Push(LaunchpadOverlayBuilder(this))
+        }
+
+        if (buildInfo.BuildAhkBins) {
+            builders.Push(AhkBinsBuilder(this))
+        }
+        
+        if (buildInfo.BuildLaunchpad) {
+            builders.Push(AhkExeBuilder(this))
+
+            if (buildInfo.BuildInstaller) {
+                builders.Push(NsisInstallerBuilder(this))
+
+                if (buildInfo.BuildChocoPkg) {
+                    builders.Push(ChocoPkgBuilder(this))
+                }
+            }
+        }
+        
+        return builders
+    }
+
+    GetDeployers(buildInfo) {
+        deployers := Map()
+
+        if (buildInfo.DeployToGitHub) {
+            deployers["GitHub"] := GitHubBuildDeployer(this)
+        }
+
+        if (buildInfo.DeployToApi) {
+            deployers["Api"] := ApiBuildDeployer(this)
+        }
+        
+        if (buildInfo.DeployToChocolatey) {
+            deployers["Chocolatey"] := ChocoDeployer(this)
+        }
+        
+        return deployers
+    }
+
+    CreateGitTag(version) {
+        if (!this.GetCmdOutput("git show-ref " . version)) {
+            RunWait("git tag " . version, this.appDir)
+
+            response := this["manager.gui"].Dialog(Map(
+                "title", "Push git tag?",
+                "text", "Would you like to push the git tag that was just created (" . version . ") to origin?"
+            ))
+        
+            if (response == "Yes") {
+                RunWait("git push origin " . version, this.appDir)
+            }
+        }
+    }
+
+    InitialSetup(config) {
+        ; TODO: Ask initial build setup questions and store them in Launchpad.build.ini
+    }
+
+    CheckForUpdates(notify := true) {
+        ; TODO: Offer to pull the latest git code if it's outdated, and then restart the script if updates were applied
+    }
+
+    ExitApp() {
+        this.CleanupBuild()
+        super.ExitApp()
+    }
+
+    CleanupBuild() {
+        if (this.Config["cleanup_build_artifacts"]) {
+            if (DirExist(this.Config["build_dir"])) {
+                DirDelete(this.Config["build_dir"], true)
+            }
+        }
+    }
+}

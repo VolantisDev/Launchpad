@@ -1,0 +1,11 @@
+targets:
+  $default:
+    builders:
+      swagger_dart_code_generator:
+        enabled: true
+        options:
+          input_folder: lib/swaggers/
+          output_folder: lib/gen
+          # @todo Uncomment this after the URL is available
+          # input_urls:
+          #   - https://api.launchpad.games/v1/openapi.yaml

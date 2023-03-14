@@ -3,7 +3,9 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/launchpad_app/.dart_tool/**",
+                "E:/Tools/flutter/**"
             ],
             "defines": [
                 "_DEBUG",

@@ -1,0 +1,17 @@
+/Vendor/*
+!/Vendor/7zip
+!/Vendor/7zip/*
+!/Vendor/Verpatch
+!/Vendor/Verpatch/*
+/Launchpad.ini
+/Launchpad.build.ini
+/Launchpad.json
+/Build
+/Dist
+/Launchpad.zip
+/Launchpad-*.zip
+/Launchpad.exe
+/log.txt
+/LaunchpadOverlay/bin
+/LaunchpadOverlay/obj
+/.vs

@@ -1,0 +1,3 @@
+class BasicWebServiceRequest extends WebServiceRequestBase {
+    
+}

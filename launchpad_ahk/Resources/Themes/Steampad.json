@@ -1,0 +1,199 @@
+{
+    "theme": {
+        "name": "Steampad",
+        "parentTheme": "Darkpad",
+        "vars": {},
+        "colors": {
+            "accentBg": "12273C",
+            "accentText": "3D668F",
+            "accentBright": "59AECE",
+            "background": "{{dark}}",
+            "border": "3D668F",
+            "buttonBg": "353A41",
+            "buttonBgDisabled": "646E70",
+            "buttonBgHover": "4B515C",
+            "buttonBorder": "{{border}}",
+            "buttonBorderDisabled": "{{buttonBorder}}",
+            "buttonBorderHover": "59AECE",
+            "buttonText": "{{textInactive}}",
+            "buttonTextDisabled": "355D79",
+            "buttonTextHover": "{{text}}",
+            "dark": "1F2329",
+            "light": "FEFEFE",
+            "mainMenuBg": "{{background}}",
+            "mainMenuBgDisabled": "{{background}}",
+            "mainMenuBgHover": "{{background}}",
+            "mainMenuBorder": "{{menuBorder}}",
+            "mainMenuBorderDisabled": "{{menuBorderDisabled}}",
+            "mainMenuBorderHover": "{{menuBorderHover}}",
+            "mainMenuText": "{{menuText}}",
+            "mainMenuTextDisabled": "{{menuTextDisabled}}",
+            "mainMenuTextHover": "{{menuTextHover}}",
+            "manageButtonBg": "{{background}}",
+            "manageButtonBgDisabled": "{{buttonBg}}",
+            "manageButtonBgHover": "{{accentBg}}",
+            "manageButtonBorder": "{{border}}",
+            "manageButtonBorderDisabled": "{{buttonBorder}}",
+            "manageButtonBorderHover": "{{buttonBorder}}",
+            "manageButtonText": "{{textInactive}}",
+            "manageButtonTextDisabled": "{{textDim}}",
+            "manageButtonTextHover": "{{textLink}}",
+            "detailsButtonBg": "{{background}}",
+            "detailsButtonBgDisabled": "{{buttonBg}}",
+            "detailsButtonBgHover": "{{accentBg}}",
+            "detailsButtonBorder": "{{border}}",
+            "detailsButtonBorderDisabled": "{{buttonBorder}}",
+            "detailsButtonBorderHover": "{{buttonBorder}}",
+            "detailsButtonText": "{{textInactive}}",
+            "detailsButtonTextDisabled": "{{textDim}}",
+            "detailsButtonTextHover": "{{light}}",
+            "detailsButtonPrimaryBg": "{{background}}",
+            "detailsButtonPrimaryBgDisabled": "{{buttonBg}}",
+            "detailsButtonPrimaryBgHover": "{{accentText}}",
+            "detailsButtonPrimaryBorder": "{{border}}",
+            "detailsButtonPrimaryBorderDisabled": "{{buttonBorder}}",
+            "detailsButtonPrimaryBorderHover": "{{buttonBorder}}",
+            "detailsButtonPrimaryText": "{{accentText}}",
+            "detailsButtonPrimaryTextDisabled": "{{textDim}}",
+            "detailsButtonPrimaryTextHover": "{{accentBg}}",
+            "menuBg": "32363E",
+            "menuBgDisabled": "{{buttonBgDisabled}}",
+            "menuBgHover": "{{buttonBgHover}}",
+            "menuBorder": "{{buttonBorder}}",
+            "menuBorderDisabled": "{{buttonBorder}}",
+            "menuBorderHover": "{{buttonBorderHover}}",
+            "menuText": "{{textInactive}}",
+            "menuTextDisabled": "{{buttonTextDisabled}}",
+            "menuTextHover": "{{text}}",
+            "primaryActionBg": "7A9C04",
+            "primaryActionBgDisabled": "{{buttonBgDisabled}}",
+            "primaryActionBgHover": "89AE05",
+            "primaryActionBorder": "{{primaryActionText}}",
+            "primaryActionBorderDisabled": "{{primaryActionTextDisabled}}",
+            "primaryActionBorderHover": "{{primaryActionBgHover}}",
+            "primaryActionText": "{{text}}",
+            "primaryActionTextDisabled": "{{buttonTextDisabled}}",
+            "primaryActionTextHover": "FFFFFF",
+            "progressBarBg": "{{accentBright}}",
+            "progressBarFg": "{{accentText}}",
+            "statusBgActive": "{{accentBg}}",
+            "statusBgActiveHover": "182D42",
+            "statusBgInactive": "{{background}}",
+            "statusBgInactiveHover": "{{background}}",
+            "statusBorderActive": "{{accentBright}}",
+            "statusBorderActiveHover": "{{light}}",
+            "statusBorderInactive": "{{textDim}}",
+            "statusBorderInactiveHover": "{{textLight}}",
+            "statusTextActive": "{{accentBright}}",
+            "statusTextActiveHover": "{{accentBright}}",
+            "statusTextInactive": "{{textDim}}",
+            "statusTextInactiveHover": "{{textLight}}",
+            "text": "{{light}}",
+            "textHeading": "63AAD0",
+            "textListViewHeader": "{{textHeading}}",
+            "textInactive": "C8D0BF",
+            "textDim": "646E70",
+            "textInput": "{{dark}}",
+            "textLink": "7EA64B",
+            "titlebarButtonBg": "{{background}}",
+            "titlebarButtonBgDisabled": "{{background}}",
+            "titlebarButtonBgHover": "{{background}}",
+            "titlebarButtonBorder": "{{background}}",
+            "titlebarButtonBorderDisabled": "{{background}}",
+            "titlebarButtonBorderHover": "{{background}}",
+            "titlebarButtonText": "{{buttonText}}",
+            "titlebarButtonTextDisabled": "{{buttonTextDisabled}}",
+            "titlebarButtonTextHover": "{{buttonTextHover}}"
+        },
+        "themeAssets": {
+            "logo": "",
+            "spinner": "Graphics\\spinner-steam.gif"
+        },
+        "buttons": {
+            "styles": {
+                "default": {
+                    "enabled": {
+                        "borderThickness": 0
+                    },
+                    "disabled": {
+                        "borderThickness": 0
+                    },
+                    "hovered": {
+                        "borderThickness": 0
+                    }
+                },
+                "dialog": {
+                    "enabled": {
+                        "textAlign": "Left",
+                        "textUpper": true
+                    },
+                    "disabled": {
+                        "textAlign": "Left",
+                        "textUpper": true
+                    },
+                    "hovered": {
+                        "textAlign": "Left",
+                        "textUpper": true
+                    }
+                },
+                "primary": {
+                    "enabled": {
+                        "textUpper": true
+                    },
+                    "disabled": {
+                        "textUpper": true
+                    },
+                    "hovered": {
+                        "textUpper": true
+                    }
+                },
+                "menu": {
+                    "enabled": {
+                        "textAlign": "Left",
+                        "margin": 4
+                    },
+                    "disabled": {
+                        "textAlign": "Left",
+                        "margin": 4
+                    },
+                    "hovered": {
+                        "textAlign": "Left",
+                        "margin": 4
+                    }
+                },
+                "managePrimary": {
+                    "enabled": {
+                        "bgColor": "{{background}}",
+                        "textColor": "{{textInactive}}",
+                        "borderColor": "{{textInactive}}",
+                        "borderThickness": 1,
+                        "shape": "ManageButtonShape",
+                        "strokeWidth": 2,
+                        "textAlign": "Left",
+                        "textUpper": true
+                    },
+                    "disabled": {
+                        "bgColor": "{{background}}",
+                        "textColor": "{{textInactive}}",
+                        "borderColor": "{{background}}",
+                        "borderThickness": 1,
+                        "shape": "ManageButtonShape",
+                        "strokeWidth": 2,
+                        "textAlign": "Left",
+                        "textUpper": true
+                    },
+                    "hovered": {
+                        "bgColor": "{{background}}",
+                        "textColor": "{{accentBright}}",
+                        "borderColor": "{{menuTextHover}}",
+                        "borderThickness": 1,
+                        "shape": "ManageButtonShape",
+                        "strokeWidth": 2,
+                        "textAlign": "Left",
+                        "textUpper": true
+                    }
+                }
+            }
+        }
+    }
+}

@@ -2,40 +2,118 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "update-includes",
-            "command": "Vendor/AutoHotKey/AutoHotkey64.exe",
-            "type": "process",
+            "label": "flutter pub run build_runner watch",
+            "type": "flutter",
+            "command": "flutter",
             "args": [
-                "Scripts/UpdateIncludes.ahk"
+                "pub",
+                "run",
+                "build_runner",
+                "watch",
+                "--delete-conflicting-outputs"
+            ],
+            "presentation": {
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                "panel": "dedicated",
+                "close": true
+            },
+            "problemMatcher": [
+                "$dart-build_runner"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/launchpad_app"
+            },
+            "isBackground": true,
+            "detail": "",
+            "runOptions": {
+                "runOn": "folderOpen",
+                "instanceLimit": 1,
+                "reevaluateOnRerun": true
+            },
+            "dependsOn": [
+                "flutter pub get"
+            ],
+        },
+        {
+            "label": "flutter pub run build_runner build",
+            "type": "flutter",
+            "command": "flutter",
+            "args": [
+                "pub",
+                "run",
+                "build_runner",
+                "build",
+                "--delete-conflicting-outputs"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "showReuseMessage": true,
+                "close": false
+            },
+            "problemMatcher": [
+                "$dart-build_runner"
             ],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/launchpad_app"
+            },
+            "group": "none",
+            "detail": ""
+        },
+        {
+            "label": "flutter pub get",
+            "type": "flutter",
+            "command": "flutter",
+            "args": [
+                "pub",
+                "get"
+            ],
+            "presentation": {
+                "echo": true,
+                "focus": false,
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                "panel": "dedicated",
+                "close": true
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/launchpad_app"
+            },
+            "group": "none",
+            "detail": ""
+        },
+        {
+            "label": "flutter launcher icons",
+            "type": "flutter",
+            "command": "flutter",
+            "args": [
+                "pub",
+                "run",
+                "flutter_launcher_icons"
+            ],
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceFolder}/launchpad_app"
             }
         },
         {
-            "label": "build-launchpad",
-            "command": "Vendor/AutoHotKey/AutoHotkey64.exe",
-            "type": "process",
+            "label": "flutter native splash",
+            "type": "flutter",
+            "command": "flutter",
             "args": [
-                "Scripts/Build.ahk"
+                "pub",
+                "run",
+                "flutter_native_splash:create"
             ],
+            "group": "build",
             "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "build-overlay-debug",
-            "command": "msbuild",
-            "type": "process",
-            "args": [
-                "Launchpad.sln",
-                "-property:Configuration=Debug"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "problemMatcher": "$tsc"
+                "cwd": "${workspaceFolder}/launchpad_app"
+            }
         },
         {
             "label": "build-overlay",
@@ -46,9 +124,50 @@
                 "-property:Configuration=Release"
             ],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/launchpad_legacy"
             },
+            "group": "build",
             "problemMatcher": "$tsc"
+        },
+        {
+            "label": "build-overlay-debug",
+            "command": "msbuild",
+            "type": "process",
+            "args": [
+                "Launchpad.sln",
+                "-property:Configuration=Debug"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/launchpad_legacy"
+            },
+            "group": "none",
+            "problemMatcher": "$tsc"
+        },
+        {
+            "label": "update-includes (AHK)",
+            "command": "Vendor/AutoHotKey/AutoHotkey64.exe",
+            "type": "process",
+            "args": [
+                "Scripts/UpdateIncludes.ahk"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/launchpad_legacy"
+            },
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "build-launchpad (AHK)",
+            "command": "Vendor/AutoHotKey/AutoHotkey64.exe",
+            "type": "process",
+            "args": [
+                "Scripts/Build.ahk"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/launchpad_legacy"
+            },
+            "group": "build",
+            "problemMatcher": []
         }
     ]
 }

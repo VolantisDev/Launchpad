@@ -1,0 +1,141 @@
+{
+    "parameters": {
+        "app.website_url": "https://launchpad.games",
+        "app.custom_tray_menu": true,
+        "app.developer": "Volantis Development",
+        "app.has_settings": true,
+        "app.settings_window": "SettingsWindow",
+        "app.show_about_menu_item": true,
+        "app.about_window": "AboutWindow",
+        "app.show_website_menu_item": true,
+        "backups_config": {},
+        "config.assets_dir": "@@{data_dir}\\Launcher Assets",
+        "config.auto_backup_config_files": true,
+        "config.backups_to_keep": 5,
+        "config.builder_key": "ahk_launcher",
+        "config.check_updates_on_start": true,
+        "config.clean_launchers_on_build": false,
+        "config.clean_launchers_on_exit": true,
+        "config.create_desktop_shortcuts": true,
+        "config.default_launcher_theme": "",
+        "config.destination_dir": "@@{data_dir}\\Launchers",
+        "config.launcher_double_click_action": "Edit",
+        "config.launcher_file": "@@{data_dir}\\Launchers.json",
+        "config.launcher_view_mode": "Report",
+        "config.enable_custom_launcher_themes": true,
+        "config.platforms_file": "@@{data_dir}\\Platforms.json",
+        "config.platforms_view_mode": "Report",
+        "config.tasks_view_mode": "Report",
+        "config.rebuild_existing_launchers": false,
+        "config.tasks_file": "@@{data_dir}\\Tasks.json",
+        "config.use_advanced_launcher_editor": false,
+        "entity_type.launcher": {
+            "name_singular": "Launcher",
+            "name_plural": "Launchers",
+            "entity_class": "LauncherEntity",
+            "storage_config_storage_parent_key": "Games",
+            "storage_config_path_parameter": "config.launcher_file",
+            "manager_view_mode_parameter": "config.launcher_view_mode",
+            "default_icon": "game",
+            "allow_add": true,
+            "allow_edit": true,
+            "allow_delete": true,
+            "manager_gui": "MainWindow"
+        },
+        "entity_type.game_process": {
+            "name_singular": "Managed Game",
+            "name_plural": "Managed Games",
+            "entity_class": "GameProcessEntity",
+            "storage_config_storage_parent_key": "Games",
+            "storage_config_path_parameter": "config.launcher_file",
+            "parent_entity_type": "launcher",
+            "parent_entity_storage": true
+        },
+        "entity_type.launcher_process": {
+            "name_singular": "Managed Launcher",
+            "name_plural": "Managed Launchers",
+            "entity_class": "LauncherProcessEntity",
+            "storage_config_storage_parent_key": "Games",
+            "storage_config_path_parameter": "config.launcher_file",
+            "parent_entity_type": "launcher",
+            "parent_entity_storage": true
+        },
+        "entity_type.platform": {
+            "name_singular": "Platform",
+            "name_plural": "Platforms",
+            "entity_class": "PlatformEntity",
+            "definition_loader_class": "ParameterEntityDefinitionLoader",
+            "definition_loader_parameter_key": "platforms",
+            "entity_manager_class": "PlatformManager",
+            "storage_config_storage_parent_key": "Platforms",
+            "storage_config_path_parameter": "config.platforms_file",
+            "manager_view_mode_parameter": "config.platforms_view_mode",
+            "default_icon": "platform",
+            "manager_gui": "PlatformsWindow",
+            "manager_link_in_tools_menu": true
+        },
+        "entity_type.task": {
+            "name_singular": "Task",
+            "name_plural": "Tasks",
+            "entity_class": "TaskEntity",
+            "storage_config_storage_parent_key": "tasks",
+            "storage_config_path_parameter": "config.tasks_file",
+            "manager_view_mode_parameter": "config.tasks_view_mode",
+            "allow_add": true,
+            "allow_edit": true,
+            "allow_delete": true,
+            "manager_link_in_tools_menu": false
+        },
+        "launcher_config": {},
+        "module_config": {},
+        "modules.Auth": true,
+        "modules.Bethesda": true,
+        "modules.Blizzard": true,
+        "modules.Epic": true,
+        "modules.LaunchpadApi": true,
+        "modules.Origin": true,
+        "modules.Riot": true,
+        "modules.Steam": true,
+        "platforms_config": {},
+        "platforms.Basic.PlatformClass": "BasicPlatform",
+        "previous_config_file": "@@{app_dir}\\Launchpad.ini"
+    },
+    "services": {
+        "builder.ahk_launcher": {
+            "class": "AhkLauncherBuilder",
+            "arguments": ["@{App}", "@notifier"]
+        },
+        "cache_state.local": {
+            "class": "CacheState",
+            "arguments": ["@{App}", "@@config.cache_dir", "Local.json"]
+        },
+        "cache.local": {
+            "class": "FileCache",
+            "arguments": ["@{App}", "@cache_state.local", "@@config.cache_dir", "Local"]
+        },
+        "config.app": {
+            "class": "LaunchpadConfig",
+            "arguments": ["@config_storage.app_config", "@{}", "@@config_key"]
+        },
+        "ini_migrator": {
+            "class": "LaunchpadIniMigrator",
+            "arguments": ["@{App}", "@manager.gui"]
+        },
+        "installer.dependencies": {
+            "class": "DependencyInstaller",
+            "arguments": ["@@version", "@state.app", "@manager.cache", "file", [], "@@tmp_dir"]
+        },
+        "installer.launchpad_update": {
+            "class": "LaunchpadUpdate",
+            "arguments": ["@@version", "@state.app", "@manager.cache", "file", "@@tmp_dir"]
+        },
+        "manager.builder": {
+            "class": "BuilderManager",
+            "arguments": ["@entity_manager.launcher", "@{}", "@manager.event", "@notifier"]
+        },
+        "state.app": {
+            "class": "LaunchpadAppState",
+            "arguments": ["@{App}", "@@state_path"]
+        }
+    }
+}
